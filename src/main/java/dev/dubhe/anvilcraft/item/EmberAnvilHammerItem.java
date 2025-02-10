@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -19,7 +20,7 @@ import java.util.Map;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class EmberAnvilHammerItem extends AnvilHammerItem implements IInherentEnchantment, IFireReforging {
+public class EmberAnvilHammerItem extends AnvilHammerItem implements IInherentEnchantment {
     /**
      * 初始化铁砧锤
      *
@@ -51,6 +52,16 @@ public class EmberAnvilHammerItem extends AnvilHammerItem implements IInherentEn
         if (pContext.level() != null) {
             pTooltipComponents.addAll(this.getInherentEnchantmentsTooltip(pContext.level()));
         }
+    }
+
+    @Override
+    public ItemStack getDefaultInstance() {
+        ItemStack defaultInstance = super.getDefaultInstance();
+
+        defaultInstance.set(ModComponents.FIRE_REFORGING, new ToolAttributes.FireReforging());
+        defaultInstance.set(ModComponents.TOUGH, new ToolAttributes.Tough());
+
+        return defaultInstance;
     }
 
     @Override

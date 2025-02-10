@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
+import dev.dubhe.anvilcraft.item.ToolAttributes;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -43,6 +44,18 @@ public class ModComponents {
     public static final DataComponentType<ComradeAmuletItem.SignedPlayers> SIGNED_PLAYERS =
         register("signed_player", b -> b.persistent(ComradeAmuletItem.SignedPlayers.CODEC)
             .networkSynchronized(ComradeAmuletItem.SignedPlayers.STREAM_CODEC));
+
+    public static final DataComponentType<ToolAttributes.FireReforging> FIRE_REFORGING =
+        register("reforging", b -> b.persistent(ToolAttributes.FireReforging.CODEC)
+            .networkSynchronized(ToolAttributes.FireReforging.STREAM_CODEC));
+
+    public static final DataComponentType<ToolAttributes.Tough> TOUGH =
+        register("tough", b -> b.persistent(ToolAttributes.Tough.CODEC)
+            .networkSynchronized(ToolAttributes.Tough.STREAM_CODEC));
+
+    public static final DataComponentType<ToolAttributes.Morph> MORPH =
+        register("morph", b -> b.persistent(ToolAttributes.Morph.CODEC)
+            .networkSynchronized(ToolAttributes.Morph.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();

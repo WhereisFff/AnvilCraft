@@ -2,9 +2,9 @@ package dev.dubhe.anvilcraft.api.tooltip;
 
 import com.google.common.collect.Maps;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.item.IFireReforging;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
@@ -100,8 +100,14 @@ public class ItemTooltipManager {
      */
     public static void addTooltip(ItemStack stack, List<Component> tooltip) {
         Item item = stack.getItem();
-        if (item instanceof IFireReforging) {
-            reforgingTooltip(tooltip);
+        if (stack.get(ModComponents.FIRE_REFORGING) != null) {
+            attributeTooltip("fire_reforging", tooltip);
+        }
+        if (stack.get(ModComponents.TOUGH) != null) {
+            attributeTooltip("tough", tooltip);
+        }
+        if (stack.get(ModComponents.MORPH) != null) {
+            attributeTooltip("morph", tooltip);
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));
@@ -123,7 +129,7 @@ public class ItemTooltipManager {
         return "tooltip.%s.item.%s".formatted(key.getNamespace(), key.getPath());
     }
 
-    private static void reforgingTooltip(List<Component> tooltip) {
+    private static void attributeTooltip(String attributeName, List<Component> tooltip) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
@@ -133,7 +139,7 @@ public class ItemTooltipManager {
         }
         tooltip.add(
             1 + i,
-            Component.translatable("item.anvilcraft.fire_reforging.tooltip").withStyle(ChatFormatting.GOLD)
+            Component.translatable("tooltip.anvilcraft.attribute.%s".formatted(attributeName)).withStyle(ChatFormatting.GOLD)
         );
     }
 }

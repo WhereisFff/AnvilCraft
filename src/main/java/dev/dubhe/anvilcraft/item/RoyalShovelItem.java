@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -32,6 +33,15 @@ public class RoyalShovelItem extends ShovelItem implements IInherentEnchantment 
         if (pContext.level() != null) {
             pTooltipComponents.addAll(this.getInherentEnchantmentsTooltip(pContext.level()));
         }
+    }
+
+    @Override
+    public ItemStack getDefaultInstance() {
+        ItemStack defaultInstance = super.getDefaultInstance();
+
+        defaultInstance.set(ModComponents.TOUGH, new ToolAttributes.Tough());
+
+        return defaultInstance;
     }
 
     @Override

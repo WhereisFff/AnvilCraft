@@ -13,7 +13,6 @@ public class OtherLang {
         provider.add("item.anvilcraft.inherent_enchantment.tooltip", "Inherent enchantments:");
         provider.add(
                 "item.anvilcraft.amethyst_pickaxe.tooltip", "Stone pickaxe quality, can mine iron ore, not diamonds!");
-        provider.add("item.anvilcraft.fire_reforging.tooltip", "Reforging: mending in fire or lava");
         provider.add("item.anvilcraft.comrade_amulet.tooltip", "Signed players:");
 
         provider.add("item.anvilcraft.geode.find", "Suspected amethyst geode, located %s");
@@ -42,5 +41,9 @@ public class OtherLang {
         provider.add("enchantment.anvilcraft.harvest", "Harvest");
         provider.add("death.attack.anvilcraft.laser", "%1$s was pierced by laser");
         provider.add("death.attack.anvilcraft.lost_in_time", "%1$s was lost in the river of time");
+
+        provider.add("tooltip.anvilcraft.attribute.fire_reforging", "Reforging: mending in fire or lava");
+        provider.add("tooltip.anvilcraft.attribute.tough", "Tough: make unbreaking enchantment stronger");
+        provider.add("tooltip.anvilcraft.attribute.morph", "Morph: press [%s] to switch enchantment space");
     }
 }
