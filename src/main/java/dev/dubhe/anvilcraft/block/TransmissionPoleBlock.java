@@ -4,7 +4,7 @@ import dev.dubhe.anvilcraft.api.IHasMultiBlock;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.block.entity.TransmissionPoleBlockEntity;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 
@@ -35,7 +35,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class TransmissionPoleBlock extends AbstractMultiplePartBlock<Vertical3PartHalf>
+public class TransmissionPoleBlock extends SimpleMultiPartBlock<Vertical3PartHalf>
     implements IHammerRemovable, IHasMultiBlock, EntityBlock {
     public static final EnumProperty<Vertical3PartHalf> HALF = EnumProperty.create("half", Vertical3PartHalf.class);
     public static final BooleanProperty OVERLOAD = IPowerComponent.OVERLOAD;

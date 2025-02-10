@@ -1,8 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
-import dev.dubhe.anvilcraft.block.state.IMultiplePartBlockState;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
+import dev.dubhe.anvilcraft.block.state.ISimpleMultiPartBlockState;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -15,18 +16,20 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import org.jetbrains.annotations.NotNull;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-public class AbstractMultiplePartBlockItem<P extends Enum<P> & IMultiplePartBlockState<P>> extends BlockItem {
-    private final AbstractMultiplePartBlock<P> block;
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class SimpleMultiPartBlockItem<P extends Enum<P> & ISimpleMultiPartBlockState<P>> extends BlockItem {
+    private final SimpleMultiPartBlock<P> block;
 
-    public AbstractMultiplePartBlockItem(AbstractMultiplePartBlock<P> block, Properties properties) {
+    public SimpleMultiPartBlockItem(SimpleMultiPartBlock<P> block, Properties properties) {
         super(block, properties);
         this.block = block;
     }
 
     @Override
-    protected boolean placeBlock(@NotNull BlockPlaceContext context, @NotNull BlockState state) {
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
         BlockPos pos = context.getClickedPos();
         Level level = context.getLevel();
         for (P part : this.block.getParts()) {
@@ -38,7 +41,7 @@ public class AbstractMultiplePartBlockItem<P extends Enum<P> & IMultiplePartBloc
         return super.placeBlock(context, state);
     }
 
-    private int getMaxOffsetDistance(@NotNull Direction clickedFace) {
+    private int getMaxOffsetDistance(Direction clickedFace) {
         Vec3i normal = clickedFace.getOpposite().getNormal();
         int i = 0;
         for (P part : this.block.getParts()) {
@@ -51,7 +54,7 @@ public class AbstractMultiplePartBlockItem<P extends Enum<P> & IMultiplePartBloc
     }
 
     @Override
-    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         InteractionResult result = super.useOn(context);
         Direction clickedFace = context.getClickedFace();
         if (result == InteractionResult.FAIL) {

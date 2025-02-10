@@ -1,7 +1,8 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.block.multipart.AbstractStateAddableMultiplePartBlock;
-import dev.dubhe.anvilcraft.block.state.IStateAddableMultiplePartBlockState;
+import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
+import dev.dubhe.anvilcraft.block.state.IFlexibleMultiPartBlockState;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -14,18 +15,21 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
-public class AbstractStateAddableMultiplePartBlockItem<P extends Enum<P> & IStateAddableMultiplePartBlockState<P, E>, T extends Property<E>, E extends Comparable<E>> extends BlockItem {
-    private final AbstractStateAddableMultiplePartBlock<P, T, E> block;
+import javax.annotation.ParametersAreNonnullByDefault;
 
-    public AbstractStateAddableMultiplePartBlockItem(AbstractStateAddableMultiplePartBlock<P, T, E> block, Properties properties) {
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class FlexibleMultiPartBlockItem<P extends Enum<P> & IFlexibleMultiPartBlockState<P, E>, T extends Property<E>, E extends Comparable<E>> extends BlockItem {
+    private final FlexibleMultiPartBlock<P, T, E> block;
+
+    public FlexibleMultiPartBlockItem(FlexibleMultiPartBlock<P, T, E> block, Properties properties) {
         super(block, properties);
         this.block = block;
     }
 
     @Override
-    protected boolean placeBlock(@NotNull BlockPlaceContext context, @NotNull BlockState state) {
+    protected boolean placeBlock(BlockPlaceContext context, BlockState state) {
         BlockPos pos = context.getClickedPos();
         Level level = context.getLevel();
         for (P part : this.block.getParts()) {
@@ -37,7 +41,7 @@ public class AbstractStateAddableMultiplePartBlockItem<P extends Enum<P> & IStat
         return super.placeBlock(context, state);
     }
 
-    private int getMaxOffsetDistance(@NotNull BlockState state, @NotNull Direction clickedFace) {
+    private int getMaxOffsetDistance(BlockState state, Direction clickedFace) {
         Vec3i normal = clickedFace.getOpposite().getNormal();
         int i = 0;
         for (P part : this.block.getParts()) {
@@ -50,7 +54,7 @@ public class AbstractStateAddableMultiplePartBlockItem<P extends Enum<P> & IStat
     }
 
     @Override
-    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         InteractionResult result = super.useOn(context);
         Direction clickedFace = context.getClickedFace();
         BlockState state = this.block.getPlacementState(new BlockPlaceContext(context));
@@ -71,7 +75,7 @@ public class AbstractStateAddableMultiplePartBlockItem<P extends Enum<P> & IStat
     }
 
     @Override
-    public boolean canPlace(BlockPlaceContext context, @NotNull BlockState state) {
+    public boolean canPlace(BlockPlaceContext context, BlockState state) {
         if (!block.hasEnoughSpace(state, context.getClickedPos(), context.getLevel())) return false;
         return super.canPlace(context, state);
     }

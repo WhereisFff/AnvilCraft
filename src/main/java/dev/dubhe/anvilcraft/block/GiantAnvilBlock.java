@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.event.anvil.GiantAnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
@@ -56,7 +56,7 @@ import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class GiantAnvilBlock extends AbstractMultiplePartBlock<Cube3x3PartHalf> implements Fallable, IHammerRemovable {
+public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> implements Fallable, IHammerRemovable {
     private static final Component CONTAINER_TITLE = Component.translatable("container.repair");
     public static final EnumProperty<Cube3x3PartHalf> HALF = EnumProperty.create("half", Cube3x3PartHalf.class);
     public static final EnumProperty<GiantAnvilCube> CUBE = EnumProperty.create("cube", GiantAnvilCube.class);

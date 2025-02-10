@@ -6,7 +6,7 @@ import net.minecraft.util.StringRepresentable;
 /**
  * 多方块方块状态
  */
-public interface IStateAddableMultiplePartBlockState<E, T extends Comparable<T>> extends StringRepresentable, Comparable<E> {
+public interface IFlexibleMultiPartBlockState<E, T extends Comparable<T>> extends StringRepresentable, Comparable<E> {
     int getOffsetX(T value);
 
     int getOffsetY(T value);

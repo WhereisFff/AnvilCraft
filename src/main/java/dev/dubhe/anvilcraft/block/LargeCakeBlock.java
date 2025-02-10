@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -35,7 +35,7 @@ import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class LargeCakeBlock extends AbstractMultiplePartBlock<Cube3x3PartHalf> {
+public class LargeCakeBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> {
     public static final EnumProperty<Cube3x3PartHalf> HALF = EnumProperty.create("half", Cube3x3PartHalf.class);
 
     protected static final VoxelShape BASE_ANGLE_NW = Stream.of(

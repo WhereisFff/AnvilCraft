@@ -7,7 +7,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.mixin.accessor.CropBlockAccessor;
 import dev.dubhe.anvilcraft.mixin.accessor.GrowingPlantAccessor;
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
@@ -188,9 +188,8 @@ public class BlockStateUtil {
             baseItem = ItemStack.EMPTY;
         } else if (state.hasProperty(BED_PART) && state.getValue(BED_PART) != BedPart.HEAD) {
             baseItem = ItemStack.EMPTY;
-        } else if (block instanceof AbstractMultiplePartBlock<?> multiplePartBlock &&
-            !state.getValue(multiplePartBlock.getPart()).getOffset()
-                .equals(multiplePartBlock.getMainPartOffset())) {
+        } else if (block instanceof AbstractMultiPartBlock<?> multiplePartBlock &&
+            !multiplePartBlock.isMainPart(state)) {
             baseItem = ItemStack.EMPTY;
         } else if (isMultifaceLike(block)) {
             long faceCount = PipeBlock.PROPERTY_BY_DIRECTION.values().stream()
@@ -203,8 +202,8 @@ public class BlockStateUtil {
         } else {
             ItemStack finalBaseItem = baseItem;
             state.getProperties().stream()
-                .filter(p -> p instanceof IntegerProperty)
-                .map(p -> (IntegerProperty) p)
+                .filter(IntegerProperty.class::isInstance)
+                .map(IntegerProperty.class::cast)
                 .filter(COUNT_PROPERTIES::contains)
                 .findFirst()
                 .ifPresent(p -> finalBaseItem.setCount(state.getValue(p)));

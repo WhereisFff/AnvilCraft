@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.entity.TeslaTowerBlockEntity;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import net.minecraft.core.BlockPos;
@@ -14,8 +14,8 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class TeslaTowerItem extends AbstractMultiplePartBlockItem<Vertical4PartHalf> {
-    public TeslaTowerItem(AbstractMultiplePartBlock<Vertical4PartHalf> block, Properties properties) {
+public class TeslaTowerItem extends SimpleMultiPartBlockItem<Vertical4PartHalf> {
+    public TeslaTowerItem(SimpleMultiPartBlock<Vertical4PartHalf> block, Properties properties) {
         super(block, properties);
     }
 

@@ -5,8 +5,8 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent.Switch;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
-import dev.dubhe.anvilcraft.block.multipart.AbstractStateAddableMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
+import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.AccelerationRingBlock;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
 import dev.dubhe.anvilcraft.block.ArrowBlock;
@@ -114,8 +114,8 @@ import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
-import dev.dubhe.anvilcraft.item.AbstractMultiplePartBlockItem;
-import dev.dubhe.anvilcraft.item.AbstractStateAddableMultiplePartBlockItem;
+import dev.dubhe.anvilcraft.item.SimpleMultiPartBlockItem;
+import dev.dubhe.anvilcraft.item.FlexibleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.CursedBlockItem;
 import dev.dubhe.anvilcraft.item.EndDustBlockItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
@@ -323,10 +323,10 @@ public class ModBlocks {
     public static final BlockEntry<GiantAnvilBlock> GIANT_ANVIL = REGISTRATE
         .block("giant_anvil", GiantAnvilBlock::new)
         .initialProperties(() -> Blocks.ANVIL)
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .properties(
             p -> p.noOcclusion().strength(4.0F).sound(SoundType.ANVIL).explosionResistance(1200))
-        .item(AbstractMultiplePartBlockItem<Cube3x3PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Cube3x3PartHalf>::new)
         .build()
         .blockstate((ctx, provider) -> {
         })
@@ -545,7 +545,7 @@ public class ModBlocks {
         }))
         .blockstate((ctx, provider) -> {
         })
-        .item(AbstractMultiplePartBlockItem<Vertical3PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Vertical3PartHalf>::new)
         .model((ctx, provider) -> {
         })
         .build()
@@ -567,12 +567,12 @@ public class ModBlocks {
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_BLOCK), AnvilCraftDatagen.has(Items.IRON_BLOCK))
                 .save(provider);
         })
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .register();
     public static final BlockEntry<? extends Block> REMOTE_TRANSMISSION_POLE = REGISTRATE
         .block("remote_transmission_pole", RemoteTransmissionPoleBlock::new)
         .initialProperties(ModBlocks.MAGNET_BLOCK)
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .properties(properties -> properties.noOcclusion().lightLevel(state -> {
             if (state.getValue(RemoteTransmissionPoleBlock.HALF) != Vertical4PartHalf.TOP) return 0;
             if (state.getValue(SWITCH) == Switch.OFF) return 0;
@@ -581,7 +581,7 @@ public class ModBlocks {
         }))
         .blockstate((ctx, provider) -> {
         })
-        .item(AbstractMultiplePartBlockItem<Vertical4PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Vertical4PartHalf>::new)
         .model((ctx, provider) -> {
         })
         .build()
@@ -607,7 +607,7 @@ public class ModBlocks {
     public static final BlockEntry<TeslaTowerBlock> TESLA_TOWER = REGISTRATE
         .block("tesla_tower", TeslaTowerBlock::new)
         .initialProperties(ModBlocks.MAGNET_BLOCK)
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .properties(properties -> properties.noOcclusion().lightLevel(state -> {
             if (state.getValue(TeslaTowerBlock.HALF) != Vertical4PartHalf.TOP) return 0;
             if (state.getValue(SWITCH) == Switch.OFF) return 0;
@@ -1253,8 +1253,8 @@ public class ModBlocks {
         .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate((ctx, provider) -> {
         })
-        .loot(AbstractMultiplePartBlock::loot)
-        .item(AbstractMultiplePartBlockItem<Vertical3PartHalf>::new)
+        .loot(SimpleMultiPartBlock::loot)
+        .item(SimpleMultiPartBlockItem<Vertical3PartHalf>::new)
         .model((ctx, provider) -> {
         })
         .build()
@@ -1497,9 +1497,9 @@ public class ModBlocks {
     public static final BlockEntry<AccelerationRingBlock> ACCELERATION_RING = REGISTRATE
         .block("acceleration_ring", AccelerationRingBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
-        .loot(AbstractStateAddableMultiplePartBlock::loot)
+        .loot(FlexibleMultiPartBlock::loot)
         .properties(BlockBehaviour.Properties::noOcclusion)
-        .item(AbstractStateAddableMultiplePartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
+        .item(FlexibleMultiPartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
         .build()
         .blockstate((ctx, provider) -> {
         })
@@ -2735,7 +2735,7 @@ public class ModBlocks {
                 .setRandomSequence(ResourceLocation.withDefaultNamespace("blocks/large_cake"));
             ctx.add(prov, builder);
         })
-        .item(AbstractMultiplePartBlockItem<Cube3x3PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Cube3x3PartHalf>::new)
         .tag(Tags.Items.FOODS,
             Tags.Items.FOODS_EDIBLE_WHEN_PLACED)
         .build()

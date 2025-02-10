@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.block;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.OverseerBlockEntity;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -34,7 +34,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class OverseerBlock
-    extends AbstractMultiplePartBlock<Vertical3PartHalf>
+    extends SimpleMultiPartBlock<Vertical3PartHalf>
     implements IHammerRemovable, IHasMultiBlock, EntityBlock {
     private static final VoxelShape OVERSEER_BASE =
         Shapes.or(Block.box(0, 0, 0, 16, 4, 16), Block.box(2, 8, 2, 14, 16, 14));
