@@ -403,8 +403,7 @@ public class ModItems {
                 .save(provider);
         })
         .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.SWORDS,
-             Tags.Items.MELEE_WEAPON_TOOLS)
+        .tag(ItemTags.SHOVELS)
         .register();
     public static final ItemEntry<MorphableHoeItem> MORPHABLE_HOE = REGISTRATE
         .item("morphable_hoe", MorphableHoeItem::new)
@@ -419,8 +418,7 @@ public class ModItems {
                 .save(provider);
         })
         .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.SWORDS,
-             Tags.Items.MELEE_WEAPON_TOOLS)
+        .tag(ItemTags.HOES)
         .register();
     public static final ItemEntry<MorphableSwordItem> MORPHABLE_SWORD = REGISTRATE
         .item("morphable_sword", MorphableSwordItem::new)

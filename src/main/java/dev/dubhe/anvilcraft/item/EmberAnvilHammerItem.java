@@ -17,7 +17,11 @@ public class EmberAnvilHammerItem extends AnvilHammerItem {
      * @param properties 物品属性
      */
     public EmberAnvilHammerItem(Properties properties) {
-        super(properties.fireResistant());
+        super(
+            properties.fireResistant()
+                .component(ModComponents.FIRE_REFORGING, ToolAttributes.FireReforging.INSTANCE)
+                .component(ModComponents.TOUGH, ToolAttributes.Tough.INSTANCE)
+        );
     }
 
     @Override
@@ -33,15 +37,5 @@ public class EmberAnvilHammerItem extends AnvilHammerItem {
     @Override
     protected float calculateFallDamageBonus(float fallDistance) {
         return Math.min(120, fallDistance * 2);
-    }
-
-    @Override
-    public ItemStack getDefaultInstance() {
-        ItemStack defaultInstance = super.getDefaultInstance();
-
-        defaultInstance.set(ModComponents.FIRE_REFORGING, new ToolAttributes.FireReforging());
-        defaultInstance.set(ModComponents.TOUGH, new ToolAttributes.Tough());
-
-        return defaultInstance;
     }
 }

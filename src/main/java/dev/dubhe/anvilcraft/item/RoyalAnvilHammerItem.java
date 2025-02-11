@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.item;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -17,7 +16,7 @@ public class RoyalAnvilHammerItem extends AnvilHammerItem {
      * @param properties 物品属性
      */
     public RoyalAnvilHammerItem(Properties properties) {
-        super(properties);
+        super(properties.component(ModComponents.TOUGH, ToolAttributes.Tough.INSTANCE));
     }
 
     @Override
@@ -33,14 +32,5 @@ public class RoyalAnvilHammerItem extends AnvilHammerItem {
     @Override
     protected float calculateFallDamageBonus(float fallDistance) {
         return Math.min(80, fallDistance * 2);
-    }
-
-    @Override
-    public ItemStack getDefaultInstance() {
-        ItemStack defaultInstance = super.getDefaultInstance();
-
-        defaultInstance.set(ModComponents.TOUGH, new ToolAttributes.Tough());
-
-        return defaultInstance;
     }
 }

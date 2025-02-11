@@ -15,17 +15,9 @@ public class MorphableHoeItem extends HoeItem {
             ModTiers.MORPHABLE,
             properties.fireResistant()
                 .attributes(HoeItem.createAttributes(ModTiers.MORPHABLE, 1, 0))
+                .component(ModComponents.FIRE_REFORGING, ToolAttributes.FireReforging.INSTANCE)
+                .component(ModComponents.TOUGH, ToolAttributes.Tough.INSTANCE)
+                .component(ModComponents.MORPH, ToolAttributes.Morph.INSTANCE)
         );
-    }
-
-    @Override
-    public ItemStack getDefaultInstance() {
-        ItemStack defaultInstance = super.getDefaultInstance();
-
-        defaultInstance.set(ModComponents.FIRE_REFORGING, new ToolAttributes.FireReforging());
-        defaultInstance.set(ModComponents.TOUGH, new ToolAttributes.Tough());
-        defaultInstance.set(ModComponents.MORPH, new ToolAttributes.Morph());
-
-        return defaultInstance;
     }
 }
