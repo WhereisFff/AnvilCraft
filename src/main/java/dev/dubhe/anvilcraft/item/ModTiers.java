@@ -28,7 +28,17 @@ public enum ModTiers implements Tier {
         22,
         () -> Ingredient.of(ModItems.EMBER_METAL_INGOT),
         ModBlockTags.INCORRECT_FOR_EMBER_TOOL
-    );
+    ),
+    MORPHABLE(
+        2031,
+        10.0f,
+        1.0f,
+        22,
+        () -> Ingredient.of(ModItems.MORPHABLE_POLYMER),
+        ModBlockTags.INCORRECT_FOR_MORPHABLE_TOOL
+    ),
+    ;
+
     private final int uses;
     private final float speed;
     private final float damage;

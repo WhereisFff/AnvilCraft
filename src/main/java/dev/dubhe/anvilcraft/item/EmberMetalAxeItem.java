@@ -27,7 +27,7 @@ public class EmberMetalAxeItem extends AxeItem implements IInherentEnchantment {
         super(
             ModTiers.EMBER_METAL,
             properties.fireResistant()
-                .attributes(AxeItem.createAttributes(ModTiers.AMETHYST, 10, -3f))
+                .attributes(AxeItem.createAttributes(ModTiers.EMBER_METAL, 10, -3f))
         );
     }
 

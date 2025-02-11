@@ -70,6 +70,7 @@ public class ModBlockTags {
 
     public static final TagKey<Block> INCORRECT_FOR_AMETHYST_TOOL = bind("incorrect_for_amethyst_tool");
     public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
+    public static final TagKey<Block> INCORRECT_FOR_MORPHABLE_TOOL = bind("incorrect_for_morphable_tool");
 
     //mekanism tags
     public static final TagKey<Block> MEKANISM_CARDBOARD_BOX_BLACKLIST = bindMekanism("cardboard_blacklist");

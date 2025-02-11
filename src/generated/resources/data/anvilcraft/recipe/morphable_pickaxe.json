@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "A": {
+      "item": "anvilcraft:morphable_polymer"
+    },
+    "B": {
+      "item": "minecraft:stick"
+    }
+  },
+  "pattern": [
+    "AAA",
+    " B ",
+    " B "
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:morphable_pickaxe"
+  }
+}

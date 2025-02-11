@@ -4,7 +4,6 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
-import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
@@ -26,10 +25,14 @@ import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmberMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.MorphableAxeItem;
+import dev.dubhe.anvilcraft.item.MorphableHoeItem;
+import dev.dubhe.anvilcraft.item.MorphablePickaxeItem;
+import dev.dubhe.anvilcraft.item.MorphableShovelItem;
+import dev.dubhe.anvilcraft.item.MorphableSwordItem;
 import dev.dubhe.anvilcraft.item.amulet.AbstractAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.AnvilAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.CatAmuletItem;
-import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.DogAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.EmeraldAmuletItem;
@@ -79,11 +82,7 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
-
-import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
@@ -357,6 +356,87 @@ public class ModItems {
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.SWORDS,
             Tags.Items.MELEE_WEAPON_TOOLS)
+        .register();
+    public static final ItemEntry<MorphablePickaxeItem> MORPHABLE_PICKAXE = REGISTRATE
+        .item("morphable_pickaxe", MorphablePickaxeItem::new)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
+                .pattern("AAA")
+                .pattern(" B ")
+                .pattern(" B ")
+                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('B', Items.STICK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .save(provider);
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.PICKAXES,
+             ModItemTags.EXPLOSION_PROOF,
+             Tags.Items.MINING_TOOL_TOOLS)
+        .register();
+    public static final ItemEntry<MorphableAxeItem> MORPHABLE_AXE = REGISTRATE
+        .item("morphable_axe", MorphableAxeItem::new)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
+                .pattern("AA ")
+                .pattern("AB ")
+                .pattern(" B ")
+                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('B', Items.STICK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .save(provider);
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.AXES,
+             Tags.Items.MELEE_WEAPON_TOOLS)
+        .register();
+    public static final ItemEntry<MorphableShovelItem> MORPHABLE_SHOVEL = REGISTRATE
+        .item("morphable_shovel", MorphableShovelItem::new)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
+                .pattern(" A ")
+                .pattern(" B ")
+                .pattern(" B ")
+                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('B', Items.STICK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .save(provider);
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.SWORDS,
+             Tags.Items.MELEE_WEAPON_TOOLS)
+        .register();
+    public static final ItemEntry<MorphableHoeItem> MORPHABLE_HOE = REGISTRATE
+        .item("morphable_hoe", MorphableHoeItem::new)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
+                .pattern("AA ")
+                .pattern(" B ")
+                .pattern(" B ")
+                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('B', Items.STICK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .save(provider);
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.SWORDS,
+             Tags.Items.MELEE_WEAPON_TOOLS)
+        .register();
+    public static final ItemEntry<MorphableSwordItem> MORPHABLE_SWORD = REGISTRATE
+        .item("morphable_sword", MorphableSwordItem::new)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
+                .pattern(" A ")
+                .pattern(" A ")
+                .pattern(" B ")
+                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('B', Items.STICK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .save(provider);
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.SWORDS,
+             Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<AnvilHammerItem> ANVIL_HAMMER = REGISTRATE
         .item("anvil_hammer", AnvilHammerItem::new)
@@ -1578,6 +1658,10 @@ public class ModItems {
                     AnvilCraftDatagen.has(ModBlocks.EARTH_CORE_SHARD_BLOCK))
                 .save(provider);
         })
+        .register();
+    public static final ItemEntry<Item> MORPHABLE_POLYMER = REGISTRATE
+        .item("morphable_polymer", Item::new)
+        .initialProperties(() -> new Item.Properties().fireResistant())
         .register();
 
     public static final ItemEntry<? extends Item> EMBER_METAL_INGOT = REGISTRATE
