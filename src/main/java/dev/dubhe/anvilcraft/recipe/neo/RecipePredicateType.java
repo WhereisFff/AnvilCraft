@@ -7,7 +7,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public interface RecipePredicateType<T extends RecipePredicate> {
+public interface RecipePredicateType<T extends RecipePredicate<T>> {
     default ResourceLocation getId() {
         return ModRegistries.BuiltIn.RECIPE_PREDICATE.getKey(this);
     }
@@ -16,7 +16,7 @@ public interface RecipePredicateType<T extends RecipePredicate> {
 
     @NotNull StreamCodec<? super ByteBuf, T> streamCodec();
 
-    static <T extends RecipePredicate> @NotNull RecipePredicateType<T> of(@NotNull Codec<T> codec, @NotNull StreamCodec<? super ByteBuf, T> streamCodec) {
+    static <T extends RecipePredicate<T>> @NotNull RecipePredicateType<T> of(@NotNull Codec<T> codec, @NotNull StreamCodec<? super ByteBuf, T> streamCodec) {
         return new RecipePredicateType<>() {
             @Override
             public @NotNull Codec<T> codec() {

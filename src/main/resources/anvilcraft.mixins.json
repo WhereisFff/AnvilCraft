@@ -23,6 +23,7 @@
     "InventoryMixin",
     "ItemEntityMixin",
     "LivingEntityMixin",
+    "MinecraftServerMixin",
     "PhantomGoalMixin",
     "PistonBaseBlockMixin",
     "PistonMovingBlockEntityMixin",
