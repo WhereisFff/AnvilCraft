@@ -45,5 +45,8 @@ public class OtherLang {
         provider.add("tooltip.anvilcraft.attribute.fire_reforging", "Reforging: mending in fire or lava");
         provider.add("tooltip.anvilcraft.attribute.tough", "Tough: make unbreaking enchantment stronger");
         provider.add("tooltip.anvilcraft.attribute.morph", "Morph: press [%s] to switch enchantment space");
+
+        provider.add("key.categories.anvilcraft", "AnvilCraft");
+        provider.add("key.anvilcraft.change_enchantment_space", "Change Enchantment Space");
     }
 }

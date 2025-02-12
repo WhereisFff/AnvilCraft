@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.api.tooltip;
 
 import com.google.common.collect.Maps;
+import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
@@ -107,7 +108,7 @@ public class ItemTooltipManager {
             attributeTooltip("tough", tooltip);
         }
         if (stack.get(ModComponents.MORPH) != null) {
-            attributeTooltip("morph", tooltip);
+            attributeTooltip("morph", tooltip, ModKeyMappings.CHANGE_ENCHANTMENT_SPACE.get().getKey().getDisplayName());
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));
@@ -140,6 +141,19 @@ public class ItemTooltipManager {
         tooltip.add(
             1 + i,
             Component.translatable("tooltip.anvilcraft.attribute.%s".formatted(attributeName)).withStyle(ChatFormatting.GOLD)
+        );
+    }
+    private static void attributeTooltip(String attributeName, List<Component> tooltip, Object... args) {
+        int i = 0;
+        for (int j = 0; j < tooltip.size(); j++) {
+            if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
+                i = j;
+                break;
+            }
+        }
+        tooltip.add(
+            1 + i,
+            Component.translatable("tooltip.anvilcraft.attribute.%s".formatted(attributeName), args).withStyle(ChatFormatting.GOLD)
         );
     }
 }

@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.event.ClientBlockEventListener;
 import dev.dubhe.anvilcraft.client.event.GuiLayerRegistrationEventListener;
 import dev.dubhe.anvilcraft.client.event.HammerEffectRenderEventListener;
+import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.client.init.ModShaders;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 
@@ -29,6 +30,7 @@ public class AnvilCraftClient {
             (c, s) -> AutoConfig.getConfigScreen(AnvilCraftConfig.class, s).get()
         );
         modBus.addListener(AnvilCraftClient::registerClientFluidExtensions);
+        modBus.addListener(ModKeyMappings::register);
         modBus.addListener(ModShaders::register);
         ModInspectionClient.initializeClient();
     }

@@ -2,6 +2,8 @@ package dev.dubhe.anvilcraft.client.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
+import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
+import dev.dubhe.anvilcraft.network.ChangeEnchantmentSpacePacket;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
 
 import net.minecraft.client.Minecraft;
@@ -10,7 +12,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
 public class ClientEventListener {
@@ -31,5 +35,12 @@ public class ClientEventListener {
     @SubscribeEvent
     public static void onClientPlayerDisconnect(ClientPlayerNetworkEvent.LoggingOut event) {
         SoundHelper.INSTANCE.clear();
+    }
+
+    @SubscribeEvent
+    public static void onKeyPressed(ClientTickEvent.Post event) {
+        while (ModKeyMappings.CHANGE_ENCHANTMENT_SPACE.get().consumeClick()) {
+            PacketDistributor.sendToServer(new ChangeEnchantmentSpacePacket());
+        }
     }
 }
