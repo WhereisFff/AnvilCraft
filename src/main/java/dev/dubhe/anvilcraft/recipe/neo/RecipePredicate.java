@@ -11,4 +11,19 @@ public interface RecipePredicate<T extends RecipePredicate<T>> extends Predicate
     @Override
     default void accept(InWorldRecipeContext inWorldRecipeContext) {
     }
+
+    default void push(InWorldRecipeContext inWorldRecipeContext) {
+    }
+
+    default void pop(InWorldRecipeContext inWorldRecipeContext) {
+    }
+
+    default ConsumeType getConsumeType() {
+        return ConsumeType.NON_CONSUMING;
+    }
+
+    enum ConsumeType {
+        CONSUMABLE,
+        NON_CONSUMING
+    }
 }

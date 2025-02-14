@@ -52,21 +52,28 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, Comparable<I
     public boolean matches(@NotNull InWorldRecipeContext inWorldRecipeContext, @NotNull Level level) {
         int count = 0;
         for (RecipePredicate<?> predicate : predicates) {
-            if (predicate.test(inWorldRecipeContext)) count++;
+            if (predicate.getConsumeType() != RecipePredicate.ConsumeType.NON_CONSUMING) continue;
+            if (predicate.test(inWorldRecipeContext)) {
+                inWorldRecipeContext.pass(predicate);
+                count++;
+            }
         }
-        if (count != predicates.size()) return false;
-        for (RecipeOutcome<?> outcome : outcomes) {
-            outcome.accept(inWorldRecipeContext);
+        for (RecipePredicate<?> predicate : predicates) {
+            if (predicate.getConsumeType() != RecipePredicate.ConsumeType.CONSUMABLE) continue;
+            if (predicate.test(inWorldRecipeContext)) {
+                inWorldRecipeContext.pass(predicate);
+                count++;
+            }
         }
-        return true;
+        return count == predicates.size();
     }
 
     @Override
     public @NotNull ItemStack assemble(@NotNull InWorldRecipeContext inWorldRecipeContext, HolderLookup.@NotNull Provider provider) {
         if (!this.matches(inWorldRecipeContext, inWorldRecipeContext.getLevel())) return ItemStack.EMPTY;
-        for (RecipeOutcome<?> outcome : outcomes) {
-            outcome.accept(inWorldRecipeContext);
-        }
+        for (RecipePredicate<?> predicate : inWorldRecipeContext.getPassed()) predicate.accept(inWorldRecipeContext);
+        for (RecipeOutcome<?> outcome : outcomes) outcome.accept(inWorldRecipeContext);
+        inWorldRecipeContext.reset();
         return this.icon.getFirst().copy();
     }
 

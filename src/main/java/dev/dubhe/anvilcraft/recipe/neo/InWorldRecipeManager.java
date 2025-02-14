@@ -27,6 +27,18 @@ public class InWorldRecipeManager {
         return recipes.getOrDefault(recipeTrigger, Set.of());
     }
 
+    public void trigger(RecipeTrigger recipeTrigger, InWorldRecipeContext context) {
+        Set<InWorldRecipe> recipes = getRecipes(recipeTrigger);
+        for (InWorldRecipe recipe : recipes) {
+            int efficiency = AnvilCraft.config.anvilEfficiency;
+            while (efficiency > 0 && recipe.matches(context, context.getLevel())) {
+                efficiency--;
+                recipe.assemble(context, context.getLevel().registryAccess());
+            }
+            if (efficiency != AnvilCraft.config.anvilEfficiency) break;
+        }
+    }
+
     public void addRecipe(@NotNull InWorldRecipe recipe) {
         recipes.computeIfAbsent(recipe.getTrigger(), k -> new TreeSet<>()).add(recipe);
     }

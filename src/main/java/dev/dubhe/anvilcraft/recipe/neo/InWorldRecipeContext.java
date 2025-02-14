@@ -10,7 +10,9 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class InWorldRecipeContext implements RecipeInput {
@@ -23,6 +25,8 @@ public class InWorldRecipeContext implements RecipeInput {
     @Getter
     private final Vec3 triggerPos;
     private final Map<ResourceLocation, Object> data = new HashMap<>();
+    @Getter
+    private final List<RecipePredicate<?>> passed = new ArrayList<>();
 
     private InWorldRecipeContext(MinecraftServer server, ServerLevel level, Entity triggerEntity, Vec3 triggerPos) {
         this.server = server;
@@ -53,6 +57,15 @@ public class InWorldRecipeContext implements RecipeInput {
         return ItemStack.EMPTY;
     }
 
+    public void pass(RecipePredicate<?> predicate) {
+        this.passed.add(predicate);
+        predicate.push(this);
+    }
+
+    public void pop() {
+        this.passed.removeLast().pop(this);
+    }
+
     @Override
     public int size() {
         return 0;
@@ -61,5 +74,8 @@ public class InWorldRecipeContext implements RecipeInput {
     @Override
     public boolean isEmpty() {
         return true;
+    }
+
+    public void reset() {
     }
 }

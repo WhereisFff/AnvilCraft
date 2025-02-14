@@ -19,16 +19,24 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
-public record HasItem(
-    Vec3 pos,
-    Vec3 range,
-    Optional<HolderSet<Item>> items,
-    MinMaxBounds.Ints count,
-    DataComponentPredicate components,
-    Map<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates
-) implements RecipePredicate<HasItem> {
+public class HasItem implements RecipePredicate<HasItem> {
+    protected final Vec3 pos;
+    protected final Vec3 range;
+    protected final HolderSet<Item> items;
+    protected final MinMaxBounds.Ints count;
+    protected final DataComponentPredicate components;
+    protected final Map<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates;
+
+    public HasItem(Vec3 pos, Vec3 range, HolderSet<Item> items, MinMaxBounds.Ints count, DataComponentPredicate components, Map<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates) {
+        this.pos = pos;
+        this.range = range;
+        this.items = items;
+        this.count = count;
+        this.components = components;
+        this.subPredicates = subPredicates;
+    }
+
     @Override
     public @NotNull RecipePredicateType<HasItem> getType() {
         return null;
@@ -47,7 +55,7 @@ public record HasItem(
     }
 
     public boolean test(@NotNull ItemStack stack) {
-        if (this.items.isPresent() && !stack.is(this.items.get())) {
+        if (!stack.is(this.items)) {
             return false;
         } else if (!this.components.test(stack)) {
             return false;
