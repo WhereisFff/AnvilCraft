@@ -13,6 +13,7 @@ import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.AmuletUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -77,17 +78,7 @@ public class PlayerEventListener {
     public static void onPlayerUsingTotem(LivingUseTotemEvent event) {
         if (event.getEntity() instanceof ServerPlayer player && player.getInventory().contains(ModItems.AMULET_BOX.asStack())) {
             Inventory inventory = player.getInventory();
-
-            boolean isConsumeAmuletBox;
-            if (inventory.contains(Items.TOTEM_OF_UNDYING.getDefaultInstance())) {
-                inventory.removeItem(Items.TOTEM_OF_UNDYING.getDefaultInstance());
-                isConsumeAmuletBox = false;
-            } else {
-                inventory.removeItem(ModItems.AMULET_BOX.asStack());
-                isConsumeAmuletBox = true;
-            }
-
-            AmuletUtil.startRaffle(player, event.getSource(), isConsumeAmuletBox);
+            AmuletUtil.startRaffle(player, event.getSource(), !inventory.contains(Items.TOTEM_OF_UNDYING.getDefaultInstance()));
         }
     }
 
@@ -103,6 +94,14 @@ public class PlayerEventListener {
                 || (source.type().equals(sources.damageTypes.get(DamageTypes.FALLING_BLOCK)) && source.getEntity() instanceof FallingGiantAnvilEntity)
                 || Optional.ofNullable(source.getWeaponItem()).filter(item -> item.is(ModItemTags.ANVIL_HAMMER)).isPresent())
                 && player.getData(ModDataAttachments.STEEL_HEAD)
+            ) {
+                event.getContainer().setNewDamage(0);
+            }
+
+            if (
+                Optional.ofNullable(sources.damageTypes.getKey(source.type()))
+                    .orElse(ResourceLocation.fromNamespaceAndPath("minecraft", "empty")).getNamespace().contains("create")
+                && player.getData(ModDataAttachments.CREATE_MASTER)
             ) {
                 event.getContainer().setNewDamage(0);
             }

@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.AMULET_COUNT;
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.AMULET_MAX;
+import static dev.dubhe.anvilcraft.init.ModDataAttachments.CREATE_MASTER;
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.DISCOUNT_RATE;
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.IMMUNE_TO_LIGHTNING;
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.NO_FALL_DAMAGE;
@@ -57,6 +58,9 @@ public abstract class AbstractAmuletItem extends Item {
         }
         if (entity.hasData(STEEL_HEAD)) {
             entity.setData(STEEL_HEAD, false);
+        }
+        if (entity.hasData(CREATE_MASTER)) {
+            entity.setData(CREATE_MASTER, false);
         }
         if (entity.hasData(SCARE_ENTITIES)) {
             CompoundTag root = entity.getData(ModDataAttachments.SCARE_ENTITIES);

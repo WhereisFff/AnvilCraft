@@ -7,6 +7,7 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.integration.create.CreateIntegration;
 import dev.dubhe.anvilcraft.item.AmethystAxeItem;
 import dev.dubhe.anvilcraft.item.AmethystHoeItem;
 import dev.dubhe.anvilcraft.item.AmethystPickaxeItem;
@@ -30,6 +31,7 @@ import dev.dubhe.anvilcraft.item.IonocraftBackpackItem;
 import dev.dubhe.anvilcraft.item.amulet.AbstractAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.AnvilAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.CatAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.DogAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.EmeraldAmuletItem;
@@ -80,9 +82,13 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.BooleanSupplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
@@ -535,6 +541,17 @@ public class ModItems {
             })
             .register();
     }
+    public static <T extends AbstractAmuletItem> @Nullable ItemEntry<T> createAmuletItem(
+        String type, NonNullFunction<Item.Properties, T> factory,
+        NonNullConsumer<JewelCraftingRecipe.Builder> builderConsumer,
+        BooleanSupplier loadCondition
+    ) {
+        if (loadCondition.getAsBoolean()) {
+            return createAmuletItem(type, factory, builderConsumer);
+        } else {
+            return null;
+        }
+    }
 
     public static final ItemEntry<EmeraldAmuletItem> EMERALD_AMULET =
         createAmuletItem(
@@ -561,11 +578,12 @@ public class ModItems {
             "anvil", AnvilAmuletItem::new,
             builder -> builder.requires(Items.ANVIL)
         );
-    //public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET =
-    //    createAmuletItem(
-    //        "cogwheel", CogwheelAmuletItem::new,
-    //        builder -> builder.requires(AllItems.PRECISION_MECHANISM, 16)
-    //    );
+    public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET =
+        createAmuletItem(
+            "cogwheel", CogwheelAmuletItem::new,
+            builder -> builder.requires(CreateIntegration.PRECISION_MECHANISM, 16),
+            () -> LoadingModList.get().getModFileById("create") != null
+        );
     public static final ItemEntry<ComradeAmuletItem> COMRADE_AMULET =
         createAmuletItem(
             "comrade", ComradeAmuletItem::new,

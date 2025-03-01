@@ -39,8 +39,8 @@ public class ModDataAttachments {
     public static final Supplier<AttachmentType<Boolean>> STEEL_HEAD = ATTACHMENT_TYPES.register(
         "steel_head", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
 
-    //public static final Supplier<AttachmentType<Boolean>> CREATE_MASTER = ATTACHMENT_TYPES.register(
-    //    "create_master", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+    public static final Supplier<AttachmentType<Boolean>> CREATE_MASTER = ATTACHMENT_TYPES.register(
+        "create_master", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
 
     public static final Supplier<AttachmentType<CompoundTag>> AMULET_RAFFLE_PROBABILITY = ATTACHMENT_TYPES.register(
         "amulet_raffle_probability", () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build());

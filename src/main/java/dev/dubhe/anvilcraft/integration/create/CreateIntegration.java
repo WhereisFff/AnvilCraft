@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.integration.create;
 
+import com.simibubi.create.AllItems;
 import com.simibubi.create.api.boiler.BoilerHeater;
 import com.simibubi.create.api.registry.SimpleRegistry;
+import com.tterrag.registrate.util.entry.ItemEntry;
 import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.block.GlowingMetalBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
@@ -9,6 +11,7 @@ import dev.dubhe.anvilcraft.block.IncandescentMetalBlock;
 import dev.dubhe.anvilcraft.block.RedhotMetalBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,4 +62,6 @@ public class CreateIntegration {
             return this.level;
         }
     }
+
+    public static final ItemEntry<Item> PRECISION_MECHANISM = AllItems.PRECISION_MECHANISM;
 }

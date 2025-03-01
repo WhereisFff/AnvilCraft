@@ -17,10 +17,12 @@ import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.neoforged.fml.loading.LoadingModList;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiPredicate;
 
@@ -60,19 +62,12 @@ public class AmuletUtil {
                 .isPresent(),
             ModItems.ANVIL_AMULET
         ),
-        //COGWHEEL(
-        //    "cogwheel", (sources, source) ->
-        //    source.type().equals(sources.damageTypes.get(AllDamageTypes.CRUSH))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.CUCKOO_SURPRISE))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.FAN_FIRE))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.FAN_LAVA))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.DRILL))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.ROLLER))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.SAW))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.POTATO_CANNON))
-        //    || source.type().equals(sources.damageTypes.get(AllDamageTypes.RUN_OVER)),
-        //    ModItems.COGWHEEL_AMULET
-        //),
+        COGWHEEL(
+            "cogwheel", (sources, source) ->
+            LoadingModList.get().getModFileById("create") != null
+            || Objects.requireNonNull(sources.damageTypes.getKey(source.type())).getNamespace().contains("create"),
+            ModItems.COGWHEEL_AMULET
+        ),
         COMRADE(
             "comrade", (sources, source) -> {
                 if (source.getEntity() instanceof Player murder && source.getDirectEntity() instanceof Player victim) {
@@ -183,7 +178,11 @@ public class AmuletUtil {
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean hasAmuletInInventory(Player player, Type type) {
-        return player.getInventory().hasAnyOf(Collections.singleton(type.getEntry().asItem()));
+        try {
+            return player.getInventory().hasAnyOf(Collections.singleton(Objects.requireNonNull(type.getEntry()).asItem()));
+        } catch (NullPointerException ignored) {
+            return false;
+        }
     }
 
     public static void startRaffle(ServerPlayer player, DamageSource source, boolean isConsumeAmuletBox) {
@@ -198,7 +197,10 @@ public class AmuletUtil {
                 player.getInventory().add(type.getEntry().asStack());
             }
         } else {
-            AmuletUtil.setRaffleProbability(player, source, value -> Math.min(value + 5, 50));
+            AmuletUtil.setRaffleProbability(
+                player, source,
+                value -> Math.min(value + (isConsumeAmuletBox ? 20 : 5), 50)
+            );
         }
     }
 }

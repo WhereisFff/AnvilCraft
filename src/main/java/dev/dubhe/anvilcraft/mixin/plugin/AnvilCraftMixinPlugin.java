@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     private static boolean hasZetaPiston = false;
-    private static final boolean hasCreate = false;
+    private static boolean hasCreate = false;
     private static boolean hasReiScreen = false;
 
     private boolean isLoaded(String clazz) {
@@ -26,6 +26,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
             != null;
         hasZetaPiston = this.isLoaded("org/violetmoon/zeta/piston/ZetaPistonStructureResolver.class");
         hasReiScreen = this.isLoaded("me/shedaniel/rei/impl/client/gui/screen/DefaultDisplayViewingScreen.class");
+        hasCreate = this.isLoaded("com/simibubi/create/Create");
     }
 
     @Override

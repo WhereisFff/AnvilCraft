@@ -17,6 +17,7 @@ lombok = "8.7.1"
 machete = "1.+"
 anvillib = "1.1.0+build.97"
 curios = "9.0.15+1.21.1"
+create = "1.21.1-6.0.0"
 
 [libraries]
 neoForge = { group = "net.neoforged", name = "neoforge", version.ref = "neoForge" }
@@ -35,6 +36,7 @@ kubejs = { group = "dev.latvian.mods", name = "kubejs-neoforge", version.ref = "
 patchouli = { group = "vazkii.patchouli", name = "Patchouli", version.ref = "patchouli" }
 anvillib = { group = "dev.anvilcraft.lib", name = "anvillib-neoforge-1.21.1", version.ref = "anvillib" }
 curios = { group = "top.theillusivec4.curios", name = "curios-neoforge", version.ref = "curios" }
+create = { group = "maven.modrinth", name = "create", version.ref = "create" }
 
 
 [plugins]
