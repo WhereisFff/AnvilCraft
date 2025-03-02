@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.event.anvil.GiantAnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
@@ -357,7 +358,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
     }
 
     protected void falling(FallingBlockEntity entity) {
-        entity.setHurtsEntities(10.0F, 40);
+        entity.setHurtsEntities(10.0F, AnvilCraft.config.giantAnvilFallDamageMax);
     }
 
 

@@ -149,6 +149,11 @@ public class AnvilCraftConfig implements ConfigData {
     @Comment("Iono Craft Backpack Max Flight Time in ticks")
     public int ionoCraftBackpackMaxFlightTime = 1200 * 20;
 
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 100, min = 0)
+    @Comment("Giant anvil max fall damage")
+    public int giantAnvilFallDamageMax = 40;
+
     public static class PowerConverter implements ConfigData {
         @Comment("The working interval of power converters")
         @ConfigEntry.Gui.Tooltip
