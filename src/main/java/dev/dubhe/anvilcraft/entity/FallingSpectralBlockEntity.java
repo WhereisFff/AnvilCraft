@@ -165,6 +165,7 @@ public class FallingSpectralBlockEntity extends FallingBlockEntity {
             || blockState.getBlock() instanceof TransparentBlock
             || blockState.canBeReplaced()
             || !blockState.getBlock().properties().hasCollision
+            || blockState.is(BlockTags.LEAVES)
         ) && !(blockState.getBlock() instanceof SpectralAnvilBlock);
     }
 
