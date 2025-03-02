@@ -105,6 +105,11 @@ public class BlockTagLoader {
             .add(ModBlocks.HEATER.getKey())
             .add(ModBlocks.CORRUPTED_BEACON.getKey());
 
+        provider.addTag(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)
+            .addTag(Tags.Blocks.SANDS)
+            .addTag(Tags.Blocks.GRAVELS)
+            .add();
+
         provider.addTag(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
             .add(findResourceKey(Blocks.STONE))
             .add(findResourceKey(Blocks.DEEPSLATE))
