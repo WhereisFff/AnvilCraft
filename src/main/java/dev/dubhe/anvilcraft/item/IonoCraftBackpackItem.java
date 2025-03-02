@@ -44,7 +44,7 @@ import java.util.function.Function;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class IonoCraftBackpackItem extends ArmorItem {
+public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarriedAware{
     public static final DynamicPowerComponent.PowerConsumption CONSUMPTION = new DynamicPowerComponent.PowerConsumption(64);
 
     public static final ResourceLocation TEXTURE = AnvilCraft.of("textures/entity/equipment/ionocraft_backpack.png");
@@ -90,7 +90,8 @@ public class IonoCraftBackpackItem extends ArmorItem {
         if (!(entity instanceof ServerPlayer serverPlayer)) return;
         IDynamicPowerComponentHolder holder = IDynamicPowerComponentHolder.of(serverPlayer);
         DynamicPowerComponent powerComponent = holder.anvilCraft$getPowerComponent();
-        if (getByPlayer(serverPlayer) != stack) {
+        ItemStack equipped = getByPlayer(serverPlayer);
+        if (equipped != stack && equipped.isEmpty()) {
             powerComponent.getPowerConsumptions().remove(CONSUMPTION);
             AttributeInstance instance = serverPlayer.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
             if (instance.hasModifier(CREATIVE_FLIGHT_ID)) {
@@ -161,9 +162,11 @@ public class IonoCraftBackpackItem extends ArmorItem {
     }
 
     public static ItemStack getByPlayer(Player player) {
-        for (var provider : STACK_PROVIDERS) {
-            var stack = provider.apply(player);
-            if (!stack.isEmpty()) return stack;
+        for (Function<Player, ItemStack> provider : STACK_PROVIDERS) {
+            ItemStack stack = provider.apply(player);
+            if (stack.is(ModItems.IONOCRAFT_BACKPACK)) {
+                return stack;
+            }
         }
         return ItemStack.EMPTY;
     }
@@ -188,6 +191,14 @@ public class IonoCraftBackpackItem extends ArmorItem {
                 }
                 IonoCraftBackpackItem.setFlightTime(itemStack, flightTime);
             }
+        }
+    }
+
+    @Override
+    public void onCarriedUpdate(ItemStack itemStack, ServerPlayer serverPlayer) {
+        AttributeInstance instance = serverPlayer.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
+        if (instance.hasModifier(CREATIVE_FLIGHT_ID)) {
+            instance.removeModifier(CREATIVE_FLIGHT);
         }
     }
 }

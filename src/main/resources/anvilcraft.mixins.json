@@ -29,6 +29,7 @@
     "PistonStructureResolverMixin",
     "PlayerHitEntityMixin",
     "RecipeManagerMixin",
+    "ServerGamePacketListenerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "SkeletonMixin",

@@ -117,5 +117,7 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.tesla_tower.filter.is_entity_id", "Entity Filter");
         provider.add("screen.anvilcraft.tesla_tower.filter.is_baby_friendly", "Baby Friendly Entity Filter");
         provider.add("screen.anvilcraft.tesla_tower.filter.has_custom_name", "Custom Named Entity Filter");
+
+        provider.add("hud.anvilcraft.ionocraft_backpack_power", "Ionocraft Backpack Power: %d%%");
     }
 }
