@@ -7,7 +7,6 @@ import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
-import dev.dubhe.anvilcraft.integration.create.CreateIntegration;
 import dev.dubhe.anvilcraft.item.AmethystAxeItem;
 import dev.dubhe.anvilcraft.item.AmethystHoeItem;
 import dev.dubhe.anvilcraft.item.AmethystPickaxeItem;
@@ -59,6 +58,7 @@ import dev.dubhe.anvilcraft.item.amulet.SapphireAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SilenceAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.TopazAmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import dev.dubhe.anvilcraft.util.CastUtil;
 import dev.dubhe.anvilcraft.util.ModelProviderUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -88,7 +88,6 @@ import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
 
 import java.lang.reflect.Field;
-import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
@@ -574,7 +573,7 @@ public class ModItems {
             try {
                 Class<?> createIntegration = Class.forName("dev.dubhe.anvilcraft.integration.create.CreateIntegration");
                 Field cogwheelAmuletEntry = createIntegration.getField("COGWHEEL_AMULET");
-                cogwheelAmulet = (ItemEntry<CogwheelAmuletItem>) cogwheelAmuletEntry.get(null);
+                cogwheelAmulet = CastUtil.cast(cogwheelAmuletEntry.get(null));
             } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException ignored) {
                 cogwheelAmulet = null;
             }
