@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.ZOMBIFICATED_BY_CURSE;
 
 @Mixin(AbstractPiglin.class)
-public class AbstractPiglinMixin {
+abstract class AbstractPiglinMixin {
 
     @WrapOperation(
         method = "finishConversion",
