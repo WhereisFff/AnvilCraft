@@ -27,12 +27,12 @@ import java.util.function.BiFunction;
  * 溜槽屏幕基类
  */
 public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends BaseChuteMenu<T>>
-        extends BaseMachineScreen<M> implements IFilterScreen<M> {
+    extends BaseMachineScreen<M> implements IFilterScreen<M> {
     private static final ResourceLocation CONTAINER_LOCATION =
-            AnvilCraft.of("textures/gui/container/machine/background/chute.png");
+        AnvilCraft.of("textures/gui/container/machine/background/chute.png");
 
     BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier =
-            this.getEnableFilterButtonSupplier(134, 36);
+        this.getEnableFilterButtonSupplier(134, 36);
 
     @Getter
     private EnableFilterButton enableFilterButton = null;
@@ -111,7 +111,7 @@ public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends 
                 } else {
                     if (carriedItem.isEmpty()) {
                         PacketDistributor.sendToServer(
-                                new SlotDisableChangePacket(realSlotId, !this.menu.isSlotDisabled(realSlotId)));
+                            new SlotDisableChangePacket(realSlotId, !this.menu.isSlotDisabled(realSlotId)));
                     } else {
                         PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
                     }

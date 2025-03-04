@@ -48,7 +48,7 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
     public MeshRecipeCategory(IGuiHelper helper) {
         this.slot = helper.getSlotDrawable();
         this.icon =
-                new DrawableBlockStateIcon(Blocks.ANVIL.defaultBlockState(), Blocks.SCAFFOLDING.defaultBlockState());
+            new DrawableBlockStateIcon(Blocks.ANVIL.defaultBlockState(), Blocks.SCAFFOLDING.defaultBlockState());
         this.title = Component.translatable("gui.anvilcraft.category.mesh");
         this.timer = helper.createTickTimer(30, 60, true);
 
@@ -87,30 +87,30 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
         for (int i = 0; i < recipe.results().size(); i++) {
             MeshRecipeGroup.Result result = recipe.results().get(i);
             IRecipeSlotBuilder slot = builder.addSlot(
-                            RecipeIngredientRole.OUTPUT, 1 + (i % 9) * 18, 1 + ROW_START + 18 * (i / 9))
-                    .addItemStack(result.item);
+                    RecipeIngredientRole.OUTPUT, 1 + (i % 9) * 18, 1 + ROW_START + 18 * (i / 9))
+                .addItemStack(result.item);
             JeiRecipeUtil.addTooltips(slot, result.provider);
         }
     }
 
     @Override
     public void draw(
-            MeshRecipeGroup recipe,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        MeshRecipeGroup recipe,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                12 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            12 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics, Blocks.SCAFFOLDING.defaultBlockState(), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, Blocks.SCAFFOLDING.defaultBlockState(), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 22);
         slot.draw(guiGraphics, 36, 13);

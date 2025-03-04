@@ -98,10 +98,10 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
 
     @Override
     protected void onPlace(BlockState state,
-        Level level,
-        BlockPos pos,
-        BlockState oldState,
-boolean movedByPiston) {
+                           Level level,
+                           BlockPos pos,
+                           BlockState oldState,
+                           boolean movedByPiston) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
         }
@@ -245,8 +245,8 @@ boolean movedByPiston) {
 
             List<ItemStack> dropList = Lists.newArrayList();
             switch (anvil) {
-                case RoyalAnvilBlock $ -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.dropSilkTouch(level, pos)));
-                case EmberAnvilBlock $ -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.dropSmelt(level, pos)));
+                case RoyalAnvilBlock ignore -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.dropSilkTouch(level, pos)));
+                case EmberAnvilBlock ignore -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.dropSmelt(level, pos)));
                 case null, default -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.drop(level, pos)));
             }
             for (ItemStack itemStack : dropList) {

@@ -116,11 +116,11 @@ public class ItemDetectorMenu extends AbstractContainerMenu implements IFilterMe
 
     @Override
     public void clicked(int slotId, int button, ClickType clickType, Player player) {
-        if (clickType == ClickType.SWAP &&
-            slotId >= FILTER_FIRST_SLOT_INDEX &&
-            slotId < FILTER_FIRST_SLOT_INDEX + FILTER_SLOT_COUNT &&
-            this.getSlot(slotId) instanceof FilterOnlySlot filterSlot &&
-            (button >= 0 && button < HOTBAR_SLOT_COUNT || button == Inventory.SLOT_OFFHAND)) {
+        if (clickType == ClickType.SWAP
+            && slotId >= FILTER_FIRST_SLOT_INDEX
+            && slotId < FILTER_FIRST_SLOT_INDEX + FILTER_SLOT_COUNT
+            && this.getSlot(slotId) instanceof FilterOnlySlot filterSlot
+            && (button >= 0 && button < HOTBAR_SLOT_COUNT || button == Inventory.SLOT_OFFHAND)) {
             filterSlot.set(player.getInventory().getItem(button).copy());
             return;
         }

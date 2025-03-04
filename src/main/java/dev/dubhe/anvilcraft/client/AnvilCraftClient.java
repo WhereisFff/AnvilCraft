@@ -18,7 +18,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
@@ -42,12 +41,7 @@ public class AnvilCraftClient {
         modBus.addListener(ModShaders::register);
         modBus.addListener(ModModelLayers::register);
         modBus.addListener(ModModelLayers::createModel);
-        modBus.addListener(AnvilCraftClient::clientSetup);
         ModInspectionClient.initializeClient();
-    }
-
-    public static void clientSetup(FMLClientSetupEvent event) {
-        AnvilCraft.getIntegrationManager().loadAllClientIntegrations();
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent e) {

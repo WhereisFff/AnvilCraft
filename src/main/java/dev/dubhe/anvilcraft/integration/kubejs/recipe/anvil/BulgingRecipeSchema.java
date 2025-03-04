@@ -76,10 +76,10 @@ public interface BulgingRecipeSchema {
 
         @Override
         protected void validate() {
-            if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()){
+            if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
             }
-            if (computeIfAbsent(RESULTS, ArrayList::new).isEmpty()){
+            if (computeIfAbsent(RESULTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Result is Empty!").source(sourceLine);
             }
         }

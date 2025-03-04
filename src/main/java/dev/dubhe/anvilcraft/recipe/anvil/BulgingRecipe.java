@@ -248,7 +248,7 @@ public class BulgingRecipe implements Recipe<BulgingRecipe.Input> {
             return this;
         }
 
-        public Builder result(ItemStack stack, float chance){
+        public Builder result(ItemStack stack, float chance) {
             results.add(ChanceItemStack.of(stack).withChance(chance));
             return this;
         }

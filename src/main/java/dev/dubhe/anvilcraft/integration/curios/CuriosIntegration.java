@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.integration.curios;
 
+import dev.anvilcraft.lib.integration.Integrations;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.integration.curios.renderer.GogglesCurioRenderer;
 import dev.dubhe.anvilcraft.integration.curios.renderer.IonoCraftBackpackCurioRenderer;
@@ -22,7 +22,7 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 
 import java.util.List;
 
-@Integration("curios")
+@Integrations("curios")
 public class CuriosIntegration {
     public void apply() {
         AnvilCraft.MOD_BUS.addListener(this::setup);

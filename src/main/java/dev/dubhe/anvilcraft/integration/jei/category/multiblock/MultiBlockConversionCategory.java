@@ -53,7 +53,7 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
     private final Map<RecipeHolder<MultiblockConversionRecipe>, LevelLike> cacheInput = new HashMap<>();
     private final Map<RecipeHolder<MultiblockConversionRecipe>, LevelLike> cacheOutput = new HashMap<>();
 
-    private final static Comparator<ItemStack> BY_COUNT_DECREASING =
+    private static final Comparator<ItemStack> BY_COUNT_DECREASING =
         Comparator.comparing(ItemStack::getCount).thenComparing(ItemStack::getDescriptionId).reversed();
 
     private final IDrawable icon;

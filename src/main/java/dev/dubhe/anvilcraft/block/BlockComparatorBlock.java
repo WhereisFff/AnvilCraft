@@ -49,11 +49,11 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
     public BlockComparatorBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(
-                this.stateDefinition
-                        .any()
-                        .setValue(FACING, Direction.NORTH)
-                        .setValue(PRECISE, false)
-                        .setValue(POWERED, false)
+            this.stateDefinition
+                .any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(PRECISE, false)
+                .setValue(POWERED, false)
         );
     }
 
@@ -69,10 +69,10 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
 
     @Override
     public VoxelShape getShape(
-            BlockState state,
-            BlockGetter level,
-            BlockPos pos,
-            CollisionContext context
+        BlockState state,
+        BlockGetter level,
+        BlockPos pos,
+        CollisionContext context
     ) {
         return switch (state.getValue(HorizontalDirectionalBlock.FACING)) {
             case NORTH -> NORTH_MODEL;
@@ -129,12 +129,12 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
 
     @Override
     public BlockState updateShape(
-            BlockState blockState,
-            Direction direction,
-            BlockState blockState2,
-            LevelAccessor level,
-            BlockPos pos,
-            BlockPos pos2
+        BlockState blockState,
+        Direction direction,
+        BlockState blockState2,
+        LevelAccessor level,
+        BlockPos pos,
+        BlockPos pos2
     ) {
         Direction facing = blockState.getValue(FACING);
         if (direction.getAxis() == Direction.Axis.Y || direction.getAxis() == facing.getAxis()) return blockState;

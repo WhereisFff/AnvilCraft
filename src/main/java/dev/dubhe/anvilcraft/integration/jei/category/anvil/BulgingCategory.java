@@ -51,7 +51,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
 
     public BulgingCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(
-                Blocks.ANVIL.defaultBlockState(),
+            Blocks.ANVIL.defaultBlockState(),
             CauldronUtil.fullState(Blocks.WATER_CAULDRON));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.bulging");
@@ -97,21 +97,21 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
 
     @Override
     public void draw(
-            RecipeHolder<BulgingRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<BulgingRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         BulgingRecipe recipe = recipeHolder.value();
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                22 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            22 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         BlockState state;
         if (recipe.isFromWater()) {
             state = CauldronUtil.fullState(Blocks.WATER_CAULDRON);
@@ -130,22 +130,22 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
             JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.results.size());
             if (recipe.isConsumeFluid()) {
                 guiGraphics.drawString(
-                        Minecraft.getInstance().font,
-                        Component.translatable(
-                                "gui.anvilcraft.category.bulging.consume_fluid", recipe.cauldron.getName()),
-                        10,
-                        54,
-                        0xFF000000,
-                        false);
+                    Minecraft.getInstance().font,
+                    Component.translatable(
+                        "gui.anvilcraft.category.bulging.consume_fluid", recipe.cauldron.getName()),
+                    10,
+                    54,
+                    0xFF000000,
+                    false);
             } else if (recipe.isProduceFluid()) {
                 guiGraphics.drawString(
-                        Minecraft.getInstance().font,
-                        Component.translatable(
-                                "gui.anvilcraft.category.bulging.produce_fluid", recipe.cauldron.getName()),
-                        10,
-                        54,
-                        0xFF000000,
-                        false);
+                    Minecraft.getInstance().font,
+                    Component.translatable(
+                        "gui.anvilcraft.category.bulging.produce_fluid", recipe.cauldron.getName()),
+                    10,
+                    54,
+                    0xFF000000,
+                    false);
             }
         } else {
             if (recipe.isConsumeFluid()) {
@@ -162,11 +162,11 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
 
     @Override
     public void getTooltip(
-            ITooltipBuilder tooltip,
-            RecipeHolder<BulgingRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            double mouseX,
-            double mouseY) {
+        ITooltipBuilder tooltip,
+        RecipeHolder<BulgingRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        double mouseX,
+        double mouseY) {
         BulgingRecipe recipe = recipeHolder.value();
         if (mouseX >= 72 && mouseX <= 90) {
             if (mouseY >= 34 && mouseY <= 53) {
@@ -204,7 +204,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-                AnvilCraftJeiPlugin.BULGING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BULGING_TYPE.get()));
+            AnvilCraftJeiPlugin.BULGING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BULGING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

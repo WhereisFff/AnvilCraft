@@ -46,7 +46,7 @@ public class InputRefusingItemHandlerWrapper implements IItemHandler {
         return false;
     }
 
-    public static IItemHandler wrap(IItemHandler ih){
+    public static IItemHandler wrap(IItemHandler ih) {
         return new InputRefusingItemHandlerWrapper(ih);
     }
 }

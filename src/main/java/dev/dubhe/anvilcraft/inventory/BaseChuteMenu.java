@@ -26,7 +26,7 @@ public abstract class BaseChuteMenu<T extends BaseChuteBlockEntity> extends Base
     private final Level level;
 
     public BaseChuteMenu(
-            @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
+        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
         this(menuType, containerId, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
@@ -114,7 +114,7 @@ public abstract class BaseChuteMenu<T extends BaseChuteBlockEntity> extends Base
         } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
             // This is a TE slot so merge the stack into the players inventory
             if (!moveItemStackTo(
-                    sourceStack,
+                sourceStack,
                 VANILLA_FIRST_SLOT_INDEX,
                 VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT,
                 false

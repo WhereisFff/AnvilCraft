@@ -95,7 +95,7 @@ public class ItemTooltipManager {
     /**
      * 为模组物品添加工具提示
      *
-     * @param stack 需要添加工具提示的物品堆叠
+     * @param stack   需要添加工具提示的物品堆叠
      * @param tooltip 提示内容
      */
     public static void addTooltip(ItemStack stack, List<Component> tooltip) {

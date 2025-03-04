@@ -39,6 +39,7 @@
     "accessor.BaseSpawnerAccessor",
     "accessor.CropBlockAccessor",
     "accessor.GrowingPlantAccessor",
+    "compat.PackagerBlockEntityMixin",
     "forge.FallingBlockEntityMixin",
     "forge.LevelChunkMixin",
     "forge.LightningBoltMixin",

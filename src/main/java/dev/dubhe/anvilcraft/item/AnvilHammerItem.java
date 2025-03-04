@@ -105,8 +105,8 @@ public class AnvilHammerItem extends Item implements Equipable {
                 pos = posMainPart;
                 state = stateMainPart;
             }
-        } else if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF) &&
-            state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
+        } else if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
+            && state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
             BlockPos posMainPart = pos.below();
             BlockState stateMainPart = level.getBlockState(posMainPart);
             if (stateMainPart.is(block)) {

@@ -1,16 +1,13 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.JewelCraftingMenu;
 import dev.dubhe.anvilcraft.inventory.component.jewel.JewelInputSlot;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -24,7 +21,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class JewelCraftingScreen extends AbstractContainerScreen<JewelCraftingMenu> {
 
-    private final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/jewelcrafting/background.png");
+    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/jewelcrafting/background.png");
 
 
     public JewelCraftingScreen(JewelCraftingMenu menu, Inventory playerInventory, Component title) {

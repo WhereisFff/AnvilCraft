@@ -48,8 +48,8 @@ public class CookingCategory implements IRecipeCategory<RecipeHolder<CookingReci
 
     public CookingCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(
-                Blocks.CAULDRON.defaultBlockState(),
-                Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
+            Blocks.CAULDRON.defaultBlockState(),
+            Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.cooking");
         timer = helper.createTickTimer(30, 60, true);
@@ -92,31 +92,31 @@ public class CookingCategory implements IRecipeCategory<RecipeHolder<CookingReci
 
     @Override
     public void draw(
-            RecipeHolder<CookingRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<CookingRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         CookingRecipe recipe = recipeHolder.value();
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                12 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            12 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics, Blocks.CAULDRON.defaultBlockState(), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, Blocks.CAULDRON.defaultBlockState(), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true),
-                81,
-                40,
-                0,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true),
+            81,
+            40,
+            0,
+            12,
+            RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
@@ -127,7 +127,7 @@ public class CookingCategory implements IRecipeCategory<RecipeHolder<CookingReci
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-                AnvilCraftJeiPlugin.COOKING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.COOKING_TYPE.get()));
+            AnvilCraftJeiPlugin.COOKING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.COOKING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

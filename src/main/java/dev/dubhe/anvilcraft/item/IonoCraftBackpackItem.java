@@ -44,7 +44,7 @@ import java.util.function.Function;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarriedAware{
+public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarriedAware {
     public static final DynamicPowerComponent.PowerConsumption CONSUMPTION = new DynamicPowerComponent.PowerConsumption(64);
 
     public static final ResourceLocation TEXTURE = AnvilCraft.of("textures/entity/equipment/ionocraft_backpack.png");

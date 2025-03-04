@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 public class UpdateDisplayItemPacket implements CustomPacketPayload {
     public static final Type<UpdateDisplayItemPacket> TYPE = new Type<>(AnvilCraft.of("client_update_display_item"));
     public static final StreamCodec<RegistryFriendlyByteBuf, UpdateDisplayItemPacket> STREAM_CODEC =
-            StreamCodec.ofMember(UpdateDisplayItemPacket::encode, UpdateDisplayItemPacket::new);
+        StreamCodec.ofMember(UpdateDisplayItemPacket::encode, UpdateDisplayItemPacket::new);
     public static final IPayloadHandler<UpdateDisplayItemPacket> HANDLER = UpdateDisplayItemPacket::clientHandler;
 
     private final ItemStack displayItem;
@@ -50,8 +50,8 @@ public class UpdateDisplayItemPacket implements CustomPacketPayload {
             if (mc.level == null) return;
             BlockState state = mc.level.getBlockState(data.pos);
             if (state.isAir()
-                    || !state.hasBlockEntity()
-                    || mc.level.getBlockEntity(data.pos) instanceof IHasDisplayItem) {
+                || !state.hasBlockEntity()
+                || mc.level.getBlockEntity(data.pos) instanceof IHasDisplayItem) {
                 IHasDisplayItem be = (IHasDisplayItem) mc.level.getBlockEntity(data.pos);
                 if (be == null) return; // make idea happy
                 be.updateDisplayItem(data.displayItem);

@@ -10,7 +10,7 @@ public interface IDynamicPowerComponentHolder {
 
     DynamicPowerComponent anvilCraft$getPowerComponent();
 
-    static IDynamicPowerComponentHolder of(ServerPlayer player){
+    static IDynamicPowerComponentHolder of(ServerPlayer player) {
         return (IDynamicPowerComponentHolder) player;
     }
 }

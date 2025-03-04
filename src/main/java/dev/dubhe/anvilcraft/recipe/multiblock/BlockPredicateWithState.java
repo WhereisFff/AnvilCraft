@@ -81,10 +81,6 @@ public class BlockPredicateWithState implements Predicate<BlockState> {
         return this;
     }
 
-    public <T extends Comparable<T>> BlockPredicateWithState copyPropertyFrom(BlockState state, Property<T> property) {
-        return this.hasState(property, state.getValue(property));
-    }
-
     public BlockPredicateWithState hasState(String stateName, String stateValue) {
         Property<?> property = this.block.getStateDefinition().getProperty(stateName);
         this.properties.put(property, Optional.ofNullable(property)
@@ -93,12 +89,17 @@ public class BlockPredicateWithState implements Predicate<BlockState> {
         return this;
     }
 
+    public <T extends Comparable<T>> BlockPredicateWithState copyPropertyFrom(BlockState state, Property<T> property) {
+        return this.hasState(property, state.getValue(property));
+    }
+
     public <T extends Comparable<T>> boolean hasProperty(Property<T> property) {
         return properties.containsKey(property);
     }
 
     @SuppressWarnings("unchecked")
-    @Nullable public <T extends Comparable<T>> T getPropertyValue(Property<T> property) {
+    @Nullable
+    public <T extends Comparable<T>> T getPropertyValue(Property<T> property) {
         return (T) properties.getOrDefault(property, null);
     }
 
@@ -142,8 +143,7 @@ public class BlockPredicateWithState implements Predicate<BlockState> {
                 try {
                     this.defaultState = (BlockState) setValueMethod.invoke(this.defaultState, property, value);
                 } catch (Exception e) {
-                    AnvilCraft.LOGGER.warn("Invalid property or value: " +
-                        "property:{}, value:{}", property, value);
+                    AnvilCraft.LOGGER.warn("Invalid property or value: property:{}, value:{}", property, value);
                 }
             });
         }
@@ -151,8 +151,7 @@ public class BlockPredicateWithState implements Predicate<BlockState> {
     }
 
     public static String getNameOf(Object value) {
-        return value instanceof StringRepresentable representable ?
-            representable.getSerializedName() : value.toString();
+        return value instanceof StringRepresentable representable ? representable.getSerializedName() : value.toString();
     }
 
     private Raw toRaw() {

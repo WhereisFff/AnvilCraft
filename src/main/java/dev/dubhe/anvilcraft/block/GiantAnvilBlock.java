@@ -56,6 +56,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.DeferredSoundType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
@@ -274,12 +275,12 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
      * 落地
      */
     public void onLand(
-            Level level,
-            BlockPos pos,
-            BlockState state,
-            @SuppressWarnings("unused") BlockState replaceableState,
-            FallingBlockEntity fallingBlock,
-            float fallDistance
+        Level level,
+        BlockPos pos,
+        BlockState state,
+        @SuppressWarnings("unused") BlockState replaceableState,
+        FallingBlockEntity fallingBlock,
+        float fallDistance
     ) {
         level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
         BlockPos belowPos = pos.below();
@@ -320,8 +321,10 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
         RandomSource random
     ) {
         BlockState ringState = level.getBlockState(pos.subtract(state.getValue(HALF).getOffset()).above(3));
-        if (ringState.hasProperty(AccelerationRingBlock.HALF) && ringState.getValue(AccelerationRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(AccelerationRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(AccelerationRingBlock.OVERLOAD) && ringState.getValue(AccelerationRingBlock.FACING) == Direction.UP) return;
-        if (ringState.hasProperty(DeflectionRingBlock.HALF) && ringState.getValue(DeflectionRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(DeflectionRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(DeflectionRingBlock.OVERLOAD) && ringState.getValue(DeflectionRingBlock.FACING).getAxis() == Direction.Axis.Y) return;
+        if (ringState.hasProperty(AccelerationRingBlock.HALF) && ringState.getValue(AccelerationRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(AccelerationRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(AccelerationRingBlock.OVERLOAD) && ringState.getValue(AccelerationRingBlock.FACING) == Direction.UP)
+            return;
+        if (ringState.hasProperty(DeflectionRingBlock.HALF) && ringState.getValue(DeflectionRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(DeflectionRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(DeflectionRingBlock.OVERLOAD) && ringState.getValue(DeflectionRingBlock.FACING).getAxis() == Direction.Axis.Y)
+            return;
         if (state.getValue(HALF) != Cube3x3PartHalf.BOTTOM_CENTER) return;
         for (Cube3x3PartHalf part : getParts()) {
             if (part.getOffsetY() != 0) continue;
@@ -338,7 +341,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
         this.falling(fallingBlockEntity);
     }
 
-    public void removePartsAndUpdate(Level level, BlockPos pos){
+    public void removePartsAndUpdate(Level level, BlockPos pos) {
         for (Cube3x3PartHalf part : getParts()) {
             BlockPos bp = pos.offset(part.getOffset());
             BlockState blockState = level.getBlockState(bp);

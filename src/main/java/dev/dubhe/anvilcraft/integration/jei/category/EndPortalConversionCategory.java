@@ -76,7 +76,7 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
 
     @Override
     public void setRecipe(
-            IRecipeLayoutBuilder builder, EndPortalConversionRecipe recipe, IFocusGroup focuses) {
+        IRecipeLayoutBuilder builder, EndPortalConversionRecipe recipe, IFocusGroup focuses) {
         JeiSlotUtil.addInputSlots(builder, recipe.ingredients);
         JeiSlotUtil.addOutputSlots(builder, recipe.results);
     }

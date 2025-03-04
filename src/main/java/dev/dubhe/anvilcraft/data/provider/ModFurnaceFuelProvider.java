@@ -24,7 +24,7 @@ public class ModFurnaceFuelProvider extends DataMapProvider {
         builder(NeoForgeDataMaps.FURNACE_FUELS).add(ModItems.WOOD_FIBER, fromItemCount(1.5), false);
     }
 
-    private static FurnaceFuel fromItemCount(double count){
+    private static FurnaceFuel fromItemCount(double count) {
         return new FurnaceFuel((int) (count * FurnaceBlockEntity.BURN_TIME_STANDARD));
     }
 }

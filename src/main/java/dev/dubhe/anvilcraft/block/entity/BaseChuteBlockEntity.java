@@ -5,7 +5,7 @@ import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.itemhandler.IItemHandlerHolder;
 import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
-
+import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -29,13 +29,10 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-
-import lombok.Getter;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @Getter
 @MethodsReturnNonnullByDefault
@@ -122,7 +119,7 @@ public abstract class BaseChuteBlockEntity
                 inputBlockPos,
                 context
             );
-        if (input != null){
+        if (input != null) {
             return input;
         }
         AABB aabb = new AABB(inputBlockPos);

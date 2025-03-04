@@ -15,8 +15,11 @@ modDevGradle = "2.0.78"
 spotless = "7.0.0.BETA2"
 lombok = "8.7.1"
 machete = "1.+"
-anvillib = "1.1.0+build.97"
+anvillib = "1.2.0+build.107"
 curios = "9.0.15+1.21.1"
+create = "6.0.1-18"
+ponder = "1.0.43"
+flywheel = "1.0.1-11"
 
 [libraries]
 neoForge = { group = "net.neoforged", name = "neoforge", version.ref = "neoForge" }
@@ -35,6 +38,10 @@ kubejs = { group = "dev.latvian.mods", name = "kubejs-neoforge", version.ref = "
 patchouli = { group = "vazkii.patchouli", name = "Patchouli", version.ref = "patchouli" }
 anvillib = { group = "dev.anvilcraft.lib", name = "anvillib-neoforge-1.21.1", version.ref = "anvillib" }
 curios = { group = "top.theillusivec4.curios", name = "curios-neoforge", version.ref = "curios" }
+create = { group = "com.simibubi.create", name = "create-1.21.1", version.ref = "create" }
+ponder = { group = "net.createmod.ponder", name = "Ponder-NeoForge-1.21.1", version.ref = "ponder" }
+flywheelApi = { group = "dev.engine-room.flywheel", name = "flywheel-neoforge-api-1.21.1", version.ref = "flywheel" }
+flywheel = { group = "dev.engine-room.flywheel", name = "flywheel-neoforge-1.21.1", version.ref = "flywheel" }
 
 
 [plugins]

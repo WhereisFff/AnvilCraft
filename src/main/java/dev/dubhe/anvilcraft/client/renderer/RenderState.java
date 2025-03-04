@@ -22,11 +22,11 @@ public class RenderState {
         return IRIS_PRESENT;
     }
 
-    public static void bloomStage(){
+    public static void bloomStage() {
         bloomRenderStage = true;
     }
 
-    public static void levelStage(){
+    public static void levelStage() {
         bloomRenderStage = false;
     }
 
@@ -34,7 +34,7 @@ public class RenderState {
         return !Minecraft.useShaderTransparency() && !IrisState.isShaderEnabled();
     }
 
-    public static boolean isBloomEffectEnabled(){
+    public static boolean isBloomEffectEnabled() {
         return AnvilCraft.config.renderBloomEffect;
     }
 

@@ -56,7 +56,7 @@ public class ModRenderTargets {
 
     public static void renderTargetLoaded(
         RenderTarget laserTarget
-    ){
+    ) {
         ModRenderTargets.bloomTarget = laserTarget;
         ModRenderTargets.tempTarget = new TextureTarget(
             laserTarget.width,

@@ -47,8 +47,8 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
 
     public CementStainingCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(
-                Blocks.ANVIL.defaultBlockState(),
-                ModBlocks.CEMENT_CAULDRONS.get(Color.PINK).getDefaultState());
+            Blocks.ANVIL.defaultBlockState(),
+            ModBlocks.CEMENT_CAULDRONS.get(Color.PINK).getDefaultState());
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.cement_staining");
         anvilTimer = helper.createTickTimer(30, 60, true);
@@ -90,29 +90,29 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
 
     @Override
     public void draw(
-            CementStainingRecipe recipe,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        CementStainingRecipe recipe,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(anvilTimer);
         Color color = Color.getColorByIndex(colorTimer.getValue());
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                22 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            22 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics,
-                ModBlocks.CEMENT_CAULDRONS.get(color).getDefaultState(),
-                81,
-                40,
-                10,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            ModBlocks.CEMENT_CAULDRONS.get(color).getDefaultState(),
+            81,
+            40,
+            10,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
@@ -123,11 +123,11 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
 
     @Override
     public void getTooltip(
-            ITooltipBuilder tooltip,
-            CementStainingRecipe recipe,
-            IRecipeSlotsView recipeSlotsView,
-            double mouseX,
-            double mouseY) {
+        ITooltipBuilder tooltip,
+        CementStainingRecipe recipe,
+        IRecipeSlotsView recipeSlotsView,
+        double mouseX,
+        double mouseY) {
         if (mouseX >= 72 && mouseX <= 90) {
             if (mouseY >= 34 && mouseY <= 53) {
                 Color color = Color.getColorByIndex(colorTimer.getValue());

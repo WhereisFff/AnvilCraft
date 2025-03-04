@@ -1,12 +1,11 @@
 package dev.dubhe.anvilcraft.block.state;
 
 import com.mojang.serialization.Codec;
+import lombok.Getter;
+import lombok.experimental.Accessors;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-
-import lombok.Getter;
-import lombok.experimental.Accessors;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

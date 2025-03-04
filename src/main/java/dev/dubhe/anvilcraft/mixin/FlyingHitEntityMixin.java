@@ -26,7 +26,8 @@ import java.util.List;
 @Mixin(LivingEntity.class)
 public abstract class FlyingHitEntityMixin extends Entity {
 
-    @Unique private static final float DAMAGE_FACTOR = 40 / 1.7444f;
+    @Unique
+    private static final float DAMAGE_FACTOR = 40 / 1.7444f;
 
     @Shadow
     public abstract ItemStack getItemBySlot(EquipmentSlot slot);
@@ -36,22 +37,22 @@ public abstract class FlyingHitEntityMixin extends Entity {
     }
 
     @Inject(
-            method = "travel",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/world/entity/LivingEntity;"
-                                    + "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
-                            ordinal = 2,
-                            shift = At.Shift.AFTER))
+        method = "travel",
+        at =
+        @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/LivingEntity;"
+                + "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+            ordinal = 2,
+            shift = At.Shift.AFTER))
     @SuppressWarnings("UnreachableCode")
     private void onFlyingHitEntity(Vec3 travelVector, CallbackInfo ci) {
         if (!((Object) this instanceof ServerPlayer)) return;
-        if (!AnvilHammerItem.isWearing((Player)(Object) this)
-                && !this.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.ROYAL_ANVIL_HAMMER.get())) return;
+        if (!AnvilHammerItem.isWearing((Player) (Object) this)
+            && !this.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.ROYAL_ANVIL_HAMMER.get())) return;
         AABB headBlockBoundBox = AABB.ofSize(this.getEyePosition(), 1, 1, 1);
         List<LivingEntity> entities =
-                level().getEntitiesOfClass(LivingEntity.class, headBlockBoundBox, it -> it != (Object) this);
+            level().getEntitiesOfClass(LivingEntity.class, headBlockBoundBox, it -> it != (Object) this);
         Vec3 movement = getDeltaMovement();
         float amount = (float) (movement.length() * DAMAGE_FACTOR);
         for (LivingEntity entity : entities) {
@@ -60,7 +61,8 @@ public abstract class FlyingHitEntityMixin extends Entity {
         }
     }
 
-    @Unique private static void anvilCraft$damageItem(Player player, ItemStack itemStack) {
+    @Unique
+    private static void anvilCraft$damageItem(Player player, ItemStack itemStack) {
         if (player.isCreative()) return;
 
         if (itemStack.isDamageableItem()) {

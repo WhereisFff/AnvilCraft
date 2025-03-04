@@ -47,7 +47,7 @@ public class StampingCategory implements IRecipeCategory<RecipeHolder<StampingRe
 
     public StampingCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(
-                Blocks.ANVIL.defaultBlockState(), ModBlocks.STAMPING_PLATFORM.getDefaultState());
+            Blocks.ANVIL.defaultBlockState(), ModBlocks.STAMPING_PLATFORM.getDefaultState());
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.stamping");
         timer = helper.createTickTimer(30, 60, true);
@@ -83,7 +83,7 @@ public class StampingCategory implements IRecipeCategory<RecipeHolder<StampingRe
 
     @Override
     public void setRecipe(
-            IRecipeLayoutBuilder builder, RecipeHolder<StampingRecipe> recipeHolder, IFocusGroup focuses) {
+        IRecipeLayoutBuilder builder, RecipeHolder<StampingRecipe> recipeHolder, IFocusGroup focuses) {
         StampingRecipe recipe = recipeHolder.value();
         JeiSlotUtil.addInputSlots(builder, recipe.mergedIngredients);
         JeiSlotUtil.addOutputSlots(builder, recipe.results);
@@ -91,23 +91,23 @@ public class StampingCategory implements IRecipeCategory<RecipeHolder<StampingRe
 
     @Override
     public void draw(
-            RecipeHolder<StampingRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<StampingRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         StampingRecipe recipe = recipeHolder.value();
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                22 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            22 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics, ModBlocks.STAMPING_PLATFORM.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, ModBlocks.STAMPING_PLATFORM.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
@@ -118,8 +118,8 @@ public class StampingCategory implements IRecipeCategory<RecipeHolder<StampingRe
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-                AnvilCraftJeiPlugin.STAMPING,
-                JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.STAMPING_TYPE.get()));
+            AnvilCraftJeiPlugin.STAMPING,
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.STAMPING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

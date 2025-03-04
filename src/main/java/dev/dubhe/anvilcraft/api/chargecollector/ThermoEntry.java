@@ -1,9 +1,8 @@
 package dev.dubhe.anvilcraft.api.chargecollector;
 
+import lombok.Getter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-
-import lombok.Getter;
 
 import java.util.function.Function;
 

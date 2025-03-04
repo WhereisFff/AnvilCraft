@@ -35,8 +35,8 @@ public class PlayerInventoryPressurePlateBlock extends PowerLevelPressurePlateBl
         float result = 0F;
 
         for (Player player : level.getEntitiesOfClass(
-                Player.class, box,
-                EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
+            Player.class, box,
+            EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
         )) {
             Inventory inventory = player.getInventory();
 

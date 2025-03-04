@@ -47,8 +47,8 @@ public class ItemCrushCategory implements IRecipeCategory<RecipeHolder<ItemCrush
 
     public ItemCrushCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(
-                Blocks.ANVIL.defaultBlockState(),
-                ModBlocks.CRUSHING_TABLE.getDefaultState());
+            Blocks.ANVIL.defaultBlockState(),
+            ModBlocks.CRUSHING_TABLE.getDefaultState());
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.item_crush");
         timer = helper.createTickTimer(30, 60, true);
@@ -84,7 +84,7 @@ public class ItemCrushCategory implements IRecipeCategory<RecipeHolder<ItemCrush
 
     @Override
     public void setRecipe(
-            IRecipeLayoutBuilder builder, RecipeHolder<ItemCrushRecipe> recipeHolder, IFocusGroup focuses) {
+        IRecipeLayoutBuilder builder, RecipeHolder<ItemCrushRecipe> recipeHolder, IFocusGroup focuses) {
         ItemCrushRecipe recipe = recipeHolder.value();
         JeiSlotUtil.addInputSlots(builder, recipe.mergedIngredients);
         JeiSlotUtil.addOutputSlots(builder, recipe.results);
@@ -92,29 +92,29 @@ public class ItemCrushCategory implements IRecipeCategory<RecipeHolder<ItemCrush
 
     @Override
     public void draw(
-            RecipeHolder<ItemCrushRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<ItemCrushRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         ItemCrushRecipe recipe = recipeHolder.value();
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                22 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            22 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics,
-                ModBlocks.CRUSHING_TABLE.getDefaultState(),
-                81,
-                40,
-                10,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            ModBlocks.CRUSHING_TABLE.getDefaultState(),
+            81,
+            40,
+            10,
+            12,
+            RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
@@ -127,8 +127,8 @@ public class ItemCrushCategory implements IRecipeCategory<RecipeHolder<ItemCrush
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-                AnvilCraftJeiPlugin.ITEM_CRUSH,
-                JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.ITEM_CRUSH_TYPE.get()));
+            AnvilCraftJeiPlugin.ITEM_CRUSH,
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.ITEM_CRUSH_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

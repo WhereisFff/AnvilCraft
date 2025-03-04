@@ -34,8 +34,8 @@ public class EntityTypePressurePlateBlock extends PowerLevelPressurePlateBlock {
         Set<Entity> entities = Sets.newHashSet();
         for (Class<? extends Entity> entityClass : entityClasses) {
             entities.addAll(level.getEntitiesOfClass(
-                    entityClass, box,
-                    EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
+                entityClass, box,
+                EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
             ));
         }
 

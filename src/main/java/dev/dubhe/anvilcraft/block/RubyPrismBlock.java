@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.RubyPrismBlockEntity;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
-
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -28,8 +28,6 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -115,7 +113,7 @@ public class RubyPrismBlock extends BaseLaserBlock implements IHammerRemovable, 
         return createTickerHelper(
             type, ModBlockEntities.RUBY_PRISM.get(), (level1, pos, state1, entity) -> entity.tick(level1));
     }
-    
+
     @Override
     protected BlockState rotate(BlockState state, Rotation rot) {
         return state.setValue(FACING, rot.rotate(state.getValue(FACING)));

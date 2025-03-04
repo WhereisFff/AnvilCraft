@@ -61,7 +61,7 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
     private static final Component TITLE = Component.translatable("gui.anvilcraft.category.multiblock");
     private static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
 
-    private final static Comparator<ItemStack> BY_COUNT_DECREASING =
+    private static final Comparator<ItemStack> BY_COUNT_DECREASING =
         Comparator.comparing(ItemStack::getCount).thenComparing(ItemStack::getDescriptionId).reversed();
 
     public static final int WIDTH = 162;
@@ -86,29 +86,29 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
         arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
         slot = helper.getSlotDrawable();
         layerUp = helper.drawableBuilder(
-                        AnvilCraft.of("textures/gui/container/insight/insight_layer_up.png"), 0, 0, 10, 10)
-                .setTextureSize(10, 20)
-                .build();
+                AnvilCraft.of("textures/gui/container/insight/insight_layer_up.png"), 0, 0, 10, 10)
+            .setTextureSize(10, 20)
+            .build();
         layerUpHovered = helper.drawableBuilder(
                 AnvilCraft.of("textures/gui/container/insight/insight_layer_up.png"), 0, 10, 10, 10)
             .setTextureSize(10, 20)
             .build();
         layerDown = helper.drawableBuilder(
-                        AnvilCraft.of("textures/gui/container/insight/insight_layer_down.png"), 0, 0, 10, 10)
-                .setTextureSize(10, 20)
-                .build();
+                AnvilCraft.of("textures/gui/container/insight/insight_layer_down.png"), 0, 0, 10, 10)
+            .setTextureSize(10, 20)
+            .build();
         layerDownHovered = helper.drawableBuilder(
                 AnvilCraft.of("textures/gui/container/insight/insight_layer_down.png"), 0, 10, 10, 10)
             .setTextureSize(10, 20)
             .build();
         renderSwitchOff = helper.drawableBuilder(
-                        AnvilCraft.of("textures/gui/container/insight/insight_layer_switch.png"), 0, 0, 10, 10)
-                .setTextureSize(10, 20)
-                .build();
+                AnvilCraft.of("textures/gui/container/insight/insight_layer_switch.png"), 0, 0, 10, 10)
+            .setTextureSize(10, 20)
+            .build();
         renderSwitchOn = helper.drawableBuilder(
-                        AnvilCraft.of("textures/gui/container/insight/insight_layer_switch.png"), 0, 10, 10, 10)
-                .setTextureSize(10, 20)
-                .build();
+                AnvilCraft.of("textures/gui/container/insight/insight_layer_switch.png"), 0, 10, 10, 10)
+            .setTextureSize(10, 20)
+            .build();
     }
 
     @Override
@@ -140,7 +140,7 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<MultiblockRecipe> recipe, IFocusGroup focuses) {
         cache.computeIfAbsent(recipe, it -> RecipeUtil.asLevelLike(it.value().getPattern()));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 130, 70)
-                .addItemStack(recipe.value().getResult().copy());
+            .addItemStack(recipe.value().getResult().copy());
 
         List<ItemStack> ingredientList = recipe.value().getPattern().toIngredientList();
         ingredientList.sort(BY_COUNT_DECREASING);
@@ -150,17 +150,17 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
             int row = i / 9;
             int col = i % 9;
             builder.addSlot(RecipeIngredientRole.INPUT, col * 18 + 1, START_HEIGHT + row * 18 + 1)
-                    .addItemStack(stack);
+                .addItemStack(stack);
         }
     }
 
     @Override
     public void draw(
-            RecipeHolder<MultiblockRecipe> recipe,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<MultiblockRecipe> recipe,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         LevelLike level = cache.get(recipe);
         if (level == null) {
             level = RecipeUtil.asLevelLike(recipe.value().pattern);
@@ -204,7 +204,7 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
             iter = BlockPos.betweenClosed(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeX - 1));
         } else {
             iter = BlockPos.betweenClosed(
-                    BlockPos.ZERO.atY(visibleLayer), new BlockPos(sizeX - 1, visibleLayer, sizeX - 1));
+                BlockPos.ZERO.atY(visibleLayer), new BlockPos(sizeX - 1, visibleLayer, sizeX - 1));
         }
         pose.pushPose();
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
@@ -239,7 +239,7 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
             renderSwitchOff.draw(guiGraphics, 125, 10);
         } else {
             component =
-                    Component.translatable("gui.anvilcraft.category.multiblock.single_layer", visibleLayer + 1, sizeY);
+                Component.translatable("gui.anvilcraft.category.multiblock.single_layer", visibleLayer + 1, sizeY);
             renderSwitchOn.draw(guiGraphics, 125, 10);
             this.layerUpButton(mouseX, mouseY).draw(guiGraphics, 137, 10);
             this.layerDownButton(mouseX, mouseY).draw(guiGraphics, 149, 10);
@@ -269,44 +269,44 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
 
     @Override
     public void createRecipeExtras(
-            IRecipeExtrasBuilder builder, RecipeHolder<MultiblockRecipe> recipe, IFocusGroup focuses) {
+        IRecipeExtrasBuilder builder, RecipeHolder<MultiblockRecipe> recipe, IFocusGroup focuses) {
         builder.addGuiEventListener(new JeiButton<>(
-                125,
-                10,
-                10,
-                it -> {
-                    LevelLike level = this.cache.computeIfAbsent(it, a -> RecipeUtil.asLevelLike(a.value().pattern));
-                    level.setAllLayersVisible(!level.isAllLayersVisible());
-                },
-                recipe));
+            125,
+            10,
+            10,
+            it -> {
+                LevelLike level = this.cache.computeIfAbsent(it, a -> RecipeUtil.asLevelLike(a.value().pattern));
+                level.setAllLayersVisible(!level.isAllLayersVisible());
+            },
+            recipe));
 
         builder.addGuiEventListener(new JeiButton<>(
-                137,
-                10,
-                10,
-                it -> {
-                    LevelLike level = this.cache.computeIfAbsent(it, a -> RecipeUtil.asLevelLike(a.value().pattern));
-                    if (level.isAllLayersVisible()) return;
-                    level.nextLayer();
-                },
-                recipe));
+            137,
+            10,
+            10,
+            it -> {
+                LevelLike level = this.cache.computeIfAbsent(it, a -> RecipeUtil.asLevelLike(a.value().pattern));
+                if (level.isAllLayersVisible()) return;
+                level.nextLayer();
+            },
+            recipe));
 
         builder.addGuiEventListener(new JeiButton<>(
-                149,
-                10,
-                10,
-                it -> {
-                    LevelLike level = this.cache.computeIfAbsent(it, a -> RecipeUtil.asLevelLike(a.value().pattern));
-                    if (level.isAllLayersVisible()) return;
-                    level.previousLayer();
-                },
-                recipe));
+            149,
+            10,
+            10,
+            it -> {
+                LevelLike level = this.cache.computeIfAbsent(it, a -> RecipeUtil.asLevelLike(a.value().pattern));
+                if (level.isAllLayersVisible()) return;
+                level.previousLayer();
+            },
+            recipe));
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-                AnvilCraftJeiPlugin.MULTI_BLOCK,
-                JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MULTIBLOCK_TYPE.get()));
+            AnvilCraftJeiPlugin.MULTI_BLOCK,
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MULTIBLOCK_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

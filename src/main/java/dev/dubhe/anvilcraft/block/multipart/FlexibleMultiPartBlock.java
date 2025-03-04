@@ -28,9 +28,9 @@ import java.util.Arrays;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class FlexibleMultiPartBlock<
-        P extends Enum<P> & IFlexibleMultiPartBlockState<P, E>,
-        T extends Property<E>,
-        E extends Comparable<E>
+    P extends Enum<P> & IFlexibleMultiPartBlockState<P, E>,
+    T extends Property<E>,
+    E extends Comparable<E>
     > extends AbstractMultiPartBlock<P> {
     final P mainPart;
 
@@ -47,7 +47,7 @@ public abstract class FlexibleMultiPartBlock<
 
     public <J extends Property<H>, H extends Comparable<H>> void updateState(Level level, BlockPos pos, J property, H value, int flag) {
         BlockState state = level.getBlockState(pos);
-        if(!state.is(this)) return;
+        if (!state.is(this)) return;
         state = state.setValue(property, value);
         for (P part : getParts()) {
             level.setBlock(pos.offset(this.offsetFrom(state, part)), state.setValue(getPart(), part), flag);

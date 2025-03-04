@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class HammerUsePacket implements CustomPacketPayload {
     public static final Type<HammerUsePacket> TYPE = new Type<>(AnvilCraft.of("hammer_use"));
     public static final StreamCodec<RegistryFriendlyByteBuf, HammerUsePacket> STREAM_CODEC =
-            StreamCodec.ofMember(HammerUsePacket::encode, HammerUsePacket::new);
+        StreamCodec.ofMember(HammerUsePacket::encode, HammerUsePacket::new);
     public static final IPayloadHandler<HammerUsePacket> HANDLER = HammerUsePacket::serverHandler;
 
     private final BlockPos pos;
@@ -44,6 +44,7 @@ public class HammerUsePacket implements CustomPacketPayload {
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
+
     /**
      *
      */

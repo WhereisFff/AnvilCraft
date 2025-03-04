@@ -26,7 +26,7 @@ public record RecipeCacheSyncPacket(
         ByteBufCodecs.map(
             HashMap::new,
             net.minecraft.world.item.ItemStack.STREAM_CODEC,
-            (StreamCodec<RegistryFriendlyByteBuf,RecipeHolder<JewelCraftingRecipe>>) (Object) RecipeHolder.STREAM_CODEC
+            (StreamCodec<RegistryFriendlyByteBuf, RecipeHolder<JewelCraftingRecipe>>) (Object) RecipeHolder.STREAM_CODEC
         ),
         RecipeCacheSyncPacket::data,
         RecipeCacheSyncPacket::new

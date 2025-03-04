@@ -40,7 +40,7 @@ public class ShapeUtil {
                     shapes.add(Shapes.empty());
                 }
                 List<Future<VoxelShape>> futures = new ArrayList<>(shapes.size() / 2);
-                List<Pair<VoxelShape,VoxelShape>> slices = slice2(shapes);
+                List<Pair<VoxelShape, VoxelShape>> slices = slice2(shapes);
                 log.debug("Grouped merging into {} groups.", slices.size());
                 for (Pair<VoxelShape, VoxelShape> slice : slices) {
                     futures.add(executorService.submit(new ShapeJoinTask(slice, function)));

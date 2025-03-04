@@ -35,9 +35,9 @@ public class AnimateAscendingBlockEntity extends Entity {
     private BlockState blockState;
 
     private static final EntityDataAccessor<BlockPos> DATA_START_POS =
-            SynchedEntityData.defineId(AnimateAscendingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
+        SynchedEntityData.defineId(AnimateAscendingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
     private static final EntityDataAccessor<BlockPos> DATA_END_POS =
-            SynchedEntityData.defineId(AnimateAscendingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
+        SynchedEntityData.defineId(AnimateAscendingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
 
     /**
      *
@@ -102,39 +102,42 @@ public class AnimateAscendingBlockEntity extends Entity {
         BlockPos up = current.above();
         BlockState bs = this.level().getBlockState(up);
         if (!bs.isAir()
-                || current.getY() >= getEndPos().getY()
-                || eyePos.getY() >= getEndPos().getY()) {
+            || current.getY() >= getEndPos().getY()
+            || eyePos.getY() >= getEndPos().getY()) {
             this.discard();
         }
         this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
     }
 
     @Override
-    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {}
+    protected void readAdditionalSaveData(@NotNull CompoundTag compound) {
+    }
 
     @Override
-    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {}
+    protected void addAdditionalSaveData(@NotNull CompoundTag compound) {
+    }
 
     /**
      * 动画
      */
     public static void animate(
-            Level level, @NotNull BlockPos startPos, @NotNull BlockState blockState, BlockPos endPos) {
+        Level level, @NotNull BlockPos startPos, @NotNull BlockState blockState, BlockPos endPos) {
         if (!AnvilCraft.config.displayAnvilAnimation) return;
         AnimateAscendingBlockEntity entity = new AnimateAscendingBlockEntity(
-                level,
-                startPos.getX() + 0.5,
-                startPos.getY(),
-                startPos.getZ() + 0.5,
-                blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-                        ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
-                        : blockState,
-                endPos);
+            level,
+            startPos.getX() + 0.5,
+            startPos.getY(),
+            startPos.getZ() + 0.5,
+            blockState.hasProperty(BlockStateProperties.WATERLOGGED)
+                ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
+                : blockState,
+            endPos);
         level.addFreshEntity(entity);
     }
 
     @Override
-    @NotNull public Packet<ClientGamePacketListener> getAddEntityPacket(@NotNull ServerEntity entity) {
+    @NotNull
+    public Packet<ClientGamePacketListener> getAddEntityPacket(@NotNull ServerEntity entity) {
         return new ClientboundAddEntityPacket(this, entity, Block.getId(this.getBlockState()));
     }
 

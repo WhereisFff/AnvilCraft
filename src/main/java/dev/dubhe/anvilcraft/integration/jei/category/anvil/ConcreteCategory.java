@@ -47,8 +47,8 @@ public class ConcreteCategory implements IRecipeCategory<ColoredConcreteRecipe> 
 
     public ConcreteCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(
-                Blocks.ANVIL.defaultBlockState(),
-                ModBlocks.CEMENT_CAULDRONS.get(Color.PINK).getDefaultState());
+            Blocks.ANVIL.defaultBlockState(),
+            ModBlocks.CEMENT_CAULDRONS.get(Color.PINK).getDefaultState());
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.concrete");
         timer = helper.createTickTimer(30, 60, true);
@@ -90,28 +90,28 @@ public class ConcreteCategory implements IRecipeCategory<ColoredConcreteRecipe> 
 
     @Override
     public void draw(
-            ColoredConcreteRecipe recipe,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        ColoredConcreteRecipe recipe,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                22 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            22 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics,
-                ModBlocks.CEMENT_CAULDRONS.get(recipe.color).getDefaultState(),
-                81,
-                40,
-                10,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            ModBlocks.CEMENT_CAULDRONS.get(recipe.color).getDefaultState(),
+            81,
+            40,
+            10,
+            12,
+            RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
@@ -122,11 +122,11 @@ public class ConcreteCategory implements IRecipeCategory<ColoredConcreteRecipe> 
 
     @Override
     public void getTooltip(
-            ITooltipBuilder tooltip,
-            ColoredConcreteRecipe recipe,
-            IRecipeSlotsView recipeSlotsView,
-            double mouseX,
-            double mouseY) {
+        ITooltipBuilder tooltip,
+        ColoredConcreteRecipe recipe,
+        IRecipeSlotsView recipeSlotsView,
+        double mouseX,
+        double mouseY) {
         if (mouseX >= 72 && mouseX <= 90) {
             if (mouseY >= 34 && mouseY <= 53) {
                 tooltip.add(ModBlocks.CEMENT_CAULDRONS.get(recipe.color).get().getName());
