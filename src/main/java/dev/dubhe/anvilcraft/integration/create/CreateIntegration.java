@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.integration.create;
 import com.simibubi.create.AllItems;
 import com.simibubi.create.api.boiler.BoilerHeater;
 import com.simibubi.create.api.registry.SimpleRegistry;
+import com.tterrag.registrate.util.entry.ItemEntry;
 import dev.anvilcraft.lib.integration.Integrations;
 import dev.dubhe.anvilcraft.block.GlowingMetalBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
