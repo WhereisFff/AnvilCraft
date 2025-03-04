@@ -87,6 +87,7 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
 
+import java.lang.reflect.Field;
 import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
@@ -568,12 +569,19 @@ public class ModItems {
         );
     public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET;
     static {
-        Supplier<ItemEntry<CogwheelAmuletItem>> cogwheelAmuletSupplier = () -> CreateIntegration.COGWHEEL_AMULET;
+        ItemEntry<CogwheelAmuletItem> cogwheelAmulet;
         if (LoadingModList.get().getModFileById("create") != null) {
-            COGWHEEL_AMULET = cogwheelAmuletSupplier.get();
+            try {
+                Class<?> createIntegration = Class.forName("dev.dubhe.anvilcraft.integration.create.CreateIntegration");
+                Field cogwheelAmuletEntry = createIntegration.getField("COGWHEEL_AMULET");
+                cogwheelAmulet = (ItemEntry<CogwheelAmuletItem>) cogwheelAmuletEntry.get(null);
+            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException ignored) {
+                cogwheelAmulet = null;
+            }
         } else {
-            COGWHEEL_AMULET = null;
+            cogwheelAmulet = null;
         }
+        COGWHEEL_AMULET = cogwheelAmulet;
     }
     public static final ItemEntry<ComradeAmuletItem> COMRADE_AMULET =
         createAmuletItem(
