@@ -10,12 +10,17 @@ import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.IncandescentMetalBlock;
 import dev.dubhe.anvilcraft.block.RedhotMetalBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
+import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
+
+import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
 @Integration("create")
 public class CreateIntegration {
@@ -63,5 +68,14 @@ public class CreateIntegration {
         }
     }
 
-    public static final ItemEntry<Item> PRECISION_MECHANISM = AllItems.PRECISION_MECHANISM;
+    public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET = REGISTRATE
+        .item("cogwheel_amulet", CogwheelAmuletItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .recipe((ctx, provider) -> JewelCraftingRecipe.builder()
+            .requires(ModBlocks.SILVER_BLOCK, 4)
+            .requires(AllItems.PRECISION_MECHANISM, 16)
+            .requires(ModItems.ROYAL_STEEL_INGOT)
+            .result(new ItemStack(ctx.get()))
+            .save(provider))
+        .register();
 }
