@@ -5,8 +5,6 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent.Switch;
-import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
-import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.AccelerationRingBlock;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
 import dev.dubhe.anvilcraft.block.ArrowBlock;
@@ -28,18 +26,8 @@ import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.block.CrabTrapBlock;
 import dev.dubhe.anvilcraft.block.CreamBlock;
 import dev.dubhe.anvilcraft.block.CreativeGeneratorBlock;
-import dev.dubhe.anvilcraft.block.DeflectionRingBlock;
-import dev.dubhe.anvilcraft.block.HeavyIronDoorBlock;
-import dev.dubhe.anvilcraft.block.HeavyIronTrapdoorBlock;
-import dev.dubhe.anvilcraft.block.HeavyIronWallBlock;
-import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
-import dev.dubhe.anvilcraft.block.MagnetoElectricCoreBlock;
-import dev.dubhe.anvilcraft.block.NegativeMatterBlock;
-import dev.dubhe.anvilcraft.block.SlidingRailBlock;
-import dev.dubhe.anvilcraft.block.SlidingRailStopBlock;
-import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
-import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
 import dev.dubhe.anvilcraft.block.CrushingTableBlock;
+import dev.dubhe.anvilcraft.block.DeflectionRingBlock;
 import dev.dubhe.anvilcraft.block.DischargerBlock;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.EmberGrindstone;
@@ -110,6 +98,8 @@ import dev.dubhe.anvilcraft.block.ThermoelectricConverterBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
 import dev.dubhe.anvilcraft.block.VoidMatterBlock;
+import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityCountPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityTypePressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.FireImmunePressurePlateBlock;
@@ -125,14 +115,14 @@ import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
-import dev.dubhe.anvilcraft.item.SimpleMultiPartBlockItem;
-import dev.dubhe.anvilcraft.item.FlexibleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.CursedBlockItem;
 import dev.dubhe.anvilcraft.item.EndDustBlockItem;
+import dev.dubhe.anvilcraft.item.FlexibleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.PlaceInWaterBlockItem;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.item.SimpleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
 import dev.dubhe.anvilcraft.util.DangerUtil;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
@@ -292,37 +282,37 @@ public class ModBlocks {
         })
         .register();
     public static final BlockEntry<? extends Block> CRUSHING_TABLE = REGISTRATE
-            .block("crushing_table", CrushingTableBlock::new)
-            .initialProperties(() -> Blocks.IRON_BLOCK)
-            .blockstate((ctx, provider) -> {
-            })
-            .simpleItem()
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .recipe((ctx, provider) -> {
-                ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
-                        .requires(ModBlocks.STAMPING_PLATFORM)
-                        .requires(Items.GRINDSTONE)
-                        .unlockedBy(
-                                "has_" + Items.GRINDSTONE,
-                                AnvilCraftDatagen.has(Items.GRINDSTONE))
-                        .unlockedBy(
-                                AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
-                        .save(provider, AnvilCraft.of("shapeless_crushing_table_recipe"));
-                ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
-                        .pattern("BAB")
-                        .pattern("B B")
-                        .pattern("B B")
-                        .define('A', Items.GRINDSTONE)
-                        .define('B', Tags.Items.INGOTS_IRON)
-                        .unlockedBy(
-                                "has_" + Items.GRINDSTONE,
-                                AnvilCraftDatagen.has(Items.GRINDSTONE))
-                        .unlockedBy(
-                                AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
-                        .save(provider, AnvilCraft.of("shaped_crushing_table_recipe"));
+        .block("crushing_table", CrushingTableBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .blockstate((ctx, provider) -> {
+        })
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
+                .requires(ModBlocks.STAMPING_PLATFORM)
+                .requires(Items.GRINDSTONE)
+                .unlockedBy(
+                    "has_" + Items.GRINDSTONE,
+                    AnvilCraftDatagen.has(Items.GRINDSTONE))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
+                .save(provider, AnvilCraft.of("shapeless_crushing_table_recipe"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("BAB")
+                .pattern("B B")
+                .pattern("B B")
+                .define('A', Items.GRINDSTONE)
+                .define('B', Tags.Items.INGOTS_IRON)
+                .unlockedBy(
+                    "has_" + Items.GRINDSTONE,
+                    AnvilCraftDatagen.has(Items.GRINDSTONE))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
+                .save(provider, AnvilCraft.of("shaped_crushing_table_recipe"));
 
-            })
-            .register();
+        })
+        .register();
     public static final BlockEntry<? extends Block> CORRUPTED_BEACON = REGISTRATE
         .block("corrupted_beacon", CorruptedBeaconBlock::new)
         .initialProperties(() -> Blocks.BEACON)
@@ -529,8 +519,7 @@ public class ModBlocks {
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("ABA")
                 .pattern("BCB")
                 .pattern("BBB")
@@ -562,8 +551,7 @@ public class ModBlocks {
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("A")
                 .pattern("B")
                 .pattern("C")
@@ -598,8 +586,7 @@ public class ModBlocks {
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("A")
                 .pattern("B")
                 .pattern("C")
@@ -634,8 +621,7 @@ public class ModBlocks {
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("ABA")
                 .pattern("ACA")
                 .pattern("ADA")
@@ -668,8 +654,7 @@ public class ModBlocks {
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get(), 8)
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 8)
                 .pattern("A")
                 .pattern("B")
                 .pattern("A")
@@ -1225,8 +1210,7 @@ public class ModBlocks {
         .blockstate((ctx, provider) -> {
             provider.horizontalBlock(
                 ctx.get(),
-                state -> DangerUtil.genModModelFile("block/item_detector" +
-                    (state.getValue(ItemDetectorBlock.POWERED) ? "_on" : "")).get(),
+                state -> DangerUtil.genModModelFile("block/item_detector" + (state.getValue(ItemDetectorBlock.POWERED) ? "_on" : "")).get(),
                 0
             );
         })
@@ -1518,18 +1502,18 @@ public class ModBlocks {
         .register();
 
     public static final BlockEntry<DeflectionRingBlock> DEFLECTION_RING = REGISTRATE
-            .block("deflection_ring", DeflectionRingBlock::new)
-            .initialProperties(() -> Blocks.IRON_BLOCK)
-            .loot(FlexibleMultiPartBlock::loot)
-            .properties(it ->
-                it.isSuffocating(ModBlocks::never).noOcclusion()
-            )
-            .item(FlexibleMultiPartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
-            .build()
-            .blockstate((ctx, provider) -> {
-            })
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .register();
+        .block("deflection_ring", DeflectionRingBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .loot(FlexibleMultiPartBlock::loot)
+        .properties(it ->
+            it.isSuffocating(ModBlocks::never).noOcclusion()
+        )
+        .item(FlexibleMultiPartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
+        .build()
+        .blockstate((ctx, provider) -> {
+        })
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .register();
 
     public static final BlockEntry<MagnetoElectricCoreBlock> MAGNETO_ELECTRIC_CORE_BLOCK = REGISTRATE
         .block("magnetoelectric_core", MagnetoElectricCoreBlock::new)

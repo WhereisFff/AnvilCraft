@@ -149,6 +149,9 @@ public class AnvilCraftConfig implements ConfigData {
     @Comment("Iono Craft Backpack Max Flight Time in ticks")
     public int ionoCraftBackpackMaxFlightTime = 1200 * 20;
 
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    public IonoCraftBackpackHud ionoCraftBackpackHud = new IonoCraftBackpackHud();
+
     public static class PowerConverter implements ConfigData {
         @Comment("The working interval of power converters")
         @ConfigEntry.Gui.Tooltip
@@ -163,5 +166,24 @@ public class AnvilCraftConfig implements ConfigData {
         @Comment("Power loss of energy converters")
         @ConfigEntry.Gui.Tooltip
         public double powerConverterLoss = 0.1;
+    }
+
+    public static class IonoCraftBackpackHud implements ConfigData {
+        @Comment("If true, will show Ionocraft Backpack current power in hud")
+        @ConfigEntry.Gui.Tooltip
+        public boolean enabled = true;
+
+        @Comment("The Gui Hud Scale")
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 8)
+        public float hudScale = 0.75f;
+
+        @Comment("The gui hud x position")
+        @ConfigEntry.Gui.Tooltip
+        public int hudX = 8;
+
+        @Comment("The gui hud y position")
+        @ConfigEntry.Gui.Tooltip
+        public int hudY = 8;
     }
 }

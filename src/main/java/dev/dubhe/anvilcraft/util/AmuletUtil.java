@@ -50,14 +50,14 @@ public class AmuletUtil {
         SAPPHIRE(
             "sapphire", (sources, source) ->
             DamageSourceUtil.isMatchTypes(source, sources, DamageTypes.DROWN, DamageTypes.DRY_OUT)
-            || DamageSourceUtil.isEntityMatchTypes(source, EntityType.GUARDIAN, EntityType.ELDER_GUARDIAN),
+                || DamageSourceUtil.isEntityMatchTypes(source, EntityType.GUARDIAN, EntityType.ELDER_GUARDIAN),
             ModItems.SAPPHIRE_AMULET
         ),
         ANVIL(
             "anvil", (sources, source) ->
             DamageSourceUtil.isMatchTypes(source, sources, DamageTypes.FALLING_ANVIL)
-            || (source.type().equals(sources.damageTypes.get(DamageTypes.FALLING_BLOCK)) && source.getEntity() instanceof FallingGiantAnvilEntity)
-            || Optional.ofNullable(source.getWeaponItem())
+                || (source.type().equals(sources.damageTypes.get(DamageTypes.FALLING_BLOCK)) && source.getEntity() instanceof FallingGiantAnvilEntity)
+                || Optional.ofNullable(source.getWeaponItem())
                 .filter(item -> item.is(ModItemTags.ANVIL_HAMMER))
                 .isPresent(),
             ModItems.ANVIL_AMULET
@@ -70,14 +70,14 @@ public class AmuletUtil {
         ),
         COMRADE(
             "comrade", (sources, source) -> {
-                if (source.getEntity() instanceof Player murder && source.getDirectEntity() instanceof Player victim) {
-                    return Optional.ofNullable(victim.getTeam())
-                        .map(team -> team.getPlayers().contains(murder.getScoreboardName()))
-                        .orElse(true);
-                }
+            if (source.getEntity() instanceof Player murder && source.getDirectEntity() instanceof Player victim) {
+                return Optional.ofNullable(victim.getTeam())
+                    .map(team -> team.getPlayers().contains(murder.getScoreboardName()))
+                    .orElse(true);
+            }
 
-                return false;
-            },
+            return false;
+        },
             ModItems.COMRADE_AMULET
         ),
         FEATHER(
@@ -120,7 +120,8 @@ public class AmuletUtil {
         public boolean isValid(DamageSources sources, DamageSource source) {
             try {
                 return this.predicate.test(sources, source);
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+            }
 
             return false;
         }
@@ -148,15 +149,16 @@ public class AmuletUtil {
         return 0;
     }
 
-    public static int getStoredRaffleProbability(Player player, Type type) {
-        return player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY).getInt(type.getTypeId());
-    }
     public static int getRaffleProbability(Player player, Type type, boolean isConsumeAmuletBox) {
         if (!hasAmuletInInventory(player, type)) {
             return getStoredRaffleProbability(player, type) + (isConsumeAmuletBox ? 20 : 5);
         } else {
             return 0;
         }
+    }
+
+    public static int getStoredRaffleProbability(Player player, Type type) {
+        return player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY).getInt(type.getTypeId());
     }
 
     public static void setRaffleProbability(Player player, DamageSource source, NonNullUnaryOperator<Integer> modifier) {
@@ -167,6 +169,7 @@ public class AmuletUtil {
             }
         }
     }
+
     public static void setRaffleProbability(Player player, Type type, NonNullUnaryOperator<Integer> modifier) {
         CompoundTag root = player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY);
         if (!hasAmuletInInventory(player, type)) {

@@ -207,7 +207,7 @@ public class SlidingRailBlock extends Block implements IHammerChangeable, IHamme
 
         List<BlockPos> list2 = pistonstructureresolver.getToDestroy();
         BlockState[] ablockstate = new BlockState[list.size() + list2.size()];
-        Direction direction = facing;//facing.getOpposite();
+        Direction direction = facing; //facing.getOpposite();
         int i = 0;
 
         for (int j = list2.size() - 1; j >= 0; j--) {

@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.client.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
+import dev.dubhe.anvilcraft.client.hud.IonoCraftBackpackHUD;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 
 import net.minecraft.client.DeltaTracker;
@@ -58,6 +59,7 @@ public class GuiLayerRegistrationEventListener {
         });
 
         event.registerAboveAll(AnvilCraft.of("test"), GuiLayerRegistrationEventListener::render);
+        event.registerAboveAll(AnvilCraft.of("ionocraft_backpack"), IonoCraftBackpackHUD::render);
     }
 
     public static void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {

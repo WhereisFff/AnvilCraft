@@ -78,7 +78,7 @@ public class ModBlockTags {
         return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", id));
     }
 
-    private static TagKey<Block> bindMekanism(String id){
+    private static TagKey<Block> bindMekanism(String id) {
         return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(MEKANISM_MODID, id));
     }
 
@@ -88,7 +88,7 @@ public class ModBlockTags {
 
     public static final Object2ObjectMap<Color, TagKey<Block>> DYED_COLORS = initDyedTags();
 
-    public static Object2ObjectMap<Color, TagKey<Block>> initDyedTags(){
+    public static Object2ObjectMap<Color, TagKey<Block>> initDyedTags() {
         Object2ObjectMap<Color, TagKey<Block>> map = new Object2ObjectOpenHashMap<>();
         for (Color color : Color.values()) {
             map.put(color, bindC("dyed/" + color));

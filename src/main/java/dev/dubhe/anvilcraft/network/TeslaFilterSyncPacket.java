@@ -19,7 +19,7 @@ import java.util.List;
 public class TeslaFilterSyncPacket implements CustomPacketPayload {
     public static final Type<TeslaFilterSyncPacket> TYPE = new Type<>(AnvilCraft.of("tesla_filter_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, TeslaFilterSyncPacket> STREAM_CODEC =
-            StreamCodec.ofMember(TeslaFilterSyncPacket::encode, TeslaFilterSyncPacket::new);
+        StreamCodec.ofMember(TeslaFilterSyncPacket::encode, TeslaFilterSyncPacket::new);
     public static final IPayloadHandler<TeslaFilterSyncPacket> HANDLER = TeslaFilterSyncPacket::clientHandler;
 
     private final List<Pair<TeslaFilter, String>> filters;

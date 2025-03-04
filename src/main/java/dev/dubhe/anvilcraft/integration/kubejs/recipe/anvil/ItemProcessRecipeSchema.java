@@ -48,18 +48,18 @@ public interface ItemProcessRecipeSchema {
 
         @Override
         protected void validate() {
-            if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()){
+            if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Ingredients is Empty!").source(sourceLine);
             }
-            if (computeIfAbsent(RESULTS, ArrayList::new).isEmpty()){
+            if (computeIfAbsent(RESULTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Ingredients is Empty!").source(sourceLine);
             }
         }
     }
-    
+
     RecipeKey<List<Ingredient>> INGREDIENTS = IngredientComponent.INGREDIENT.asList().inputKey("ingredients").defaultOptional();
     RecipeKey<List<ChanceItemStack>> RESULTS = AnvilCraftRecipeComponents.CHANCE_ITEM_STACK.asList().inputKey("results").defaultOptional();
-    
+
     RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, RESULTS)
         .factory(new KubeRecipeFactory(AnvilCraft.of("item_process"), ItemProcessKubeRecipe.class, ItemProcessKubeRecipe::new))
         .constructor(INGREDIENTS, RESULTS)

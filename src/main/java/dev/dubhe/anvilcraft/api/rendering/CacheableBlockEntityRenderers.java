@@ -18,7 +18,7 @@ public class CacheableBlockEntityRenderers {
         RENDERERS.put(type, renderProvider);
     }
 
-    public static CacheableBlockEntityRenderer<?> get(BlockEntityType<?> type){
+    public static CacheableBlockEntityRenderer<?> get(BlockEntityType<?> type) {
         return RENDERERS.get(type);
     }
 

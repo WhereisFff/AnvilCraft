@@ -53,6 +53,6 @@ public class DynamicPowerComponent {
         }
     }
 
-    public record PowerConsumption(int amount){
+    public record PowerConsumption(int amount) {
     }
 }

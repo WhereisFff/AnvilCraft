@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-
 import dev.dubhe.anvilcraft.util.ModInteractionMap;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -30,13 +29,13 @@ public class HoneyCauldronBlock extends Layered4LevelCauldronBlock implements IH
 
     @Override
     public ItemInteractionResult useItemOn(
-            ItemStack stack,
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            Player player,
-            InteractionHand hand,
-            BlockHitResult hitResult
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
     ) {
         CauldronInteraction interaction = this.interactions.map().get(stack.getItem());
         if (interaction == null) {

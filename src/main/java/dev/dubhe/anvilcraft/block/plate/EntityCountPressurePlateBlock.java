@@ -28,8 +28,8 @@ public class EntityCountPressurePlateBlock extends PowerLevelPressurePlateBlock 
 
     protected static int getEntityCountWithFilter(Level level, AABB box, Predicate<Entity> filter) {
         return level.getEntitiesOfClass(
-                Entity.class, box,
-                EntitySelector.NO_SPECTATORS.and(filter)
+            Entity.class, box,
+            EntitySelector.NO_SPECTATORS.and(filter)
         ).size();
     }
 }

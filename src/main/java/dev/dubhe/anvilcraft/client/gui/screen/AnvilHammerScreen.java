@@ -25,13 +25,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Matrix4f;
-import org.joml.Quaternionf;
 import org.joml.Vector2f;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -44,9 +42,9 @@ import java.util.List;
 @ParametersAreNonnullByDefault
 public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     public static final int RADIUS = 80;
-    public static final int DELAY = 150;//ms
-    public static final int ANIMATION_T = 300;//ms
-    public static final int CLOSING_ANIMATION_T = 150;//ms
+    public static final int DELAY = 150; //ms
+    public static final int ANIMATION_T = 300; //ms
+    public static final int CLOSING_ANIMATION_T = 150; //ms
     public static final float ZOOM = 13.5f;
     public static final int IGNORE_CURSOR_MOVE_LENGTH = 15;
 

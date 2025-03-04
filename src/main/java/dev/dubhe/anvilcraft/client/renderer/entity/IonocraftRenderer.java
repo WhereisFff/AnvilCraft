@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.client.renderer.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.init.ModModelLayers;
 import dev.dubhe.anvilcraft.entity.IonocraftEntity;
@@ -13,7 +12,6 @@ import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -30,7 +28,7 @@ public class IonocraftRenderer extends EntityRenderer<IonocraftEntity> {
 
     @Override
     public void render(
-        IonocraftEntity p_entity,
+        IonocraftEntity pEntity,
         float entityYaw,
         float partialTick,
         PoseStack poseStack,
@@ -40,8 +38,8 @@ public class IonocraftRenderer extends EntityRenderer<IonocraftEntity> {
         poseStack.pushPose();
         poseStack.scale(1, -1, 1);
         poseStack.translate(0, -1.5f, 0);
-        model.setupAnim(p_entity, 0, 0, 0, 0, 0);
-        VertexConsumer consumer = bufferSource.getBuffer(model.renderType(this.getTextureLocation(p_entity)));
+        model.setupAnim(pEntity, 0, 0, 0, 0, 0);
+        VertexConsumer consumer = bufferSource.getBuffer(model.renderType(this.getTextureLocation(pEntity)));
         model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
     }

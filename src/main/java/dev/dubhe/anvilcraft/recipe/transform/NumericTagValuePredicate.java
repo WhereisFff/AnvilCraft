@@ -22,10 +22,10 @@ import java.util.function.BiFunction;
 @Getter
 public class NumericTagValuePredicate {
     public static final Codec<NumericTagValuePredicate> CODEC = RecordCodecBuilder.create(ins -> ins.group(
-                    Codec.STRING.fieldOf("tagKeyPath").forGetter(o -> o.tagKeyPath),
-                    ValueFunction.CODEC.fieldOf("requirement").forGetter(o -> o.requirement),
-                    Codec.LONG.fieldOf("expected").forGetter(it -> it.expected))
-            .apply(ins, NumericTagValuePredicate::new));
+            Codec.STRING.fieldOf("tagKeyPath").forGetter(o -> o.tagKeyPath),
+            ValueFunction.CODEC.fieldOf("requirement").forGetter(o -> o.requirement),
+            Codec.LONG.fieldOf("expected").forGetter(it -> it.expected))
+        .apply(ins, NumericTagValuePredicate::new));
 
     private final String tagKeyPath;
     private final ValueFunction requirement;
@@ -74,7 +74,8 @@ public class NumericTagValuePredicate {
         }
 
         @Override
-        @NotNull public String getSerializedName() {
+        @NotNull
+        public String getSerializedName() {
             return name();
         }
     }
@@ -88,7 +89,8 @@ public class NumericTagValuePredicate {
         private ValueFunction requirement;
         private long expected;
 
-        Builder() {}
+        Builder() {
+        }
 
         public Builder path(String tagKeyPath) {
             this.tagKeyPath = tagKeyPath;
@@ -137,7 +139,7 @@ public class NumericTagValuePredicate {
             List<Tag> contract = path.get(tag);
             if (contract.size() >= 2)
                 throw new IllegalArgumentException(
-                        "TagValuePredicate does not allow multiple tag at path: " + tagKeyPath);
+                    "TagValuePredicate does not allow multiple tag at path: " + tagKeyPath);
             if (contract.isEmpty()) return false;
             Tag value = contract.getFirst();
             if (value instanceof NumericTag tag1) {

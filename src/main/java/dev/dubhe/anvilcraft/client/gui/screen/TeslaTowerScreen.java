@@ -28,10 +28,10 @@ import java.util.regex.Pattern;
 public class TeslaTowerScreen extends AbstractContainerScreen<TeslaTowerMenu> {
 
     private static final ResourceLocation CONTAINER_LOCATION =
-            AnvilCraft.of("textures/gui/container/machine/background/tesla_tower.png");
+        AnvilCraft.of("textures/gui/container/machine/background/tesla_tower.png");
 
     public static final ResourceLocation ACTIVE_SILENCER_SLIDER =
-            AnvilCraft.of("textures/gui/container/machine/active_silencer_slider.png");
+        AnvilCraft.of("textures/gui/container/machine/active_silencer_slider.png");
 
     private static final int SCROLL_BAR_HEIGHT = 120;
     private static final int SCROLL_BAR_TOP_POS_Y = 35;
@@ -76,25 +76,25 @@ public class TeslaTowerScreen extends AbstractContainerScreen<TeslaTowerMenu> {
         if (text.startsWith("#")) {
             String search = text.replaceFirst("#", "");
             allFilter.stream()
-                    .filter(it -> it.right().contains(search))
-                    .filter(it -> whiteFilters.stream().noneMatch(it2 -> it.left().getId().equals(it2.left().getId()) && it.right().equals(it2.right())))
-                    .forEach(filteredFilters::add);
+                .filter(it -> it.right().contains(search))
+                .filter(it -> whiteFilters.stream().noneMatch(it2 -> it.left().getId().equals(it2.left().getId()) && it.right().equals(it2.right())))
+                .forEach(filteredFilters::add);
         } else {
             if (text.startsWith("~")) {
                 try {
                     Pattern search = Pattern.compile(text.replaceFirst("~", ""));
                     allFilter.stream()
-                            .filter(it -> search.matcher(it.left().getId()).matches())
-                            .forEach(filteredFilters::add);
+                        .filter(it -> search.matcher(it.left().getId()).matches())
+                        .forEach(filteredFilters::add);
                 } catch (Exception ignored) {
                     // intentionally empty
                 }
             }
             allFilter.stream()
-                    .filter(it -> it.left().title().getString().contains(filterText))
-                    .filter(it ->
-                            whiteFilters.stream().noneMatch(it2 -> it.left().getId().equals(it2.left().getId()) && it.right().equals(it2.right())))
-                    .forEach(filteredFilters::add);
+                .filter(it -> it.left().title().getString().contains(filterText))
+                .filter(it ->
+                    whiteFilters.stream().noneMatch(it2 -> it.left().getId().equals(it2.left().getId()) && it.right().equals(it2.right())))
+                .forEach(filteredFilters::add);
         }
     }
 
@@ -190,17 +190,17 @@ public class TeslaTowerScreen extends AbstractContainerScreen<TeslaTowerMenu> {
         int buttonTop = topPos + 35;
         for (int l = 0; l < 8; ++l) {
             TeslaTowerButton button = new TeslaTowerButton(
-                    leftPos + START_LEFT_X,
-                    buttonTop,
-                    l,
-                    FILTER_FILTERED,
-                    b -> {
-                        if (b instanceof TeslaTowerButton silencerButton) {
-                            onAllFilterButtonClick(silencerButton.getIndex());
-                        }
-                    },
-                    this,
-                    "add");
+                leftPos + START_LEFT_X,
+                buttonTop,
+                l,
+                FILTER_FILTERED,
+                b -> {
+                    if (b instanceof TeslaTowerButton silencerButton) {
+                        onAllFilterButtonClick(silencerButton.getIndex());
+                    }
+                },
+                this,
+                "add");
             button.setWidth(112);
             this.allFilterButtons[l] = this.addRenderableWidget(button);
             buttonTop += 15;
@@ -209,76 +209,76 @@ public class TeslaTowerScreen extends AbstractContainerScreen<TeslaTowerMenu> {
         buttonTop = topPos + 35;
         for (int l = 0; l < 8; ++l) {
             TeslaTowerButton button = new TeslaTowerButton(
-                    leftPos + START_RIGHT_X,
-                    buttonTop,
-                    l,
-                    SOUND_MUTED,
-                    b -> {
-                        if (b instanceof TeslaTowerButton silencerButton) {
-                            onWhiteListFilterButtonClick(silencerButton.getIndex());
-                        }
-                    },
-                    this,
-                    "remove");
+                leftPos + START_RIGHT_X,
+                buttonTop,
+                l,
+                SOUND_MUTED,
+                b -> {
+                    if (b instanceof TeslaTowerButton silencerButton) {
+                        onWhiteListFilterButtonClick(silencerButton.getIndex());
+                    }
+                },
+                this,
+                "remove");
             this.mutedSoundButtons[l] = this.addRenderableWidget(button);
             buttonTop += 15;
         }
 
         assert this.minecraft != null;
         editBox = new EditBox(
-                this.minecraft.font,
-                leftPos + 78,
-                topPos + 19,
-                100,
-                12,
-                Component.translatable("screen.anvilcraft.active_silencer.search"));
+            this.minecraft.font,
+            leftPos + 78,
+            topPos + 19,
+            100,
+            12,
+            Component.translatable("screen.anvilcraft.active_silencer.search"));
         editBox.setResponder(this::onSearchTextChange);
         addRenderableWidget(editBox);
 
         allFilter.addAll(TeslaFilter.all()
-                .stream()
-                .filter(it -> !it.needArg())
-                .map(it -> Pair.of(it, ""))
-                .toList()
+            .stream()
+            .filter(it -> !it.needArg())
+            .map(it -> Pair.of(it, ""))
+            .toList()
         );
         assert Minecraft.getInstance().player != null;
         allFilter.addAll(Minecraft.getInstance().player.connection.getOnlinePlayers().stream()
-                .map(it -> Pair.of(TeslaFilter.getFilter("IsPlayerIdFilter"), it.getProfile().getName()))
-                .toList()
+            .map(it -> Pair.of(TeslaFilter.getFilter("IsPlayerIdFilter"), it.getProfile().getName()))
+            .toList()
         );
         allFilter.addAll(BuiltInRegistries.ENTITY_TYPE.stream()
-                .map(it -> Pair.of(TeslaFilter.getFilter("IsEntityIdFilter"), it.getDescriptionId()))
-                .toList()
+            .map(it -> Pair.of(TeslaFilter.getFilter("IsEntityIdFilter"), it.getDescriptionId()))
+            .toList()
         );
         filteredFilters.addAll(allFilter);
     }
 
     private boolean mouseInLeft(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + START_LEFT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     private boolean mouseInRight(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + START_RIGHT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     private boolean mouseInLeftSlider(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + SCROLL_BAR_START_LEFT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     private boolean mouseInRightSlider(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + SCROLL_BAR_START_RIGHT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     @Override
@@ -293,7 +293,7 @@ public class TeslaTowerScreen extends AbstractContainerScreen<TeslaTowerMenu> {
             if (mouseInRight(mouseX, mouseY, leftPos, topPos)) {
                 if (this.whiteFilters.size() > 8) {
                     this.rightScrollOff =
-                            (int) Mth.clamp(this.rightScrollOff - pScrollY, 0, this.whiteFilters.size() - 7);
+                        (int) Mth.clamp(this.rightScrollOff - pScrollY, 0, this.whiteFilters.size() - 7);
                 }
             }
         }

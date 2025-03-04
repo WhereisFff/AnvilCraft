@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.block.better;
 
 import dev.dubhe.anvilcraft.util.Util;
-
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -19,8 +18,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public abstract class BetterAnvilBlock extends AnvilBlock {
-    public BetterAnvilBlock(Properties p_48777_) {
-        super(p_48777_);
+    public BetterAnvilBlock(Properties properties) {
+        super(properties);
     }
 
     @Override

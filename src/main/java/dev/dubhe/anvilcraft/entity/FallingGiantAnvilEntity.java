@@ -69,13 +69,13 @@ public class FallingGiantAnvilEntity extends FallingBlockEntity {
      */
     public static FallingGiantAnvilEntity fall(Level level, BlockPos pos, BlockState blockState, boolean updateBlock) {
         FallingGiantAnvilEntity fallingBlockEntity = new FallingGiantAnvilEntity(
-                level,
-                (double) pos.getX() + 0.5,
-                pos.getY(),
-                (double) pos.getZ() + 0.5,
-                blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-                        ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
-                        : blockState);
+            level,
+            (double) pos.getX() + 0.5,
+            pos.getY(),
+            (double) pos.getZ() + 0.5,
+            blockState.hasProperty(BlockStateProperties.WATERLOGGED)
+                ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
+                : blockState);
         if (updateBlock) {
             level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
         }
@@ -105,11 +105,11 @@ public class FallingGiantAnvilEntity extends FallingBlockEntity {
                 Block block = this.blockState.getBlock();
                 if (!this.onGround()) {
                     if (!this.level().isClientSide
-                            && (this.time > 100
-                                            && (blockPos.getY() <= this.level().getMinBuildHeight()
-                                                    || blockPos.getY()
-                                                            > this.level().getMaxBuildHeight())
-                                    || this.time > 600)) {
+                        && (this.time > 100
+                        && (blockPos.getY() <= this.level().getMinBuildHeight()
+                        || blockPos.getY()
+                        > this.level().getMaxBuildHeight())
+                        || this.time > 600)) {
                         if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                             this.spawnAtLocation(block);
                         }
@@ -120,7 +120,7 @@ public class FallingGiantAnvilEntity extends FallingBlockEntity {
                     BlockState blockState = this.level().getBlockState(blockPos);
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
                     DirectionalPlaceContext placeContext = new DirectionalPlaceContext(
-                            this.level(), blockPos, Direction.DOWN, ItemStack.EMPTY, Direction.UP);
+                        this.level(), blockPos, Direction.DOWN, ItemStack.EMPTY, Direction.UP);
                     boolean isMovingPiston = false;
                     boolean canBeReplaced = true;
                     boolean canSurvive = this.blockState.canSurvive(this.level(), blockPos.below());
@@ -129,12 +129,12 @@ public class FallingGiantAnvilEntity extends FallingBlockEntity {
                         for (int j = -1; j <= 1; j++) {
                             BlockPos offsetPos = blockPos.offset(i, -1, j);
                             isMovingPiston = isMovingPiston
-                                    || this.level().getBlockState(offsetPos).is(Blocks.MOVING_PISTON);
+                                || this.level().getBlockState(offsetPos).is(Blocks.MOVING_PISTON);
                             for (int k = -1; k <= 1; k++) {
                                 canBeReplaced = canBeReplaced
-                                        && this.level()
-                                                .getBlockState(blockPos.offset(i, k, j))
-                                                .canBeReplaced(placeContext);
+                                    && this.level()
+                                    .getBlockState(blockPos.offset(i, k, j))
+                                    .canBeReplaced(placeContext);
                             }
                             isFree = isFree && FallingBlock.isFree(this.level().getBlockState(offsetPos.below()));
                         }
@@ -142,30 +142,30 @@ public class FallingGiantAnvilEntity extends FallingBlockEntity {
                     if (!isMovingPiston) {
                         if (canBeReplaced && canSurvive && !isFree) {
                             if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-                                    && this.level().getFluidState(blockPos).getType() == Fluids.WATER) {
+                                && this.level().getFluidState(blockPos).getType() == Fluids.WATER) {
                                 this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, true);
                             }
 
                             if (this.level().setBlock(blockPos, this.blockState, 3)) {
                                 ((ServerLevel) this.level())
-                                        .getChunkSource()
-                                        .chunkMap
-                                        .broadcast(
-                                                this,
-                                                new ClientboundBlockUpdatePacket(
-                                                        blockPos, this.level().getBlockState(blockPos)));
+                                    .getChunkSource()
+                                    .chunkMap
+                                    .broadcast(
+                                        this,
+                                        new ClientboundBlockUpdatePacket(
+                                            blockPos, this.level().getBlockState(blockPos)));
                                 this.discard();
                                 if (block instanceof GiantAnvilBlock block1) {
                                     block1.onLand(
-                                            this.level(),
-                                            blockPos,
-                                            this.blockState,
-                                            blockState,
-                                            this,
-                                            this.fallDistance);
+                                        this.level(),
+                                        blockPos,
+                                        this.blockState,
+                                        blockState,
+                                        this,
+                                        this.fallDistance);
                                 }
                             } else if (this.dropItem
-                                    && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                                && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                                 this.discard();
                                 this.callOnBrokenAfterFall(block, blockPos);
                                 this.spawnAtLocation(block);

@@ -32,14 +32,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.util.Lazy;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
 import java.util.List;
 
-import static dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity.NEUTRONIUM_INGOT_MASS;
 import static dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity.DISPLAYED_MASS;
+import static dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity.NEUTRONIUM_INGOT_MASS;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -47,11 +46,10 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final String KEY_MASS_VALUE = "gui.anvilcraft.category.mass_inject.mass_value";
-    private final String KEY_MASS_NEEDED = "gui.anvilcraft.category.mass_inject.mass_needed";
-    private final String KEY_ITEMS_NEEDED = "gui.anvilcraft.category.mass_inject.items_needed";
+    private static final String KEY_MASS_VALUE = "gui.anvilcraft.category.mass_inject.mass_value";
+    private static final String KEY_MASS_NEEDED = "gui.anvilcraft.category.mass_inject.mass_needed";
+    private static final String KEY_ITEMS_NEEDED = "gui.anvilcraft.category.mass_inject.items_needed";
 
-    private final Lazy<IDrawable> background;
     private final IDrawable icon;
     private final IDrawable slot;
     private final Component title;
@@ -61,7 +59,6 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
     private final IDrawable arrowOut;
 
     public MassInjectCategory(IGuiHelper helper) {
-        background = Lazy.of(() -> helper.createBlankDrawable(WIDTH, HEIGHT));
         icon = new DrawableBlockStateIcon(Blocks.ANVIL.defaultBlockState(),
             ModBlocks.SPACE_OVERCOMPRESSOR.getDefaultState());
         slot = helper.getSlotDrawable();
@@ -83,8 +80,13 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background.get();
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override
@@ -94,7 +96,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
 
     @Override
     public void setRecipe(
-            IRecipeLayoutBuilder builder, RecipeHolder<MassInjectRecipe> recipeHolder, IFocusGroup focuses) {
+        IRecipeLayoutBuilder builder, RecipeHolder<MassInjectRecipe> recipeHolder, IFocusGroup focuses) {
         MassInjectRecipe recipe = recipeHolder.value();
         builder.addSlot(RecipeIngredientRole.INPUT, 21, 24)
             .addIngredients(recipe.getIngredient());
@@ -107,21 +109,21 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
 
     @Override
     public void draw(
-            RecipeHolder<MassInjectRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<MassInjectRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         MassInjectRecipe recipe = recipeHolder.value();
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                22 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            22 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(guiGraphics, ModBlocks.SPACE_OVERCOMPRESSOR.getDefaultState(),
             81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
 

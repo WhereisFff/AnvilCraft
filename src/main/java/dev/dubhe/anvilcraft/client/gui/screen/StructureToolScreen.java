@@ -66,11 +66,9 @@ import static dev.dubhe.anvilcraft.item.StructureToolItem.StructureData;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class StructureToolScreen extends AbstractContainerScreen<StructureToolMenu> {
-    private final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/structure_tool/background.png");
+    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/structure_tool/background.png");
 
-    private static final WidgetSprites SPRITES = new WidgetSprites(
-        AnvilCraft.of("widget/structure_tool/button"), AnvilCraft.of("widget/structure_tool/button_highlighted"));
+    private static final WidgetSprites SPRITES = new WidgetSprites(AnvilCraft.of("widget/structure_tool/button"), AnvilCraft.of("widget/structure_tool/button_highlighted"));
 
     private static final Component REGULAR_RECIPE_TOOLTIP =
         Component.translatable("screen.anvilcraft.structure_tool.regular_recipe");
@@ -245,9 +243,7 @@ public class StructureToolScreen extends AbstractContainerScreen<StructureToolMe
 
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
-        if (this.hoveredSlot != null &&
-            this.hoveredSlot.index == SLOT_ID_RESULT  &&
-            !this.hoveredSlot.hasItem()) {
+        if (this.hoveredSlot != null && this.hoveredSlot.index == SLOT_ID_RESULT && !this.hoveredSlot.hasItem()) {
             guiGraphics.renderComponentTooltip(font, RESULT_SLOT_TOOLTIPS, x, y);
         }
         super.renderTooltip(guiGraphics, x, y);
@@ -359,10 +355,11 @@ public class StructureToolScreen extends AbstractContainerScreen<StructureToolMe
         Block block = state.getBlock();
         BlockPredicateWithState predicate = BlockPredicateWithState.of(block);
         state.getProperties().stream()
-            .filter(p -> recordAllStates || DEFAULT_RECORDED_PROPERTIES.contains(p)
-                || (BlockStateUtil.isMultifaceLike(block) &&
-                    p instanceof BooleanProperty &&
-                    PipeBlock.PROPERTY_BY_DIRECTION.containsValue(p)))
+            .filter(p -> recordAllStates
+                || DEFAULT_RECORDED_PROPERTIES.contains(p)
+                || (BlockStateUtil.isMultifaceLike(block)
+                && p instanceof BooleanProperty
+                && PipeBlock.PROPERTY_BY_DIRECTION.containsValue(p)))
             .forEach(p -> predicate.copyPropertyFrom(state, p));
         return predicate;
     }

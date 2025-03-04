@@ -26,8 +26,6 @@ import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmberMetalUpgradeTemplateItem;
-import dev.dubhe.anvilcraft.item.IonoCraftItem;
-import dev.dubhe.anvilcraft.item.IonocraftBackpackItem;
 import dev.dubhe.anvilcraft.item.amulet.AbstractAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.AnvilAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.CatAmuletItem;
@@ -38,6 +36,8 @@ import dev.dubhe.anvilcraft.item.amulet.EmeraldAmuletItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.GeodeItem;
 import dev.dubhe.anvilcraft.item.GuideBookItem;
+import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
+import dev.dubhe.anvilcraft.item.IonoCraftItem;
 import dev.dubhe.anvilcraft.item.LevitationPowderItem;
 import dev.dubhe.anvilcraft.item.MagnetItem;
 import dev.dubhe.anvilcraft.item.ModFoods;
@@ -53,6 +53,12 @@ import dev.dubhe.anvilcraft.item.StructureToolItem;
 import dev.dubhe.anvilcraft.item.SuperHeavyItem;
 import dev.dubhe.anvilcraft.item.TopazItem;
 import dev.dubhe.anvilcraft.item.UtusanItem;
+import dev.dubhe.anvilcraft.item.amulet.AbstractAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.AnvilAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.CatAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.DogAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.EmeraldAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.FeatherAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.RubyAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SapphireAmuletItem;
@@ -446,8 +452,8 @@ public class ModItems {
         })
         .register();
 
-    public static final ItemEntry<? extends IonocraftBackpackItem> IONOCRAFT_BACKPACK = REGISTRATE
-        .item("ionocraft_backpack", IonocraftBackpackItem::new)
+    public static final ItemEntry<? extends IonoCraftBackpackItem> IONOCRAFT_BACKPACK = REGISTRATE
+        .item("ionocraft_backpack", IonoCraftBackpackItem::new)
         .initialProperties(() -> new Item.Properties().durability(ArmorItem.Type.CHESTPLATE.getDurability(15)))
         .model((ctx, prov) -> {
             ItemModelBuilder offModel = prov.getBuilder(prov.name(ctx.lazy()))

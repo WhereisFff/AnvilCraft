@@ -16,10 +16,10 @@ import lombok.Getter;
 public class StructureDataSyncPacket implements CustomPacketPayload {
     public static final Type<StructureDataSyncPacket> TYPE = new Type<>(AnvilCraft.of("structure_data_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, StructureDataSyncPacket> STREAM_CODEC =
-            StreamCodec.composite(
-                    StructureToolItem.StructureData.STREAM_CODEC,
-                    StructureDataSyncPacket::getStructureData,
-                    StructureDataSyncPacket::new);
+        StreamCodec.composite(
+            StructureToolItem.StructureData.STREAM_CODEC,
+            StructureDataSyncPacket::getStructureData,
+            StructureDataSyncPacket::new);
     public static final IPayloadHandler<StructureDataSyncPacket> HANDLER = (packet, ctx) -> {
         Screen screen = Minecraft.getInstance().screen;
         if (screen instanceof StructureToolScreen structureToolScreen) {

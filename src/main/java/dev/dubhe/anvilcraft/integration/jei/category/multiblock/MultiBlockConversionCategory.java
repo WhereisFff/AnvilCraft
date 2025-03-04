@@ -32,7 +32,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -54,10 +53,9 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
     private final Map<RecipeHolder<MultiblockConversionRecipe>, LevelLike> cacheInput = new HashMap<>();
     private final Map<RecipeHolder<MultiblockConversionRecipe>, LevelLike> cacheOutput = new HashMap<>();
 
-    private final static Comparator<ItemStack> BY_COUNT_DECREASING =
+    private static final Comparator<ItemStack> BY_COUNT_DECREASING =
         Comparator.comparing(ItemStack::getCount).thenComparing(ItemStack::getDescriptionId).reversed();
 
-    private final Lazy<IDrawable> background;
     private final IDrawable icon;
     private final IDrawable slot;
     private final IDrawable layerUp;
@@ -77,7 +75,6 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
     private DisplayMode displayMode = DisplayMode.OVERVIEW;
 
     public MultiBlockConversionCategory(IGuiHelper helper) {
-        background = Lazy.of(() -> helper.createBlankDrawable(WIDTH, HEIGHT));
         icon = helper.createDrawableItemStack(new ItemStack(ModBlocks.GIANT_ANVIL));
         arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
         slot = helper.getSlotDrawable();
@@ -154,8 +151,13 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background.get();
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override
