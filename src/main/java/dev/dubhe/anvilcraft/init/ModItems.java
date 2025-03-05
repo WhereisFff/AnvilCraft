@@ -567,6 +567,7 @@ public class ModItems {
             builder -> builder.requires(Items.ANVIL)
         );
     public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET;
+
     static {
         ItemEntry<CogwheelAmuletItem> cogwheelAmulet;
         if (LoadingModList.get().getModFileById("create") != null) {
@@ -582,6 +583,7 @@ public class ModItems {
         }
         COGWHEEL_AMULET = cogwheelAmulet;
     }
+
     public static final ItemEntry<ComradeAmuletItem> COMRADE_AMULET =
         createAmuletItem(
             "comrade", ComradeAmuletItem::new,

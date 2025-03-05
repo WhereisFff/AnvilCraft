@@ -64,6 +64,7 @@ public abstract class LivingEntityMixin extends Entity {
     private boolean alsoCheckAmuletBox(ItemStack instance, Item item) {
         return instance.is(item) || instance.is(ModItems.AMULET_BOX);
     }
+
     @ModifyArg(
         method = "checkTotemDeathProtection",
         at = @At(
@@ -74,6 +75,7 @@ public abstract class LivingEntityMixin extends Entity {
     private Object alsoAwardAmuletBoxStat(Object value, @Local ItemStack stack) {
         return stack.getItem();
     }
+
     @ModifyArg(
         method = "checkTotemDeathProtection",
         at = @At(
@@ -85,6 +87,7 @@ public abstract class LivingEntityMixin extends Entity {
     private ItemStack onlyUseTotemToTrigger(ItemStack stack) {
         return Items.TOTEM_OF_UNDYING.getDefaultInstance();
     }
+
     @ModifyVariable(
         method = "checkTotemDeathProtection",
         at = @At(
@@ -119,6 +122,7 @@ public abstract class LivingEntityMixin extends Entity {
 
         return ref.get();
     }
+
     @Redirect(
         method = "checkTotemDeathProtection",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V")
