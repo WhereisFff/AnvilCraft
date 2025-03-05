@@ -24,13 +24,13 @@ public class MineralFountainBlockEntity extends BlockEntity {
         super(ModBlockEntities.MINERAL_FOUNTAIN.get(), pos, blockState);
     }
 
+    private MineralFountainBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+    }
+
     public static @NotNull MineralFountainBlockEntity createBlockEntity(
         BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         return new MineralFountainBlockEntity(type, pos, blockState);
-    }
-
-    private MineralFountainBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        super(type, pos, blockState);
     }
 
     /**

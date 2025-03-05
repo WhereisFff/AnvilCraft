@@ -34,7 +34,7 @@ public class ComradeAmuletItem extends AbstractAmuletItem {
     }
 
     @Override
-    void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, !getSignedPlayers(stack).isEmpty());
     }
 

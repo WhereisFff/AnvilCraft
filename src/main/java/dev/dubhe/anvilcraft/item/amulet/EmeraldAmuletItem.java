@@ -13,7 +13,7 @@ public class EmeraldAmuletItem extends AbstractAmuletItem {
     }
 
     @Override
-    void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (entity instanceof Player player) {
             //如果要直接加村庄英雄：player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 1, 2, false, false));
             player.setData(DISCOUNT_RATE, 0.3f);
