@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tterrag.registrate.Registrate;
+import dev.dubhe.anvilcraft.api.integration.IntegrationManager;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
@@ -29,6 +30,7 @@ import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.ModInteractionMap;
 import dev.dubhe.anvilcraft.util.Util;
+import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.minecraft.network.chat.Component;
@@ -64,6 +66,9 @@ public class AnvilCraft {
     public static AnvilCraftConfig config = AutoConfig.register(AnvilCraftConfig.class, JanksonConfigSerializer::new)
         .getConfig();
 
+    @Getter
+    private static final IntegrationManager integrationManager = new IntegrationManager();
+
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
 
     public AnvilCraft(IEventBus modEventBus) {
@@ -91,6 +96,9 @@ public class AnvilCraft {
         AnvilCraftDatagen.init();
 
         registerEvents(modEventBus);
+        StartupNotificationManager.addModMessage("[AnvilCraft] Loading Integrations");
+        integrationManager.compileContent();
+        integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
     }

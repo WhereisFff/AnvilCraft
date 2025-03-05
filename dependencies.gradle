@@ -3,10 +3,6 @@ dependencies {
     api("com.tterrag.registrate:Registrate:${libs.versions.registrate.get()}")
     jarJar("com.tterrag.registrate:Registrate:${libs.versions.registrate.get()}")
 
-    // Anvil Lib
-    implementation(libs.anvillib)
-    jarJar(libs.anvillib)
-
     // Cloth Config
     implementation(libs.clothConfig)
     jarJar(libs.clothConfig)
