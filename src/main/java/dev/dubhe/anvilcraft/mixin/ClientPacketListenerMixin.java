@@ -27,6 +27,7 @@ public class ClientPacketListenerMixin {
     private static boolean alsoCheckAmuletBox(ItemStack instance, Item item) {
         return instance.is(item) || instance.is(ModItems.AMULET_BOX);
     }
+    
     @Inject(
         method = "findTotem",
         at = @At("RETURN"),
