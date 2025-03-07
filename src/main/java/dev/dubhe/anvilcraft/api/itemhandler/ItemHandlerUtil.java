@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.api.itemhandler;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
@@ -49,5 +52,22 @@ public class ItemHandlerUtil {
             }
             if (maxAmount <= 0) return;
         }
+    }
+
+    public static int countItemsInHandler(IItemHandler handler) {
+        int count = 0;
+        for (int i = 0; i < handler.getSlots(); i++) {
+            count += handler.getStackInSlot(i).getCount();
+        }
+        return count;
+    }
+
+    public static Object2IntMap<Item> mergeHandlerItems(IItemHandler handler) {
+        Object2IntMap<Item> items = new Object2IntOpenHashMap<>();
+        for (int i = 0; i < handler.getSlots(); i++) {
+            ItemStack stack = handler.getStackInSlot(i);
+            items.mergeInt(stack.getItem(), stack.getCount(), Integer::sum);
+        }
+        return items;
     }
 }

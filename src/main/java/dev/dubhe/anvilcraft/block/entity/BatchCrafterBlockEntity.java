@@ -131,7 +131,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     }
 
     @SuppressWarnings("UnreachableCode")
-    private boolean craft(@NotNull Level level) {
+    public boolean craft(@NotNull Level level) {
         if (craftingContainer.isEmpty()) return false;
         if (!canCraft()) return false;
         ItemStack result;

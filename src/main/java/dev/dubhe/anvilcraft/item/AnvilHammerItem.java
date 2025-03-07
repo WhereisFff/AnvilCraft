@@ -46,13 +46,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior.FACING;
-import static dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior.FACING_HOPPER;
-import static dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior.HORIZONTAL_FACING;
-
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class AnvilHammerItem extends Item implements Equipable {
+    public static final Property<?>[] SUPPORTED_PROPERTIES = {
+        BlockStateProperties.FACING,
+        BlockStateProperties.FACING_HOPPER,
+        BlockStateProperties.HORIZONTAL_FACING,
+        BlockStateProperties.ORIENTATION,
+        BlockStateProperties.AXIS,
+        BlockStateProperties.HORIZONTAL_AXIS
+    };
     private static final List<Predicate<Player>> isWearingPredicates = new ArrayList<>();
     private final ItemAttributeModifiers modifiers;
 
@@ -133,19 +137,14 @@ public class AnvilHammerItem extends Item implements Equipable {
      */
     public static boolean ableToUseAnvilHammer(Level level, BlockPos blockPos, Player player) {
         BlockState state = level.getBlockState(blockPos);
-        return state.getBlock() instanceof IHammerRemovable
-            || state.getBlock() instanceof IHammerChangeable
-            || state.is(ModBlockTags.HAMMER_REMOVABLE)
-            || state.is(ModBlockTags.HAMMER_CHANGEABLE)
-            || player.getOffhandItem().is(Items.FIREWORK_ROCKET);
-    }
-
-    public static boolean possibleToUseEnhancedHammerChange(BlockState state) {
-        return state.getBlock() instanceof IHammerChangeable || state.is(ModBlockTags.HAMMER_CHANGEABLE);
+        if (state.getBlock() instanceof IHammerChangeable hammerChangeable) {
+            return hammerChangeable.checkBlockState(state);
+        }
+        return true;
     }
 
     @Nullable
-    public static Property<?> findChangeableProperty(BlockState state) {
+    public static Property<?> findModifyableProperty(BlockState state) {
         Property<?> result = null;
         if (state.getBlock() instanceof IHammerChangeable changeable) {
             result = changeable.getChangeableProperty(state);
@@ -153,12 +152,10 @@ public class AnvilHammerItem extends Item implements Equipable {
         if (result != null) {
             return result;
         }
-        if (state.hasProperty(FACING)) {
-            return FACING;
-        } else if (state.hasProperty(FACING_HOPPER)) {
-            return FACING_HOPPER;
-        } else if (state.hasProperty(HORIZONTAL_FACING)) {
-            return HORIZONTAL_FACING;
+        for (Property<?> supportedProperty : SUPPORTED_PROPERTIES) {
+            if (state.hasProperty(supportedProperty)) {
+                return supportedProperty;
+            }
         }
         return null;
     }
