@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.curios;
 
+import com.simibubi.create.content.equipment.goggles.GogglesItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.init.ModItems;
@@ -10,6 +11,7 @@ import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
@@ -38,6 +40,11 @@ public class CuriosIntegration {
         IonoCraftBackpackItem.addStackProvider(player ->
             CuriosApi.getCuriosInventory(player).map(this::getIonoCraftBackpackWearing).orElse(ItemStack.EMPTY)
         );
+        if (ModList.get().isLoaded("create")) {
+            GogglesItem.addIsWearingPredicate(player ->
+                CuriosApi.getCuriosInventory(player).map(this::isAnvilHammerWearing).orElse(false)
+            );
+        }
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

@@ -165,13 +165,9 @@ public class BlockTagLoader {
             .add(ModBlocks.TRANSMISSION_POLE.getKey())
             .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
             .add(ModBlocks.TESLA_TOWER.getKey())
-            .add(ModBlocks.OVERSEER_BLOCK.getKey());
+            .add(ModBlocks.OVERSEER_BLOCK.getKey())
+            .add(ModBlocks.ACCELERATION_RING.getKey())
+            .add(ModBlocks.DEFLECTION_RING.getKey());
 
-        provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
-            .add(ModBlocks.GIANT_ANVIL.getKey())
-            .add(ModBlocks.TRANSMISSION_POLE.getKey())
-            .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
-            .add(ModBlocks.TESLA_TOWER.getKey())
-            .add(ModBlocks.OVERSEER_BLOCK.getKey());
     }
 }
