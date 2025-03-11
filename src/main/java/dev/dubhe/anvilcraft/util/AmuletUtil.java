@@ -58,8 +58,8 @@ public class AmuletUtil {
         new Type(
             "anvil", (sources, source) ->
             DamageSourceUtil.isMatchTypes(source, sources, DamageTypes.FALLING_ANVIL)
-            || (source.type().equals(sources.damageTypes.get(DamageTypes.FALLING_BLOCK)) &&
-                source.getEntity() instanceof FallingGiantAnvilEntity)
+            || (source.type().equals(sources.damageTypes.get(DamageTypes.FALLING_BLOCK))
+                && source.getEntity() instanceof FallingGiantAnvilEntity)
             || Optional.ofNullable(source.getWeaponItem())
                 .filter(item -> item.is(ModItemTags.ANVIL_HAMMER))
                 .isPresent(),
@@ -67,14 +67,14 @@ public class AmuletUtil {
         ),
         new Type(
             "comrade", (sources, source) -> {
-                if (source.getEntity() instanceof Player murder && source.getDirectEntity() instanceof Player victim) {
-                    return Optional.ofNullable(victim.getTeam())
-                        .map(team -> team.getPlayers().contains(murder.getScoreboardName()))
-                        .orElse(true);
-                }
+            if (source.getEntity() instanceof Player murder && source.getDirectEntity() instanceof Player victim) {
+                return Optional.ofNullable(victim.getTeam())
+                    .map(team -> team.getPlayers().contains(murder.getScoreboardName()))
+                    .orElse(true);
+            }
 
-                return false;
-            },
+            return false;
+        },
             ModItems.COMRADE_AMULET
         ),
         new Type(
@@ -110,7 +110,8 @@ public class AmuletUtil {
         public boolean isValid(DamageSources sources, DamageSource source) {
             try {
                 return this.predicate.test(sources, source);
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+            }
 
             return false;
         }
@@ -118,7 +119,8 @@ public class AmuletUtil {
         public boolean isValid(ItemEntry<? extends AbstractAmuletItem> entry) {
             try {
                 return this.entry.equals(entry);
-            } catch (Throwable ignored) {}
+            } catch (Throwable ignored) {
+            }
 
             return false;
         }

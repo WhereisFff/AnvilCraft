@@ -94,7 +94,8 @@ public class PlayerEventListener {
                 if (!comrade.equals(ItemStack.EMPTY) && ComradeAmuletItem.canIgnorePlayer(comrade, causingEntityUUID)) {
                     event.setCanceled(true);
                 }
-            } catch (NullPointerException ignored) {}
+            } catch (NullPointerException ignored) {
+            }
 
             if (AmuletUtil.shouldIgnoreDamage(player, source)) {
                 event.setCanceled(true);

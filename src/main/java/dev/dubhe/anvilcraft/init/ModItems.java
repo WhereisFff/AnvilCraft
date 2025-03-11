@@ -576,7 +576,8 @@ public class ModItems {
                 Field cogwheelAmuletEntry = createIntegration.getField("COGWHEEL_AMULET");
                 //noinspection ResultOfMethodCallIgnored
                 cogwheelAmuletEntry.get(null);
-            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException ignored) {}
+            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException ignored) {
+            }
         }
     }
 
