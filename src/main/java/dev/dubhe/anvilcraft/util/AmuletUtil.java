@@ -18,6 +18,7 @@ import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -198,9 +199,22 @@ public class AmuletUtil {
         try {
             return entry.isIn(
                 InventoryUtil.getFirstItem(player.getInventory(), stack -> stack.getItem() instanceof AbstractAmuletItem)
-            );
+            ) || InventoryUtil.hasItemInCompat(player, entry::isIn);
         } catch (NullPointerException ignored) {
             return false;
+        }
+    }
+
+    public static ItemStack getEffectiveAmulet(Player player, ItemEntry<? extends AbstractAmuletItem> entry) {
+        try {
+            ItemStack stack = InventoryUtil.getFirstItem(player.getInventory(), stack1 -> stack1.getItem() instanceof AbstractAmuletItem);
+            if (entry.isIn(stack)) {
+                return stack;
+            } else {
+                return InventoryUtil.getItemInCompat(player, entry::isIn);
+            }
+        } catch (NullPointerException ignored) {
+            return ItemStack.EMPTY;
         }
     }
 

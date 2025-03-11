@@ -86,10 +86,9 @@ public class PlayerEventListener {
     public static void onPlayerHurt(LivingIncomingDamageEvent event) {
         if (event.getEntity() instanceof Player player) {
             DamageSource source = event.getSource();
-            Inventory inventory = player.getInventory();
 
-            ItemStack comrade = InventoryUtil.getFirstItem(inventory, ModItems.COMRADE_AMULET);
             try {
+                ItemStack comrade = AmuletUtil.getEffectiveAmulet(player, ModItems.COMRADE_AMULET);
                 UUID causingEntityUUID = Objects.requireNonNull(source.getEntity()).getUUID();
                 if (!comrade.equals(ItemStack.EMPTY) && ComradeAmuletItem.canIgnorePlayer(comrade, causingEntityUUID)) {
                     event.setCanceled(true);

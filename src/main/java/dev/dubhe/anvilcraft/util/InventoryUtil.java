@@ -4,6 +4,7 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
@@ -47,17 +48,10 @@ public class InventoryUtil {
     public static LinkedList<ItemStack> getItems(Inventory inventory) {
         LinkedList<ItemStack> items = new LinkedList<>();
 
-        compatConsumer.accept(items, inventory.player);
         items.addAll(inventory.items);
         items.addAll(inventory.armor);
         items.addAll(inventory.offhand);
 
-        return items;
-    }
-
-    public static LinkedList<ItemStack> getItems(Inventory inventory, Item item) {
-        LinkedList<ItemStack> items = getItems(inventory);
-        items.removeIf(stack -> stack.getItem().equals(item));
         return items;
     }
 
@@ -67,6 +61,32 @@ public class InventoryUtil {
 
     public static boolean hasItem(Inventory inventory, ItemEntry<? extends Item> item) {
         return !getFirstItem(inventory, item).equals(ItemStack.EMPTY);
+    }
+
+    public static ItemStack getItemInCompat(LivingEntity entity, Predicate<ItemStack> filter) {
+        for (ItemStack stack : getCompatItems(entity)) {
+            if (filter.test(stack)) {
+                return stack;
+            }
+        }
+
+        return ItemStack.EMPTY;
+    }
+
+    public static LinkedList<ItemStack> getCompatItems(LivingEntity living) {
+        LinkedList<ItemStack> items = new LinkedList<>();
+        compatConsumer.accept(items, living);
+        return items;
+    }
+
+    public static boolean hasItemInCompat(LivingEntity entity, Predicate<ItemStack> filter) {
+        for (ItemStack stack : getCompatItems(entity)) {
+            if (filter.test(stack)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public static void addToInventory(Inventory inventory, ItemStack stack) {

@@ -531,13 +531,12 @@ public class ModItems {
             .tag(ModItemTags.AMULET)
             .recipe((ctx, provider) -> {
                 JewelCraftingRecipe.Builder builder = JewelCraftingRecipe.builder()
-                    .requires(ModBlocks.SILVER_BLOCK, 4);
+                    .requires(ModItems.SILVER_INGOT, 1)
+                    .result(new ItemStack(ctx.get()));
 
                 builderConsumer.accept(builder);
 
-                builder.requires(ModItems.ROYAL_STEEL_INGOT)
-                    .result(new ItemStack(ctx.get()))
-                    .save(provider);
+                builder.save(provider);
             })
             .register();
     }

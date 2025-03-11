@@ -76,9 +76,8 @@ public class CreateIntegration {
         .item("cogwheel_amulet", CogwheelAmuletItem::new)
         .properties(properties -> properties.stacksTo(1))
         .recipe((ctx, provider) -> JewelCraftingRecipe.builder()
-            .requires(ModBlocks.SILVER_BLOCK, 4)
+            .requires(ModItems.SILVER_INGOT, 1)
             .requires(AllItems.PRECISION_MECHANISM, 16)
-            .requires(ModItems.ROYAL_STEEL_INGOT)
             .result(new ItemStack(ctx.get()))
             .save(provider))
         .register();

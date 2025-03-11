@@ -33,7 +33,7 @@ public class AmuletBoxItem extends Item {
         if (!level.isClientSide) {
             if (!player.isShiftKeyDown()) {
                 while (
-                    !this.isTotemCountMax(box)
+                    !this.isFullTotem(box)
                     && inventory.contains(stack -> stack.getItem().equals(Items.TOTEM_OF_UNDYING))
                 ) {
                     ItemStack totem = InventoryUtil.getFirstItem(inventory, Items.TOTEM_OF_UNDYING);
@@ -52,8 +52,12 @@ public class AmuletBoxItem extends Item {
     }
 
     @SuppressWarnings("DataFlowIssue")
-    private boolean isTotemCountMax(ItemStack stack) {
-        return !(stack.getItem() instanceof AmuletBoxItem) || stack.get(ModComponents.TOTEM_COUNT) >= 27;
+    private boolean isFullTotem(ItemStack stack) {
+        return !(stack.getItem() instanceof AmuletBoxItem) || stack.get(ModComponents.TOTEM_COUNT) >= this.getMaxTotemCount();
+    }
+
+    public int getMaxTotemCount() {
+        return 16;
     }
 
     @Override
