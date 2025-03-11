@@ -81,12 +81,9 @@ import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
-
-import java.lang.reflect.Field;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
@@ -521,7 +518,7 @@ public class ModItems {
         .properties((properties) -> properties.stacksTo(1))
         .register();
 
-    public static <T extends AbstractAmuletItem> ItemEntry<T> createAmuletItem(
+    private static <T extends AbstractAmuletItem> ItemEntry<T> createAmuletItem(
         String type, NonNullFunction<Item.Properties, T> factory,
         NonNullConsumer<JewelCraftingRecipe.Builder> builderConsumer
     ) {
@@ -566,20 +563,6 @@ public class ModItems {
             "anvil", AnvilAmuletItem::new,
             builder -> builder.requires(Items.ANVIL)
         );
-
-    // 齿轮护符加载
-    static {
-        if (LoadingModList.get().getModFileById("create") != null) {
-            try {
-                Class<?> createIntegration = Class.forName("dev.dubhe.anvilcraft.integration.create.CreateIntegration");
-                Field cogwheelAmuletEntry = createIntegration.getField("COGWHEEL_AMULET");
-                //noinspection ResultOfMethodCallIgnored
-                cogwheelAmuletEntry.get(null);
-            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException ignored) {
-            }
-        }
-    }
-
     public static final ItemEntry<ComradeAmuletItem> COMRADE_AMULET =
         createAmuletItem(
             "comrade", ComradeAmuletItem::new,

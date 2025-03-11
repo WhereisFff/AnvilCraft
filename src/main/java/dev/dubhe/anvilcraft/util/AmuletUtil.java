@@ -31,7 +31,7 @@ public class AmuletUtil {
     public static BiPredicate<Player, Type> hasAmuletInInventory =
         (player, type) -> InventoryUtil.hasItem(player.getInventory(), type.getEntry().asItem());
 
-    public static final Set<Type> types = Sets.newHashSet(
+    private static final Set<Type> types = Sets.newHashSet(
         new Type(
             "emerald", (sources, source) ->
             DamageSourceUtil.isEntityMatchTypes(source, EntityType.IRON_GOLEM, EntityType.PILLAGER),
@@ -125,6 +125,10 @@ public class AmuletUtil {
 
             return false;
         }
+    }
+
+    public static void registerCustomType(Type type) {
+        types.add(type);
     }
 
     public static @Nullable Type getType(Player player, DamageSource source) {

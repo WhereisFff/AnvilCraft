@@ -4,6 +4,7 @@ import com.simibubi.create.AllItems;
 import com.simibubi.create.api.boiler.BoilerHeater;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.block.GlowingMetalBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
@@ -15,11 +16,13 @@ import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.util.AmuletUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
@@ -35,6 +38,7 @@ public class CreateIntegration {
 
     public void apply() {
         BoilerHeater.REGISTRY.registerProvider(new MyProvider());
+        AnvilCraft.MOD_BUS.addListener(this::registerToTab);
     }
 
     private static float heater(Level level, BlockPos blockPos, BlockState blockState) {
@@ -72,6 +76,10 @@ public class CreateIntegration {
         }
     }
 
+    private void registerToTab(BuildCreativeModeTabContentsEvent event) {
+        event.insertAfter(ModItems.ANVIL_AMULET.asStack(), COGWHEEL_AMULET.asStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+    }
+
     public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET = REGISTRATE
         .item("cogwheel_amulet", CogwheelAmuletItem::new)
         .properties(properties -> properties.stacksTo(1))
@@ -83,7 +91,7 @@ public class CreateIntegration {
         .register();
 
     static {
-        AmuletUtil.types.add(new AmuletUtil.Type(
+        AmuletUtil.registerCustomType(new AmuletUtil.Type(
             "cogwheel", (sources, source) ->
             ModList.get().isLoaded("create")
             && Objects.requireNonNull(sources.damageTypes.getKey(source.type())).getNamespace().contains("create"),
