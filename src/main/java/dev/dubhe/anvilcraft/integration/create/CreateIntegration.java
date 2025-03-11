@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.IncandescentMetalBlock;
 import dev.dubhe.anvilcraft.block.RedhotMetalBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModItemGroups;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
@@ -77,7 +78,11 @@ public class CreateIntegration {
     }
 
     private void registerToTab(BuildCreativeModeTabContentsEvent event) {
-        event.insertAfter(ModItems.ANVIL_AMULET.asStack(), COGWHEEL_AMULET.asStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS);
+        if (event.getTabKey().equals(ModItemGroups.ANVILCRAFT_TOOL.getKey())) {
+            event.insertAfter(
+                ModItems.ANVIL_AMULET.asStack(), COGWHEEL_AMULET.asStack(), CreativeModeTab.TabVisibility.PARENT_AND_SEARCH_TABS
+            );
+        }
     }
 
     public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET = REGISTRATE
