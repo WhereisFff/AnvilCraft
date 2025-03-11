@@ -8,12 +8,13 @@ import dev.dubhe.anvilcraft.integration.curios.renderer.GogglesCurioRenderer;
 import dev.dubhe.anvilcraft.integration.curios.renderer.IonoCraftBackpackCurioRenderer;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
+import dev.dubhe.anvilcraft.util.AmuletUtil;
+import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.LoadingModList;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import org.jetbrains.annotations.NotNull;
@@ -40,6 +41,20 @@ public class CuriosIntegration {
         IonoCraftBackpackItem.addStackProvider(player ->
             CuriosApi.getCuriosInventory(player).map(this::getIonoCraftBackpackWearing).orElse(ItemStack.EMPTY)
         );
+        InventoryUtil.compatConsumer = InventoryUtil.compatConsumer.andThen(
+            (items, living) -> CuriosApi.getCuriosInventory(living).ifPresent(
+                handler -> handler.findCurios(stack -> true)
+                    .forEach(result -> items.offerLast(result.stack()))
+            )
+        );
+        AmuletUtil.hasAmuletInInventory = AmuletUtil.hasAmuletInInventory.or((player, type) -> {
+            if (CuriosApi.getCuriosInventory(player).isPresent()) {
+                return CuriosApi.getCuriosInventory(player).get()
+                    .isEquipped(type.getEntry().asItem());
+            }
+
+            return false;
+        });
         if (ModList.get().isLoaded("create")) {
             GogglesItem.addIsWearingPredicate(player ->
                 CuriosApi.getCuriosInventory(player).map(this::isAnvilHammerWearing).orElse(false)
@@ -54,25 +69,8 @@ public class CuriosIntegration {
             ModItems.ANVIL_HAMMER,
             ModItems.ROYAL_ANVIL_HAMMER,
             ModItems.EMBER_ANVIL_HAMMER,
-            ModItems.IONOCRAFT_BACKPACK,
-            ModItems.ANVIL_AMULET,
-            ModItems.CAT_AMULET,
-            ModItems.COMRADE_AMULET,
-            ModItems.DOG_AMULET,
-            ModItems.EMERALD_AMULET,
-            ModItems.FEATHER_AMULET,
-            ModItems.RUBY_AMULET,
-            ModItems.SAPPHIRE_AMULET,
-            ModItems.SILENCE_AMULET,
-            ModItems.TOPAZ_AMULET
+            ModItems.IONOCRAFT_BACKPACK
         );
-        if (LoadingModList.get().getModFileById("create") != null) {
-            event.registerItem(
-                CuriosCapability.ITEM,
-                (stack, context) -> () -> stack,
-                ModItems.COGWHEEL_AMULET
-            );
-        }
     }
 
     private boolean isAnvilHammerWearing(ICuriosItemHandler itemHandler) {

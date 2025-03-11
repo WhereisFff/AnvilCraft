@@ -46,9 +46,9 @@ import dev.dubhe.anvilcraft.item.SuperHeavyItem;
 import dev.dubhe.anvilcraft.item.TopazItem;
 import dev.dubhe.anvilcraft.item.UtusanItem;
 import dev.dubhe.anvilcraft.item.amulet.AbstractAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
 import dev.dubhe.anvilcraft.item.amulet.AnvilAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.CatAmuletItem;
-import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.DogAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.EmeraldAmuletItem;
@@ -58,7 +58,6 @@ import dev.dubhe.anvilcraft.item.amulet.SapphireAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SilenceAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.TopazAmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.util.CastUtil;
 import dev.dubhe.anvilcraft.util.ModelProviderUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -517,10 +516,10 @@ public class ModItems {
         })
         .register();
 
-    public static final ItemEntry<Item> AMULET_BOX =
-        REGISTRATE.item("amulet_box", Item::new)
-            .properties((properties) -> properties.stacksTo(1))
-            .register();
+    public static final ItemEntry<AmuletBoxItem> AMULET_BOX = REGISTRATE
+        .item("amulet_box", AmuletBoxItem::new)
+        .properties((properties) -> properties.stacksTo(1))
+        .register();
 
     public static <T extends AbstractAmuletItem> ItemEntry<T> createAmuletItem(
         String type, NonNullFunction<Item.Properties, T> factory,
@@ -568,22 +567,17 @@ public class ModItems {
             "anvil", AnvilAmuletItem::new,
             builder -> builder.requires(Items.ANVIL)
         );
-    public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET;
 
+    // 齿轮护符加载
     static {
-        ItemEntry<CogwheelAmuletItem> cogwheelAmulet;
         if (LoadingModList.get().getModFileById("create") != null) {
             try {
                 Class<?> createIntegration = Class.forName("dev.dubhe.anvilcraft.integration.create.CreateIntegration");
                 Field cogwheelAmuletEntry = createIntegration.getField("COGWHEEL_AMULET");
-                cogwheelAmulet = CastUtil.cast(cogwheelAmuletEntry.get(null));
-            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException ignored) {
-                cogwheelAmulet = null;
-            }
-        } else {
-            cogwheelAmulet = null;
+                //noinspection ResultOfMethodCallIgnored
+                cogwheelAmuletEntry.get(null);
+            } catch (NoSuchFieldException | ClassNotFoundException | IllegalAccessException ignored) {}
         }
-        COGWHEEL_AMULET = cogwheelAmulet;
     }
 
     public static final ItemEntry<ComradeAmuletItem> COMRADE_AMULET =

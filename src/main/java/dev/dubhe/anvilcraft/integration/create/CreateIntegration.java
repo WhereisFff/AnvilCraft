@@ -13,12 +13,16 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import dev.dubhe.anvilcraft.util.AmuletUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
@@ -78,4 +82,13 @@ public class CreateIntegration {
             .result(new ItemStack(ctx.get()))
             .save(provider))
         .register();
+
+    static {
+        AmuletUtil.types.add(new AmuletUtil.Type(
+            "cogwheel", (sources, source) ->
+            ModList.get().isLoaded("create")
+            && Objects.requireNonNull(sources.damageTypes.getKey(source.type())).getNamespace().contains("create"),
+            COGWHEEL_AMULET
+        ));
+    }
 }
