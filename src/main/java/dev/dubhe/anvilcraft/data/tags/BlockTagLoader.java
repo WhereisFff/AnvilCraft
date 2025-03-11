@@ -178,5 +178,10 @@ public class BlockTagLoader {
             .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
             .add(ModBlocks.TESLA_TOWER.getKey())
             .add(ModBlocks.OVERSEER_BLOCK.getKey());
+
+        provider.addTag(ModBlockTags.SPECTRAL_CAN_THROUGH)
+            .addTag(Tags.Blocks.GLASS_BLOCKS)
+            .addTag(Tags.Blocks.GLASS_PANES)
+            .addTag(BlockTags.LEAVES);
     }
 }

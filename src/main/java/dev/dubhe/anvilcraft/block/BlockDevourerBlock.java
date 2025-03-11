@@ -224,7 +224,6 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             if (
                 AnvilCraft.config.blockDevourerUpwardChainDevouring
                 && devourBlockPos.getY() == devourBlockBoundingBox.maxY
-                && devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)
             ) {
                 chainDevourBlockPoses.addAll(
                     BlockPos.betweenClosedStream(AabbUtil.create(
