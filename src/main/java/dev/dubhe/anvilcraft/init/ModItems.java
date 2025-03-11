@@ -513,7 +513,9 @@ public class ModItems {
         .register();
 
     public static final ItemEntry<Item> AMULET_BOX =
-        REGISTRATE.item("amulet_box", Item::new).register();
+        REGISTRATE.item("amulet_box", Item::new)
+            .properties((properties) -> properties.stacksTo(1))
+            .register();
 
     public static <T extends AbstractAmuletItem> ItemEntry<T> createAmuletItem(
         String type, NonNullFunction<Item.Properties, T> factory,
@@ -679,7 +681,6 @@ public class ModItems {
         .register();
     public static final ItemEntry<CannedFoodItem> CANNED_FOOD = REGISTRATE
         .item("canned_food", p -> new CannedFoodItem(p, TIN_CAN))
-        .properties(properties -> properties.stacksTo(16))
         .tag(Tags.Items.FOODS)
         .register();
 
@@ -1722,11 +1723,13 @@ public class ModItems {
         .item("neutronium_ingot", SuperHeavyItem::new)
         .tag(Tags.Items.INGOTS)
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .properties((properties) -> properties.stacksTo(1))
         .register();
     public static final ItemEntry<SuperHeavyItem> STABLE_NEUTRONIUM_INGOT = REGISTRATE
         .item("stable_neutronium_ingot", SuperHeavyItem::new)
         .tag(Tags.Items.INGOTS)
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .properties((properties) -> properties.stacksTo(1))
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 1)
                 .requires(ModItems.NEUTRONIUM_INGOT)
@@ -1741,6 +1744,7 @@ public class ModItems {
         .item("charged_neutronium_ingot", SuperHeavyItem::new)
         .tag(Tags.Items.INGOTS)
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .properties((properties) -> properties.stacksTo(1))
         .register();
 
     public static final ItemEntry<BucketItem> OIL_BUCKET = REGISTRATE

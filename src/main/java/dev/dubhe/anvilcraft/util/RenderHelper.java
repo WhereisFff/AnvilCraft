@@ -66,8 +66,8 @@ public class RenderHelper {
     private static final int MAX_CACHE_SIZE = 64;
     private static final LinkedHashMap<BlockState, BlockEntity> BLOCK_ENTITY_CACHE = new LinkedHashMap<>();
     private static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
-    private static final Vector3f L1 = new Vector3f(0.4F, 0.0F, 1.0F).normalize();
-    private static final Vector3f L2 = new Vector3f(-0.4F, 1.0F, -0.2F).normalize();
+    public static final Vector3f L1 = new Vector3f(0.4F, 0.0F, 1.0F).normalize();
+    public static final Vector3f L2 = new Vector3f(-0.4F, 1.0F, -0.2F).normalize();
 
     private static final ModelResourceLocation TRIDENT_MODEL = ModelResourceLocation.inventory(ResourceLocation.withDefaultNamespace("trident"));
     private static final ModelResourceLocation SPYGLASS_MODEL = ModelResourceLocation.inventory(ResourceLocation.withDefaultNamespace("spyglass"));

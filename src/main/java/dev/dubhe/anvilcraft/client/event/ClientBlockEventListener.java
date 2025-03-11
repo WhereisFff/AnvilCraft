@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -31,7 +32,7 @@ public class ClientBlockEventListener {
      *
      * @param event 右键方块事件
      */
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void anvilHammerUse(@NotNull PlayerInteractEvent.RightClickBlock event) {
         InteractionHand hand = event.getHand();
         if (event.getEntity().getItemInHand(hand).getItem() instanceof AnvilHammerItem) {
@@ -55,17 +56,9 @@ public class ClientBlockEventListener {
 
 
     private static void clientHandle(PlayerInteractEvent.@NotNull RightClickBlock event, BlockState targetBlockState, InteractionHand hand) {
-        Property<?> property = AnvilHammerItem.findChangeableProperty(targetBlockState);
-        if (!event.getEntity().isShiftKeyDown()
-            && AnvilHammerItem.possibleToUseEnhancedHammerChange(targetBlockState)
-            && property != null
-        ) {
-            if (
-                (targetBlockState.getBlock() instanceof IHammerChangeable ihc
-                    && ihc.checkBlockState(targetBlockState)
-                ) || (targetBlockState.is(ModBlockTags.HAMMER_CHANGEABLE))
-                    && event.getEntity().getAbilities().mayBuild
-            ) {
+        Property<?> property = AnvilHammerItem.findModifyableProperty(targetBlockState);
+        if (!event.getEntity().isShiftKeyDown() && property != null) {
+            if (event.getEntity().getAbilities().mayBuild) {
                 List<BlockState> possibleStates = StateUtil.findPossibleStatesForProperty(targetBlockState, property);
                 if (possibleStates.isEmpty()) {
                     PacketDistributor.sendToServer(new HammerUsePacket(event.getPos(), hand));

@@ -15,7 +15,7 @@ modDevGradle = "2.0.78"
 spotless = "7.0.0.BETA2"
 lombok = "8.7.1"
 machete = "1.+"
-anvillib = "1.2.0+build.107"
+anvillib = "1.1.0+build.97"
 curios = "9.0.15+1.21.1"
 create = "6.0.1-18"
 ponder = "1.0.43"
@@ -42,6 +42,7 @@ create = { group = "com.simibubi.create", name = "create-1.21.1", version.ref = 
 ponder = { group = "net.createmod.ponder", name = "Ponder-NeoForge-1.21.1", version.ref = "ponder" }
 flywheelApi = { group = "dev.engine-room.flywheel", name = "flywheel-neoforge-api-1.21.1", version.ref = "flywheel" }
 flywheel = { group = "dev.engine-room.flywheel", name = "flywheel-neoforge-1.21.1", version.ref = "flywheel" }
+
 
 
 [plugins]

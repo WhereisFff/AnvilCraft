@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tterrag.registrate.Registrate;
+import dev.dubhe.anvilcraft.api.integration.IntegrationManager;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
@@ -21,6 +22,7 @@ import dev.dubhe.anvilcraft.init.ModInspections;
 import dev.dubhe.anvilcraft.init.ModItemGroups;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootContextParamSets;
+import dev.dubhe.anvilcraft.init.ModLootItemFunctions;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.ModNetworks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
@@ -29,6 +31,7 @@ import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.ModInteractionMap;
 import dev.dubhe.anvilcraft.util.Util;
+import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.minecraft.network.chat.Component;
@@ -64,6 +67,9 @@ public class AnvilCraft {
     public static AnvilCraftConfig config = AutoConfig.register(AnvilCraftConfig.class, JanksonConfigSerializer::new)
         .getConfig();
 
+    @Getter
+    private static final IntegrationManager integrationManager = new IntegrationManager();
+
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
 
     public AnvilCraft(IEventBus modEventBus) {
@@ -85,12 +91,15 @@ public class AnvilCraft {
         ModLootContextParamSets.registerAll();
         ModEnchantmentEffectComponents.register(modEventBus);
         ModEnchantmentEffects.register(modEventBus);
-
+        ModLootItemFunctions.LOOT_FUNCTION_TYPES.register(modEventBus);
         TeslaFilter.init();
         // datagen
         AnvilCraftDatagen.init();
 
         registerEvents(modEventBus);
+        StartupNotificationManager.addModMessage("[AnvilCraft] Loading Integrations");
+        integrationManager.compileContent();
+        integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
     }

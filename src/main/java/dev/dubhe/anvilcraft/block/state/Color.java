@@ -11,22 +11,22 @@ import org.jetbrains.annotations.Nullable;
 
 @Accessors(fluent = true)
 public enum Color implements StringRepresentable {
-    BLACK("black", Items.BLACK_DYE),
-    BLUE("blue", Items.BLUE_DYE),
-    BROWN("brown", Items.BROWN_DYE),
-    CYAN("cyan", Items.CYAN_DYE),
-    GRAY("gray", Items.GRAY_DYE),
-    GREEN("green", Items.GREEN_DYE),
-    LIGHT_BLUE("light_blue", Items.LIGHT_BLUE_DYE),
-    LIGHT_GRAY("light_gray", Items.LIGHT_GRAY_DYE),
-    LIME("lime", Items.LIME_DYE),
-    MAGENTA("magenta", Items.MAGENTA_DYE),
-    ORANGE("orange", Items.ORANGE_DYE),
-    PINK("pink", Items.PINK_DYE),
-    PURPLE("purple", Items.PURPLE_DYE),
-    RED("red", Items.RED_DYE),
     WHITE("white", Items.WHITE_DYE),
-    YELLOW("yellow", Items.YELLOW_DYE);
+    LIGHT_GRAY("light_gray", Items.LIGHT_GRAY_DYE),
+    GRAY("gray", Items.GRAY_DYE),
+    BLACK("black", Items.BLACK_DYE),
+    BROWN("brown", Items.BROWN_DYE),
+    RED("red", Items.RED_DYE),
+    ORANGE("orange", Items.ORANGE_DYE),
+    YELLOW("yellow", Items.YELLOW_DYE),
+    LIME("lime", Items.LIME_DYE),
+    GREEN("green", Items.GREEN_DYE),
+    CYAN("cyan", Items.CYAN_DYE),
+    LIGHT_BLUE("light_blue", Items.LIGHT_BLUE_DYE),
+    BLUE("blue", Items.BLUE_DYE),
+    PURPLE("purple", Items.PURPLE_DYE),
+    MAGENTA("magenta", Items.MAGENTA_DYE),
+    PINK("pink", Items.PINK_DYE);
 
     private final String name;
 

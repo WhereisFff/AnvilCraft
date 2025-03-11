@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.integration.create;
 
 import com.simibubi.create.api.boiler.BoilerHeater;
 import com.simibubi.create.api.registry.SimpleRegistry;
-import dev.anvilcraft.lib.integration.Integrations;
+import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.block.GlowingMetalBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.IncandescentMetalBlock;
@@ -12,10 +12,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Integrations("create")
+@Integration("create")
 public class CreateIntegration {
     private static final BoilerHeater HEATER = CreateIntegration::heater;
     private static final BoilerHeater REDHOT_METAL = new ConstantValueHeater(1);
@@ -26,7 +25,7 @@ public class CreateIntegration {
         BoilerHeater.REGISTRY.registerProvider(new MyProvider());
     }
 
-    private static float heater(Level level, BlockPos blockPos, @NotNull BlockState blockState) {
+    private static float heater(Level level, BlockPos blockPos, BlockState blockState) {
         if (blockState.is(ModBlocks.HEATER) && !blockState.getValue(HeaterBlock.OVERLOAD)) {
             return 1;
         }
@@ -54,6 +53,7 @@ public class CreateIntegration {
     }
 
     private record ConstantValueHeater(float level) implements BoilerHeater {
+
         @Override
         public float getHeat(Level level, BlockPos blockPos, BlockState blockState) {
             return this.level;

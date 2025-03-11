@@ -11,6 +11,6 @@ public class CogwheelAmuletItem extends AbstractAmuletItem {
     }
 
     @Override
-    void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
     }
 }
