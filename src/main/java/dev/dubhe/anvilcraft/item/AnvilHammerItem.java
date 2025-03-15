@@ -137,6 +137,7 @@ public class AnvilHammerItem extends Item implements Equipable {
      */
     public static boolean ableToUseAnvilHammer(Level level, BlockPos blockPos, Player player) {
         BlockState state = level.getBlockState(blockPos);
+        if (state.is(ModBlockTags.ANVIL_HAMMER_BLACKLIST)) return false;
         if (state.getBlock() instanceof IHammerChangeable hammerChangeable) {
             return hammerChangeable.checkBlockState(state);
         }
