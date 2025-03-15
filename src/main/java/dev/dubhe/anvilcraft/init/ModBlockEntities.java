@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChuteBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.ConfinementChamberBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CorruptedBeaconBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CrabTrapBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CreativeGeneratorBlockEntity;
@@ -34,6 +35,7 @@ import dev.dubhe.anvilcraft.block.entity.TransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.plate.TimeCountedPressurePlateBlockEntity;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.BatchCrafterRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.ChargeCollectorRenderer;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.ConfinementChamberRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.CorruptedBeaconRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.CreativeGeneratorRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HasMobBlockRenderer;
@@ -42,7 +44,7 @@ import dev.dubhe.anvilcraft.client.renderer.blockentity.LaserBlockRenderer;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
-public class ModBlockEntities {
+public class  ModBlockEntities {
     public static final BlockEntityEntry<BatchCrafterBlockEntity> BATCH_CRAFTER = REGISTRATE
         .blockEntity("batch_crafter", BatchCrafterBlockEntity::new)
         .renderer(() -> BatchCrafterRenderer::new)
@@ -209,9 +211,15 @@ public class ModBlockEntities {
         .register();
 
     public static final BlockEntityEntry<DeflectionRingBlockEntity> DEFLECTION_RING = REGISTRATE
-        .blockEntity("deflection_ring", DeflectionRingBlockEntity::createBlockEntity)
-        .validBlocks(ModBlocks.DEFLECTION_RING)
-        .register();
+            .blockEntity("deflection_ring", DeflectionRingBlockEntity::createBlockEntity)
+            .validBlocks(ModBlocks.DEFLECTION_RING)
+            .register();
+
+    public static final BlockEntityEntry<ConfinementChamberBlockEntity> CONFINEMENT_CHAMBER = REGISTRATE
+            .blockEntity("confinement_chamber", ConfinementChamberBlockEntity::createBlockEntity)
+            .renderer(() -> ConfinementChamberRenderer::new)
+            .validBlocks(ModBlocks.CONFINEMENT_CHAMBER)
+            .register();
 
     public static void register() {
     }

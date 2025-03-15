@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @MethodsReturnNonnullByDefault
@@ -45,6 +46,7 @@ public abstract class BaseChuteBlockEntity
     private final FilteredItemStackHandler itemHandler = new FilteredItemStackHandler(9) {
         @Override
         public void onContentsChanged(int slot) {
+            assert level != null;
             if (level.isClientSide) return;
             setChanged();
         }
@@ -113,7 +115,7 @@ public abstract class BaseChuteBlockEntity
 
     @Nullable
     protected IItemHandler findItemHandler(BlockPos inputBlockPos, Direction context) {
-        IItemHandler input = getLevel()
+        IItemHandler input = Objects.requireNonNull(getLevel())
             .getCapability(
                 Capabilities.ItemHandler.BLOCK,
                 inputBlockPos,
@@ -123,6 +125,7 @@ public abstract class BaseChuteBlockEntity
             return input;
         }
         AABB aabb = new AABB(inputBlockPos);
+        assert level != null;
         List<ContainerEntity> entities =
             level.getEntitiesOfClass(
                     Entity.class,
@@ -153,9 +156,9 @@ public abstract class BaseChuteBlockEntity
                 );
                 if (source != null) {
                     ItemHandlerUtil.importFromTarget(getItemHandler(), 64, stack -> true, source);
-                    cooldown = AnvilCraft.config.chuteMaxCooldown;
+                    cooldown = AnvilCraft.config.chuteMaxCooldown - 1;
                 } else {
-                    List<ItemEntity> itemEntities = getLevel()
+                    List<ItemEntity> itemEntities = Objects.requireNonNull(getLevel())
                         .getEntitiesOfClass(
                             ItemEntity.class,
                             new AABB(getBlockPos().relative(getInputDirection())),
@@ -170,7 +173,7 @@ public abstract class BaseChuteBlockEntity
                         break;
                     }
                     if (prevSize > itemEntities.size()) {
-                        cooldown = AnvilCraft.config.chuteMaxCooldown;
+                        cooldown = AnvilCraft.config.chuteMaxCooldown - 1;
                     }
                 }
                 // 尝试向朝向容器输出
@@ -181,10 +184,10 @@ public abstract class BaseChuteBlockEntity
 
                 if (target != null) {
                     ItemHandlerUtil.exportToTarget(getItemHandler(), 64, stack -> true, target);
-                    cooldown = AnvilCraft.config.chuteMaxCooldown;
+                    cooldown = AnvilCraft.config.chuteMaxCooldown - 1;
                 } else {
                     Vec3 center = getBlockPos().relative(getOutputDirection()).getCenter();
-                    List<ItemEntity> itemEntities = getLevel()
+                    List<ItemEntity> itemEntities = Objects.requireNonNull(getLevel())
                         .getEntitiesOfClass(
                             ItemEntity.class,
                             new AABB(getBlockPos().relative(getOutputDirection())),
@@ -221,7 +224,7 @@ public abstract class BaseChuteBlockEntity
                                     itemEntity.setDefaultPickUpDelay();
                                     getLevel().addFreshEntity(itemEntity);
                                     this.itemHandler.setStackInSlot(i, stack);
-                                    cooldown = AnvilCraft.config.chuteMaxCooldown;
+                                    cooldown = AnvilCraft.config.chuteMaxCooldown - 1;
                                     break;
                                 }
                             }

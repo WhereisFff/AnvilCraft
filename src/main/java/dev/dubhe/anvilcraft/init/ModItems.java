@@ -57,7 +57,7 @@ import dev.dubhe.anvilcraft.item.amulet.SapphireAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SilenceAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.TopazAmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.util.ModelProviderUtil;
+import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.component.DataComponents;

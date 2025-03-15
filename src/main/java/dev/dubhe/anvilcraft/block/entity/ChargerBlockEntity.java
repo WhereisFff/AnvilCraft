@@ -41,7 +41,7 @@ public class ChargerBlockEntity extends BlockEntity
     private final FilteredItemStackHandler itemHandler = new FilteredItemStackHandler(1) {
 
         @Override
-        public ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
             if (!locked && !previousDischargeFailed) {
                 ItemStack original = stack.copy();
                 original.shrink(1);
@@ -69,7 +69,7 @@ public class ChargerBlockEntity extends BlockEntity
         }
 
         @Override
-        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
             return !locked ? super.extractItem(slot, amount, simulate) : ItemStack.EMPTY;
         }
     };
@@ -119,7 +119,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         super.saveAdditional(tag, provider);
         tag.putInt("Cooldown", cd);
         tag.put("Depository", itemHandler.serializeNBT(provider));
@@ -129,7 +129,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.Provider provider) {
+    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         super.loadAdditional(tag, provider);
         cd = tag.getInt("Cooldown");
         itemHandler.deserializeNBT(provider, tag.getCompound("Depository"));
