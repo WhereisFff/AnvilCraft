@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
+import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.LoadMonitorBlockEntity;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import net.minecraft.core.BlockPos;
@@ -111,6 +113,11 @@ public class DeflectionRingBlock extends FlexibleMultiPartBlock<DirectionCube3x3
             updateState(level, pos, SWITCH, IPowerComponent.Switch.OFF, 3);
         } else if (!isSignal && state.getValue(SWITCH) == IPowerComponent.Switch.OFF) {
             updateState(level, pos, SWITCH, IPowerComponent.Switch.ON, 3);
+            BlockPos centerPos = pos.subtract(state.getValue(HALF).getOffset()).offset(0, 1,0);
+            if (level.getBlockEntity(centerPos) instanceof IPowerConsumer powerConsumer) {
+                if (powerConsumer.getGrid() == null) return;
+                powerConsumer.getGrid().flush();
+            }
         }
     }
 
@@ -138,5 +145,19 @@ public class DeflectionRingBlock extends FlexibleMultiPartBlock<DirectionCube3x3
         return (level1, pos, state1, entity) -> {
             if (entity instanceof DeflectionRingBlockEntity be) be.tick();
         };
+    }
+
+    @Override
+    public boolean hasAnalogOutputSignal(@NotNull BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        BlockPos centerPos = pos.subtract(state.getValue(HALF).getOffset()).offset(0, 1,0);
+        if (level.getBlockEntity(centerPos) instanceof DeflectionRingBlockEntity deflectionRingBlockEntity && deflectionRingBlockEntity.isOverSpeed()) {
+            return 15;
+        }
+        return 0;
     }
 }

@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.mixin;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
+import dev.dubhe.anvilcraft.util.DeflectionEntity;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
@@ -14,6 +15,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -23,7 +25,9 @@ import java.util.ArrayList;
 
 @SuppressWarnings("DuplicatedCode")
 @Mixin(Entity.class)
-public abstract class EntityMixin {
+public abstract class EntityMixin implements DeflectionEntity {
+    @Unique public Vec3 anvil$fixedDeltaMovement;
+    @Unique public Boolean anvil$isDeflected;
 
     @Shadow private Vec3 deltaMovement;
 
@@ -50,6 +54,18 @@ public abstract class EntityMixin {
     @Shadow protected abstract AABB makeBoundingBox();
 
     @Shadow public abstract float distanceTo(Entity entity);
+
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    @Override
+    public boolean isDeflected() {
+        return anvil$isDeflected;
+    }
+
+    @SuppressWarnings("AddedMixinMembersNamePattern")
+    @Override
+    public Vec3 getFixedDeltaMovement() {
+        return anvil$fixedDeltaMovement;
+    }
 
     @Redirect(method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V", ordinal = 1))
     public void anvilcraft$fixFallingBlockEntity(Entity instance, double x, double y, double z, @Share("isFixed") LocalBooleanRef isFixed) {
@@ -78,19 +94,24 @@ public abstract class EntityMixin {
                 }
             }
             if (blockPos == null) {
+                anvil$isDeflected = false;
                 setPos(e);
                 return;
             }
             double a = distance / vec3.length();
 
             if (a > 1) {
+                anvil$isDeflected = false;
                 setPos(e);
                 return;
             }
             setPos(vec3.multiply(a, a, a).add(s));
             isFixed.set(true);
+            anvil$fixedDeltaMovement = vec3.multiply(a, a, a);
+            anvil$isDeflected = true;
             return;
         }
+        anvil$isDeflected = false;
         setPos(x, y, z);
     }
 

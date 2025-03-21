@@ -36,12 +36,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("LombokSetterMayBeUsed")
 public class DeflectionRingBlockEntity extends BlockEntity implements IPowerConsumer {
     private static final HashMap<Level, HashSet<BlockPos>> LEVEL_DEFLECTION_BLOCK_MAP = new HashMap<>();
     @Getter
     @Setter
     private PowerGrid grid;
+
+    @Getter
+    private boolean overSpeed = false;
+    private int overSpeedTick = 0;
 
     public DeflectionRingBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.DEFLECTION_RING.get(), pos, blockState);
@@ -118,6 +121,15 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
 
     public void tick() {
         if (level == null) return;
+        if (overSpeed && overSpeedTick > 1) {
+            overSpeed = false;
+            overSpeedTick = 0;
+            BlockState state = getBlockState();
+            if (!(state.getBlock() instanceof DeflectionRingBlock block)) return;
+            block.updateState(level, getBlockPos(), DeflectionRingBlock.OVERLOAD, state.getValue(DeflectionRingBlock.OVERLOAD), 3);
+        } else if (overSpeed) {
+            overSpeedTick++;
+        }
         if (level.isClientSide) {
             if (!getBlockState().getValue(DeflectionRingBlock.HALF).equals(DirectionCube3x3PartHalf.MID_CENTER)) return;
             if (isWork()) {
@@ -157,24 +169,29 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
                         || entity instanceof Projectile)
         );
         for (Entity entity : entities2) {
-            if (entity.getDeltaMovement().length() > 16 * 0.99f) return;
+            if (entity.getDeltaMovement().length() > 16 * 0.99f) {
+                overSpeed = true;
+                BlockState state = getBlockState();
+                if (!(state.getBlock() instanceof DeflectionRingBlock block)) return;
+                block.updateState(level, getBlockPos(), DeflectionRingBlock.OVERLOAD, state.getValue(DeflectionRingBlock.OVERLOAD), 3);
+            }
             Vec3 deltaMovement = entity.getDeltaMovement();
             Direction facing = getBlockState().getValue(DeflectionRingBlock.FACING);
             Vec3 fixedPos = switch (facing) {
-                case DOWN -> new Vec3(fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, -fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
-                case UP -> new Vec3(-fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
-                case SOUTH -> new Vec3(fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), -fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
-                case NORTH -> new Vec3(-fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
-                case EAST -> new Vec3(0, fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), -fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
-                case WEST -> new Vec3(0, -fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
+                case UP -> new Vec3(fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, -fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                case DOWN -> new Vec3(-fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                case NORTH -> new Vec3(fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), -fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
+                case SOUTH -> new Vec3(-fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
+                case WEST -> new Vec3(0, fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), -fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
+                case EAST -> new Vec3(0, -fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
             };
             deltaMovement = switch (facing) {
-                case DOWN -> new Vec3(deltaMovement.z, 0, -deltaMovement.x);
-                case UP -> new Vec3(-deltaMovement.z, 0, deltaMovement.x);
-                case SOUTH -> new Vec3(deltaMovement.y, -deltaMovement.x, 0);
-                case NORTH -> new Vec3(-deltaMovement.y, deltaMovement.x, 0);
-                case EAST -> new Vec3(0, deltaMovement.z, -deltaMovement.y);
-                case WEST -> new Vec3(0, -deltaMovement.z, deltaMovement.y);
+                case UP -> new Vec3(deltaMovement.z, 0, -deltaMovement.x);
+                case DOWN -> new Vec3(-deltaMovement.z, 0, deltaMovement.x);
+                case NORTH -> new Vec3(deltaMovement.y, -deltaMovement.x, 0);
+                case SOUTH -> new Vec3(-deltaMovement.y, deltaMovement.x, 0);
+                case WEST -> new Vec3(0, deltaMovement.z, -deltaMovement.y);
+                case EAST -> new Vec3(0, -deltaMovement.z, deltaMovement.y);
             };
             entity.setDeltaMovement(deltaMovement);
             Vec3 blockCenter = getBlockPos().getCenter();
