@@ -4,7 +4,9 @@ import dev.dubhe.anvilcraft.block.state.Orientation;
 import dev.dubhe.anvilcraft.mixin.BlockItemInvoker;
 import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -14,6 +16,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -63,16 +66,8 @@ public interface IAnvilCraftBlockPlacer {
                 blockHitResult
             );
         BlockState blockState = ((BlockItemInvoker) blockItem).invokerGetPlacementState(blockPlaceContext);
-        if (blockState == null) {
-            return InteractionResult.FAIL;
-        }
-        if (!blockItem.canPlace(blockPlaceContext, blockState) || !blockState.canSurvive(level, pos)) {
-            return InteractionResult.FAIL;
-        }
-        level.setBlockAndUpdate(pos, blockState);
-        blockItem.getBlock().setPlacedBy(level, pos, blockState, getPlayer(), itemStack);
-        // 使放置的方块实体有NBT
-        BlockItem.updateCustomBlockEntityTag(level, null, pos, itemStack);
+        //实际上，如果需要nbt的话，直接用NeoForge自带的就行
+        blockItem.place(blockPlaceContext);
         SoundType soundType = blockState.getSoundType(level, pos, getPlayer());
         level.playSound(
             getPlayer(),
