@@ -64,7 +64,8 @@ public interface IAnvilCraftBlockPlacer {
             );
         BlockState blockState = ((BlockItemInvoker) blockItem).invokerGetPlacementState(blockPlaceContext);
         //实际上，如果需要nbt的话，直接用NeoForge自带的就行
-        blockItem.place(blockPlaceContext);
+        InteractionResult ir = blockItem.place(blockPlaceContext);
+        if (ir == InteractionResult.FAIL) return ir;
         SoundType soundType = blockState.getSoundType(level, pos, getPlayer());
         level.playSound(
             getPlayer(),
