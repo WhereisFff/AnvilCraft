@@ -36,8 +36,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("LombokSetterMayBeUsed")
 public class DeflectionRingBlockEntity extends BlockEntity implements IPowerConsumer {
-    private final static HashMap<Level, HashSet<BlockPos>> LEVEL_DEFLECTION_BLOCK_MAP = new HashMap<>();
+    private static final HashMap<Level, HashSet<BlockPos>> LEVEL_DEFLECTION_BLOCK_MAP = new HashMap<>();
     @Getter
     @Setter
     private PowerGrid grid;
@@ -144,7 +145,7 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
     }
 
     private double fixPos(double p1, double p2, double p3) {
-        double d = p1 * 1.01/(Math.sqrt(p2*p2+p3*p3));
+        double d = p1 * 1.01 / (Math.sqrt(p2 * p2 + p3 * p3));
         return Double.isNaN(d) ? 0 : d;
     }
 
@@ -184,7 +185,7 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
                         || entity instanceof Projectile)
         );
         for (Entity entity : entities) {
-            if (entity.position().y - getBlockPos().getCenter().y -(entity instanceof FallingBlockEntity ? 0.5 : 0) >= entity.getGravity()) return;
+            if (entity.position().y - getBlockPos().getCenter().y - (entity instanceof FallingBlockEntity ? 0.5 : 0) >= entity.getGravity()) return;
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
         }
     }

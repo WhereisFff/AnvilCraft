@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "anvilcraft:block/white_chocolate_block",
+    "side": "anvilcraft:block/white_chocolate_block",
+    "top": "anvilcraft:block/white_chocolate_block"
+  }
+}

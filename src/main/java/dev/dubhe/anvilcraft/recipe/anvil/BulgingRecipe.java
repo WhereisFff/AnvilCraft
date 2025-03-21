@@ -110,7 +110,7 @@ public class BulgingRecipe implements Recipe<BulgingRecipe.Input> {
         if (fromWater) {
             if (input.cauldronState != FULL_WATER_CAULDRON) return false;
         } else {
-            if (consumeFluid && !CauldronUtil.compatibleForDrain(input.cauldronState, this.cauldron, 1)) {
+            if (!CauldronUtil.compatibleForDrain(input.cauldronState, this.cauldron, 1)) {
                 return false;
             }
             if (produceFluid && !CauldronUtil.compatibleForFill(input.cauldronState, this.cauldron, 1)) {

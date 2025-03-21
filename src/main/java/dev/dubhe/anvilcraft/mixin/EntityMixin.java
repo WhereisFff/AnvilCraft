@@ -54,24 +54,24 @@ public abstract class EntityMixin {
     @Redirect(method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V", ordinal = 1))
     public void anvilcraft$fixFallingBlockEntity(Entity instance, double x, double y, double z, @Share("isFixed") LocalBooleanRef isFixed) {
         isFixed.set(false);
-        Vec3 vec3 = new Vec3(x-getX(), y-getY(), z-getZ());
-        if (((Object) this instanceof Projectile || (Object) this instanceof FallingBlockEntity) && vec3.length() > 0.98 ) {
+        Vec3 vec3 = new Vec3(x - getX(), y - getY(), z - getZ());
+        if (((Object) this instanceof Projectile || (Object) this instanceof FallingBlockEntity) && vec3.length() > 0.98) {
             Vec3 s = position();
             Vec3 e = vec3.add(s);
-            ArrayList<Pair<BlockPos,Double>> blockPosList = new ArrayList<>();
+            ArrayList<Pair<BlockPos, Double>> blockPosList = new ArrayList<>();
             for (BlockPos blockPos : DeflectionRingBlockEntity.getAllBlocks(level)) {
                 Vec3 q = blockPos.getCenter();
                 double a = s.distanceTo(q);
                 double b = e.distanceTo(q);
                 double c = s.distanceTo(e);
-                double d = -(b*b-c*c-a*a)/(2*c);
-                double distance = Math.sqrt(a*a-d*d);
+                double d = -(b * b - c * c - a * a) / (2 * c);
+                double distance = Math.sqrt(a * a - d * d);
                 if (distance <= 0.56747 && d > 0)
                     blockPosList.add(Pair.of(blockPos, d));
             }
             double distance = Double.MAX_VALUE;
             BlockPos blockPos = null;
-            for (Pair<BlockPos,Double> pos : blockPosList) {
+            for (Pair<BlockPos, Double> pos : blockPosList) {
                 if (distance > pos.right()) {
                     distance = pos.right();
                     blockPos = pos.left();
@@ -94,12 +94,12 @@ public abstract class EntityMixin {
         setPos(x, y, z);
     }
 
-    @Redirect(method="move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(value="INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 0))
+    @Redirect(method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 0))
     public boolean anvilcraft$cancelCollision1(double x, double y, @Share("isFixed") LocalBooleanRef isFixed) {
         return isFixed.get() || Mth.equal(x, y);
     }
 
-    @Redirect(method="move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(value="INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 1))
+    @Redirect(method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 1))
     public boolean anvilcraft$cancelCollision2(double x, double y, @Share("isFixed") LocalBooleanRef isFixed) {
         return isFixed.get() || Mth.equal(x, y);
     }
@@ -107,25 +107,25 @@ public abstract class EntityMixin {
     @Inject(method = "setPos(DDD)V", at = @At("HEAD"), cancellable = true)
     public void anvilcraft$changeProjectilePosSetResult(double x, double y, double z, CallbackInfo ci) {
         if (!((Object) this instanceof Projectile)) return;
-        Vec3 vec3 = new Vec3(x-getX(), y-getY(), z-getZ());
+        Vec3 vec3 = new Vec3(x - getX(), y - getY(), z - getZ());
         if (vec3.add(getDeltaMovement().scale(-1)).length() > 0.5) return;
-        if (((Object) this instanceof Projectile || (Object) this instanceof FallingBlockEntity) && vec3.length() > 0.98 ) {
+        if (((Object) this instanceof Projectile || (Object) this instanceof FallingBlockEntity) && vec3.length() > 0.98) {
             Vec3 s = position();
             Vec3 e = vec3.add(s);
-            ArrayList<Pair<BlockPos,Double>> blockPosList = new ArrayList<>();
+            ArrayList<Pair<BlockPos, Double>> blockPosList = new ArrayList<>();
             for (BlockPos blockPos : DeflectionRingBlockEntity.getAllBlocks(level)) {
                 Vec3 q = blockPos.getCenter();
                 double a = s.distanceTo(q);
                 double b = e.distanceTo(q);
                 double c = s.distanceTo(e);
-                double d = -(b*b-c*c-a*a)/(2*c);
-                double distance = Math.sqrt(a*a-d*d);
+                double d = -(b * b - c * c - a * a) / (2 * c);
+                double distance = Math.sqrt(a * a - d * d);
                 if (distance <= 0.56747 && d > 0)
                     blockPosList.add(Pair.of(blockPos, d));
             }
             double distance = Double.MAX_VALUE;
             BlockPos blockPos = null;
-            for (Pair<BlockPos,Double> pos : blockPosList) {
+            for (Pair<BlockPos, Double> pos : blockPosList) {
                 if (distance > pos.right()) {
                     distance = pos.right();
                     blockPos = pos.left();

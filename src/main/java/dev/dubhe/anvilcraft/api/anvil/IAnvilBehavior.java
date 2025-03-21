@@ -14,12 +14,14 @@ import dev.dubhe.anvilcraft.api.anvil.impl.ItemMeshBehavior;
 import dev.dubhe.anvilcraft.api.anvil.impl.ItemStampingBehavior;
 import dev.dubhe.anvilcraft.api.anvil.impl.MassInjectBehavior;
 import dev.dubhe.anvilcraft.api.anvil.impl.RedstoneEMPBehavior;
+import dev.dubhe.anvilcraft.api.anvil.impl.ResetVaultBehavior;
 import dev.dubhe.anvilcraft.api.anvil.impl.SuperHeatingBehavior;
 import dev.dubhe.anvilcraft.api.anvil.impl.TimeWarpBehavior;
 import dev.dubhe.anvilcraft.api.anvil.impl.UnpackBehavior;
 import dev.dubhe.anvilcraft.api.anvil.impl.WaxingBehavior;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.block.CementCauldronBlock;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -94,5 +96,6 @@ public interface IAnvilBehavior {
         registerBehavior(ModBlocks.CRUSHING_TABLE.get(), new ItemCrushBehavior());
         registerBehavior(ModBlocks.SPACE_OVERCOMPRESSOR.get(), new MassInjectBehavior());
         registerBehavior(Blocks.SCAFFOLDING, new ItemMeshBehavior());
+        registerBehavior(state -> state.is(ModBlockTags.STORAGE_BLOCKS_LEAD), new ResetVaultBehavior());
     }
 }

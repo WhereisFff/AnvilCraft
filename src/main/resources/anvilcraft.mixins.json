@@ -34,6 +34,7 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "SkeletonMixin",
+    "VaultServerDataAccessor",
     "VibrationSystemUserMixin",
     "VillagerMixin",
     "ZombieVillagerMixin",
