@@ -125,7 +125,10 @@ abstract class FallingBlockEntityMixin extends Entity {
             )
     )
     private void hurtEntity(CallbackInfo ci) {
-        if (this.getDeltaMovement().multiply(1, 0, 1).length() < 0.75) return;
+        if (
+                this.getDeltaMovement().multiply(1, 0, 1).length() < 0.75 &&
+                this.getDeltaMovement().y < 2.5
+        ) return;
         if (!this.blockState.is(BlockTags.ANVIL)) return;
         EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
                 this.level(),

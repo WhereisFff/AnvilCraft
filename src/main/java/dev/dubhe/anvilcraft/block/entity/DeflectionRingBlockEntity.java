@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -8,6 +9,7 @@ import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
+import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
@@ -20,6 +22,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -164,12 +167,9 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
     @SuppressWarnings("SuspiciousNameCombination")
     public void accelerate() {
         if (level == null) return;
-        List<Entity> entities2 = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos()),
-                entity -> (entity instanceof FallingBlockEntity fallingBlockEntity && fallingBlockEntity.getBlockState().is(BlockTags.ANVIL) && !fallingBlockEntity.getBlockState().is(ModBlockTags.NON_MAGNETIC)
-                        || entity instanceof Projectile)
-        );
+        List<Entity> entities2 = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos()),AccelerationRingBlockEntity::canBeAccelerated);
         for (Entity entity : entities2) {
-            if (entity.getDeltaMovement().length() > 16 * 0.99f) {
+            if (entity.getDeltaMovement().length() > AnvilCraft.config.maxAccelerationSpeed * 0.99f) {
                 overSpeed = true;
                 BlockState state = getBlockState();
                 if (!(state.getBlock() instanceof DeflectionRingBlock block)) return;
@@ -178,8 +178,8 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
             Vec3 deltaMovement = entity.getDeltaMovement();
             Direction facing = getBlockState().getValue(DeflectionRingBlock.FACING);
             Vec3 fixedPos = switch (facing) {
-                case UP -> new Vec3(fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, -fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
-                case DOWN -> new Vec3(-fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                case UP -> new Vec3(fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity || entity instanceof Player? -0.5 : 0, -fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                case DOWN -> new Vec3(-fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity || entity instanceof Player? -0.5 : 0, fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
                 case NORTH -> new Vec3(fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), -fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
                 case SOUTH -> new Vec3(-fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
                 case WEST -> new Vec3(0, fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), -fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
@@ -197,12 +197,9 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
             Vec3 blockCenter = getBlockPos().getCenter();
             entity.setPos(fixedPos.add(blockCenter));
         }
-        List<Entity> entities = level.getEntitiesOfClass(Entity.class, AABB.encapsulatingFullBlocks(getBlockPos().east().north(), getBlockPos().west().south()),
-                entity -> (entity instanceof FallingBlockEntity fallingBlockEntity && fallingBlockEntity.getBlockState().is(BlockTags.ANVIL) && !fallingBlockEntity.getBlockState().is(ModBlockTags.NON_MAGNETIC)
-                        || entity instanceof Projectile)
-        );
+        List<Entity> entities = level.getEntitiesOfClass(Entity.class, AABB.encapsulatingFullBlocks(getBlockPos().east().north(), getBlockPos().west().south()), AccelerationRingBlockEntity::canBeAccelerated);
         for (Entity entity : entities) {
-            if (entity.position().y - getBlockPos().getCenter().y - (entity instanceof FallingBlockEntity ? 0.5 : 0) >= entity.getGravity()) return;
+            if (entity.position().y - getBlockPos().getCenter().y - (entity instanceof FallingBlockEntity || entity instanceof Player ? 0.5 : 0) >= entity.getGravity()) return;
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
         }
     }

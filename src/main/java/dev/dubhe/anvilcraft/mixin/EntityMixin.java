@@ -9,6 +9,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -71,7 +72,8 @@ public abstract class EntityMixin implements DeflectionEntity {
     public void anvilcraft$fixFallingBlockEntity(Entity instance, double x, double y, double z, @Share("isFixed") LocalBooleanRef isFixed) {
         isFixed.set(false);
         Vec3 vec3 = new Vec3(x - getX(), y - getY(), z - getZ());
-        if (((Object) this instanceof Projectile || (Object) this instanceof FallingBlockEntity) && vec3.length() > 0.98) {
+        if (((Object) this instanceof Projectile || (Object) this instanceof FallingBlockEntity
+                || (Object) this instanceof Player) && vec3.length() > 0.98) {
             Vec3 s = position();
             Vec3 e = vec3.add(s);
             ArrayList<Pair<BlockPos, Double>> blockPosList = new ArrayList<>();
