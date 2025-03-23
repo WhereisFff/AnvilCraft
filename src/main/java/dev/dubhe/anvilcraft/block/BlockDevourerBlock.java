@@ -213,8 +213,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         boolean insertEnabled = itemHandler != null;
         boolean dropOriginalPlace = !level.noCollision(aabb);
         devourBlockPosList = BlockPos.betweenClosedStream(devourBlockBoundingBox)
-            .map(blockPos -> new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-            .map(BlockPos::new)
+            .map(BlockPos::immutable)
             .toList();
         for (BlockPos devourBlockPos : devourBlockPosList) {
             BlockState devourBlockState = level.getBlockState(devourBlockPos);
@@ -229,8 +228,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
                     BlockPos.betweenClosedStream(AabbUtil.create(
                         devourBlockPos.above(), devourBlockPos.above(AnvilCraft.config.blockDevourerUpwardChainDevouringDistance)
                     ))
-                        .map(blockPos -> new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-                        .map(BlockPos::new)
+                        .map(BlockPos::immutable)
                         .sorted(Comparator.comparingInt(Vec3i::getY))
                         .takeWhile(blockPos -> level.getBlockState(blockPos).is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING))
                         .toList()

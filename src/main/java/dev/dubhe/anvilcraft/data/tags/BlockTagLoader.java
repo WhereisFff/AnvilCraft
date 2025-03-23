@@ -105,8 +105,7 @@ public class BlockTagLoader {
 
         provider.addTag(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)
             .addTag(Tags.Blocks.SANDS)
-            .addTag(Tags.Blocks.GRAVELS)
-            .add();
+            .addTag(Tags.Blocks.GRAVELS);
 
         provider.addTag(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
             .add(findResourceKey(Blocks.STONE))
