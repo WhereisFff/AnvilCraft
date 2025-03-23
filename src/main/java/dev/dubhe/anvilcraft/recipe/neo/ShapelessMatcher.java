@@ -14,20 +14,19 @@ import java.util.function.Predicate;
 
 public class ShapelessMatcher {
     public interface Context<C extends Context<C>> {
-        default <P extends Predicate<C>> void push(@NotNull Stack<P> stack, P predicate) {
+        default <P extends MatcherPredicate<C>> void push(@NotNull Stack<P> stack, P predicate) {
             stack.push(predicate);
         }
 
-        default <P extends Predicate<C>> void pop(@NotNull Stack<P> stack) {
+        default <P extends MatcherPredicate<C>> void pop(@NotNull Stack<P> stack) {
             stack.pop();
         }
     }
 
     public interface MatcherPredicate<T extends Context<T>> extends Predicate<T>, Consumer<T> {
-
     }
 
-    public static <T extends Context<T>, P extends Predicate<T>> boolean incompatible(@NotNull List<P> predicates, @NotNull T ctx, Stack<P> stack) {
+    public static <T extends Context<T>, P extends MatcherPredicate<T>> boolean incompatible(@NotNull List<P> predicates, @NotNull T ctx, Stack<P> stack) {
         for (P predicate : predicates) {
             if (!predicate.test(ctx)) continue;
             List<P> next = new ArrayList<>();
@@ -44,7 +43,7 @@ public class ShapelessMatcher {
         return false;
     }
 
-    public static <T, P extends Predicate<T>> boolean compatible(@NotNull List<P> predicates, @Nullable T ctx) {
+    public static <T extends Context<T>, P extends MatcherPredicate<T>> boolean compatible(@NotNull List<P> predicates, @Nullable T ctx) {
         for (P predicate : predicates) {
             if (!predicate.test(ctx)) return false;
         }
@@ -83,16 +82,21 @@ public class ShapelessMatcher {
         }
     }
 
-    public record ItemStackPredicate(List<String> names, int count) implements Predicate<TestContext> {
+    public record ItemStackPredicate(List<String> names, int count) implements MatcherPredicate<TestContext> {
         @Override
         public boolean test(TestContext testContext) {
             return false;
         }
 
-        public <P extends Predicate<TestContext>> void push(@NotNull Stack<P> stack, TestContext context) {
+        public <P extends MatcherPredicate<TestContext>> void push(@NotNull Stack<P> stack, TestContext context) {
         }
 
-        public <P extends Predicate<TestContext>> void pop(@NotNull Stack<P> stack, TestContext context) {
+        public <P extends MatcherPredicate<TestContext>> void pop(@NotNull Stack<P> stack, TestContext context) {
+        }
+
+        @Override
+        public void accept(TestContext testContext) {
+
         }
     }
 
