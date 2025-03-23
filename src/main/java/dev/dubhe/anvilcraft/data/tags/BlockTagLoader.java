@@ -187,5 +187,10 @@ public class BlockTagLoader {
             .addTag(Tags.Blocks.CHESTS_ENDER)
             .addTag(Tags.Blocks.CHESTS_TRAPPED)
             .addTag(Tags.Blocks.CHESTS_WOODEN);
+      
+        provider.addTag(ModBlockTags.SPECTRAL_CAN_THROUGH)
+            .addTag(Tags.Blocks.GLASS_BLOCKS)
+            .addTag(Tags.Blocks.GLASS_PANES)
+            .addTag(BlockTags.LEAVES);
     }
 }
