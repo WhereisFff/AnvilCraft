@@ -13,7 +13,7 @@ public class TopazAmuletItem extends AbstractAmuletItem {
     }
 
     @Override
-    void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         //这个可能主要是从另一边（实体被闪电击中）的事件监听效果那边写的，同样用的是data attachment
         if (entity instanceof LivingEntity) {
             entity.setData(IMMUNE_TO_LIGHTNING, true);

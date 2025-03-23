@@ -178,6 +178,15 @@ public class FilteredItemStackHandler extends ItemStackHandler {
         return this.disabled.get(slot);
     }
 
+    public boolean isEmpty() {
+        for (ItemStack stack : stacks) {
+            if (!stack.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     @Override
     public @NotNull CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag compoundTag = new CompoundTag();

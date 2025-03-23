@@ -31,10 +31,14 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Vector2d;
 
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 
+@SuppressWarnings("LombokSetterMayBeUsed")
 public class DeflectionRingBlockEntity extends BlockEntity implements IPowerConsumer {
+    private static final HashMap<Level, HashSet<BlockPos>> LEVEL_DEFLECTION_BLOCK_MAP = new HashMap<>();
     @Getter
     @Setter
     private PowerGrid grid;
@@ -51,6 +55,35 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
         return new DeflectionRingBlockEntity(type, pos, blockState);
     }
 
+    public static Iterable<BlockPos> getAllBlocks(Level level) {
+        if (LEVEL_DEFLECTION_BLOCK_MAP.containsKey(level)) {
+            return LEVEL_DEFLECTION_BLOCK_MAP.get(level);
+        } else {
+            return List.of();
+        }
+    }
+
+    public static void clear() {
+        LEVEL_DEFLECTION_BLOCK_MAP.clear();
+    }
+
+    private void addSelfToMap() {
+        if (level == null) return;
+        if (LEVEL_DEFLECTION_BLOCK_MAP.containsKey(level)) {
+            LEVEL_DEFLECTION_BLOCK_MAP.get(level).add(getBlockPos());
+        } else {
+            HashSet<BlockPos> set = new HashSet<>();
+            set.add(getBlockPos());
+            LEVEL_DEFLECTION_BLOCK_MAP.put(level, set);
+        }
+    }
+
+    private void removeSelfFromMap() {
+        if (level == null) return;
+        if (LEVEL_DEFLECTION_BLOCK_MAP.containsKey(level)) {
+            LEVEL_DEFLECTION_BLOCK_MAP.get(level).remove(getBlockPos());
+        }
+    }
 
     @Override
     public Level getCurrentLevel() {
@@ -86,8 +119,11 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
     public void tick() {
         if (level == null) return;
         if (level.isClientSide) {
-            if (isWork())
+            if (!getBlockState().getValue(DeflectionRingBlock.HALF).equals(DirectionCube3x3PartHalf.MID_CENTER)) return;
+            if (isWork()) {
+                addSelfToMap();
                 accelerate();
+            } else removeSelfFromMap();
         }
         if (grid == null) return;
         BlockState state = getBlockState();
@@ -98,21 +134,58 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
         } else if (!grid.isWorking() && !state.getValue(DeflectionRingBlock.OVERLOAD)) {
             block.updateState(level, getBlockPos(), DeflectionRingBlock.OVERLOAD, true, 3);
         }
-        if (!isWork()) return;
+        if (!isWork()) {
+            removeSelfFromMap();
+            return;
+        }
+        addSelfToMap();
         if (state.getValue(DeflectionRingBlock.FACING).getAxis().equals(Direction.Axis.Y))
             attractGianAnvil();
         accelerate();
     }
 
+    private double fixPos(double p1, double p2, double p3) {
+        double d = p1 * 1.01 / (Math.sqrt(p2 * p2 + p3 * p3));
+        return Double.isNaN(d) ? 0 : d;
+    }
+
+    @SuppressWarnings("SuspiciousNameCombination")
     public void accelerate() {
         if (level == null) return;
-        List<Entity> entities = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos()),
-            entity -> (entity instanceof FallingBlockEntity fallingBlockEntity && fallingBlockEntity.getBlockState().is(BlockTags.ANVIL) && !fallingBlockEntity.getBlockState().is(ModBlockTags.NON_MAGNETIC)
-                || entity instanceof Projectile)
+        List<Entity> entities2 = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos()),
+                entity -> (entity instanceof FallingBlockEntity fallingBlockEntity && fallingBlockEntity.getBlockState().is(BlockTags.ANVIL) && !fallingBlockEntity.getBlockState().is(ModBlockTags.NON_MAGNETIC)
+                        || entity instanceof Projectile)
+        );
+        for (Entity entity : entities2) {
+            if (entity.getDeltaMovement().length() > 16 * 0.99f) return;
+            Vec3 deltaMovement = entity.getDeltaMovement();
+            Direction facing = getBlockState().getValue(DeflectionRingBlock.FACING);
+            Vec3 fixedPos = switch (facing) {
+                case DOWN -> new Vec3(fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, -fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                case UP -> new Vec3(-fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity ? -0.5 : 0, fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                case SOUTH -> new Vec3(fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), -fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
+                case NORTH -> new Vec3(-fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
+                case EAST -> new Vec3(0, fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), -fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
+                case WEST -> new Vec3(0, -fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
+            };
+            deltaMovement = switch (facing) {
+                case DOWN -> new Vec3(deltaMovement.z, 0, -deltaMovement.x);
+                case UP -> new Vec3(-deltaMovement.z, 0, deltaMovement.x);
+                case SOUTH -> new Vec3(deltaMovement.y, -deltaMovement.x, 0);
+                case NORTH -> new Vec3(-deltaMovement.y, deltaMovement.x, 0);
+                case EAST -> new Vec3(0, deltaMovement.z, -deltaMovement.y);
+                case WEST -> new Vec3(0, -deltaMovement.z, deltaMovement.y);
+            };
+            entity.setDeltaMovement(deltaMovement);
+            Vec3 blockCenter = getBlockPos().getCenter();
+            entity.setPos(fixedPos.add(blockCenter));
+        }
+        List<Entity> entities = level.getEntitiesOfClass(Entity.class, AABB.encapsulatingFullBlocks(getBlockPos().east().north(), getBlockPos().west().south()),
+                entity -> (entity instanceof FallingBlockEntity fallingBlockEntity && fallingBlockEntity.getBlockState().is(BlockTags.ANVIL) && !fallingBlockEntity.getBlockState().is(ModBlockTags.NON_MAGNETIC)
+                        || entity instanceof Projectile)
         );
         for (Entity entity : entities) {
-            Vec3 deltaMovement = entity.getDeltaMovement();
-            Double speed = deltaMovement.length();
+            if (entity.position().y - getBlockPos().getCenter().y - (entity instanceof FallingBlockEntity ? 0.5 : 0) >= entity.getGravity()) return;
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
         }
     }
@@ -192,5 +265,11 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
     @Override
     public int getInputPower() {
         return getBlockState().getValue(DeflectionRingBlock.SWITCH) == Switch.ON ? 256 : 0;
+    }
+
+    @Override
+    public void setRemoved() {
+        super.setRemoved();
+        removeSelfFromMap();
     }
 }

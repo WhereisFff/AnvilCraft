@@ -11,7 +11,7 @@ import java.util.Set;
 
 public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     private static boolean hasZetaPiston = false;
-    private static final boolean hasCreate = false;
+    private static boolean hasCreate = false;
     private static boolean hasReiScreen = false;
 
     private boolean isLoaded(String clazz) {
@@ -20,12 +20,9 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void onLoad(String mixinPackage) {
-        hasZetaPiston = AnvilCraftMixinPlugin.class
-            .getClassLoader()
-            .getResource("org/violetmoon/zeta/piston/ZetaPistonStructureResolver.class")
-            != null;
         hasZetaPiston = this.isLoaded("org/violetmoon/zeta/piston/ZetaPistonStructureResolver.class");
         hasReiScreen = this.isLoaded("me/shedaniel/rei/impl/client/gui/screen/DefaultDisplayViewingScreen.class");
+        hasCreate = this.isLoaded("com/simibubi/create/Create.class");
     }
 
     @Override
@@ -37,7 +34,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
         if (mixinClassName.endsWith("PistonStructureResolverMixin")) return !hasZetaPiston;
         if (mixinClassName.endsWith("DefaultDisplayViewingScreenMixin")) return hasReiScreen;
-        if (mixinClassName.startsWith("dev.dubhe.anvilcraft.mixin.integration.create.")) {
+        if (mixinClassName.contains("Create")) {
             return hasCreate;
         }
         return true;

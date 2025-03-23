@@ -25,7 +25,7 @@ public abstract class AbstractAmuletItem extends Item {
         super(properties);
     }
 
-    abstract void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected);
+    abstract void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected);
 
     @Override
     public void inventoryTick(@NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
@@ -33,7 +33,7 @@ public abstract class AbstractAmuletItem extends Item {
         if (!(stack.getItem() instanceof AbstractAmuletItem)) return;
         if (!(entity instanceof Player)) return;
         if (entity.getData(AMULET_COUNT) < entity.getData(AMULET_MAX)) {
-            UpdateAccessory(stack, level, entity, slotId, isSelected);
+            updateAccessory(stack, level, entity, slotId, isSelected);
             entity.setData(AMULET_COUNT, entity.getData(AMULET_COUNT) + 1);
         }
     }

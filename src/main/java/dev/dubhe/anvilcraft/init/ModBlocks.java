@@ -92,11 +92,15 @@ import dev.dubhe.anvilcraft.block.SlidingRailStopBlock;
 import dev.dubhe.anvilcraft.block.SpaceOvercompressorBlock;
 import dev.dubhe.anvilcraft.block.SpectralAnvilBlock;
 import dev.dubhe.anvilcraft.block.StampingPlatformBlock;
+import dev.dubhe.anvilcraft.block.StepEffectBlock;
+import dev.dubhe.anvilcraft.block.StepEffectSlabBlock;
+import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
 import dev.dubhe.anvilcraft.block.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.ThermoelectricConverterBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
+import dev.dubhe.anvilcraft.block.VoidEnergyCollectorBlock;
 import dev.dubhe.anvilcraft.block.VoidMatterBlock;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
@@ -1415,6 +1419,7 @@ public class ModBlocks {
     public static final BlockEntry<SpaceOvercompressorBlock> SPACE_OVERCOMPRESSOR = REGISTRATE
         .block("space_overcompressor", SpaceOvercompressorBlock::new)
         // .initialProperties(() -> Blocks.SHULKER_BOX)
+        .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate((ctx, provider) -> {
         })
         // .tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -1513,6 +1518,34 @@ public class ModBlocks {
         .blockstate((ctx, provider) -> {
         })
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .register();
+
+    public static final BlockEntry<VoidEnergyCollectorBlock> VOID_ENERGY_COLLECTOR = REGISTRATE
+        .block("void_energy_collector", VoidEnergyCollectorBlock::new)
+        .simpleItem()
+        .properties(BlockBehaviour.Properties::noOcclusion)
+        .blockstate((ctx, provider) -> {
+        })
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("ABA")
+                .pattern("CCC")
+                .define('A', ModBlocks.VOID_MATTER_BLOCK)
+                .define('B', ModBlocks.CHARGE_COLLECTOR)
+                .define('C', ModBlocks.HEAVY_IRON_BLOCK)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.VOID_MATTER_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.VOID_MATTER_BLOCK))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.CHARGE_COLLECTOR),
+                    AnvilCraftDatagen.has(ModBlocks.CHARGE_COLLECTOR))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.HEAVY_IRON_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
+                .save(provider);
+        })
         .register();
 
     public static final BlockEntry<MagnetoElectricCoreBlock> MAGNETO_ELECTRIC_CORE_BLOCK = REGISTRATE
@@ -2748,6 +2781,234 @@ public class ModBlocks {
         .tag(Tags.Items.FOODS,
             Tags.Items.FOODS_EDIBLE_WHEN_PLACED)
         .build()
+        .register();
+
+    public static final BlockEntry<StepEffectBlock> CHOCOLATE_BLOCK = REGISTRATE
+        .block("chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
+                RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.CHOCOLATE)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE), AnvilCraftDatagen.has(ModItems.CHOCOLATE))
+            .save(provider))
+        .register();
+
+    public static final BlockEntry<StepEffectBlock> BLACK_CHOCOLATE_BLOCK = REGISTRATE
+        .block("black_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnBlackChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
+                RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.CHOCOLATE_BLACK)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE_BLACK), AnvilCraftDatagen.has(ModItems.CHOCOLATE_BLACK))
+            .save(provider))
+        .register();
+
+    public static final BlockEntry<StepEffectBlock> WHITE_CHOCOLATE_BLOCK = REGISTRATE
+        .block("white_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnWhiteChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
+                RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.CHOCOLATE_WHITE)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE_WHITE), AnvilCraftDatagen.has(ModItems.CHOCOLATE_WHITE))
+            .save(provider))
+        .register();
+
+    public static final BlockEntry<StepEffectSlabBlock> CHOCOLATE_SLAB = REGISTRATE
+        .block("chocolate_slab", p -> new StepEffectSlabBlock(p, StepEffectBlock::stepOnChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.SLABS)
+        .blockstate((ctx, provider) -> {
+            provider.slabBlock(ctx.get(), AnvilCraft.of("block/chocolate_block"),
+                AnvilCraft.of("block/chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
+                .pattern("AAA")
+                .define('A', ModBlocks.CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectSlabBlock> BLACK_CHOCOLATE_SLAB = REGISTRATE
+        .block("black_chocolate_slab", p -> new StepEffectSlabBlock(p, StepEffectBlock::stepOnBlackChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.SLABS)
+        .blockstate((ctx, provider) -> {
+            provider.slabBlock(ctx.get(), AnvilCraft.of("block/black_chocolate_block"),
+                AnvilCraft.of("block/black_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
+                .pattern("AAA")
+                .define('A', ModBlocks.BLACK_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectSlabBlock> WHITE_CHOCOLATE_SLAB = REGISTRATE
+        .block("white_chocolate_slab", p -> new StepEffectSlabBlock(p, StepEffectBlock::stepOnWhiteChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.SLABS)
+        .blockstate((ctx, provider) -> {
+            provider.slabBlock(ctx.get(), AnvilCraft.of("block/white_chocolate_block"),
+                AnvilCraft.of("block/white_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
+                .pattern("AAA")
+                .define('A', ModBlocks.WHITE_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectStairBlock> CHOCOLATE_STAIRS = REGISTRATE
+        .block("chocolate_stairs", p -> new StepEffectStairBlock(
+            ModBlocks.CHOCOLATE_BLOCK.getDefaultState(), p, StepEffectBlock::stepOnChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.STAIRS)
+        .blockstate((ctx, provider) -> {
+            provider.stairsBlock(ctx.get(), AnvilCraft.of("block/chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("A  ")
+                .pattern("AA ")
+                .pattern("AAA")
+                .define('A', ModBlocks.CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectStairBlock> BLACK_CHOCOLATE_STAIRS = REGISTRATE
+        .block("black_chocolate_stairs", p -> new StepEffectStairBlock(
+            ModBlocks.BLACK_CHOCOLATE_BLOCK.getDefaultState(), p, StepEffectBlock::stepOnBlackChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.STAIRS)
+        .blockstate((ctx, provider) -> {
+            provider.stairsBlock(ctx.get(), AnvilCraft.of("block/black_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("A  ")
+                .pattern("AA ")
+                .pattern("AAA")
+                .define('A', ModBlocks.BLACK_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectStairBlock> WHITE_CHOCOLATE_STAIRS = REGISTRATE
+        .block("white_chocolate_stairs", p -> new StepEffectStairBlock(
+            ModBlocks.WHITE_CHOCOLATE_BLOCK.getDefaultState(), p, StepEffectBlock::stepOnWhiteChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.STAIRS)
+        .blockstate((ctx, provider) -> {
+            provider.stairsBlock(ctx.get(), AnvilCraft.of("block/white_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("A  ")
+                .pattern("AA ")
+                .pattern("AAA")
+                .define('A', ModBlocks.WHITE_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
         .register();
 
     public static final Object2ObjectMap<Color, BlockEntry<ReinforcedConcreteBlock>> REINFORCED_CONCRETES =

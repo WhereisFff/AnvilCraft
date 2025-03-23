@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftBlockPlacerFakePlaye
 import dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer;
 import dev.dubhe.anvilcraft.api.world.load.LevelLoadManager;
 
+import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -32,6 +33,7 @@ public class LevelEventListener {
     public static void onLevelUnload(@NotNull LevelEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel serverLevel) {
             LevelLoadManager.removeAll(serverLevel);
+            DeflectionRingBlockEntity.clear();
         }
     }
 }

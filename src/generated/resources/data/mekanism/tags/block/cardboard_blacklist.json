@@ -5,10 +5,7 @@
     "anvilcraft:remote_transmission_pole",
     "anvilcraft:tesla_tower",
     "anvilcraft:overseer",
-    "anvilcraft:giant_anvil",
-    "anvilcraft:transmission_pole",
-    "anvilcraft:remote_transmission_pole",
-    "anvilcraft:tesla_tower",
-    "anvilcraft:overseer"
+    "anvilcraft:acceleration_ring",
+    "anvilcraft:deflection_ring"
   ]
 }

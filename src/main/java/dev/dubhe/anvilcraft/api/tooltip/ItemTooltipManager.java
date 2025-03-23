@@ -54,7 +54,7 @@ public class ItemTooltipManager {
             ModBlocks.FERRITE_CORE_MAGNET_BLOCK.asItem(),
             "Attracting the anvil below, "
                 + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges");
-        map.put(ModBlocks.BATCH_CRAFTER.asItem(), "consumes 1 kW");
+        map.put(ModBlocks.BATCH_CRAFTER.asItem(), "Received a redstone signal and synthesized all internal items at once, with a power consumption of 4 kW");
         map.put(ModBlocks.ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.SMOOTH_ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.CUT_ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
@@ -76,7 +76,6 @@ public class ItemTooltipManager {
         map.put(ModBlocks.HEAVY_IRON_WALL.asItem(), "Explosion proof");
         map.put(ModBlocks.HEAVY_IRON_DOOR.asItem(), "Explosion proof");
         map.put(ModBlocks.HEAVY_IRON_TRAPDOOR.asItem(), "Explosion proof");
-        map.put(ModBlocks.INDUCTION_LIGHT.asItem(), "Catalyze crop growth, consumes 1 kW");
         map.put(
             ModBlocks.ITEM_COLLECTOR.asItem(),
             "Adjust power consumption based on range and cooling" + ", from 30kW to 150kW");
@@ -88,6 +87,56 @@ public class ItemTooltipManager {
         map.put(ModBlocks.CUT_EMBER_METAL_PILLAR.asItem(), "Wither proof");
         map.put(ModBlocks.CUT_EMBER_METAL_SLAB.asItem(), "Wither proof");
         map.put(ModBlocks.CUT_EMBER_METAL_STAIRS.asItem(), "Wither proof");
+
+        map.put(ModItems.TIN_CAN.asItem(), "Tin cans can be combined with any food to obtain canned food");
+        map.put(ModItems.CANNED_FOOD.asItem(), "Stackable instant food");
+        map.put(ModItems.IONOCRAFT.asItem(), "It will float when placed in the power grid");
+        map.put(ModItems.IONOCRAFT_BACKPACK.asItem(), """
+            When equipping to start flying like gamemode creative
+            The backpack requires power supply from the grid or capacitors in the inventory for use""");
+        map.put(ModItems.LEVITATION_POWDER.asItem(), "Slight weightlessness");
+        map.put(ModItems.NEGATIVE_MATTER.asItem(), "Negative matter is not antimatter, it is anti gravity matter");
+        map.put(ModItems.NEGATIVE_MATTER_NUGGET.asItem(), "Negative matter is not antimatter, it is anti gravity matter");
+        map.put(ModBlocks.NEGATIVE_MATTER_BLOCK.asItem(), "Negative matter is not antimatter, it is anti gravity matter");
+        map.put(ModItems.NEUTRONIUM_INGOT.asItem(), "Pass through most blocks except end dust, negative matter block, and bedrock");
+        map.put(ModItems.STABLE_NEUTRONIUM_INGOT.asItem(), "No more passing through blocks");
+        map.put(ModItems.CHARGED_NEUTRONIUM_INGOT.asItem(), "No longer passing through blocks, storing a large amount of electrical energy");
+        map.put(ModBlocks.TESLA_TOWER.asItem(), "Electric shock to mobs or lightning rods within a range of 8 grids, with a power consumption of 128 kW");
+        map.put(ModBlocks.INDUCTION_LIGHT.asItem(), """
+            Lighting, with a power consumption of 1 kW
+            Right click on this with Redstone to change it to ripening mode
+            Right click on this with Glowstone Dust to change it to anti-monster spawning mode
+            Right click on this with Void Matter to change it to anti-animal spawning mode
+            The power consumption of the above three modes will become 16 kW""");
+        map.put(ModBlocks.HELIOSTATS.asItem(), """
+            Right click on the Netherite Block or Tungsten Block of the handheld heliostat to determine the irradiation point
+            After placing it, it will heat the irradiated block during the day""");
+        map.put(ModBlocks.ACTIVE_SILENCER.asItem(), "Eliminate selected nearby sounds");
+        map.put(ModBlocks.BLOCK_PLACER.asItem(), """
+            Redstone activation placed a block in front of this, but was hit by an anvil and placed further away.
+            There is no stock available and items need to be retrieved from the blocks behind, fallen objects, or physical inventory""");
+        map.put(ModBlocks.BLOCK_DEVOURER.asItem(), """
+            Activated by redstone:
+                Swallows blocks in a 3*3 range in front.
+            Activated by an anvil:
+                1 block -> 5 * 5
+                2 blocks -> 7 * 7
+            There is no inventory, and items will be inputted into the block or physical inventory behind or form falling objects behind.
+            World base blocks such as stones, mud, lower bound rocks, and terminal stones will not drop 100%""");
+
+        map.put(ModBlocks.COPPER_PRESSURE_PLATE.asItem(), "Redstone signal increases with pressing time, also a copper plate");
+        map.put(ModBlocks.EXPOSED_COPPER_PRESSURE_PLATE.asItem(), "Redstone signal increases with pressing time, also a copper plate");
+        map.put(ModBlocks.WEATHERED_COPPER_PRESSURE_PLATE.asItem(), "Redstone signal increases with pressing time, also a copper plate");
+        map.put(ModBlocks.OXIDIZED_COPPER_PRESSURE_PLATE.asItem(), "Redstone signal increases with pressing time, also a copper plate");
+        map.put(ModBlocks.ZINC_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the highest percentage of health of the mobs above, also a zinc plate");
+        map.put(ModBlocks.TIN_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the lowest percentage of health of the mobs above, also a tin plate");
+        map.put(ModBlocks.LEAD_PRESSURE_PLATE.asItem(), "Output redstone signal based on the number of biological species above, also a lead plateOutput redstone signal based on the number of mob species above, also a lead plate");
+        map.put(ModBlocks.SILVER_PRESSURE_PLATE.asItem(), "Output redstone signal based on the number of undead mobs above, also a silver plate");
+        map.put(ModBlocks.TUNGSTEN_PRESSURE_PLATE.asItem(), "Output redstone signal based on the number of fire-resistant entities above, also a tungsten plate");
+        map.put(ModBlocks.TITANIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the highest durability of the items above, also a titanium plate");
+        map.put(ModBlocks.URANIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the lowest durability of the items above, also a uranium plate");
+        map.put(ModBlocks.BRONZE_PRESSURE_PLATE.asItem(), "Output a redstone signal based on player satiety above, also a bronze plate");
+        map.put(ModBlocks.BRASS_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the inventory's filling degree of player above, also a brass plate");
     }
 
     public static final Map<Item, String> NEED_TOOLTIP_ITEM = Collections.unmodifiableMap(map);

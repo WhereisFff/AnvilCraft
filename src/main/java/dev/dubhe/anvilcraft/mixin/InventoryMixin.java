@@ -18,10 +18,9 @@ abstract class InventoryMixin {
 
     @Inject(
         method = "tick",
-        at = @At(value = "HEAD"),
-        cancellable = true
+        at = @At(value = "HEAD")
     )
-    private void PreInventoryTick(CallbackInfo ci) {
+    private void preInventoryTick(CallbackInfo ci) {
         AbstractAmuletItem.resetWorkingAmuletData(this.player);
     }
 }

@@ -170,13 +170,22 @@ public class BlockTagLoader {
             .add(ModBlocks.TRANSMISSION_POLE.getKey())
             .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
             .add(ModBlocks.TESLA_TOWER.getKey())
-            .add(ModBlocks.OVERSEER_BLOCK.getKey());
+            .add(ModBlocks.OVERSEER_BLOCK.getKey())
+            .add(ModBlocks.ACCELERATION_RING.getKey())
+            .add(ModBlocks.DEFLECTION_RING.getKey());
 
-        provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
-            .add(ModBlocks.GIANT_ANVIL.getKey())
-            .add(ModBlocks.TRANSMISSION_POLE.getKey())
-            .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
-            .add(ModBlocks.TESLA_TOWER.getKey())
-            .add(ModBlocks.OVERSEER_BLOCK.getKey());
+        provider.addTag(ModBlockTags.ANVIL_HAMMER_BLACKLIST)
+            .add(ModBlocks.DEFLECTION_RING.getKey())
+            .add(findResourceKey(Blocks.NETHER_PORTAL))
+            .add(findResourceKey(Blocks.PISTON_HEAD))
+            .add(findResourceKey(Blocks.END_PORTAL_FRAME))
+            .add(findResourceKey(Blocks.ATTACHED_MELON_STEM))
+            .add(findResourceKey(Blocks.ATTACHED_PUMPKIN_STEM))
+            .addTag(BlockTags.BEDS)
+            .addTag(BlockTags.ALL_SIGNS)
+            .addTag(Tags.Blocks.CHESTS)
+            .addTag(Tags.Blocks.CHESTS_ENDER)
+            .addTag(Tags.Blocks.CHESTS_TRAPPED)
+            .addTag(Tags.Blocks.CHESTS_WOODEN);
     }
 }

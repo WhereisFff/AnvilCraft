@@ -21,10 +21,10 @@ import com.mojang.blaze3d.platform.Window;
 public class GuiLayerRegistrationEventListener {
 
     public static void onRegister(RegisterGuiLayersEvent event) {
-        event.registerAboveAll(AnvilCraft.of("power"), (guiGraphics, pDeltaTracker) -> {
+        event.registerAboveAll(AnvilCraft.of("power"), (guiGraphics, deltaTracker) -> {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.options.hideGui) return;
-            float partialTick = pDeltaTracker.getGameTimeDeltaPartialTick(
+            float partialTick = deltaTracker.getGameTimeDeltaPartialTick(
                 Minecraft.getInstance().isPaused()
             );
             Window window = Minecraft.getInstance().getWindow();

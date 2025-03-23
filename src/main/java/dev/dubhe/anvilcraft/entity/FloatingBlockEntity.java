@@ -57,6 +57,7 @@ public class FloatingBlockEntity extends FallingBlockEntity {
      * @param pos        方块坐标
      * @param blockState 方块状态
      */
+    @SuppressWarnings("checkstyle:MethodName")
     public static FloatingBlockEntity _float(Level level, BlockPos pos, BlockState blockState, boolean isWater) {
         FloatingBlockEntity floatingBlockEntity = new FloatingBlockEntity(
             level,

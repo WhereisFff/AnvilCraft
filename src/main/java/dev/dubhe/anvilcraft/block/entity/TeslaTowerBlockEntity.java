@@ -178,37 +178,28 @@ public class TeslaTowerBlockEntity extends BlockEntity
         if (level == null) return;
         BlockState blockState = level.getBlockState(getBlockPos());
         int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity)
-            teslaTowerBlockEntity._addFilter(id, arg);
-    }
-
-    private void _addFilter(String id, String arg) {
-        whiteList.add(Pair.of(TeslaFilter.getFilter(id), arg));
+        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+            teslaTowerBlockEntity.whiteList.add(Pair.of(TeslaFilter.getFilter(id), arg));
+        }
     }
 
     public void removeFilter(String id, String arg) {
         if (level == null) return;
         BlockState blockState = level.getBlockState(getBlockPos());
         int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity)
-            teslaTowerBlockEntity._removeFilter(id, arg);
-    }
-
-    private void _removeFilter(String id, String arg) {
-        whiteList.removeIf(pair -> pair.first().getId().equals(id) && pair.second().equals(arg));
+        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+            teslaTowerBlockEntity.whiteList.removeIf(pair -> pair.first().getId().equals(id) && pair.second().equals(arg));
+        }
     }
 
     public void handleSync(List<Pair<TeslaFilter, String>> filters) {
         if (level == null) return;
         BlockState blockState = level.getBlockState(getBlockPos());
         int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity)
-            teslaTowerBlockEntity._handleSync(filters);
-    }
-
-    private void _handleSync(List<Pair<TeslaFilter, String>> filters) {
-        whiteList.clear();
-        whiteList.addAll(filters);
+        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+            teslaTowerBlockEntity.whiteList.clear();
+            teslaTowerBlockEntity.whiteList.addAll(filters);
+        }
     }
 
     @Override

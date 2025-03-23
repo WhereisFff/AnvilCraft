@@ -13,7 +13,7 @@ public class RubyAmuletItem extends AbstractAmuletItem {
     }
 
     @Override
-    void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (entity instanceof LivingEntity livingEntity) {
             if (!livingEntity.isInLava()) {
                 MobEffectInstance effect = livingEntity.getEffect(MobEffects.FIRE_RESISTANCE);

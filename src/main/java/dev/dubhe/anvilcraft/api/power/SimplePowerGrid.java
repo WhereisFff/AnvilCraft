@@ -97,41 +97,6 @@ public class SimplePowerGrid {
     }
 
     /**
-     * @param buf 缓冲区
-     */
-    public void encode(@NotNull FriendlyByteBuf buf) {
-        Tag tag = CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
-        CompoundTag data = new CompoundTag();
-        data.put("data", tag);
-        buf.writeNbt(data);
-    }
-
-    public boolean collideFast(AABB aabb) {
-        for (PowerComponentInfo it : this.powerComponentInfoList) {
-            if (new AABB(
-                it.pos().offset(-it.range(), -it.range(), -it.range()).getCenter(),
-                it.pos().offset(it.range(), it.range(), it.range()).getCenter()
-            ).intersects(aabb)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * 获得指定坐标的电网元件信息
-     */
-    public Optional<PowerComponentInfo> getInfoForPos(BlockPos pos) {
-        return powerComponentInfoList.stream()
-            .filter(it -> it.pos().equals(pos))
-            .findFirst();
-    }
-
-    public boolean isOverloaded() {
-        return this.getConsume() > this.getGenerate();
-    }
-
-    /**
      * @param grid 电网
      */
     public SimplePowerGrid(@NotNull PowerGrid grid) {
@@ -219,6 +184,41 @@ public class SimplePowerGrid {
         }
         this.consume = grid.getConsume();
         this.generate = grid.getGenerate();
+    }
+
+    /**
+     * @param buf 缓冲区
+     */
+    public void encode(@NotNull FriendlyByteBuf buf) {
+        Tag tag = CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
+        CompoundTag data = new CompoundTag();
+        data.put("data", tag);
+        buf.writeNbt(data);
+    }
+
+    public boolean collideFast(AABB aabb) {
+        for (PowerComponentInfo it : this.powerComponentInfoList) {
+            if (new AABB(
+                it.pos().offset(-it.range(), -it.range(), -it.range()).getCenter(),
+                it.pos().offset(it.range(), it.range(), it.range()).getCenter()
+            ).intersects(aabb)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获得指定坐标的电网元件信息
+     */
+    public Optional<PowerComponentInfo> getInfoForPos(BlockPos pos) {
+        return powerComponentInfoList.stream()
+            .filter(it -> it.pos().equals(pos))
+            .findFirst();
+    }
+
+    public boolean isOverloaded() {
+        return this.getConsume() > this.getGenerate();
     }
 
     public boolean shouldRender(Vec3 cameraPos) {

@@ -13,7 +13,7 @@ public class CatAmuletItem extends AbstractAmuletItem {
     }
 
     @Override
-    void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (entity instanceof Player player) {
             CompoundTag root = player.getData(ModDataAttachments.SCARE_ENTITIES);
             root.putBoolean("creepers", true);
