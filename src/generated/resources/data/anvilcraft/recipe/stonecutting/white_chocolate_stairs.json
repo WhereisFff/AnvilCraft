@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "anvilcraft:white_chocolate_block"
+  },
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:white_chocolate_stairs"
+  }
+}

@@ -27,7 +27,7 @@ public abstract class PowerProducerRenderer<T extends BlockEntity & IPowerProduc
     ) {
         poseStack.pushPose();
         float rotation = rotation(blockEntity, partialTick);
-        final VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.solid());
+        final VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.cutout());
         poseStack.translate(0.5F, elevation(), 0.5F);
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
         poseStack.mulPose(Axis.ZP.rotationDegrees(rotation));

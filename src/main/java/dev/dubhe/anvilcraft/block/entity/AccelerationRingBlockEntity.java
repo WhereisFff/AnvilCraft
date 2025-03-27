@@ -89,12 +89,13 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
 
     public void tick() {
         if (level == null) return;
+        BlockState state = getBlockState();
         if (level.isClientSide) {
+            if (!state.getValue(AccelerationRingBlock.HALF).equals(DirectionCube3x3PartHalf.MID_CENTER)) return;
             if (isWork())
                 accelerate();
         }
         if (grid == null) return;
-        BlockState state = getBlockState();
         if (!state.getValue(AccelerationRingBlock.HALF).equals(DirectionCube3x3PartHalf.MID_CENTER)) return;
         if (!(state.getBlock() instanceof AccelerationRingBlock block)) return;
         if (grid.isWorking() && state.getValue(AccelerationRingBlock.OVERLOAD)) {
@@ -116,7 +117,7 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
         checkPos.set(getBlockPos());
         boolean found = false;
         checkPos.move(direction);
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 14; i++) {
             checkPos.move(direction);
             BlockState checkState = level.getBlockState(checkPos);
             if (checkState.is(BlockTags.ANVIL) && !checkState.is(ModBlockTags.NON_MAGNETIC)) {
@@ -176,8 +177,11 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
                 case Z -> deltaMovement.multiply(0, 0, 1);
             };
             fixMovement = fixMovement.multiply(0.2, 0.2, 0.2);
-            deltaMovement = deltaMovement.add(fixMovement);
-            deltaMovement = deltaMovement.add(new Vec3(0.16f, 0.16f, 0.16f).multiply(Vec3.atLowerCornerOf(direction.getNormal())));
+            if (Math.abs(entity.getDeltaMovement().get(direction.getAxis())) <= 5)
+                deltaMovement = deltaMovement.add(fixMovement);
+            else
+                entity.setPos(entity.position().add(fixMovement.multiply(5, 5, 5)));
+            deltaMovement = deltaMovement.scale(1.0204081632653061).add(new Vec3(0.16f, 0.16f, 0.16f).multiply(Vec3.atLowerCornerOf(direction.getNormal())));
             entity.setDeltaMovement(deltaMovement);
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
         }

@@ -66,7 +66,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
     @Getter
-    private final int inputPower = 1;
+    private final int inputPower = 4;
     @Getter
     @Setter
     private PowerGrid grid;
