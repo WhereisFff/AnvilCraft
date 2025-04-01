@@ -29,8 +29,6 @@ public interface ITooltipProvider<T> {
         @ApiStatus.OverrideOnly
         public abstract boolean accepts(Block value);
 
-        public abstract List<Component> tooltip(BlockState value);
-
         public abstract int priority();
 
         @DoNotCall
@@ -44,6 +42,8 @@ public interface ITooltipProvider<T> {
         public ItemStack icon(Block value) {
             return value.asItem().getDefaultInstance();
         }
+
+        public abstract List<Component> tooltip(BlockState value);
 
         public boolean accepts(BlockState value) {
             return accepts(value.getBlock());
