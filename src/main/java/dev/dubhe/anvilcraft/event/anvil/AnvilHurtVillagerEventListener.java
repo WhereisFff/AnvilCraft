@@ -24,15 +24,15 @@ public class AnvilHurtVillagerEventListener {
     public static void onAnvilHurtEntity(@NotNull AnvilHurtEntityEvent event) {
         if (event.getHurtedEntity() instanceof Villager villager) {
             RandomSource random = event.getLevel().random;
-            double change = random.nextDouble();
-            if (change <= 0.2) {
-                villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NITWIT));
-                return;
-            }
             VillagerData villagerData = villager.getVillagerData();
-            if (villagerData.getProfession() == VillagerProfession.NITWIT) {
-                villager.setVillagerData(villagerData.setProfession(VillagerProfession.NITWIT));
-            } else villager.setVillagerData(villagerData.setProfession(VillagerProfession.NONE));
+            if (random.nextDouble() <= 0.2) {
+                villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NITWIT));
+            }
+            if (villagerData.getProfession() != VillagerProfession.NITWIT) {
+                villager.setVillagerData(villagerData.setProfession(VillagerProfession.NONE));
+            }
+            villager.setVillagerData(villagerData.setLevel(1));
+            villager.setVillagerXp(0);
             villager.releasePoi(MemoryModuleType.HOME);
             villager.releasePoi(MemoryModuleType.JOB_SITE);
             villager.releasePoi(MemoryModuleType.POTENTIAL_JOB_SITE);
