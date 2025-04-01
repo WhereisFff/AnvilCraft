@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 头戴铁砧锤时显示的tooltip
  */
-@Deprecated(since = "1.5.0", forRemoval = true)
+@Deprecated(since = "1.4.2", forRemoval = true)
 public interface IBlockEntityTooltipProvider {
     boolean accepts(BlockEntity entity);
 

@@ -64,7 +64,7 @@ public class HudTooltipManager {
     }
 
     @SuppressWarnings("removal")
-    @Deprecated(since = "1.5.0", forRemoval = true)
+    @Deprecated(since = "1.4.2", forRemoval = true)
     private void registerBlockEntityTooltip(IBlockEntityTooltipProvider provider) {
         blockEntityProviders.add(provider.toNewImplementation());
     }
