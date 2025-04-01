@@ -13,6 +13,7 @@ import java.util.List;
 public interface IInjectedTooltipProducer {
     /**
      * 获取需要渲染的tooltip
+     *
      * @return 一个按顺序存储了所有需要渲染的tooltip的List
      * @see IInjectedTooltipProducer#anvilcraft$getTooltip(BlockState)
      */
@@ -22,6 +23,7 @@ public interface IInjectedTooltipProducer {
 
     /**
      * （用于Block）获取需要渲染的tooltip
+     *
      * @return 一个按顺序存储了所有需要渲染的tooltip的List
      * @see IInjectedTooltipProducer#anvilcraft$getTooltip()
      */

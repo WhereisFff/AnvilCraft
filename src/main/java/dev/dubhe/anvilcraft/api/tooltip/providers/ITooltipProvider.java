@@ -28,12 +28,10 @@ public interface ITooltipProvider<T> {
 
         @ApiStatus.OverrideOnly
         public abstract boolean accepts(Block value);
-        public abstract List<Component> tooltip(BlockState value);
-        public abstract int priority();
 
-        public boolean accepts(BlockState value) {
-            return accepts(value.getBlock());
-        }
+        public abstract List<Component> tooltip(BlockState value);
+
+        public abstract int priority();
 
         @DoNotCall
         @Override
@@ -47,6 +45,10 @@ public interface ITooltipProvider<T> {
             return value.asItem().getDefaultInstance();
         }
 
+        public boolean accepts(BlockState value) {
+            return accepts(value.getBlock());
+        }
+
         public ItemStack icon(BlockState value) {
             return value.getBlock().asItem().getDefaultInstance();
         }
@@ -57,7 +59,9 @@ public interface ITooltipProvider<T> {
         }
 
         public abstract boolean accepts(BlockEntity value);
+
         public abstract List<Component> tooltip(BlockEntity value);
+
         public abstract int priority();
 
         @Override
