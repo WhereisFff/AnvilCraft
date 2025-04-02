@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.util;
 import com.google.common.base.CaseFormat;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,5 +51,23 @@ public class FormattingUtil {
         return Arrays.stream(internalName.toString().toLowerCase(Locale.ROOT).split("_"))
             .map(StringUtils::capitalize)
             .collect(Collectors.joining(" "));
+    }
+
+    /**
+     * 30 -> 30t, 150 -> 7.50s, 1635 -> 1min21.75s
+     */
+    public static Component toFormattedTime(int ticks) {
+        if (ticks < 20 * 5) {
+            return Component.translatable("time.ticks", ticks);
+        } else if (ticks < 20 * 5 * 60) {
+            return Component.translatable("time.seconds", ticks / 20);
+        } else {
+            int seconds = ticks / 20;
+            return Component.translatable(
+                "time.minutes", seconds / 60, Component.translatable(
+                    "time.seconds", seconds % 60, Component.translatable("time.ticks", ticks % 20)
+                )
+            );
+        }
     }
 }
