@@ -86,9 +86,7 @@ public class TimeWarpRecipeLoader {
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(4)),
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(4)).withChance(0.50f),
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(4)).withChance(0.25f)
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(3))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
@@ -101,7 +99,7 @@ public class TimeWarpRecipeLoader {
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(9))
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(4))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
@@ -114,7 +112,7 @@ public class TimeWarpRecipeLoader {
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(12))
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(5))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
@@ -127,7 +125,7 @@ public class TimeWarpRecipeLoader {
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(15))
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(6))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
