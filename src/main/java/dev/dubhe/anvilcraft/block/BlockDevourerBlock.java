@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
+import com.google.common.collect.Collections2;
 import com.google.common.collect.Lists;
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.AnvilCraft;
@@ -9,6 +10,7 @@ import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
@@ -39,10 +42,17 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
 
@@ -97,11 +107,13 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    protected void onPlace(BlockState state,
-                           Level level,
-                           BlockPos pos,
-                           BlockState oldState,
-                           boolean movedByPiston) {
+    protected void onPlace(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        BlockState oldState,
+        boolean movedByPiston
+    ) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
         }
@@ -112,7 +124,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockState state,
         ServerLevel level,
         BlockPos pos,
-        RandomSource random) {
+        RandomSource random
+    ) {
         super.tick(state, level, pos, random);
         if (!state.getValue(TRIGGERED)) return;
         if (!level.hasNeighborSignal(pos)) level.setBlock(pos, state.setValue(TRIGGERED, false), 2);
@@ -125,7 +138,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockPos pos,
         Block neighborBlock,
         BlockPos neighborPos,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
         }
@@ -152,7 +166,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockState state,
         BlockGetter level,
         BlockPos pos,
-        CollisionContext context) {
+        CollisionContext context
+    ) {
         return switch (state.getValue(FACING)) {
             case DOWN -> DOWN_SHAPE;
             case UP -> UP_SHAPE;
@@ -187,13 +202,15 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockPos devourerPos,
         Direction devourerDirection,
         int range,
-        @Nullable Block anvil) {
+        @Nullable Block anvil
+    ) {
         BlockPos outputPos = devourerPos.relative(devourerDirection.getOpposite());
         BlockPos devourCenterPos = devourerPos.relative(devourerDirection);
         IItemHandler itemHandler = level.getCapability(
             Capabilities.ItemHandler.BLOCK,
             devourerPos.relative(devourerDirection.getOpposite()),
-            devourerDirection.getOpposite());
+            devourerDirection.getOpposite()
+        );
         Vec3 center = outputPos.getCenter();
         AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
         final List<BlockPos> devourBlockPosList;
@@ -201,13 +218,16 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         switch (devourerDirection) {
             case DOWN, UP -> devourBlockBoundingBox = AabbUtil.create(
                 devourCenterPos.relative(Direction.NORTH, range).relative(Direction.WEST, range),
-                devourCenterPos.relative(Direction.SOUTH, range).relative(Direction.EAST, range));
+                devourCenterPos.relative(Direction.SOUTH, range).relative(Direction.EAST, range)
+            );
             case NORTH, SOUTH -> devourBlockBoundingBox = AabbUtil.create(
                 devourCenterPos.relative(Direction.UP, range).relative(Direction.WEST, range),
-                devourCenterPos.relative(Direction.DOWN, range).relative(Direction.EAST, range));
+                devourCenterPos.relative(Direction.DOWN, range).relative(Direction.EAST, range)
+            );
             case WEST, EAST -> devourBlockBoundingBox = AabbUtil.create(
                 devourCenterPos.relative(Direction.UP, range).relative(Direction.NORTH, range),
-                devourCenterPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range));
+                devourCenterPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range)
+            );
             default -> devourBlockBoundingBox = new AABB(devourCenterPos);
         }
         boolean insertEnabled = itemHandler != null;
@@ -215,58 +235,82 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         devourBlockPosList = BlockPos.betweenClosedStream(devourBlockBoundingBox)
             .map(BlockPos::immutable)
             .toList();
+
+        final List<BlockPos> chainDevourBlockPosList = new ArrayList<>();
+        final List<BlockPos> filteredBlockPosList = new ArrayList<>();
         for (BlockPos devourBlockPos : devourBlockPosList) {
-            BlockState devourBlockState = level.getBlockState(devourBlockPos);
-            List<BlockPos> chainDevourBlockPoses = Lists.newArrayList(devourBlockPos);
-            if (devourBlockState.isAir()) continue;
-            if (devourBlockState.getBlock().defaultDestroyTime() < 0) continue;
             if (
                 AnvilCraft.config.blockDevourerUpwardChainDevouring
                 && devourBlockPos.getY() == devourBlockBoundingBox.maxY
             ) {
-                chainDevourBlockPoses.addAll(
-                    BlockPos.betweenClosedStream(AabbUtil.create(
-                        devourBlockPos.above(), devourBlockPos.above(AnvilCraft.config.blockDevourerUpwardChainDevouringDistance)
-                    ))
-                        .map(BlockPos::immutable)
-                        .sorted(Comparator.comparingInt(Vec3i::getY))
-                        .takeWhile(blockPos -> level.getBlockState(blockPos).is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING))
-                        .toList()
-                );
-            }
-            if (devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
-                && level.random.nextDouble() > 0.05) {
-                level.destroyBlock(devourBlockPos, false);
-                continue;
-            }
-
-            List<ItemStack> dropList = Lists.newArrayList();
-            switch (anvil) {
-                case RoyalAnvilBlock ignore -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.dropSilkTouch(level, pos)));
-                case EmberAnvilBlock ignore -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.dropSmelt(level, pos)));
-                case null, default -> chainDevourBlockPoses.forEach(pos -> dropList.addAll(BreakBlockUtil.drop(level, pos)));
-            }
-            for (ItemStack itemStack : dropList) {
-                if (insertEnabled) {
-                    ItemStack outItemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, true);
-                    if (outItemStack.isEmpty()) {
-                        itemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, false);
+                for (BlockPos chainDevourBlockPos : BlockPos.betweenClosed(
+                    devourBlockPos.above(), devourBlockPos.above(AnvilCraft.config.blockDevourerUpwardChainDevouringDistance)
+                )) {
+                    if (level.getBlockState(chainDevourBlockPos).is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)) {
+                        chainDevourBlockPosList.add(chainDevourBlockPos.immutable());
+                    } else {
+                        break;
                     }
                 }
-                if (itemStack.isEmpty()) continue;
-                if (dropOriginalPlace) {
-                    Block.popResource(level, devourBlockPos, itemStack);
-                } else {
-                    AnvilUtil.dropItems(List.of(itemStack), level, center);
+            }
+
+            devourSingleBlockInternalLogic(
+                level, anvil, devourBlockPos, filteredBlockPosList, insertEnabled, itemHandler, dropOriginalPlace, center
+            );
+        }
+        for (BlockPos devourBlockPos : chainDevourBlockPosList) {
+            devourSingleBlockInternalLogic(
+                level, anvil, devourBlockPos, filteredBlockPosList, insertEnabled, itemHandler, dropOriginalPlace, center
+            );
+        }
+    }
+
+    private static void devourSingleBlockInternalLogic(
+        ServerLevel level, @Nullable Block anvil, BlockPos devourBlockPos, List<BlockPos> filteredBlockPosList, boolean insertEnabled,
+        @Nullable IItemHandler itemHandler, boolean dropOriginalPlace, Vec3 center
+    ) {
+        if (filteredBlockPosList.contains(devourBlockPos)) return;
+        BlockState devourBlockState = level.getBlockState(devourBlockPos);
+        if (devourBlockState.isAir()) return;
+        if (devourBlockState.getBlock().defaultDestroyTime() < 0) return;
+        if (devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
+            && level.random.nextDouble() > 0.05) {
+            level.destroyBlock(devourBlockPos, false);
+            return;
+        }
+
+        if (devourBlockState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)) {
+            Direction toAnother = devourBlockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).getDirectionToOther();
+            BlockPos anotherHalfPos = devourBlockPos.relative(toAnother);
+            level.destroyBlock(anotherHalfPos, false);
+            filteredBlockPosList.add(anotherHalfPos);
+        }
+
+        List<ItemStack> dropList = switch (anvil) {
+            case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
+            case EmberAnvilBlock ignore -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
+            case null, default -> BreakBlockUtil.drop(level, devourBlockPos);
+        };
+
+        for (ItemStack itemStack : dropList) {
+            if (insertEnabled) {
+                ItemStack outItemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, true);
+                if (outItemStack.isEmpty()) {
+                    itemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, false);
                 }
             }
-            chainDevourBlockPoses.forEach(pos -> {
-                level.getBlockState(pos)
-                    .getBlock()
-                    .playerWillDestroy(level, pos, level.getBlockState(pos), anvilCraftBlockPlacer.getPlayer());
-                level.destroyBlock(pos, false);
-            });
+            if (itemStack.isEmpty()) continue;
+            if (dropOriginalPlace) {
+                Block.popResource(level, devourBlockPos, itemStack);
+            } else {
+                AnvilUtil.dropItems(List.of(itemStack), level, center);
+            }
         }
+
+        if (!(devourBlockState.getBlock() instanceof DoublePlantBlock)) {
+            devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
+        }
+        level.destroyBlock(devourBlockPos, false);
     }
 
     @Override
