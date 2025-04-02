@@ -13,7 +13,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -40,7 +39,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,6 +46,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
+import static dev.dubhe.anvilcraft.util.ItemHandlerUtil.getTargetItemHandler;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -228,28 +227,11 @@ public class BlockPlacerBlock extends Block implements IHammerRemovable, IHammer
         }
         // 获取放置方块类型
         ItemStack placeItem = null;
-        IItemHandler itemHandler = level.getCapability(
-            Capabilities.ItemHandler.BLOCK,
+        IItemHandler itemHandler = getTargetItemHandler(
             blockPos.relative(direction.getOpposite()),
-            direction
+            direction,
+            level
         );
-        if (itemHandler == null) {
-            AABB aabb = new AABB(blockPos.relative(direction.getOpposite()));
-            List<ContainerEntity> entities =
-                level.getEntitiesOfClass(
-                        Entity.class,
-                        aabb,
-                        e -> (e instanceof ContainerEntity ce) && !ce.isEmpty()
-                    ).stream()
-                    .map(it -> (ContainerEntity) it)
-                    .toList();
-            if (!entities.isEmpty()) {
-                itemHandler = ((Entity) entities.getFirst()).getCapability(
-                    Capabilities.ItemHandler.ENTITY,
-                    null
-                );
-            }
-        }
         int slot;
         for (slot = 0; itemHandler != null && slot < itemHandler.getSlots(); slot++) {
             ItemStack blockItemStack = itemHandler.extractItem(slot, 1, true);
