@@ -81,6 +81,9 @@ public class TimeWarpRecipeLoader {
         timeWarpToOilCauldron(provider, Items.MUTTON, 16);
         timeWarpToOilCauldron(provider, Items.RABBIT, 16);
 
+        timeWarpToOilCauldron(provider, Items.ZOMBIE_HEAD, 1);
+        timeWarpToOilCauldron(provider, Items.PIGLIN_HEAD, 1);
+
         TimeWarpRecipe.builder()
             .requires(ModItemTags.NETHERITE_BLOCK)
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
@@ -133,6 +136,12 @@ public class TimeWarpRecipeLoader {
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
             .consumeFluid(true)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_nugget_3"));
+
+        TimeWarpRecipe.builder()
+            .requires(Items.SKELETON_SKULL)
+            .requires(Items.COAL, 4)
+            .result(Items.WITHER_SKELETON_SKULL.getDefaultInstance())
+            .save(provider);
     }
 
     private static void timeWarp(
