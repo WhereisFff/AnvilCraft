@@ -56,18 +56,15 @@ public class FormattingUtil {
     /**
      * 30 -> 30t, 150 -> 7.50s, 1635 -> 1min21.75s
      */
-    public static Component toFormattedTime(int ticks) {
+    public static String toFormattedTime(int ticks) {
         if (ticks < 20 * 5) {
-            return Component.translatable("time.ticks", ticks);
-        } else if (ticks < 20 * 5 * 60) {
-            return Component.translatable("time.seconds", ticks / 20);
+            return ticks + "gt";
+        } else if (ticks < 20 * 60) {
+            return (ticks % 20 == 0 ? String.valueOf(ticks / 20) : ticks / 20.0) + "s";
         } else {
-            int seconds = ticks / 20;
-            return Component.translatable(
-                "time.minutes", seconds / 60, Component.translatable(
-                    "time.seconds", seconds % 60, Component.translatable("time.ticks", ticks % 20)
-                )
-            );
+            int minutes = ticks / 20 / 60;
+            double seconds = (ticks - minutes * 60 * 20) / 20.0;
+            return minutes + "min" + (seconds == 0 ? "" : (seconds == (int) seconds ? String.valueOf((int) seconds) : seconds) + "s");
         }
     }
 }

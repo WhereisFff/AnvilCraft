@@ -36,8 +36,8 @@ public class DataGenUtil {
     }
 
     public static void diodeBlock(RegistrateBlockstateProvider provider, ResourceLocation id, DiodeBlock block) {
-        ModelFile diode = new ModelFile.ExistingModelFile(id.withPrefix("model/"), provider.models().existingFileHelper);
-        ModelFile diodeOn = new ModelFile.ExistingModelFile(id.withPrefix("model/").withSuffix("_on"), provider.models().existingFileHelper);
+        ModelFile diode = new ModelFile.ExistingModelFile(id.withPrefix("block/"), provider.models().existingFileHelper);
+        ModelFile diodeOn = new ModelFile.ExistingModelFile(id.withPrefix("block/").withSuffix("_on"), provider.models().existingFileHelper);
 
         provider.getVariantBuilder(block)
             .partialState().with(DiodeBlock.FACING, Direction.NORTH).with(DiodeBlock.POWERED, false).addModels(new ConfiguredModel(diode))

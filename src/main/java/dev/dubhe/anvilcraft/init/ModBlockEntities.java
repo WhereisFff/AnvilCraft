@@ -224,6 +224,7 @@ public class ModBlockEntities {
 
     public static final BlockEntityEntry<AdvancedRepeaterBlockEntity> ADVANCED_REPEATER = REGISTRATE
         .blockEntity("advanced_repeater", AdvancedRepeaterBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.ADVANCED_REPEATER)
         .register();
 
     public static void register() {

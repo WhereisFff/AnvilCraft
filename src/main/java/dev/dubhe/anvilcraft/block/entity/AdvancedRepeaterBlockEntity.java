@@ -55,40 +55,40 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putByte("StartMode", this.startMode);
-        tag.putBoolean("OutputMode", this.outputInvert);
-        tag.putInt("WaitingTime", this.waitingTime);
-        tag.putInt("SignalDuration", this.signalDuration);
-        tag.putInt("RemainingWaitingTime", this.waitingTimeRemaining);
-        tag.putInt("RemainingSignalDuration", this.signalDurationRemaining);
+        CompoundTag data = new CompoundTag();
+        data.putByte("StartMode", this.startMode);
+        data.putBoolean("OutputMode", this.outputInvert);
+        data.putInt("WaitingTime", this.waitingTime);
+        data.putInt("SignalDuration", this.signalDuration);
+        data.putInt("RemainingWaitingTime", this.waitingTimeRemaining);
+        data.putInt("RemainingSignalDuration", this.signalDurationRemaining);
+        tag.put("ExtraData", data);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.startMode = tag.getByte("StartMode");
-        this.outputInvert = tag.getBoolean("OutputMode");
-        this.waitingTime = tag.getInt("WaitingTime");
-        this.signalDuration = tag.getInt("SignalDuration");
-        this.waitingTimeRemaining = tag.getInt("RemainingWaitingTime");
-        this.signalDurationRemaining = tag.getInt("RemainingSignalDuration");
+        CompoundTag data = tag.getCompound("ExtraData");
+        this.startMode = data.getByte("StartMode");
+        this.outputInvert = data.getBoolean("OutputMode");
+        this.waitingTime = data.getInt("WaitingTime");
+        this.signalDuration = data.getInt("SignalDuration");
+        this.waitingTimeRemaining = data.getInt("RemainingWaitingTime");
+        this.signalDurationRemaining = data.getInt("RemainingSignalDuration");
     }
 
     public void tick() {
-        this.isOutputting = this.signalDurationRemaining > 0;
-
         if (this.waitingTimeRemaining > 0) {
             this.waitingTimeRemaining--;
-            if (this.waitingTimeRemaining <= 0) {
-                startOutputting();
-            }
-            return;
+        }
+        if (this.waitingTimeRemaining <= 0) {
+            this.startOutputting();
         }
         if (this.signalDurationRemaining > 0) {
             this.signalDurationRemaining--;
-            if (this.signalDurationRemaining <= 0) {
-                this.checkOnSignalEnd();
-            }
+        }
+        if (this.signalDurationRemaining <= 0) {
+            this.checkOnSignalEnd();
         }
     }
 
@@ -107,6 +107,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
 
         if (this.startMode == 2) {
             this.startWaiting();
+            this.waitingTimeRemaining--;
         }
     }
 
@@ -130,19 +131,27 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         }
     }
 
+    public int getOutputMode() {
+        return this.outputInvert ? 1 : 0;
+    }
+
+    public void setStartMode(int mode) {
+        this.startMode = (byte) Math.clamp(mode, 0, 2);
+        if (this.startMode == 2 && !this.isWaiting && !this.isOutputting) {
+            this.startWaiting();
+        }
+    }
+
+    public void setOutputMode(int mode) {
+        this.outputInvert = mode == 1;
+    }
+
     public void setSignalDuration(int signalDuration) {
-        this.signalDuration = Math.clamp(0, signalDuration, 24000);
+        this.signalDuration = Math.clamp(1, signalDuration, 24000);
     }
 
     public void setWaitingTime(int waitingTime) {
         this.waitingTime = Math.clamp(0, waitingTime, 24000);
-    }
-
-    public void setStartMode(byte mode) {
-        this.startMode = mode;
-        if (this.startMode == 2 && !this.isWaiting && !this.isOutputting) {
-            this.startWaiting();
-        }
     }
 
     @Override

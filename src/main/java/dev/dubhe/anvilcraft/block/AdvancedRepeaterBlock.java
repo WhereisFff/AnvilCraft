@@ -2,12 +2,19 @@ package dev.dubhe.anvilcraft.block;
 
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.block.entity.AdvancedRepeaterBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.TeslaTowerBlockEntity;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -16,6 +23,8 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -59,14 +68,23 @@ public class AdvancedRepeaterBlock extends DiodeBlock implements EntityBlock {
     }
 
     @Override
-    protected boolean canSurviveOn(LevelReader level, BlockPos pos, BlockState state) {
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
         return true;
+    }
+
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        if (level instanceof ServerLevel serverLevel) {
+            this.tick(state, serverLevel, pos, serverLevel.random);
+        }
     }
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         BlockEntity blockentity = level.getBlockEntity(pos);
         if (blockentity instanceof AdvancedRepeaterBlockEntity repeater) {
+            repeater.tick();
             if (
                 repeater.getStartMode() == 0 && this.getInputSignal(level, pos, state) > 0
                 || repeater.getStartMode() == 1 && this.getInputSignal(level, pos, state) == 0
@@ -81,6 +99,26 @@ public class AdvancedRepeaterBlock extends DiodeBlock implements EntityBlock {
     @Override
     protected boolean shouldTurnOn(Level level, BlockPos pos, BlockState state) {
         BlockEntity blockentity = level.getBlockEntity(pos);
-        return blockentity instanceof AdvancedRepeaterBlockEntity repeater && repeater.isWaiting();
+        return blockentity instanceof AdvancedRepeaterBlockEntity repeater && repeater.isOutputting();
+    }
+
+    @Override
+    protected InteractionResult useWithoutItem(
+        BlockState pState,
+        Level pLevel,
+        BlockPos pPos,
+        Player pPlayer,
+        BlockHitResult pHitResult
+    ) {
+        if (pLevel.isClientSide) {
+            return InteractionResult.SUCCESS;
+        }
+        BlockEntity be = pLevel.getBlockEntity(pPos);
+        if (be instanceof AdvancedRepeaterBlockEntity blockEntity && pPlayer instanceof ServerPlayer sp) {
+            if (sp.gameMode.getGameModeForPlayer() == GameType.SPECTATOR) return InteractionResult.PASS;
+            ModMenuTypes.open(sp, blockEntity, pPos);
+            return InteractionResult.SUCCESS;
+        }
+        return InteractionResult.FAIL;
     }
 }
