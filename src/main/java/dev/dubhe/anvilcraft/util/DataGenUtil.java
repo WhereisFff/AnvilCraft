@@ -40,19 +40,21 @@ public class DataGenUtil {
         ModelFile diodeOn = new ModelFile.ExistingModelFile(id.withPrefix("block/").withSuffix("_on"), provider.models().existingFileHelper);
 
         provider.getVariantBuilder(block)
-            .partialState().with(DiodeBlock.FACING, Direction.NORTH).with(DiodeBlock.POWERED, false).addModels(new ConfiguredModel(diode))
-            .partialState().with(DiodeBlock.FACING, Direction.EAST).with(DiodeBlock.POWERED, false).addModels(
-                new ConfiguredModel(diode, 0, 90, false))
             .partialState().with(DiodeBlock.FACING, Direction.SOUTH).with(DiodeBlock.POWERED, false).addModels(
-                new ConfiguredModel(diode, 0, 180, false))
+                new ConfiguredModel(diode))
             .partialState().with(DiodeBlock.FACING, Direction.WEST).with(DiodeBlock.POWERED, false).addModels(
+                new ConfiguredModel(diode, 0, 90, false))
+            .partialState().with(DiodeBlock.FACING, Direction.NORTH).with(DiodeBlock.POWERED, false).addModels(
+                new ConfiguredModel(diode, 0, 180, false))
+            .partialState().with(DiodeBlock.FACING, Direction.EAST).with(DiodeBlock.POWERED, false).addModels(
                 new ConfiguredModel(diode, 0, 270, false))
-            .partialState().with(DiodeBlock.FACING, Direction.NORTH).with(DiodeBlock.POWERED, true).addModels(new ConfiguredModel(diodeOn))
-            .partialState().with(DiodeBlock.FACING, Direction.EAST).with(DiodeBlock.POWERED, true).addModels(
-                new ConfiguredModel(diodeOn, 0, 90, false))
             .partialState().with(DiodeBlock.FACING, Direction.SOUTH).with(DiodeBlock.POWERED, true).addModels(
-                new ConfiguredModel(diodeOn, 0, 180, false))
+                new ConfiguredModel(diodeOn))
             .partialState().with(DiodeBlock.FACING, Direction.WEST).with(DiodeBlock.POWERED, true).addModels(
+                new ConfiguredModel(diodeOn, 0, 90, false))
+            .partialState().with(DiodeBlock.FACING, Direction.NORTH).with(DiodeBlock.POWERED, true).addModels(
+                new ConfiguredModel(diodeOn, 0, 180, false))
+            .partialState().with(DiodeBlock.FACING, Direction.EAST).with(DiodeBlock.POWERED, true).addModels(
                 new ConfiguredModel(diodeOn, 0, 270, false));
     }
 }

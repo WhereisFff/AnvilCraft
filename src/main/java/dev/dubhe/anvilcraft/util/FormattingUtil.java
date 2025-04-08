@@ -54,17 +54,60 @@ public class FormattingUtil {
     }
 
     /**
-     * 30 -> 30t, 150 -> 7.50s, 1635 -> 1min21.75s
+     * <table>
+     *     <thead>
+     *         <tr>
+     *             <th>tick数</th>
+     *             <th>显示效果</th>
+     *         </tr>
+     *     </thead>
+     *     <tbody>
+     *         <tr>
+     *             <td>30gt</td>
+     *             <td>30gt</td>
+     *         </tr>
+     *         <tr>
+     *             <td>100gt</td>
+     *             <td>5"</td>
+     *         </tr>
+     *         <tr>
+     *             <td>150gt</td>
+     *             <td>7"50</td>
+     *         </tr>
+     *         <tr>
+     *             <td>1200gt</td>
+     *             <td>1'</td>
+     *         </tr>
+     *         <tr>
+     *             <td>1220gt</td>
+     *             <td>1'01</td>
+     *         </tr>
+     *         <tr>
+     *             <td>1635gt</td>
+     *             <td>1'21"75</td>
+     *         </tr>
+     *     </tbody>
+     * </table>
      */
-    public static String toFormattedTime(int ticks) {
-        if (ticks < 20 * 5) {
-            return ticks + "gt";
-        } else if (ticks < 20 * 60) {
-            return (ticks % 20 == 0 ? String.valueOf(ticks / 20) : ticks / 20.0) + "s";
-        } else {
-            int minutes = ticks / 20 / 60;
-            double seconds = (ticks - minutes * 60 * 20) / 20.0;
-            return minutes + "min" + (seconds == 0 ? "" : (seconds == (int) seconds ? String.valueOf((int) seconds) : seconds) + "s");
-        }
+    public static String toFormattedTime(int total) {
+        int minutes = total / 20 / 60;
+        int seconds = (total / 20) % 60;
+        int ticks = total % 60 % 20;
+
+        StringBuilder result = new StringBuilder();
+
+        if (minutes > 0) result.append(minutes).append("'");
+
+        if (!result.isEmpty()) {
+            if (seconds != 0 || ticks != 0) {
+                result.append(String.format("%02d", seconds));
+            }
+            if (ticks != 0) result.append('"');
+        } else if (seconds >= 5) result.append(String.format("%d", seconds)).append('"');
+
+        if (result.isEmpty()) result.append(String.format("%dgt", ticks + seconds * 20));
+        else if (ticks != 0) result.append(String.format("%02d", ticks * 5));
+
+        return result.toString();
     }
 }

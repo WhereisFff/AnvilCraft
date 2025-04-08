@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.gui.component;
 import com.google.common.collect.Collections2;
 import dev.dubhe.anvilcraft.util.MathUtil;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -24,6 +25,7 @@ public class SwitchableButton extends Button {
 
     private final List<Button> switchables = new ArrayList<>();
     @Getter
+    @Setter
     private int current = 0;
 
     public SwitchableButton(

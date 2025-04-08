@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.block.AdvancedRepeaterBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.AdvancedRepeaterMenu;
@@ -15,6 +16,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -32,9 +34,12 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     protected int waitingTime = 2;
     protected int signalDuration = 2;
 
-    private boolean isWaiting = false;
+    protected boolean isInputtingSignal = false;
+    // TODO: Remove this
+    protected boolean isDirty = false;
+
     @Setter(AccessLevel.NONE)
-    private boolean isOutputting = false;
+    private Mode mode = Mode.DEFAULT;
     @Setter(AccessLevel.NONE)
     private int waitingTimeRemaining;
     @Setter(AccessLevel.NONE)
@@ -55,6 +60,16 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
+        tag.put("ExtraData", this.constructDataNbt());
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.readDataNbt(tag.getCompound("ExtraData"));
+    }
+
+    public CompoundTag constructDataNbt() {
         CompoundTag data = new CompoundTag();
         data.putByte("StartMode", this.startMode);
         data.putBoolean("OutputMode", this.outputInvert);
@@ -62,68 +77,86 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         data.putInt("SignalDuration", this.signalDuration);
         data.putInt("RemainingWaitingTime", this.waitingTimeRemaining);
         data.putInt("RemainingSignalDuration", this.signalDurationRemaining);
-        tag.put("ExtraData", data);
+        return data;
     }
 
-    @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        super.loadAdditional(tag, registries);
-        CompoundTag data = tag.getCompound("ExtraData");
+    public AdvancedRepeaterBlockEntity readDataNbt(CompoundTag data) {
         this.startMode = data.getByte("StartMode");
         this.outputInvert = data.getBoolean("OutputMode");
         this.waitingTime = data.getInt("WaitingTime");
         this.signalDuration = data.getInt("SignalDuration");
         this.waitingTimeRemaining = data.getInt("RemainingWaitingTime");
         this.signalDurationRemaining = data.getInt("RemainingSignalDuration");
+        return this;
     }
 
-    public void tick() {
-        if (this.waitingTimeRemaining > 0) {
-            this.waitingTimeRemaining--;
+    public void tickTime() {
+        switch (this.mode) {
+            case WAITING -> {
+                if (this.waitingTimeRemaining > 0) {
+                    this.waitingTimeRemaining--;
+                    this.setChanged();
+                }
+                if (this.waitingTimeRemaining <= 0) {
+                    this.startOutputting();
+                    this.setChanged();
+                }
+            }
+            case OUTPUTTING -> {
+                if (this.signalDurationRemaining > 0 && !this.isInputtingSignal) {
+                    this.signalDurationRemaining--;
+                    this.setChanged();
+                }
+                if (this.signalDurationRemaining <= 0) {
+                    this.checkOnSignalEnd();
+                    this.setChanged();
+                }
+            }
         }
-        if (this.waitingTimeRemaining <= 0) {
-            this.startOutputting();
-        }
-        if (this.signalDurationRemaining > 0) {
-            this.signalDurationRemaining--;
-        }
-        if (this.signalDurationRemaining <= 0) {
-            this.checkOnSignalEnd();
-        }
+    }
+
+    public static void tick(Level level, BlockPos pos, BlockState state, AdvancedRepeaterBlockEntity repeaterEntity) {
+        repeaterEntity.tickTime();
+        level.setBlock(
+            pos,
+            state.setValue(AdvancedRepeaterBlock.POWERED, repeaterEntity.outputInvert != repeaterEntity.isOutputting()),
+            3
+        );
     }
 
     protected void startWaiting() {
-        this.isWaiting = true;
+        this.mode = Mode.WAITING;
         this.waitingTimeRemaining = this.waitingTime;
     }
 
     protected void startOutputting() {
-        this.isOutputting = true;
+        this.mode = Mode.OUTPUTTING;
         this.signalDurationRemaining = this.signalDuration;
     }
 
     protected void checkOnSignalEnd() {
-        this.isOutputting = false;
+        this.mode = Mode.DEFAULT;
 
         if (this.startMode == 2) {
             this.startWaiting();
-            this.waitingTimeRemaining--;
         }
     }
 
     public void start() {
-        startWaiting();
+        if (!this.isProcessing()) {
+            this.startWaiting();
+        }
     }
 
     public int getOutputSignal() {
-        if (isOutputting) {
-            if (outputInvert) {
+        if (this.isOutputting()) {
+            if (this.outputInvert) {
                 return 0;
             } else {
                 return 15;
             }
         } else {
-            if (outputInvert) {
+            if (this.outputInvert) {
                 return 15;
             } else {
                 return 0;
@@ -131,27 +164,30 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         }
     }
 
-    public int getOutputMode() {
-        return this.outputInvert ? 1 : 0;
-    }
-
     public void setStartMode(int mode) {
         this.startMode = (byte) Math.clamp(mode, 0, 2);
-        if (this.startMode == 2 && !this.isWaiting && !this.isOutputting) {
+        if (this.startMode == 2 && this.mode == Mode.DEFAULT) {
             this.startWaiting();
         }
-    }
-
-    public void setOutputMode(int mode) {
-        this.outputInvert = mode == 1;
+        this.setChanged();
     }
 
     public void setSignalDuration(int signalDuration) {
-        this.signalDuration = Math.clamp(1, signalDuration, 24000);
+        this.signalDuration = Math.clamp(signalDuration, 1, 24000);
+        this.setChanged();
     }
 
     public void setWaitingTime(int waitingTime) {
-        this.waitingTime = Math.clamp(0, waitingTime, 24000);
+        this.waitingTime = Math.clamp(waitingTime, 0, 24000);
+        this.setChanged();
+    }
+
+    public boolean isProcessing() {
+        return this.mode != Mode.DEFAULT;
+    }
+
+    public boolean isOutputting() {
+        return this.mode == Mode.OUTPUTTING;
     }
 
     @Override
@@ -161,9 +197,19 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
-        if (level == null || player.isSpectator()) return null;
-        if (level.getBlockEntity(getBlockPos()) instanceof AdvancedRepeaterBlockEntity blockEntity)
+        if (player.isSpectator()) return null;
+        if (player.level().getBlockEntity(getBlockPos()) instanceof AdvancedRepeaterBlockEntity blockEntity)
             return new AdvancedRepeaterMenu(ModMenuTypes.ADVANCED_REPEATER.get(), containerId, inventory, blockEntity);
         return null;
+    }
+
+    public static boolean canStart(@Nullable BlockEntity blockEntity, boolean nowInputting) {
+        return blockEntity instanceof AdvancedRepeaterBlockEntity repeater
+               && ((repeater.getStartMode() == 0 && !repeater.isInputtingSignal() && nowInputting)
+                   || (repeater.getStartMode() == 1 && repeater.isInputtingSignal() && !nowInputting));
+    }
+
+    public enum Mode {
+        DEFAULT, WAITING, OUTPUTTING
     }
 }

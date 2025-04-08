@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.client.gui.component.SwitchableButton;
 import dev.dubhe.anvilcraft.client.gui.component.TextWidget;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
 import dev.dubhe.anvilcraft.inventory.AdvancedRepeaterMenu;
+import dev.dubhe.anvilcraft.network.AdvancedRepeaterUpdatePacket;
 import dev.dubhe.anvilcraft.util.FormattingUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -55,6 +57,17 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
     }
 
     @Override
+    public void onClose() {
+        PacketDistributor.sendToServer(new AdvancedRepeaterUpdatePacket(
+            this.menu.getBlockEntity().getStartMode(),
+            this.menu.getBlockEntity().isOutputInvert(),
+            this.menu.getBlockEntity().getWaitingTime(),
+            this.menu.getBlockEntity().getSignalDuration()
+        ));
+        super.onClose();
+    }
+
+    @Override
     protected void init() {
         super.init();
         SwitchableButton startMode = new SwitchableButton(
@@ -71,7 +84,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             16, 16,
             List.of(BUTTON_REVERSE_OFF, BUTTON_REVERSE_ON),
             16, 16, 32,
-            (button, index) -> this.menu.setOutputMode((byte) index)
+            (button, index) -> this.menu.setOutputInvert(index == 1)
         );
         BiFunction<Integer, Consumer<Integer>, TexturedButton> addTickFunc = (offsetX, tickAdder) -> new TexturedButton(
             this.leftPos + offsetX,
@@ -127,15 +140,17 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             this.topPos + 38,
             32, 9,
             minecraft.font,
-            () -> Component.literal(FormattingUtil.toFormattedTime(this.menu.getWaitingTime()))
+            () -> Component.literal(FormattingUtil.toFormattedTime(this.menu.getBlockEntity().getWaitingTime()))
         ).setRenderMode(TextWidget.RenderMode.SCALED);
         TextWidget signalDuration = new TextWidget(
             this.leftPos + 115,
             this.topPos + 38,
             32, 9,
             minecraft.font,
-            () -> Component.literal(FormattingUtil.toFormattedTime(this.menu.getSignalDuration()))
+            () -> Component.literal(FormattingUtil.toFormattedTime(this.menu.getBlockEntity().getSignalDuration()))
         ).setRenderMode(TextWidget.RenderMode.SCALED);
+        startMode.setCurrent(this.menu.getBlockEntity().getStartMode());
+        outputMode.setCurrent(this.menu.getBlockEntity().isOutputInvert() ? 1 : 0);
         this.addRenderableWidget(startMode);
         this.addRenderableWidget(outputMode);
         this.addRenderableOnly(waitingTime);
