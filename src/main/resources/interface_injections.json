@@ -1,5 +1,0 @@
-{
-  "net/minecraft/world/inventory/AbstractContainerMenu": [
-    "dev/dubhe/anvilcraft/api/injections/menu/IAbstractContainerMenuExtension"
-  ]
-}

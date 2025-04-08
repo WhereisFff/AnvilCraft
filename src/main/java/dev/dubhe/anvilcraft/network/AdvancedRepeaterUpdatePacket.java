@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.network;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.entity.AdvancedRepeaterBlockEntity;
 import dev.dubhe.anvilcraft.inventory.AdvancedRepeaterMenu;
-import dev.dubhe.anvilcraft.util.Callback;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

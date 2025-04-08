@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.google.common.collect.Collections2;
-import dev.dubhe.anvilcraft.util.MathUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.GuiGraphics;
