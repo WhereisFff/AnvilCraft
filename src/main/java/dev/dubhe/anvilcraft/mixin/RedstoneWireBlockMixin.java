@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.api.injections.tooltip.IInjectedTooltipProducer;
+import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProducer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;

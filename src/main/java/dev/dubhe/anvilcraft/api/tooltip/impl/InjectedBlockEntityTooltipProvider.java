@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.api.tooltip.impl;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.injections.tooltip.IInjectedTooltipProducer;
+import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProducer;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.network.chat.Component;
