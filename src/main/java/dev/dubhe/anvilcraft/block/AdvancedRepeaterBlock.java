@@ -30,6 +30,7 @@ import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -85,6 +86,12 @@ public class AdvancedRepeaterBlock extends DiodeBlock implements EntityBlock {
     }
 
     @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
+        super.onPlace(state, level, pos, oldState, isMoving);
+        level.scheduleTick(pos, this, 1, TickPriority.HIGH);
+    }
+
+    @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         boolean nowInputting = this.getInputSignal(level, pos, state) > 0;
 
@@ -108,7 +115,9 @@ public class AdvancedRepeaterBlock extends DiodeBlock implements EntityBlock {
         boolean powered = state.getValue(POWERED);
         boolean shouldBePowered = super.shouldTurnOn(level, pos, state);
         if (
-            (powered != shouldBePowered || powered != AdvancedRepeaterBlockEntity.canStart(level.getBlockEntity(pos), shouldBePowered))
+            (powered != shouldBePowered
+             || powered != AdvancedRepeaterBlockEntity.canStart(level.getBlockEntity(pos), shouldBePowered)
+             || ((AdvancedRepeaterBlockEntity) Objects.requireNonNull(level.getBlockEntity(pos))).isInputtingSignal() != shouldBePowered)
             && !level.getBlockTicks().willTickThisTick(pos, this)
         ) {
             TickPriority tickpriority = TickPriority.HIGH;

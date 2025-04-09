@@ -35,8 +35,6 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     protected int signalDuration = 2;
 
     protected boolean isInputtingSignal = false;
-    // TODO: Remove this
-    protected boolean isDirty = false;
 
     @Setter(AccessLevel.NONE)
     private Mode mode = Mode.DEFAULT;
@@ -103,7 +101,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
                 }
             }
             case OUTPUTTING -> {
-                if (this.signalDurationRemaining > 0 && !this.isInputtingSignal) {
+                if (this.signalDurationRemaining > 0 && this.shouldReduce()) {
                     this.signalDurationRemaining--;
                     this.setChanged();
                 }
@@ -113,6 +111,10 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
                 }
             }
         }
+    }
+
+    protected boolean shouldReduce() {
+        return (!this.isInputtingSignal) || this.startMode == 2;
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, AdvancedRepeaterBlockEntity repeaterEntity) {
