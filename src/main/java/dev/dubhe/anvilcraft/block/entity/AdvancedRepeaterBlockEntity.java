@@ -35,6 +35,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     protected int signalDuration = 2;
 
     protected boolean isInputtingSignal = false;
+    protected boolean isDeadlock = false;
 
     @Setter(AccessLevel.NONE)
     private Mode mode = Mode.DEFAULT;
@@ -58,13 +59,22 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put("ExtraData", this.constructDataNbt());
+        CompoundTag data = this.constructDataNbt();
+        data.putInt("RemainingWaitingTime", this.waitingTimeRemaining);
+        data.putInt("RemainingSignalDuration", this.signalDurationRemaining);
+        tag.put("ExtraData", data);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.readDataNbt(tag.getCompound("ExtraData"));
+        CompoundTag data = tag.getCompound("ExtraData");
+        this.readDataNbt(data);
+        this.waitingTimeRemaining = data.getInt("RemainingWaitingTime");
+        this.signalDurationRemaining = data.getInt("RemainingSignalDuration");
+        if (this.waitingTimeRemaining != 0) this.mode = Mode.WAITING;
+        else if (this.signalDurationRemaining != 0) this.mode = Mode.OUTPUTTING;
+        else this.mode = Mode.DEFAULT;
     }
 
     public CompoundTag constructDataNbt() {
@@ -73,8 +83,6 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         data.putBoolean("OutputMode", this.outputInvert);
         data.putInt("WaitingTime", this.waitingTime);
         data.putInt("SignalDuration", this.signalDuration);
-        data.putInt("RemainingWaitingTime", this.waitingTimeRemaining);
-        data.putInt("RemainingSignalDuration", this.signalDurationRemaining);
         return data;
     }
 
@@ -83,15 +91,13 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         this.outputInvert = data.getBoolean("OutputMode");
         this.waitingTime = data.getInt("WaitingTime");
         this.signalDuration = data.getInt("SignalDuration");
-        this.waitingTimeRemaining = data.getInt("RemainingWaitingTime");
-        this.signalDurationRemaining = data.getInt("RemainingSignalDuration");
         return this;
     }
 
-    public void tickTime() {
+    protected void tickTime() {
         switch (this.mode) {
             case WAITING -> {
-                if (this.waitingTimeRemaining > 0) {
+                if (this.waitingTimeRemaining > 0 && !this.isDeadlock) {
                     this.waitingTimeRemaining--;
                     this.setChanged();
                 }
@@ -101,7 +107,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
                 }
             }
             case OUTPUTTING -> {
-                if (this.signalDurationRemaining > 0 && this.shouldReduce()) {
+                if (this.signalDurationRemaining > 0 && !this.isDeadlock) {
                     this.signalDurationRemaining--;
                     this.setChanged();
                 }
@@ -113,12 +119,32 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         }
     }
 
-    protected boolean shouldReduce() {
-        return (!this.isInputtingSignal) || this.startMode == 2;
+    protected void checkIsDeadlock() {
+        this.isDeadlock = switch (this.startMode) {
+            case 0 -> this.mode == Mode.OUTPUTTING && this.isInputtingSignal;
+            case 1 -> false;
+            case 2 -> {
+                if (this.isInputtingSignal && !this.isDeadlock) {
+                    this.mode = Mode.DEFAULT;
+                    this.signalDurationRemaining = 0;
+                    this.setChanged();
+                    yield true;
+                } else if (this.isDeadlock && !this.isInputtingSignal) {
+                    this.startWaiting();
+                    this.setChanged();
+                    yield false;
+                } else {
+                    yield false;
+                }
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + this.startMode);
+        };
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, AdvancedRepeaterBlockEntity repeaterEntity) {
         repeaterEntity.tickTime();
+        repeaterEntity.checkIsDeadlock();
+
         level.setBlock(
             pos,
             state.setValue(AdvancedRepeaterBlock.POWERED, repeaterEntity.outputInvert != repeaterEntity.isOutputting()),
@@ -208,7 +234,8 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     public static boolean canStart(@Nullable BlockEntity blockEntity, boolean nowInputting) {
         return blockEntity instanceof AdvancedRepeaterBlockEntity repeater
                && ((repeater.getStartMode() == 0 && !repeater.isInputtingSignal() && nowInputting)
-                   || (repeater.getStartMode() == 1 && repeater.isInputtingSignal() && !nowInputting));
+                   || (repeater.getStartMode() == 1 && repeater.isInputtingSignal() && !nowInputting)
+                   || (repeater.getStartMode() == 2 && (repeater.isDeadlock || repeater.mode == Mode.DEFAULT)));
     }
 
     public enum Mode {
