@@ -26,8 +26,8 @@ public interface IToolProperties {
     /**
      * 多相
      *
-     * @param alpha
-     * @param beta
+     * @param alpha α相
+     * @param beta β相
      */
     record Multiphase(Phase alpha, Phase beta) {
         public static final Multiphase EMPTY = new Multiphase(Phase.EMPTY, Phase.EMPTY);
