@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -225,7 +226,7 @@ public class TransparentCraftingTableBlock extends TransparentBlock implements I
      * @return 判断结果
      */
     public boolean isValidMatrixBlock(BlockState block, Boolean isSelfOnly) {
-        return block.is(this) || (!isSelfOnly && (block.is(ModBlocks.SPACE_OVERCOMPRESSOR.get())));
+        return block.is(this) || (!isSelfOnly && block.is(ModBlockTags.CRAFTING_MATRIX_ELEMENT));
     }
 
     public enum Type implements StringRepresentable {
