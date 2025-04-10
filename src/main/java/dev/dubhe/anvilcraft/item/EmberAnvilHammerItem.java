@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.IToolAttributes;
+import dev.dubhe.anvilcraft.api.item.IToolProperties;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -19,8 +19,8 @@ public class EmberAnvilHammerItem extends AnvilHammerItem {
     public EmberAnvilHammerItem(Properties properties) {
         super(
             properties.fireResistant()
-                .component(ModComponents.FIRE_REFORGING, IToolAttributes.FireReforging.INSTANCE)
-                .component(ModComponents.TOUGH, IToolAttributes.Tough.INSTANCE)
+                .component(ModComponents.FIRE_REFORGING, IToolProperties.FireReforging.INSTANCE)
+                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
         );
     }
 

@@ -8,7 +8,7 @@ import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
-import dev.dubhe.anvilcraft.api.item.IToolAttributes;
+import dev.dubhe.anvilcraft.api.item.IToolProperties;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -52,9 +52,9 @@ public class ModComponents {
 
     public static final DataComponentType<Unit> TOUGH = registerEmpty("tough");
 
-    public static final DataComponentType<IToolAttributes.Multiphase> MULTIPHASE =
-        register("multiphase", b -> b.persistent(IToolAttributes.Multiphase.CODEC)
-            .networkSynchronized(IToolAttributes.Multiphase.STREAM_CODEC));
+    public static final DataComponentType<IToolProperties.Multiphase> MULTIPHASE =
+        register("multiphase", b -> b.persistent(IToolProperties.Multiphase.CODEC)
+            .networkSynchronized(IToolProperties.Multiphase.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();

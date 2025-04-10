@@ -10,7 +10,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.component.PatchedDataComponentMap;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
@@ -23,30 +22,36 @@ import org.jetbrains.annotations.Nullable;
 /**
  * 特殊工具属性
  */
-public interface IToolAttributes {
-    record Multiphase(Phase spaceA, Phase spaceB) {
+public interface IToolProperties {
+    /**
+     * 多相
+     *
+     * @param alpha
+     * @param beta
+     */
+    record Multiphase(Phase alpha, Phase beta) {
         public static final Multiphase EMPTY = new Multiphase(Phase.EMPTY, Phase.EMPTY);
 
         public static final Codec<Multiphase> CODEC = Codec.pair(Phase.CODEC, Phase.CODEC).xmap(
             spaces -> new Multiphase(spaces.getFirst(), spaces.getSecond()),
-            multiphase -> new Pair<>(multiphase.spaceA, multiphase.spaceB)
+            multiphase -> new Pair<>(multiphase.alpha, multiphase.beta)
         );
         public static final StreamCodec<ByteBuf, Multiphase> STREAM_CODEC = StreamCodec.of(Multiphase::encode, Multiphase::decode);
 
         public static Multiphase make(Component customName, @Nullable ItemEnchantments enchantments) {
             MutableComponent customNameExtra = customName.copy();
-            Phase spaceA = Phase.make(customNameExtra.append("-A"), enchantments);
-            Phase spaceB = Phase.EMPTY.withCustomName(customNameExtra.append("-B"));
-            return new Multiphase(spaceA, spaceB);
+            Phase alpha = Phase.make(customNameExtra.append("-α"), enchantments);
+            Phase beta = Phase.EMPTY.withCustomName(customNameExtra.append("-β"));
+            return new Multiphase(alpha, beta);
         }
 
         public Multiphase switchSpaces() {
-            return new Multiphase(spaceB, spaceA);
+            return new Multiphase(beta, alpha);
         }
 
         private static void encode(ByteBuf buf, Multiphase value) {
-            Phase.STREAM_CODEC.encode(buf, value.spaceA);
-            Phase.STREAM_CODEC.encode(buf, value.spaceB);
+            Phase.STREAM_CODEC.encode(buf, value.alpha);
+            Phase.STREAM_CODEC.encode(buf, value.beta);
         }
 
         private static Multiphase decode(ByteBuf buf) {

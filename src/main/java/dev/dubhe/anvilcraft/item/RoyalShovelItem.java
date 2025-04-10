@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.IToolAttributes;
+import dev.dubhe.anvilcraft.api.item.IToolProperties;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.AxeItem;
@@ -16,7 +16,7 @@ public class RoyalShovelItem extends ShovelItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(Tiers.DIAMOND, 1.5f, -3.0f))
-                .component(ModComponents.TOUGH, IToolAttributes.Tough.INSTANCE)
+                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
         );
     }
 }

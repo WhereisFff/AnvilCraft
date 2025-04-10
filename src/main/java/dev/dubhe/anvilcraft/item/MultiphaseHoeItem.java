@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.IToolAttributes;
+import dev.dubhe.anvilcraft.api.item.IToolProperties;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
@@ -16,9 +16,9 @@ public class MultiphaseHoeItem extends HoeItem {
             ModTiers.MULTIPHASE,
             properties.fireResistant()
                 .attributes(HoeItem.createAttributes(ModTiers.MULTIPHASE, 1, 0))
-                .component(ModComponents.FIRE_REFORGING, IToolAttributes.FireReforging.INSTANCE)
-                .component(ModComponents.TOUGH, IToolAttributes.Tough.INSTANCE)
-                .component(ModComponents.MULTIPHASE, IToolAttributes.Multiphase.make(
+                .component(ModComponents.FIRE_REFORGING, IToolProperties.FireReforging.INSTANCE)
+                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
+                .component(ModComponents.MULTIPHASE, IToolProperties.Multiphase.make(
                     Component.translatable("item.anvilcraft.multiphase_hoe"), null
                 ))
         );
