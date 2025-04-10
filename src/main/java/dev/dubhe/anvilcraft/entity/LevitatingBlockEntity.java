@@ -1,12 +1,10 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.init.ModEntities;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -22,25 +20,19 @@ import net.minecraft.world.level.block.Fallable;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.NotNull;
 
-public class FloatingBlockEntity extends FallingBlockEntity {
-
-    private boolean underCeiling = false;
-
-    /**
-     *
-     */
-    public FloatingBlockEntity(EntityType<? extends FallingBlockEntity> entityType, Level level) {
+public class LevitatingBlockEntity extends FallingBlockEntity {
+    public LevitatingBlockEntity(EntityType<? extends FallingBlockEntity> entityType, Level level) {
         super(entityType, level);
         this.setNoGravity(true);
         this.refreshDimensions();
     }
 
-    private FloatingBlockEntity(Level level, double x, double y, double z, BlockState state) {
-        this(ModEntities.FLOATING_BLOCK.get(), level);
+    private LevitatingBlockEntity(Level level, double x, double y, double z, BlockState state) {
+        this(ModEntities.LEVITATING_BLOCK.get(), level);
         this.blockState = state;
         this.blocksBuilding = true;
         this.setPos(x, y, z);
@@ -51,14 +43,9 @@ public class FloatingBlockEntity extends FallingBlockEntity {
         this.setStartPos(this.blockPosition());
     }
 
-    /**
-     * @param level      世界
-     * @param pos        方块坐标
-     * @param blockState 方块状态
-     */
-    @SuppressWarnings({"checkstyle:MethodName", "UnusedReturnValue"})
-    public static FloatingBlockEntity _float(Level level, BlockPos pos, BlockState blockState) {
-        FloatingBlockEntity floatingBlockEntity = new FloatingBlockEntity(
+    @SuppressWarnings("UnusedReturnValue")
+    public static LevitatingBlockEntity levitate(Level level, BlockPos pos, BlockState blockState) {
+        LevitatingBlockEntity levitating = new LevitatingBlockEntity(
             level,
             (double) pos.getX() + 0.5,
             pos.getY(),
@@ -68,12 +55,13 @@ public class FloatingBlockEntity extends FallingBlockEntity {
             : blockState
         );
         level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
-        level.addFreshEntity(floatingBlockEntity);
-        return floatingBlockEntity;
+        level.addFreshEntity(levitating);
+        return levitating;
     }
 
     @Override
     public void tick() {
+        this.setNoGravity(true);
         if (this.blockState.isAir()) {
             this.discard();
         } else {
@@ -81,23 +69,32 @@ public class FloatingBlockEntity extends FallingBlockEntity {
             ++this.time;
             BlockPos blockPos = this.blockPosition();
 
-            if (this.level().getFluidState(blockPos.above()).is(FluidTags.WATER) && !underCeiling) {
+            if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
+                this.discard();
+            } else if (
+                this.level().getBlockState(blockPos.above()).isAir()
+                || (this.level().getBlockState(blockPos).getBlock() instanceof Fallable
+                    || this.level().getBlockState(blockPos.above()).getBlock() instanceof Fallable
+                    || !this.level().getEntitiesOfClass(
+                    FallingBlockEntity.class,
+                    new AABB(this.position(), this.position()).expandTowards(-0.2, 0, -0.2).expandTowards(0.2, 1.7, 0.2),
+                    entity -> !entity.equals(this) && entity.getBlockState().getBlock() instanceof Fallable).isEmpty()
+                )
+            ) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04, 0.0));
             } else {
                 if (!this.level().isClientSide) {
-                    if (underCeiling) blockPos = blockPos.above();
                     BlockState blockState = this.level().getBlockState(blockPos);
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
                     if (!blockState.is(Blocks.MOVING_PISTON)) {
                         if (!this.cancelDrop) {
-                            boolean canBeReplaced = blockState.canBeReplaced(new DirectionalPlaceContext(
-                                this.level(), blockPos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
+                            boolean canBeReplaced = blockState.canBeReplaced(
+                                new DirectionalPlaceContext(this.level(), blockPos, Direction.DOWN, ItemStack.EMPTY, Direction.UP)
+                            );
                             boolean canSurvive = this.blockState.canSurvive(this.level(), blockPos);
                             if (canBeReplaced && canSurvive) {
-                                if (
-                                    this.blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-                                    && this.level().getFluidState(blockPos).getType() == Fluids.WATER
-                                ) {
+                                if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED)
+                                    && this.level().getFluidState(blockPos).getType() == Fluids.WATER) {
                                     this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, true);
                                 }
 
@@ -105,22 +102,12 @@ public class FloatingBlockEntity extends FallingBlockEntity {
                                     ((ServerLevel) this.level())
                                         .getChunkSource()
                                         .chunkMap
-                                        .broadcast(
-                                            this,
-                                            new ClientboundBlockUpdatePacket(
-                                                blockPos,
-                                                this.level().getBlockState(blockPos)
-                                            )
-                                        );
+                                        .broadcast(this, new ClientboundBlockUpdatePacket(blockPos, this.level().getBlockState(blockPos)));
                                     this.discard();
                                     if (block instanceof Fallable) {
                                         ((Fallable) block).onLand(this.level(), blockPos, this.blockState, blockState, this);
                                     }
-                                } else if (
-                                    !(this.level().getBlockState(blockPos).getBlock() instanceof Fallable)
-                                    && this.position().y - Math.floor(this.position().y) < 0.5
-                                    && this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)
-                                ) {
+                                } else if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
                                     this.discard();
                                     this.callOnBrokenAfterFall(block, blockPos);
                                     this.spawnAtLocation(block);
@@ -147,13 +134,5 @@ public class FloatingBlockEntity extends FallingBlockEntity {
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
         return EntityDimensions.scalable(0.98f, 0.98f);
-    }
-
-    @Override
-    public void move(@NotNull MoverType type, @NotNull Vec3 pos) {
-        super.move(type, pos);
-        Vec3 vec3 = this.collide(pos);
-        this.verticalCollision = pos.y != vec3.y;
-        this.underCeiling = this.verticalCollision && pos.y > 0;
     }
 }
