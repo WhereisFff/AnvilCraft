@@ -46,15 +46,18 @@ public class ItemTooltipManager {
         map.put(
             ModBlocks.MAGNET_BLOCK.asItem(),
             "Attracting the anvil below, when pushed and pulled by the piston, "
-                + "causes adjacent copper blocks to generate charges");
+            + "causes adjacent copper blocks to generate charges"
+        );
         map.put(
             ModBlocks.HOLLOW_MAGNET_BLOCK.asItem(),
             "Attracting the anvil below, "
-                + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges");
+            + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges"
+        );
         map.put(
             ModBlocks.FERRITE_CORE_MAGNET_BLOCK.asItem(),
             "Attracting the anvil below, "
-                + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges");
+            + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges"
+        );
         map.put(ModBlocks.BATCH_CRAFTER.asItem(), "consumes 1 kW");
         map.put(ModBlocks.ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.SMOOTH_ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
@@ -80,7 +83,8 @@ public class ItemTooltipManager {
         map.put(ModBlocks.INDUCTION_LIGHT.asItem(), "Catalyze crop growth, consumes 1 kW");
         map.put(
             ModBlocks.ITEM_COLLECTOR.asItem(),
-            "Adjust power consumption based on range and cooling" + ", from 30kW to 150kW");
+            "Adjust power consumption based on range and cooling" + ", from 30kW to 150kW"
+        );
         map.put(ModBlocks.EMBER_ANVIL.asItem(), "Wither proof");
         map.put(ModBlocks.EMBER_GRINDSTONE.asItem(), "Wither proof");
         map.put(ModBlocks.EMBER_SMITHING_TABLE.asItem(), "Wither proof");
@@ -96,7 +100,7 @@ public class ItemTooltipManager {
     /**
      * 为模组物品添加工具提示
      *
-     * @param stack 需要添加工具提示的物品堆叠
+     * @param stack   需要添加工具提示的物品堆叠
      * @param tooltip 提示内容
      */
     public static void addTooltip(ItemStack stack, List<Component> tooltip) {
@@ -115,9 +119,11 @@ public class ItemTooltipManager {
         }
         if (stack.is(ModItemTags.REINFORCED_CONCRETE)) {
             ResourceLocation key = BuiltInRegistries.ITEM.getKey(item);
-            tooltip.add(1,
+            tooltip.add(
+                1,
                 Component.translatable("tooltip.%s.item.reinforced_concrete".formatted(key.getNamespace()))
-                    .withStyle(ChatFormatting.GRAY));
+                    .withStyle(ChatFormatting.GRAY)
+            );
         }
     }
 
@@ -143,6 +149,7 @@ public class ItemTooltipManager {
             Component.translatable("tooltip.anvilcraft.attribute.%s".formatted(attributeName)).withStyle(ChatFormatting.GOLD)
         );
     }
+
     private static void attributeTooltip(String attributeName, List<Component> tooltip, Object... args) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {

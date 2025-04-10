@@ -17,24 +17,25 @@ import java.util.Objects;
 import java.util.Optional;
 
 @MethodsReturnNonnullByDefault
-public record ChangeEnchantmentSpacePacket() implements CustomPacketPayload {
-    public static final Type<ChangeEnchantmentSpacePacket> TYPE = new Type<>(AnvilCraft.of("change_enchantment_space"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, ChangeEnchantmentSpacePacket> STREAM_CODEC =
-        CustomPacketPayload.codec(ChangeEnchantmentSpacePacket::encode, ChangeEnchantmentSpacePacket::decode);
-    public static final IPayloadHandler<ChangeEnchantmentSpacePacket> HANDLER = ChangeEnchantmentSpacePacket::serverHandler;
+public record SwitchPhasePacket() implements CustomPacketPayload {
+    public static final Type<SwitchPhasePacket> TYPE = new Type<>(AnvilCraft.of("change_enchantment_space"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, SwitchPhasePacket> STREAM_CODEC =
+        CustomPacketPayload.codec(SwitchPhasePacket::encode, SwitchPhasePacket::decode);
+    public static final IPayloadHandler<SwitchPhasePacket> HANDLER = SwitchPhasePacket::serverHandler;
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public void encode(@NotNull RegistryFriendlyByteBuf buf) {}
-
-    public static ChangeEnchantmentSpacePacket decode(@NotNull RegistryFriendlyByteBuf buf) {
-        return new ChangeEnchantmentSpacePacket();
+    public void encode(@NotNull RegistryFriendlyByteBuf buf) {
     }
 
-    public static void serverHandler(ChangeEnchantmentSpacePacket data, IPayloadContext context) {
+    public static SwitchPhasePacket decode(@NotNull RegistryFriendlyByteBuf buf) {
+        return new SwitchPhasePacket();
+    }
+
+    public static void serverHandler(SwitchPhasePacket data, IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {
             if (!(player.level() instanceof ServerLevel)) return;
@@ -44,7 +45,8 @@ public record ChangeEnchantmentSpacePacket() implements CustomPacketPayload {
             if (itemInHand.isEmpty()) return;
             try {
                 Objects.requireNonNull(itemInHand.get(ModComponents.MULTIPHASE)).switchSpaces();
-            } catch (NullPointerException ignored) {}
+            } catch (NullPointerException ignored) {
+            }
         });
     }
 }

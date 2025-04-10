@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.client.event;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
-import dev.dubhe.anvilcraft.network.ChangeEnchantmentSpacePacket;
+import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
 
 import net.minecraft.client.Minecraft;
@@ -40,7 +40,7 @@ public class ClientEventListener {
     @SubscribeEvent
     public static void onKeyPressed(ClientTickEvent.Post event) {
         while (ModKeyMappings.SWITCH_PHASE.get().consumeClick()) {
-            PacketDistributor.sendToServer(new ChangeEnchantmentSpacePacket());
+            PacketDistributor.sendToServer(new SwitchPhasePacket());
         }
     }
 }
