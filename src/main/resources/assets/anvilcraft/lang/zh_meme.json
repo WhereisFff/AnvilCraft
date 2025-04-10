@@ -110,6 +110,7 @@
   "block.anvilcraft.lava_cauldron": "装有熔岩的中华锅",
   "block.anvilcraft.lead_block": "铅方块",
   "block.anvilcraft.lead_pressure_plate": "铅阿姨压一压板",
+  "block.anvilcraft.levitation_powder_block": "Levitation Powder Block",
   "block.anvilcraft.light_blue_cement": "亮蓝色水门汀",
   "block.anvilcraft.light_blue_cement_cauldron": "装有亮蓝色水门汀的中华锅",
   "block.anvilcraft.light_gray_cement": "亮灰色水门汀",
@@ -295,6 +296,7 @@
   "entity.anvilcraft.falling_spectral_block": "下落的光谱方块",
   "entity.anvilcraft.floating_block": "飞起来！块",
   "entity.anvilcraft.ionocraft": "Ionocraft",
+  "entity.anvilcraft.levitating_block": "Levitating Block",
   "entity.minecraft.villager.anvilcraft.jeweler": "珠宝商",
   "gui.anvilcraft.category.average_output": "平均：%s",
   "gui.anvilcraft.category.beacon_conversion": "信标转化",
@@ -759,5 +761,11 @@
   "tooltip.anvilcraft.jade.item_detector": "检测范围： %d",
   "tooltip.anvilcraft.jade.power_information": "电网：%d / %d kW",
   "tooltip.anvilcraft.jade.ruby_prism.power": "激光等级：%d",
+  "tooltip.anvilcraft.redstone.output_mode": "  Output Mode: %s",
+  "tooltip.anvilcraft.redstone.output_mode.compare": "Compare",
+  "tooltip.anvilcraft.redstone.output_mode.subtract": "Subtract",
+  "tooltip.anvilcraft.redstone.output_power": "  Output Power: %d",
+  "tooltip.anvilcraft.redstone.power": "  Power: %d",
+  "tooltip.anvilcraft.redstone.title": "Redstone Stats:",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "已储存质量： %s"
 }

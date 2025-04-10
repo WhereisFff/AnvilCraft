@@ -110,6 +110,7 @@
   "block.anvilcraft.lava_cauldron": "Chaudron de Lave",
   "block.anvilcraft.lead_block": "Bloc de plomb",
   "block.anvilcraft.lead_pressure_plate": "Plaque de pression en plomb",
+  "block.anvilcraft.levitation_powder_block": "Levitation Powder Block",
   "block.anvilcraft.light_blue_cement": "Light Blue Cement",
   "block.anvilcraft.light_blue_cement_cauldron": "Light Blue Cement Cauldron",
   "block.anvilcraft.light_gray_cement": "Light Gray Cement",
@@ -295,6 +296,7 @@
   "entity.anvilcraft.falling_spectral_block": "Bloc spectral descendant",
   "entity.anvilcraft.floating_block": "Bloc flottant",
   "entity.anvilcraft.ionocraft": "Ionocraft",
+  "entity.anvilcraft.levitating_block": "Levitating Block",
   "entity.minecraft.villager.anvilcraft.jeweler": "Bijoutier",
   "gui.anvilcraft.category.average_output": "Average: %s",
   "gui.anvilcraft.category.beacon_conversion": "Beacon Conversion",
@@ -759,5 +761,11 @@
   "tooltip.anvilcraft.jade.item_detector": "Detection Range: %d",
   "tooltip.anvilcraft.jade.power_information": "Réseau électrique: %d/%d kW",
   "tooltip.anvilcraft.jade.ruby_prism.power": "Niveau laser : %d",
+  "tooltip.anvilcraft.redstone.output_mode": "  Output Mode: %s",
+  "tooltip.anvilcraft.redstone.output_mode.compare": "Compare",
+  "tooltip.anvilcraft.redstone.output_mode.subtract": "Subtract",
+  "tooltip.anvilcraft.redstone.output_power": "  Output Power: %d",
+  "tooltip.anvilcraft.redstone.power": "  Power: %d",
+  "tooltip.anvilcraft.redstone.title": "Redstone Stats:",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s"
 }

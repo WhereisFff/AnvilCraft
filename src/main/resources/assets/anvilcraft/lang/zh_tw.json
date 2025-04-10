@@ -110,6 +110,7 @@
   "block.anvilcraft.lava_cauldron": "裝熔岩的鍋釜",
   "block.anvilcraft.lead_block": "鉛方塊",
   "block.anvilcraft.lead_pressure_plate": "鉛壓力板",
+  "block.anvilcraft.levitation_powder_block": "Levitation Powder Block",
   "block.anvilcraft.light_blue_cement": "淺藍色水泥",
   "block.anvilcraft.light_blue_cement_cauldron": "裝淺藍色水泥的鍋釜",
   "block.anvilcraft.light_gray_cement": "淺灰色水泥",
@@ -295,6 +296,7 @@
   "entity.anvilcraft.falling_spectral_block": "掉落的幻靈鐵砧",
   "entity.anvilcraft.floating_block": "懸浮方塊",
   "entity.anvilcraft.ionocraft": "Ionocraft",
+  "entity.anvilcraft.levitating_block": "Levitating Block",
   "entity.minecraft.villager.anvilcraft.jeweler": "珠寶商",
   "gui.anvilcraft.category.average_output": "平均：%s",
   "gui.anvilcraft.category.beacon_conversion": "Beacon Conversion",
@@ -759,5 +761,11 @@
   "tooltip.anvilcraft.jade.item_detector": "Detection Range: %d",
   "tooltip.anvilcraft.jade.power_information": "電網：%d / %d kW",
   "tooltip.anvilcraft.jade.ruby_prism.power": "雷射等級：%d",
+  "tooltip.anvilcraft.redstone.output_mode": "  Output Mode: %s",
+  "tooltip.anvilcraft.redstone.output_mode.compare": "Compare",
+  "tooltip.anvilcraft.redstone.output_mode.subtract": "Subtract",
+  "tooltip.anvilcraft.redstone.output_power": "  Output Power: %d",
+  "tooltip.anvilcraft.redstone.power": "  Power: %d",
+  "tooltip.anvilcraft.redstone.title": "Redstone Stats:",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s"
 }
