@@ -30,7 +30,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
      * 物品收集器 ScreenHandler
      */
     public ItemCollectorMenu(
-            @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull BlockEntity machine) {
+        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull BlockEntity machine) {
         super(menuType, containerId);
         ItemCollectorMenu.checkContainerSize(inventory, 9);
 
@@ -43,7 +43,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
                 this.addSlot(new SlotItemHandlerWithFilter(
-                        this.blockEntity.getItemHandler(), i * 3 + j, 98 + j * 18, 18 + i * 18));
+                    this.blockEntity.getItemHandler(), i * 3 + j, 98 + j * 18, 18 + i * 18));
             }
         }
 
@@ -52,7 +52,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
     }
 
     public ItemCollectorMenu(
-            @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
+        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
         this(menuType, containerId, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
@@ -70,7 +70,8 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
         }
     }
 
-    private void onChanged() {}
+    private void onChanged() {
+    }
 
     @Override
     public IFilterBlockEntity getFilterBlockEntity() {
@@ -167,17 +168,18 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
     @Override
     public boolean stillValid(@NotNull Player player) {
         return stillValid(
-                ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, ModBlocks.ITEM_COLLECTOR.get());
+            ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, ModBlocks.ITEM_COLLECTOR.get());
     }
 
     @Override
     public void slotChanged(
-            @NotNull AbstractContainerMenu containerToSend, int dataSlotIndex, @NotNull ItemStack stack) {
+        @NotNull AbstractContainerMenu containerToSend, int dataSlotIndex, @NotNull ItemStack stack) {
         onChanged();
     }
 
     @Override
-    public void dataChanged(@NotNull AbstractContainerMenu containerMenu, int dataSlotIndex, int value) {}
+    public void dataChanged(@NotNull AbstractContainerMenu containerMenu, int dataSlotIndex, int value) {
+    }
 
     @Override
     public void flush() {

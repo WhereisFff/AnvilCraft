@@ -3,10 +3,6 @@ dependencies {
     api("com.tterrag.registrate:Registrate:${libs.versions.registrate.get()}")
     jarJar("com.tterrag.registrate:Registrate:${libs.versions.registrate.get()}")
 
-    // Anvil Lib
-    implementation(libs.anvillib)
-    jarJar(libs.anvillib)
-
     // Cloth Config
     implementation(libs.clothConfig)
     jarJar(libs.clothConfig)
@@ -38,9 +34,15 @@ dependencies {
     compileOnly("maven.modrinth:iris:1.8.1+1.21.1-neoforge")
 
     // Jade, The One Probe, KubeJS
-    implementation(libs.jade)
-    implementation(libs.theoneprobe)
-    implementation(libs.kubejs)
+    compileOnly(libs.jade)
+    compileOnly(libs.theoneprobe)
+    compileOnly(libs.kubejs)
+
+
+    compileOnly(libs.create) { transitive = false }
+    compileOnly(libs.ponder)
+    compileOnly(libs.flywheelApi)
+    compileOnly(libs.flywheel)
 
 //    compileOnly("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308ded19")
 //    compileOnly("org.sinytra.forgified-fabric-api:fabric-renderer-api-v1:3.4.0+acb05a3919")

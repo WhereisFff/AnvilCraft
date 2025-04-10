@@ -7,26 +7,44 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.mojang.math.Axis;
 import dev.dubhe.anvilcraft.api.hammer.IHasHammerEffect;
 import dev.dubhe.anvilcraft.api.input.IMouseHandlerExtension;
 import dev.dubhe.anvilcraft.block.multipart.IMultiPartBlockModelHolder;
 import dev.dubhe.anvilcraft.client.init.ModRenderTypes;
 import dev.dubhe.anvilcraft.client.init.ModShaders;
-import dev.dubhe.anvilcraft.client.renderer.RenderState;
+import dev.dubhe.anvilcraft.integration.create.VisualizationUnsupported;
 import dev.dubhe.anvilcraft.integration.iris.IrisState;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
+import dev.dubhe.anvilcraft.util.FullBrightLevel;
 import dev.dubhe.anvilcraft.util.MathUtil;
-import dev.dubhe.anvilcraft.util.RenderHelper;
+import dev.dubhe.anvilcraft.util.VertexConsumerWithPose;
+import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.block.BlockRenderDispatcher;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.BlockAndTintGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.material.FluidState;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
@@ -38,12 +56,15 @@ import java.lang.invoke.MethodType;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.dubhe.anvilcraft.util.RenderHelper.L1;
+import static dev.dubhe.anvilcraft.util.RenderHelper.L2;
+
 @ParametersAreNonnullByDefault
 public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     public static final int RADIUS = 80;
-    public static final int DELAY = 150;//ms
-    public static final int ANIMATION_T = 300;//ms
-    public static final int CLOSING_ANIMATION_T = 150;//ms
+    public static final int DELAY = 150; //ms
+    public static final int ANIMATION_T = 300; //ms
+    public static final int CLOSING_ANIMATION_T = 150; //ms
     public static final float ZOOM = 13.5f;
     public static final int IGNORE_CURSOR_MOVE_LENGTH = 15;
 
@@ -60,6 +81,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     private static final int TEXT_COLOR = 0xfdfdfd;
 
     private static final Vector2f ROTATION_START = new Vector2f(0, 1);
+    private static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
 
     /// Nonlinear, should bigger than 1, 1 means no animation
     private static final float SELECTION_ANIMATION_SPEED_FACTOR = 5.0f;
@@ -85,7 +107,10 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     private final BlockPos targetBlockPos;
     private final Property<?> property;
     private final List<BlockState> possibleStates;
+    private final Camera camera;
 
+    private final Level replacementLevel = VisualizationUnsupported.wrap(minecraft.level);
+    private final BlockAndTintGetter fullBrightLevel = new FullBrightLevel(minecraft.level);
     private BlockState currentBlockState;
     private final List<SelectionItem> items = new ArrayList<>();
     private long displayTime = System.currentTimeMillis();
@@ -103,6 +128,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         this.currentBlockState = initialBlockState;
         this.property = property;
         this.possibleStates = possibleStates;
+        this.camera = Minecraft.getInstance().gameRenderer.getMainCamera();
     }
 
     @Override
@@ -227,6 +253,89 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         renderProgressAnimation(guiGraphics, progress, centerX, centerY);
     }
 
+    private void renderRotatedBlock(
+        PoseStack poseStack,
+        BlockState block,
+        float x,
+        float y,
+        float z,
+        float scale
+    ) {
+        float partialTick = minecraft.getTimer().getGameTimeDeltaPartialTick(true);
+        poseStack.pushPose();
+        poseStack.translate(-7, 7, 0);
+        poseStack.translate(x, y, z);
+        poseStack.scale(scale, scale, scale);
+        poseStack.mulPose(new Matrix4f().scaling(1, -1, 1));
+        poseStack.translate(0.5f, 0.5f, 0.5f);
+        poseStack.mulPose(Axis.XP.rotationDegrees(camera.getEntity().getXRot()));
+        poseStack.mulPose(Axis.YP.rotationDegrees(camera.getEntity().getYRot() + 180f));
+        poseStack.translate(-0.5f, -0.5f, -0.5f);
+
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+
+        FluidState fluidState = block.getFluidState();
+        MultiBufferSource.BufferSource buffers =
+            Minecraft.getInstance().renderBuffers().bufferSource();
+
+        RenderSystem.setupGui3DDiffuseLighting(L1, L2);
+        BlockRenderDispatcher blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();
+        BakedModel model = blockRenderDispatcher.getBlockModel(block);
+        for (RenderType renderType : model.getRenderTypes(block, RANDOM, ModelData.EMPTY)) {
+            VertexConsumer bufferBuilder = buffers.getBuffer(renderType);
+            blockRenderDispatcher.renderBatched(
+                block,
+                targetBlockPos,
+                fullBrightLevel,
+                poseStack,
+                bufferBuilder,
+                true,
+                RANDOM,
+                ModelData.EMPTY,
+                renderType
+            );
+        }
+        buffers.endLastBatch();
+        if (!fluidState.isEmpty()) {
+            if (block.getBlock() instanceof LiquidBlock) {
+                block = block.setValue(LiquidBlock.LEVEL, block.getFluidState().getAmount());
+            }
+            blockRenderDispatcher.renderLiquid(
+                targetBlockPos,
+                fullBrightLevel,
+                new VertexConsumerWithPose(
+                    buffers.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidState)),
+                    poseStack.last(),
+                    BlockPos.ZERO
+                ),
+                block,
+                fluidState
+            );
+            buffers.endLastBatch();
+        }
+        BlockEntity blockEntity = minecraft.level.getBlockEntity(targetBlockPos);
+        if (blockEntity != null) {
+            BlockEntityRenderer<BlockEntity> renderer = minecraft.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
+            if (renderer != null) {
+                Level originalLevel = blockEntity.getLevel();
+                BlockState originalBlockState = blockEntity.getBlockState();
+                blockEntity.setLevel(replacementLevel);
+                blockEntity.setBlockState(block);
+                renderer.render(
+                    blockEntity,
+                    partialTick,
+                    poseStack,
+                    buffers,
+                    LightTexture.FULL_BLOCK,
+                    OverlayTexture.NO_OVERLAY
+                );
+                blockEntity.setLevel(originalLevel);
+                blockEntity.setBlockState(originalBlockState);
+            }
+        }
+        poseStack.popPose();
+    }
+
     private void renderProgressAnimation(GuiGraphics guiGraphics, float progress, float centerX, float centerY) {
         progress = (float) (-Math.pow(progress, 2) + 2 * progress);
         if (progress == 0) return;
@@ -267,14 +376,13 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                 .add(centerX, centerY);
             float x = center.x;
             float y = center.y;
-            RenderHelper.renderBlock(
-                guiGraphics,
+            renderRotatedBlock(
+                poseStack,
                 value.modelBlock,
                 x,
-                y - 4f,
+                y,
                 100,
-                ZOOM,
-                RenderHelper.SINGLE_BLOCK
+                ZOOM
             );
             int textAlpha = (int) (progress * 0xff) << 24;
             poseStack.pushPose();
@@ -335,14 +443,13 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         for (SelectionItem value : items) {
             float x = value.center.x;
             float y = value.center.y;
-            RenderHelper.renderBlock(
-                guiGraphics,
+            renderRotatedBlock(
+                poseStack,
                 value.modelBlock,
                 x,
-                y - 4f,
+                y,
                 -100,
-                ZOOM,
-                RenderHelper.SINGLE_BLOCK
+                ZOOM
             );
             poseStack.pushPose();
             float coordinateScale = 0.7f;

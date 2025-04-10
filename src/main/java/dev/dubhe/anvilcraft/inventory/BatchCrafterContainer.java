@@ -67,7 +67,8 @@ public class BatchCrafterContainer implements CraftingContainer {
     }
 
     @Override
-    public void setChanged() {}
+    public void setChanged() {
+    }
 
     @Override
     public boolean stillValid(Player player) {

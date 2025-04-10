@@ -43,8 +43,8 @@ public class ItemDurabilityPressurePlateBlock extends PowerLevelPressurePlateBlo
     protected static Pair<Float, Float> getItemDurabilityPercentMinAndMax(Level level, AABB box) {
         TreeSet<Float> set = Sets.newTreeSet();
         for (ItemEntity item : level.getEntitiesOfClass(
-                ItemEntity.class, box,
-                EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
+            ItemEntity.class, box,
+            EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
         )) {
             ItemStack stack = item.getItem();
             set.add(MathUtil.safeDivide(stack.getMaxDamage() - stack.getDamageValue(), stack.getMaxDamage()));

@@ -2,7 +2,8 @@ package dev.dubhe.anvilcraft.network;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import dev.dubhe.anvilcraft.client.renderer.PowerGridRenderer;
+import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
+import dev.dubhe.anvilcraft.client.PowerGridClient;
 
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -18,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 public class PowerGridRemovePacket implements CustomPacketPayload {
     public static final Type<PowerGridRemovePacket> TYPE = new Type<>(AnvilCraft.of("power_grid_remove"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PowerGridRemovePacket> STREAM_CODEC =
-            StreamCodec.composite(ByteBufCodecs.INT, PowerGridRemovePacket::getGrid, PowerGridRemovePacket::new);
+        StreamCodec.composite(ByteBufCodecs.INT, PowerGridRemovePacket::getGrid, PowerGridRemovePacket::new);
     public static final IPayloadHandler<PowerGridRemovePacket> HANDLER = PowerGridRemovePacket::clientHandler;
 
     private final int grid;
@@ -39,7 +40,13 @@ public class PowerGridRemovePacket implements CustomPacketPayload {
         return TYPE;
     }
 
-    public static void clientHandler(PowerGridRemovePacket data, IPayloadContext context) {
-        context.enqueueWork(() -> PowerGridRenderer.getGridMap().remove(data.grid));
+    public void clientHandler(IPayloadContext context) {
+        context.enqueueWork(() -> {
+            SimplePowerGrid powerGrid = PowerGridClient.getGridMap().get(this.grid);
+            if (powerGrid != null) {
+                powerGrid.destroy();
+            }
+            PowerGridClient.getGridMap().remove(this.grid);
+        });
     }
 }

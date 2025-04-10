@@ -37,15 +37,15 @@ public abstract class TeslaFilter {
         return FILTER_MAP.values();
     }
 
-    abstract public String getId();
+    public abstract String getId();
 
-    abstract public boolean match(LivingEntity entity, String arg);
+    public abstract boolean match(LivingEntity entity, String arg);
 
     public boolean needArg() {
         return false;
     }
 
-    abstract public Component title();
+    public abstract Component title();
 
     public String tooltip(String arg) {
         return "";

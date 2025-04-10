@@ -13,6 +13,7 @@ import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -42,11 +43,17 @@ public class ModComponents {
     public static final DataComponentType<IExtraItemDisplay.StoredItem> DISPLAY_ITEM =
         register("display_item",
             b -> b.persistent(IExtraItemDisplay.StoredItem.CODEC)
-            .networkSynchronized(IExtraItemDisplay.StoredItem.STREAM_CODEC));
+                .networkSynchronized(IExtraItemDisplay.StoredItem.STREAM_CODEC));
 
     public static final DataComponentType<ComradeAmuletItem.SignedPlayers> SIGNED_PLAYERS =
         register("signed_player", b -> b.persistent(ComradeAmuletItem.SignedPlayers.CODEC)
             .networkSynchronized(ComradeAmuletItem.SignedPlayers.STREAM_CODEC));
+  
+    public static final DataComponentType<Integer> FLIGHT_TIME = register(
+        "flight_time",
+        it -> it.persistent(Codec.INT)
+            .networkSynchronized(ByteBufCodecs.INT)
+    );
 
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 

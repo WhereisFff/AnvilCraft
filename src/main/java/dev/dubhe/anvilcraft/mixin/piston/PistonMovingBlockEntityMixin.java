@@ -32,7 +32,7 @@ abstract class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityIn
 
     @Override
     public void anvilcraft$setData(CompoundTag nbt) {
-        if(nbt == null) return;
+        if (nbt == null) return;
         this.anvilcraft$nbt.merge(nbt);
     }
 

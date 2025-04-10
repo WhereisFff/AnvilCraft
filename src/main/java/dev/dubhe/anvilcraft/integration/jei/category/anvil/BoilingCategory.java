@@ -29,7 +29,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,7 +39,6 @@ public class BoilingCategory implements IRecipeCategory<RecipeHolder<BoilingReci
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final Lazy<IDrawable> background;
     private final IDrawable icon;
     private final IDrawable slot;
     private final Component title;
@@ -50,9 +48,8 @@ public class BoilingCategory implements IRecipeCategory<RecipeHolder<BoilingReci
     private final IDrawable arrowOut;
 
     public BoilingCategory(IGuiHelper helper) {
-        background = Lazy.of(() -> helper.createBlankDrawable(WIDTH, HEIGHT));
         icon = new DrawableBlockStateIcon(CauldronUtil.fullState(Blocks.WATER_CAULDRON),
-                Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
+            Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.boiling");
         timer = helper.createTickTimer(30, 60, true);
@@ -72,8 +69,13 @@ public class BoilingCategory implements IRecipeCategory<RecipeHolder<BoilingReci
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background.get();
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override
@@ -89,48 +91,48 @@ public class BoilingCategory implements IRecipeCategory<RecipeHolder<BoilingReci
 
     @Override
     public void draw(
-            RecipeHolder<BoilingRecipe> recipe,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<BoilingRecipe> recipe,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                12 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            12 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics,
-                CauldronUtil.fullState(Blocks.WATER_CAULDRON),
-                81,
-                30,
-                10,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            CauldronUtil.fullState(Blocks.WATER_CAULDRON),
+            81,
+            30,
+            10,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true),
-                81,
-                40,
-                0,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true),
+            81,
+            40,
+            0,
+            12,
+            RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
         JeiSlotUtil.drawInputSlots(
-                guiGraphics, slot, recipe.value().mergedIngredients.size());
+            guiGraphics, slot, recipe.value().mergedIngredients.size());
         JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.value().results.size());
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-                AnvilCraftJeiPlugin.BOILING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BOILING_TYPE.get()));
+            AnvilCraftJeiPlugin.BOILING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BOILING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

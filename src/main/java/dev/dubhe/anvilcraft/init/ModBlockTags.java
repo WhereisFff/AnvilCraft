@@ -72,6 +72,8 @@ public class ModBlockTags {
     public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
     public static final TagKey<Block> INCORRECT_FOR_MULTIPHASE_TOOL = bind("incorrect_for_multiphase_tool");
 
+    public static final TagKey<Block> ANVIL_HAMMER_BLACKLIST = bind("anvil_hammer_blacklist");
+
     //mekanism tags
     public static final TagKey<Block> MEKANISM_CARDBOARD_BOX_BLACKLIST = bindMekanism("cardboard_blacklist");
 
@@ -79,7 +81,7 @@ public class ModBlockTags {
         return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath("c", id));
     }
 
-    private static TagKey<Block> bindMekanism(String id){
+    private static TagKey<Block> bindMekanism(String id) {
         return TagKey.create(Registries.BLOCK, ResourceLocation.fromNamespaceAndPath(MEKANISM_MODID, id));
     }
 
@@ -89,7 +91,7 @@ public class ModBlockTags {
 
     public static final Object2ObjectMap<Color, TagKey<Block>> DYED_COLORS = initDyedTags();
 
-    public static Object2ObjectMap<Color, TagKey<Block>> initDyedTags(){
+    public static Object2ObjectMap<Color, TagKey<Block>> initDyedTags() {
         Object2ObjectMap<Color, TagKey<Block>> map = new Object2ObjectOpenHashMap<>();
         for (Color color : Color.values()) {
             map.put(color, bindC("dyed/" + color));

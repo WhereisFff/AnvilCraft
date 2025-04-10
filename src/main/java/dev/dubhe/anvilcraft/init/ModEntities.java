@@ -1,17 +1,17 @@
 package dev.dubhe.anvilcraft.init;
 
+import com.tterrag.registrate.util.entry.EntityEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.renderer.entity.AscendingBlockRenderer;
+import dev.dubhe.anvilcraft.client.renderer.entity.IonocraftRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SpectralBlockRenderer;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.entity.FallingSpectralBlockEntity;
 import dev.dubhe.anvilcraft.entity.FloatingBlockEntity;
-
+import dev.dubhe.anvilcraft.entity.IonocraftEntity;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.world.entity.MobCategory;
-
-import com.tterrag.registrate.util.entry.EntityEntry;
 
 public class ModEntities {
     public static final EntityEntry<? extends AnimateAscendingBlockEntity> ASCENDING_BLOCK_ENTITY = AnvilCraft.REGISTRATE
@@ -33,6 +33,14 @@ public class ModEntities {
     public static final EntityEntry<? extends FloatingBlockEntity> FLOATING_BLOCK = AnvilCraft.REGISTRATE
         .entity("floating_block", FloatingBlockEntity::new, MobCategory.MISC)
         .renderer(() -> FallingBlockRenderer::new)
+        .register();
+
+    public static final EntityEntry<? extends IonocraftEntity> IONOCRAFT = AnvilCraft.REGISTRATE
+        .<IonocraftEntity>entity("ionocraft", IonocraftEntity::new, MobCategory.MISC)
+        .properties(it -> it.sized(0.75f, 0.75f)
+            .eyeHeight(0.5625F)
+            .clientTrackingRange(10)
+        ).renderer(() -> IonocraftRenderer::new)
         .register();
 
     public static void register() {

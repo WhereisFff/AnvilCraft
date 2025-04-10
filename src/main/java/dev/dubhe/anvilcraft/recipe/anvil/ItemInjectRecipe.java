@@ -110,7 +110,7 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
             }
         }
         if (ingredientFlags.values().stream().anyMatch(flag -> !flag)
-                || flags.values().stream().anyMatch(flag -> !flag)) {
+            || flags.values().stream().anyMatch(flag -> !flag)) {
             return false;
         }
         return contents.values().intStream().allMatch(count -> count >= 0);
@@ -131,14 +131,14 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
 
     public static class Serializer implements RecipeSerializer<ItemInjectRecipe> {
         private static final MapCodec<ItemInjectRecipe> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
-                        CodecUtil.createIngredientListCodec("ingredients", 9, "item_inject")
-                                .forGetter(ItemInjectRecipe::getIngredients),
-                        CodecUtil.BLOCK_CODEC.fieldOf("input_block").forGetter(ItemInjectRecipe::getInputBlock),
-                        CodecUtil.BLOCK_CODEC.fieldOf("result_block").forGetter(ItemInjectRecipe::getResultBlock))
-                .apply(ins, ItemInjectRecipe::new));
+                CodecUtil.createIngredientListCodec("ingredients", 9, "item_inject")
+                    .forGetter(ItemInjectRecipe::getIngredients),
+                CodecUtil.BLOCK_CODEC.fieldOf("input_block").forGetter(ItemInjectRecipe::getInputBlock),
+                CodecUtil.BLOCK_CODEC.fieldOf("result_block").forGetter(ItemInjectRecipe::getResultBlock))
+            .apply(ins, ItemInjectRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, ItemInjectRecipe> STREAM_CODEC =
-                StreamCodec.of(Serializer::encode, Serializer::decode);
+            StreamCodec.of(Serializer::encode, Serializer::decode);
 
         @Override
         public MapCodec<ItemInjectRecipe> codec() {

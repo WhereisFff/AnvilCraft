@@ -6,8 +6,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,15 +33,9 @@ public interface IPowerComponent extends Comparable<IPowerComponent> {
     /**
      * @return 覆盖范围
      */
-    default VoxelShape getShape() {
-        return Shapes.box(
-            -this.getRange(),
-            -this.getRange(),
-            -this.getRange(),
-            this.getRange() + 1,
-            this.getRange() + 1,
-            this.getRange() + 1
-        );
+    default AABB getShape() {
+        float range = getRange() * 2 + 1;
+        return AABB.ofSize(getPos().getCenter(), range, range, range);
     }
 
     default int getRange() {

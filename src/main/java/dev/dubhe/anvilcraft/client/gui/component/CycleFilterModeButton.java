@@ -41,7 +41,7 @@ public class CycleFilterModeButton extends Button {
         }
     }
 
-    private String buttonPath(){
+    private String buttonPath() {
         return this.filterMode.get().buttonPath;
     }
 
@@ -78,7 +78,7 @@ public class CycleFilterModeButton extends Button {
         guiGraphics.blit(texture, x, y, puOffset, i, width, height, textureWidth, textureHeight);
     }
 
-    public Mode cycle(){
+    public Mode cycle() {
         return this.filterMode.get().cycle();
     }
 }

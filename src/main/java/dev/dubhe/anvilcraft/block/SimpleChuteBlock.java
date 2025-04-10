@@ -1,12 +1,13 @@
 package dev.dubhe.anvilcraft.block;
 
-import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
+import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
+import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
+import dev.dubhe.anvilcraft.block.entity.ChuteBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.SimpleChuteBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -17,6 +18,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
@@ -35,6 +37,7 @@ import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -42,14 +45,14 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.items.IItemHandler;
-
-import com.mojang.serialization.MapCodec;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
-import static dev.dubhe.anvilcraft.block.ChuteBlock.hasChuteFacing;
+import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportToTarget;
+import static dev.dubhe.anvilcraft.block.ChuteBlock.getFacing;
+import static dev.dubhe.anvilcraft.block.ChuteBlock.isChuteBlock;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -105,52 +108,32 @@ public class SimpleChuteBlock
         builder.add(FACING, WATERLOGGED, ENABLED, TALL);
     }
 
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+        if (level.isClientSide) return;
+        BlockState neighborState = level.getBlockState(neighborPos);
+        Block neighborBlock1 = neighborState.getBlock();
+        if (isChuteBlock(neighborBlock) || isChuteBlock(neighborBlock1)) {
+            BlockState newState = getState(level, pos, state.getValue(FACING));
+            if (newState != null && newState != state)
+                level.setBlockAndUpdate(pos, newState);
+        }
+        this.checkPoweredState(level, pos, state);
+    }
+
+    private void checkPoweredState(Level level, BlockPos pos, BlockState state) {
+        boolean flag = !level.hasNeighborSignal(pos);
+        if (flag != state.getValue(ENABLED)) {
+            level.setBlock(pos, state.setValue(ENABLED, flag), 2);
+        }
+    }
 
     @Override
-    public void neighborChanged(
-        BlockState state,
-        Level level,
-        BlockPos pos,
-        Block neighborBlock,
-        BlockPos neighborPos,
-        boolean movedByPiston) {
-        if (level.isClientSide) return;
-        boolean bl = state.getValue(ENABLED);
-        if (bl == level.hasNeighborSignal(pos)) {
-            if (!bl) level.scheduleTick(pos, this, 4);
-            else level.setBlock(pos, state.cycle(ENABLED), 2);
+    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
+        if (state.getValue(WATERLOGGED)) {
+            level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        if (!neighborPos.equals(pos.relative(state.getValue(FACING)))) return;
-        BlockState blockState = level.getBlockState(neighborPos);
-        if (blockState.is(ModBlocks.CHUTE.get())
-            || blockState.is(ModBlocks.MAGNETIC_CHUTE.get())
-            || blockState.is(ModBlocks.SIMPLE_CHUTE.get())
-        ) {
-            Direction neighbourFacing;
-            if (neighborBlock == ModBlocks.MAGNETIC_CHUTE.get()) {
-                neighbourFacing = blockState.getValue(MagneticChuteBlock.FACING);
-            } else {
-                neighbourFacing = blockState.getValue(FACING);
-            }
-            if (neighbourFacing == state.getValue(FACING).getOpposite()) {
-                level.destroyBlock(neighborPos, true);
-                level.setBlock(neighborPos, level.getFluidState(neighborPos).createLegacyBlock(), Block.UPDATE_ALL_IMMEDIATE);
-                return;
-            }
-        }
-        if (!blockState.is(ModBlocks.CHUTE.get())) return;
-        if (ChuteBlock.hasChuteFacing(level, neighborPos)) {
-            BlockState newState = ModBlocks.SIMPLE_CHUTE.getDefaultState();
-            newState = newState.setValue(SimpleChuteBlock.FACING, blockState.getValue(FACING))
-                .setValue(SimpleChuteBlock.ENABLED, blockState.getValue(ENABLED));
-            BlockState upState = level.getBlockState(neighborPos.relative(Direction.UP));
-            if (upState.is(ModBlocks.SIMPLE_CHUTE.get()) || upState.is(ModBlocks.CHUTE.get())) {
-                if (upState.getValue(FACING) == Direction.DOWN) {
-                    newState = newState.setValue(SimpleChuteBlock.TALL, true);
-                }
-            }
-            level.setBlockAndUpdate(neighborPos, newState);
-        }
+        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
     }
 
     @Override
@@ -178,47 +161,28 @@ public class SimpleChuteBlock
         return RenderShape.MODEL;
     }
 
-
     @Override
-    public void onRemove(
-        BlockState state,
-        Level level,
-        BlockPos pos,
-        BlockState newState,
-        boolean movedByPiston) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock())) {
-            if (level.getBlockEntity(pos) instanceof SimpleChuteBlockEntity entity) {
-                Vec3 vec3 = entity.getBlockPos().getCenter();
-                IItemHandler depository = entity.getItemHandler();
-                for (int slot = 0; slot < depository.getSlots(); slot++) {
-                    Containers.dropItemStack(level, vec3.x, vec3.y, vec3.z, depository.getStackInSlot(slot));
+            if (level.getBlockEntity(pos) instanceof SimpleChuteBlockEntity oldEntity) {
+                IItemHandler oldHandler = oldEntity.getItemHandler();
+                if (newState.is(ModBlocks.CHUTE.get())) {
+                    level.removeBlockEntity(pos);
+                    level.setBlock(pos, newState, 2);
+                    IItemHandler newHandler = null;
+                    if (level.getBlockEntity(pos) instanceof ChuteBlockEntity newEntity) {
+                        newHandler = newEntity.getItemHandler();
+                    }
+                    exportToTarget(oldHandler, 64, stack -> true, newHandler);
+                } else level.removeBlockEntity(pos);
+                Vec3 vec3 = oldEntity.getBlockPos().getCenter();
+                for (int slot = 0; slot < oldHandler.getSlots(); slot++) {
+                    Containers.dropItemStack(level, vec3.x, vec3.y, vec3.z, oldHandler.getStackInSlot(slot));
                 }
                 level.updateNeighbourForOutputSignal(pos, this);
             }
         }
-        BlockState facingState = level.getBlockState(pos.relative(state.getValue(FACING)));
-        if (facingState.is(ModBlocks.SIMPLE_CHUTE.get())
-            && !newState.is(ModBlocks.CHUTE.get())
-            && !hasChuteFacing(level, pos.relative(state.getValue(FACING)))) {
-            BlockState newBlockState = ModBlocks.CHUTE.getDefaultState();
-            newBlockState = newBlockState
-                .setValue(FACING, facingState.getValue(SimpleChuteBlock.FACING))
-                .setValue(ENABLED, facingState.getValue(SimpleChuteBlock.ENABLED));
-            level.setBlockAndUpdate(pos.relative(state.getValue(FACING)), newBlockState);
-        }
-        BlockState downState = level.getBlockState(pos.relative(Direction.DOWN));
-        if (state.getValue(FACING) == Direction.DOWN
-            && downState.is(ModBlocks.SIMPLE_CHUTE.get())
-            && !newState.is(ModBlocks.SIMPLE_CHUTE.get())
-            && !newState.is(ModBlocks.CHUTE.get())) {
-            BlockState newBlockState = ModBlocks.SIMPLE_CHUTE.getDefaultState();
-            newBlockState = newBlockState
-                .setValue(FACING, downState.getValue(FACING))
-                .setValue(ENABLED, downState.getValue(ENABLED))
-                .setValue(TALL, false);
-            level.setBlockAndUpdate(pos.relative(Direction.DOWN), newBlockState);
-        }
-        super.onRemove(state, level, pos, newState, movedByPiston);
+
     }
 
     @Nullable
@@ -256,6 +220,11 @@ public class SimpleChuteBlock
                 default -> AABB_TALL;
             };
         }
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     @Override
@@ -304,5 +273,33 @@ public class SimpleChuteBlock
     @Override
     public @NotNull BlockState mirror(@NotNull BlockState state, @NotNull Mirror mirror) {
         return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    }
+
+    @Nullable
+    BlockState getState(Level level, BlockPos pos, Direction facing) {
+        boolean success = false;
+        boolean tall = false;
+        BlockState result = level.getBlockState(pos);
+        //遍历六个方向 获取指向自己的溜槽
+        for (Direction dir : Direction.values()) {
+            BlockPos neighborPos = pos.relative(dir);
+            BlockState neighborState = level.getBlockState(neighborPos);
+            if (isChuteBlock(neighborState)) {
+                if (getFacing(neighborState) == dir.getOpposite()) {
+                    success = true;
+                    if (dir == Direction.UP) {
+                        tall = !neighborState.is(ModBlocks.MAGNETIC_CHUTE.get());
+                    }
+                }
+
+            }
+        }
+        if (!success)
+            result = ModBlocks.CHUTE.getDefaultState()
+                .setValue(FACING, facing)
+                .setValue(ENABLED, !level.hasNeighborSignal(pos));
+        else
+            result = result.setValue(TALL, tall);
+        return result;
     }
 }

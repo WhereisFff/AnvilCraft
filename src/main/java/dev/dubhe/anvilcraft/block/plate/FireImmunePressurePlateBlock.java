@@ -35,8 +35,8 @@ public class FireImmunePressurePlateBlock extends PowerLevelPressurePlateBlock {
         Set<Entity> entities = Sets.newHashSet();
         for (Class<? extends Entity> entityClass : entityClasses) {
             entities.addAll(level.getEntitiesOfClass(
-                    entityClass, box,
-                    EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
+                entityClass, box,
+                EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
             ));
         }
 
@@ -45,7 +45,7 @@ public class FireImmunePressurePlateBlock extends PowerLevelPressurePlateBlock {
             if (entity.fireImmune()) {
                 result++;
             } else if (
-                    entity instanceof ItemEntity item && item.fireImmune()
+                entity instanceof ItemEntity item && item.fireImmune()
                     && item.getItem().getCount() >= item.getItem().getMaxStackSize()
             ) {
                 result++;

@@ -29,7 +29,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -47,7 +46,6 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
     public static final int MAX_SHOWN_COLUMN = 5;
     public static final int MAX_SHOWN_COUNT = MAX_SHOWN_ROW * MAX_SHOWN_COLUMN;
 
-    private final Lazy<IDrawable> background;
     private final IDrawable slot;
     private final Component title;
     private final IDrawable progressArrow;
@@ -68,7 +66,6 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
     private static final BlockPos CENTER_POS = new BlockPos(1, 1, 1);
 
     public VoidDecayCategory(IGuiHelper helper) {
-        background = Lazy.of(() -> helper.createBlankDrawable(WIDTH, HEIGHT));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.void_decay");
         randomTickTooltip = Component.translatable("gui.anvilcraft.category.void_decay.random_tick");
@@ -94,8 +91,13 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background.get();
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override

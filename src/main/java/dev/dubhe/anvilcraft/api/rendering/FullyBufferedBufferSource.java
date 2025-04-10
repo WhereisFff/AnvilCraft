@@ -26,7 +26,7 @@ public class FullyBufferedBufferSource extends MultiBufferSource.BufferSource im
     private final Map<RenderType, BufferBuilder> bufferBuilders = new HashMap<>();
     final Reference2IntMap<RenderType> indexCountMap = new Reference2IntOpenHashMap<>();
 
-    protected FullyBufferedBufferSource() {
+    public FullyBufferedBufferSource() {
         super(null, null);
     }
 

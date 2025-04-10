@@ -66,6 +66,7 @@ public class MultiblockConversionRecipe implements Recipe<MultiblockInput>, IDat
     public static Builder builder() {
         return new Builder();
     }
+
     @Override
     public RecipeType<?> getType() {
         return ModRecipeTypes.MULTIBLOCK_CONVERSION_TYPE.get();
@@ -159,11 +160,11 @@ public class MultiblockConversionRecipe implements Recipe<MultiblockInput>, IDat
         return false;
     }
 
-    public int getSize(){
+    public int getSize() {
         return this.inputPattern.getSize();
     }
 
-    public Block centerOutput(){
+    public Block centerOutput() {
         int t = this.getSize() / 2;
         return this.getOutputPattern().getPredicate(t, t, t).getBlock();
     }
@@ -229,7 +230,8 @@ public class MultiblockConversionRecipe implements Recipe<MultiblockInput>, IDat
         private final BlockPattern outputPattern = BlockPattern.create();
         private ModifySpawnerAction postAction = null;
 
-        public Builder() {}
+        public Builder() {
+        }
 
         public Builder inputLayer(String... layers) {
             inputPattern.layer(layers);
@@ -306,8 +308,7 @@ public class MultiblockConversionRecipe implements Recipe<MultiblockInput>, IDat
         @Override
         public void validate(ResourceLocation pId) {
             if (inputPattern.getSize() != outputPattern.getSize()) {
-                throw new IllegalArgumentException(("Input size must be same as output size: %s " +
-                    "input size: %d, output size: %d")
+                throw new IllegalArgumentException(("Input size must be same as output size: %s input size: %d, output size: %d")
                     .formatted(pId, inputPattern.getSize(), outputPattern.getSize()));
             }
             if (!inputPattern.checkSymbols()) {
@@ -333,12 +334,12 @@ public class MultiblockConversionRecipe implements Recipe<MultiblockInput>, IDat
 
         private static final MapCodec<MultiblockConversionRecipe> CODEC =
             RecordCodecBuilder.mapCodec(ins -> ins.group(
-                BlockPattern.CODEC.fieldOf("inputPattern").forGetter(MultiblockConversionRecipe::getInputPattern),
-                BlockPattern.CODEC.fieldOf("outputPattern").forGetter(MultiblockConversionRecipe::getOutputPattern),
-                ModifySpawnerAction.CODEC.codec().optionalFieldOf("modifySpawnerAction")
-                    .forGetter(MultiblockConversionRecipe::getModifySpawnerAction)
-            )
-            .apply(ins, MultiblockConversionRecipe::new));
+                    BlockPattern.CODEC.fieldOf("inputPattern").forGetter(MultiblockConversionRecipe::getInputPattern),
+                    BlockPattern.CODEC.fieldOf("outputPattern").forGetter(MultiblockConversionRecipe::getOutputPattern),
+                    ModifySpawnerAction.CODEC.codec().optionalFieldOf("modifySpawnerAction")
+                        .forGetter(MultiblockConversionRecipe::getModifySpawnerAction)
+                )
+                .apply(ins, MultiblockConversionRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, MultiblockConversionRecipe> STREAM_CODEC =
             StreamCodec.composite(

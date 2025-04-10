@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.init.ModFluidTags;
-
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -16,15 +16,17 @@ import net.minecraft.world.level.block.SpongeBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import org.jetbrains.annotations.NotNull;
-
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
 public class MengerSpongeBlock extends SpongeBlock {
 
     private static final VoxelShape REDUCE_AABB = Stream.of(
@@ -43,7 +45,12 @@ public class MengerSpongeBlock extends SpongeBlock {
     }
 
     @Override
-    protected void tryAbsorbWater(@NotNull Level level, @NotNull BlockPos pos) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
+    }
+
+    @Override
+    protected void tryAbsorbWater(Level level, BlockPos pos) {
         if (this.removeFluidBreadthFirstSearch(level, pos)) {
             level.playSound(
                 null,
@@ -106,18 +113,18 @@ public class MengerSpongeBlock extends SpongeBlock {
 
 
     @Override
-    public @NotNull VoxelShape getInteractionShape(
-        @NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
+    public VoxelShape getInteractionShape(
+        BlockState state, BlockGetter level, BlockPos pos) {
         return REDUCE_AABB;
     }
 
 
     @Override
-    public @NotNull VoxelShape getShape(
-        @NotNull BlockState state,
-        @NotNull BlockGetter level,
-        @NotNull BlockPos pos,
-        @NotNull CollisionContext context) {
+    public VoxelShape getShape(
+        BlockState state,
+        BlockGetter level,
+        BlockPos pos,
+        CollisionContext context) {
         return AABB;
     }
 }

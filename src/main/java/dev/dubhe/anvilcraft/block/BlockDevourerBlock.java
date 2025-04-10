@@ -27,20 +27,22 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
 import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
+import static dev.dubhe.anvilcraft.util.ItemHandlerUtil.getTargetItemHandler;
 
+@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class BlockDevourerBlock extends DirectionalBlock implements HammerRotateBehavior, IHammerRemovable {
 
@@ -66,12 +68,12 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    protected @NotNull MapCodec<? extends DirectionalBlock> codec() {
+    protected MapCodec<? extends DirectionalBlock> codec() {
         return simpleCodec(BlockDevourerBlock::new);
     }
 
     @Override
-    protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING).add(TRIGGERED);
     }
 
@@ -91,10 +93,10 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    protected void onPlace(@NotNull BlockState state,
+    protected void onPlace(BlockState state,
                            Level level,
-                           @NotNull BlockPos pos,
-                           @NotNull BlockState oldState,
+                           BlockPos pos,
+                           BlockState oldState,
                            boolean movedByPiston) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
@@ -103,10 +105,10 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
 
     @Override
     public void tick(
-        @NotNull BlockState state,
-        @NotNull ServerLevel level,
-        @NotNull BlockPos pos,
-        @NotNull RandomSource random) {
+        BlockState state,
+        ServerLevel level,
+        BlockPos pos,
+        RandomSource random) {
         super.tick(state, level, pos, random);
         if (!state.getValue(TRIGGERED)) return;
         if (!level.hasNeighborSignal(pos)) level.setBlock(pos, state.setValue(TRIGGERED, false), 2);
@@ -114,11 +116,11 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
 
     @Override
     public void neighborChanged(
-        @NotNull BlockState state,
-        @NotNull Level level,
-        @NotNull BlockPos pos,
-        @NotNull Block neighborBlock,
-        @NotNull BlockPos neighborPos,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block neighborBlock,
+        BlockPos neighborPos,
         boolean movedByPiston) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
@@ -137,17 +139,16 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    public @Nonnull RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    
-    public @NotNull VoxelShape getShape(
-        @NotNull BlockState state,
-        @NotNull BlockGetter level,
-        @NotNull BlockPos pos,
-        @NotNull CollisionContext context) {
+    public VoxelShape getShape(
+        BlockState state,
+        BlockGetter level,
+        BlockPos pos,
+        CollisionContext context) {
         return switch (state.getValue(FACING)) {
             case DOWN -> DOWN_SHAPE;
             case UP -> UP_SHAPE;
@@ -156,6 +157,11 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             case WEST -> WEST_SHAPE;
             case EAST -> EAST_SHAPE;
         };
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     public void devourBlock(ServerLevel level, BlockPos devourerPos, Direction devourerDirection, int range) {
@@ -177,13 +183,14 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockPos devourerPos,
         Direction devourerDirection,
         int range,
-        Block anvil) {
+        @Nullable Block anvil) {
         BlockPos outputPos = devourerPos.relative(devourerDirection.getOpposite());
         BlockPos devourCenterPos = devourerPos.relative(devourerDirection);
-        IItemHandler itemHandler = level.getCapability(
-            Capabilities.ItemHandler.BLOCK,
-            devourerPos.relative(devourerDirection.getOpposite()),
-            devourerDirection.getOpposite());
+        IItemHandler itemHandler = getTargetItemHandler(
+            outputPos,
+            devourerDirection,
+            level
+        );
         Vec3 center = outputPos.getCenter();
         AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
         final List<BlockPos> devourBlockPosList;
@@ -217,8 +224,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             }
             List<ItemStack> dropList = switch (anvil) {
                 case null -> BreakBlockUtil.drop(level, devourBlockPos);
-                case RoyalAnvilBlock $ -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
-                case EmberAnvilBlock $ -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
+                case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
+                case EmberAnvilBlock ignore -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
                 default -> BreakBlockUtil.drop(level, devourBlockPos);
             };
             for (ItemStack itemStack : dropList) {

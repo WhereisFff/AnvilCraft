@@ -26,7 +26,7 @@ public class RoyalAnvilHammerItem extends AnvilHammerItem {
     }
 
     @Override
-    public Block getAnvil(){
+    public Block getAnvil() {
         return ModBlocks.ROYAL_ANVIL.get();
     }
 

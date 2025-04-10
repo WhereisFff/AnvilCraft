@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
@@ -11,6 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -32,16 +32,21 @@ public class ImpactPileBlock extends Block implements IHammerRemovable {
     }
 
     @Override
-    public  VoxelShape getShape(
-         BlockState state,
-         BlockGetter level,
-         BlockPos pos,
-         CollisionContext context) {
+    public VoxelShape getShape(
+        BlockState state,
+        BlockGetter level,
+        BlockPos pos,
+        CollisionContext context) {
         return SHAPE;
     }
 
     @Override
-    public  RenderShape getRenderShape( BlockState state) {
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -82,8 +87,8 @@ public class ImpactPileBlock extends Block implements IHammerRemovable {
             ModBlocks.MINERAL_FOUNTAIN.getDefaultState());
     }
 
-    private static void setSturdyDeepslate(Level level, BlockPos pos){
-        if(level.getBlockState(pos).is(Blocks.BEDROCK)) return;
+    private static void setSturdyDeepslate(Level level, BlockPos pos) {
+        if (level.getBlockState(pos).is(Blocks.BEDROCK)) return;
         level.setBlockAndUpdate(pos, ModBlocks.STURDY_DEEPSLATE.getDefaultState());
     }
 }

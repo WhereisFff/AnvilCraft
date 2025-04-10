@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.tags;
 
+import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -10,8 +10,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
-
-import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import org.jetbrains.annotations.NotNull;
 
 public class BlockTagLoader {
@@ -163,17 +161,26 @@ public class BlockTagLoader {
 
         //mekanism integration
         provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
-                .add(ModBlocks.GIANT_ANVIL.getKey())
-                .add(ModBlocks.TRANSMISSION_POLE.getKey())
-                .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
-                .add(ModBlocks.TESLA_TOWER.getKey())
-                .add(ModBlocks.OVERSEER_BLOCK.getKey());
+            .add(ModBlocks.GIANT_ANVIL.getKey())
+            .add(ModBlocks.TRANSMISSION_POLE.getKey())
+            .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
+            .add(ModBlocks.TESLA_TOWER.getKey())
+            .add(ModBlocks.OVERSEER_BLOCK.getKey())
+            .add(ModBlocks.ACCELERATION_RING.getKey())
+            .add(ModBlocks.DEFLECTION_RING.getKey());
 
-        provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
-                .add(ModBlocks.GIANT_ANVIL.getKey())
-                .add(ModBlocks.TRANSMISSION_POLE.getKey())
-                .add(ModBlocks.REMOTE_TRANSMISSION_POLE.getKey())
-                .add(ModBlocks.TESLA_TOWER.getKey())
-                .add(ModBlocks.OVERSEER_BLOCK.getKey());
+        provider.addTag(ModBlockTags.ANVIL_HAMMER_BLACKLIST)
+            .add(ModBlocks.DEFLECTION_RING.getKey())
+            .add(findResourceKey(Blocks.NETHER_PORTAL))
+            .add(findResourceKey(Blocks.PISTON_HEAD))
+            .add(findResourceKey(Blocks.END_PORTAL_FRAME))
+            .add(findResourceKey(Blocks.ATTACHED_MELON_STEM))
+            .add(findResourceKey(Blocks.ATTACHED_PUMPKIN_STEM))
+            .addTag(BlockTags.BEDS)
+            .addTag(BlockTags.ALL_SIGNS)
+            .addTag(Tags.Blocks.CHESTS)
+            .addTag(Tags.Blocks.CHESTS_ENDER)
+            .addTag(Tags.Blocks.CHESTS_TRAPPED)
+            .addTag(Tags.Blocks.CHESTS_WOODEN);
     }
 }

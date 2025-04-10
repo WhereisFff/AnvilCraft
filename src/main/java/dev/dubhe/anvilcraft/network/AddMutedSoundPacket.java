@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 public class AddMutedSoundPacket implements CustomPacketPayload {
     public static final Type<AddMutedSoundPacket> TYPE = new Type<>(AnvilCraft.of("muted_sound_add"));
     public static final StreamCodec<RegistryFriendlyByteBuf, AddMutedSoundPacket> STREAM_CODEC =
-            StreamCodec.ofMember(AddMutedSoundPacket::encode, AddMutedSoundPacket::new);
+        StreamCodec.ofMember(AddMutedSoundPacket::encode, AddMutedSoundPacket::new);
     public static final IPayloadHandler<AddMutedSoundPacket> HANDLER = AddMutedSoundPacket::serverHandler;
 
     private final ResourceLocation soundId;

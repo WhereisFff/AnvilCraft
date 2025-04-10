@@ -34,7 +34,7 @@ interface IShockBehaviorDefinition {
             for (int dx : dt) {
                 for (int dz : dt) {
                     BlockPos pos =
-                            new BlockPos(dx + centerPos.getX(), centerPos.getY(), dz + centerPos.getZ());
+                        new BlockPos(dx + centerPos.getX(), centerPos.getY(), dz + centerPos.getZ());
                     BlockState state = level.getBlockState(pos);
                     if (!blockMatches(state)) return false;
                 }

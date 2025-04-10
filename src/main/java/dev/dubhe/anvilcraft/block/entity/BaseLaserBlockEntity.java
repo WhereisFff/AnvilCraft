@@ -305,8 +305,8 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         }
     }
 
-    public void updateLaserLevel(int value){
-        if (laserLevel != value){
+    public void updateLaserLevel(int value) {
+        if (laserLevel != value) {
             markChanged();
         }
         laserLevel = value;

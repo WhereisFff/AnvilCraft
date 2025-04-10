@@ -5,7 +5,8 @@ import dev.dubhe.anvilcraft.api.chargecollector.HeatedBlockRecorder;
 import dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
-
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -20,9 +21,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-
-import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
@@ -102,13 +100,13 @@ public class HeliostatsBlockEntity extends BlockEntity {
             for (int dz = -1; dz <= 1; dz++) {
                 for (int dy = 0; dy <= 1; dy++) {
                     if (dx == 0 && dz == 0 && dy == 0) continue;
-                    if (dy == 0){
+                    if (dy == 0) {
                         BlockPos pos = getBlockPos().offset(dx, dy, dz);
                         if (level.getBlockState(pos).is(ModBlocks.HELIOSTATS)) {
                             return WorkResult.ADJACENT_HELIOSTATS;
                         }
                     }
-                    if (dy == 1){
+                    if (dy == 1) {
                         BlockPos pos = getBlockPos().offset(dx, dy, dz);
                         BlockState bs = level.getBlockState(pos);
                         if (!bs.isAir() && !(bs.getBlock() instanceof HalfTransparentBlock)) {

@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
-
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 

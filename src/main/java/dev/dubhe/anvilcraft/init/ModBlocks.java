@@ -5,10 +5,9 @@ import com.tterrag.registrate.util.entry.BlockEntry;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent.Switch;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
-import dev.dubhe.anvilcraft.block.multipart.AbstractStateAddableMultiplePartBlock;
 import dev.dubhe.anvilcraft.block.AccelerationRingBlock;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
+import dev.dubhe.anvilcraft.block.AmberBlock;
 import dev.dubhe.anvilcraft.block.ArrowBlock;
 import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
 import dev.dubhe.anvilcraft.block.BerryCakeBlock;
@@ -29,6 +28,7 @@ import dev.dubhe.anvilcraft.block.CrabTrapBlock;
 import dev.dubhe.anvilcraft.block.CreamBlock;
 import dev.dubhe.anvilcraft.block.CreativeGeneratorBlock;
 import dev.dubhe.anvilcraft.block.CrushingTableBlock;
+import dev.dubhe.anvilcraft.block.DeflectionRingBlock;
 import dev.dubhe.anvilcraft.block.DischargerBlock;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.EmberGrindstone;
@@ -93,12 +93,18 @@ import dev.dubhe.anvilcraft.block.SlidingRailStopBlock;
 import dev.dubhe.anvilcraft.block.SpaceOvercompressorBlock;
 import dev.dubhe.anvilcraft.block.SpectralAnvilBlock;
 import dev.dubhe.anvilcraft.block.StampingPlatformBlock;
+import dev.dubhe.anvilcraft.block.StepEffectBlock;
+import dev.dubhe.anvilcraft.block.StepEffectSlabBlock;
+import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
 import dev.dubhe.anvilcraft.block.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.ThermoelectricConverterBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
+import dev.dubhe.anvilcraft.block.VoidEnergyCollectorBlock;
 import dev.dubhe.anvilcraft.block.VoidMatterBlock;
+import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityCountPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityTypePressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.FireImmunePressurePlateBlock;
@@ -114,14 +120,14 @@ import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
-import dev.dubhe.anvilcraft.item.AbstractMultiplePartBlockItem;
-import dev.dubhe.anvilcraft.item.AbstractStateAddableMultiplePartBlockItem;
 import dev.dubhe.anvilcraft.item.CursedBlockItem;
 import dev.dubhe.anvilcraft.item.EndDustBlockItem;
+import dev.dubhe.anvilcraft.item.FlexibleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.PlaceInWaterBlockItem;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.item.SimpleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
 import dev.dubhe.anvilcraft.util.DangerUtil;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
@@ -153,7 +159,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ColoredFallingBlock;
-import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -281,37 +286,37 @@ public class ModBlocks {
         })
         .register();
     public static final BlockEntry<? extends Block> CRUSHING_TABLE = REGISTRATE
-            .block("crushing_table", CrushingTableBlock::new)
-            .initialProperties(() -> Blocks.IRON_BLOCK)
-            .blockstate((ctx, provider) -> {
-            })
-            .simpleItem()
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-            .recipe((ctx, provider) -> {
-                ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
-                        .requires(ModBlocks.STAMPING_PLATFORM)
-                        .requires(Items.GRINDSTONE)
-                        .unlockedBy(
-                                "has_" + Items.GRINDSTONE,
-                                AnvilCraftDatagen.has(Items.GRINDSTONE))
-                        .unlockedBy(
-                                AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
-                        .save(provider, AnvilCraft.of("shapeless_crushing_table_recipe"));
-                ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
-                        .pattern("BAB")
-                        .pattern("B B")
-                        .pattern("B B")
-                        .define('A', Items.GRINDSTONE)
-                        .define('B', Tags.Items.INGOTS_IRON)
-                        .unlockedBy(
-                                "has_" + Items.GRINDSTONE,
-                                AnvilCraftDatagen.has(Items.GRINDSTONE))
-                        .unlockedBy(
-                                AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
-                        .save(provider, AnvilCraft.of("shaped_crushing_table_recipe"));
+        .block("crushing_table", CrushingTableBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .blockstate((ctx, provider) -> {
+        })
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
+                .requires(ModBlocks.STAMPING_PLATFORM)
+                .requires(Items.GRINDSTONE)
+                .unlockedBy(
+                    "has_" + Items.GRINDSTONE,
+                    AnvilCraftDatagen.has(Items.GRINDSTONE))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
+                .save(provider, AnvilCraft.of("shapeless_crushing_table_recipe"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("BAB")
+                .pattern("B B")
+                .pattern("B B")
+                .define('A', Items.GRINDSTONE)
+                .define('B', Tags.Items.INGOTS_IRON)
+                .unlockedBy(
+                    "has_" + Items.GRINDSTONE,
+                    AnvilCraftDatagen.has(Items.GRINDSTONE))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
+                .save(provider, AnvilCraft.of("shaped_crushing_table_recipe"));
 
-            })
-            .register();
+        })
+        .register();
     public static final BlockEntry<? extends Block> CORRUPTED_BEACON = REGISTRATE
         .block("corrupted_beacon", CorruptedBeaconBlock::new)
         .initialProperties(() -> Blocks.BEACON)
@@ -323,10 +328,10 @@ public class ModBlocks {
     public static final BlockEntry<GiantAnvilBlock> GIANT_ANVIL = REGISTRATE
         .block("giant_anvil", GiantAnvilBlock::new)
         .initialProperties(() -> Blocks.ANVIL)
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .properties(
             p -> p.noOcclusion().strength(4.0F).sound(SoundType.ANVIL).explosionResistance(1200))
-        .item(AbstractMultiplePartBlockItem<Cube3x3PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Cube3x3PartHalf>::new)
         .build()
         .blockstate((ctx, provider) -> {
         })
@@ -518,8 +523,7 @@ public class ModBlocks {
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("ABA")
                 .pattern("BCB")
                 .pattern("BBB")
@@ -545,14 +549,13 @@ public class ModBlocks {
         }))
         .blockstate((ctx, provider) -> {
         })
-        .item(AbstractMultiplePartBlockItem<Vertical3PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Vertical3PartHalf>::new)
         .model((ctx, provider) -> {
         })
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("A")
                 .pattern("B")
                 .pattern("C")
@@ -567,12 +570,12 @@ public class ModBlocks {
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_BLOCK), AnvilCraftDatagen.has(Items.IRON_BLOCK))
                 .save(provider);
         })
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .register();
     public static final BlockEntry<? extends Block> REMOTE_TRANSMISSION_POLE = REGISTRATE
         .block("remote_transmission_pole", RemoteTransmissionPoleBlock::new)
         .initialProperties(ModBlocks.MAGNET_BLOCK)
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .properties(properties -> properties.noOcclusion().lightLevel(state -> {
             if (state.getValue(RemoteTransmissionPoleBlock.HALF) != Vertical4PartHalf.TOP) return 0;
             if (state.getValue(SWITCH) == Switch.OFF) return 0;
@@ -581,14 +584,13 @@ public class ModBlocks {
         }))
         .blockstate((ctx, provider) -> {
         })
-        .item(AbstractMultiplePartBlockItem<Vertical4PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Vertical4PartHalf>::new)
         .model((ctx, provider) -> {
         })
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("A")
                 .pattern("B")
                 .pattern("C")
@@ -607,7 +609,7 @@ public class ModBlocks {
     public static final BlockEntry<TeslaTowerBlock> TESLA_TOWER = REGISTRATE
         .block("tesla_tower", TeslaTowerBlock::new)
         .initialProperties(ModBlocks.MAGNET_BLOCK)
-        .loot(AbstractMultiplePartBlock::loot)
+        .loot(SimpleMultiPartBlock::loot)
         .properties(properties -> properties.noOcclusion().lightLevel(state -> {
             if (state.getValue(TeslaTowerBlock.HALF) != Vertical4PartHalf.TOP) return 0;
             if (state.getValue(SWITCH) == Switch.OFF) return 0;
@@ -623,8 +625,7 @@ public class ModBlocks {
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("ABA")
                 .pattern("ACA")
                 .pattern("ADA")
@@ -657,8 +658,7 @@ public class ModBlocks {
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC
-                    , ctx.get(), 8)
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 8)
                 .pattern("A")
                 .pattern("B")
                 .pattern("A")
@@ -1214,8 +1214,7 @@ public class ModBlocks {
         .blockstate((ctx, provider) -> {
             provider.horizontalBlock(
                 ctx.get(),
-                state -> DangerUtil.genModModelFile("block/item_detector" +
-                    (state.getValue(ItemDetectorBlock.POWERED) ? "_on" : "")).get(),
+                state -> DangerUtil.genModModelFile("block/item_detector" + (state.getValue(ItemDetectorBlock.POWERED) ? "_on" : "")).get(),
                 0
             );
         })
@@ -1253,8 +1252,8 @@ public class ModBlocks {
         .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate((ctx, provider) -> {
         })
-        .loot(AbstractMultiplePartBlock::loot)
-        .item(AbstractMultiplePartBlockItem<Vertical3PartHalf>::new)
+        .loot(SimpleMultiPartBlock::loot)
+        .item(SimpleMultiPartBlockItem<Vertical3PartHalf>::new)
         .model((ctx, provider) -> {
         })
         .build()
@@ -1420,6 +1419,7 @@ public class ModBlocks {
     public static final BlockEntry<SpaceOvercompressorBlock> SPACE_OVERCOMPRESSOR = REGISTRATE
         .block("space_overcompressor", SpaceOvercompressorBlock::new)
         // .initialProperties(() -> Blocks.SHULKER_BOX)
+        .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate((ctx, provider) -> {
         })
         // .tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -1497,13 +1497,55 @@ public class ModBlocks {
     public static final BlockEntry<AccelerationRingBlock> ACCELERATION_RING = REGISTRATE
         .block("acceleration_ring", AccelerationRingBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
-        .loot(AbstractStateAddableMultiplePartBlock::loot)
+        .loot(FlexibleMultiPartBlock::loot)
         .properties(BlockBehaviour.Properties::noOcclusion)
-        .item(AbstractStateAddableMultiplePartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
+        .item(FlexibleMultiPartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
         .build()
         .blockstate((ctx, provider) -> {
         })
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .register();
+
+    public static final BlockEntry<DeflectionRingBlock> DEFLECTION_RING = REGISTRATE
+        .block("deflection_ring", DeflectionRingBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .loot(FlexibleMultiPartBlock::loot)
+        .properties(it ->
+            it.isSuffocating(ModBlocks::never).noOcclusion()
+        )
+        .item(FlexibleMultiPartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
+        .build()
+        .blockstate((ctx, provider) -> {
+        })
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .register();
+
+    public static final BlockEntry<VoidEnergyCollectorBlock> VOID_ENERGY_COLLECTOR = REGISTRATE
+        .block("void_energy_collector", VoidEnergyCollectorBlock::new)
+        .simpleItem()
+        .properties(BlockBehaviour.Properties::noOcclusion)
+        .blockstate((ctx, provider) -> {
+        })
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("ABA")
+                .pattern("CCC")
+                .define('A', ModBlocks.VOID_MATTER_BLOCK)
+                .define('B', ModBlocks.CHARGE_COLLECTOR)
+                .define('C', ModBlocks.HEAVY_IRON_BLOCK)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.VOID_MATTER_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.VOID_MATTER_BLOCK))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.CHARGE_COLLECTOR),
+                    AnvilCraftDatagen.has(ModBlocks.CHARGE_COLLECTOR))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.HEAVY_IRON_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
+                .save(provider);
+        })
         .register();
 
     public static final BlockEntry<MagnetoElectricCoreBlock> MAGNETO_ELECTRIC_CORE_BLOCK = REGISTRATE
@@ -1917,6 +1959,7 @@ public class ModBlocks {
                 .save(provider);
         })
         .register();
+
     public static final BlockEntry<? extends Block> POLISHED_HEAVY_IRON_BLOCK = REGISTRATE
         .block("polished_heavy_iron_block", Block::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -1928,11 +1971,13 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get())
+                    ctx.get(),
+                    2)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
         })
         .register();
+
     public static final BlockEntry<? extends Block> POLISHED_HEAVY_IRON_SLAB = REGISTRATE
         .block("polished_heavy_iron_slab", SlabBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -1953,7 +1998,7 @@ public class ModBlocks {
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
                     ctx.get(),
-                    2)
+                    4)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_heavy_iron_block"));
             SingleItemRecipeBuilder.stonecutting(
@@ -1965,6 +2010,7 @@ public class ModBlocks {
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
         })
         .register();
+
     public static final BlockEntry<? extends Block> POLISHED_HEAVY_IRON_STAIRS = REGISTRATE
         .block(
             "polished_heavy_iron_stairs",
@@ -1983,7 +2029,8 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get())
+                    ctx.get(),
+                    2)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_heavy_iron_block"));
             SingleItemRecipeBuilder.stonecutting(
@@ -1994,6 +2041,7 @@ public class ModBlocks {
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
         })
         .register();
+
     public static final BlockEntry<? extends Block> CUT_HEAVY_IRON_BLOCK = REGISTRATE
         .block("cut_heavy_iron_block", Block::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -2006,11 +2054,19 @@ public class ModBlocks {
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
                     ctx.get(),
-                    4)
+                    8)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
         })
         .register();
+
     public static final BlockEntry<? extends Block> CUT_HEAVY_IRON_SLAB = REGISTRATE
         .block("cut_heavy_iron_slab", SlabBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -2030,17 +2086,27 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get(), 8)
+                    ctx.get(),
+                    16)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_heavy_iron_block"));
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get(), 2)
+                    ctx.get(),
+                    8)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_block"));
         })
         .register();
+
     public static final BlockEntry<? extends Block> CUT_HEAVY_IRON_STAIRS = REGISTRATE
         .block(
             "cut_heavy_iron_stairs",
@@ -2058,17 +2124,26 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get(), 4)
+                    ctx.get(),
+                    8)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_heavy_iron_block"));
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get())
+                    ctx.get(),
+                    4)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_block"));
         })
         .register();
+
     public static final BlockEntry<? extends Block> HEAVY_IRON_PLATE = REGISTRATE
         .block("heavy_iron_plate", HeavyIronPlateBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -2082,11 +2157,40 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get(), 8)
+                    ctx.get(),
+                    16)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    8)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_SLAB),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_SLAB))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_slab"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_SLAB),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_SLAB))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_slab"));
         })
         .register();
+
     public static final BlockEntry<? extends Block> HEAVY_IRON_COLUMN = REGISTRATE
         .block("heavy_iron_column", Block::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -2100,11 +2204,26 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get(), 4)
+                    ctx.get(),
+                    8)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_block"));
         })
         .register();
+
     public static final BlockEntry<? extends Block> HEAVY_IRON_BEAM = REGISTRATE
         .block("heavy_iron_beam", HeavyIronBeamBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -2121,11 +2240,26 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
-                    ctx.get(), 4)
+                    ctx.get(),
+                    8)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+            SingleItemRecipeBuilder.stonecutting(
+                Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_block"));
         })
         .register();
+
     public static final BlockEntry<HeavyIronWallBlock> HEAVY_IRON_WALL = REGISTRATE
         .block("heavy_iron_wall", HeavyIronWallBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
@@ -2136,6 +2270,26 @@ public class ModBlocks {
             BlockTags.NEEDS_IRON_TOOL,
             BlockTags.WALLS)
         .recipe((ctx, provider) -> {
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    8)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_block"));
         })
         .item()
         .tag(ItemTags.WALLS)
@@ -2145,6 +2299,7 @@ public class ModBlocks {
         ))
         .build()
         .register();
+
     public static final BlockEntry<HeavyIronDoorBlock> HEAVY_IRON_DOOR = REGISTRATE
         .block("heavy_iron_door", HeavyIronDoorBlock::new)
         .initialProperties(() -> Blocks.IRON_DOOR)
@@ -2157,6 +2312,22 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_IRON_TOOL,
             BlockTags.DOORS)
+        .recipe((ctx, provider) -> {
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+        })
         .item()
         .tag(ItemTags.DOORS)
         .model((ctx, prov) -> {
@@ -2164,6 +2335,7 @@ public class ModBlocks {
         })
         .build()
         .register();
+
     public static final BlockEntry<HeavyIronTrapdoorBlock> HEAVY_IRON_TRAPDOOR = REGISTRATE
         .block("heavy_iron_trapdoor", HeavyIronTrapdoorBlock::new)
         .initialProperties(() -> Blocks.IRON_TRAPDOOR)
@@ -2174,6 +2346,28 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_IRON_TOOL,
             BlockTags.TRAPDOORS)
+        .recipe((ctx, provider) -> {
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    8)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.POLISHED_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_polished_heavy_iron_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_HEAVY_IRON_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_HEAVY_IRON_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName() + "_from_cut_heavy_iron_block"));
+        })
         .item()
         .tag(ItemTags.TRAPDOORS)
         .model((c, p) -> {
@@ -2181,7 +2375,6 @@ public class ModBlocks {
         })
         .build()
         .register();
-
     public static final BlockEntry<? extends Block> CURSED_GOLD_BLOCK = REGISTRATE
         .block("cursed_gold_block", Block::new)
         .initialProperties(() -> Blocks.GOLD_BLOCK)
@@ -2503,11 +2696,14 @@ public class ModBlocks {
         .register();
 
     public static final BlockEntry<? extends Block> AMBER_BLOCK = REGISTRATE
-        .block("amber_block", HalfTransparentBlock::new)
+        .block("amber_block", AmberBlock::new)
         .initialProperties(() -> Blocks.EMERALD_BLOCK)
         .blockstate((ctx, provider) -> {
         })
-        .properties(BlockBehaviour.Properties::noOcclusion)
+        .properties(properties -> properties
+            .noOcclusion()
+            .pushReaction(PushReaction.DESTROY)
+        )
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS,
             ModItemTags.STORAGE_BLOCKS_AMBER)
@@ -2735,10 +2931,238 @@ public class ModBlocks {
                 .setRandomSequence(ResourceLocation.withDefaultNamespace("blocks/large_cake"));
             ctx.add(prov, builder);
         })
-        .item(AbstractMultiplePartBlockItem<Cube3x3PartHalf>::new)
+        .item(SimpleMultiPartBlockItem<Cube3x3PartHalf>::new)
         .tag(Tags.Items.FOODS,
             Tags.Items.FOODS_EDIBLE_WHEN_PLACED)
         .build()
+        .register();
+
+    public static final BlockEntry<StepEffectBlock> CHOCOLATE_BLOCK = REGISTRATE
+        .block("chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
+                RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.CHOCOLATE)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE), AnvilCraftDatagen.has(ModItems.CHOCOLATE))
+            .save(provider))
+        .register();
+
+    public static final BlockEntry<StepEffectBlock> BLACK_CHOCOLATE_BLOCK = REGISTRATE
+        .block("black_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnBlackChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
+                RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.CHOCOLATE_BLACK)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE_BLACK), AnvilCraftDatagen.has(ModItems.CHOCOLATE_BLACK))
+            .save(provider))
+        .register();
+
+    public static final BlockEntry<StepEffectBlock> WHITE_CHOCOLATE_BLOCK = REGISTRATE
+        .block("white_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnWhiteChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
+                RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.CHOCOLATE_WHITE)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE_WHITE), AnvilCraftDatagen.has(ModItems.CHOCOLATE_WHITE))
+            .save(provider))
+        .register();
+
+    public static final BlockEntry<StepEffectSlabBlock> CHOCOLATE_SLAB = REGISTRATE
+        .block("chocolate_slab", p -> new StepEffectSlabBlock(p, StepEffectBlock::stepOnChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.SLABS)
+        .blockstate((ctx, provider) -> {
+            provider.slabBlock(ctx.get(), AnvilCraft.of("block/chocolate_block"),
+                AnvilCraft.of("block/chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
+                .pattern("AAA")
+                .define('A', ModBlocks.CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectSlabBlock> BLACK_CHOCOLATE_SLAB = REGISTRATE
+        .block("black_chocolate_slab", p -> new StepEffectSlabBlock(p, StepEffectBlock::stepOnBlackChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.SLABS)
+        .blockstate((ctx, provider) -> {
+            provider.slabBlock(ctx.get(), AnvilCraft.of("block/black_chocolate_block"),
+                AnvilCraft.of("block/black_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
+                .pattern("AAA")
+                .define('A', ModBlocks.BLACK_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectSlabBlock> WHITE_CHOCOLATE_SLAB = REGISTRATE
+        .block("white_chocolate_slab", p -> new StepEffectSlabBlock(p, StepEffectBlock::stepOnWhiteChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.SLABS)
+        .blockstate((ctx, provider) -> {
+            provider.slabBlock(ctx.get(), AnvilCraft.of("block/white_chocolate_block"),
+                AnvilCraft.of("block/white_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
+                .pattern("AAA")
+                .define('A', ModBlocks.WHITE_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectStairBlock> CHOCOLATE_STAIRS = REGISTRATE
+        .block("chocolate_stairs", p -> new StepEffectStairBlock(
+            ModBlocks.CHOCOLATE_BLOCK.getDefaultState(), p, StepEffectBlock::stepOnChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.STAIRS)
+        .blockstate((ctx, provider) -> {
+            provider.stairsBlock(ctx.get(), AnvilCraft.of("block/chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("A  ")
+                .pattern("AA ")
+                .pattern("AAA")
+                .define('A', ModBlocks.CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectStairBlock> BLACK_CHOCOLATE_STAIRS = REGISTRATE
+        .block("black_chocolate_stairs", p -> new StepEffectStairBlock(
+            ModBlocks.BLACK_CHOCOLATE_BLOCK.getDefaultState(), p, StepEffectBlock::stepOnBlackChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.STAIRS)
+        .blockstate((ctx, provider) -> {
+            provider.stairsBlock(ctx.get(), AnvilCraft.of("block/black_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("A  ")
+                .pattern("AA ")
+                .pattern("AAA")
+                .define('A', ModBlocks.BLACK_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
+        .register();
+
+    public static final BlockEntry<StepEffectStairBlock> WHITE_CHOCOLATE_STAIRS = REGISTRATE
+        .block("white_chocolate_stairs", p -> new StepEffectStairBlock(
+            ModBlocks.WHITE_CHOCOLATE_BLOCK.getDefaultState(), p, StepEffectBlock::stepOnWhiteChocolateBlock))
+        .initialProperties(() -> Blocks.STONE)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.STAIRS)
+        .blockstate((ctx, provider) -> {
+            provider.stairsBlock(ctx.get(), AnvilCraft.of("block/white_chocolate_block"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("A  ")
+                .pattern("AA ")
+                .pattern("AAA")
+                .define('A', ModBlocks.WHITE_CHOCOLATE_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider);
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get())
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
+        })
         .register();
 
     public static final Object2ObjectMap<Color, BlockEntry<ReinforcedConcreteBlock>> REINFORCED_CONCRETES =

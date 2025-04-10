@@ -2,8 +2,6 @@ package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
 import net.minecraft.world.entity.EntitySelector;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.goal.Goal;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
 import org.objectweb.asm.Opcodes;
@@ -18,8 +16,11 @@ import java.util.List;
 @Mixin(Phantom.PhantomSweepAttackGoal.class)
 public abstract class PhantomGoalMixin {
 
-    @Shadow @Final
+    // CHECKSTYLE:OFF
+    @Shadow
+    @Final
     Phantom this$0;
+    // CHECKSTYLE:ON
 
     @Redirect(
         method = "canContinueToUse",

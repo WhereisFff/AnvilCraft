@@ -1,20 +1,16 @@
 package dev.dubhe.anvilcraft.block;
 
+import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.block.entity.HeaterBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -26,12 +22,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import com.mojang.serialization.MapCodec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.Nonnull;
@@ -92,15 +86,8 @@ public class HeaterBlock extends BaseEntityBlock implements IHammerRemovable {
         if (state.is(ModBlocks.HEATER.get())
             && !state.getValue(OVERLOAD)
             && !entity.isSteppingCarefully()
-            && entity instanceof LivingEntity living
-            && !EnchantmentHelper.hasTag(
-            living.getItemBySlot(EquipmentSlot.FEET), EnchantmentTags.PREVENTS_ICE_MELTING)) {
-            if (entity.hurt(level.damageSources().hotFloor(), 4.0F)) {
-                entity.playSound(
-                    SoundEvents.GENERIC_BURN,
-                    0.4F,
-                    2.0F + living.getRandom().nextFloat() * 0.4F);
-            }
+            && entity instanceof LivingEntity) {
+            entity.hurt(level.damageSources().hotFloor(), 4.0F);
         }
         super.stepOn(level, pos, state, entity);
     }
@@ -113,5 +100,10 @@ public class HeaterBlock extends BaseEntityBlock implements IHammerRemovable {
         BlockPos pos,
         CollisionContext context) {
         return SHAPE;
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 }

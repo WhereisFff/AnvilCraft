@@ -73,7 +73,7 @@ public class AbstractCakeBlock extends Block {
             ItemInteractionResult itemInteractionResult =
                 eat(pLevel, pPos, pPlayer, getFoodLevel(), getSaturationLevel(), Util.interactionResultConverter());
             if (itemInteractionResult == ItemInteractionResult.SUCCESS)
-                itemStack.hurtAndBreak(1,  pPlayer, PlayerUtil.handToSlot(pHand));
+                itemStack.hurtAndBreak(1, pPlayer, PlayerUtil.handToSlot(pHand));
             return itemInteractionResult;
         }
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;

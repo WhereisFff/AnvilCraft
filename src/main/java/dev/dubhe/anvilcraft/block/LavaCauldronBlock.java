@@ -29,16 +29,15 @@ public class LavaCauldronBlock extends Layered4LevelCauldronBlock implements IHa
     }
 
 
-
     @Override
     public ItemInteractionResult useItemOn(
-            ItemStack stack,
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            Player player,
-            InteractionHand hand,
-            BlockHitResult hitResult
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
     ) {
         CauldronInteraction interaction = this.interactions.map().get(stack.getItem());
         if (interaction == null) {
@@ -80,5 +79,11 @@ public class LavaCauldronBlock extends Layered4LevelCauldronBlock implements IHa
         if (this.isFull(state)) {
             level.setBlockAndUpdate(pos, Blocks.LAVA_CAULDRON.defaultBlockState());
         }
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        int layer = state.getValue(LEVEL);
+        return layer <= 2 ? layer : layer - 1;
     }
 }

@@ -34,7 +34,7 @@ public class HealthPercentPressurePlateBlock extends PowerLevelPressurePlateBloc
 
     @Override
     protected int getSignalStrength(
-            Level level, AABB box, Set<Class<? extends Entity>> entityClasses
+        Level level, AABB box, Set<Class<? extends Entity>> entityClasses
     ) {
         Pair<Float, Float> minAndMax = getEntitiesHealthPercentMinAndMax(level, box, entityClasses);
         float value = this.useMin ? minAndMax.getFirst() : minAndMax.getSecond();
@@ -45,8 +45,8 @@ public class HealthPercentPressurePlateBlock extends PowerLevelPressurePlateBloc
         Set<Entity> entities = Sets.newHashSet();
         for (Class<? extends Entity> entityClass : entityClasses) {
             entities.addAll(level.getEntitiesOfClass(
-                    entityClass, box,
-                    EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
+                entityClass, box,
+                EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
             ));
         }
 
