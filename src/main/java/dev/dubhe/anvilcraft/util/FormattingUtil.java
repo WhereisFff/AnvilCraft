@@ -95,17 +95,26 @@ public class FormattingUtil {
 
         StringBuilder result = new StringBuilder();
 
-        if (minutes > 0) result.append(minutes).append("'");
+        if (minutes > 0) {
+            result.append(minutes).append("'");
+        }
 
         if (!result.isEmpty()) {
             if (seconds != 0 || ticks != 0) {
                 result.append(String.format("%02d", seconds));
             }
-            if (ticks != 0) result.append('"');
-        } else if (seconds >= 5) result.append(String.format("%d", seconds)).append('"');
+            if (ticks != 0) {
+                result.append('"');
+            }
+        } else if (seconds >= 5) {
+            result.append(String.format("%d", seconds)).append('"');
+        }
 
-        if (result.isEmpty()) result.append(String.format("%dgt", ticks + seconds * 20));
-        else if (ticks != 0) result.append(String.format("%02d", ticks * 5));
+        if (result.isEmpty()) {
+            result.append(String.format("%dgt", ticks + seconds * 20));
+        } else if (ticks != 0) {
+            result.append(String.format("%02d", ticks * 5));
+        }
 
         return result.toString();
     }
