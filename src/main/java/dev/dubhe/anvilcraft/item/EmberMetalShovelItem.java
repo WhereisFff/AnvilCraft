@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.api.item.IToolAttributes;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ShovelItem;
@@ -14,8 +15,8 @@ public class EmberMetalShovelItem extends ShovelItem {
             ModTiers.EMBER_METAL,
             properties.fireResistant()
                 .attributes(ShovelItem.createAttributes(ModTiers.EMBER_METAL, 6.5f, -3f))
-                .component(ModComponents.FIRE_REFORGING, ToolAttributes.FireReforging.INSTANCE)
-                .component(ModComponents.TOUGH, ToolAttributes.Tough.INSTANCE)
+                .component(ModComponents.FIRE_REFORGING, IToolAttributes.FireReforging.INSTANCE)
+                .component(ModComponents.TOUGH, IToolAttributes.Tough.INSTANCE)
         );
     }
 }

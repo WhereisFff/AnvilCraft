@@ -3,21 +3,24 @@ package dev.dubhe.anvilcraft.item;
 import dev.dubhe.anvilcraft.api.item.IToolAttributes;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.world.item.AxeItem;
-import net.minecraft.world.item.SwordItem;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.HoeItem;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class EmberMetalSwordItem extends SwordItem {
-    public EmberMetalSwordItem(Properties properties) {
+public class MultiphaseHoeItem extends HoeItem {
+    public MultiphaseHoeItem(Properties properties) {
         super(
-            ModTiers.EMBER_METAL,
+            ModTiers.MULTIPHASE,
             properties.fireResistant()
-                .attributes(AxeItem.createAttributes(ModTiers.EMBER_METAL, 8, -2.4f))
+                .attributes(HoeItem.createAttributes(ModTiers.MULTIPHASE, 1, 0))
                 .component(ModComponents.FIRE_REFORGING, IToolAttributes.FireReforging.INSTANCE)
                 .component(ModComponents.TOUGH, IToolAttributes.Tough.INSTANCE)
+                .component(ModComponents.MULTIPHASE, IToolAttributes.Multiphase.make(
+                    Component.translatable("item.anvilcraft.multiphase_hoe"), null
+                ))
         );
     }
 }

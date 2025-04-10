@@ -107,8 +107,8 @@ public class ItemTooltipManager {
         if (stack.get(ModComponents.TOUGH) != null) {
             attributeTooltip("tough", tooltip);
         }
-        if (stack.get(ModComponents.MORPH) != null) {
-            attributeTooltip("morph", tooltip, ModKeyMappings.CHANGE_ENCHANTMENT_SPACE.get().getKey().getDisplayName());
+        if (stack.get(ModComponents.MULTIPHASE) != null) {
+            attributeTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));

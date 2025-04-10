@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.api.item.IToolAttributes;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.AxeItem;
@@ -15,7 +16,7 @@ public class RoyalHoeItem extends HoeItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(Tiers.DIAMOND, -3, 0))
-                .component(ModComponents.TOUGH, ToolAttributes.Tough.INSTANCE)
+                .component(ModComponents.TOUGH, IToolAttributes.Tough.INSTANCE)
         );
     }
 }

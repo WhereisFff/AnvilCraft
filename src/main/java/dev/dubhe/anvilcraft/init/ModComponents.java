@@ -1,15 +1,18 @@
 package dev.dubhe.anvilcraft.init;
 
+import com.mojang.datafixers.util.Unit;
+import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
 import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
-import dev.dubhe.anvilcraft.item.ToolAttributes;
+import dev.dubhe.anvilcraft.api.item.IToolAttributes;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -45,17 +48,13 @@ public class ModComponents {
         register("signed_player", b -> b.persistent(ComradeAmuletItem.SignedPlayers.CODEC)
             .networkSynchronized(ComradeAmuletItem.SignedPlayers.STREAM_CODEC));
 
-    public static final DataComponentType<ToolAttributes.FireReforging> FIRE_REFORGING =
-        register("reforging", b -> b.persistent(ToolAttributes.FireReforging.CODEC)
-            .networkSynchronized(ToolAttributes.FireReforging.STREAM_CODEC));
+    public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
-    public static final DataComponentType<ToolAttributes.Tough> TOUGH =
-        register("tough", b -> b.persistent(ToolAttributes.Tough.CODEC)
-            .networkSynchronized(ToolAttributes.Tough.STREAM_CODEC));
+    public static final DataComponentType<Unit> TOUGH = registerEmpty("tough");
 
-    public static final DataComponentType<ToolAttributes.Morph> MORPH =
-        register("morph", b -> b.persistent(ToolAttributes.Morph.CODEC)
-            .networkSynchronized(ToolAttributes.Morph.STREAM_CODEC));
+    public static final DataComponentType<IToolAttributes.Multiphase> MULTIPHASE =
+        register("multiphase", b -> b.persistent(IToolAttributes.Multiphase.CODEC)
+            .networkSynchronized(IToolAttributes.Multiphase.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();
@@ -63,6 +62,11 @@ public class ModComponents {
         var componentType = builder.build();
         DR.register(name, () -> componentType);
         return componentType;
+    }
+
+    private static DataComponentType<Unit> registerEmpty(String name) {
+        return register(name, b -> b.persistent(Codec.EMPTY.codec())
+            .networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     }
 
     public static void register(IEventBus bus) {

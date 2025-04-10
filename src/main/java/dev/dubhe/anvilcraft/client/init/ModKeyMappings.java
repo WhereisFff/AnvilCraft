@@ -8,7 +8,7 @@ import net.neoforged.neoforge.common.util.Lazy;
 import org.lwjgl.glfw.GLFW;
 
 public class ModKeyMappings {
-    public static final Lazy<KeyMapping> CHANGE_ENCHANTMENT_SPACE = Lazy.of(() -> new KeyMapping(
+    public static final Lazy<KeyMapping> SWITCH_PHASE = Lazy.of(() -> new KeyMapping(
         "key.anvilcraft.change_enchantment_space",
         KeyConflictContext.IN_GAME,
         InputConstants.Type.KEYSYM,
@@ -17,6 +17,6 @@ public class ModKeyMappings {
     ));
 
     public static void register(RegisterKeyMappingsEvent event) {
-        event.register(CHANGE_ENCHANTMENT_SPACE.get());
+        event.register(SWITCH_PHASE.get());
     }
 }

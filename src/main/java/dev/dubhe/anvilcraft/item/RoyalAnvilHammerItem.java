@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.api.item.IToolAttributes;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -16,7 +17,7 @@ public class RoyalAnvilHammerItem extends AnvilHammerItem {
      * @param properties 物品属性
      */
     public RoyalAnvilHammerItem(Properties properties) {
-        super(properties.component(ModComponents.TOUGH, ToolAttributes.Tough.INSTANCE));
+        super(properties.component(ModComponents.TOUGH, IToolAttributes.Tough.INSTANCE));
     }
 
     @Override

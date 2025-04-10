@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.network;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -39,12 +38,12 @@ public record ChangeEnchantmentSpacePacket() implements CustomPacketPayload {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {
             if (!(player.level() instanceof ServerLevel)) return;
-            ItemStack itemInHand = Optional.of(player.getMainHandItem()).filter(stack -> stack.get(ModComponents.MORPH) != null)
-                .or(() -> Optional.of(player.getOffhandItem()).filter(stack -> stack.get(ModComponents.MORPH) != null))
+            ItemStack itemInHand = Optional.of(player.getMainHandItem()).filter(stack -> stack.get(ModComponents.MULTIPHASE) != null)
+                .or(() -> Optional.of(player.getOffhandItem()).filter(stack -> stack.get(ModComponents.MULTIPHASE) != null))
                 .orElse(ItemStack.EMPTY);
             if (itemInHand.isEmpty()) return;
             try {
-                Objects.requireNonNull(itemInHand.get(ModComponents.MORPH)).switchSpaces();
+                Objects.requireNonNull(itemInHand.get(ModComponents.MULTIPHASE)).switchSpaces();
             } catch (NullPointerException ignored) {}
         });
     }

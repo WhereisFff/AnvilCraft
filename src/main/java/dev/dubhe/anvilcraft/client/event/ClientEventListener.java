@@ -39,7 +39,7 @@ public class ClientEventListener {
 
     @SubscribeEvent
     public static void onKeyPressed(ClientTickEvent.Post event) {
-        while (ModKeyMappings.CHANGE_ENCHANTMENT_SPACE.get().consumeClick()) {
+        while (ModKeyMappings.SWITCH_PHASE.get().consumeClick()) {
             PacketDistributor.sendToServer(new ChangeEnchantmentSpacePacket());
         }
     }

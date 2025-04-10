@@ -25,11 +25,11 @@ import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmberMetalUpgradeTemplateItem;
-import dev.dubhe.anvilcraft.item.MorphableAxeItem;
-import dev.dubhe.anvilcraft.item.MorphableHoeItem;
-import dev.dubhe.anvilcraft.item.MorphablePickaxeItem;
-import dev.dubhe.anvilcraft.item.MorphableShovelItem;
-import dev.dubhe.anvilcraft.item.MorphableSwordItem;
+import dev.dubhe.anvilcraft.item.MultiphaseAxeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseHoeItem;
+import dev.dubhe.anvilcraft.item.MultiphasePickaxeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseShovelItem;
+import dev.dubhe.anvilcraft.item.MultiphaseSwordItem;
 import dev.dubhe.anvilcraft.item.amulet.AbstractAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.AnvilAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.CatAmuletItem;
@@ -357,16 +357,16 @@ public class ModItems {
         .tag(ItemTags.SWORDS,
             Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
-    public static final ItemEntry<MorphablePickaxeItem> MORPHABLE_PICKAXE = REGISTRATE
-        .item("morphable_pickaxe", MorphablePickaxeItem::new)
+    public static final ItemEntry<MultiphasePickaxeItem> MULTIPHASE_PICKAXE = REGISTRATE
+        .item("multiphase_pickaxe", MultiphasePickaxeItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern("AAA")
                 .pattern(" B ")
                 .pattern(" B ")
-                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('A', ModItems.MULTIPHASE_MATTER)
                 .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider);
         })
         .model((ctx, provider) -> provider.handheld(ctx))
@@ -374,62 +374,62 @@ public class ModItems {
              ModItemTags.EXPLOSION_PROOF,
              Tags.Items.MINING_TOOL_TOOLS)
         .register();
-    public static final ItemEntry<MorphableAxeItem> MORPHABLE_AXE = REGISTRATE
-        .item("morphable_axe", MorphableAxeItem::new)
+    public static final ItemEntry<MultiphaseAxeItem> MULTIPHASE_AXE = REGISTRATE
+        .item("multiphase_axe", MultiphaseAxeItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern("AA ")
                 .pattern("AB ")
                 .pattern(" B ")
-                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('A', ModItems.MULTIPHASE_MATTER)
                 .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider);
         })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.AXES,
              Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
-    public static final ItemEntry<MorphableShovelItem> MORPHABLE_SHOVEL = REGISTRATE
-        .item("morphable_shovel", MorphableShovelItem::new)
+    public static final ItemEntry<MultiphaseShovelItem> MULTIPHASE_SHOVEL = REGISTRATE
+        .item("multiphase_shovel", MultiphaseShovelItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern(" A ")
                 .pattern(" B ")
                 .pattern(" B ")
-                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('A', ModItems.MULTIPHASE_MATTER)
                 .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider);
         })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.SHOVELS)
         .register();
-    public static final ItemEntry<MorphableHoeItem> MORPHABLE_HOE = REGISTRATE
-        .item("morphable_hoe", MorphableHoeItem::new)
+    public static final ItemEntry<MultiphaseHoeItem> MULTIPHASE_HOE = REGISTRATE
+        .item("multiphase_hoe", MultiphaseHoeItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern("AA ")
                 .pattern(" B ")
                 .pattern(" B ")
-                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('A', ModItems.MULTIPHASE_MATTER)
                 .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider);
         })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.HOES)
         .register();
-    public static final ItemEntry<MorphableSwordItem> MORPHABLE_SWORD = REGISTRATE
-        .item("morphable_sword", MorphableSwordItem::new)
+    public static final ItemEntry<MultiphaseSwordItem> MULTIPHASE_SWORD = REGISTRATE
+        .item("multiphase_sword", MultiphaseSwordItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern(" A ")
                 .pattern(" A ")
                 .pattern(" B ")
-                .define('A', ModItems.MORPHABLE_POLYMER)
+                .define('A', ModItems.MULTIPHASE_MATTER)
                 .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MORPHABLE_POLYMER))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider);
         })
         .model((ctx, provider) -> provider.handheld(ctx))
@@ -1657,8 +1657,8 @@ public class ModItems {
                 .save(provider);
         })
         .register();
-    public static final ItemEntry<Item> MORPHABLE_POLYMER = REGISTRATE
-        .item("morphable_polymer", Item::new)
+    public static final ItemEntry<Item> MULTIPHASE_MATTER = REGISTRATE
+        .item("multiphase_matter", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .register();
 
