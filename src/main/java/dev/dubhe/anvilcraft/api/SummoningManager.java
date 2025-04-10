@@ -2,6 +2,8 @@ package dev.dubhe.anvilcraft.api;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.InductionLightBlock;
+import dev.dubhe.anvilcraft.block.entity.InductionLightBlockEntity;
+import dev.dubhe.anvilcraft.util.AabbUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.world.entity.Entity;
@@ -65,9 +67,8 @@ public class SummoningManager {
                 && (InductionLightBlock.canBlockMobSummoning(lightBlockState)
                     || InductionLightBlock.canBlockAnimalSummoning(lightBlockState))
             ) {
-                AABB blockedAABB = centerSectionTo3x3x3(SectionPos.of(pos));
-
-                if (blockedAABB.contains(entity.position())
+                if (level.getBlockEntity(pos) instanceof InductionLightBlockEntity blockEntity
+                    && blockEntity.blockingArea.get().contains(entity.position())
                     && ((InductionLightBlock.canBlockMobSummoning(lightBlockState) && entity instanceof Monster)
                         || (InductionLightBlock.canBlockAnimalSummoning(lightBlockState) && entity instanceof Animal))
                 ) {
@@ -77,16 +78,5 @@ public class SummoningManager {
                 it.remove();
             }
         }
-    }
-
-    private static AABB centerSectionTo3x3x3(SectionPos center) {
-        return new AABB(
-            center.minBlockX() - 16,
-            center.minBlockY() - 16,
-            center.minBlockZ() - 16,
-            center.maxBlockX() + 16 + 1,
-            center.maxBlockY() + 16 + 1,
-            center.maxBlockZ() + 16 + 1
-        );
     }
 }
