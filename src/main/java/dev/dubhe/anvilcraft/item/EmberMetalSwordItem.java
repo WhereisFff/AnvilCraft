@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.IToolProperties;
+import com.mojang.datafixers.util.Unit;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.AxeItem;
@@ -16,8 +16,8 @@ public class EmberMetalSwordItem extends SwordItem {
             ModTiers.EMBER_METAL,
             properties.fireResistant()
                 .attributes(AxeItem.createAttributes(ModTiers.EMBER_METAL, 8, -2.4f))
-                .component(ModComponents.FIRE_REFORGING, IToolProperties.FireReforging.INSTANCE)
-                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
+                .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
+                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

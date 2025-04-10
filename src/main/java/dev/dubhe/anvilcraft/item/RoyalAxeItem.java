@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.IToolProperties;
+import com.mojang.datafixers.util.Unit;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.AxeItem;
@@ -15,7 +15,7 @@ public class RoyalAxeItem extends AxeItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(ModTiers.AMETHYST, 5, -3.0f))
-                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
+                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

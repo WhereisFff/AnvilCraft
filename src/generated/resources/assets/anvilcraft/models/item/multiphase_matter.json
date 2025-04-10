@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "anvilcraft:item/morphable_polymer"
+    "layer0": "anvilcraft:item/multiphase_matter"
   }
 }

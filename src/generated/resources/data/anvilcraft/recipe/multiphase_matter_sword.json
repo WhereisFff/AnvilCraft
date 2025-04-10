@@ -3,19 +3,19 @@
   "category": "equipment",
   "key": {
     "A": {
-      "item": "anvilcraft:morphable_polymer"
+      "item": "anvilcraft:multiphase_matter"
     },
     "B": {
       "item": "minecraft:stick"
     }
   },
   "pattern": [
-    "AAA",
-    " B ",
+    " A ",
+    " A ",
     " B "
   ],
   "result": {
     "count": 1,
-    "id": "anvilcraft:morphable_pickaxe"
+    "id": "anvilcraft:multiphase_matter_sword"
   }
 }

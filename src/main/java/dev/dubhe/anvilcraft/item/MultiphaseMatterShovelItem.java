@@ -1,25 +1,26 @@
 package dev.dubhe.anvilcraft.item;
 
+import com.mojang.datafixers.util.Unit;
 import dev.dubhe.anvilcraft.api.item.IToolProperties;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.ShovelItem;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class MultiphaseHoeItem extends HoeItem {
-    public MultiphaseHoeItem(Properties properties) {
+public class MultiphaseMatterShovelItem extends ShovelItem {
+    public MultiphaseMatterShovelItem(Properties properties) {
         super(
             ModTiers.MULTIPHASE,
             properties.fireResistant()
-                .attributes(HoeItem.createAttributes(ModTiers.MULTIPHASE, 1, 0))
-                .component(ModComponents.FIRE_REFORGING, IToolProperties.FireReforging.INSTANCE)
-                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
+                .attributes(ShovelItem.createAttributes(ModTiers.MULTIPHASE, 6.5f, -3f))
+                .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
+                .component(ModComponents.TOUGH, Unit.INSTANCE)
                 .component(ModComponents.MULTIPHASE, IToolProperties.Multiphase.make(
-                    Component.translatable("item.anvilcraft.multiphase_hoe"), null
+                    Component.translatable("item.anvilcraft.multiphase_matter_shovel"), null
                 ))
         );
     }

@@ -25,11 +25,11 @@ import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmberMetalUpgradeTemplateItem;
-import dev.dubhe.anvilcraft.item.MultiphaseAxeItem;
-import dev.dubhe.anvilcraft.item.MultiphaseHoeItem;
-import dev.dubhe.anvilcraft.item.MultiphasePickaxeItem;
-import dev.dubhe.anvilcraft.item.MultiphaseShovelItem;
-import dev.dubhe.anvilcraft.item.MultiphaseSwordItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterAxeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterHoeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.GeodeItem;
 import dev.dubhe.anvilcraft.item.GuideBookItem;
@@ -362,8 +362,8 @@ public class ModItems {
         .tag(ItemTags.SWORDS,
             Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
-    public static final ItemEntry<MultiphasePickaxeItem> MULTIPHASE_PICKAXE = REGISTRATE
-        .item("multiphase_pickaxe", MultiphasePickaxeItem::new)
+    public static final ItemEntry<MultiphaseMatterPickaxeItem> MULTIPHASE_MATTER_PICKAXE = REGISTRATE
+        .item("multiphase_matter_pickaxe", MultiphaseMatterPickaxeItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern("AAA")
@@ -379,8 +379,8 @@ public class ModItems {
              ModItemTags.EXPLOSION_PROOF,
              Tags.Items.MINING_TOOL_TOOLS)
         .register();
-    public static final ItemEntry<MultiphaseAxeItem> MULTIPHASE_AXE = REGISTRATE
-        .item("multiphase_axe", MultiphaseAxeItem::new)
+    public static final ItemEntry<MultiphaseMatterAxeItem> MULTIPHASE_MATTER_AXE = REGISTRATE
+        .item("multiphase_matter_axe", MultiphaseMatterAxeItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern("AA ")
@@ -395,8 +395,8 @@ public class ModItems {
         .tag(ItemTags.AXES,
              Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
-    public static final ItemEntry<MultiphaseShovelItem> MULTIPHASE_SHOVEL = REGISTRATE
-        .item("multiphase_shovel", MultiphaseShovelItem::new)
+    public static final ItemEntry<MultiphaseMatterShovelItem> MULTIPHASE_MATTER_SHOVEL = REGISTRATE
+        .item("multiphase_matter_shovel", MultiphaseMatterShovelItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern(" A ")
@@ -410,8 +410,8 @@ public class ModItems {
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.SHOVELS)
         .register();
-    public static final ItemEntry<MultiphaseHoeItem> MULTIPHASE_HOE = REGISTRATE
-        .item("multiphase_hoe", MultiphaseHoeItem::new)
+    public static final ItemEntry<MultiphaseMatterHoeItem> MULTIPHASE_MATTER_HOE = REGISTRATE
+        .item("multiphase_matter_hoe", MultiphaseMatterHoeItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern("AA ")
@@ -425,8 +425,8 @@ public class ModItems {
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.HOES)
         .register();
-    public static final ItemEntry<MultiphaseSwordItem> MULTIPHASE_SWORD = REGISTRATE
-        .item("multiphase_sword", MultiphaseSwordItem::new)
+    public static final ItemEntry<MultiphaseMatterSwordItem> MULTIPHASE_MATTER_SWORD = REGISTRATE
+        .item("multiphase_matter_sword", MultiphaseMatterSwordItem::new)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
                 .pattern(" A ")

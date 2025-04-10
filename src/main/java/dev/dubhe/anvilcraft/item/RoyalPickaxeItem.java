@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.IToolProperties;
+import com.mojang.datafixers.util.Unit;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.AxeItem;
@@ -16,7 +16,7 @@ public class RoyalPickaxeItem extends PickaxeItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(Tiers.DIAMOND, 1, -2.8f))
-                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
+                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

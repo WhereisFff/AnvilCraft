@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.IToolProperties;
+import com.mojang.datafixers.util.Unit;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.HoeItem;
@@ -15,8 +15,8 @@ public class EmberMetalHoeItem extends HoeItem {
             ModTiers.EMBER_METAL,
             properties.fireResistant()
                 .attributes(HoeItem.createAttributes(ModTiers.EMBER_METAL, 1, 0))
-                .component(ModComponents.FIRE_REFORGING, IToolProperties.FireReforging.INSTANCE)
-                .component(ModComponents.TOUGH, IToolProperties.Tough.INSTANCE)
+                .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
+                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

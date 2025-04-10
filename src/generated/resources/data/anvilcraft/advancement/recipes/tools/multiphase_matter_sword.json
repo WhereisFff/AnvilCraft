@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:morphable_axe"
+        "recipe": "anvilcraft:multiphase_matter_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -11,7 +11,7 @@
       "conditions": {
         "items": [
           {
-            "items": "anvilcraft:morphable_polymer"
+            "items": "anvilcraft:multiphase_matter"
           }
         ]
       },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:morphable_axe"
+      "anvilcraft:multiphase_matter_sword"
     ]
   }
 }

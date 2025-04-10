@@ -3,7 +3,7 @@
   "category": "equipment",
   "key": {
     "A": {
-      "item": "anvilcraft:morphable_polymer"
+      "item": "anvilcraft:multiphase_matter"
     },
     "B": {
       "item": "minecraft:stick"
@@ -16,6 +16,6 @@
   ],
   "result": {
     "count": 1,
-    "id": "anvilcraft:morphable_axe"
+    "id": "anvilcraft:multiphase_matter_axe"
   }
 }
