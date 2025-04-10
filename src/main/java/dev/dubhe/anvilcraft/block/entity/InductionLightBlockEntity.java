@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.api.SummoningManager;
 import dev.dubhe.anvilcraft.api.RipeningManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -39,8 +40,11 @@ public class InductionLightBlockEntity extends BlockEntity implements IPowerCons
      */
     public void tick(Level level1) {
         flushState(level1, getBlockPos());
-        if (getBlockState().getValue(InductionLightBlock.COLOR) == LightColor.PINK) {
+        LightColor color = getBlockState().getValue(InductionLightBlock.COLOR);
+        if (color == LightColor.PINK) {
             RipeningManager.addLightBlock(getBlockPos(), level);
+        } else if (color == LightColor.YELLOW || color == LightColor.DARK) {
+            SummoningManager.addLightBlock(getBlockPos(), level);
         }
     }
 
