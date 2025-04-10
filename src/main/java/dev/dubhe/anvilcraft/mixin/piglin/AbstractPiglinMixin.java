@@ -12,14 +12,13 @@ import org.spongepowered.asm.mixin.injection.At;
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.ZOMBIFICATED_BY_CURSE;
 
 @Mixin(AbstractPiglin.class)
-public class AbstractPiglinMixin {
+abstract class AbstractPiglinMixin {
 
     @WrapOperation(
         method = "finishConversion",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/monster/piglin/AbstractPiglin;convertTo" +
-                "(Lnet/minecraft/world/entity/EntityType;Z)Lnet/minecraft/world/entity/Mob;"
+            target = "Lnet/minecraft/world/entity/monster/piglin/AbstractPiglin;convertTo(Lnet/minecraft/world/entity/EntityType;Z)Lnet/minecraft/world/entity/Mob;"
         )
     )
     private Mob punishmentForGreed(

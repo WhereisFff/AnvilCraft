@@ -67,7 +67,7 @@ public class MassInjectRecipe extends SingleItemRecipe {
         return Component.literal((mass / 100) + (rem < 10 ? ".0" : ".") + (mass % 100));
     }
 
-    public Ingredient getIngredient(){
+    public Ingredient getIngredient() {
         return this.ingredient;
     }
 

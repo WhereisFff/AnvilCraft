@@ -27,7 +27,7 @@ public abstract class PowerProducerRenderer<T extends BlockEntity & IPowerProduc
     ) {
         poseStack.pushPose();
         float rotation = rotation(blockEntity, partialTick);
-        final VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.solid());
+        final VertexConsumer vertexConsumer = buffer.getBuffer(RenderType.cutout());
         poseStack.translate(0.5F, elevation(), 0.5F);
         poseStack.mulPose(Axis.YP.rotationDegrees(rotation));
         poseStack.mulPose(Axis.ZP.rotationDegrees(rotation));
@@ -48,11 +48,11 @@ public abstract class PowerProducerRenderer<T extends BlockEntity & IPowerProduc
         poseStack.popPose();
     }
 
-    protected float rotation(T blockEntity, float partialTick){
-       return ((float) blockEntity.getTime() + partialTick) * blockEntity.getServerPower() * magic();
+    protected float rotation(T blockEntity, float partialTick) {
+        return ((float) blockEntity.getTime() + partialTick) * blockEntity.getServerPower() * magic();
     }
 
-    protected float elevation(){
+    protected float elevation() {
         return 0.8f;
     }
 
@@ -60,5 +60,5 @@ public abstract class PowerProducerRenderer<T extends BlockEntity & IPowerProduc
         return ROTATION_MAGIC;
     }
 
-    abstract protected ModelResourceLocation getModel();
+    protected abstract ModelResourceLocation getModel();
 }

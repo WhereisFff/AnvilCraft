@@ -52,6 +52,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.client.model.data.ModelData;
+import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
@@ -65,8 +66,8 @@ public class RenderHelper {
     private static final int MAX_CACHE_SIZE = 64;
     private static final LinkedHashMap<BlockState, BlockEntity> BLOCK_ENTITY_CACHE = new LinkedHashMap<>();
     private static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
-    private static final Vector3f L1 = new Vector3f(0.4F, 0.0F, 1.0F).normalize();
-    private static final Vector3f L2 = new Vector3f(-0.4F, 1.0F, -0.2F).normalize();
+    public static final Vector3f L1 = new Vector3f(0.4F, 0.0F, 1.0F).normalize();
+    public static final Vector3f L2 = new Vector3f(-0.4F, 1.0F, -0.2F).normalize();
 
     private static final ModelResourceLocation TRIDENT_MODEL = ModelResourceLocation.inventory(ResourceLocation.withDefaultNamespace("trident"));
     private static final ModelResourceLocation SPYGLASS_MODEL = ModelResourceLocation.inventory(ResourceLocation.withDefaultNamespace("spyglass"));
@@ -98,16 +99,63 @@ public class RenderHelper {
         });
     };
 
+    public static void renderBlockWithRotationNoTranslate(
+        GuiGraphics guiGraphics,
+        BlockState block,
+        BlockRenderFunction fn
+    ) {
+        RenderSystem.enableBlend();
+        RenderSystem.defaultBlendFunc();
+        ClientLevel level = Minecraft.getInstance().level;
+        if (currentClientLevel != level) {
+            airLevelLike = new LevelLike.AirLevelLike(level);
+            currentClientLevel = level;
+        }
+        PoseStack poseStack = guiGraphics.pose();
 
+        poseStack.pushPose();
 
-    public static void renderBlock(
+        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
+
+        FluidState fluidState = block.getFluidState();
+        MultiBufferSource.BufferSource buffers =
+            Minecraft.getInstance().renderBuffers().bufferSource();
+
+        RenderSystem.setupGui3DDiffuseLighting(L1, L2);
+        fn.renderBlock(block, poseStack, buffers);
+        buffers.endLastBatch();
+        if (!fluidState.isEmpty()) {
+            if (block.getBlock() instanceof LiquidBlock) {
+                block = block.setValue(LiquidBlock.LEVEL, block.getFluidState().getAmount());
+            }
+            BlockRenderDispatcher blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();
+            blockRenderDispatcher.renderLiquid(
+                BlockPos.ZERO,
+                airLevelLike,
+                new VertexConsumerWithPose(
+                    buffers.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidState)),
+                    poseStack.last(),
+                    BlockPos.ZERO
+                ),
+                block,
+                fluidState
+            );
+            buffers.endLastBatch();
+        }
+
+        poseStack.popPose();
+    }
+
+    public static void renderBlockWithRotation(
         GuiGraphics guiGraphics,
         BlockState block,
         float x,
         float y,
         float z,
         float scale,
-        BlockRenderFunction fn
+        BlockRenderFunction fn,
+        Quaternionf rotationX,
+        Quaternionf rotationY
     ) {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
@@ -122,9 +170,9 @@ public class RenderHelper {
         poseStack.translate(x, y, z);
         poseStack.scale(-scale, -scale, -scale);
         poseStack.translate(-0.5f, -0.5f, 0);
-        poseStack.mulPose(Axis.XP.rotationDegrees(-30F));
+        poseStack.mulPose(rotationX);
         poseStack.translate(0.5F, 0, -0.5F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(45f));
+        poseStack.mulPose(rotationY);
         poseStack.translate(-0.5F, 0, 0.5F);
 
         RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
@@ -159,13 +207,36 @@ public class RenderHelper {
         poseStack.popPose();
     }
 
+
+    public static void renderBlock(
+        GuiGraphics guiGraphics,
+        BlockState block,
+        float x,
+        float y,
+        float z,
+        float scale,
+        BlockRenderFunction fn
+    ) {
+        renderBlockWithRotation(
+            guiGraphics,
+            block,
+            x,
+            y,
+            z,
+            scale,
+            fn,
+            Axis.XP.rotationDegrees(-30F),
+            Axis.YP.rotationDegrees(45f)
+        );
+    }
+
     public static void renderLevelLike(
-            LevelLike level,
-            GuiGraphics guiGraphics,
-            int xPos,
-            int yPos,
-            float scaleFactor,
-            float rotationSpeed) {
+        LevelLike level,
+        GuiGraphics guiGraphics,
+        int xPos,
+        int yPos,
+        float scaleFactor,
+        float rotationSpeed) {
         RenderSystem.enableBlend();
         Minecraft minecraft = Minecraft.getInstance();
         DeltaTracker tracker = minecraft.getTimer();
@@ -238,7 +309,7 @@ public class RenderHelper {
         GuiGraphics guiGraphics,
         int xPos,
         int yPos,
-        float scale){
+        float scale) {
         renderLevelLike(level, guiGraphics, xPos, yPos, scale, 0.0f);
     }
 
@@ -247,7 +318,7 @@ public class RenderHelper {
         if (BLOCK_ENTITY_CACHE.containsKey(state)) return Optional.of(BLOCK_ENTITY_CACHE.get(state));
         Optional<BlockEntity> opt = Optional.of(state.getBlock())
             .filter(b -> b instanceof EntityBlock)
-            .map(b -> ((EntityBlock)b).newBlockEntity(BlockPos.ZERO, state));
+            .map(b -> ((EntityBlock) b).newBlockEntity(BlockPos.ZERO, state));
         opt.ifPresent(be -> {
             BLOCK_ENTITY_CACHE.put(state, be);
             if (BLOCK_ENTITY_CACHE.size() > MAX_CACHE_SIZE) {
@@ -329,7 +400,7 @@ public class RenderHelper {
         MultiBufferSource bufferSource,
         int combinedLight,
         int combinedOverlay,
-        BakedModel p_model,
+        BakedModel pModel,
         float alpha
     ) {
         if (!itemStack.isEmpty()) {
@@ -337,15 +408,15 @@ public class RenderHelper {
             boolean flag = displayContext == ItemDisplayContext.GUI || displayContext == ItemDisplayContext.GROUND || displayContext == ItemDisplayContext.FIXED;
             if (flag) {
                 if (itemStack.is(Items.TRIDENT)) {
-                    p_model = itemRenderer.getItemModelShaper().getModelManager().getModel(TRIDENT_MODEL);
+                    pModel = itemRenderer.getItemModelShaper().getModelManager().getModel(TRIDENT_MODEL);
                 } else if (itemStack.is(Items.SPYGLASS)) {
-                    p_model = itemRenderer.getItemModelShaper().getModelManager().getModel(SPYGLASS_MODEL);
+                    pModel = itemRenderer.getItemModelShaper().getModelManager().getModel(SPYGLASS_MODEL);
                 }
             }
 
-            p_model = net.neoforged.neoforge.client.ClientHooks.handleCameraTransforms(poseStack, p_model, displayContext, leftHand);
+            pModel = net.neoforged.neoforge.client.ClientHooks.handleCameraTransforms(poseStack, pModel, displayContext, leftHand);
             poseStack.translate(-0.5F, -0.5F, -0.5F);
-            if (!p_model.isCustomRenderer() && (!itemStack.is(Items.TRIDENT) || flag)) {
+            if (!pModel.isCustomRenderer() && (!itemStack.is(Items.TRIDENT) || flag)) {
                 boolean flag1;
                 if (displayContext != ItemDisplayContext.GUI && !displayContext.firstPerson() && itemStack.getItem() instanceof BlockItem blockitem) {
                     Block block = blockitem.getBlock();
@@ -354,7 +425,7 @@ public class RenderHelper {
                     flag1 = true;
                 }
 
-                for (BakedModel model : p_model.getRenderPasses(itemStack, flag1)) {
+                for (BakedModel model : pModel.getRenderPasses(itemStack, flag1)) {
                     for (RenderType rendertype : model.getRenderTypes(itemStack, flag1)) {
                         VertexConsumer vertexconsumer;
                         if (hasAnimatedTexture(itemStack) && itemStack.hasFoil()) {

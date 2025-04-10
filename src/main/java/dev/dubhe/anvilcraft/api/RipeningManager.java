@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.api;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.InductionLightBlock;
 import dev.dubhe.anvilcraft.block.state.LightColor;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
@@ -18,7 +17,6 @@ import net.minecraft.world.level.block.GrassBlock;
 import net.minecraft.world.level.block.NetherWartBlock;
 import net.minecraft.world.level.block.NyliumBlock;
 import net.minecraft.world.level.block.state.BlockState;
-
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -100,9 +98,9 @@ public class RipeningManager {
                     }
                     if (state.is(Blocks.NETHER_WART) && state.getValue(NetherWartBlock.AGE) != NetherWartBlock.MAX_AGE) {
                         level.setBlock(pos1,
-                                Blocks.NETHER_WART.defaultBlockState().setValue(NetherWartBlock.AGE,
-                                        state.getValue(NetherWartBlock.AGE) + 1),
-                                Block.UPDATE_ALL_IMMEDIATE);
+                            Blocks.NETHER_WART.defaultBlockState().setValue(NetherWartBlock.AGE,
+                                state.getValue(NetherWartBlock.AGE) + 1),
+                            Block.UPDATE_ALL_IMMEDIATE);
                     }
                 }
             }

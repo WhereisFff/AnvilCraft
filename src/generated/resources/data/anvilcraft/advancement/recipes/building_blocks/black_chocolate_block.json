@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_chocolate_black": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:chocolate_black"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "anvilcraft:black_chocolate_block"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_chocolate_black"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "anvilcraft:black_chocolate_block"
+    ]
+  }
+}

@@ -4,7 +4,7 @@ import dev.dubhe.anvilcraft.block.ChuteBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.ChuteMenu;
-
+import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -16,8 +16,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -65,14 +63,16 @@ public class ChuteBlockEntity extends BaseChuteBlockEntity {
         return new ChuteBlockEntity(type, pos, blockState);
     }
 
-    public static void onBlockEntityRegister(BlockEntityType<ChuteBlockEntity> type) {}
+    public static void onBlockEntityRegister(BlockEntityType<ChuteBlockEntity> type) {
+    }
 
     @Override
     public @NotNull Component getDisplayName() {
         return Component.translatable("block.anvilcraft.chute");
     }
 
-    @Nullable @Override
+    @Nullable
+    @Override
     public AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
         if (player.isSpectator()) return null;
         return new ChuteMenu(ModMenuTypes.CHUTE.get(), i, inventory, this);

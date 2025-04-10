@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 
 public class RenderRegion {
-    public final List<RenderType> BLOOM_RENDERTYPES = List.of(
+    public static final List<RenderType> BLOOM_RENDERTYPES = List.of(
         ModRenderTypes.LASER
     );
     private final ChunkPos chunkPos;

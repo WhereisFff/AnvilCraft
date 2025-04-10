@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractItemProcessBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.input.IItemsInput;
 import dev.dubhe.anvilcraft.util.CodecUtil;
@@ -41,7 +40,7 @@ public class JewelCraftingRecipe implements Recipe<JewelCraftingRecipe.Input> {
     public final ItemStack result;
     public final List<Object2IntMap.Entry<Ingredient>> mergedIngredients;
     public Input cache;
-    public int cache_times;
+    public int cacheTimes;
 
     public JewelCraftingRecipe(NonNullList<Ingredient> ingredients, ItemStack result) {
         this.ingredients = ingredients;
@@ -85,12 +84,12 @@ public class JewelCraftingRecipe implements Recipe<JewelCraftingRecipe.Input> {
     @Override
     public boolean matches(Input input, Level level) {
         if (input == cache) {
-            return cache_times >= 1;
+            return cacheTimes >= 1;
         }
         int times = RecipeUtil.getMaxCraftTime(input, ingredients);
         cache = input;
-        cache_times = times;
-        return cache_times >= 1;
+        cacheTimes = times;
+        return cacheTimes >= 1;
     }
 
     public record Input(ItemStack source, List<ItemStack> items) implements RecipeInput, IItemsInput {
@@ -143,7 +142,7 @@ public class JewelCraftingRecipe implements Recipe<JewelCraftingRecipe.Input> {
             return new JewelCraftingRecipe(ingredients, result);
         }
     }
-    
+
     @Setter
     @Accessors(fluent = true, chain = true)
     public static class Builder extends AbstractRecipeBuilder<JewelCraftingRecipe> {
@@ -176,7 +175,7 @@ public class JewelCraftingRecipe implements Recipe<JewelCraftingRecipe.Input> {
         public Builder requires(TagKey<Item> pTag) {
             return requires(pTag, 1);
         }
-        
+
         @Override
         public JewelCraftingRecipe buildRecipe() {
             return new JewelCraftingRecipe(ingredients, result);

@@ -48,13 +48,13 @@ public interface ItemInjectRecipeSchema {
 
         @Override
         protected void validate() {
-            if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()){
+            if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Ingredients is Empty!").source(sourceLine);
             }
-            if (getValue(INPUT_BLOCK) == null){
+            if (getValue(INPUT_BLOCK) == null) {
                 throw new KubeRuntimeException("input_block is Empty!").source(sourceLine);
             }
-            if (getValue(OUTPUT_BLOCK) == null){
+            if (getValue(OUTPUT_BLOCK) == null) {
                 throw new KubeRuntimeException("output_block is Empty!").source(sourceLine);
             }
         }

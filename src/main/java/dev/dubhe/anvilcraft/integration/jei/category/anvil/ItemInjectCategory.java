@@ -9,16 +9,6 @@ import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
-
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.util.Lazy;
-
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -31,6 +21,13 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -40,7 +37,6 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final Lazy<IDrawable> background;
     private final IDrawable icon;
     private final IDrawable slot;
     private final Component title;
@@ -50,7 +46,6 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
     private final IDrawable arrowOut;
 
     public ItemInjectCategory(IGuiHelper helper) {
-        background = Lazy.of(() -> helper.createBlankDrawable(WIDTH, HEIGHT));
         icon = helper.createDrawableItemStack(new ItemStack(Items.ANVIL));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.item_inject");
@@ -71,8 +66,13 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background.get();
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override
@@ -82,7 +82,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
 
     @Override
     public void setRecipe(
-            IRecipeLayoutBuilder builder, RecipeHolder<ItemInjectRecipe> recipeHolder, IFocusGroup focuses) {
+        IRecipeLayoutBuilder builder, RecipeHolder<ItemInjectRecipe> recipeHolder, IFocusGroup focuses) {
         ItemInjectRecipe recipe = recipeHolder.value();
         JeiSlotUtil.addInputSlots(builder, recipe.mergedIngredients);
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(new ItemStack(recipe.inputBlock));
@@ -91,39 +91,39 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
 
     @Override
     public void draw(
-            RecipeHolder<ItemInjectRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            GuiGraphics guiGraphics,
-            double mouseX,
-            double mouseY) {
+        RecipeHolder<ItemInjectRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
+        double mouseX,
+        double mouseY) {
         ItemInjectRecipe recipe = recipeHolder.value();
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
         RenderHelper.renderBlock(
-                guiGraphics,
-                Blocks.ANVIL.defaultBlockState(),
-                81,
-                22 + anvilYOffset,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            81,
+            22 + anvilYOffset,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-                guiGraphics, recipe.inputBlock.defaultBlockState(), 81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, recipe.inputBlock.defaultBlockState(), 81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.mergedIngredients.size());
         RenderHelper.renderBlock(
-                guiGraphics, recipe.resultBlock.defaultBlockState(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, recipe.resultBlock.defaultBlockState(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
     }
 
     @Override
     public void getTooltip(
-            ITooltipBuilder tooltip,
-            RecipeHolder<ItemInjectRecipe> recipeHolder,
-            IRecipeSlotsView recipeSlotsView,
-            double mouseX,
-            double mouseY) {
+        ITooltipBuilder tooltip,
+        RecipeHolder<ItemInjectRecipe> recipeHolder,
+        IRecipeSlotsView recipeSlotsView,
+        double mouseX,
+        double mouseY) {
         ItemInjectRecipe recipe = recipeHolder.value();
         if (mouseX >= 72 && mouseX <= 90) {
             if (mouseY >= 34 && mouseY <= 53) {
@@ -139,8 +139,8 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-                AnvilCraftJeiPlugin.ITEM_INJECT,
-                JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.ITEM_INJECT_TYPE.get()));
+            AnvilCraftJeiPlugin.ITEM_INJECT,
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.ITEM_INJECT_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

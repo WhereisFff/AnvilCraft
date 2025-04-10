@@ -49,9 +49,6 @@ file="META-INF/accesstransformer.cfg"
 
 # The coremods config file path is not configurable and is always loaded from META-INF/coremods.json
 
-[modproperties."${mod_id}".anvillib.integrations]
-curios = ["dev.dubhe.anvilcraft.integration.curios.CuriosIntegration"]
-
 # A dependency - use the . to indicate dependency for a specific modid. Dependencies are optional.
 [[dependencies."${mod_id}"]] #optional
     modId="neoforge" #mandatory
@@ -74,11 +71,18 @@ curios = ["dev.dubhe.anvilcraft.integration.curios.CuriosIntegration"]
     side="BOTH"
 
 [[dependencies."${mod_id}"]]
-modId = "cloth_config"
-mandatory = true
-versionRange = "[11.0.0,)"
-ordering = "NONE"
-side = "BOTH"
+    modId="cloth_config"
+    mandatory=true
+    versionRange="[11.0.0,)"
+    ordering="NONE"
+    side="BOTH"
+
+[[dependencies."${mod_id}"]]
+    modId="jei"
+    type="optional"
+    versionRange="[19.19.0.219,)"
+    ordering="NONE"
+    side="BOTH"
 
 [mc-publish]
 loaders = ["neoforge"]

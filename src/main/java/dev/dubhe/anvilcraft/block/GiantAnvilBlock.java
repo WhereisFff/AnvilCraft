@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.event.anvil.GiantAnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
@@ -44,6 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -51,12 +52,13 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.Nullable;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class GiantAnvilBlock extends AbstractMultiplePartBlock<Cube3x3PartHalf> implements Fallable, IHammerRemovable {
+public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> implements Fallable, IHammerRemovable {
     private static final Component CONTAINER_TITLE = Component.translatable("container.repair");
     public static final EnumProperty<Cube3x3PartHalf> HALF = EnumProperty.create("half", Cube3x3PartHalf.class);
     public static final EnumProperty<GiantAnvilCube> CUBE = EnumProperty.create("cube", GiantAnvilCube.class);
@@ -264,7 +266,7 @@ public class GiantAnvilBlock extends AbstractMultiplePartBlock<Cube3x3PartHalf> 
         Level level,
         BlockPos pos,
         BlockState state,
-        BlockState replaceableState,
+        @SuppressWarnings("unused") BlockState replaceableState,
         FallingBlockEntity fallingBlock,
         float fallDistance
     ) {
@@ -307,7 +309,10 @@ public class GiantAnvilBlock extends AbstractMultiplePartBlock<Cube3x3PartHalf> 
         RandomSource random
     ) {
         BlockState ringState = level.getBlockState(pos.subtract(state.getValue(HALF).getOffset()).above(3));
-        if (ringState.hasProperty(AccelerationRingBlock.HALF) && ringState.getValue(AccelerationRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(AccelerationRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(AccelerationRingBlock.OVERLOAD)) return;
+        if (ringState.hasProperty(AccelerationRingBlock.HALF) && ringState.getValue(AccelerationRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(AccelerationRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(AccelerationRingBlock.OVERLOAD) && ringState.getValue(AccelerationRingBlock.FACING) == Direction.UP)
+            return;
+        if (ringState.hasProperty(DeflectionRingBlock.HALF) && ringState.getValue(DeflectionRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(DeflectionRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(DeflectionRingBlock.OVERLOAD) && ringState.getValue(DeflectionRingBlock.FACING).getAxis() == Direction.Axis.Y)
+            return;
         if (state.getValue(HALF) != Cube3x3PartHalf.BOTTOM_CENTER) return;
         for (Cube3x3PartHalf part : getParts()) {
             if (part.getOffsetY() != 0) continue;
@@ -324,7 +329,7 @@ public class GiantAnvilBlock extends AbstractMultiplePartBlock<Cube3x3PartHalf> 
         this.falling(fallingBlockEntity);
     }
 
-    public void removePartsAndUpdate(Level level, BlockPos pos){
+    public void removePartsAndUpdate(Level level, BlockPos pos) {
         for (Cube3x3PartHalf part : getParts()) {
             BlockPos bp = pos.offset(part.getOffset());
             BlockState blockState = level.getBlockState(bp);
@@ -407,6 +412,11 @@ public class GiantAnvilBlock extends AbstractMultiplePartBlock<Cube3x3PartHalf> 
             (syncId, inventory, player) ->
                 new AnvilMenu(syncId, inventory, ContainerLevelAccess.create(level, pos)),
             CONTAINER_TITLE);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     @Override

@@ -1,37 +1,49 @@
 package dev.dubhe.anvilcraft.api.power;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.PowerGridClient;
 import dev.dubhe.anvilcraft.client.renderer.Line;
-import dev.dubhe.anvilcraft.client.renderer.PowerGridRenderer;
-
+import dev.dubhe.anvilcraft.util.ColorUtil;
+import dev.dubhe.anvilcraft.util.ShapeUtil;
+import dev.dubhe.anvilcraft.util.VirtualThreadFactoryImpl;
+import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.FastColor;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
-import org.joml.Matrix4f;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Random;
 import java.util.Set;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 @Getter
 public class SimplePowerGrid {
+    private final Random random = new Random();
+    private static ExecutorService EXECUTOR;
+    private final int[] EMPTY = {};
+
+    static {
+        recreateExecutor();
+    }
 
     public static final Codec<SimplePowerGrid> CODEC = RecordCodecBuilder.create(ins -> ins.group(
             Codec.INT.fieldOf("hash").forGetter(o -> o.id),
@@ -52,11 +64,12 @@ public class SimplePowerGrid {
     private final List<BlockPos> blocks = new ArrayList<>();
     private final List<PowerComponentInfo> powerComponentInfoList = new ArrayList<>();
     private final List<Line> powerTransmitterLines = new ArrayList<>();
+    private List<Line> powerGridBoundLines = new ArrayList<>();
     private final int generate; // 发电功率
     private final int consume; // 耗电功率
+    private final int color;
 
-    @Getter
-    private final VoxelShape cachedOutlineShape;
+    private Future<?> shapeFuture;
 
     /**
      * 简单电网
@@ -72,31 +85,15 @@ public class SimplePowerGrid {
         this.pos = pos;
         this.level = level;
         this.id = id;
+        random.setSeed(id);
+        int[] colors = ColorUtil.hsvToRgb(random.nextInt(360), 80, 80);
+        this.color = FastColor.ARGB32.color((int) (0.4 * 255), colors[0], colors[1], colors[2]);
         this.generate = generate;
         this.consume = consume;
         blocks.addAll(powerComponentInfoList.stream().map(PowerComponentInfo::pos).toList());
         this.powerComponentInfoList.addAll(powerComponentInfoList);
-        cachedOutlineShape = createMergedOutlineShape();
+        createMergedOutlineShape();
         createTransmitterVisualLines();
-    }
-
-    /**
-     * @param buf 缓冲区
-     */
-    public void encode(@NotNull FriendlyByteBuf buf) {
-        Tag tag = CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
-        CompoundTag data = new CompoundTag();
-        data.put("data", tag);
-        buf.writeNbt(data);
-    }
-
-    /**
-     * 获得指定坐标的电网元件信息
-     */
-    public Optional<PowerComponentInfo> getInfoForPos(BlockPos pos) {
-        return powerComponentInfoList.stream()
-            .filter(it -> it.pos().equals(pos))
-            .findFirst();
     }
 
     /**
@@ -111,6 +108,7 @@ public class SimplePowerGrid {
         powerComponents.addAll(grid.producers);
         powerComponents.addAll(grid.consumers);
         powerComponents.addAll(grid.transmitters);
+        this.color = 0;
         for (IPowerComponent component : powerComponents) {
             switch (component.getComponentType()) {
                 case STORAGE -> {
@@ -186,7 +184,41 @@ public class SimplePowerGrid {
         }
         this.consume = grid.getConsume();
         this.generate = grid.getGenerate();
-        cachedOutlineShape = Shapes.block();
+    }
+
+    /**
+     * @param buf 缓冲区
+     */
+    public void encode(@NotNull FriendlyByteBuf buf) {
+        Tag tag = CODEC.encodeStart(NbtOps.INSTANCE, this).getOrThrow();
+        CompoundTag data = new CompoundTag();
+        data.put("data", tag);
+        buf.writeNbt(data);
+    }
+
+    public boolean collideFast(AABB aabb) {
+        for (PowerComponentInfo it : this.powerComponentInfoList) {
+            if (new AABB(
+                it.pos().offset(-it.range(), -it.range(), -it.range()).getCenter(),
+                it.pos().offset(it.range(), it.range(), it.range()).getCenter()
+            ).intersects(aabb)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 获得指定坐标的电网元件信息
+     */
+    public Optional<PowerComponentInfo> getInfoForPos(BlockPos pos) {
+        return powerComponentInfoList.stream()
+            .filter(it -> it.pos().equals(pos))
+            .findFirst();
+    }
+
+    public boolean isOverloaded() {
+        return this.getConsume() > this.getGenerate();
     }
 
     public boolean shouldRender(Vec3 cameraPos) {
@@ -225,22 +257,30 @@ public class SimplePowerGrid {
         }
     }
 
-    private VoxelShape createMergedOutlineShape() {
-        return this.powerComponentInfoList.stream()
-            .map(it -> Shapes.box(
-                    -it.range(),
-                    -it.range(),
-                    -it.range(),
-                    it.range() + 1,
-                    it.range() + 1,
-                    it.range() + 1
-                ).move(
-                    this.offset(it.pos()).getX(),
-                    this.offset(it.pos()).getY(),
-                    this.offset(it.pos()).getZ()
-                )
-            ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR))
-            .orElse(Shapes.block());
+    private void createMergedOutlineShape() {
+        this.shapeFuture = EXECUTOR.submit(() -> {
+            List<VoxelShape> input = new ArrayList<>();
+            for (PowerComponentInfo it : powerComponentInfoList) {
+                Vec3 center = it.pos().getCenter();
+                float size = it.range() * 2 + 1;
+                input.add(Shapes.create(AABB.ofSize(center, size, size, size)));
+            }
+            Future<VoxelShape> future = ShapeUtil.threadedJoin(input, BooleanOp.OR, EXECUTOR);
+            try {
+                VoxelShape shape = future.get();
+                List<Line> lines = new ArrayList<>();
+                shape.forAllEdges((minX, minY, minZ, maxX, maxY, maxZ) -> {
+                    Vec3 min = new Vec3(minX, minY, minZ);
+                    Vec3 max = new Vec3(maxX, maxY, maxZ);
+                    lines.add(new Line(min, max, (float) min.distanceTo(max)));
+                });
+                this.powerGridBoundLines = lines;
+            } catch (Throwable e) {
+                if (e instanceof ExecutionException) {
+                    AnvilCraft.LOGGER.error("Exception thrown while building power grid shape.", e);
+                }
+            }
+        });
     }
 
     private @NotNull BlockPos offset(@NotNull BlockPos pos) {
@@ -251,7 +291,7 @@ public class SimplePowerGrid {
      * 寻找电网
      */
     public static Optional<SimplePowerGrid> findPowerGrid(BlockPos pos) {
-        for (SimplePowerGrid value : PowerGridRenderer.getGridMap().values()) {
+        for (SimplePowerGrid value : PowerGridClient.getGridMap().values()) {
             for (BlockPos block : value.blocks) {
                 if (block.equals(pos)) {
                     return Optional.of(value);
@@ -261,5 +301,16 @@ public class SimplePowerGrid {
         return Optional.empty();
     }
 
+    public void destroy() {
+        if (!shapeFuture.isDone()) {
+            shapeFuture.cancel(true);
+        }
+    }
 
+    public static void recreateExecutor() {
+        if (EXECUTOR != null) {
+            EXECUTOR.shutdownNow();
+        }
+        EXECUTOR = Executors.newThreadPerTaskExecutor(new VirtualThreadFactoryImpl());
+    }
 }

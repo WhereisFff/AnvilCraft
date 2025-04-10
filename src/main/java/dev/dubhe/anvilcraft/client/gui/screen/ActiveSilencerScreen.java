@@ -31,10 +31,10 @@ import java.util.regex.Pattern;
 public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencerMenu> {
 
     private static final ResourceLocation CONTAINER_LOCATION =
-            AnvilCraft.of("textures/gui/container/machine/background/active_silencer.png");
+        AnvilCraft.of("textures/gui/container/machine/background/active_silencer.png");
 
     public static final ResourceLocation ACTIVE_SILENCER_SLIDER =
-            AnvilCraft.of("textures/gui/container/machine/active_silencer_slider.png");
+        AnvilCraft.of("textures/gui/container/machine/active_silencer_slider.png");
 
     private static final int SCROLL_BAR_HEIGHT = 120;
     private static final int SCROLL_BAR_TOP_POS_Y = 35;
@@ -79,28 +79,28 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
         if (text.startsWith("#")) {
             String search = text.replaceFirst("#", "");
             allSounds.stream()
-                    .filter(it -> it.left().toString().contains(search))
-                    .filter(it ->
-                            mutedSounds.stream().noneMatch(it1 -> it1.left().equals(it.first())))
-                    .forEach(filteredSounds::add);
+                .filter(it -> it.left().toString().contains(search))
+                .filter(it ->
+                    mutedSounds.stream().noneMatch(it1 -> it1.left().equals(it.first())))
+                .forEach(filteredSounds::add);
         } else {
             if (text.startsWith("~")) {
                 try {
                     Pattern search = Pattern.compile(text.replaceFirst("~", ""));
                     allSounds.stream()
-                            .filter(it -> search.matcher(it.left().toString()).matches())
-                            .filter(it -> mutedSounds.stream()
-                                    .noneMatch(it1 -> it1.left().equals(it.first())))
-                            .forEach(filteredSounds::add);
+                        .filter(it -> search.matcher(it.left().toString()).matches())
+                        .filter(it -> mutedSounds.stream()
+                            .noneMatch(it1 -> it1.left().equals(it.first())))
+                        .forEach(filteredSounds::add);
                 } catch (Exception ignored) {
                     // intentionally empty
                 }
             }
             allSounds.stream()
-                    .filter(it -> it.right().getString().contains(filterText))
-                    .filter(it ->
-                            mutedSounds.stream().noneMatch(it1 -> it1.left().equals(it.first())))
-                    .forEach(filteredSounds::add);
+                .filter(it -> it.right().getString().contains(filterText))
+                .filter(it ->
+                    mutedSounds.stream().noneMatch(it1 -> it1.left().equals(it.first())))
+                .forEach(filteredSounds::add);
         }
     }
 
@@ -200,17 +200,17 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
         int buttonTop = topPos + 35;
         for (int l = 0; l < 8; ++l) {
             SilencerButton button = new SilencerButton(
-                    leftPos + START_LEFT_X,
-                    buttonTop,
-                    l,
-                    SOUND_FILTERED,
-                    b -> {
-                        if (b instanceof SilencerButton silencerButton) {
-                            onAllSoundButtonClick(silencerButton.getIndex());
-                        }
-                    },
-                    this,
-                    "add");
+                leftPos + START_LEFT_X,
+                buttonTop,
+                l,
+                SOUND_FILTERED,
+                b -> {
+                    if (b instanceof SilencerButton silencerButton) {
+                        onAllSoundButtonClick(silencerButton.getIndex());
+                    }
+                },
+                this,
+                "add");
             button.setWidth(112);
             this.allSoundButtons[l] = this.addRenderableWidget(button);
             buttonTop += 15;
@@ -219,66 +219,66 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
         buttonTop = topPos + 35;
         for (int l = 0; l < 8; ++l) {
             SilencerButton button = new SilencerButton(
-                    leftPos + START_RIGHT_X,
-                    buttonTop,
-                    l,
-                    SOUND_MUTED,
-                    b -> {
-                        if (b instanceof SilencerButton silencerButton) {
-                            onMutedSoundButtonClick(silencerButton.getIndex());
-                        }
-                    },
-                    this,
-                    "remove");
+                leftPos + START_RIGHT_X,
+                buttonTop,
+                l,
+                SOUND_MUTED,
+                b -> {
+                    if (b instanceof SilencerButton silencerButton) {
+                        onMutedSoundButtonClick(silencerButton.getIndex());
+                    }
+                },
+                this,
+                "remove");
             this.mutedSoundButtons[l] = this.addRenderableWidget(button);
             buttonTop += 15;
         }
 
         editBox = new EditBox(
-                this.minecraft.font,
-                leftPos + 78,
-                topPos + 19,
-                100,
-                12,
-                Component.translatable("screen.anvilcraft.active_silencer.search"));
+            this.minecraft.font,
+            leftPos + 78,
+            topPos + 19,
+            100,
+            12,
+            Component.translatable("screen.anvilcraft.active_silencer.search"));
         editBox.setResponder(this::onSearchTextChange);
         addRenderableWidget(editBox);
 
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         BuiltInRegistries.SOUND_EVENT.stream()
-                .map(it -> Pair.of(it.getLocation(), manager.getSoundEvent(it.getLocation())))
-                .filter(it -> it.second() != null)
-                .filter(it -> it.second().getSubtitle() != null)
-                .forEach(it -> allSounds.add(Pair.of(it.first(), it.second().getSubtitle())));
+            .map(it -> Pair.of(it.getLocation(), manager.getSoundEvent(it.getLocation())))
+            .filter(it -> it.second() != null)
+            .filter(it -> it.second().getSubtitle() != null)
+            .forEach(it -> allSounds.add(Pair.of(it.first(), it.second().getSubtitle())));
         filteredSounds.addAll(allSounds);
     }
 
     private boolean mouseInLeft(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + START_LEFT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     private boolean mouseInRight(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + START_RIGHT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     private boolean mouseInLeftSlider(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + SCROLL_BAR_START_LEFT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_LEFT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     private boolean mouseInRightSlider(double mouseX, double mouseY, int leftPos, int topPos) {
         return mouseX >= leftPos + SCROLL_BAR_START_RIGHT_X
-                && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
-                && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
-                && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
+            && mouseX <= leftPos + SCROLL_BAR_START_RIGHT_X + SCROLL_BAR_WIDTH
+            && mouseY >= topPos + SCROLL_BAR_TOP_POS_Y
+            && mouseY <= topPos + SCROLL_BAR_TOP_POS_Y + SCROLL_BAR_HEIGHT;
     }
 
     @Override
@@ -293,7 +293,7 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
             if (mouseInRight(mouseX, mouseY, leftPos, topPos)) {
                 if (this.mutedSounds.size() > 8) {
                     this.rightScrollOff =
-                            (int) Mth.clamp(this.rightScrollOff - pScrollY, 0, this.mutedSounds.size() - 7);
+                        (int) Mth.clamp(this.rightScrollOff - pScrollY, 0, this.mutedSounds.size() - 7);
                 }
             }
         }

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "anvilcraft:deflection_ring",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "half": "mid_center"
+              }
+            }
+          ],
+          "name": "anvilcraft:deflection_ring"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "anvilcraft:blocks/deflection_ring"
+}

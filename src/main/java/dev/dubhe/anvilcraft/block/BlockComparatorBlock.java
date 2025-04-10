@@ -21,6 +21,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -48,11 +49,11 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
     public BlockComparatorBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(
-                this.stateDefinition
-                        .any()
-                        .setValue(FACING, Direction.NORTH)
-                        .setValue(PRECISE, false)
-                        .setValue(POWERED, false)
+            this.stateDefinition
+                .any()
+                .setValue(FACING, Direction.NORTH)
+                .setValue(PRECISE, false)
+                .setValue(POWERED, false)
         );
     }
 
@@ -68,10 +69,10 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
 
     @Override
     public VoxelShape getShape(
-            BlockState state,
-            BlockGetter level,
-            BlockPos pos,
-            CollisionContext context
+        BlockState state,
+        BlockGetter level,
+        BlockPos pos,
+        CollisionContext context
     ) {
         return switch (state.getValue(HorizontalDirectionalBlock.FACING)) {
             case NORTH -> NORTH_MODEL;
@@ -128,12 +129,12 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
 
     @Override
     public BlockState updateShape(
-            BlockState blockState,
-            Direction direction,
-            BlockState blockState2,
-            LevelAccessor level,
-            BlockPos pos,
-            BlockPos pos2
+        BlockState blockState,
+        Direction direction,
+        BlockState blockState2,
+        LevelAccessor level,
+        BlockPos pos,
+        BlockPos pos2
     ) {
         Direction facing = blockState.getValue(FACING);
         if (direction.getAxis() == Direction.Axis.Y || direction.getAxis() == facing.getAxis()) return blockState;
@@ -177,5 +178,10 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
     @Override
     protected int getSignal(BlockState blockState, BlockGetter blockAccess, BlockPos pos, Direction side) {
         return blockState.getValue(POWERED) && blockState.getValue(FACING) == side ? 15 : 0;
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 }

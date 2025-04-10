@@ -29,12 +29,10 @@ public class ModelProviderUtil {
      */
     public static void bucket(DataGenContext<Item, ? extends BucketItem> ctx, RegistrateItemModelProvider provider) {
         provider.withExistingParent(
-                        ctx.getName(),
-                        ResourceLocation.parse("neoforge:item/bucket_drip"))
-                .texture("cover", ResourceLocation.parse("neoforge:item/mask/bucket_fluid_cover_drip"))
-                .customLoader((builder, helper) -> DynamicFluidContainerModelBuilder.begin(builder, helper)
-                        .fluid(ctx.get().content)
-                        .coverIsMask(true)
+                ctx.getName(),
+                ResourceLocation.parse("neoforge:item/bucket_drip"))
+            .customLoader((builder, helper) -> DynamicFluidContainerModelBuilder.begin(builder, helper)
+                .fluid(ctx.get().content)
             );
     }
 }

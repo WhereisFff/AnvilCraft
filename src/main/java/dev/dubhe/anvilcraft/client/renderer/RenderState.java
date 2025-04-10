@@ -15,18 +15,18 @@ public class RenderState {
     private static final Logger logger = LogUtils.getLogger();
 
     static {
-        IRIS_PRESENT = Util.isLoaded("iris");
+        IRIS_PRESENT = Util.isLoaded("iris") || Util.isLoaded("oculus");
     }
 
     public static boolean isIrisPresent() {
         return IRIS_PRESENT;
     }
 
-    public static void bloomStage(){
+    public static void bloomStage() {
         bloomRenderStage = true;
     }
 
-    public static void levelStage(){
+    public static void levelStage() {
         bloomRenderStage = false;
     }
 
@@ -34,7 +34,7 @@ public class RenderState {
         return !Minecraft.useShaderTransparency() && !IrisState.isShaderEnabled();
     }
 
-    public static boolean isBloomEffectEnabled(){
+    public static boolean isBloomEffectEnabled() {
         return AnvilCraft.config.renderBloomEffect;
     }
 

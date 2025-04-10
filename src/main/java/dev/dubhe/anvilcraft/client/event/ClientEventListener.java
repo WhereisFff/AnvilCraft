@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.network.ChangeEnchantmentSpacePacket;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
 
 import net.minecraft.client.Minecraft;
@@ -13,6 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.ClientTickEvent;
+import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -30,6 +32,15 @@ public class ClientEventListener {
             event.getPoseStack(),
             event.getCamera()
         );
+    }
+
+    @SubscribeEvent
+    public static void onRenderBlockOverlay(RenderBlockScreenEffectEvent event) {
+        if (event.getOverlayType() == RenderBlockScreenEffectEvent.OverlayType.BLOCK
+            && (event.getBlockState().is(ModBlocks.ACCELERATION_RING) || event.getBlockState().is(ModBlocks.DEFLECTION_RING))
+        ) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent

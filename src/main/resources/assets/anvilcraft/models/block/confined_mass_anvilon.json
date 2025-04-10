@@ -1,0 +1,11 @@
+{
+	"credit": "Made by XeKr with Blockbench",
+	"parent": "anvilcraft:block/confined_time_anvilon",
+	"ambientocclusion": false,
+	"render_type": "minecraft:cutout",
+	"textures": {
+		"0": "anvilcraft:block/confined_mass_anvilon",
+		"2": "anvilcraft:block/ember_metal_block_outline",
+		"particle": "anvilcraft:block/confined_mass_anvilon"
+	}
+}

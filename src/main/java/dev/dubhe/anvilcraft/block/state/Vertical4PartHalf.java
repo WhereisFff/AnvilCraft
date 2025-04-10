@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
-public enum Vertical4PartHalf implements IMultiplePartBlockState<Vertical4PartHalf> {
+public enum Vertical4PartHalf implements ISimpleMultiPartBlockState<Vertical4PartHalf> {
     TOP("top", 0, 3, 0),
     MID_UPPER("upper", 0, 2, 0),
     MID_LOWER("lower", 0, 1, 0),

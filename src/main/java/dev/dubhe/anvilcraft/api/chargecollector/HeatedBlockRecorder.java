@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.api.chargecollector;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelAccessor;
@@ -9,13 +8,13 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-
-import it.unimi.dsi.fastutil.Pair;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.stream.Collectors;
 
 public class HeatedBlockRecorder {
     private static final Map<LevelAccessor, HeatedBlockRecorder> INSTANCES = new HashMap<>();
@@ -65,7 +64,7 @@ public class HeatedBlockRecorder {
         int level = record.get(pos).addAndGet(1);
         irritateEntity.add(entity);
         Block heatedBlock = this.level.getBlockState(pos).getBlock();
-        while(true) {
+        while (true) {
             HeatingInfo info = TRANSFORMS.get(heatedBlock);
             if (info == null || info.nextTier == null || level < info.toNextTier) break;
             heatedBlock = info.nextTier;
@@ -98,7 +97,7 @@ public class HeatedBlockRecorder {
         if (record.containsKey(pos)) {
             int level = record.get(pos).get();
             Block heatedBlock = newState.getBlock();
-            while(true) {
+            while (true) {
                 HeatingInfo info = TRANSFORMS.get(heatedBlock);
                 if (info == null || info.nextTier == null || level < info.toNextTier) break;
                 heatedBlock = info.nextTier;
@@ -121,7 +120,7 @@ public class HeatedBlockRecorder {
         INSTANCES.clear();
     }
 
-    public record HeatingInfo(@Nullable Block nextTier, int toNextTier, int remainCurrentTier){
+    public record HeatingInfo(@Nullable Block nextTier, int toNextTier, int remainCurrentTier) {
 
     }
 }

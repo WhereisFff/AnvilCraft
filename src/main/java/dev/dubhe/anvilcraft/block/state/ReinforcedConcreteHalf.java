@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.block.state;
 
 import net.minecraft.util.StringRepresentable;
-
 import org.jetbrains.annotations.NotNull;
 
 public enum ReinforcedConcreteHalf implements StringRepresentable {

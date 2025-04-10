@@ -27,7 +27,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,7 +39,6 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     public static final int WIDTH = 162;
     public static final int HEIGHT = 128;
 
-    private final Lazy<IDrawable> background;
     private final IDrawable slot;
     private final IDrawable progressArrow;
     private final Component title;
@@ -51,7 +49,6 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     private final Map<BeaconConversionRecipe, LevelLike> cache = new HashMap<>();
 
     public BeaconConversionCategory(IGuiHelper helper) {
-        background = Lazy.of(() -> helper.createBlankDrawable(WIDTH, HEIGHT));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.beacon_conversion");
         activateTooltip = Component.translatable("gui.anvilcraft.category.beacon_conversion.activate")
@@ -75,8 +72,13 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background.get();
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override

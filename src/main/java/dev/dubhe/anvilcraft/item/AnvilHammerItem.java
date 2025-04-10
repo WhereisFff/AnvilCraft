@@ -4,12 +4,12 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.hammer.HammerManager;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiplePartBlock;
+import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.network.RocketJumpPacket;
-
+import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -33,22 +33,36 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-import org.jetbrains.annotations.NotNull;
-
+import javax.annotation.Nullable;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
-import static dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior.FACING;
-import static dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior.FACING_HOPPER;
-import static dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior.HORIZONTAL_FACING;
-
-public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles {
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class AnvilHammerItem extends Item implements Equipable {
+    public static final Property<?>[] SUPPORTED_PROPERTIES = {
+        BlockStateProperties.FACING,
+        BlockStateProperties.FACING_HOPPER,
+        BlockStateProperties.HORIZONTAL_FACING,
+        BlockStateProperties.ORIENTATION,
+        BlockStateProperties.AXIS,
+        BlockStateProperties.HORIZONTAL_AXIS
+    };
+    private static final List<Predicate<Player>> isWearingPredicates = new ArrayList<>();
     private final ItemAttributeModifiers modifiers;
+
+    static {
+        isWearingPredicates.add(player -> player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AnvilHammerItem);
+    }
 
     /**
      * 初始化铁砧锤
@@ -80,30 +94,35 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
         return 5;
     }
 
-    public Block getAnvil(){
+    public Block getAnvil() {
         return Blocks.ANVIL;
     }
 
-    private static void breakBlock(ServerPlayer player, BlockPos pos, @NotNull ServerLevel level, ItemStack tool) {
+    private static void breakBlock(ServerPlayer player, BlockPos pos, ServerLevel level, ItemStack tool) {
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
         if (!state.is(ModBlockTags.HAMMER_REMOVABLE) && !(block instanceof IHammerRemovable)) return;
-        if (block instanceof AbstractMultiplePartBlock<?> multiplePartBlock){
-            Vec3i offset = state.getValue(multiplePartBlock.getPart()).getOffset();
-            Vec3i offsetMainPart = multiplePartBlock.getMainPartOffset();
-            BlockPos posMainPart = pos.subtract(offset).offset(offsetMainPart);
+        if (block instanceof AbstractMultiPartBlock<?> multiplePartBlock) {
+            BlockPos posMainPart = multiplePartBlock.getMainPartPos(pos, state);
             BlockState stateMainPart = level.getBlockState(posMainPart);
-            if(stateMainPart.is(block)){
+            if (stateMainPart.is(block)) {
+                pos = posMainPart;
+                state = stateMainPart;
+            }
+        } else if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
+            && state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
+            BlockPos posMainPart = pos.below();
+            BlockState stateMainPart = level.getBlockState(posMainPart);
+            if (stateMainPart.is(block)) {
                 pos = posMainPart;
                 state = stateMainPart;
             }
         }
         BlockPos posToRemove = pos;
+        List<ItemStack> drops = player.isCreative() ? List.of() : BreakBlockUtil.dropSilkTouch(level, pos);
         block.playerWillDestroy(level, posToRemove, state, player);
         level.destroyBlock(posToRemove, false);
         if (player.isCreative()) return;
-        BlockEntity entity = state.hasBlockEntity() ? level.getBlockEntity(posToRemove) : null;
-        List<ItemStack> drops = Block.getDrops(state, level, posToRemove, entity, player, tool);
         if (!player.isAlive() && player.hasDisconnected()) {
             drops.forEach(drop -> Block.popResource(level, posToRemove, drop));
             state.spawnAfterBreak(level, posToRemove, tool, true);
@@ -118,18 +137,15 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
      */
     public static boolean ableToUseAnvilHammer(Level level, BlockPos blockPos, Player player) {
         BlockState state = level.getBlockState(blockPos);
-        return state.getBlock() instanceof IHammerRemovable
-            || state.getBlock() instanceof IHammerChangeable
-            || state.is(ModBlockTags.HAMMER_REMOVABLE)
-            || state.is(ModBlockTags.HAMMER_CHANGEABLE)
-            || player.getOffhandItem().is(Items.FIREWORK_ROCKET);
+        if (state.is(ModBlockTags.ANVIL_HAMMER_BLACKLIST)) return false;
+        if (state.getBlock() instanceof IHammerChangeable hammerChangeable) {
+            return hammerChangeable.checkBlockState(state);
+        }
+        return true;
     }
 
-    public static boolean possibleToUseEnhancedHammerChange(BlockState state) {
-        return state.getBlock() instanceof IHammerChangeable || state.is(ModBlockTags.HAMMER_CHANGEABLE);
-    }
-
-    public static Property<?> findChangeableProperty(BlockState state) {
+    @Nullable
+    public static Property<?> findModifyableProperty(BlockState state) {
         Property<?> result = null;
         if (state.getBlock() instanceof IHammerChangeable changeable) {
             result = changeable.getChangeableProperty(state);
@@ -137,21 +153,19 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
         if (result != null) {
             return result;
         }
-        if (state.hasProperty(FACING)) {
-            return FACING;
-        } else if (state.hasProperty(FACING_HOPPER)) {
-            return FACING_HOPPER;
-        } else if (state.hasProperty(HORIZONTAL_FACING)) {
-            return HORIZONTAL_FACING;
+        for (Property<?> supportedProperty : SUPPORTED_PROPERTIES) {
+            if (state.hasProperty(supportedProperty)) {
+                return supportedProperty;
+            }
         }
         return null;
     }
 
-    public static boolean dropAnvil(Player player, Level level, BlockPos blockPos) {
+    public static boolean dropAnvil(@Nullable Player player, Level level, BlockPos blockPos) {
         if (player == null || level.isClientSide) return false;
         ItemStack itemStack = player.getItemInHand(player.getUsedItemHand());
         Item item = itemStack.getItem();
-        if(!(item instanceof AnvilHammerItem anvilHammerItem)) return false;
+        if (!(item instanceof AnvilHammerItem anvilHammerItem)) return false;
         if (player.getCooldowns().isOnCooldown(anvilHammerItem)) {
             return false;
         }
@@ -170,7 +184,7 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
      * 右键方块
      */
     public static void useBlock(
-        @NotNull ServerPlayer player, BlockPos blockPos, @NotNull ServerLevel level, ItemStack anvilHammer) {
+        ServerPlayer player, BlockPos blockPos, ServerLevel level, ItemStack anvilHammer) {
         if (rocketJump(player, level, blockPos)) return;
         if (!player.getAbilities().mayBuild) return;
         if (player.isShiftKeyDown()) {
@@ -181,7 +195,7 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
         HammerManager.getChange(block).change(player, blockPos, level, anvilHammer);
     }
 
-    private static boolean rocketJump(ServerPlayer serverPlayer, ServerLevel level, BlockPos blockPos) {
+    private static boolean rocketJump(@Nullable ServerPlayer serverPlayer, ServerLevel level, BlockPos blockPos) {
         if (serverPlayer == null) return false;
         ItemStack itemStack = serverPlayer.getInventory().offhand.getFirst();
         if (!itemStack.is(Items.FIREWORK_ROCKET)) return false;
@@ -211,22 +225,22 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
 
     @Override
     public boolean canAttackBlock(
-        @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
+        BlockState state, Level level, BlockPos pos, Player player) {
         return !player.isCreative();
     }
 
     @Override
-    public float getDestroySpeed(@NotNull ItemStack stack, @NotNull BlockState state) {
+    public float getDestroySpeed(ItemStack stack, BlockState state) {
         return 1.0f;
     }
 
     @Override
     public boolean mineBlock(
-        @NotNull ItemStack stack,
-        @NotNull Level level,
-        @NotNull BlockState state,
-        @NotNull BlockPos pos,
-        @NotNull LivingEntity miningEntity) {
+        ItemStack stack,
+        Level level,
+        BlockState state,
+        BlockPos pos,
+        LivingEntity miningEntity) {
         if (state.getDestroySpeed(level, pos) != 0.0f) {
             stack.hurtAndBreak(2, miningEntity, LivingEntity.getSlotForHand(miningEntity.getUsedItemHand()));
         }
@@ -238,7 +252,7 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
     }
 
     @Override
-    public boolean hurtEnemy(@NotNull ItemStack stack, @NotNull LivingEntity target, @NotNull LivingEntity attacker) {
+    public boolean hurtEnemy(ItemStack stack, LivingEntity target, LivingEntity attacker) {
         stack.hurtAndBreak(1, attacker, LivingEntity.getSlotForHand(target.getUsedItemHand()));
         float damageBonus = calculateFallDamageBonus(attacker.fallDistance);
         Level level = target.level();
@@ -276,7 +290,20 @@ public class AnvilHammerItem extends Item implements Equipable, IEngineerGoggles
     }
 
     @Override
-    public @NotNull EquipmentSlot getEquipmentSlot() {
+    public EquipmentSlot getEquipmentSlot() {
         return EquipmentSlot.HEAD;
+    }
+
+    public static void addIsWearingPredicate(Predicate<Player> predicate) {
+        isWearingPredicates.add(predicate);
+    }
+
+    public static boolean isWearing(Player player) {
+        for (Predicate<Player> it : isWearingPredicates) {
+            if (it.test(player)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

@@ -1,8 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.init.ModComponents;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -23,9 +24,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -55,7 +53,7 @@ public class DiskItem extends Item {
 
     public static CompoundTag getData(ItemStack stack) {
         return stack.getOrDefault(ModComponents.DISK_DATA, new DiskData(new CompoundTag()))
-                .tag();
+            .tag();
     }
 
     /**
@@ -83,17 +81,17 @@ public class DiskItem extends Item {
 
     @Override
     public void appendHoverText(
-            @NotNull ItemStack stack,
-            @NotNull Item.TooltipContext context,
-            @NotNull List<Component> tooltipComponents,
-            @NotNull TooltipFlag isAdvanced) {
+        @NotNull ItemStack stack,
+        @NotNull Item.TooltipContext context,
+        @NotNull List<Component> tooltipComponents,
+        @NotNull TooltipFlag isAdvanced) {
         super.appendHoverText(stack, context, tooltipComponents, isAdvanced);
         if (hasDataStored(stack)) {
             ResourceLocation storedFrom = ResourceLocation.parse(getData(stack).getString("StoredFrom"));
             String name = Component.translatable("block.anvilcraft." + storedFrom.getPath())
-                    .getString();
+                .getString();
             tooltipComponents.add(Component.translatable("item.anvilcraft.disk.stored_from", name)
-                    .withStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+                .withStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
             tooltipComponents.add(TOOLTIP_CLEAR);
         } else {
             tooltipComponents.add(TOOLTIP_STORE);
@@ -137,7 +135,7 @@ public class DiskItem extends Item {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(
-            Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
+        Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
         if (!level.isClientSide && player.isShiftKeyDown()) {
             ItemStack itemStack = player.getItemInHand(usedHand);
             if (hasDataStored(itemStack)) {
@@ -165,11 +163,11 @@ public class DiskItem extends Item {
 
     public record DiskData(CompoundTag tag) {
         public static final Codec<DiskData> CODEC = RecordCodecBuilder.create(
-                ins -> ins.group(CompoundTag.CODEC.fieldOf("tag").forGetter(DiskData::tag))
-                        .apply(ins, DiskData::new));
+            ins -> ins.group(CompoundTag.CODEC.fieldOf("tag").forGetter(DiskData::tag))
+                .apply(ins, DiskData::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, DiskData> STREAM_CODEC =
-                StreamCodec.composite(ByteBufCodecs.COMPOUND_TAG, DiskData::tag, DiskData::new);
+            StreamCodec.composite(ByteBufCodecs.COMPOUND_TAG, DiskData::tag, DiskData::new);
 
         @Override
         public boolean equals(Object obj) {

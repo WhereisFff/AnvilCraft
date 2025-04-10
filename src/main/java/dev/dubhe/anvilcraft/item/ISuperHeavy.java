@@ -27,9 +27,9 @@ public interface ISuperHeavy {
         if (player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
         int superHeavyItemCount = hasSuperHeavyNumber(player);
         int amplifier = 0;
-        if(superHeavyItemCount > 64) amplifier = 3;
-        else if(superHeavyItemCount > 16) amplifier = 2;
-        else if(superHeavyItemCount > 4) amplifier = 1;
+        if (superHeavyItemCount > 64) amplifier = 3;
+        else if (superHeavyItemCount > 16) amplifier = 2;
+        else if (superHeavyItemCount > 4) amplifier = 1;
         MobEffectInstance slowness = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, amplifier, false, true);
         player.addEffect(slowness);
     }

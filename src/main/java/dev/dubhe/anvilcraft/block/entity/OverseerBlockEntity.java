@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.block.OverseerBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -15,7 +14,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-
 import org.jetbrains.annotations.NotNull;
 
 public class OverseerBlockEntity extends BlockEntity {
@@ -25,16 +23,16 @@ public class OverseerBlockEntity extends BlockEntity {
         this(ModBlockEntities.OVERSEER.get(), pos, blockState);
     }
 
+    private OverseerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+    }
+
     public static @NotNull OverseerBlockEntity createBlockEntity(
         BlockEntityType<?> type,
         BlockPos pos,
         BlockState blockState
     ) {
         return new OverseerBlockEntity(type, pos, blockState);
-    }
-
-    private OverseerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        super(type, pos, blockState);
     }
 
     /**
