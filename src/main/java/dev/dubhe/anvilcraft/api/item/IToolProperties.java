@@ -1,27 +1,23 @@
 package dev.dubhe.anvilcraft.api.item;
 
-import com.google.common.collect.Collections2;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import dev.dubhe.anvilcraft.util.CodecUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentMap;
-import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.component.PatchedDataComponentMap;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -38,7 +34,7 @@ public interface IToolProperties {
      *
      * @param phases 相
      */
-    record Multiphase(List<Phase> phases) {
+    record Multiphase(ImmutableList<Phase> phases) {
         public static final Component[] phaseSuffixes = new Component[] {
             Component.translatable("tooltip.anvilcraft.attribute.multiphase.alpha"),
             Component.translatable("tooltip.anvilcraft.attribute.multiphase.beta"),
@@ -46,23 +42,26 @@ public interface IToolProperties {
             Component.translatable("tooltip.anvilcraft.attribute.multiphase.delta")
         };
         public static final Multiphase EMPTY = new Multiphase(Lists.newArrayList(new Iterator<>() {
-            private int count = phaseSuffixes.length;
+            private int count = 0;
 
             @Override
             public boolean hasNext() {
-                return count > 0;
+                return count < phaseSuffixes.length;
             }
 
             @Override
             public Phase next() {
-                this.count--;
-                return Phase.EMPTY;
+                return Phase.EMPTY.withCustomName(Component.literal("Empty").copy().append(phaseSuffixes[this.count++]));
             }
         }));
 
         public static final Codec<Multiphase> CODEC = Codec.list(Phase.CODEC).xmap(Multiphase::new, Multiphase::phases);
         public static final StreamCodec<RegistryFriendlyByteBuf, Multiphase> STREAM_CODEC =
             StreamCodec.of(Multiphase::encode, Multiphase::decode);
+
+        public Multiphase(List<Phase> phases) {
+            this(ImmutableList.copyOf(phases));
+        }
 
         /**
          * 构建一个全新的多相<br>
@@ -74,7 +73,9 @@ public interface IToolProperties {
          */
         public static Multiphase make(Component customName, @Nullable ItemEnchantments enchantments) {
             MutableComponent customNameExtra = customName.copy();
-            List<Phase> phases = Lists.newArrayList(Phase.make(customNameExtra.append(phaseSuffixes[0]), enchantments));
+            List<Phase> phases = Lists.newArrayList(
+                Phase.make(customNameExtra.append(phaseSuffixes[0]), enchantments == null ? ItemEnchantments.EMPTY : enchantments)
+            );
             for (int i = 1; i < phaseSuffixes.length; i++) {
                 phases.add(Phase.EMPTY.withCustomName(customNameExtra.append(phaseSuffixes[i])));
             }
@@ -89,19 +90,26 @@ public interface IToolProperties {
          * @return 一个全新的多相
          */
         @SafeVarargs
-        public static Multiphase make(Item original, Pair<Component, @Nullable ItemEnchantments>... dataPairs) {
+        public static Multiphase make(ItemStack original, Pair<Component, @Nullable ItemEnchantments>... dataPairs) {
             List<Phase> phases = new ArrayList<>();
             for (int i = 0; i < phaseSuffixes.length; i++) {
-                Pair<Component, ItemEnchantments> dataPair = dataPairs[i];
-                if (dataPair != null) {
-                    MutableComponent customNameExtra = dataPair.getFirst().copy();
-                    phases.add(Phase.make(
-                        customNameExtra.append(phaseSuffixes[i]),
-                        dataPair.getSecond() == null ? ItemEnchantments.EMPTY : dataPair.getSecond()
-                    ));
+                if (i < dataPairs.length) {
+                    Pair<Component, ItemEnchantments> dataPair = dataPairs[i];
+                    if (dataPair != null) {
+                        MutableComponent customNameExtra = dataPair.getFirst().copy();
+                        phases.add(Phase.make(
+                            customNameExtra.append(phaseSuffixes[i]),
+                            dataPair.getSecond() == null ? ItemEnchantments.EMPTY : dataPair.getSecond()
+                        ));
+                    } else {
+                        phases.add(Phase.make(
+                            original.getDisplayName().copy().append(phaseSuffixes[i]),
+                            ItemEnchantments.EMPTY
+                        ));
+                    }
                 } else {
                     phases.add(Phase.make(
-                        original.getDescription().copy().append(phaseSuffixes[i]),
+                        original.getDisplayName().copy().append(phaseSuffixes[i]),
                         ItemEnchantments.EMPTY
                     ));
                 }
@@ -109,36 +117,42 @@ public interface IToolProperties {
             return new Multiphase(phases);
         }
 
-        public Multiphase switchSpaces() {
-            List<Phase> allExceptFirst = this.phases.subList(1, this.phases.size() - 1);
-            allExceptFirst.add(this.phases.getFirst());
-            return new Multiphase(allExceptFirst);
+        public Component getCustomName() {
+            return this.phases.getFirst().customName;
         }
 
-        private static void encode(RegistryFriendlyByteBuf buf, Multiphase value) {
-            buf.writeCollection(value.phases, Phase.STREAM_CODEC);
+        public ItemEnchantments getEnchantments() {
+            return this.phases.getFirst().enchantments;
+        }
+
+        public Multiphase cyclePhases() {
+            List<Phase> phases = new ArrayList<>(this.phases);
+            Phase first = phases.removeFirst();
+            phases.add(first);
+            return new Multiphase(phases);
+        }
+
+        private static void encode(RegistryFriendlyByteBuf buf, Multiphase multiphase) {
+            CodecUtil.writeCollectionWithRegistries(buf, multiphase.phases, Phase.STREAM_CODEC);
         }
 
         private static Multiphase decode(RegistryFriendlyByteBuf buf) {
-            return new Multiphase(buf.readCollection(ArrayList::new, Phase.STREAM_CODEC));
+            return new Multiphase(CodecUtil.readListWithRegistries(buf, Phase.STREAM_CODEC));
         }
     }
 
-    record Phase(Component customName, PatchedDataComponentMap enchantments) {
-        public static final DataComponentMap PROTOTYPE = DataComponentMap.builder()
-            .set(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY)
-            .build();
-        public static final Phase EMPTY = new Phase(Component.empty(), new PatchedDataComponentMap(PROTOTYPE));
+    record Phase(@NotNull Component customName, @NotNull ItemEnchantments enchantments) {
+        public static final Phase EMPTY = new Phase(Component.empty(), ItemEnchantments.EMPTY);
 
-        public static final Codec<Phase> CODEC = CompoundTag.CODEC.xmap(Phase::decode, Phase::encode);
-        public static final StreamCodec<ByteBuf, Phase> STREAM_CODEC = ByteBufCodecs.COMPOUND_TAG.map(
-            Phase::decode, Phase::encode
-        );
+        public static final Codec<Phase> CODEC = Codec.pair(ComponentSerialization.FLAT_CODEC, ItemEnchantments.CODEC)
+            .xmap(
+                pair -> new Phase(pair.getFirst(), pair.getSecond()),
+                phase -> new Pair<>(phase.customName, phase.enchantments)
+            );
+        public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = StreamCodec.of(Phase::encode, Phase::decode);
 
         public static Phase make(Component customName, @Nullable ItemEnchantments enchantments) {
-            PatchedDataComponentMap prototype = new PatchedDataComponentMap(PROTOTYPE);
-            prototype.set(DataComponents.ENCHANTMENTS, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
-            return new Phase(customName, prototype);
+            return new Phase(customName, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
         }
 
         public Phase withCustomName(Component customName) {
@@ -150,8 +164,7 @@ public interface IToolProperties {
         }
 
         public Phase addEnchantments(ItemEnchantments enchantments) {
-            ItemEnchantments original = this.enchantments.get(DataComponents.ENCHANTMENTS);
-            assert original != null;
+            ItemEnchantments original = this.enchantments;
             ItemEnchantments.Mutable originalMut = new ItemEnchantments.Mutable(original);
             for (Holder<Enchantment> enchantmentHolder : enchantments.keySet()) {
                 if (original.keySet().contains(enchantmentHolder)) {
@@ -165,27 +178,16 @@ public interface IToolProperties {
             return make(this.customName, originalMut.toImmutable());
         }
 
-        public static CompoundTag encode(Phase space) {
-            CompoundTag root = new CompoundTag();
-
-            root.putString("customName", space.customName.toString());
-
-            CompoundTag enchantments = new CompoundTag();
-            DataComponentPatch.CODEC.encode(space.enchantments.asPatch(), NbtOps.INSTANCE, enchantments);
-            root.put("Enchantments", enchantments);
-
-            return root;
+        private static void encode(RegistryFriendlyByteBuf buf, Phase phase) {
+            ComponentSerialization.STREAM_CODEC.encode(buf, phase.customName);
+            ItemEnchantments.STREAM_CODEC.encode(buf, phase.enchantments);
         }
 
-        public static Phase decode(CompoundTag root) {
-            Component customName = ComponentSerialization.CODEC.decode(NbtOps.INSTANCE, root.get("customName"))
-                .getOrThrow().getFirst();
-
-            DataComponentPatch enchantmentsPatch = DataComponentPatch.CODEC.decode(NbtOps.INSTANCE, root.getCompound("Enchantments"))
-                .getOrThrow().getFirst();
-            PatchedDataComponentMap enchantments = PatchedDataComponentMap.fromPatch(PROTOTYPE, enchantmentsPatch);
-
-            return new Phase(customName, enchantments);
+        private static Phase decode(RegistryFriendlyByteBuf buf) {
+            return new Phase(
+                ComponentSerialization.STREAM_CODEC.decode(buf),
+                ItemEnchantments.STREAM_CODEC.decode(buf)
+            );
         }
     }
 }

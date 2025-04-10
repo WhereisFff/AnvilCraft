@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -14,6 +16,8 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.codec.StreamDecoder;
+import net.minecraft.network.codec.StreamEncoder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -23,7 +27,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
+import java.util.function.IntFunction;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CodecUtil {
@@ -135,4 +142,33 @@ public class CodecUtil {
             (buf, blockState) -> buf.writeInt(Block.getId(blockState)),
             (buf) -> Block.stateById(buf.readInt())
         );
+
+    public static <T> void writeCollectionWithRegistries(
+        RegistryFriendlyByteBuf buf, Collection<T> collection, StreamEncoder<? super RegistryFriendlyByteBuf, T> elementWriter
+    ) {
+        buf.writeVarInt(collection.size());
+
+        for (T t : collection) {
+            elementWriter.encode(buf, t);
+        }
+    }
+
+    public static <T, C extends Collection<T>> C readCollectionWithRegistries(
+        RegistryFriendlyByteBuf buf, IntFunction<C> collectionFactory, StreamDecoder<? super RegistryFriendlyByteBuf, T> elementReader
+    ) {
+        int i = buf.readVarInt();
+        C c = collectionFactory.apply(i);
+
+        for (int j = 0; j < i; j++) {
+            c.add(elementReader.decode(buf));
+        }
+
+        return c;
+    }
+
+    public static <T> List<T> readListWithRegistries(
+        RegistryFriendlyByteBuf buf, StreamDecoder<? super RegistryFriendlyByteBuf, T> elementReader
+    ) {
+        return readCollectionWithRegistries(buf, Lists::newArrayListWithCapacity, elementReader);
+    }
 }

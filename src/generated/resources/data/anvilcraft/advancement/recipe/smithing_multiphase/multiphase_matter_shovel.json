@@ -1,13 +1,7 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_the_recipe": {
-      "conditions": {
-        "recipe": "anvilcraft:multiphase_matter_axe"
-      },
-      "trigger": "minecraft:recipe_unlocked"
-    },
-    "hasitem": {
+    "has_multiphase_matter": {
       "conditions": {
         "items": [
           {
@@ -16,17 +10,23 @@
         ]
       },
       "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "anvilcraft:smithing_multiphase/multiphase_matter_shovel"
+      },
+      "trigger": "minecraft:recipe_unlocked"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "hasitem"
+      "has_multiphase_matter"
     ]
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:multiphase_matter_axe"
+      "anvilcraft:smithing_multiphase/multiphase_matter_shovel"
     ]
   }
 }

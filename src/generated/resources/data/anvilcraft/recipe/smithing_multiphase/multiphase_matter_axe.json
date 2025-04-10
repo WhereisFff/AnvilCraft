@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:smithing_multiphase",
+  "addition": {
+    "item": "anvilcraft:ember_metal_axe"
+  },
+  "base": {
+    "item": "anvilcraft:ember_metal_axe"
+  },
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:multiphase_matter_axe"
+  },
+  "template": []
+}

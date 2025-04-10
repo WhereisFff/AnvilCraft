@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.init;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import dev.dubhe.anvilcraft.recipe.SmithingMultiphaseRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BoilingRecipe;
@@ -149,6 +150,9 @@ public class ModRecipeTypes {
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CanningFoodRecipe>> CANNING_FOOD_SERIALIZER =
         RECIPE_SERIALIZERS.register("canning_food", () -> new SimpleCraftingRecipeSerializer<>(CanningFoodRecipe::new));
+
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SmithingMultiphaseRecipe>> SMITHING_MULTIPHASE_SERIALIZER =
+        RECIPE_SERIALIZERS.register("smithing_multiphase", SmithingMultiphaseRecipe.Serializer::new);
 
     private static <T extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<T>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> new RecipeType<>() {

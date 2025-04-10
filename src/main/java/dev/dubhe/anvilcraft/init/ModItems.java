@@ -72,6 +72,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
+import net.minecraft.data.recipes.SmithingTrimRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ArmorItem;
@@ -364,16 +365,6 @@ public class ModItems {
         .register();
     public static final ItemEntry<MultiphaseMatterPickaxeItem> MULTIPHASE_MATTER_PICKAXE = REGISTRATE
         .item("multiphase_matter_pickaxe", MultiphaseMatterPickaxeItem::new)
-        .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern("AAA")
-                .pattern(" B ")
-                .pattern(" B ")
-                .define('A', ModItems.MULTIPHASE_MATTER)
-                .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
-                .save(provider);
-        })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.PICKAXES,
              ModItemTags.EXPLOSION_PROOF,
@@ -381,62 +372,22 @@ public class ModItems {
         .register();
     public static final ItemEntry<MultiphaseMatterAxeItem> MULTIPHASE_MATTER_AXE = REGISTRATE
         .item("multiphase_matter_axe", MultiphaseMatterAxeItem::new)
-        .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern("AA ")
-                .pattern("AB ")
-                .pattern(" B ")
-                .define('A', ModItems.MULTIPHASE_MATTER)
-                .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
-                .save(provider);
-        })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.AXES,
              Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<MultiphaseMatterShovelItem> MULTIPHASE_MATTER_SHOVEL = REGISTRATE
         .item("multiphase_matter_shovel", MultiphaseMatterShovelItem::new)
-        .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern(" A ")
-                .pattern(" B ")
-                .pattern(" B ")
-                .define('A', ModItems.MULTIPHASE_MATTER)
-                .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
-                .save(provider);
-        })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.SHOVELS)
         .register();
     public static final ItemEntry<MultiphaseMatterHoeItem> MULTIPHASE_MATTER_HOE = REGISTRATE
         .item("multiphase_matter_hoe", MultiphaseMatterHoeItem::new)
-        .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern("AA ")
-                .pattern(" B ")
-                .pattern(" B ")
-                .define('A', ModItems.MULTIPHASE_MATTER)
-                .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
-                .save(provider);
-        })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.HOES)
         .register();
     public static final ItemEntry<MultiphaseMatterSwordItem> MULTIPHASE_MATTER_SWORD = REGISTRATE
         .item("multiphase_matter_sword", MultiphaseMatterSwordItem::new)
-        .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern(" A ")
-                .pattern(" A ")
-                .pattern(" B ")
-                .define('A', ModItems.MULTIPHASE_MATTER)
-                .define('B', Items.STICK)
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.MULTIPHASE_MATTER))
-                .save(provider);
-        })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.SWORDS,
              Tags.Items.MELEE_WEAPON_TOOLS)

@@ -44,7 +44,7 @@ public record SwitchPhasePacket() implements CustomPacketPayload {
                 .orElse(ItemStack.EMPTY);
             if (itemInHand.isEmpty()) return;
             try {
-                itemInHand.set(ModComponents.MULTIPHASE, Objects.requireNonNull(itemInHand.get(ModComponents.MULTIPHASE)).switchSpaces());
+                itemInHand.set(ModComponents.MULTIPHASE, Objects.requireNonNull(itemInHand.get(ModComponents.MULTIPHASE)).cyclePhases());
             } catch (NullPointerException ignored) {
             }
         });
