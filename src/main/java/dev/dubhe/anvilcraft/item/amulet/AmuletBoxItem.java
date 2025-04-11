@@ -20,7 +20,7 @@ import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class      AmuletBoxItem extends Item {
+public class AmuletBoxItem extends Item {
     public AmuletBoxItem(Properties properties) {
         super(properties.component(ModComponents.TOTEM_COUNT, 0));
     }

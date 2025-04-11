@@ -117,7 +117,9 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         RandomSource random) {
         super.tick(state, level, pos, random);
         if (!state.getValue(TRIGGERED)) return;
-        if (!level.hasNeighborSignal(pos)) level.setBlock(pos, state.setValue(TRIGGERED, false), 2);
+        if (!BlockPlacerBlock.hasNeighborSignal(level, pos, state.getValue(FACING))) {
+            level.setBlock(pos, state.setValue(TRIGGERED, false), 2);
+        }
     }
 
     @Override
@@ -135,8 +137,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
 
     private void checkIfTriggered(Level level, BlockState blockState, BlockPos blockPos) {
         boolean bl = blockState.getValue(TRIGGERED);
-        BlockState changedState = blockState.setValue(TRIGGERED, !bl);
-        if (bl != level.hasNeighborSignal(blockPos)) {
+        if (bl != BlockPlacerBlock.hasNeighborSignal(level, blockPos, blockState.getValue(FACING))) {
+            BlockState changedState = blockState.setValue(TRIGGERED, !bl);
             level.setBlock(blockPos, changedState, 2);
             if (!bl) {
                 devourBlock((ServerLevel) level, blockPos, blockState.getValue(FACING), 1);
