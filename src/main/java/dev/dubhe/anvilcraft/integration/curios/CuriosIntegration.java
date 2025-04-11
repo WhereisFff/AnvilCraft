@@ -44,7 +44,7 @@ public class CuriosIntegration {
         InventoryUtil.compatConsumer = InventoryUtil.compatConsumer.andThen(
             (items, living) -> CuriosApi.getCuriosInventory(living).ifPresent(
                 handler -> handler.findCurios(stack -> true)
-                    .forEach(result -> items.offerLast(result.stack()))
+                    .forEach(result -> items.add(result.stack()))
             )
         );
         AmuletUtil.hasAmuletInInventory = AmuletUtil.hasAmuletInInventory.or((player, type) -> {
