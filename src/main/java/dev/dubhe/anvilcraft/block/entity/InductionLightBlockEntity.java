@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import dev.dubhe.anvilcraft.api.SummoningManager;
+import dev.dubhe.anvilcraft.api.SpawningManager;
 import dev.dubhe.anvilcraft.api.RipeningManager;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -48,7 +48,7 @@ public class InductionLightBlockEntity extends BlockEntity implements IPowerCons
         if (color == LightColor.PINK) {
             RipeningManager.addLightBlock(getBlockPos(), level);
         } else if (color == LightColor.YELLOW || color == LightColor.DARK) {
-            SummoningManager.addLightBlock(getBlockPos(), level);
+            SpawningManager.addLightBlock(getBlockPos(), level);
         }
     }
 

@@ -3,18 +3,16 @@ package dev.dubhe.anvilcraft.api;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.InductionLightBlock;
 import dev.dubhe.anvilcraft.block.entity.InductionLightBlockEntity;
-import dev.dubhe.anvilcraft.util.AabbUtil;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.SectionPos;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
+import net.neoforged.neoforge.event.entity.living.MobSpawnEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -25,37 +23,38 @@ import java.util.Map;
 import java.util.Set;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
-public class SummoningManager {
-    private static final Map<Level, SummoningManager> INSTANCES = new HashMap<>();
+public class SpawningManager {
+    private static final Map<Level, SpawningManager> INSTANCES = new HashMap<>();
 
     private final Set<BlockPos> lightBlocks = Collections.synchronizedSet(new HashSet<>());
 
     /**
      * 获取当前维度实体生成实例
      */
-    public static SummoningManager getInstance(Level level) {
+    public static SpawningManager getInstance(Level level) {
         if (!INSTANCES.containsKey(level)) {
-            INSTANCES.put(level, new SummoningManager());
+            INSTANCES.put(level, new SpawningManager());
         }
         return INSTANCES.get(level);
     }
 
-    public SummoningManager() {
+    public SpawningManager() {
     }
 
     /**
      *
      */
     public static void addLightBlock(BlockPos pos, Level level) {
-        SummoningManager inst = SummoningManager.getInstance(level);
+        SpawningManager inst = SpawningManager.getInstance(level);
         inst.lightBlocks.add(pos);
     }
 
     @SubscribeEvent
-    private static void blockEntitySummon(@NotNull EntityJoinLevelEvent event) {
+    private static void blockEntitySummon(@NotNull MobSpawnEvent.PositionCheck event) {
+        if (!event.getSpawnType().equals(MobSpawnType.NATURAL)) return;
         Entity entity = event.getEntity();
         Level level = entity.level();
-        SummoningManager instance = getInstance(level);
+        SpawningManager instance = getInstance(level);
 
         Iterator<BlockPos> it = instance.lightBlocks.iterator();
         while (it.hasNext()) {
@@ -72,7 +71,7 @@ public class SummoningManager {
                     && ((InductionLightBlock.canBlockMobSummoning(lightBlockState) && entity instanceof Monster)
                         || (InductionLightBlock.canBlockAnimalSummoning(lightBlockState) && entity instanceof Animal))
                 ) {
-                    event.setCanceled(true);
+                    event.setResult(MobSpawnEvent.PositionCheck.Result.FAIL);
                 }
             } else {
                 it.remove();
