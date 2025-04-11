@@ -52,6 +52,8 @@ public class SpawningManager {
     @SubscribeEvent
     private static void blockEntitySummon(@NotNull MobSpawnEvent.PositionCheck event) {
         if (!event.getSpawnType().equals(MobSpawnType.NATURAL)) return;
+        if (!event.getSpawnType().equals(MobSpawnType.CHUNK_GENERATION)) return;
+        if (!event.getSpawnType().equals(MobSpawnType.PATROL)) return;
         Entity entity = event.getEntity();
         Level level = entity.level();
         SpawningManager instance = getInstance(level);
