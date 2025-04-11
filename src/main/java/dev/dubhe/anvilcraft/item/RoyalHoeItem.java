@@ -16,7 +16,6 @@ public class RoyalHoeItem extends HoeItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(Tiers.DIAMOND, -3, 0))
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

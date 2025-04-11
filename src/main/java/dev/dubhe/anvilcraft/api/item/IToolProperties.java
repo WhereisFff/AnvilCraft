@@ -5,14 +5,11 @@ import com.google.common.collect.Lists;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.util.CodecUtil;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -21,9 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.function.Function;
 
 /**
  * 特殊工具属性
@@ -35,11 +32,11 @@ public interface IToolProperties {
      * @param phases 相
      */
     record Multiphase(ImmutableList<Phase> phases) {
-        public static final Component[] phaseSuffixes = new Component[] {
-            Component.translatable("tooltip.anvilcraft.attribute.multiphase.alpha"),
-            Component.translatable("tooltip.anvilcraft.attribute.multiphase.beta"),
-            Component.translatable("tooltip.anvilcraft.attribute.multiphase.gamma"),
-            Component.translatable("tooltip.anvilcraft.attribute.multiphase.delta")
+        public static final Component[] phaseSuffixes = {
+            Component.translatable("tooltip.anvilcraft.property.multiphase.alpha"),
+            Component.translatable("tooltip.anvilcraft.property.multiphase.beta"),
+            Component.translatable("tooltip.anvilcraft.property.multiphase.gamma"),
+            Component.translatable("tooltip.anvilcraft.property.multiphase.delta")
         };
         public static final Multiphase EMPTY = new Multiphase(Lists.newArrayList(new Iterator<>() {
             private int count = 0;
@@ -51,7 +48,9 @@ public interface IToolProperties {
 
             @Override
             public Phase next() {
-                return Phase.EMPTY.withCustomName(Component.literal("Empty").copy().append(phaseSuffixes[this.count++]));
+                return Phase.EMPTY.withCustomName(
+                    Component.literal("Empty").append(phaseSuffixes[this.count++])
+                );
             }
         }));
 
@@ -68,16 +67,36 @@ public interface IToolProperties {
          * 该方法目前仅用于多相工具
          *
          * @param customName 原始名称，不含后缀
+         * @return 一个全新的多相
+         */
+        public static Multiphase make(Component customName) {
+            List<Phase> phases = new ArrayList<>();
+            for (Component phaseSuffix : phaseSuffixes) {
+                phases.add(Phase.EMPTY.withCustomName(
+                    customName.copy().append(phaseSuffix)
+                ));
+            }
+            return new Multiphase(phases);
+        }
+
+        /**
+         * 构建一个全新的多相<br>
+         *
+         * @param customName 原始名称，不含后缀
          * @param enchantments 初始附魔，用于第一个相
          * @return 一个全新的多相
          */
         public static Multiphase make(Component customName, @Nullable ItemEnchantments enchantments) {
-            MutableComponent customNameExtra = customName.copy();
             List<Phase> phases = Lists.newArrayList(
-                Phase.make(customNameExtra.append(phaseSuffixes[0]), enchantments == null ? ItemEnchantments.EMPTY : enchantments)
+                Phase.make(
+                    customName.copy().append(phaseSuffixes[0]),
+                    enchantments == null ? ItemEnchantments.EMPTY : enchantments
+                )
             );
             for (int i = 1; i < phaseSuffixes.length; i++) {
-                phases.add(Phase.EMPTY.withCustomName(customNameExtra.append(phaseSuffixes[i])));
+                phases.add(Phase.EMPTY.withCustomName(
+                    customName.copy().append(phaseSuffixes[i])
+                ));
             }
             return new Multiphase(phases);
         }
@@ -96,20 +115,19 @@ public interface IToolProperties {
                 if (i < dataPairs.length) {
                     Pair<Component, ItemEnchantments> dataPair = dataPairs[i];
                     if (dataPair != null) {
-                        MutableComponent customNameExtra = dataPair.getFirst().copy();
                         phases.add(Phase.make(
-                            customNameExtra.append(phaseSuffixes[i]),
+                            dataPair.getFirst().copy().append(phaseSuffixes[i]),
                             dataPair.getSecond() == null ? ItemEnchantments.EMPTY : dataPair.getSecond()
                         ));
                     } else {
                         phases.add(Phase.make(
-                            original.getDisplayName().copy().append(phaseSuffixes[i]),
+                            original.getHoverName().copy().append(phaseSuffixes[i]),
                             ItemEnchantments.EMPTY
                         ));
                     }
                 } else {
                     phases.add(Phase.make(
-                        original.getDisplayName().copy().append(phaseSuffixes[i]),
+                        original.getHoverName().copy().append(phaseSuffixes[i]),
                         ItemEnchantments.EMPTY
                     ));
                 }

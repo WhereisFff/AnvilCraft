@@ -16,7 +16,6 @@ public class RoyalSwordItem extends SwordItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(Tiers.DIAMOND, 3, -2.4f))
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

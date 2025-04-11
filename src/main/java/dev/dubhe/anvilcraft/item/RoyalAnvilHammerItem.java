@@ -17,7 +17,7 @@ public class RoyalAnvilHammerItem extends AnvilHammerItem {
      * @param properties 物品属性
      */
     public RoyalAnvilHammerItem(Properties properties) {
-        super(properties.component(ModComponents.TOUGH, Unit.INSTANCE));
+        super(properties);
     }
 
     @Override

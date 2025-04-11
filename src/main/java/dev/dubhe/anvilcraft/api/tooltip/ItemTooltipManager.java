@@ -154,13 +154,10 @@ public class ItemTooltipManager {
     public static void addTooltip(ItemStack stack, List<Component> tooltip) {
         Item item = stack.getItem();
         if (stack.get(ModComponents.FIRE_REFORGING) != null) {
-            attributeTooltip("fire_reforging", tooltip);
-        }
-        if (stack.get(ModComponents.TOUGH) != null) {
-            attributeTooltip("tough", tooltip);
+            propertyTooltip("fire_reforging", tooltip);
         }
         if (stack.get(ModComponents.MULTIPHASE) != null) {
-            attributeTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
+            propertyTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));
@@ -184,7 +181,7 @@ public class ItemTooltipManager {
         return "tooltip.%s.item.%s".formatted(key.getNamespace(), key.getPath());
     }
 
-    private static void attributeTooltip(String attributeName, List<Component> tooltip) {
+    private static void propertyTooltip(String propertyName, List<Component> tooltip) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
@@ -194,11 +191,11 @@ public class ItemTooltipManager {
         }
         tooltip.add(
             1 + i,
-            Component.translatable("tooltip.anvilcraft.attribute.%s".formatted(attributeName)).withStyle(ChatFormatting.GOLD)
+            Component.translatable("tooltip.anvilcraft.property.%s".formatted(propertyName)).withStyle(ChatFormatting.GOLD)
         );
     }
 
-    private static void attributeTooltip(String attributeName, List<Component> tooltip, Object... args) {
+    private static void propertyTooltip(String propertyName, List<Component> tooltip, Object... args) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
@@ -208,7 +205,7 @@ public class ItemTooltipManager {
         }
         tooltip.add(
             1 + i,
-            Component.translatable("tooltip.anvilcraft.attribute.%s".formatted(attributeName), args).withStyle(ChatFormatting.GOLD)
+            Component.translatable("tooltip.anvilcraft.property.%s".formatted(propertyName), args).withStyle(ChatFormatting.GOLD)
         );
     }
 }

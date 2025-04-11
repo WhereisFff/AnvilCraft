@@ -57,8 +57,6 @@ public class ModComponents {
 
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
-    public static final DataComponentType<Unit> TOUGH = registerEmpty("tough");
-
     public static final DataComponentType<IToolProperties.Multiphase> MULTIPHASE =
         register("multiphase", b -> b.persistent(IToolProperties.Multiphase.CODEC)
             .networkSynchronized(IToolProperties.Multiphase.STREAM_CODEC));

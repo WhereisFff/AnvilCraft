@@ -16,7 +16,6 @@ public class RoyalShovelItem extends ShovelItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(Tiers.DIAMOND, 1.5f, -3.0f))
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

@@ -15,7 +15,6 @@ public class RoyalAxeItem extends AxeItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(ModTiers.AMETHYST, 5, -3.0f))
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

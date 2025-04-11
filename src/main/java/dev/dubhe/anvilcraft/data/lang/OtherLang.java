@@ -43,13 +43,12 @@ public class OtherLang {
         provider.add("death.attack.anvilcraft.laser", "%1$s was pierced by laser");
         provider.add("death.attack.anvilcraft.lost_in_time", "%1$s was lost in the river of time");
 
-        provider.add("tooltip.anvilcraft.attribute.fire_reforging", "Reforging: mending in fire or lava");
-        provider.add("tooltip.anvilcraft.attribute.tough", "Tough: make unbreaking enchantment stronger");
-        provider.add("tooltip.anvilcraft.attribute.multiphase", "Multiphase: press [%s] to switch phases");
-        provider.add("tooltip.anvilcraft.attribute.multiphase.alpha", "-α");
-        provider.add("tooltip.anvilcraft.attribute.multiphase.beta", "-β");
-        provider.add("tooltip.anvilcraft.attribute.multiphase.gamma", "-γ");
-        provider.add("tooltip.anvilcraft.attribute.multiphase.delta", "-δ");
+        provider.add("tooltip.anvilcraft.property.fire_reforging", "Reforging: mending in fire or lava");
+        provider.add("tooltip.anvilcraft.property.multiphase", "Multiphase: press [%s] to switch phases");
+        provider.add("tooltip.anvilcraft.property.multiphase.alpha", "-α");
+        provider.add("tooltip.anvilcraft.property.multiphase.beta", "-β");
+        provider.add("tooltip.anvilcraft.property.multiphase.gamma", "-γ");
+        provider.add("tooltip.anvilcraft.property.multiphase.delta", "-δ");
 
         provider.add("key.categories.anvilcraft", "AnvilCraft");
         provider.add("key.anvilcraft.switch_phase", "Switch Phase");

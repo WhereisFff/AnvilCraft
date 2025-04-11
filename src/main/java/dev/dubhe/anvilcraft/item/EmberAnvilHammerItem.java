@@ -20,7 +20,6 @@ public class EmberAnvilHammerItem extends AnvilHammerItem {
         super(
             properties.fireResistant()
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 

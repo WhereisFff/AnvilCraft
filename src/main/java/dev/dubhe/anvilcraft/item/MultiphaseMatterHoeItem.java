@@ -19,17 +19,27 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class MultiphaseMatterHoeItem extends HoeItem {
+    public static final IToolProperties.Multiphase DEFAULT_MULTIPHASE = IToolProperties.Multiphase.make(
+        Component.translatable("item.anvilcraft.multiphase_matter_hoe"), null
+    );
+
     public MultiphaseMatterHoeItem(Properties properties) {
         super(
             ModTiers.MULTIPHASE,
             properties.fireResistant()
                 .attributes(HoeItem.createAttributes(ModTiers.MULTIPHASE, 1, 0))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
-                .component(ModComponents.MULTIPHASE, IToolProperties.Multiphase.make(
-                    Component.translatable("item.anvilcraft.multiphase_matter_hoe"), null
-                ))
+                .component(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE)
         );
+    }
+
+    @Override
+    public ItemStack getDefaultInstance() {
+        ItemStack stack = super.getDefaultInstance();
+        stack.set(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE);
+        stack.set(DataComponents.ITEM_NAME, DEFAULT_MULTIPHASE.getCustomName());
+        stack.set(DataComponents.ENCHANTMENTS, DEFAULT_MULTIPHASE.getEnchantments());
+        return stack;
     }
 
     @Override
@@ -37,7 +47,7 @@ public class MultiphaseMatterHoeItem extends HoeItem {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
         IToolProperties.Multiphase multiPhase = stack.get(ModComponents.MULTIPHASE);
         if (multiPhase != null) {
-            stack.set(DataComponents.CUSTOM_NAME, multiPhase.getCustomName());
+            stack.set(DataComponents.ITEM_NAME, multiPhase.getCustomName());
             stack.set(DataComponents.ENCHANTMENTS, multiPhase.getEnchantments());
         }
     }
@@ -45,12 +55,14 @@ public class MultiphaseMatterHoeItem extends HoeItem {
     @Override
     public Component getName(ItemStack stack) {
         IToolProperties.Multiphase multiPhase = stack.get(ModComponents.MULTIPHASE);
-        return multiPhase != null ? multiPhase.getCustomName() : super.getName(stack);
+        return multiPhase != null && !multiPhase.equals(DEFAULT_MULTIPHASE)
+               ? multiPhase.getCustomName() : super.getName(stack);
     }
 
     @Override
     public ItemEnchantments getAllEnchantments(ItemStack stack, HolderLookup.RegistryLookup<Enchantment> lookup) {
         IToolProperties.Multiphase multiPhase = stack.get(ModComponents.MULTIPHASE);
-        return multiPhase != null ? multiPhase.getEnchantments() : super.getAllEnchantments(stack, lookup);
+        return multiPhase != null && !multiPhase.equals(DEFAULT_MULTIPHASE)
+               ? multiPhase.getEnchantments() : super.getAllEnchantments(stack, lookup);
     }
 }

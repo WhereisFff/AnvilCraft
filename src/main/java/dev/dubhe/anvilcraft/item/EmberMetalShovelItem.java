@@ -16,7 +16,6 @@ public class EmberMetalShovelItem extends ShovelItem {
             properties.fireResistant()
                 .attributes(ShovelItem.createAttributes(ModTiers.EMBER_METAL, 6.5f, -3f))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }

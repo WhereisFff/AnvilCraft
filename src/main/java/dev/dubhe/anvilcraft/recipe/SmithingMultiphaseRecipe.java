@@ -71,10 +71,10 @@ public class SmithingMultiphaseRecipe implements SmithingRecipe {
     @Override
     public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
         Pair<Component, ItemEnchantments> first = new Pair<>(
-            input.base().getDisplayName(), input.base().get(DataComponents.ENCHANTMENTS)
+            input.base().getHoverName(), input.base().get(DataComponents.ENCHANTMENTS)
         );
         Pair<Component, ItemEnchantments> second = new Pair<>(
-            input.addition().getDisplayName(), input.addition().get(DataComponents.ENCHANTMENTS)
+            input.addition().getHoverName(), input.addition().get(DataComponents.ENCHANTMENTS)
         );
 
         if (first.getFirst().getContents().equals(second.getFirst().getContents())) {
@@ -85,10 +85,10 @@ public class SmithingMultiphaseRecipe implements SmithingRecipe {
                 second = new Pair<>(second.getFirst().copy(), second.getSecond());
             } else {
                 if (!firstHasCustomName) {
-                    first = new Pair<>(this.result.getDisplayName().copy(), first.getSecond());
+                    first = new Pair<>(this.result.getHoverName().copy(), first.getSecond());
                 }
                 if (!secondHasCustomName) {
-                    second = new Pair<>(this.result.getDisplayName().copy(), second.getSecond());
+                    second = new Pair<>(this.result.getHoverName().copy(), second.getSecond());
                 }
             }
         }

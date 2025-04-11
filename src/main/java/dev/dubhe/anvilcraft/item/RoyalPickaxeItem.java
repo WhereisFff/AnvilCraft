@@ -16,7 +16,6 @@ public class RoyalPickaxeItem extends PickaxeItem {
         super(
             Tiers.DIAMOND,
             properties.attributes(AxeItem.createAttributes(Tiers.DIAMOND, 1, -2.8f))
-                .component(ModComponents.TOUGH, Unit.INSTANCE)
         );
     }
 }
