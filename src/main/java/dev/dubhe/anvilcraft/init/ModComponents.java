@@ -55,6 +55,11 @@ public class ModComponents {
             .networkSynchronized(ByteBufCodecs.INT)
     );
 
+    public static final DataComponentType<Integer> TOTEM_COUNT = register(
+        "totem_count", b -> b.persistent(Codec.INT)
+            .networkSynchronized(ByteBufCodecs.INT)
+    );
+
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
     public static final DataComponentType<Multiphase> MULTIPHASE =
