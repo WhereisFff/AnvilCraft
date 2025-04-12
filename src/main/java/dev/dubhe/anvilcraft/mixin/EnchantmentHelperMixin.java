@@ -31,9 +31,9 @@ public abstract class EnchantmentHelperMixin {
         method = "setEnchantments",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;set(" +
-                     "Lnet/minecraft/core/component/DataComponentType;" +
-                     "Ljava/lang/Object;)Ljava/lang/Object;"))
+            target = "Lnet/minecraft/world/item/ItemStack;set("
+                     + "Lnet/minecraft/core/component/DataComponentType;"
+                     + "Ljava/lang/Object;)Ljava/lang/Object;"))
     private static <T> T setToMultiphase(ItemStack instance, DataComponentType<? super T> type, T value) {
         if (value instanceof ItemEnchantments enchantments && instance.has(ModComponents.MULTIPHASE)) {
             Multiphase multiphase = Objects.requireNonNull(instance.get(ModComponents.MULTIPHASE));

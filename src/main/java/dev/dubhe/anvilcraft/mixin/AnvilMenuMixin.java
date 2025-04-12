@@ -32,9 +32,9 @@ abstract class AnvilMenuMixin {
         method = "createResult",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/item/ItemStack;" +
-                     "set(Lnet/minecraft/core/component/DataComponentType;" +
-                     "Ljava/lang/Object;)Ljava/lang/Object;",
+            target = "Lnet/minecraft/world/item/ItemStack;"
+                     + "set(Lnet/minecraft/core/component/DataComponentType;"
+                     + "Ljava/lang/Object;)Ljava/lang/Object;",
             ordinal = 0))
     private <T> T setToMultiphase(ItemStack instance, DataComponentType<? super T> component, T value) {
         if (value instanceof Component name && instance.has(ModComponents.MULTIPHASE)) {
