@@ -9,6 +9,8 @@ import net.minecraft.world.ItemInteractionResult;
 import net.neoforged.fml.ModList;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -120,5 +122,30 @@ public class Util {
         for (Direction direction : HORIZONTAL_DIRECTIONS) {
             blockPosConsumer.accept(blockPos.relative(direction));
         }
+    }
+
+    public static <T> boolean isEqualCollection(Collection<T> list1, Collection<T> list2) {
+        if (list1.size() != list2.size()) {
+            return false;
+        }
+
+        Map<T, Integer> countMap = new HashMap<>();
+        for (T obj : list1) {
+            countMap.put(obj, countMap.getOrDefault(obj, 0) + 1);
+        }
+
+        for (T obj : list2) {
+            Integer count = countMap.get(obj);
+            if (count == null) {
+                return false;
+            }
+            int newCount = count - 1;
+            if (newCount < 0) {
+                return false;
+            }
+            countMap.put(obj, newCount);
+        }
+
+        return true;
     }
 }

@@ -6,7 +6,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullSupplier;
-import dev.dubhe.anvilcraft.api.item.IToolProperties;
+import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
@@ -93,7 +93,7 @@ public class SmithingMultiphaseRecipe implements SmithingRecipe {
             }
         }
 
-        IToolProperties.Multiphase multiphase = IToolProperties.Multiphase.make(this.result, first, second);
+        Multiphase multiphase = Multiphase.make(this.result, first, second);
         ItemStack result = this.result.copy();
         result.set(ModComponents.MULTIPHASE, multiphase);
 

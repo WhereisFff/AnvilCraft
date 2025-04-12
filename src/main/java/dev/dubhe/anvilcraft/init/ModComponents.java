@@ -4,11 +4,11 @@ import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
+import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
-import dev.dubhe.anvilcraft.api.item.IToolProperties;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -57,9 +57,9 @@ public class ModComponents {
 
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
-    public static final DataComponentType<IToolProperties.Multiphase> MULTIPHASE =
-        register("multiphase", b -> b.persistent(IToolProperties.Multiphase.CODEC)
-            .networkSynchronized(IToolProperties.Multiphase.STREAM_CODEC));
+    public static final DataComponentType<Multiphase> MULTIPHASE =
+        register("multiphase", b -> b.persistent(Multiphase.CODEC)
+            .networkSynchronized(Multiphase.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();
