@@ -333,7 +333,7 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.ANVIL)
         .loot(SimpleMultiPartBlock::loot)
         .properties(
-            p -> p.noOcclusion().strength(4.0F).sound(SoundType.ANVIL).explosionResistance(1200))
+            p -> p.noOcclusion().strength(4.0F).sound(GiantAnvilBlock.SOUND_TYPE).explosionResistance(1200))
         .item(SimpleMultiPartBlockItem<Cube3x3PartHalf>::new)
         .build()
         .blockstate((ctx, provider) -> {
