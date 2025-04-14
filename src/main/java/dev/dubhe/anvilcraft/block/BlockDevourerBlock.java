@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.itemstack.ItemStackUtil;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
-import dev.dubhe.anvilcraft.block.state.ISimpleMultiPartBlockState;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.AabbUtil;
@@ -80,21 +79,13 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         );
     }
 
-    private static BlockPos getMainPartPos(
-        Level level,
-        BlockPos devouredPos,
-        BlockState devouredState,
-        List<BlockPos> filteredBlockPosList) {
+    private static BlockPos getMainPartPos(Level level, BlockPos devouredPos, BlockState devouredState) {
         Block devouredBlock = devouredState.getBlock();
         if (devouredBlock instanceof AbstractMultiPartBlock<?> multiplePartBlock
             && !devouredState.is(ModBlocks.LARGE_CAKE)) {
             BlockPos mainPartPos = multiplePartBlock.getMainPartPos(devouredPos, devouredState);
             BlockState mainPartState = level.getBlockState(mainPartPos);
-            if (mainPartState.is(devouredBlock)
-                && multiplePartBlock.isMainPart(mainPartState)) {
-                devouredPos = mainPartPos;
-                addFilteredBlockPos(level, devouredBlock, devouredPos, multiplePartBlock.getParts(), filteredBlockPosList);
-            }
+            if (mainPartState.is(devouredBlock)) devouredPos = mainPartPos;
         } else if (devouredState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
             && devouredState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
             BlockPos mainPartPos = devouredPos.below();
@@ -108,18 +99,6 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             if (level.getBlockState(mainPartPos).is(Blocks.PISTON)) devouredPos = mainPartPos;
         }
         return devouredPos;
-    }
-
-    private static void addFilteredBlockPos(Level level, Block devouredBlock, BlockPos devouredPos, Enum<?>[] parts, List<BlockPos> filteredBlockPosList) {
-        if (parts instanceof ISimpleMultiPartBlockState<?>[] multiPartBlockStates) {
-            for (var part : multiPartBlockStates) {
-                BlockPos offsetPos = devouredPos.offset(part.getOffset());
-                if (offsetPos == devouredPos) return;
-                BlockState offsetState = level.getBlockState(offsetPos);
-                if (offsetState.is(devouredBlock))
-                    filteredBlockPosList.add(devouredPos.offset(part.getOffset()));
-            }
-        }
     }
 
     @Override
@@ -312,7 +291,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             level.destroyBlock(devourBlockPos, false);
             return;
         }
-        devourBlockPos = getMainPartPos(level, devourBlockPos, devourBlockState, filteredBlockPosList);
+        devourBlockPos = getMainPartPos(level, devourBlockPos, devourBlockState);
         devourBlockState = level.getBlockState(devourBlockPos);
         List<ItemStack> dropList = switch (anvil) {
             case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
