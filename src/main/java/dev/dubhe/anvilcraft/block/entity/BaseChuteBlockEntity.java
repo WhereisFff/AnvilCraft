@@ -134,10 +134,9 @@ public abstract class BaseChuteBlockEntity
                     getOutputDirection().getOpposite(),
                     level
                 );
-                boolean success = false;
                 if (targetList != null && !targetList.isEmpty()) {
                     for (IItemHandler target : targetList) {
-                        success = ItemHandlerUtil.exportToTarget(getItemHandler(), 64, stack -> true, target);
+                        boolean success = ItemHandlerUtil.exportToTarget(getItemHandler(), 64, stack -> true, target);
                         if (success) {
                             //特判溜槽cd7gt
                             if (isTargetEmpty) setChuteCD(targetBE);
@@ -145,8 +144,7 @@ public abstract class BaseChuteBlockEntity
                             break;
                         }
                     }
-                }
-                if (!success) {
+                } else {
                     Vec3 center = getBlockPos().relative(getOutputDirection()).getCenter();
                     AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
                     if (getLevel().noCollision(aabb)) {
