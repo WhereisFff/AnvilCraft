@@ -207,17 +207,15 @@ public abstract class BaseChuteBlockEntity
                             ItemEntity.class,
                             new AABB(getBlockPos().relative(getInputDirection())),
                             itemEntity -> !itemEntity.getItem().isEmpty());
-                    int prevSize = itemEntities.size();
                     for (ItemEntity itemEntity : itemEntities) {
+                        ItemStack itemStack = itemEntity.getItem();
                         ItemStack remaining =
-                            ItemHandlerHelper.insertItem(this.itemHandler, itemEntity.getItem(), true);
-                        if (!remaining.isEmpty()) continue;
+                            ItemHandlerHelper.insertItem(this.itemHandler, itemStack, true);
+                        if (remaining.getCount() == itemStack.getCount()) continue;
                         ItemHandlerHelper.insertItem(this.itemHandler, itemEntity.getItem(), false);
-                        itemEntity.discard();
-                        itemEntities.remove(itemEntity);
-                        break;
+                        itemEntity.setItem(remaining);
+                        resetCD = true;
                     }
-                    resetCD |= prevSize > itemEntities.size();
                 }
 
             }
