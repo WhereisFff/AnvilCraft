@@ -28,6 +28,8 @@ import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BedPart;
@@ -52,6 +54,7 @@ import java.util.List;
 import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.dropAllToPos;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportAllToTarget;
+import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportContentsToItemHandlers;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
 
 @ParametersAreNonnullByDefault
@@ -228,7 +231,6 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             level
         );
         Vec3 center = outputPos.getCenter();
-        AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
         final List<BlockPos> devourBlockPosList;
         AABB devourBlockBoundingBox;
         switch (devourerDirection) {
@@ -243,14 +245,12 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
                 devourCenterPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range));
             default -> devourBlockBoundingBox = new AABB(devourCenterPos);
         }
-        boolean insertEnabled = itemHandlerList != null && !itemHandlerList.isEmpty();
-        boolean dropOriginalPlace = !level.noCollision(aabb);
         devourBlockPosList = BlockPos.betweenClosedStream(devourBlockBoundingBox)
             .map(BlockPos::immutable)
             .toList();
 
         final List<BlockPos> chainDevourBlockPosList = new ArrayList<>();
-        List<BlockPos> filteredBlockPosList = new ArrayList<>();
+        final List<BlockPos> filteredBlockPosList = new ArrayList<>();
         for (BlockPos devourBlockPos : devourBlockPosList) {
             if (
                 AnvilCraft.config.blockDevourerUpwardChainDevouring
@@ -268,20 +268,24 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             }
 
             devourSingleBlockInternalLogic(
-                level, anvil, devourBlockPos, filteredBlockPosList, insertEnabled, itemHandlerList, dropOriginalPlace, center
+                level, anvil, devourBlockPos, filteredBlockPosList, itemHandlerList, center
             );
         }
         for (BlockPos devourBlockPos : chainDevourBlockPosList) {
             devourSingleBlockInternalLogic(
-                level, anvil, devourBlockPos, filteredBlockPosList, insertEnabled, itemHandlerList, dropOriginalPlace, center
+                level, anvil, devourBlockPos, filteredBlockPosList, itemHandlerList, center
             );
         }
     }
 
     private static void devourSingleBlockInternalLogic(
-        ServerLevel level, @Nullable Block anvil, BlockPos devourBlockPos, List<BlockPos> filteredBlockPosList, boolean insertEnabled,
-        @Nullable List<IItemHandler> itemHandlerList, boolean dropOriginalPlace, Vec3 center
+        ServerLevel level, @Nullable Block anvil, BlockPos devourBlockPos, List<BlockPos> filteredBlockPosList,
+        @Nullable List<IItemHandler> itemHandlerList, Vec3 center
     ) {
+        AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
+        boolean insertEnabled = itemHandlerList != null && !itemHandlerList.isEmpty();
+        boolean dropOriginalPlace = !level.noCollision(aabb);
+
         if (filteredBlockPosList.contains(devourBlockPos)) return;
         BlockState devourBlockState = level.getBlockState(devourBlockPos);
         if (devourBlockState.isAir()) return;
@@ -293,30 +297,18 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         }
         devourBlockPos = getMainPartPos(level, devourBlockPos, devourBlockState);
         devourBlockState = level.getBlockState(devourBlockPos);
+        BlockEntity devouredBE = level.getBlockEntity(devourBlockPos);
         List<ItemStack> dropList = switch (anvil) {
             case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
             case EmberAnvilBlock ignore -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
             case null, default -> BreakBlockUtil.drop(level, devourBlockPos);
         };
         IItemHandler source = level.getCapability(Capabilities.ItemHandler.BLOCK, devourBlockPos, null);
-        //对雕纹书架一类的容器特判 正常转移内容物
-        if (source != null && dropList.isEmpty()) {
-            if (insertEnabled) {
-                assert itemHandlerList != null;
-                for (IItemHandler target : itemHandlerList) {
-                    exportAllToTarget(source, stack -> true, target);
-                }
-            }
-            if (!dropOriginalPlace) dropAllToPos(source, level, center);
-        }
         for (ItemStack itemStack : dropList) {
             boolean transferContents = source != null && ItemStackUtil.isDefaultComponent(itemStack);
             if (insertEnabled) {
-                assert itemHandlerList != null;
                 for (IItemHandler target : itemHandlerList) {
-                    ItemStack outItemStack = ItemHandlerHelper.insertItem(target, itemStack, true);
-                    if (outItemStack.isEmpty())
-                        itemStack = ItemHandlerHelper.insertItem(target, itemStack, false);
+                    itemStack = ItemHandlerHelper.insertItemStacked(target, itemStack, false);
                     if (transferContents) exportAllToTarget(source, stack -> true, target);
                 }
             }
@@ -326,6 +318,24 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             } else {
                 AnvilUtil.dropItems(List.of(itemStack), level, center);
                 if (transferContents) dropAllToPos(source, level, center);
+            }
+        }
+        //特判雕纹书架一类
+        if (source != null && dropList.isEmpty()) {
+            if (insertEnabled) exportContentsToItemHandlers(source, itemHandlerList);
+            if (!dropOriginalPlace) dropAllToPos(source, level, center);
+        }
+        //特判讲台
+        if (devouredBE instanceof LecternBlockEntity lectern) {
+            ItemStack bookStack = lectern.getBook();
+            if (insertEnabled)
+                for (IItemHandler target : itemHandlerList) {
+                    bookStack = ItemHandlerHelper.insertItem(target, bookStack, false);
+                    lectern.setBook(bookStack);
+                }
+            if (!dropOriginalPlace) {
+                AnvilUtil.dropItems(List.of(bookStack), level, center);
+                lectern.setBook(ItemStack.EMPTY);
             }
         }
         if (!(devourBlockState.getBlock() instanceof DoublePlantBlock))

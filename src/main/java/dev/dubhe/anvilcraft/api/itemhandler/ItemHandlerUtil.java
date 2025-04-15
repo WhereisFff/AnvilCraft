@@ -16,6 +16,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,6 +102,22 @@ public class ItemHandlerUtil {
             if (amountToInsert > 0) {
                 sourceStack = source.extractItem(srcIndex, amountToInsert, false);
                 ItemHandlerHelper.insertItem(target, sourceStack, false);
+            }
+        }
+    }
+
+    public static void exportContentsToItemHandlers(IItemHandler source, @Nullable List<IItemHandler> itemHandlerList) {
+        if (itemHandlerList == null) return;
+        for (IItemHandler target : itemHandlerList) {
+            exportAllToTarget(source, stack -> true, target);
+        }
+    }
+
+    public static void exportItemsToItemHandlers(List<ItemStack> items, @Nullable List<IItemHandler> itemHandlerList) {
+        if (itemHandlerList == null) return;
+        for (var stack : items) {
+            for (IItemHandler target : itemHandlerList) {
+                stack = ItemHandlerHelper.insertItem(target, stack, false);
             }
         }
     }
