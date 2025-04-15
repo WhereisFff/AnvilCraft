@@ -45,14 +45,10 @@ public class OtherLang {
 
         provider.add("tooltip.anvilcraft.property.fire_reforging", "Reforging: mending in fire or lava");
         provider.add("tooltip.anvilcraft.property.multiphase", "Multiphase: press [%s] to switch phases");
-        provider.add("tooltip.anvilcraft.property.multiphase.alpha", "α");
-        provider.add("tooltip.anvilcraft.property.multiphase.beta", "β");
-        provider.add("tooltip.anvilcraft.property.multiphase.gamma", "γ");
-        provider.add("tooltip.anvilcraft.property.multiphase.delta", "δ");
-        provider.add("tooltip.anvilcraft.property.multiphase.alpha.suffix", "-α");
-        provider.add("tooltip.anvilcraft.property.multiphase.beta.suffix", "-β");
-        provider.add("tooltip.anvilcraft.property.multiphase.gamma.suffix", "-γ");
-        provider.add("tooltip.anvilcraft.property.multiphase.delta.suffix", "-δ");
+        provider.add("tooltip.anvilcraft.property.multiphase.suffix.alpha", "-α");
+        provider.add("tooltip.anvilcraft.property.multiphase.suffix.beta", "-β");
+        provider.add("tooltip.anvilcraft.property.multiphase.suffix.gamma", "-γ");
+        provider.add("tooltip.anvilcraft.property.multiphase.suffix.delta", "-δ");
 
         provider.add("key.categories.anvilcraft", "AnvilCraft");
         provider.add("key.anvilcraft.switch_phase", "Switch Phase");

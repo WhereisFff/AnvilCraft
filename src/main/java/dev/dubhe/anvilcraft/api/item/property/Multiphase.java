@@ -20,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Objects;
 import java.util.Optional;
 
 /**
@@ -31,7 +30,7 @@ import java.util.Optional;
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public record Multiphase(int current, Phase[] phases) implements Cloneable {
+public record Multiphase(int current, Phase[] phases) {
     public static final Multiphase EMPTY = make(Component.literal("Empty"));
 
     public static final Codec<Phase[]> PHASES_CODEC = CodecUtil.array(Phase.CODEC, () -> new Phase[0]);
@@ -111,9 +110,16 @@ public record Multiphase(int current, Phase[] phases) implements Cloneable {
         return new Multiphase(0, phases);
     }
 
+    public int size() {
+        return this.phases.length;
+    }
+
     public void cyclePhases(ItemStack stack) {
+        this.cyclePhases(stack, (this.current + 1) % this.size());
+    }
+
+    public void cyclePhases(ItemStack stack, int nextIndex) {
         Phase current = this.phases[this.current];
-        int nextIndex = this.current + 1 == this.phases.length ? 0 : this.current + 1;
         Phase next = this.phases[nextIndex];
 
         Component customName;
@@ -166,7 +172,6 @@ public record Multiphase(int current, Phase[] phases) implements Cloneable {
     }
 
     public record Phase(
-        @NotNull Component phaseName,
         @Nullable Component customName, @Nullable Component itemName,
         int repairCost, @NotNull ItemEnchantments enchantments
     ) {
@@ -175,23 +180,22 @@ public record Multiphase(int current, Phase[] phases) implements Cloneable {
         );
 
         public static final Codec<Phase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
             ComponentSerialization.FLAT_CODEC.lenientOptionalFieldOf("customName")
                 .forGetter(phase -> Optional.ofNullable(phase.customName())),
             ComponentSerialization.FLAT_CODEC.lenientOptionalFieldOf("itemName")
                 .forGetter(phase -> Optional.ofNullable(phase.itemName())),
             Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
             ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
-        ).apply(inst, (phaseName, customName, itemName, repairCost, enchantments) ->
-            new Phase(phaseName, customName.orElse(null), itemName.orElse(null), repairCost, enchantments)));
+        ).apply(inst, (customName, itemName, repairCost, enchantments) ->
+            new Phase(customName.orElse(null), itemName.orElse(null), repairCost, enchantments)));
         public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = StreamCodec.of(Phase::encode, Phase::decode);
 
-        public Phase(Component phaseName, @Nullable Component name, @Nullable ItemEnchantments enchantments) {
-            this(phaseName, name, 0, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
+        public Phase(@Nullable Component name, @Nullable ItemEnchantments enchantments) {
+            this(name, 0, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
         }
 
-        public Phase(Component phaseName, @Nullable Component name, int repairCost, @Nullable ItemEnchantments enchantments) {
-            this(phaseName, name, name, repairCost, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
+        public Phase(@Nullable Component name, int repairCost, @Nullable ItemEnchantments enchantments) {
+            this(name, name, repairCost, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
         }
 
         public static Phase make(Component name, @Nullable ItemEnchantments enchantments) {
@@ -201,19 +205,19 @@ public record Multiphase(int current, Phase[] phases) implements Cloneable {
         }
 
         public Phase withCustomName(@Nullable Component customName) {
-            return new Phase(this.phaseName, customName, this.itemName, this.repairCost, this.enchantments);
+            return new Phase(customName, this.itemName, this.repairCost, this.enchantments);
         }
 
         public Phase withItemName(@Nullable Component itemName) {
-            return new Phase(this.phaseName, this.customName, itemName, this.repairCost, this.enchantments);
+            return new Phase(this.customName, itemName, this.repairCost, this.enchantments);
         }
 
         public Phase withRepairCost(int repairCost) {
-            return new Phase(this.phaseName, this.customName, this.itemName, repairCost, this.enchantments);
+            return new Phase(this.customName, this.itemName, repairCost, this.enchantments);
         }
 
         public Phase withEnchantments(ItemEnchantments enchantments) {
-            return new Phase(this.phaseName, this.customName, this.itemName, this.repairCost, enchantments);
+            return new Phase(this.customName, this.itemName, this.repairCost, enchantments);
         }
 
         public Phase addEnchantments(ItemEnchantments enchantments) {
@@ -228,11 +232,17 @@ public record Multiphase(int current, Phase[] phases) implements Cloneable {
                     originalMut.set(enchantmentHolder, enchantments.getLevel(enchantmentHolder));
                 }
             }
-            return new Phase(this.phaseName, this.customName, this.itemName, this.repairCost, originalMut.toImmutable());
+            return new Phase(this.customName, this.itemName, this.repairCost, originalMut.toImmutable());
+        }
+
+        public void applyToStack(ItemStack stack) {
+            stack.set(DataComponents.CUSTOM_NAME, this.customName());
+            stack.set(DataComponents.ITEM_NAME, this.itemName());
+            stack.set(DataComponents.REPAIR_COST, this.repairCost());
+            stack.set(DataComponents.ENCHANTMENTS, this.enchantments());
         }
 
         private static void encode(RegistryFriendlyByteBuf buf, Phase phase) {
-            ComponentSerialization.STREAM_CODEC.encode(buf, phase.phaseName);
             ComponentSerialization.OPTIONAL_STREAM_CODEC.encode(buf, Optional.ofNullable(phase.customName));
             ComponentSerialization.OPTIONAL_STREAM_CODEC.encode(buf, Optional.ofNullable(phase.itemName));
             ByteBufCodecs.INT.encode(buf, phase.repairCost);
@@ -241,7 +251,6 @@ public record Multiphase(int current, Phase[] phases) implements Cloneable {
 
         private static Phase decode(RegistryFriendlyByteBuf buf) {
             return new Phase(
-                ComponentSerialization.STREAM_CODEC.decode(buf),
                 ComponentSerialization.OPTIONAL_STREAM_CODEC.decode(buf).orElse(null),
                 ComponentSerialization.OPTIONAL_STREAM_CODEC.decode(buf).orElse(null),
                 ByteBufCodecs.INT.decode(buf),
@@ -251,32 +260,24 @@ public record Multiphase(int current, Phase[] phases) implements Cloneable {
 
         @Override
         public String toString() {
-            return "Phase{phaseName: %s, customName: %s, itemName: %s, repairCost: %s, enchantments: %s}"
-                .formatted(this.phaseName, this.customName, this.itemName, this.repairCost, this.enchantments);
+            return "Phase{customName: %s, itemName: %s, repairCost: %s, enchantments: %s}"
+                .formatted(this.customName, this.itemName, this.repairCost, this.enchantments);
         }
     }
 
     public enum PhasePattern {
         ALPHA(
-            new Phase(
-                Component.translatable("tooltip.anvilcraft.property.multiphase.alpha"),
-                null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.alpha.suffix")),
+            new Phase(null, null, 0, ItemEnchantments.EMPTY),
+            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.alpha")),
         BETA(
-            new Phase(
-                Component.translatable("tooltip.anvilcraft.property.multiphase.beta"),
-                null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.beta.suffix")),
+            new Phase(null, null, 0, ItemEnchantments.EMPTY),
+            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.beta")),
         GAMMA(
-            new Phase(
-                Component.translatable("tooltip.anvilcraft.property.multiphase.gamma"),
-                null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.gamma.suffix")),
+            new Phase(null, null, 0, ItemEnchantments.EMPTY),
+            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.gamma")),
         DELTA(
-            new Phase(
-                Component.translatable("tooltip.anvilcraft.property.multiphase.delta"),
-                null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.delta.suffix")),
+            new Phase(null, null, 0, ItemEnchantments.EMPTY),
+            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.delta")),
         ;
 
         private final Phase phase;
