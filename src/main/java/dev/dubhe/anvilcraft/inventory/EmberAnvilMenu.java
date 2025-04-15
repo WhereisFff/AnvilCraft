@@ -184,10 +184,6 @@ public class EmberAnvilMenu extends AnvilMenu {
                     && !this.itemName.isBlank()) {
                     currentName = Component.literal(this.itemName);
                 }
-                if (inputItemLeftCopy.has(ModComponents.MULTIPHASE)) {
-                    Multiphase multiphase = Objects.requireNonNull(inputItemLeftCopy.get(ModComponents.MULTIPHASE));
-                    inputItemLeftCopy.set(ModComponents.MULTIPHASE, multiphase.applyCustomName(currentName.copy().withStyle(extraFormat)));
-                }
                 inputItemLeftCopy.set(DataComponents.CUSTOM_NAME, currentName.copy().withStyle(extraFormat));
             } else {
                 if (this.itemName != null && !StringUtil.isBlank(this.itemName)) {
@@ -197,22 +193,10 @@ public class EmberAnvilMenu extends AnvilMenu {
                         repairCostT = 1;
                         totalCost += repairCostT;
                         Component name = Component.literal(this.itemName);
-                        if (inputItemLeftCopy.has(ModComponents.MULTIPHASE)) {
-                            Multiphase multiphase = Objects.requireNonNull(inputItemLeftCopy.get(ModComponents.MULTIPHASE));
-                            inputItemLeftCopy.set(ModComponents.MULTIPHASE, multiphase.applyCustomName(name));
-                        }
                         inputItemLeftCopy.set(DataComponents.CUSTOM_NAME, name);
                     }
                 } else {
-                    if (inputItemLeft.has(ModComponents.MULTIPHASE)) {
-                        repairCostT = 1;
-                        totalCost += repairCostT;
-                        Multiphase multiphase = Objects.requireNonNull(inputItemLeftCopy.get(ModComponents.MULTIPHASE));
-                        Component name = inputItemLeftCopy.get(DataComponents.ITEM_NAME);
-                        if (name == null || name.equals(Component.empty())) name = inputItemLeftCopy.getItem().getDescription();
-                        inputItemLeftCopy.set(ModComponents.MULTIPHASE, multiphase.applyCustomName(name));
-                        inputItemLeftCopy.set(DataComponents.CUSTOM_NAME, name);
-                    } else if (inputItemLeft.has(DataComponents.CUSTOM_NAME)) {
+                    if (inputItemLeft.has(DataComponents.CUSTOM_NAME)) {
                         repairCostT = 1;
                         totalCost += repairCostT;
                         inputItemLeftCopy.remove(DataComponents.CUSTOM_NAME);

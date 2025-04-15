@@ -26,6 +26,7 @@ import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -70,25 +71,25 @@ public class SmithingMultiphaseRecipe implements SmithingRecipe {
 
     @Override
     public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
-        Pair<Component, ItemEnchantments> first = new Pair<>(
-            input.base().getHoverName(), input.base().get(DataComponents.ENCHANTMENTS)
+        Triple<Component, Integer, ItemEnchantments> first = Triple.of(
+            input.base().getHoverName(), input.base().get(DataComponents.REPAIR_COST), input.base().get(DataComponents.ENCHANTMENTS)
         );
-        Pair<Component, ItemEnchantments> second = new Pair<>(
-            input.addition().getHoverName(), input.addition().get(DataComponents.ENCHANTMENTS)
+        Triple<Component, Integer, ItemEnchantments> second = Triple.of(
+            input.addition().getHoverName(), input.addition().get(DataComponents.REPAIR_COST), input.addition().get(DataComponents.ENCHANTMENTS)
         );
 
-        if (first.getFirst().getContents().equals(second.getFirst().getContents())) {
+        if (first.getLeft().getContents().equals(second.getLeft().getContents())) {
             boolean firstHasCustomName = input.base().has(DataComponents.CUSTOM_NAME);
             boolean secondHasCustomName = input.addition().has(DataComponents.CUSTOM_NAME);
             if (firstHasCustomName && secondHasCustomName) {
-                first = new Pair<>(first.getFirst().copy(), first.getSecond());
-                second = new Pair<>(second.getFirst().copy(), second.getSecond());
+                first = Triple.of(first.getLeft().copy(), first.getMiddle(), first.getRight());
+                second = Triple.of(second.getLeft().copy(), first.getMiddle(), second.getRight());
             } else {
                 if (!firstHasCustomName) {
-                    first = new Pair<>(this.result.getHoverName().copy(), first.getSecond());
+                    first = Triple.of(this.result.getHoverName().copy(), first.getMiddle(), first.getRight());
                 }
                 if (!secondHasCustomName) {
-                    second = new Pair<>(this.result.getHoverName().copy(), second.getSecond());
+                    second = Triple.of(this.result.getHoverName().copy(), second.getMiddle(), second.getRight());
                 }
             }
         }

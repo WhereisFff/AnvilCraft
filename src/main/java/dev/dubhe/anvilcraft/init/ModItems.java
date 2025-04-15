@@ -367,15 +367,12 @@ public class ModItems {
     public static final ItemEntry<MultiphaseMatterPickaxeItem> MULTIPHASE_MATTER_PICKAXE = REGISTRATE
         .item("multiphase_matter_pickaxe", MultiphaseMatterPickaxeItem::new)
         .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.PICKAXES,
-             ModItemTags.EXPLOSION_PROOF,
-             Tags.Items.MINING_TOOL_TOOLS)
+        .tag(ItemTags.PICKAXES, ModItemTags.EXPLOSION_PROOF, Tags.Items.MINING_TOOL_TOOLS)
         .register();
     public static final ItemEntry<MultiphaseMatterAxeItem> MULTIPHASE_MATTER_AXE = REGISTRATE
         .item("multiphase_matter_axe", MultiphaseMatterAxeItem::new)
         .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.AXES,
-             Tags.Items.MELEE_WEAPON_TOOLS)
+        .tag(ItemTags.AXES, Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<MultiphaseMatterShovelItem> MULTIPHASE_MATTER_SHOVEL = REGISTRATE
         .item("multiphase_matter_shovel", MultiphaseMatterShovelItem::new)
@@ -390,8 +387,7 @@ public class ModItems {
     public static final ItemEntry<MultiphaseMatterSwordItem> MULTIPHASE_MATTER_SWORD = REGISTRATE
         .item("multiphase_matter_sword", MultiphaseMatterSwordItem::new)
         .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.SWORDS,
-             Tags.Items.MELEE_WEAPON_TOOLS)
+        .tag(ItemTags.SWORDS, Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<AnvilHammerItem> ANVIL_HAMMER = REGISTRATE
         .item("anvil_hammer", AnvilHammerItem::new)

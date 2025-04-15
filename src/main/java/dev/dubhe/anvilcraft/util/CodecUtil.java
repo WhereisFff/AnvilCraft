@@ -31,6 +31,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.IntFunction;
+import java.util.function.Supplier;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CodecUtil {
@@ -170,5 +171,11 @@ public class CodecUtil {
         RegistryFriendlyByteBuf buf, StreamDecoder<? super RegistryFriendlyByteBuf, T> elementReader
     ) {
         return readCollectionWithRegistries(buf, Lists::newArrayListWithCapacity, elementReader);
+    }
+
+    public static <T> Codec<T[]> array(Codec<T> elementCodec, Supplier<T[]> emptyArrayFactory) {
+        return Codec.list(elementCodec).xmap(
+            list -> list.toArray(emptyArrayFactory.get()), Lists::newArrayList
+        );
     }
 }
