@@ -21,8 +21,5 @@ public class EnchantmentTagLoader {
         provider.addTag(ModEnchantmentTags.MODIFY_BLOCK_LOOT)
             .add(Enchantments.SILK_TOUCH)
             .add(Enchantments.FORTUNE);
-
-        provider.addTag(ModEnchantmentTags.MODIFY_ENTITY_LOOT)
-            .add(Enchantments.LOOTING);
     }
 }

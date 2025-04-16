@@ -22,8 +22,8 @@ public class EnchantmentHelperMixin {
         at = @At("HEAD"), cancellable = true)
     private static void cancelWhenMercilessAndTargetedDamage(
         ServerLevel level, ItemStack tool, Entity entity, DamageSource damageSource, MutableFloat mutablefloat,
-        Holder<Enchantment> p_344525_, int p_344526_, CallbackInfo ci
+        Holder<Enchantment> enchantment, int enchantmentLevel, CallbackInfo ci
     ) {
-        if (tool.has(ModComponents.MERCILESS) && p_344525_.is(ModEnchantmentTags.TARGETED_DAMAGE)) ci.cancel();
+        if (tool.has(ModComponents.MERCILESS) && enchantment.is(ModEnchantmentTags.TARGETED_DAMAGE)) ci.cancel();
     }
 }
