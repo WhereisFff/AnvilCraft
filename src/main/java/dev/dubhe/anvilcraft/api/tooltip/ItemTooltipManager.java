@@ -153,11 +153,14 @@ public class ItemTooltipManager {
      */
     public static void addTooltip(ItemStack stack, List<Component> tooltip) {
         Item item = stack.getItem();
-        if (stack.get(ModComponents.FIRE_REFORGING) != null) {
+        if (stack.has(ModComponents.FIRE_REFORGING)) {
             propertyTooltip("fire_reforging", tooltip);
         }
-        if (stack.get(ModComponents.MULTIPHASE) != null) {
+        if (stack.has(ModComponents.MULTIPHASE)) {
             propertyTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
+        }
+        if (stack.has(ModComponents.MERCILESS)) {
+            propertyTooltip("merciless", tooltip);
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));

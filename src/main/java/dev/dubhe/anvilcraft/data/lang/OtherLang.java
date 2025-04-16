@@ -49,6 +49,7 @@ public class OtherLang {
         provider.add("tooltip.anvilcraft.property.multiphase.suffix.beta", "-β");
         provider.add("tooltip.anvilcraft.property.multiphase.suffix.gamma", "-γ");
         provider.add("tooltip.anvilcraft.property.multiphase.suffix.delta", "-δ");
+        provider.add("tooltip.anvilcraft.property.merciless", "Merciless: treat everyone equally, greatness in simplicity");
 
         provider.add("key.categories.anvilcraft", "AnvilCraft");
         provider.add("key.anvilcraft.switch_phase", "Switch Phase");

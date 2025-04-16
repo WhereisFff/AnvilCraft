@@ -8,6 +8,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
@@ -45,8 +46,14 @@ public class InventoryUtil {
         return ItemStack.EMPTY;
     }
 
-    public static LinkedList<ItemStack> getItems(Inventory inventory) {
-        LinkedList<ItemStack> items = new LinkedList<>();
+    public static ArrayList<ItemStack> getItems(Inventory inventory, Predicate<ItemStack> filter) {
+        ArrayList<ItemStack> items = getItems(inventory);
+        items.removeIf(stack -> !filter.test(stack));
+        return items;
+    }
+
+    public static ArrayList<ItemStack> getItems(Inventory inventory) {
+        ArrayList<ItemStack> items = new ArrayList<>();
 
         items.addAll(inventory.items);
         items.addAll(inventory.armor);

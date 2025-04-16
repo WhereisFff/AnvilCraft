@@ -774,6 +774,7 @@
   "tooltip.anvilcraft.jade.power_information": "Power Grid: %d/%d kW",
   "tooltip.anvilcraft.jade.ruby_prism.power": "Laser level: %d",
   "tooltip.anvilcraft.property.fire_reforging": "Reforging: mending in fire or lava",
+  "tooltip.anvilcraft.property.merciless": "Merciless: treat everyone equally, greatness in simplicity",
   "tooltip.anvilcraft.property.multiphase": "Multiphase: press [%s] to switch phases",
   "tooltip.anvilcraft.property.multiphase.suffix.alpha": "-α",
   "tooltip.anvilcraft.property.multiphase.suffix.beta": "-β",
