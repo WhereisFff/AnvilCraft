@@ -4,20 +4,20 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.function.Supplier;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
 
 public class InventoryUtil {
-    public static BiConsumer<LinkedList<ItemStack>, LivingEntity> compatConsumer = NonNullBiConsumer.noop();
+    public static BiConsumer<ArrayList<ItemStack>, LivingEntity> compatConsumer = NonNullBiConsumer.noop();
 
     public static ItemStack getFirstItem(Inventory inventory, Item item) {
-        for (ItemStack stack : inventory.items) {
+        for (ItemStack stack : getItems(inventory)) {
             if (stack.getItem().equals(item)) {
                 return stack;
             }
@@ -26,9 +26,9 @@ public class InventoryUtil {
         return ItemStack.EMPTY;
     }
 
-    public static ItemStack getFirstItem(Inventory inventory, ItemEntry<? extends Item> item) {
+    public static ItemStack getFirstItem(Inventory inventory, Supplier<? extends Item> item) {
         for (ItemStack stack : getItems(inventory)) {
-            if (item.isIn(stack)) {
+            if (stack.getItem().equals(item.get())) {
                 return stack;
             }
         }
@@ -46,14 +46,14 @@ public class InventoryUtil {
         return ItemStack.EMPTY;
     }
 
-    public static ArrayList<ItemStack> getItems(Inventory inventory, Predicate<ItemStack> filter) {
-        ArrayList<ItemStack> items = getItems(inventory);
+    public static List<ItemStack> getItems(Inventory inventory, Predicate<ItemStack> filter) {
+        List<ItemStack> items = getItems(inventory);
         items.removeIf(stack -> !filter.test(stack));
         return items;
     }
 
-    public static ArrayList<ItemStack> getItems(Inventory inventory) {
-        ArrayList<ItemStack> items = new ArrayList<>();
+    public static List<ItemStack> getItems(Inventory inventory) {
+        List<ItemStack> items = new ArrayList<>();
 
         items.addAll(inventory.items);
         items.addAll(inventory.armor);
@@ -80,8 +80,8 @@ public class InventoryUtil {
         return ItemStack.EMPTY;
     }
 
-    public static LinkedList<ItemStack> getCompatItems(LivingEntity living) {
-        LinkedList<ItemStack> items = new LinkedList<>();
+    public static ArrayList<ItemStack> getCompatItems(LivingEntity living) {
+        ArrayList<ItemStack> items = new ArrayList<>();
         compatConsumer.accept(items, living);
         return items;
     }
