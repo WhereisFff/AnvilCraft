@@ -53,6 +53,7 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.HOPPER))
             .add(findResourceKey(Blocks.DROPPER))
             .add(findResourceKey(Blocks.DISPENSER))
+            .add(findResourceKey(Blocks.CRAFTER))
             .add(findResourceKey(Blocks.HONEY_BLOCK))
             .add(findResourceKey(Blocks.SLIME_BLOCK))
             .add(findResourceKey(Blocks.PISTON))
