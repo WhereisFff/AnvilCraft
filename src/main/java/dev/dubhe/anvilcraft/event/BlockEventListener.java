@@ -69,4 +69,21 @@ public class BlockEventListener {
             event.setUseBlock(TriState.FALSE);
         }
     }
+
+    /**
+     * 侦听磁性溜槽右键方块事件
+     *
+     * @param event 右键方块事件
+     */
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public static void rightClickBlock(@NotNull PlayerInteractEvent.RightClickBlock event) {
+        Level level = event.getLevel();
+        Item handItem = event.getEntity().getItemInHand(event.getHand()).getItem();
+        if (handItem == ModBlocks.MAGNETIC_CHUTE.asItem()
+            && level.getCapability(Capabilities.ItemHandler.BLOCK, event.getPos(), null) != null
+        ) {
+            event.setUseItem(TriState.TRUE);
+            event.setUseBlock(TriState.FALSE);
+        }
+    }
 }
