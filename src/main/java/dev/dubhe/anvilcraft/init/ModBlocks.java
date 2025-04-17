@@ -4179,6 +4179,8 @@ public class ModBlocks {
                 .define('C', Items.CLOCK)
                 .define('I', Items.IRON_INGOT)
                 .define('R', Items.REDSTONE_TORCH)
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Items.IRON_INGOT))
+                .save(provider)
         )
         .register();
 
