@@ -32,7 +32,7 @@ import org.jetbrains.annotations.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getSourceItemHandlerList;
+import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getSourceItemHandler;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
 
 @Getter
@@ -192,7 +192,7 @@ public abstract class BaseChuteBlockEntity
 
                 }
                 // 尝试从上方容器输入
-                IItemHandler source = getSourceItemHandlerList(
+                IItemHandler source = getSourceItemHandler(
                     getBlockPos().relative(getInputDirection()),
                     getInputDirection().getOpposite(),
                     level

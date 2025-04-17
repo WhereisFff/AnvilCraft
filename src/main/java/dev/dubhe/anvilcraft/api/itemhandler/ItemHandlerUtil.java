@@ -131,16 +131,14 @@ public class ItemHandlerUtil {
         AnvilUtil.dropItems(items, level, pos);
     }
 
-    public static IItemHandler getSourceItemHandlerList(BlockPos inputBlockPos, Direction context, Level level) {
+    public static IItemHandler getSourceItemHandler(BlockPos inputBlockPos, Direction context, Level level) {
         if (level == null) return null;
-        IItemHandler input = level.getCapability(
+        IItemHandler itemHandler = level.getCapability(
             Capabilities.ItemHandler.BLOCK,
             inputBlockPos,
             context
         );
-        if (input != null) {
-            return input;
-        }
+        if (itemHandler != null) return itemHandler;
         AABB aabb = new AABB(inputBlockPos);
         List<ContainerEntity> entities = level.getEntitiesOfClass(
                 Entity.class, aabb, e -> e instanceof ContainerEntity && !((ContainerEntity) e).isEmpty())
@@ -148,12 +146,12 @@ public class ItemHandlerUtil {
             .map(it -> (ContainerEntity) it)
             .toList();
         if (!entities.isEmpty()) {
-            input = ((Entity) entities.getFirst()).getCapability(
+            itemHandler = ((Entity) entities.getFirst()).getCapability(
                 Capabilities.ItemHandler.ENTITY,
                 null
             );
         }
-        return input;
+        return itemHandler;
     }
 
     public static List<IItemHandler> getTargetItemHandlerList(BlockPos inputBlockPos, Direction context, Level level) {
