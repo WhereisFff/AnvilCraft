@@ -44,10 +44,8 @@ public class BlockEventListener {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public static void anvilHammerUse(@NotNull PlayerInteractEvent.RightClickBlock event) {
         if (event.getEntity().level().isClientSide) return;
-        Level level = event.getLevel();
         InteractionHand hand = event.getHand();
-        Item handItem = event.getEntity().getItemInHand(hand).getItem();
-        if (handItem instanceof AnvilHammerItem) {
+        if (event.getEntity().getItemInHand(hand).getItem() instanceof AnvilHammerItem) {
             if (AnvilHammerItem.ableToUseAnvilHammer(event.getLevel(), event.getPos(), event.getEntity())) {
                 Block b = event.getLevel().getBlockState(event.getPos()).getBlock();
                 if ((b instanceof IHammerRemovable || b.defaultBlockState().is(ModBlockTags.HAMMER_REMOVABLE))
@@ -59,14 +57,6 @@ public class BlockEventListener {
                 event.setCancellationResult(InteractionResult.SUCCESS);
                 event.setCanceled(true);
             }
-        }
-        //磁性溜槽忽略容器gui
-        if (handItem == ModBlocks.MAGNETIC_CHUTE.asItem()
-            && level.getCapability(Capabilities.ItemHandler.BLOCK, event.getPos(), null) != null
-        ) {
-            event.setCancellationResult(InteractionResult.SUCCESS);
-            event.setUseItem(TriState.TRUE);
-            event.setUseBlock(TriState.FALSE);
         }
     }
 
