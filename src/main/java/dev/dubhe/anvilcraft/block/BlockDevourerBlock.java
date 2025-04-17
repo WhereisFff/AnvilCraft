@@ -5,9 +5,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.itemstack.ItemStackUtil;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
@@ -22,7 +20,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.Mirror;
@@ -32,11 +29,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BedPart;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -56,6 +51,7 @@ import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.dropAllToPos;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportAllToTarget;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportContentsToItemHandlers;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
+import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getMainPartPosToRemove;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -80,28 +76,6 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
                 .setValue(FACING, Direction.NORTH)
                 .setValue(TRIGGERED, false)
         );
-    }
-
-    private static BlockPos getMainPartPos(Level level, BlockPos devouredPos, BlockState devouredState) {
-        Block devouredBlock = devouredState.getBlock();
-        if (devouredBlock instanceof AbstractMultiPartBlock<?> multiplePartBlock
-            && !devouredState.is(ModBlocks.LARGE_CAKE)) {
-            BlockPos mainPartPos = multiplePartBlock.getMainPartPos(devouredPos, devouredState);
-            BlockState mainPartState = level.getBlockState(mainPartPos);
-            if (mainPartState.is(devouredBlock)) devouredPos = mainPartPos;
-        } else if (devouredState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
-            && devouredState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
-            BlockPos mainPartPos = devouredPos.below();
-            if (level.getBlockState(mainPartPos).is(devouredBlock)) devouredPos = mainPartPos;
-        } else if (devouredState.hasProperty(BlockStateProperties.BED_PART)
-            && devouredState.getValue(BlockStateProperties.BED_PART) == BedPart.FOOT) {
-            BlockPos mainPartPos = devouredPos.relative(devouredState.getValue(HORIZONTAL_FACING));
-            if (level.getBlockState(mainPartPos).is(devouredBlock)) devouredPos = mainPartPos;
-        } else if (devouredState.is(Blocks.PISTON_HEAD)) {
-            BlockPos mainPartPos = devouredPos.relative(devouredState.getValue(FACING).getOpposite());
-            if (level.getBlockState(mainPartPos).is(Blocks.PISTON)) devouredPos = mainPartPos;
-        }
-        return devouredPos;
     }
 
     @Override
@@ -295,7 +269,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             level.destroyBlock(devourBlockPos, false);
             return;
         }
-        devourBlockPos = getMainPartPos(level, devourBlockPos, devourBlockState);
+        devourBlockPos = getMainPartPosToRemove(level, devourBlockPos);
         devourBlockState = level.getBlockState(devourBlockPos);
         BlockEntity devouredBE = level.getBlockEntity(devourBlockPos);
         List<ItemStack> dropList = switch (anvil) {
