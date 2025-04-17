@@ -43,12 +43,11 @@ import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
 import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
-import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getSourceItemHandlerList;
+import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getSourceItemHandler;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -240,7 +239,7 @@ public class BlockPlacerBlock extends Block implements IHammerRemovable, IHammer
         }
         // 获取放置方块类型
         ItemStack placeItem = null;
-        IItemHandler itemHandler = getSourceItemHandlerList(
+        IItemHandler itemHandler = getSourceItemHandler(
             blockPos.relative(direction.getOpposite()),
             direction,
             level
