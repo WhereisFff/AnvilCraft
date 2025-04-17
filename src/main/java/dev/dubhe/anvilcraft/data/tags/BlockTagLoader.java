@@ -38,6 +38,7 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.HOPPER))
             .add(findResourceKey(Blocks.DROPPER))
             .add(findResourceKey(Blocks.DISPENSER))
+            .add(findResourceKey(Blocks.CRAFTER))
             .add(findResourceKey(Blocks.LIGHTNING_ROD));
 
         provider.addTag(ModBlockTags.HAMMER_REMOVABLE)
