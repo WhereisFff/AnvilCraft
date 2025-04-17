@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.hammer.HammerManager;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.network.RocketJumpPacket;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
@@ -35,7 +34,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -45,6 +43,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+
+import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getMainPartPosToRemove;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -102,22 +102,9 @@ public class AnvilHammerItem extends Item implements Equipable {
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
         if (!state.is(ModBlockTags.HAMMER_REMOVABLE) && !(block instanceof IHammerRemovable)) return;
-        if (block instanceof AbstractMultiPartBlock<?> multiplePartBlock) {
-            BlockPos posMainPart = multiplePartBlock.getMainPartPos(pos, state);
-            BlockState stateMainPart = level.getBlockState(posMainPart);
-            if (stateMainPart.is(block)) {
-                pos = posMainPart;
-                state = stateMainPart;
-            }
-        } else if (state.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)
-            && state.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF) == DoubleBlockHalf.UPPER) {
-            BlockPos posMainPart = pos.below();
-            BlockState stateMainPart = level.getBlockState(posMainPart);
-            if (stateMainPart.is(block)) {
-                pos = posMainPart;
-                state = stateMainPart;
-            }
-        }
+        pos = getMainPartPosToRemove(level, pos);
+        state = level.getBlockState(pos);
+        block = state.getBlock();
         BlockPos posToRemove = pos;
         List<ItemStack> drops = player.isCreative() ? List.of() : BreakBlockUtil.dropSilkTouch(level, pos);
         block.playerWillDestroy(level, posToRemove, state, player);

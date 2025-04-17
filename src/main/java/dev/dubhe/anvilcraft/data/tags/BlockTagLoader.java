@@ -58,6 +58,7 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.SLIME_BLOCK))
             .add(findResourceKey(Blocks.PISTON))
             .add(findResourceKey(Blocks.STICKY_PISTON))
+            .add(findResourceKey(Blocks.PISTON_HEAD))
             .add(findResourceKey(Blocks.LIGHTNING_ROD))
             .add(findResourceKey(Blocks.DAYLIGHT_DETECTOR))
             .add(findResourceKey(Blocks.LECTERN))
