@@ -38,6 +38,7 @@ public class MultiPartBlockUtil {
         }
         return pos;
     }
+
     public static BlockPos getMainPartPosToRemove(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
         if (state.is(ModBlocks.LARGE_CAKE)) return pos;
