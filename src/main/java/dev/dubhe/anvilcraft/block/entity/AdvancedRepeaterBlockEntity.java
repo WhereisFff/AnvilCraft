@@ -121,8 +121,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
 
     protected void checkIsDeadlock() {
         this.isDeadlock = switch (this.startMode) {
-            case 0 -> this.mode == Mode.OUTPUTTING && this.isInputtingSignal;
-            case 1 -> false;
+            case 0, 1 -> false;
             case 2 -> {
                 if (this.isInputtingSignal && !this.isDeadlock) {
                     this.mode = Mode.DEFAULT;
@@ -165,7 +164,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     protected void checkOnSignalEnd() {
         this.mode = Mode.DEFAULT;
 
-        if (this.startMode == 2) {
+        if ((this.startMode == 0 && this.isInputtingSignal) || this.startMode == 2) {
             this.startWaiting();
         }
     }
