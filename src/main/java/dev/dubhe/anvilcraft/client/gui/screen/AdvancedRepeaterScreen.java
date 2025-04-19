@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
+import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableButton;
 import dev.dubhe.anvilcraft.client.gui.component.TextWidget;
@@ -7,6 +8,7 @@ import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
 import dev.dubhe.anvilcraft.inventory.AdvancedRepeaterMenu;
 import dev.dubhe.anvilcraft.network.AdvancedRepeaterUpdatePacket;
 import dev.dubhe.anvilcraft.util.FormattingUtil;
+import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -50,6 +52,10 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
     private static final ResourceLocation BUTTON_MINUS_M =
         AnvilCraft.of("textures/gui/container/machine/advanced_repeater_button_minus_m.png");
 
+    private final Minecraft minecraft;
+    private TextWidget waitingTime;
+    private TextWidget signalDuration;
+
     public AdvancedRepeaterScreen(AdvancedRepeaterMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.minecraft = Minecraft.getInstance();
@@ -70,6 +76,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
     @Override
     protected void init() {
         super.init();
+        this.clearWidgets();
         SwitchableButton startMode = new SwitchableButton(
             this.leftPos + 28,
             this.topPos + 25,
@@ -92,7 +99,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             10, 10,
             BUTTON_ADD_T,
             10, 10, 20,
-            button -> tickAdder.accept(1)
+            button -> tickAdder.accept(!hasShiftDown() ? 1 : 5)
         );
         BiFunction<Integer, Consumer<Integer>, TexturedButton> addSecFunc = (offsetX, tickAdder) -> new TexturedButton(
             this.leftPos + offsetX,
@@ -100,7 +107,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             10, 10,
             BUTTON_ADD_S,
             10, 10, 20,
-            button -> tickAdder.accept(20)
+            button -> tickAdder.accept(!hasShiftDown() ? 20 : 100)
         );
         BiFunction<Integer, Consumer<Integer>, TexturedButton> addMinFunc = (offsetX, tickAdder) -> new TexturedButton(
             this.leftPos + offsetX,
@@ -108,7 +115,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             10, 10,
             BUTTON_ADD_M,
             10, 10, 20,
-            button -> tickAdder.accept(1200)
+            button -> tickAdder.accept(!hasShiftDown() ? 1200 : 6000)
         );
         BiFunction<Integer, Consumer<Integer>, TexturedButton> minusTickFunc = (offsetX, tickAdder) -> new TexturedButton(
             this.leftPos + offsetX,
@@ -116,7 +123,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             10, 10,
             BUTTON_MINUS_T,
             10, 10, 20,
-            button -> tickAdder.accept(-1)
+            button -> tickAdder.accept(!hasShiftDown() ? -1 : -5)
         );
         BiFunction<Integer, Consumer<Integer>, TexturedButton> minusSecFunc = (offsetX, tickAdder) -> new TexturedButton(
             this.leftPos + offsetX,
@@ -124,7 +131,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             10, 10,
             BUTTON_MINUS_S,
             10, 10, 20,
-            button -> tickAdder.accept(-20)
+            button -> tickAdder.accept(!hasShiftDown() ? -20 : -100)
         );
         BiFunction<Integer, Consumer<Integer>, TexturedButton> minusMinFunc = (offsetX, tickAdder) -> new TexturedButton(
             this.leftPos + offsetX,
@@ -132,17 +139,16 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
             10, 10,
             BUTTON_MINUS_M,
             10, 10, 20,
-            button -> tickAdder.accept(-1200)
+            button -> tickAdder.accept(!hasShiftDown() ? -1200 : -6000)
         );
-        @SuppressWarnings("DataFlowIssue")
-        TextWidget waitingTime = new TextWidget(
+        this.waitingTime = new TextWidget(
             this.leftPos + 63,
             this.topPos + 38,
             32, 9,
             minecraft.font,
             () -> Component.literal(FormattingUtil.toFormattedTime(this.menu.getBlockEntity().getWaitingTime()))
         ).setRenderMode(TextWidget.RenderMode.SCALED);
-        TextWidget signalDuration = new TextWidget(
+        this.signalDuration = new TextWidget(
             this.leftPos + 115,
             this.topPos + 38,
             32, 9,
@@ -153,14 +159,14 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
         outputMode.setCurrent(this.menu.getBlockEntity().isOutputInvert() ? 1 : 0);
         this.addRenderableWidget(startMode);
         this.addRenderableWidget(outputMode);
-        this.addRenderableOnly(waitingTime);
+        this.addRenderableOnly(this.waitingTime);
         this.addRenderableWidget(addTickFunc.apply(62, this.menu::addWaitingTime));
         this.addRenderableWidget(addSecFunc.apply(74, this.menu::addWaitingTime));
         this.addRenderableWidget(addMinFunc.apply(86, this.menu::addWaitingTime));
         this.addRenderableWidget(minusTickFunc.apply(62, this.menu::addWaitingTime));
         this.addRenderableWidget(minusSecFunc.apply(74, this.menu::addWaitingTime));
         this.addRenderableWidget(minusMinFunc.apply(86, this.menu::addWaitingTime));
-        this.addRenderableOnly(signalDuration);
+        this.addRenderableOnly(this.signalDuration);
         this.addRenderableWidget(addTickFunc.apply(114, this.menu::addSignalDuration));
         this.addRenderableWidget(addSecFunc.apply(126, this.menu::addSignalDuration));
         this.addRenderableWidget(addMinFunc.apply(138, this.menu::addSignalDuration));
@@ -177,5 +183,38 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(CONTAINER_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 128);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
+        if (MathUtil.isInRange(
+            mouseX, mouseY,
+            this.waitingTime.getX(), this.waitingTime.getY(),
+            this.waitingTime.getX() + this.waitingTime.getWidth(),
+            this.waitingTime.getY() + this.waitingTime.getHeight())
+        ) {
+            if (hasControlDown()) {
+                this.menu.addWaitingTime(scrollY < 0 ? -20 : 20);
+            } else if (hasShiftDown()) {
+                this.menu.addWaitingTime(scrollY < 0 ? -1200 : 1200);
+            } else {
+                this.menu.addWaitingTime(scrollY < 0 ? -1 : 1);
+            }
+        }
+        if (MathUtil.isInRange(
+            mouseX, mouseY,
+            this.signalDuration.getX(), this.signalDuration.getY(),
+            this.signalDuration.getX() + this.signalDuration.getWidth(),
+            this.signalDuration.getY() + this.signalDuration.getHeight())
+        ) {
+            if (hasControlDown()) {
+                this.menu.addSignalDuration(scrollY < 0 ? -20 : 20);
+            } else if (hasShiftDown()) {
+                this.menu.addSignalDuration(scrollY < 0 ? -1200 : 1200);
+            } else {
+                this.menu.addSignalDuration(scrollY < 0 ? -1 : 1);
+            }
+        }
+        return true;
     }
 }
