@@ -37,8 +37,6 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
     public final Item result;
     public final int power; //units: kW, positive for discharge and negative for charge
     public final int time; //units: tick
-    public ChargerChargingRecipe.Input cache;
-    public int cache_times;
 
     public ChargerChargingRecipe(Item input, Item result, int power, int time) {
         this.ingredient = input;
@@ -152,12 +150,12 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
             return this;
         }
 
-        public ChargerChargingRecipe.Builder power(int power){
+        public ChargerChargingRecipe.Builder power(int power) {
             this.power = power;
             return this;
         }
 
-        public ChargerChargingRecipe.Builder time(int time){
+        public ChargerChargingRecipe.Builder time(int time) {
             this.time = time;
             return this;
         }
@@ -169,13 +167,13 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
 
         @Override
         public void validate(ResourceLocation pId) {
-            if(ingredient == null)
+            if (ingredient == null)
                 throw new IllegalArgumentException("Recipe has no ingredient, RecipeId: " + pId);
-            if(result == null)
+            if (result == null)
                 throw new IllegalArgumentException("Recipe has no result, RecipeId: " + pId);
-            if(power == 0)
+            if (power == 0)
                 throw new IllegalArgumentException("The power release of charging/discharging recipe must be positive or negative, RecipeId: " + pId);
-            if(time <= 0)
+            if (time <= 0)
                 throw new IllegalArgumentException("Charging time must be a positive number, RecipeId: " + pId);
         }
 

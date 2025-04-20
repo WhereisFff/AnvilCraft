@@ -23,6 +23,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -82,7 +83,7 @@ public class ChargerBlockEntity extends BlockEntity
         if (level != null) {
             Optional<RecipeHolder<ChargerChargingRecipe>> x = level.getRecipeManager()
                 .getRecipeFor(ModRecipeTypes.CHARGER_CHARGING_TYPE.get(), input, level);
-            if(x.isPresent())  {
+            if (x.isPresent()) {
                 if (x.get().value().power == 0) return false;
                 return isCharger == x.get().value().power < 0;
                 // (isCharger && isRecipePowerCharging) || (isDisCharger && RecipePowerDischarging)
@@ -92,25 +93,25 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Nullable
-    private ChargerChargingRecipe getItemRecipe(ItemStack stack){
+    private ChargerChargingRecipe getItemRecipe(ItemStack stack) {
         ChargerChargingRecipe.Input input =
             new ChargerChargingRecipe.Input(stack);
         if (level != null) {
             Optional<RecipeHolder<ChargerChargingRecipe>> x = level.getRecipeManager()
                 .getRecipeFor(ModRecipeTypes.CHARGER_CHARGING_TYPE.get(), input, level);
-            if(x.isPresent())  {
+            if (x.isPresent())  {
                 return x.get().value();
             }
         }
         return null;
     }
 
-    private boolean checkRecipeItemValid(@Nullable ChargerChargingRecipe recipe, ItemStack stack){
-        if(recipe != null){
-            if(recipe.power == 0) return false;
-            return isCharger == recipe.power < 0;
+    private boolean checkRecipeItemNotValid(@Nullable ChargerChargingRecipe recipe, ItemStack stack) {
+        if (recipe != null) {
+            if (recipe.power == 0) return true;
+            return isCharger != recipe.power < 0;
         }
-        return false;
+        return true;
     }
 
     private void moveItemToTransformingSlot() {
@@ -118,17 +119,16 @@ public class ChargerBlockEntity extends BlockEntity
         if (stack.isEmpty()) return;
         if (!itemHandler.getStackInSlot(1).isEmpty()) return;
         ChargerChargingRecipe recipe = getItemRecipe(stack);
-        if (!checkRecipeItemValid(recipe, stack)) return;
+        if (checkRecipeItemNotValid(recipe, stack)) return;
         itemHandler.setStackInSlot(0, ItemStack.EMPTY);
         if (isCharger) {
             itemHandler.setStackInSlot(1, stack);
-        }
-        else {
+        } else {
             ItemStack transformed = recipe.getResult().getDefaultInstance();
             transformed.setCount(1);
             itemHandler.setStackInSlot(1, transformed);
         }
-        timeLeft = recipe.time + 1; //since there is a "timeleft--" after this, here +1 to negate
+        timeLeft = recipe.time + 1; //since there is a "timeLeft--" after this, here +1 to negate
         powerValue = recipe.power;
     }
 
@@ -139,14 +139,13 @@ public class ChargerBlockEntity extends BlockEntity
             powerValue = 0;
             return;
         }
-        if (isCharger){
+        if (isCharger) {
             ChargerChargingRecipe recipe = getItemRecipe(stack);
-            if (!checkRecipeItemValid(recipe, stack)) return;
+            if (checkRecipeItemNotValid(recipe, stack)) return;
             ItemStack transformed = recipe.getResult().getDefaultInstance();
             transformed.setCount(1);
             itemHandler.setStackInSlot(2, transformed);
-        }
-        else {
+        } else {
             itemHandler.setStackInSlot(2, stack);
         }
         itemHandler.setStackInSlot(1, ItemStack.EMPTY);
@@ -232,7 +231,7 @@ public class ChargerBlockEntity extends BlockEntity
         powerValue = 0;
     }
 
-    private void dropItemStack(ItemStack stack1){
+    private void dropItemStack(ItemStack stack1) {
         if (!stack1.isEmpty()) {
             if (level != null) {
                 Vec3 dropPos = getBlockPos().above().getBottomCenter();
@@ -256,7 +255,7 @@ public class ChargerBlockEntity extends BlockEntity
             moveItemToTransformingSlot();
         }
         if (timeLeft > 0) {
-            if (!isCharger || isGridWorking()){
+            if (!isCharger || isGridWorking()) {
                 //if isDisCharger or (isCharger and isGridWorking)
                 timeLeft--;
             }

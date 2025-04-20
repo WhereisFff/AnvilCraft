@@ -1,14 +1,12 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Items;
 
 public class ChargerChargingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider){
+    public static void init(RegistrateRecipeProvider provider) {
         ChargerChargingRecipe.builder()
             .requires(Items.IRON_INGOT)
             .result(ModItems.MAGNET_INGOT)
