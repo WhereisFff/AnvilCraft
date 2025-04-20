@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
-public class HasItemIngredient extends HasItem{
+public class HasItemIngredient extends HasItem {
     public HasItemIngredient(Vec3 pos, Vec3 range, HolderSet<Item> items, MinMaxBounds.Ints count, DataComponentPredicate components, Map<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates) {
         super(pos, range, items, count, components, subPredicates);
     }
