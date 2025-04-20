@@ -21,7 +21,7 @@ public class VoidMatterBlock extends Block {
         super(properties.randomTicks());
     }
 
-    public BlockState voidDecay(Level level, BlockPos pos, BlockState state, RandomSource random) {
+    public static BlockState voidDecay(Level level, BlockPos pos, BlockState state, RandomSource random) {
         return level.registryAccess().registryOrThrow(Registries.BLOCK)
             .getTag(ModBlockTags.VOID_DECAY_PRODUCTS)
             .flatMap(it -> it.getRandomElement(random))
@@ -36,7 +36,7 @@ public class VoidMatterBlock extends Block {
             .filter(b -> b.getBlock() instanceof VoidMatterBlock)
             .count();
         if (neighborVoidMatterCount >= VOID_DECAY_THRESHOLD) {
-            level.setBlockAndUpdate(pos, this.voidDecay(level, pos, state, random));
+            level.setBlockAndUpdate(pos, voidDecay(level, pos, state, random));
         }
     }
 

@@ -23,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 public class MachineOutputDirectionPacket implements CustomPacketPayload {
     public static final Type<MachineOutputDirectionPacket> TYPE = new Type<>(AnvilCraft.of("machine_output_direction"));
     public static final StreamCodec<RegistryFriendlyByteBuf, MachineOutputDirectionPacket> STREAM_CODEC =
-            StreamCodec.ofMember(MachineOutputDirectionPacket::encode, MachineOutputDirectionPacket::new);
+        StreamCodec.ofMember(MachineOutputDirectionPacket::encode, MachineOutputDirectionPacket::new);
     public static final IPayloadHandler<MachineOutputDirectionPacket> HANDLER = new DirectionalPayloadHandler<>(
-            MachineOutputDirectionPacket::clientHandler, MachineOutputDirectionPacket::serverHandler);
+        MachineOutputDirectionPacket::clientHandler, MachineOutputDirectionPacket::serverHandler);
     private final Direction direction;
 
     @Override

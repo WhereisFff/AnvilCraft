@@ -1,10 +1,8 @@
 package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
-
-import net.neoforged.neoforge.network.PacketDistributor;
-
 import lombok.Getter;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.function.Consumer;
 

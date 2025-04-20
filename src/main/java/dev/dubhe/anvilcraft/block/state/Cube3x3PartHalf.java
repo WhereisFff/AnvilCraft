@@ -59,7 +59,7 @@ public enum Cube3x3PartHalf implements ISimpleMultiPartBlockState<Cube3x3PartHal
     }
 
     static {
-        for (Cube3x3PartHalf half: Cube3x3PartHalf.values()) {
+        for (Cube3x3PartHalf half : Cube3x3PartHalf.values()) {
             int x = half.offsetX;
             int y = half.offsetY;
             int z = half.offsetZ;

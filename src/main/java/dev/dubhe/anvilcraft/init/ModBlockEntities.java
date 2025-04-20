@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.init;
 
+import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import dev.dubhe.anvilcraft.block.entity.AccelerationRingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActiveSilencerBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.AdvancedRepeaterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargerBlockEntity;
@@ -9,6 +11,7 @@ import dev.dubhe.anvilcraft.block.entity.ChuteBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CorruptedBeaconBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CrabTrapBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CreativeGeneratorBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeaterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.InductionLightBlockEntity;
@@ -29,6 +32,7 @@ import dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.TeslaTowerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ThermoelectricConverterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.TransmissionPoleBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.VoidEnergyCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.plate.TimeCountedPressurePlateBlockEntity;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.BatchCrafterRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.ChargeCollectorRenderer;
@@ -37,8 +41,7 @@ import dev.dubhe.anvilcraft.client.renderer.blockentity.CreativeGeneratorRendere
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HasMobBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HeliostatsRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.LaserBlockRenderer;
-
-import com.tterrag.registrate.util.entry.BlockEntityEntry;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.VoidEnergyCollectorRenderer;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
@@ -206,6 +209,22 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<AccelerationRingBlockEntity> ACCELERATION_RING = REGISTRATE
         .blockEntity("acceleration_ring", AccelerationRingBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.ACCELERATION_RING)
+        .register();
+
+    public static final BlockEntityEntry<DeflectionRingBlockEntity> DEFLECTION_RING = REGISTRATE
+        .blockEntity("deflection_ring", DeflectionRingBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.DEFLECTION_RING)
+        .register();
+
+    public static final BlockEntityEntry<VoidEnergyCollectorBlockEntity> VOID_ENERGY_COLLECTOR = REGISTRATE
+        .blockEntity("void_energy_collector", VoidEnergyCollectorBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.VOID_ENERGY_COLLECTOR)
+        .renderer(() -> VoidEnergyCollectorRenderer::new)
+        .register();
+
+    public static final BlockEntityEntry<AdvancedRepeaterBlockEntity> ADVANCED_REPEATER = REGISTRATE
+        .blockEntity("advanced_repeater", AdvancedRepeaterBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.ADVANCED_REPEATER)
         .register();
 
     public static void register() {

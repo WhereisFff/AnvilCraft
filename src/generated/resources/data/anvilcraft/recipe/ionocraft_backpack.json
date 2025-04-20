@@ -1,0 +1,28 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "anvilcraft:ionocraft_backpack",
+  "key": {
+    "A": {
+      "item": "anvilcraft:ionocraft"
+    },
+    "B": {
+      "tag": "anvilcraft:capacitor"
+    },
+    "C": {
+      "tag": "c:plates/titanium"
+    },
+    "D": {
+      "item": "minecraft:leather_chestplate"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "ABA",
+    "CDC"
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:ionocraft_backpack"
+  }
+}

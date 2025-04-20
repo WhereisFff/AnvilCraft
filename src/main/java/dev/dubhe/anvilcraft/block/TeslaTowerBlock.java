@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -105,12 +106,17 @@ public class TeslaTowerBlock
         BlockGetter level,
         BlockPos pos,
         CollisionContext context) {
-        return switch (state.getValue(HALF)){
+        return switch (state.getValue(HALF)) {
             case BOTTOM -> BOTTOM_SHAPE;
             case MID_LOWER -> LOWER_SHAPE;
             case MID_UPPER -> UPPER_SHAPE;
             case TOP -> TOP_SHAPE;
         };
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     @Override
@@ -184,11 +190,11 @@ public class TeslaTowerBlock
 
     @Override
     protected InteractionResult useWithoutItem(
-            BlockState pState,
-            Level pLevel,
-            BlockPos pPos,
-            Player pPlayer,
-            BlockHitResult pHitResult
+        BlockState pState,
+        Level pLevel,
+        BlockPos pPos,
+        Player pPlayer,
+        BlockHitResult pHitResult
     ) {
         if (pLevel.isClientSide) {
             return InteractionResult.SUCCESS;

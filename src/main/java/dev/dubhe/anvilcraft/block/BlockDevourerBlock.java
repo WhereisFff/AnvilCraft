@@ -1,6 +1,8 @@
 package dev.dubhe.anvilcraft.block;
 
+import com.google.common.collect.Lists;
 import com.mojang.serialization.MapCodec;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
@@ -10,6 +12,7 @@ import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
@@ -19,6 +22,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DirectionalBlock;
+import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
@@ -27,6 +31,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -34,13 +39,16 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
 
+@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class BlockDevourerBlock extends DirectionalBlock implements HammerRotateBehavior, IHammerRemovable {
 
@@ -66,12 +74,12 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    protected @NotNull MapCodec<? extends DirectionalBlock> codec() {
+    protected MapCodec<? extends DirectionalBlock> codec() {
         return simpleCodec(BlockDevourerBlock::new);
     }
 
     @Override
-    protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING).add(TRIGGERED);
     }
 
@@ -91,10 +99,10 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    protected void onPlace(@NotNull BlockState state,
+    protected void onPlace(BlockState state,
                            Level level,
-                           @NotNull BlockPos pos,
-                           @NotNull BlockState oldState,
+                           BlockPos pos,
+                           BlockState oldState,
                            boolean movedByPiston) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
@@ -103,22 +111,24 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
 
     @Override
     public void tick(
-        @NotNull BlockState state,
-        @NotNull ServerLevel level,
-        @NotNull BlockPos pos,
-        @NotNull RandomSource random) {
+        BlockState state,
+        ServerLevel level,
+        BlockPos pos,
+        RandomSource random) {
         super.tick(state, level, pos, random);
         if (!state.getValue(TRIGGERED)) return;
-        if (!level.hasNeighborSignal(pos)) level.setBlock(pos, state.setValue(TRIGGERED, false), 2);
+        if (!BlockPlacerBlock.hasNeighborSignal(level, pos, state.getValue(FACING))) {
+            level.setBlock(pos, state.setValue(TRIGGERED, false), 2);
+        }
     }
 
     @Override
     public void neighborChanged(
-        @NotNull BlockState state,
-        @NotNull Level level,
-        @NotNull BlockPos pos,
-        @NotNull Block neighborBlock,
-        @NotNull BlockPos neighborPos,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block neighborBlock,
+        BlockPos neighborPos,
         boolean movedByPiston) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
@@ -127,8 +137,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
 
     private void checkIfTriggered(Level level, BlockState blockState, BlockPos blockPos) {
         boolean bl = blockState.getValue(TRIGGERED);
-        BlockState changedState = blockState.setValue(TRIGGERED, !bl);
-        if (bl != level.hasNeighborSignal(blockPos)) {
+        if (bl != BlockPlacerBlock.hasNeighborSignal(level, blockPos, blockState.getValue(FACING))) {
+            BlockState changedState = blockState.setValue(TRIGGERED, !bl);
             level.setBlock(blockPos, changedState, 2);
             if (!bl) {
                 devourBlock((ServerLevel) level, blockPos, blockState.getValue(FACING), 1);
@@ -137,17 +147,16 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    public @Nonnull RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
-    
-    public @NotNull VoxelShape getShape(
-        @NotNull BlockState state,
-        @NotNull BlockGetter level,
-        @NotNull BlockPos pos,
-        @NotNull CollisionContext context) {
+    public VoxelShape getShape(
+        BlockState state,
+        BlockGetter level,
+        BlockPos pos,
+        CollisionContext context) {
         return switch (state.getValue(FACING)) {
             case DOWN -> DOWN_SHAPE;
             case UP -> UP_SHAPE;
@@ -156,6 +165,11 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             case WEST -> WEST_SHAPE;
             case EAST -> EAST_SHAPE;
         };
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     public void devourBlock(ServerLevel level, BlockPos devourerPos, Direction devourerDirection, int range) {
@@ -177,13 +191,14 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockPos devourerPos,
         Direction devourerDirection,
         int range,
-        Block anvil) {
+        @Nullable Block anvil) {
         BlockPos outputPos = devourerPos.relative(devourerDirection.getOpposite());
         BlockPos devourCenterPos = devourerPos.relative(devourerDirection);
         IItemHandler itemHandler = level.getCapability(
             Capabilities.ItemHandler.BLOCK,
             devourerPos.relative(devourerDirection.getOpposite()),
-            devourerDirection.getOpposite());
+            devourerDirection.getOpposite()
+        );
         Vec3 center = outputPos.getCenter();
         AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
         final List<BlockPos> devourBlockPosList;
@@ -203,43 +218,84 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         boolean insertEnabled = itemHandler != null;
         boolean dropOriginalPlace = !level.noCollision(aabb);
         devourBlockPosList = BlockPos.betweenClosedStream(devourBlockBoundingBox)
-            .map(blockPos -> new BlockPos(blockPos.getX(), blockPos.getY(), blockPos.getZ()))
-            .map(BlockPos::new)
+            .map(BlockPos::immutable)
             .toList();
+
+        final List<BlockPos> chainDevourBlockPosList = new ArrayList<>();
+        final List<BlockPos> filteredBlockPosList = new ArrayList<>();
         for (BlockPos devourBlockPos : devourBlockPosList) {
-            BlockState devourBlockState = level.getBlockState(devourBlockPos);
-            if (devourBlockState.isAir()) continue;
-            if (devourBlockState.getBlock().defaultDestroyTime() < 0) continue;
-            if (devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
-                && level.random.nextDouble() > 0.05) {
-                level.destroyBlock(devourBlockPos, false);
-                continue;
-            }
-            List<ItemStack> dropList = switch (anvil) {
-                case null -> BreakBlockUtil.drop(level, devourBlockPos);
-                case RoyalAnvilBlock $ -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
-                case EmberAnvilBlock $ -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
-                default -> BreakBlockUtil.drop(level, devourBlockPos);
-            };
-            for (ItemStack itemStack : dropList) {
-                if (insertEnabled) {
-                    ItemStack outItemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, true);
-                    if (outItemStack.isEmpty()) {
-                        itemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, false);
+            if (
+                AnvilCraft.config.blockDevourerUpwardChainDevouring
+                && devourBlockPos.getY() == devourBlockBoundingBox.maxY
+            ) {
+                for (BlockPos chainDevourBlockPos : BlockPos.betweenClosed(
+                    devourBlockPos.above(), devourBlockPos.above(AnvilCraft.config.blockDevourerUpwardChainDevouringDistance)
+                )) {
+                    if (level.getBlockState(chainDevourBlockPos).is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)) {
+                        chainDevourBlockPosList.add(chainDevourBlockPos.immutable());
+                    } else {
+                        break;
                     }
                 }
-                if (itemStack.isEmpty()) continue;
-                if (dropOriginalPlace) {
-                    Block.popResource(level, devourBlockPos, itemStack);
-                } else {
-                    AnvilUtil.dropItems(List.of(itemStack), level, center);
+            }
+            
+            devourSingleBlockInternalLogic(
+                level, anvil, devourBlockPos, filteredBlockPosList, insertEnabled, itemHandler, dropOriginalPlace, center
+            );
+        }
+        for (BlockPos devourBlockPos : chainDevourBlockPosList) {
+            devourSingleBlockInternalLogic(
+                level, anvil, devourBlockPos, filteredBlockPosList, insertEnabled, itemHandler, dropOriginalPlace, center
+            );
+        }
+    }
+
+    private static void devourSingleBlockInternalLogic(
+        ServerLevel level, @Nullable Block anvil, BlockPos devourBlockPos, List<BlockPos> filteredBlockPosList, boolean insertEnabled,
+        @Nullable IItemHandler itemHandler, boolean dropOriginalPlace, Vec3 center
+    ) {
+        if (filteredBlockPosList.contains(devourBlockPos)) return;
+        BlockState devourBlockState = level.getBlockState(devourBlockPos);
+        if (devourBlockState.isAir()) return;
+        if (devourBlockState.getBlock().defaultDestroyTime() < 0) return;
+        if (devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
+            && level.random.nextDouble() > 0.05) {
+            level.destroyBlock(devourBlockPos, false);
+            return;
+        }
+
+        if (devourBlockState.hasProperty(BlockStateProperties.DOUBLE_BLOCK_HALF)) {
+            Direction toAnother = devourBlockState.getValue(BlockStateProperties.DOUBLE_BLOCK_HALF).getDirectionToOther();
+            BlockPos anotherHalfPos = devourBlockPos.relative(toAnother);
+            level.destroyBlock(anotherHalfPos, false);
+            filteredBlockPosList.add(anotherHalfPos);
+        }
+
+        List<ItemStack> dropList = switch (anvil) {
+            case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
+            case EmberAnvilBlock ignore -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
+            case null, default -> BreakBlockUtil.drop(level, devourBlockPos);
+        };
+
+        for (ItemStack itemStack : dropList) {
+            if (insertEnabled) {
+                ItemStack outItemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, true);
+                if (outItemStack.isEmpty()) {
+                    itemStack = ItemHandlerHelper.insertItem(itemHandler, itemStack, false);
                 }
             }
-            devourBlockState
-                .getBlock()
-                .playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
-            level.destroyBlock(devourBlockPos, false);
+            if (itemStack.isEmpty()) continue;
+            if (dropOriginalPlace) {
+                Block.popResource(level, devourBlockPos, itemStack);
+            } else {
+                AnvilUtil.dropItems(List.of(itemStack), level, center);
+            }
         }
+
+        if (!(devourBlockState.getBlock() instanceof DoublePlantBlock)) {
+            devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
+        }
+        level.destroyBlock(devourBlockPos, false);
     }
 
     @Override

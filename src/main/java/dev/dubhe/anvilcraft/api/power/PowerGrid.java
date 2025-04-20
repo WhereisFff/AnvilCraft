@@ -3,25 +3,24 @@ package dev.dubhe.anvilcraft.api.power;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.network.PowerGridRemovePacket;
 import dev.dubhe.anvilcraft.network.PowerGridSyncPacket;
-
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.phys.shapes.BooleanOp;
-import net.minecraft.world.phys.shapes.Shapes;
-import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-
-import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
 
 /**
  * 电网
@@ -42,14 +41,17 @@ public class PowerGrid {
 
     @Getter
     private int consume = 0; // 耗电功率
-
+    @Getter
+    final Set<IPowerComponent> components = Collections.synchronizedSet(new HashSet<>());
     final Set<IPowerProducer> producers = Collections.synchronizedSet(new HashSet<>()); // 发电机
     final Set<IPowerConsumer> consumers = Collections.synchronizedSet(new HashSet<>()); // 用电器
     final Set<IPowerStorage> storages = Collections.synchronizedSet(new HashSet<>()); // 储电
     final Set<IPowerTransmitter> transmitters = Collections.synchronizedSet(new HashSet<>()); // 中继
 
+    final Set<DynamicPowerComponent> dynamicComponents = Collections.synchronizedSet(new HashSet<>());
+
     @Getter
-    private VoxelShape shape = null;
+    private FastShape shape = null;
 
     @Getter
     private BlockPos pos = null;
@@ -133,12 +135,8 @@ public class PowerGrid {
     }
 
     private void gridTick() {
-        Set<IPowerComponent> components = Collections.synchronizedSet(new TreeSet<>());
-        components.addAll(this.transmitters);
-        components.addAll(this.consumers);
-        components.addAll(this.storages);
-        components.addAll(this.producers);
         components.forEach(IPowerComponent::gridTick);
+        dynamicComponents.forEach(DynamicPowerComponent::gridTick);
     }
 
     private boolean checkRemove(IPowerComponent component) {
@@ -150,6 +148,8 @@ public class PowerGrid {
     }
 
     private boolean flush() {
+        int oldGenerate = this.generate;
+        int oldConsume = this.consume;
         this.generate = 0;
         this.consume = 0;
         for (IPowerTransmitter transmitter : transmitters) {
@@ -169,7 +169,33 @@ public class PowerGrid {
             }
             this.consume += consumer.getInputPower();
         }
+
+        for (DynamicPowerComponent dynamicComponent : new ArrayList<>(this.dynamicComponents)) {
+            Entity owner = dynamicComponent.getOwner();
+            if (owner.level() != this.level || !this.collideFast(dynamicComponent.boundingBox())) {
+                notifyLeaving(dynamicComponent);
+                continue;
+            }
+            int power = dynamicComponent.getPowerConsumption();
+            if (power > 0) {
+                this.consume += power;
+            } else {
+                this.generate += power;
+            }
+        }
+
+        if (this.consume != oldConsume || this.generate != oldGenerate) {
+            this.changed = true;
+        }
         return false;
+    }
+
+    public boolean inRangeFast(Vec3 pos) {
+        return shape.inRange(pos);
+    }
+
+    public boolean collideFast(AABB box) {
+        return shape.intersects(box);
     }
 
     /**
@@ -201,6 +227,7 @@ public class PowerGrid {
                 this.transmitters.add(transmitter);
             }
             component.setGrid(this);
+            this.components.add(component);
             this.addRange(component);
         }
         this.flush();
@@ -209,20 +236,19 @@ public class PowerGrid {
 
     private void addRange(IPowerComponent component) {
         if (this.shape == null) {
-            this.shape = component.getShape();
+            this.shape = new FastShape(List.of(component.getShape()));
             this.pos = component.getPos();
             return;
         }
-        BlockPos center = this.pos;
-        BlockPos vec3 = component.getPos();
-        VoxelShape range = component
-            .getShape()
-            .move(
-                vec3.getX() - center.getX(),
-                vec3.getY() - center.getY(),
-                vec3.getZ() - center.getZ()
-            );
-        this.shape = Shapes.join(this.shape, range, BooleanOp.OR);
+        this.shape.add(component.getShape());
+    }
+
+    public void notifyLeaving(DynamicPowerComponent component) {
+        this.dynamicComponents.remove(component);
+    }
+
+    public void notifyEntering(DynamicPowerComponent component) {
+        this.dynamicComponents.add(component);
     }
 
     /**
@@ -250,15 +276,15 @@ public class PowerGrid {
      */
     public void remove(IPowerComponent @NotNull ... components) {
         this.markedRemoval = true;
-        Set<IPowerComponent> set = new LinkedHashSet<>();
-        this.transmitters.stream().filter(this::clearGrid).forEach(set::add);
+        for (IPowerComponent component : this.components) {
+            component.setGrid(null);
+        }
+        Set<IPowerComponent> set = new HashSet<>(this.components);
         this.transmitters.clear();
-        this.storages.stream().filter(this::clearGrid).forEach(set::add);
         this.storages.clear();
-        this.producers.stream().filter(this::clearGrid).forEach(set::add);
         this.producers.clear();
-        this.consumers.stream().filter(this::clearGrid).forEach(set::add);
         this.consumers.clear();
+        this.components.clear();
         for (IPowerComponent component : components) {
             set.remove(component);
         }
@@ -289,17 +315,7 @@ public class PowerGrid {
      * @return 元件是否在电网范围内
      */
     public boolean isInRange(@NotNull IPowerComponent component) {
-        BlockPos vec3 = component.getPos().subtract(this.getPos());
-        VoxelShape range = Shapes.join(
-            this.shape,
-            component.getShape().move(
-                vec3.getX(),
-                vec3.getY(),
-                vec3.getZ()
-            ),
-            BooleanOp.AND
-        );
-        return !range.isEmpty();
+        return collideFast(component.getShape());
     }
 
     /**
@@ -315,6 +331,26 @@ public class PowerGrid {
 
     void syncToPlayer(ServerPlayer player) {
         PacketDistributor.sendToPlayer(player, new PowerGridSyncPacket(this));
+    }
+
+    public static Optional<PowerGrid> findPowerGridContains(Level level, Vec3 vec3) {
+        Optional<PowerGrid> powerGrid = Optional.empty();
+        for (PowerGrid it : MANAGER.getGridSet(level)) {
+            if (it.inRangeFast(vec3)) {
+                return Optional.of(it);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public static Optional<PowerGrid> findPowerGridContains(Level level, AABB vec3) {
+        Optional<PowerGrid> powerGrid = Optional.empty();
+        for (PowerGrid it : MANAGER.getGridSet(level)) {
+            if (it.collideFast(vec3)) {
+                return Optional.of(it);
+            }
+        }
+        return Optional.empty();
     }
 
     /**

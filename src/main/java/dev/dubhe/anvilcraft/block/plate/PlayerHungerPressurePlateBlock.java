@@ -34,8 +34,8 @@ public class PlayerHungerPressurePlateBlock extends PowerLevelPressurePlateBlock
         float result = 0;
 
         for (Player player : level.getEntitiesOfClass(
-                Player.class, box,
-                EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
+            Player.class, box,
+            EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
         )) {
             FoodData foodData = player.getFoodData();
             result = Math.max(result, (float) foodData.getFoodLevel() / 20);

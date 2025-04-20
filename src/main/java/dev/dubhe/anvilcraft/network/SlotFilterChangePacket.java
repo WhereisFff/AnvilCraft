@@ -20,9 +20,9 @@ import org.jetbrains.annotations.NotNull;
 public class SlotFilterChangePacket implements CustomPacketPayload {
     public static final Type<SlotFilterChangePacket> TYPE = new Type<>(AnvilCraft.of("slot_filter_change"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SlotFilterChangePacket> STREAM_CODEC =
-            StreamCodec.ofMember(SlotFilterChangePacket::encode, SlotFilterChangePacket::decode);
+        StreamCodec.ofMember(SlotFilterChangePacket::encode, SlotFilterChangePacket::decode);
     public static final IPayloadHandler<SlotFilterChangePacket> HANDLER = new DirectionalPayloadHandler<>(
-            SlotFilterChangePacket::clientHandler, SlotFilterChangePacket::serverHandler);
+        SlotFilterChangePacket::clientHandler, SlotFilterChangePacket::serverHandler);
 
     private final int index;
     private final ItemStack filter;

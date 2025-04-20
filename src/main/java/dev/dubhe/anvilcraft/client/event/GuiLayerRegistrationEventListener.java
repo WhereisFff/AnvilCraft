@@ -1,39 +1,33 @@
 package dev.dubhe.anvilcraft.client.event;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.BufferUploader;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
-import dev.dubhe.anvilcraft.client.init.ModShaders;
-import dev.dubhe.anvilcraft.item.IEngineerGoggles;
+import dev.dubhe.anvilcraft.client.hud.IonoCraftBackpackHUD;
+import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 
 import com.mojang.blaze3d.platform.Window;
-import org.joml.Matrix4f;
 
 public class GuiLayerRegistrationEventListener {
 
     public static void onRegister(RegisterGuiLayersEvent event) {
-        event.registerAboveAll(AnvilCraft.of("power"), (guiGraphics, pDeltaTracker) -> {
+        event.registerAboveAll(AnvilCraft.of("power"), (guiGraphics, deltaTracker) -> {
             Minecraft minecraft = Minecraft.getInstance();
             if (minecraft.options.hideGui) return;
-            float partialTick = pDeltaTracker.getGameTimeDeltaPartialTick(
+            float partialTick = deltaTracker.getGameTimeDeltaPartialTick(
                 Minecraft.getInstance().isPaused()
             );
             Window window = Minecraft.getInstance().getWindow();
@@ -53,7 +47,7 @@ public class GuiLayerRegistrationEventListener {
                     screenHeight
                 );
             }
-            if (!IEngineerGoggles.hasGoggles(minecraft.player)) return;
+            if (!AnvilHammerItem.isWearing(minecraft.player)) return;
             HitResult hit = minecraft.hitResult;
             if (hit == null || hit.getType() != HitResult.Type.BLOCK) {
                 return;
@@ -62,12 +56,18 @@ public class GuiLayerRegistrationEventListener {
                 BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
                 if (minecraft.level == null) return;
                 BlockEntity e = minecraft.level.getBlockEntity(blockPos);
-                if (e == null) return;
+                if (e == null) {
+                    BlockState s = minecraft.level.getBlockState(blockPos);
+                    if (s.is(BlockTags.AIR)) return;
+                    HudTooltipManager.INSTANCE.renderTooltip(guiGraphics, s, partialTick, screenWidth, screenHeight);
+                    return;
+                }
                 HudTooltipManager.INSTANCE.renderTooltip(guiGraphics, e, partialTick, screenWidth, screenHeight);
             }
         });
 
         event.registerAboveAll(AnvilCraft.of("test"), GuiLayerRegistrationEventListener::render);
+        event.registerAboveAll(AnvilCraft.of("ionocraft_backpack"), IonoCraftBackpackHUD::render);
     }
 
     public static void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker) {

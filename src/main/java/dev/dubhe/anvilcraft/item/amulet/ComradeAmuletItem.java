@@ -34,7 +34,7 @@ public class ComradeAmuletItem extends AbstractAmuletItem {
     }
 
     @Override
-    void UpdateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, !getSignedPlayers(stack).isEmpty());
     }
 
@@ -53,7 +53,7 @@ public class ComradeAmuletItem extends AbstractAmuletItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         tooltipComponents.add(Component.translatable("item.anvilcraft.comrade_amulet.tooltip")
-                                  .withStyle(ChatFormatting.GRAY));
+            .withStyle(ChatFormatting.GRAY));
 
         HashBiMap<String, UUID> signedPlayers = getSignedPlayers(stack);
         for (String playerName : signedPlayers.keySet()) {

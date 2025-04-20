@@ -23,6 +23,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -43,11 +44,11 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
     public AccelerationRingBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition
-                .any()
-                .setValue(HALF, DirectionCube3x3PartHalf.BOTTOM_CENTER)
-                .setValue(FACING, Direction.NORTH)
-                .setValue(OVERLOAD, true)
-                .setValue(SWITCH, IPowerComponent.Switch.ON));
+            .any()
+            .setValue(HALF, DirectionCube3x3PartHalf.BOTTOM_CENTER)
+            .setValue(FACING, Direction.NORTH)
+            .setValue(OVERLOAD, true)
+            .setValue(SWITCH, IPowerComponent.Switch.ON));
     }
 
     @Override
@@ -72,23 +73,23 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
     @Override
     protected BlockState placedState(DirectionCube3x3PartHalf part, BlockState state) {
         return state
-                .setValue(this.getPart(), part);
+            .setValue(this.getPart(), part);
     }
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState()
-            .setValue(FACING, context.getNearestLookingDirection().getOpposite());
+            .setValue(FACING, context.getPlayer() != null && context.getPlayer().isShiftKeyDown() ? context.getNearestLookingDirection().getOpposite() : context.getNearestLookingDirection());
     }
 
     @Override
     public void neighborChanged(
-            BlockState state,
-            Level level,
-            BlockPos pos,
-            Block neighborBlock,
-            BlockPos neighborPos,
-            boolean movedByPiston
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block neighborBlock,
+        BlockPos neighborPos,
+        boolean movedByPiston
     ) {
         boolean isSignal = Arrays.stream(getParts()).anyMatch(it -> level.hasNeighborSignal(pos.subtract(state.getValue(getPart()).getOffset()).offset(it.getOffset())));
         if (isSignal && state.getValue(SWITCH) == IPowerComponent.Switch.ON) {
@@ -124,6 +125,11 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return true;
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     @Override

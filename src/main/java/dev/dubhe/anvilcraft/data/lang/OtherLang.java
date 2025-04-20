@@ -12,7 +12,7 @@ public class OtherLang {
 
         provider.add("item.anvilcraft.inherent_enchantment.tooltip", "Inherent enchantments:");
         provider.add(
-                "item.anvilcraft.amethyst_pickaxe.tooltip", "Stone pickaxe quality, can mine iron ore, not diamonds!");
+            "item.anvilcraft.amethyst_pickaxe.tooltip", "Stone pickaxe quality, can mine iron ore, not diamonds!");
         provider.add("item.anvilcraft.fire_reforging.tooltip", "Reforging: mending in fire or lava");
         provider.add("item.anvilcraft.comrade_amulet.tooltip", "Signed players:");
 
@@ -27,8 +27,8 @@ public class OtherLang {
         provider.add("message.anvilcraft.copied_to_clipboard", "Copied to clipboard");
         provider.add("message.anvilcraft.code_gen_filed", "Code generation failed");
         provider.add(
-                "message.anvilcraft.code_gen_check",
-                "Please check if the selected area is a cube and if the output slot has items.");
+            "message.anvilcraft.code_gen_check",
+            "Please check if the selected area is a cube and if the output slot has items.");
         provider.add("message.anvilcraft.no_file_selected", "No file path selected");
         provider.add("message.anvilcraft.file_save_failed", "An issue occurred while saving file %s, %s");
         provider.add("message.anvilcraft.file_saved", "File saved to %s");
@@ -36,6 +36,7 @@ public class OtherLang {
         provider.add("message.anvilcraft.disk.data_incompatible", "This block is incompatible with data stored in disk");
         provider.add("message.anvilcraft.disk.data_cleared", "Cleared data stored in disk");
         provider.add("message.anvilcraft.disk.data_stored", "Stored setting of block into disk");
+        provider.add("message.anvilcraft.chute.cannot_place", "Chute cannot face this direction");
 
         provider.add("enchantment.anvilcraft.beheading", "Beheading");
         provider.add("enchantment.anvilcraft.felling", "Felling");

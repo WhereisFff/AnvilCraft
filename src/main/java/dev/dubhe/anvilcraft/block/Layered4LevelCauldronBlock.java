@@ -21,11 +21,11 @@ import java.util.Optional;
 @MethodsReturnNonnullByDefault
 public class Layered4LevelCauldronBlock extends AbstractCauldronBlock {
     public static final MapCodec<Layered4LevelCauldronBlock> CODEC = RecordCodecBuilder.mapCodec(
-        p_308829_ -> p_308829_.group(
+        ins -> ins.group(
                 propertiesCodec(),
-                CauldronInteraction.CODEC.fieldOf("interactions").forGetter(p_304369_ -> p_304369_.interactions)
+                CauldronInteraction.CODEC.fieldOf("interactions").forGetter(block -> block.interactions)
             )
-            .apply(p_308829_, Layered4LevelCauldronBlock::new)
+            .apply(ins, Layered4LevelCauldronBlock::new)
     );
 
     public static final int MAX_LEVEL = 4;

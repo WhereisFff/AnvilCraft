@@ -4,8 +4,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
 import dev.dubhe.anvilcraft.client.ModInspectionClient;
-import dev.dubhe.anvilcraft.client.renderer.PowerGridRenderer;
-import dev.dubhe.anvilcraft.item.IEngineerGoggles;
+import dev.dubhe.anvilcraft.client.PowerGridClient;
+import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -57,7 +57,7 @@ public class RenderEventListener {
         double camX = vec3.x();
         double camY = vec3.y();
         double camZ = vec3.z();
-        PowerGridRenderer.renderTransmitterLine(event.getPoseStack(), bufferSource, vec3);
+        PowerGridClient.renderTransmitterLine(event.getPoseStack(), bufferSource, vec3);
         VertexConsumer vertexConsumer3 = bufferSource.getBuffer(RenderType.lines());
         if (entity instanceof LivingEntity livingEntity) {
             ItemStack mainHandItem = livingEntity.getItemInHand(InteractionHand.MAIN_HAND);
@@ -69,8 +69,8 @@ public class RenderEventListener {
             }
         }
         if (!(entity instanceof Player player)) return;
-        if (!IEngineerGoggles.hasGoggles(player)) return;
-        PowerGridRenderer.render(event.getPoseStack(), bufferSource, vec3);
+        if (!AnvilHammerItem.isWearing(player)) return;
+        PowerGridClient.render(event.getPoseStack(), bufferSource, vec3);
         HitResult hit = Minecraft.getInstance().hitResult;
         if (hit == null || hit.getType() != HitResult.Type.BLOCK) {
             return;

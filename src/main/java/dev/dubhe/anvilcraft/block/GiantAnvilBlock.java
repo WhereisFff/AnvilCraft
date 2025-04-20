@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableMap;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.event.anvil.GiantAnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
@@ -40,23 +41,36 @@ import net.minecraft.world.level.block.Fallable;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.util.DeferredSoundType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> implements Fallable, IHammerRemovable {
+    public static final SoundType SOUND_TYPE = new DeferredSoundType(
+        0.55F, 0.45F,
+        () -> SoundEvents.ANVIL_BREAK,
+        () -> SoundEvents.ANVIL_STEP,
+        () -> SoundEvents.ANVIL_PLACE,
+        () -> SoundEvents.ANVIL_HIT,
+        () -> SoundEvents.ANVIL_FALL
+    );
     private static final Component CONTAINER_TITLE = Component.translatable("container.repair");
     public static final EnumProperty<Cube3x3PartHalf> HALF = EnumProperty.create("half", Cube3x3PartHalf.class);
     public static final EnumProperty<GiantAnvilCube> CUBE = EnumProperty.create("cube", GiantAnvilCube.class);
@@ -264,7 +278,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
         Level level,
         BlockPos pos,
         BlockState state,
-        BlockState replaceableState,
+        @SuppressWarnings("unused") BlockState replaceableState,
         FallingBlockEntity fallingBlock,
         float fallDistance
     ) {
@@ -290,7 +304,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
             }
         }
 
-        level.playSound(null, belowPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1f, 1f);
+        level.playSound(null, belowPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.55f, level.random.nextFloat() * 0.1F + 0.55f);
     }
 
     @Override
@@ -307,7 +321,10 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
         RandomSource random
     ) {
         BlockState ringState = level.getBlockState(pos.subtract(state.getValue(HALF).getOffset()).above(3));
-        if (ringState.hasProperty(AccelerationRingBlock.HALF) && ringState.getValue(AccelerationRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(AccelerationRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(AccelerationRingBlock.OVERLOAD)) return;
+        if (ringState.hasProperty(AccelerationRingBlock.HALF) && ringState.getValue(AccelerationRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(AccelerationRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(AccelerationRingBlock.OVERLOAD) && ringState.getValue(AccelerationRingBlock.FACING) == Direction.UP)
+            return;
+        if (ringState.hasProperty(DeflectionRingBlock.HALF) && ringState.getValue(DeflectionRingBlock.HALF) == DirectionCube3x3PartHalf.BOTTOM_CENTER && ringState.getValue(DeflectionRingBlock.SWITCH) == IPowerComponent.Switch.ON && !ringState.getValue(DeflectionRingBlock.OVERLOAD) && ringState.getValue(DeflectionRingBlock.FACING).getAxis() == Direction.Axis.Y)
+            return;
         if (state.getValue(HALF) != Cube3x3PartHalf.BOTTOM_CENTER) return;
         for (Cube3x3PartHalf part : getParts()) {
             if (part.getOffsetY() != 0) continue;
@@ -324,7 +341,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
         this.falling(fallingBlockEntity);
     }
 
-    public void removePartsAndUpdate(Level level, BlockPos pos){
+    public void removePartsAndUpdate(Level level, BlockPos pos) {
         for (Cube3x3PartHalf part : getParts()) {
             BlockPos bp = pos.offset(part.getOffset());
             BlockState blockState = level.getBlockState(bp);
@@ -344,7 +361,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
     }
 
     protected void falling(FallingBlockEntity entity) {
-        entity.setHurtsEntities(10.0F, 40);
+        entity.setHurtsEntities(10.0F, AnvilCraft.config.giantAnvilFallDamageMax);
     }
 
 
@@ -407,6 +424,11 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
             (syncId, inventory, player) ->
                 new AnvilMenu(syncId, inventory, ContainerLevelAccess.create(level, pos)),
             CONTAINER_TITLE);
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     @Override

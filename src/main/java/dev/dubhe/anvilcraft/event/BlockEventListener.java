@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.block.Block;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -37,7 +38,7 @@ public class BlockEventListener {
      *
      * @param event 右键方块事件
      */
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public static void anvilHammerUse(@NotNull PlayerInteractEvent.RightClickBlock event) {
         if (event.getEntity().level().isClientSide) return;
         InteractionHand hand = event.getHand();

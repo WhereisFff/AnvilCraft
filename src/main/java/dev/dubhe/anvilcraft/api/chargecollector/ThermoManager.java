@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.api.chargecollector;
 
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
@@ -11,8 +11,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
-
-import lombok.Getter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -117,7 +115,7 @@ public class ThermoManager {
             BlockPos blockPos = block.pos;
             BlockState state = this.level.getBlockState(blockPos);
             Optional<ThermoEntry> optional =
-                    thermoEntries.stream().filter(it -> it.accepts(state) > 0).findFirst();
+                thermoEntries.stream().filter(it -> it.accepts(state) > 0).findFirst();
             if (optional.isPresent()) {
                 ThermoEntry entry = optional.get();
                 if (block.ttl % 2 == 0) {

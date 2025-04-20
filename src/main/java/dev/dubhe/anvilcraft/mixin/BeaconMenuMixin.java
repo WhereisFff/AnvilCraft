@@ -37,14 +37,14 @@ public abstract class BeaconMenuMixin {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     @Inject(
-            method = "updateEffects",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target = "Lnet/minecraft/world/inventory/BeaconMenu$PaymentSlot;"
-                                    + "remove(I)Lnet/minecraft/world/item/ItemStack;"))
+        method = "updateEffects",
+        at =
+        @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/inventory/BeaconMenu$PaymentSlot;"
+                + "remove(I)Lnet/minecraft/world/item/ItemStack;"))
     private void updateEffects(
-            Optional<MobEffect> primaryEffect, Optional<MobEffect> secondaryEffect, CallbackInfo ci) {
+        Optional<MobEffect> primaryEffect, Optional<MobEffect> secondaryEffect, CallbackInfo ci) {
         ItemStack item = this.paymentSlot.getItem();
         if (!item.is(ModItems.CURSED_GOLD_INGOT.get())) return;
         this.access.execute((level, pos) -> {
@@ -55,12 +55,13 @@ public abstract class BeaconMenuMixin {
                 GameRules.BooleanValue rule = server.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE);
                 if (!rule.get()) return;
                 serverLevel.setWeatherParameters(
-                        0, ServerLevel.THUNDER_DURATION.sample(serverLevel.getRandom()), true, true);
+                    0, ServerLevel.THUNDER_DURATION.sample(serverLevel.getRandom()), true, true);
             }
         });
     }
 
-    @Unique private boolean anvilcraft$toCorrupted(@NotNull Level level, @NotNull BlockPos pos) {
+    @Unique
+    private boolean anvilcraft$toCorrupted(@NotNull Level level, @NotNull BlockPos pos) {
         RandomSource random = level.getRandom();
         double chance = random.nextDouble();
         int levels = anvilcraft$updateBase(level, pos.getX(), pos.getY(), pos.getZ());
@@ -73,7 +74,8 @@ public abstract class BeaconMenuMixin {
         };
     }
 
-    @Unique private static int anvilcraft$updateBase(Level level, int x, int y, int z) {
+    @Unique
+    private static int anvilcraft$updateBase(Level level, int x, int y, int z) {
         int k;
         int i = 0;
         int j = 1;

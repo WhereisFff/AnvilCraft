@@ -81,7 +81,7 @@ public class PowerGridManager {
         }
     }
 
-    private Set<PowerGrid> getGridSet(Level level) {
+    public Set<PowerGrid> getGridSet(Level level) {
         if (gridMap.containsKey(level)) {
             return gridMap.get(level);
         } else {
@@ -91,9 +91,9 @@ public class PowerGridManager {
         }
     }
 
-    public void onPlayerJoined(Level level,ServerPlayer player) {
+    public void onPlayerJoined(Level level, ServerPlayer player) {
         Set<PowerGrid> grids = this.gridMap.get(level);
-        if (grids == null)return;
+        if (grids == null) return;
         grids.forEach(it -> it.syncToPlayer(player));
     }
 }

@@ -145,6 +145,27 @@ public class AnvilCraftConfig implements ConfigData {
     @Comment("Bloom effect on laser and power transmitter lines.")
     public boolean renderBloomEffect = false;
 
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Iono Craft Backpack Max Flight Time in ticks")
+    public int ionoCraftBackpackMaxFlightTime = 1200 * 20;
+
+    @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
+    public IonoCraftBackpackHud ionoCraftBackpackHud = new IonoCraftBackpackHud();
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 100, min = 0)
+    @Comment("Giant anvil max fall damage")
+    public int giantAnvilFallDamageMax = 40;
+
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Block Devourer upward chain devouring blocks within tag #anvilcraft:block_devourer_chain_devouring")
+    public boolean blockDevourerUpwardChainDevouring = true;
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 15, min = 0)
+    @Comment("Block Devourer upward chain devouring max distance")
+    public int blockDevourerUpwardChainDevouringDistance = 8;
+
     public static class PowerConverter implements ConfigData {
         @Comment("The working interval of power converters")
         @ConfigEntry.Gui.Tooltip
@@ -159,5 +180,24 @@ public class AnvilCraftConfig implements ConfigData {
         @Comment("Power loss of energy converters")
         @ConfigEntry.Gui.Tooltip
         public double powerConverterLoss = 0.1;
+    }
+
+    public static class IonoCraftBackpackHud implements ConfigData {
+        @Comment("If true, will show Ionocraft Backpack current power in hud")
+        @ConfigEntry.Gui.Tooltip
+        public boolean enabled = true;
+
+        @Comment("The Gui Hud Scale")
+        @ConfigEntry.Gui.Tooltip
+        @ConfigEntry.BoundedDiscrete(min = 0, max = 8)
+        public float hudScale = 0.75f;
+
+        @Comment("The gui hud x position")
+        @ConfigEntry.Gui.Tooltip
+        public int hudX = 8;
+
+        @Comment("The gui hud y position")
+        @ConfigEntry.Gui.Tooltip
+        public int hudY = 8;
     }
 }

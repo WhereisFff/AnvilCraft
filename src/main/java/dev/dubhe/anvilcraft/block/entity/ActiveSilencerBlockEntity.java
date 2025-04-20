@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.sound.ISoundEventListener;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
@@ -7,8 +8,8 @@ import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.ActiveSilencerMenu;
-
 import dev.dubhe.anvilcraft.util.DistExecutor;
+import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -29,9 +30,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-
-import com.mojang.serialization.Codec;
-import lombok.Getter;
 import net.neoforged.api.distmarker.Dist;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -43,8 +41,7 @@ import java.util.concurrent.CopyOnWriteArraySet;
 
 public class ActiveSilencerBlockEntity
     extends BlockEntity
-    implements MenuProvider, ISoundEventListener, IDiskCloneable, IHasAffectRange
-{
+    implements MenuProvider, ISoundEventListener, IDiskCloneable, IHasAffectRange {
     public static final Codec<List<ResourceLocation>> CODEC =
         ResourceLocation.CODEC.listOf().fieldOf("mutedSound").codec();
 

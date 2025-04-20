@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.block;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -8,9 +10,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.state.BlockState;
-
-import lombok.Getter;
-import lombok.Setter;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 

@@ -25,6 +25,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -102,12 +103,17 @@ public class RemoteTransmissionPoleBlock
         BlockGetter level,
         BlockPos pos,
         CollisionContext context) {
-        return switch (state.getValue(HALF)){
+        return switch (state.getValue(HALF)) {
             case BOTTOM -> TRANSMISSION_POLE_BASE;
             case MID_UPPER, MID_LOWER -> TRANSMISSION_POLE_MID;
             case TOP -> TRANSMISSION_POLE_TOP;
             default -> super.getShape(state, level, pos, context);
         };
+    }
+
+    @Override
+    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
+        return false;
     }
 
     @Override

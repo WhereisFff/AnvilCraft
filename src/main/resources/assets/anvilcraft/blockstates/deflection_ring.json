@@ -1,0 +1,186 @@
+{
+  "variants": {
+    "facing=down,overload=false,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring",
+      "x": 180
+    },
+    "facing=east,overload=false,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,overload=false,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring",
+      "x": 90
+    },
+    "facing=south,overload=false,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,overload=false,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring"
+    },
+    "facing=west,overload=false,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring",
+      "x": 90,
+      "y": 270
+    },
+    "facing=down,overload=true,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_overload",
+      "x": 180
+    },
+    "facing=east,overload=true,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_overload",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,overload=true,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_overload",
+      "x": 90
+    },
+    "facing=south,overload=true,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_overload",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,overload=true,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_overload"
+    },
+    "facing=west,overload=true,switch=on,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_overload",
+      "x": 90,
+      "y": 270
+    },
+    "facing=down,overload=false,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 180
+    },
+    "facing=east,overload=false,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,overload=false,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90
+    },
+    "facing=south,overload=false,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,overload=false,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off"
+    },
+    "facing=west,overload=false,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90,
+      "y": 270
+    },
+    "facing=down,overload=true,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 180
+    },
+    "facing=east,overload=true,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north,overload=true,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90
+    },
+    "facing=south,overload=true,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up,overload=true,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off"
+    },
+    "facing=west,overload=true,switch=off,half=mid_center": {
+      "model": "anvilcraft:block/deflection_ring_off",
+      "x": 90,
+      "y": 270
+    },
+    "half=bottom_center": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_w": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_e": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_n": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_s": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_wn": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_ws": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_en": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=bottom_es": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_w": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_e": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_n": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_s": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_wn": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_ws": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_en": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=mid_es": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_center": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_w": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_e": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_n": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_s": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_wn": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_ws": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_en": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    },
+    "half=top_es": {
+      "model": "anvilcraft:block/deflection_ring_part"
+    }
+  }
+}

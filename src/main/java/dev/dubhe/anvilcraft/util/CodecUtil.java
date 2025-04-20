@@ -1,31 +1,26 @@
 package dev.dubhe.anvilcraft.util;
 
-import com.mojang.serialization.DynamicOps;
-import io.netty.buffer.ByteBuf;
-import lombok.Data;
-import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.NonNullList;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,6 +56,32 @@ public class CodecUtil {
                 },
                 DataResult::success);
     }
+
+    public static final Codec<Item> ITEM_CODEC = Codec.STRING.flatXmap(
+        s -> {
+            try {
+                Item item = BuiltInRegistries.ITEM.get(ResourceLocation.parse(s));
+                if (item == Items.AIR) {
+                    return DataResult.error(() -> "failed parse item key: " + s);
+                } else {
+                    return DataResult.success(item);
+                }
+            } catch (Exception e) {
+                return DataResult.error(e::getMessage);
+            }
+        },
+        i -> {
+            ResourceLocation key = BuiltInRegistries.ITEM.getKey(i);
+            if (key.equals(ResourceLocation.parse("air"))) {
+                return DataResult.error(() -> "failed parse item: " + i);
+            } else {
+                return DataResult.success(key.toString());
+            }
+        });
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, Item> ITEM_STREAM_CODEC = StreamCodec.of(
+        (buf, item) -> buf.writeUtf(BuiltInRegistries.ITEM.getKey(item).toString()),
+        buf -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(buf.readUtf())));
 
     public static final Codec<Block> BLOCK_CODEC = Codec.STRING.flatXmap(
         s -> {
@@ -125,7 +146,7 @@ public class CodecUtil {
             @ParametersAreNonnullByDefault
             @NotNull
             public T decode(FriendlyByteBuf buffer) {
-                return codec.decode(NbtOps.INSTANCE,buffer.readNbt()).getOrThrow().getFirst();
+                return codec.decode(NbtOps.INSTANCE, buffer.readNbt()).getOrThrow().getFirst();
             }
 
             @Override

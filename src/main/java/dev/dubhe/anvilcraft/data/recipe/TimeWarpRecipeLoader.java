@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
+import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
-
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
@@ -16,8 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
-
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 
 import java.util.List;
 
@@ -83,14 +81,15 @@ public class TimeWarpRecipeLoader {
         timeWarpToOilCauldron(provider, Items.MUTTON, 16);
         timeWarpToOilCauldron(provider, Items.RABBIT, 16);
 
+        timeWarpToOilCauldron(provider, Items.ZOMBIE_HEAD, 1);
+        timeWarpToOilCauldron(provider, Items.PIGLIN_HEAD, 1);
+
         TimeWarpRecipe.builder()
             .requires(ModItemTags.NETHERITE_BLOCK)
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(4)),
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(4)).withChance(0.50f),
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(4)).withChance(0.25f)
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(3))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
@@ -103,7 +102,7 @@ public class TimeWarpRecipeLoader {
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(9))
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(4))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
@@ -116,7 +115,7 @@ public class TimeWarpRecipeLoader {
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(12))
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(5))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
@@ -129,12 +128,18 @@ public class TimeWarpRecipeLoader {
             .cauldron(ModBlocks.FIRE_CAULDRON.get())
             .results(
                 List.of(
-                    ChanceItemStack.of(ModItems.EMBER_METAL_NUGGET.asStack(15))
+                    ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(6))
                 )
             )
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
             .consumeFluid(true)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_nugget_3"));
+
+        TimeWarpRecipe.builder()
+            .requires(Items.SKELETON_SKULL)
+            .requires(Items.COAL, 4)
+            .result(Items.WITHER_SKELETON_SKULL.getDefaultInstance())
+            .save(provider);
     }
 
     private static void timeWarp(

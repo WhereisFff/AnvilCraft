@@ -66,7 +66,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     private static final AtomicInteger COUNTER = new AtomicInteger(0);
 
     @Getter
-    private final int inputPower = 1;
+    private final int inputPower = 4;
     @Getter
     @Setter
     private PowerGrid grid;
@@ -131,7 +131,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     }
 
     @SuppressWarnings("UnreachableCode")
-    private boolean craft(@NotNull Level level) {
+    public boolean craft(@NotNull Level level) {
         if (craftingContainer.isEmpty()) return false;
         if (!canCraft()) return false;
         ItemStack result;

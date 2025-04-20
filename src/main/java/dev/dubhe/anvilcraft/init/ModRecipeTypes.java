@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
+import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
@@ -11,7 +12,6 @@ import dev.dubhe.anvilcraft.recipe.anvil.ConcreteRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.CookingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemCrushRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.UnpackRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
@@ -19,6 +19,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.StampingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SuperHeatingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.UnpackRecipe;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainChanceRecipe;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockConversionRecipe;
@@ -155,6 +156,11 @@ public class ModRecipeTypes {
 
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CanningFoodRecipe>> CANNING_FOOD_SERIALIZER =
         RECIPE_SERIALIZERS.register("canning_food", () -> new SimpleCraftingRecipeSerializer<>(CanningFoodRecipe::new));
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<ChargerChargingRecipe>> CHARGER_CHARGING_TYPE =
+        registerType("charger_charging");
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ChargerChargingRecipe>> CHARGER_CHARGING_SERIALIZER =
+        RECIPE_SERIALIZERS.register("charger_charging", ChargerChargingRecipe.Serializer::new);
 
     private static <T extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<T>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> new RecipeType<>() {

@@ -80,7 +80,7 @@ public class ModShaders {
                 it -> blitShader = it
             );
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            AnvilCraft.LOGGER.error("Shader loading has failed.", e);
         }
     }
 
@@ -100,18 +100,22 @@ public class ModShaders {
     }
 
     public static void loadBloomEffect(ResourceProvider resourceProvider) throws IOException {
-        bloomChain = new PostChain(
-            MINECRAFT.getTextureManager(),
-            resourceProvider,
-            Minecraft.getInstance().getMainRenderTarget(),
-            LASER_BLOOM_LOCATION
-        );
-        bloomChain.resize(
-            Minecraft.getInstance().getWindow().getWidth(),
-            Minecraft.getInstance().getWindow().getHeight()
-        );
-        ModRenderTargets.renderTargetLoaded(
-            bloomChain.getTempTarget("input")
-        );
+        try {
+            bloomChain = new PostChain(
+                MINECRAFT.getTextureManager(),
+                resourceProvider,
+                Minecraft.getInstance().getMainRenderTarget(),
+                LASER_BLOOM_LOCATION
+            );
+            bloomChain.resize(
+                Minecraft.getInstance().getWindow().getWidth(),
+                Minecraft.getInstance().getWindow().getHeight()
+            );
+            ModRenderTargets.renderTargetLoaded(
+                bloomChain.getTempTarget("input")
+            );
+        } catch (Throwable tr) {
+            AnvilCraft.LOGGER.error("Could not load bloom effect shader.", tr);
+        }
     }
 }

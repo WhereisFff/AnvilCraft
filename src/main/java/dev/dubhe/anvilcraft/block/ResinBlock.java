@@ -9,22 +9,22 @@ import net.minecraft.world.level.block.HalfTransparentBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-
 import org.jetbrains.annotations.NotNull;
 
 public class ResinBlock extends HalfTransparentBlock {
     public ResinBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
+
     /**
-     * @param level 世界
-     * @param state 方块状态
-     * @param pos 位置
-     * @param entity 实体
+     * @param level        世界
+     * @param state        方块状态
+     * @param pos          位置
+     * @param entity       实体
      * @param fallDistance 掉落距离
      */
     public void fallOn(
-            @NotNull Level level, @NotNull BlockState state, @NotNull BlockPos pos, Entity entity, float fallDistance) {
+        @NotNull Level level, @NotNull BlockState state, @NotNull BlockPos pos, Entity entity, float fallDistance) {
         if (entity.isSuppressingBounce()) {
             super.fallOn(level, state, pos, entity, fallDistance);
         } else {
@@ -33,7 +33,7 @@ public class ResinBlock extends HalfTransparentBlock {
     }
 
     /**
-     * @param level 世界
+     * @param level  世界
      * @param entity 实体
      */
     public void updateEntityAfterFallOn(@NotNull BlockGetter level, Entity entity) {
@@ -53,9 +53,9 @@ public class ResinBlock extends HalfTransparentBlock {
     }
 
     /**
-     * @param level 世界
-     * @param pos 位置
-     * @param state 方块状态
+     * @param level  世界
+     * @param pos    位置
+     * @param state  方块状态
      * @param entity 实体
      */
     public void stepOn(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, Entity entity) {

@@ -49,12 +49,12 @@ public class CacheableBERenderingPipeline {
         instance = new CacheableBERenderingPipeline(level);
     }
 
-    public void blockRemoved(BlockEntity be){
+    public void blockRemoved(BlockEntity be) {
         ChunkPos chunkPos = new ChunkPos(be.getBlockPos());
         getRenderRegion(chunkPos).blockRemoved(be);
     }
 
-    public void update(BlockEntity be){
+    public void update(BlockEntity be) {
         ChunkPos chunkPos = new ChunkPos(be.getBlockPos());
         getRenderRegion(chunkPos).update(be);
     }

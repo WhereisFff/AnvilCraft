@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.api.heatable;
 
 import dev.dubhe.anvilcraft.block.RedhotMetalBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 

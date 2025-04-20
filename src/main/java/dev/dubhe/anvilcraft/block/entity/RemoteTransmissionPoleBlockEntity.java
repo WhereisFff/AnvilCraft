@@ -7,14 +7,12 @@ import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-
-import lombok.Getter;
-import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
@@ -26,16 +24,16 @@ public class RemoteTransmissionPoleBlockEntity extends AbstractTransmissionPoleB
         this(ModBlockEntities.REMOTE_TRANSMISSION_POLE.get(), pos, blockState);
     }
 
+    private RemoteTransmissionPoleBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+    }
+
     public static @NotNull RemoteTransmissionPoleBlockEntity createBlockEntity(
         BlockEntityType<?> type,
         BlockPos pos,
         BlockState blockState
     ) {
         return new RemoteTransmissionPoleBlockEntity(type, pos, blockState);
-    }
-
-    private RemoteTransmissionPoleBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        super(type, pos, blockState);
     }
 
     @Override

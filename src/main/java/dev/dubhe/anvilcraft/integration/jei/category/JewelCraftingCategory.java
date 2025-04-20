@@ -23,7 +23,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.neoforged.neoforge.common.util.Lazy;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -34,14 +33,12 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final Lazy<IDrawable> background;
     private final IDrawable progress;
     private final IDrawable icon;
     private final IDrawable slot;
     private final Component title;
 
     public JewelCraftingCategory(IGuiHelper helper) {
-        background = Lazy.of(() -> helper.createBlankDrawable(WIDTH, HEIGHT));
         progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
             .setTextureSize(24, 16)
             .build();
@@ -61,8 +58,13 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
     }
 
     @Override
-    public IDrawable getBackground() {
-        return background.get();
+    public int getWidth() {
+        return WIDTH;
+    }
+
+    @Override
+    public int getHeight() {
+        return HEIGHT;
     }
 
     @Override

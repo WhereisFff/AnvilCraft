@@ -61,7 +61,7 @@ import static dev.dubhe.anvilcraft.util.Util.HORIZONTAL_DIRECTIONS;
 public class GiantAnvilLandingEventListener {
     private static final List<IShockBehaviorDefinition> behaviorDefs = new ArrayList<>();
     private static final int MIN_MULTIBLOCK_SIZE = 3;
-    private static final int MAX_MULTIBLOCK_SIZE = 3;
+    private static final int MAX_MULTIBLOCK_SIZE = 15;
 
     static {
         behaviorDefs.add(new IShockBehaviorDefinition.MatchAll((blockPosList, level) -> {
@@ -229,7 +229,7 @@ public class GiantAnvilLandingEventListener {
                         }
                         return true;
                     }
-                    if (blockState.is(BlockTags.JUNGLE_LOGS)){
+                    if (blockState.is(BlockTags.JUNGLE_LOGS)) {
                         return true;
                     }
                     return false;
@@ -311,8 +311,8 @@ public class GiantAnvilLandingEventListener {
     /**
      * 在一个边长为 {@code size} 的立方体区域中，绕着中心将 {@code pos} 旋转到对应位置。
      *
-     * @param pos 被旋转的方块坐标 (从 {@code (0, 0, 0)} 到 {@code （size - 1, size - 1, size - 1)})
-     * @param size 立方体区域的边长
+     * @param pos      被旋转的方块坐标 (从 {@code (0, 0, 0)} 到 {@code （size - 1, size - 1, size - 1)})
+     * @param size     立方体区域的边长
      * @param rotation 旋转操作
      * @return 旋转后的相对坐标
      */
@@ -334,7 +334,7 @@ public class GiantAnvilLandingEventListener {
         boolean overCompressorDetected = false;
         if (centerState.is(ModBlocks.SPACE_OVERCOMPRESSOR)) {
             overCompressorDetected = true;
-        } else if (!centerState.is(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES)){
+        } else if (!centerState.is(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES)) {
             return;
         }
         int size = findCraftingTableSize(landPos, level);

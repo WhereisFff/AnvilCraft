@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.network;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
-import dev.dubhe.anvilcraft.client.renderer.PowerGridRenderer;
+import dev.dubhe.anvilcraft.client.PowerGridClient;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class PowerGridSyncPacket implements CustomPacketPayload {
     public static final Type<PowerGridSyncPacket> TYPE = new Type<>(AnvilCraft.of("power_grid_sync"));
     public static final StreamCodec<RegistryFriendlyByteBuf, PowerGridSyncPacket> STREAM_CODEC =
-            StreamCodec.ofMember(PowerGridSyncPacket::encode, PowerGridSyncPacket::new);
+        StreamCodec.ofMember(PowerGridSyncPacket::encode, PowerGridSyncPacket::new);
     public static final IPayloadHandler<PowerGridSyncPacket> HANDLER = PowerGridSyncPacket::clientHandler;
 
     private final SimplePowerGrid grid;
@@ -41,7 +41,7 @@ public class PowerGridSyncPacket implements CustomPacketPayload {
         CompoundTag tag = buf.readNbt();
         Tag data = tag.get("data");
         this.grid =
-                SimplePowerGrid.CODEC.decode(NbtOps.INSTANCE, data).getOrThrow().getFirst();
+            SimplePowerGrid.CODEC.decode(NbtOps.INSTANCE, data).getOrThrow().getFirst();
     }
 
     public void encode(@NotNull FriendlyByteBuf buf) {
@@ -54,6 +54,12 @@ public class PowerGridSyncPacket implements CustomPacketPayload {
     }
 
     public static void clientHandler(PowerGridSyncPacket data, IPayloadContext context) {
-        context.enqueueWork(() -> PowerGridRenderer.getGridMap().put(data.grid.getId(), data.grid));
+        context.enqueueWork(() -> PowerGridClient.getGridMap().compute(
+            data.grid.getId(),
+            (integer, simplePowerGrid) -> {
+                if (simplePowerGrid != null) simplePowerGrid.destroy();
+                return data.grid;
+            }
+        ));
     }
 }

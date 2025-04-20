@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 public class AddTeslaFilterPacket implements CustomPacketPayload {
     public static final Type<AddTeslaFilterPacket> TYPE = new Type<>(AnvilCraft.of("tesla_filter_add"));
     public static final StreamCodec<RegistryFriendlyByteBuf, AddTeslaFilterPacket> STREAM_CODEC =
-            StreamCodec.ofMember(AddTeslaFilterPacket::encode, AddTeslaFilterPacket::new);
+        StreamCodec.ofMember(AddTeslaFilterPacket::encode, AddTeslaFilterPacket::new);
     public static final IPayloadHandler<AddTeslaFilterPacket> HANDLER = AddTeslaFilterPacket::serverHandler;
 
     private final String id;

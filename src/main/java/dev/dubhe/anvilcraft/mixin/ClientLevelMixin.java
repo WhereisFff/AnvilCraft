@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.api.chargecollector.HeatedBlockRecorder;
-import dev.dubhe.anvilcraft.client.renderer.PowerGridRenderer;
+import dev.dubhe.anvilcraft.client.PowerGridClient;
 
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
@@ -20,18 +20,18 @@ import java.util.function.Supplier;
 abstract class ClientLevelMixin {
     @Inject(method = "<init>", at = @At("RETURN"))
     void onLevelLoad(
-            ClientPacketListener connection,
-            ClientLevel.ClientLevelData clientLevelData,
-            ResourceKey<?> dimension,
-            Holder<?> dimensionType,
-            int viewDistance,
-            int serverSimulationDistance,
-            Supplier<?> profiler,
-            LevelRenderer levelRenderer,
-            boolean isDebug,
-            long biomeZoomSeed,
-            CallbackInfo ci) {
-        PowerGridRenderer.clearAllGrid();
+        ClientPacketListener connection,
+        ClientLevel.ClientLevelData clientLevelData,
+        ResourceKey<?> dimension,
+        Holder<?> dimensionType,
+        int viewDistance,
+        int serverSimulationDistance,
+        Supplier<?> profiler,
+        LevelRenderer levelRenderer,
+        boolean isDebug,
+        long biomeZoomSeed,
+        CallbackInfo ci) {
+        PowerGridClient.clearAllGrid();
         HeatedBlockRecorder.clear();
     }
 }

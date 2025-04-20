@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "anvilcraft:block/chocolate_slab"
+    },
+    "type=double": {
+      "model": "anvilcraft:block/chocolate_block"
+    },
+    "type=top": {
+      "model": "anvilcraft:block/chocolate_slab_top"
+    }
+  }
+}
