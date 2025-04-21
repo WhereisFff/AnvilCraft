@@ -1,12 +1,11 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableButton;
 import dev.dubhe.anvilcraft.client.gui.component.TextWidget;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
-import dev.dubhe.anvilcraft.inventory.AdvancedRepeaterMenu;
-import dev.dubhe.anvilcraft.network.AdvancedRepeaterUpdatePacket;
+import dev.dubhe.anvilcraft.inventory.PulseGeneratorMenu;
+import dev.dubhe.anvilcraft.network.PulseGeneratorUpdatePacket;
 import dev.dubhe.anvilcraft.util.FormattingUtil;
 import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.client.Minecraft;
@@ -23,9 +22,9 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 @ParametersAreNonnullByDefault
-public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepeaterMenu> {
+public class PulseGeneratorScreen extends AbstractContainerScreen<PulseGeneratorMenu> {
     private static final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/advanced_repeater.png");
+        AnvilCraft.of("textures/gui/container/machine/background/pulse_generator.png");
 
     private static final ResourceLocation BUTTON_RISING_EDGE =
         AnvilCraft.of("textures/gui/container/machine/button_rising_edge.png");
@@ -40,23 +39,23 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
         AnvilCraft.of("textures/gui/container/machine/button_reverse_on.png");
 
     private static final ResourceLocation BUTTON_ADD_T =
-        AnvilCraft.of("textures/gui/container/machine/advanced_repeater_button_add_t.png");
+        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_add_t.png");
     private static final ResourceLocation BUTTON_ADD_S =
-        AnvilCraft.of("textures/gui/container/machine/advanced_repeater_button_add_s.png");
+        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_add_s.png");
     private static final ResourceLocation BUTTON_ADD_M =
-        AnvilCraft.of("textures/gui/container/machine/advanced_repeater_button_add_m.png");
+        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_add_m.png");
     private static final ResourceLocation BUTTON_MINUS_T =
-        AnvilCraft.of("textures/gui/container/machine/advanced_repeater_button_minus_t.png");
+        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_minus_t.png");
     private static final ResourceLocation BUTTON_MINUS_S =
-        AnvilCraft.of("textures/gui/container/machine/advanced_repeater_button_minus_s.png");
+        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_minus_s.png");
     private static final ResourceLocation BUTTON_MINUS_M =
-        AnvilCraft.of("textures/gui/container/machine/advanced_repeater_button_minus_m.png");
+        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_minus_m.png");
 
     private final Minecraft minecraft;
     private TextWidget waitingTime;
     private TextWidget signalDuration;
 
-    public AdvancedRepeaterScreen(AdvancedRepeaterMenu menu, Inventory playerInventory, Component title) {
+    public PulseGeneratorScreen(PulseGeneratorMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
         this.minecraft = Minecraft.getInstance();
         this.imageHeight = 77;
@@ -64,7 +63,7 @@ public class AdvancedRepeaterScreen extends AbstractContainerScreen<AdvancedRepe
 
     @Override
     public void onClose() {
-        PacketDistributor.sendToServer(new AdvancedRepeaterUpdatePacket(
+        PacketDistributor.sendToServer(new PulseGeneratorUpdatePacket(
             this.menu.getBlockEntity().getStartMode(),
             this.menu.getBlockEntity().isOutputInvert(),
             this.menu.getBlockEntity().getWaitingTime(),

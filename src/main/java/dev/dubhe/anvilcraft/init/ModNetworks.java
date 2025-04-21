@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
-import dev.dubhe.anvilcraft.network.AdvancedRepeaterUpdatePacket;
+import dev.dubhe.anvilcraft.network.PulseGeneratorUpdatePacket;
 import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
@@ -169,9 +169,9 @@ public class ModNetworks {
             MachineCycleFilterModePacket.HANDLER
         );
         registrar.playToServer(
-            AdvancedRepeaterUpdatePacket.TYPE,
-            AdvancedRepeaterUpdatePacket.STREAM_CODEC,
-            AdvancedRepeaterUpdatePacket.HANDLER
+            PulseGeneratorUpdatePacket.TYPE,
+            PulseGeneratorUpdatePacket.STREAM_CODEC,
+            PulseGeneratorUpdatePacket.HANDLER
         );
     }
 }
