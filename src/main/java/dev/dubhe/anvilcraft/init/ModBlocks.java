@@ -24,6 +24,7 @@ import dev.dubhe.anvilcraft.block.ChargerBlock;
 import dev.dubhe.anvilcraft.block.ChocolateCakeBlock;
 import dev.dubhe.anvilcraft.block.ChocolateCreamBlock;
 import dev.dubhe.anvilcraft.block.ChuteBlock;
+import dev.dubhe.anvilcraft.block.ControllableSandBlock;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.block.CrabTrapBlock;
 import dev.dubhe.anvilcraft.block.CreamBlock;
@@ -182,6 +183,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -2822,12 +2824,32 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_SHOVEL)
         .register();
 
+    public static final BlockEntry<ControllableSandBlock> CONTROLLABLE_SAND = REGISTRATE
+        .block("controllable_sand", ControllableSandBlock::new)
+        .initialProperties(() -> Blocks.SAND)
+        .blockstate((ctx, provider) -> provider
+            .getVariantBuilder(ctx.get()).partialState()
+            .addModels(new ConfiguredModel(provider.models().getExistingFile(ctx.getId().withPrefix("block/")))))
+        .simpleItem()
+        .recipe((ctx, provider) ->
+             ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
+                 .pattern("LRL")
+                 .pattern("RSR")
+                 .pattern("LRL")
+                 .define('L', ModItems.LEVITATION_POWDER)
+                 .define('R', Items.REDSTONE)
+                 .define('S', ItemTags.SAND)
+                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
+                 .save(provider)
+        )
+        .tag(BlockTags.MINEABLE_WITH_SHOVEL)
+        .register();
     public static final BlockEntry<LevitationPowderBlock> LEVITATION_POWDER_BLOCK = REGISTRATE
         .block("levitation_powder_block", LevitationPowderBlock::new)
         .initialProperties(() -> Blocks.SAND)
         .item(LevitationPowderBlockItem::new)
         .recipe((ctx, provider) ->
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
+             ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
                 .requires(ModItems.LEVITATION_POWDER, 9)
                 .unlockedBy(
                     AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
