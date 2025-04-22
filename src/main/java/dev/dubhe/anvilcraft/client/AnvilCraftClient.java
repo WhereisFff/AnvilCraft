@@ -10,6 +10,8 @@ import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.init.ModFluids;
 import dev.dubhe.anvilcraft.init.ModItems;
 import me.shedaniel.autoconfig.AutoConfig;
+import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderPlugin;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -43,6 +45,7 @@ public class AnvilCraftClient {
         modBus.addListener(ModModelLayers::register);
         modBus.addListener(ModModelLayers::createModel);
         modBus.addListener(AnvilCraftClient::clientSetup);
+        modBus.addListener(AnvilCraftClient::registerPonderPlugin);
         ModInspectionClient.initializeClient();
     }
 
@@ -57,6 +60,10 @@ public class AnvilCraftClient {
 
     public static void registerCustomItemDecorations(RegisterItemDecorationsEvent e) {
         e.register(ModItems.IONOCRAFT_BACKPACK, new IonoCraftBackpackDecoration());
+    }
+
+    public static void registerPonderPlugin(FMLClientSetupEvent e){
+        PonderIndex.addPlugin(new AnvilCraftPonderPlugin());
     }
 
     @ParametersAreNonnullByDefault

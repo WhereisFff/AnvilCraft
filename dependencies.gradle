@@ -40,9 +40,12 @@ dependencies {
 
     // Create
     compileOnly(libs.create) { transitive = false }
-    compileOnly(libs.ponder)
+//  compileOnly(libs.ponder)
     compileOnly(libs.flywheelApi)
     compileOnly(libs.flywheel)
+
+    // Ponder
+    implementation(libs.ponder)
 
 //    compileOnly("org.sinytra.forgified-fabric-api:fabric-api-base:0.4.42+d1308ded19")
 //    compileOnly("org.sinytra.forgified-fabric-api:fabric-renderer-api-v1:3.4.0+acb05a3919")
