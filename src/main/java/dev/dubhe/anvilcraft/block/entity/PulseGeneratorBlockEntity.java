@@ -1,7 +1,5 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import com.tterrag.registrate.util.nullness.NonNullConsumer;
-import com.tterrag.registrate.util.nullness.NonNullSupplier;
 import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
@@ -11,6 +9,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -25,7 +24,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.function.Supplier;
 
 @Getter
 @Setter
@@ -144,6 +142,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, PulseGeneratorBlockEntity generatorEntity) {
+        if (level.isClientSide) return;
         generatorEntity.tickTime(level, pos, state);
         generatorEntity.checkIsDeadlock(level, pos, state);
 
@@ -152,12 +151,11 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state) {
         if (level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity generatorEntity) {
+            Direction direction = state.getValue(PulseGeneratorBlock.FACING).getOpposite();
+            BlockPos neighbourPos = pos.relative(direction);
             level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, generatorEntity.isOutputting()));
-            level.neighborChanged(pos.relative(state.getValue(PulseGeneratorBlock.FACING).getOpposite()), state.getBlock(), pos);
-            if (generatorEntity.is0ting()) {
-                level.setBlock(pos, state.setValue(PulseGeneratorBlock.POWERED, !generatorEntity.isOutputting()), 2);
-                level.neighborChanged(pos.relative(state.getValue(PulseGeneratorBlock.FACING).getOpposite()), state.getBlock(), pos);
-            }
+            level.neighborChanged(neighbourPos, state.getBlock(), pos);
+            level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction);
         }
     }
 
@@ -166,18 +164,14 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         if (this.waitingTime != 0) {
             this.waitingTimeRemaining = this.waitingTime;
         } else {
-            startOutputting(level, pos, state);
+            this.startOutputting(level, pos, state);
         }
     }
 
     protected void startOutputting(Level level, BlockPos pos, BlockState state) {
         this.mode = Mode.OUTPUTTING;
+        this.signalDurationRemaining = this.signalDuration;
         this.updateBlockAndNeighbours(level, pos, state);
-        if (this.signalDuration != 0) {
-            this.signalDurationRemaining = this.signalDuration;
-        } else {
-            checkOnSignalEnd(level, pos, state);
-        }
     }
 
     protected void checkOnSignalEnd(Level level, BlockPos pos, BlockState state) {
@@ -185,11 +179,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         this.updateBlockAndNeighbours(level, pos, state);
 
         if ((this.startMode == 0 && this.isInputtingSignal) || this.startMode == 2) {
-            if (this.waitingTime == 0 && this.signalDuration == 0) {
-                this.setDeadlock(true);
-            } else {
-                this.startWaiting(level, pos, state);
-            }
+            this.startWaiting(level, pos, state);
         }
     }
 
@@ -205,7 +195,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     public void setSignalDuration(int signalDuration) {
-        this.signalDuration = Math.clamp(signalDuration, 0, 24000);
+        this.signalDuration = Math.clamp(signalDuration, 1, 24000);
         this.setChanged();
     }
 
@@ -216,10 +206,6 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     public boolean isProcessing() {
         return this.mode != Mode.DEFAULT;
-    }
-
-    private boolean is0ting() {
-        return this.mode == Mode.OUTPUTTING && this.signalDuration == 0;
     }
 
     public boolean isOutputting() {
