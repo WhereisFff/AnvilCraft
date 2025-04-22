@@ -156,7 +156,7 @@ public class MagneticChuteBlock extends BetterBaseEntityBlock implements HammerR
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
-        Direction facing = context.getClickedFace().getOpposite();
+        Direction facing = context.getNearestLookingDirection();
         BlockState neighborState = level.getBlockState(pos.relative(facing));
         boolean cannotPlace = facing == Direction.UP
             && (neighborState.is(ModBlocks.SIMPLE_CHUTE) || neighborState.is(ModBlocks.CHUTE)

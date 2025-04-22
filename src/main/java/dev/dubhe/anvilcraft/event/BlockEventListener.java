@@ -4,18 +4,13 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
 
@@ -57,23 +52,6 @@ public class BlockEventListener {
                 event.setCancellationResult(InteractionResult.SUCCESS);
                 event.setCanceled(true);
             }
-        }
-    }
-
-    /**
-     * 侦听磁性溜槽右键方块事件
-     *
-     * @param event 右键方块事件
-     */
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void rightClickBlock(@NotNull PlayerInteractEvent.RightClickBlock event) {
-        Level level = event.getLevel();
-        Item handItem = event.getEntity().getItemInHand(event.getHand()).getItem();
-        if (handItem == ModBlocks.MAGNETIC_CHUTE.asItem()
-            && level.getCapability(Capabilities.ItemHandler.BLOCK, event.getPos(), null) != null
-        ) {
-            event.setUseItem(TriState.TRUE);
-            event.setUseBlock(TriState.FALSE);
         }
     }
 }

@@ -199,7 +199,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         @Nullable Block anvil) {
         BlockPos outputPos = devourerPos.relative(devourerDirection.getOpposite());
         BlockPos devourCenterPos = devourerPos.relative(devourerDirection);
-        List<IItemHandler> itemHandlerList = getTargetItemHandlerList(
+        final List<IItemHandler> itemHandlerList = getTargetItemHandlerList(
             outputPos,
             devourerDirection,
             level
