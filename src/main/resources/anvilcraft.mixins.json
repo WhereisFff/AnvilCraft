@@ -30,6 +30,7 @@
     "PistonMovingBlockEntityMixin",
     "PistonStructureResolverMixin",
     "PlayerHitEntityMixin",
+    "PlayerMixin",
     "RecipeManagerMixin",
     "RedstoneWireBlockMixin",
     "ServerGamePacketListenerMixin",
