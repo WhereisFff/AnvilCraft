@@ -1,13 +1,16 @@
 package dev.dubhe.anvilcraft.integration.ponder;
 
+import dev.dubhe.anvilcraft.api.integration.Integration;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
+import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.resources.ResourceLocation;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import org.jetbrains.annotations.NotNull;
 
+@Integration("ponder")
 public class AnvilCraftPonderPlugin implements PonderPlugin {
 
     /**
@@ -34,5 +37,13 @@ public class AnvilCraftPonderPlugin implements PonderPlugin {
     @Override
     public void registerTags(@NotNull PonderTagRegistrationHelper<ResourceLocation> helper) {
         AnvilCraftPonderTags.register(helper);
+    }
+
+    /**
+     * Add this plugin to ponder index.
+     *
+     */
+    public void applyClient() {
+        PonderIndex.addPlugin(new AnvilCraftPonderPlugin());
     }
 }

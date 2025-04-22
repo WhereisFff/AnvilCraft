@@ -45,7 +45,6 @@ public class AnvilCraftClient {
         modBus.addListener(ModModelLayers::register);
         modBus.addListener(ModModelLayers::createModel);
         modBus.addListener(AnvilCraftClient::clientSetup);
-        modBus.addListener(AnvilCraftClient::registerPonderPlugin);
         ModInspectionClient.initializeClient();
     }
 
@@ -60,10 +59,6 @@ public class AnvilCraftClient {
 
     public static void registerCustomItemDecorations(RegisterItemDecorationsEvent e) {
         e.register(ModItems.IONOCRAFT_BACKPACK, new IonoCraftBackpackDecoration());
-    }
-
-    public static void registerPonderPlugin(FMLClientSetupEvent e){
-        PonderIndex.addPlugin(new AnvilCraftPonderPlugin());
     }
 
     @ParametersAreNonnullByDefault

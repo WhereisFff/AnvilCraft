@@ -8,7 +8,8 @@ import net.minecraft.world.item.Items;
 
 public class AnvilCraftPonderTags {
     public static final ResourceLocation CRAFTING = AnvilCraft.of("crafting");
-    public static void register(PonderTagRegistrationHelper<ResourceLocation> helper){
+
+    public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
         PonderTagRegistrationHelper<RegistryEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
 
         HELPER.registerTag(CRAFTING)
