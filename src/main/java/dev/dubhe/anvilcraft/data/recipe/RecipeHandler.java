@@ -27,5 +27,6 @@ public class RecipeHandler {
         JewelCraftingRecipeLoader.init(provider);
         SpecialCraftingRecipeLoader.init(provider);
         SmithingMultiphaseRecipeLoader.init(provider);
+        ChargerChargingRecipeLoader.init(provider);
     }
 }
