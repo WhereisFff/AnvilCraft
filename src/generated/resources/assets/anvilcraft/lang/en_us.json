@@ -534,6 +534,8 @@
   "screen.anvilcraft.button.off": "off",
   "screen.anvilcraft.button.on": "on",
   "screen.anvilcraft.button.record": "Retention item filtering: %s",
+  "screen.anvilcraft.ember_grindstone.cost": "Exp. Cost: %d",
+  "screen.anvilcraft.ember_grindstone.title": "Extract enchantment",
   "screen.anvilcraft.ember_metal_upgrade_smithing_template": "Ember Metal Upgrade",
   "screen.anvilcraft.filter.scroll_to_change": "Scroll mouse to change count",
   "screen.anvilcraft.filter.shift_to_scroll_faster": "Hold Shift to scroll faster",
