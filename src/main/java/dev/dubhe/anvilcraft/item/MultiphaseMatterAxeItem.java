@@ -25,7 +25,7 @@ public class MultiphaseMatterAxeItem extends AxeItem {
                 .attributes(AxeItem.createAttributes(ModTiers.MULTIPHASE, 10, -3f))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
                 .component(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE.copy())
-                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().phases()[0].itemName()))
+                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().alpha().itemName()))
         );
     }
 }

@@ -171,39 +171,4 @@ public class CodecUtil {
             (buf, blockState) -> buf.writeInt(Block.getId(blockState)),
             (buf) -> Block.stateById(buf.readInt())
         );
-
-    public static <T> void writeCollectionWithRegistries(
-        RegistryFriendlyByteBuf buf, Collection<T> collection, StreamEncoder<? super RegistryFriendlyByteBuf, T> elementWriter
-    ) {
-        buf.writeVarInt(collection.size());
-
-        for (T t : collection) {
-            elementWriter.encode(buf, t);
-        }
-    }
-
-    public static <T, C extends Collection<T>> C readCollectionWithRegistries(
-        RegistryFriendlyByteBuf buf, IntFunction<C> collectionFactory, StreamDecoder<? super RegistryFriendlyByteBuf, T> elementReader
-    ) {
-        int i = buf.readVarInt();
-        C c = collectionFactory.apply(i);
-
-        for (int j = 0; j < i; j++) {
-            c.add(elementReader.decode(buf));
-        }
-
-        return c;
-    }
-
-    public static <T> List<T> readListWithRegistries(
-        RegistryFriendlyByteBuf buf, StreamDecoder<? super RegistryFriendlyByteBuf, T> elementReader
-    ) {
-        return readCollectionWithRegistries(buf, Lists::newArrayListWithCapacity, elementReader);
-    }
-
-    public static <T> Codec<T[]> array(Codec<T> elementCodec, Supplier<T[]> emptyArrayFactory) {
-        return Codec.list(elementCodec).xmap(
-            list -> list.toArray(emptyArrayFactory.get()), Lists::newArrayList
-        );
-    }
 }

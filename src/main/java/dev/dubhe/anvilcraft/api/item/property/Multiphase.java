@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.api.item.property;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.util.CodecUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -25,18 +24,20 @@ import java.util.Optional;
 /**
  * 多相
  *
- * @param current 当前生效的相名称
- * @param phases 所有相
+ * @param alpha α相
+ * @param beta β相
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public record Multiphase(int current, Phase[] phases) {
+public record Multiphase(Phase alpha, Phase beta) {
     public static final Multiphase EMPTY = make(Component.literal("Empty"));
 
-    public static final Codec<Phase[]> PHASES_CODEC = CodecUtil.array(Phase.CODEC, () -> new Phase[0]);
+    public static final Component ALPHA_NAME_SUFFIX = Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.alpha");
+    public static final Component BETA_NAME_SUFFIX = Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.beta");
+
     public static final Codec<Multiphase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-        Codec.INT.fieldOf("current").forGetter(Multiphase::current),
-        PHASES_CODEC.fieldOf("phases").forGetter(Multiphase::phases)
+        Phase.CODEC.fieldOf("alpha").forGetter(Multiphase::alpha),
+        Phase.CODEC.fieldOf("beta").forGetter(Multiphase::beta)
     ).apply(inst, Multiphase::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, Multiphase> STREAM_CODEC =
         StreamCodec.of(Multiphase::encode, Multiphase::decode);
@@ -50,133 +51,121 @@ public record Multiphase(int current, Phase[] phases) {
      * @return 一个全新的多相
      */
     public static Multiphase make(Component name) {
-        Phase[] results = new Phase[PhasePattern.values().length];
-        for (int i = 0; i < PhasePattern.values().length; i++) {
-            PhasePattern pattern = PhasePattern.values()[i];
-            Component newName = name.copy().append(pattern.nameSuffix);
-            results[i] = pattern.phase.withItemName(newName);
-        }
-        return new Multiphase(0, results);
+        Component newNameAlpha = name.copy().append(ALPHA_NAME_SUFFIX);
+        Phase alpha = Phase.EMPTY.withItemName(newNameAlpha);
+        Component newNameBeta = name.copy().append(BETA_NAME_SUFFIX);
+        Phase beta = Phase.EMPTY.withItemName(newNameBeta);
+        return new Multiphase(alpha, beta);
     }
 
     /**
      * 构建一个全新的多相<br>
      *
      * @param name   原始名称，不含后缀
-     * @param enchantments 初始附魔，用于第一个相
+     * @param enchantments 初始附魔，用于α相
      *
      * @return 一个全新的多相
      */
     public static Multiphase make(Component name, @Nullable ItemEnchantments enchantments) {
-        Phase[] results = new Phase[PhasePattern.values().length];
-        PhasePattern patternFirst = PhasePattern.values()[0];
-        Component newNameFirst = name.copy().append(patternFirst.nameSuffix);
-        results[0] = patternFirst.phase.withItemName(newNameFirst).withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
-        for (int i = 1; i < PhasePattern.values().length; i++) {
-            PhasePattern pattern = PhasePattern.values()[i];
-            Component newName = name.copy().append(pattern.nameSuffix);
-            results[i] = patternFirst.phase.withItemName(newName);
-        }
-        return new Multiphase(0, results);
+        Component newNameAlpha = name.copy().append(ALPHA_NAME_SUFFIX);
+        Phase alpha = Phase.EMPTY.withItemName(newNameAlpha).withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
+        Component newNameBeta = name.copy().append(BETA_NAME_SUFFIX);
+        Phase beta = Phase.EMPTY.withItemName(newNameBeta);
+        return new Multiphase(alpha, beta);
     }
 
     /**
      * 使用输入的数据构建一个全新的多相，并传入物品
      *
      * @param original  原始物品
-     * @param dataGroups 数据组，若数量大于{@link PhasePattern#values()}的数量，则超出的部分会被丢弃
+     * @param dataS 数据组，只取前两个非null数据作α相和β相
      *
      * @return 一个全新的多相
      */
-    @SafeVarargs
-    public static Multiphase make(ItemStack original, Triple<Component, Integer, @Nullable ItemEnchantments>... dataGroups) {
-        Phase[] phases = new Phase[PhasePattern.values().length];
-        for (int i = 0; i < PhasePattern.values().length; i++) {
-            PhasePattern pattern = PhasePattern.values()[i];
-            if (i < dataGroups.length) {
-                Triple<Component, Integer, ItemEnchantments> dataGroup = dataGroups[i];
-                if (dataGroup != null) {
-                    phases[i] = pattern.phase
-                        .withCustomName(dataGroup.getLeft().copy().append(pattern.nameSuffix))
-                        .withRepairCost(dataGroup.getMiddle())
-                        .withEnchantments(dataGroup.getRight() == null ? ItemEnchantments.EMPTY : dataGroup.getRight());
+    public static Multiphase make(ItemStack original, PhaseData... dataS) {
+        Phase[] phases = new Phase[2];
+        for (int i = 0; i < 2; i++) {
+            PhaseData data = dataS[i];
+            if (data != null) {
+                phases[i] = Phase.EMPTY
+                    .withRepairCost(data.repairCost())
+                    .withEnchantments(data.enchantments());
+                if (data.customName() != null) {
+                    phases[i] = phases[i]
+                        .withCustomName(data.customName().copy());
+                }
+                if (data.itemName() != null) {
+                    phases[i] = phases[i]
+                        .withItemName(data.itemName().copy());
                 } else {
-                    phases[i] = pattern.phase.withCustomName(original.getHoverName().copy().append(pattern.nameSuffix));
+                    phases[i] = phases[i]
+                        .withItemName(original.getHoverName().copy());
                 }
             } else {
-                phases[i] = pattern.phase.withCustomName(original.getHoverName().copy().append(pattern.nameSuffix));
+                phases[i] = Phase.EMPTY
+                    .withCustomName(original.getHoverName().copy().append(i == 0 ? ALPHA_NAME_SUFFIX : BETA_NAME_SUFFIX));
             }
         }
-        return new Multiphase(0, phases);
+        return new Multiphase(phases[0], phases[1]);
     }
 
-    public int size() {
-        return this.phases.length;
+    public void applyToStack(ItemStack stack) {
+        this.alpha.applyToStack(stack);
     }
 
     public void cyclePhases(ItemStack stack) {
-        this.cyclePhases(stack, (this.current + 1) % this.size());
-    }
-
-    public void cyclePhases(ItemStack stack, int nextIndex) {
-        Phase current = this.phases[this.current];
-        Phase next = this.phases[nextIndex];
-
         Component customName;
-        if (next.customName == null) {
+        if (this.beta.customName == null) {
             customName = stack.get(DataComponents.CUSTOM_NAME);
             stack.remove(DataComponents.CUSTOM_NAME);
         } else {
-            customName = stack.set(DataComponents.CUSTOM_NAME, next.customName);
+            customName = stack.set(DataComponents.CUSTOM_NAME, this.beta.customName);
         }
 
         Component itemName;
-        if (next.itemName == null) {
+        if (this.beta.itemName == null) {
             itemName = stack.get(DataComponents.ITEM_NAME);
             stack.remove(DataComponents.ITEM_NAME);
         } else {
-            itemName = stack.set(DataComponents.ITEM_NAME, next.itemName);
+            itemName = stack.set(DataComponents.ITEM_NAME, this.beta.itemName);
         }
 
-        Integer repairCost = stack.set(DataComponents.REPAIR_COST, next.repairCost);
+        Integer repairCost = stack.set(DataComponents.REPAIR_COST, this.beta.repairCost);
         if (repairCost == null || repairCost < 0) repairCost = 0;
 
-        ItemEnchantments enchantments = stack.set(DataComponents.ENCHANTMENTS, next.enchantments);
+        ItemEnchantments enchantments = stack.set(DataComponents.ENCHANTMENTS, this.beta.enchantments);
         if (enchantments == null) enchantments = ItemEnchantments.EMPTY;
 
-        this.phases[this.current] = current
+        Phase newAlpha = this.alpha
             .withCustomName(customName)
             .withItemName(itemName)
             .withRepairCost(repairCost)
             .withEnchantments(enchantments);
-        stack.set(ModComponents.MULTIPHASE, new Multiphase(nextIndex, this.phases));
+        stack.set(ModComponents.MULTIPHASE, new Multiphase(this.beta, newAlpha));
     }
 
     private static void encode(RegistryFriendlyByteBuf buf, Multiphase multiphase) {
-        buf.writeVarInt(multiphase.current);
-        buf.writeArray(
-            multiphase.phases,
-            (buffer, value) -> Phase.STREAM_CODEC.encode((RegistryFriendlyByteBuf) buffer, value)
-        );
+        Phase.STREAM_CODEC.encode(buf, multiphase.alpha);
+        Phase.STREAM_CODEC.encode(buf, multiphase.beta);
     }
 
     private static Multiphase decode(RegistryFriendlyByteBuf buf) {
         return new Multiphase(
-            buf.readVarInt(),
-            buf.readArray(Phase[]::new, buffer -> Phase.STREAM_CODEC.decode((RegistryFriendlyByteBuf) buffer))
+            Phase.STREAM_CODEC.decode(buf),
+            Phase.STREAM_CODEC.decode(buf)
         );
     }
 
     public Multiphase copy() {
-        return new Multiphase(this.current, this.phases);
+        return new Multiphase(this.alpha, this.beta);
     }
 
     public record Phase(
         @Nullable Component customName, @Nullable Component itemName,
         int repairCost, @NotNull ItemEnchantments enchantments
     ) {
-        public static final Phase DEFAULT = new Phase(
-            Component.literal("Default"), null, 0, ItemEnchantments.EMPTY
+        public static final Phase EMPTY = new Phase(
+            null, null, 0, ItemEnchantments.EMPTY
         );
 
         public static final Codec<Phase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
@@ -199,7 +188,7 @@ public record Multiphase(int current, Phase[] phases) {
         }
 
         public static Phase make(Component name, @Nullable ItemEnchantments enchantments) {
-            return DEFAULT
+            return EMPTY
                 .withCustomName(name)
                 .withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
         }
@@ -265,27 +254,36 @@ public record Multiphase(int current, Phase[] phases) {
         }
     }
 
-    public enum PhasePattern {
-        ALPHA(
-            new Phase(null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.alpha")),
-        BETA(
-            new Phase(null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.beta")),
-        GAMMA(
-            new Phase(null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.gamma")),
-        DELTA(
-            new Phase(null, null, 0, ItemEnchantments.EMPTY),
-            Component.translatable("tooltip.anvilcraft.property.multiphase.suffix.delta")),
-        ;
+    public record PhaseData(
+        @Nullable Component customName, @Nullable Component itemName,
+        int repairCost, @Nullable ItemEnchantments enchantments
+    ) {
+        public static PhaseData of(
+            @Nullable Component customName, @Nullable Component itemName,
+            int repairCost, @Nullable ItemEnchantments enchantments
+        ) {
+            return new PhaseData(customName, itemName, repairCost, enchantments);
+        }
 
-        private final Phase phase;
-        private final Component nameSuffix;
+        @Override
+        public ItemEnchantments enchantments() {
+            return this.enchantments == null ? ItemEnchantments.EMPTY : this.enchantments;
+        }
 
-        PhasePattern(Phase phase, Component nameSuffix) {
-            this.phase = phase;
-            this.nameSuffix = nameSuffix;
+        public PhaseData withCustomName(@Nullable Component customName) {
+            return new PhaseData(customName, itemName, repairCost, enchantments);
+        }
+
+        public PhaseData withItemName(@Nullable Component itemName) {
+            return new PhaseData(customName, itemName, repairCost, enchantments);
+        }
+
+        public PhaseData withRepairCost(int repairCost) {
+            return new PhaseData(customName, itemName, repairCost, enchantments);
+        }
+
+        public PhaseData withEnchantments(@Nullable ItemEnchantments enchantments) {
+            return new PhaseData(customName, itemName, repairCost, enchantments);
         }
     }
 }

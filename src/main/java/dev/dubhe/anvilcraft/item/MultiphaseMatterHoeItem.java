@@ -25,7 +25,7 @@ public class MultiphaseMatterHoeItem extends HoeItem {
                 .attributes(HoeItem.createAttributes(ModTiers.MULTIPHASE, 1, 0))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
                 .component(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE.copy())
-                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().phases()[0].itemName()))
+                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().alpha().itemName()))
         );
     }
 }

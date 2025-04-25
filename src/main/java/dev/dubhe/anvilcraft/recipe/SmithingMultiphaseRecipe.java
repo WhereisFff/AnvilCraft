@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.recipe;
 
 import com.google.common.collect.Collections2;
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.util.entry.ItemEntry;
@@ -15,7 +14,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -24,12 +22,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipe;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @ParametersAreNonnullByDefault
@@ -71,32 +70,28 @@ public class SmithingMultiphaseRecipe implements SmithingRecipe {
 
     @Override
     public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
-        Triple<Component, Integer, ItemEnchantments> first = Triple.of(
-            input.base().getHoverName(), input.base().get(DataComponents.REPAIR_COST), input.base().get(DataComponents.ENCHANTMENTS)
+        Multiphase.PhaseData first = Multiphase.PhaseData.of(
+            input.base().get(DataComponents.CUSTOM_NAME), input.base().get(DataComponents.ITEM_NAME),
+            input.base().getOrDefault(DataComponents.REPAIR_COST, 0),
+            input.base().get(EnchantmentHelper.getComponentType(input.base()))
         );
-        Triple<Component, Integer, ItemEnchantments> second = Triple.of(
-            input.addition().getHoverName(), input.addition().get(DataComponents.REPAIR_COST), input.addition().get(DataComponents.ENCHANTMENTS)
+        Multiphase.PhaseData second = Multiphase.PhaseData.of(
+            input.addition().get(DataComponents.CUSTOM_NAME), input.addition().get(DataComponents.ITEM_NAME),
+            input.addition().getOrDefault(DataComponents.REPAIR_COST, 0),
+            input.addition().get(EnchantmentHelper.getComponentType(input.addition()))
         );
 
-        if (first.getLeft().getContents().equals(second.getLeft().getContents())) {
-            boolean firstHasCustomName = input.base().has(DataComponents.CUSTOM_NAME);
-            boolean secondHasCustomName = input.addition().has(DataComponents.CUSTOM_NAME);
-            if (firstHasCustomName && secondHasCustomName) {
-                first = Triple.of(first.getLeft().copy(), first.getMiddle(), first.getRight());
-                second = Triple.of(second.getLeft().copy(), first.getMiddle(), second.getRight());
-            } else {
-                if (!firstHasCustomName) {
-                    first = Triple.of(this.result.getHoverName().copy(), first.getMiddle(), first.getRight());
-                }
-                if (!secondHasCustomName) {
-                    second = Triple.of(this.result.getHoverName().copy(), second.getMiddle(), second.getRight());
-                }
+        if (Objects.equals(first.customName(), second.customName())) {
+            if (first.customName() == null) {
+                first = first.withCustomName(this.result.get(DataComponents.CUSTOM_NAME));
+                second = second.withCustomName(this.result.get(DataComponents.CUSTOM_NAME));
             }
         }
 
         Multiphase multiphase = Multiphase.make(this.result, first, second);
         ItemStack result = this.result.copy();
         result.set(ModComponents.MULTIPHASE, multiphase);
+        multiphase.applyToStack(result);
 
         return result;
     }

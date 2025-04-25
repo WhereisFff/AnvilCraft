@@ -26,7 +26,7 @@ public class MultiphaseMatterPickaxeItem extends PickaxeItem {
                 .attributes(AxeItem.createAttributes(ModTiers.MULTIPHASE, 6, -2.8f))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
                 .component(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE.copy())
-                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().phases()[0].itemName()))
+                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().alpha().itemName()))
         );
     }
 }
