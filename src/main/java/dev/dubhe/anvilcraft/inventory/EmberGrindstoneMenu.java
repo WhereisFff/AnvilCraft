@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 
 import dev.dubhe.anvilcraft.util.ListUtil;
+import dev.dubhe.anvilcraft.util.MenuUtil;
 import lombok.Getter;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -43,7 +44,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
 
     @Getter
-    private final DataSlot selectedIndex = DataSlot.standalone();
+    private final DataSlot selectedIndex = MenuUtil.standalone(-1);
     @Getter
     private final DataSlot cost = DataSlot.standalone();
     @Getter
@@ -176,6 +177,13 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
         ));
     }
 
+    @Override
+    public void slotsChanged(@NotNull Container container) {
+        super.slotsChanged(container);
+        if (this.getSlot(0).getItem().isEmpty()) this.setSelectedEnchantment(-1);
+        if (container != this.resultBook) this.createResult();
+    }
+
     public void setSelectedEnchantment(int index) {
         this.selectedIndex.set(index);
         this.createResult();
@@ -212,13 +220,14 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
         if (slot.hasItem()) {
             ItemStack clickedItem = slot.getItem();
             itemStack = clickedItem.copy();
-            if (index == 2) {
-                slot.onTake(player, clickedItem);
-                return ItemStack.EMPTY;
-            } else if (index >= 0 && index < 2) {
+            if (index >= 0 && index <= 2) {
                 if (!this.moveItemStackTo(itemStack, 3, 38, false)) {
                     return ItemStack.EMPTY;
                 } else {
+                    if (index == 2) {
+                        slot.onTake(player, clickedItem);
+                        return ItemStack.EMPTY;
+                    }
                     int surplus = clickedItem.getCount() - clickedItem.getMaxStackSize();
                     ItemStack stack = surplus > 0 ? clickedItem.copyWithCount(surplus) : ItemStack.EMPTY;
                     this.getSlot(index).setByPlayer(stack);
@@ -258,13 +267,6 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
     @Override
     public boolean stillValid(@NotNull Player player) {
         return stillValid(this.access, player, ModBlocks.EMBER_GRINDSTONE.get());
-    }
-
-    @Override
-    public void slotsChanged(@NotNull Container container) {
-        super.slotsChanged(container);
-        if (this.getSlot(0).getItem().isEmpty()) this.setSelectedEnchantment(-1);
-        if (container != this.resultBook) this.createResult();
     }
 
     /**
