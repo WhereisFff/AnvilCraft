@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Transformation;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 
@@ -8,6 +10,7 @@ import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -16,11 +19,12 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import org.jetbrains.annotations.NotNull;
 
 public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindstoneMenu> {
-    private static final ResourceLocation GRINDSTONE_LOCATION =
+    private static final ResourceLocation BACKGROUND =
         AnvilCraft.of("textures/gui/container/smithing/background/ember_grindstone.png");
 
     private static final ResourceLocation BUTTON =
@@ -35,8 +39,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
     private boolean scrolling = false;
     private ItemStack renderingTooltipEnchantedBook;
 
-    public EmberGrindstoneScreen(
-        EmberGrindstoneMenu menu, Inventory playerInventory, @SuppressWarnings("unused") Component title) {
+    public EmberGrindstoneScreen(EmberGrindstoneMenu menu, Inventory playerInventory, @SuppressWarnings("unused") Component title) {
         super(menu, playerInventory, Component.translatable("screen.anvilcraft.ember_grindstone.title"));
         this.menu = menu;
         this.player = playerInventory.player;
@@ -129,7 +132,10 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
     }
 
     protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(GRINDSTONE_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.setColor(1, 1, 1, 0.5F);
+        guiGraphics.renderItem(Items.BOOK.getDefaultInstance(), this.leftPos + 25, this.topPos + 42, (int) (partialTick * 100));
+        guiGraphics.setColor(1, 1, 1, 1);
 
         if (this.menu.canScroll()) {
             int left = this.leftPos + 122;
