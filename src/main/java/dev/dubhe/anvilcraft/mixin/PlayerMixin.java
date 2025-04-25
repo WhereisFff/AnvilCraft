@@ -11,7 +11,7 @@ public class PlayerMixin {
     //飘升机背包飞行时无挖掘惩罚
     @ModifyExpressionValue(method = "getDigSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;onGround()Z"))
     private boolean modifyOnGround(boolean original) {
-        Player player = (Player)(Object)this;
+        Player player = (Player) (Object) this;
         boolean noDiggingPenalty = !IonoCraftBackpackItem.getByPlayer(player).isEmpty() && player.getAbilities().flying;
         return noDiggingPenalty || original;
     }
