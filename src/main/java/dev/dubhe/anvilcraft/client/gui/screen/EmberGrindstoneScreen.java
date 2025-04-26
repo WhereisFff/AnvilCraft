@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 
+import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.client.Minecraft;
@@ -18,6 +19,7 @@ import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindstoneMenu> {
@@ -168,8 +170,10 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                     int thisIndex = i + this.lastRowIndex * 3;
                     if (this.menu.getSelectedIndex() == thisIndex) {
                         this.menu.setSelectedEnchantment(-1);
+                        PacketDistributor.sendToServer(new SyncEmberGrindstonePacket(-1));
                     } else {
                         this.menu.setSelectedEnchantment(thisIndex);
+                        PacketDistributor.sendToServer(new SyncEmberGrindstonePacket(thisIndex));
                     }
                 }
             }

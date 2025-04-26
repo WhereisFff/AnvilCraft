@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 
 import dev.dubhe.anvilcraft.util.ListUtil;
-import dev.dubhe.anvilcraft.util.MenuUtil;
 import lombok.Getter;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -20,7 +19,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
@@ -46,8 +44,8 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
     private final Container resultBook;
     private final ContainerLevelAccess access;
 
-    private final DataSlot selectedIndex = MenuUtil.standalone(-1);
-    private final DataSlot cost = DataSlot.standalone();
+    @Getter
+    private int selectedIndex = -1;
     @Getter
     private final List<EnchantmentInstance> enchantments = new CopyOnWriteArrayList<>();
     private DataComponentType<ItemEnchantments> componentType;
@@ -91,16 +89,9 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
                 return stack.isDamageableItem() || stack.is(Items.ENCHANTED_BOOK) || stack.isEnchanted();
             }
 
-            @Override
-            public void set(@NotNull ItemStack stack) {
+            public void set(ItemStack stack) {
                 super.set(stack);
-                componentType = EnchantmentHelper.getComponentType(stack);
-                enchantments.clear();
-                enchantments.addAll(Collections2.transform(
-                    stack.getOrDefault(componentType, ItemEnchantments.EMPTY).entrySet(),
-                    entry -> new EnchantmentInstance(entry.getKey(), entry.getIntValue())));
-                enchantments.removeIf(
-                    inst -> inst.enchantment.is(EnchantmentTags.CURSE));
+                refreshEnchantments();
             }
         });
         this.addSlot(new Slot(this.book, 0, 25, 42) {
@@ -108,37 +99,34 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
                 return stack.is(Items.BOOK);
             }
         });
-        this.addSlot(new Slot(this.resultBook, 2, 145, 34) {
+        this.addSlot(new Slot(this.resultBook, 0, 145, 34) {
             public boolean mayPlace(@NotNull ItemStack stack) {
                 return false;
             }
 
             public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
                 if (!hasSelectedEnchantment()) return;
+                if (!player.level().isClientSide) player.giveExperienceLevels(-getCost());
 
                 player.playSound(SoundEvents.GRINDSTONE_USE);
 
                 ItemStack toolItem = tool.getItem(0);
                 ItemEnchantments.Mutable enchantmentsCopy = new ItemEnchantments.Mutable(
                     toolItem.getOrDefault(componentType, ItemEnchantments.EMPTY));
-                enchantmentsCopy.removeIf(holder -> holder.equals(enchantments.get(selectedIndex.get()).enchantment));
+                enchantmentsCopy.removeIf(holder -> holder.equals(enchantments.get(selectedIndex).enchantment));
                 toolItem.set(componentType, enchantmentsCopy.toImmutable());
                 toolItem.set(
                     DataComponents.REPAIR_COST,
                     AnvilMenu.calculateIncreasedRepairCost(toolItem.getOrDefault(DataComponents.REPAIR_COST, 0)));
-                getSlot(0).set(toolItem);
+                tool.setItem(0, toolItem);
+                refreshEnchantments();
 
                 ItemStack bookItem = book.getItem(0);
                 bookItem.shrink(1);
-                getSlot(1).set(bookItem);
+                book.setItem(0, bookItem);
 
-                if (!player.level().isClientSide()) {
-                    player.giveExperienceLevels(-getCost());
-                }
+                selectedIndex = -1;
 
-                setData(0, -1);
-                setCost(0);
-                broadcastChanges();
             }
         });
         int i;
@@ -151,13 +139,9 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
         for (i = 0; i < 9; ++i) {
             this.addSlot(new Slot(playerInventory, i, 8 + i * 18, 142));
         }
-
-        this.addDataSlot(this.selectedIndex);
-        this.addDataSlot(this.cost);
     }
 
     private ItemStack createResult() {
-        this.refreshCost();
         if (this.hasSelectedEnchantment()
             && !this.getSlot(0).getItem().isEmpty()
             && !this.getSlot(1).getItem().isEmpty()
@@ -168,34 +152,39 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
         }
     }
 
-    private void refreshCost() {
+    private void refreshEnchantments() {
+        ItemStack input = this.getSlot(0).getItem();
+        this.componentType = EnchantmentHelper.getComponentType(input);
+        this.enchantments.clear();
+        this.enchantments.addAll(Collections2.transform(
+            input.getOrDefault(componentType, ItemEnchantments.EMPTY).entrySet(),
+            entry -> new EnchantmentInstance(entry.getKey(), entry.getIntValue())));
+        this.enchantments.removeIf(
+            inst -> inst.enchantment.is(EnchantmentTags.CURSE));
+    }
+
+    public int getCost() {
         ItemStack input = this.getSlot(0).getItem();
         EnchantmentInstance enchantment = this.getSelectedEnchantment();
-        if (enchantment == null) return;
+        if (enchantment == null) return 0;
         int repairCost = input.getOrDefault(DataComponents.REPAIR_COST, 0);
         int anvilCost = enchantment.enchantment.value().getAnvilCost();
-        this.setCost(Math.clamp(
+        return Math.clamp(
             (long) anvilCost * enchantment.level * input.getCount() * (repairCost <= 0 ? 1 : repairCost),
             0, Integer.MAX_VALUE
-        ));
+        );
     }
 
     @Override
     public void slotsChanged(@NotNull Container container) {
-        if (this.getSlot(0).getItem().isEmpty()) this.setSelectedEnchantment(-1);
-        if (!(container instanceof Inventory) && !this.getCarried().isEmpty()) this.getSlot(2).set(this.createResult());
         super.slotsChanged(container);
-    }
-
-    private void setCost(int cost) {
-        this.setData(1, cost);
-        this.broadcastChanges();
+        if (this.getSlot(0).getItem().isEmpty()) this.setSelectedEnchantment(-1);
+        this.getSlot(2).set(this.createResult());
     }
 
     public void setSelectedEnchantment(int index) {
-        this.setData(0, index);
+        this.selectedIndex = index;
         this.getSlot(2).set(this.createResult());
-        this.broadcastChanges();
     }
 
     public boolean hasSelectedEnchantment() {
@@ -205,14 +194,6 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
 
     private @Nullable EnchantmentInstance getSelectedEnchantment() {
         return ListUtil.safelyGet(this.enchantments, this.getSelectedIndex());
-    }
-
-    public int getSelectedIndex() {
-        return this.selectedIndex.get();
-    }
-
-    public int getCost() {
-        return this.cost.get();
     }
 
     @Override
