@@ -1,7 +1,5 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.math.Transformation;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 
@@ -10,7 +8,6 @@ import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
@@ -97,7 +94,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                 vOffset = 36;
                 this.renderingTooltipEnchantedBook = willRender;
             }
-            if (this.menu.getSelectedIndex().get() - scrollOver == i) {
+            if (this.menu.getSelectedIndex() - scrollOver == i) {
                 vOffset = 18;
                 selected = true;
             }
@@ -110,7 +107,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
     protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
         super.renderLabels(guiGraphics, mouseX, mouseY);
 
-        int i = this.menu.getCost().get();
+        int i = this.menu.getCost();
         if (i > 0) {
             int j = 0x80ff20;
             Component component;
@@ -169,7 +166,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
 
                 if (MathUtil.isInRange(mouseX, mouseY, x, y, x + 18, y + 18)) {
                     int thisIndex = i + this.lastRowIndex * 3;
-                    if (this.menu.getSelectedIndex().get() == thisIndex) {
+                    if (this.menu.getSelectedIndex() == thisIndex) {
                         this.menu.setSelectedEnchantment(-1);
                     } else {
                         this.menu.setSelectedEnchantment(thisIndex);
