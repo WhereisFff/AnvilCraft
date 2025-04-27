@@ -18,7 +18,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -64,17 +63,29 @@ public class PlayerTickEventHandler {
                 if (enchantment.is(ModEnchantmentTags.MODIFY_BLOCK_LOOT)) miningEfficiency += stack.getEnchantmentLevel(enchantment);
             }
 
-            ItemAttributeModifiers attributeModifiers = stack.getAttributeModifiers()
-                .withModifierAdded(
-                    Attributes.ATTACK_DAMAGE,
-                    new AttributeModifier(MERCILESS_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE),
-                    EquipmentSlotGroup.HAND)
-                .withModifierAdded(
-                    Attributes.MINING_EFFICIENCY,
-                    new AttributeModifier(MERCILESS_ID, miningEfficiency, AttributeModifier.Operation.ADD_VALUE),
-                    EquipmentSlotGroup.HAND);
-
-            stack.set(DataComponents.ATTRIBUTE_MODIFIERS, attributeModifiers);
+            if (attackDamage != 0 || miningEfficiency != 0) {
+                ItemAttributeModifiers attributeModifiers = stack.getAttributeModifiers()
+                    .withModifierAdded(
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(MERCILESS_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HAND
+                    )
+                    .withModifierAdded(
+                        Attributes.MINING_EFFICIENCY,
+                        new AttributeModifier(MERCILESS_ID, miningEfficiency, AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.HAND
+                    );
+                stack.set(DataComponents.ATTRIBUTE_MODIFIERS, attributeModifiers);
+            } else {
+                ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+                for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
+                    if (!entry.matches(Attributes.ATTACK_DAMAGE, MERCILESS_ID)
+                        && !entry.matches(Attributes.MINING_EFFICIENCY, MERCILESS_ID)) {
+                        builder.add(entry.attribute(), entry.modifier(), entry.slot());
+                    }
+                }
+                stack.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.build());
+            }
         }
     }
 }
