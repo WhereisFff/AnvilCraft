@@ -1,6 +1,6 @@
 {
   "type": "anvilcraft:time_warp",
-  "cauldron": "minecraft:cauldron",
+  "cauldron": "minecraft:powder_snow_cauldron",
   "consume_fluid": true,
   "ingredients": [
     {

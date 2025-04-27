@@ -146,6 +146,7 @@ public class TimeWarpRecipeLoader {
             .requires(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE)
             .requiredFluidLevel(3)
             .consumeFluid(true)
+            .cauldron(Blocks.POWDER_SNOW_CAULDRON)
             .result(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE.asStack())
             .save(provider);
 
