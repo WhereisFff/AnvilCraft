@@ -119,6 +119,11 @@ public class ModItemTags {
     public static final TagKey<Item> ROYAL_STEEL_HOE_BASE = bind("royal_steel_hoe_base");
     public static final TagKey<Item> ROYAL_STEEL_SHOVEL_BASE = bind("royal_steel_shovel_base");
     public static final TagKey<Item> ROYAL_STEEL_SWORD_BASE = bind("royal_steel_sword_base");
+    public static final TagKey<Item> FROST_METAL_PICKAXE_BASE = bind("frost_metal_pickaxe_base");
+    public static final TagKey<Item> FROST_METAL_AXE_BASE = bind("frost_metal_axe_base");
+    public static final TagKey<Item> FROST_METAL_HOE_BASE = bind("frost_metal_hoe_base");
+    public static final TagKey<Item> FROST_METAL_SHOVEL_BASE = bind("frost_metal_shovel_base");
+    public static final TagKey<Item> FROST_METAL_SWORD_BASE = bind("frost_metal_sword_base");
     public static final TagKey<Item> EMBER_METAL_PICKAXE_BASE = bind("ember_metal_pickaxe_base");
     public static final TagKey<Item> EMBER_METAL_AXE_BASE = bind("ember_metal_axe_base");
     public static final TagKey<Item> EMBER_METAL_HOE_BASE = bind("ember_metal_hoe_base");

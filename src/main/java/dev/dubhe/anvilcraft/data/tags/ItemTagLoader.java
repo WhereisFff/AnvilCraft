@@ -52,6 +52,17 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.IRON_SHOVEL))
             .add(findResourceKey(Items.DIAMOND_SHOVEL));
 
+        provider.addTag(ModItemTags.FROST_METAL_PICKAXE_BASE)
+            .add(ModItems.ROYAL_STEEL_PICKAXE.getKey());
+        provider.addTag(ModItemTags.FROST_METAL_AXE_BASE)
+            .add(ModItems.ROYAL_STEEL_AXE.getKey());
+        provider.addTag(ModItemTags.FROST_METAL_HOE_BASE)
+            .add(ModItems.ROYAL_STEEL_HOE.getKey());
+        provider.addTag(ModItemTags.FROST_METAL_SWORD_BASE)
+            .add(ModItems.ROYAL_STEEL_SWORD.getKey());
+        provider.addTag(ModItemTags.FROST_METAL_SHOVEL_BASE)
+            .add(ModItems.ROYAL_STEEL_SHOVEL.getKey());
+
         provider.addTag(ModItemTags.EMBER_METAL_PICKAXE_BASE)
             .add(ModItems.ROYAL_STEEL_PICKAXE.getKey())
             .add(findResourceKey(Items.NETHERITE_PICKAXE));

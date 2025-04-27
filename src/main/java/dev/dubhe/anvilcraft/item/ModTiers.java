@@ -37,6 +37,14 @@ public enum ModTiers implements Tier {
         () -> Ingredient.of(ModItems.MULTIPHASE_MATTER),
         ModBlockTags.INCORRECT_FOR_MULTIPHASE_TOOL
     ),
+    FROST_METAL(
+        2031,
+        12.0f,
+        1.0f,
+        15,
+        () -> Ingredient.of(ModItems.FROST_METAL_INGOT),
+        ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL
+    ),
     ;
 
     private final int uses;

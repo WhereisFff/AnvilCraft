@@ -43,9 +43,12 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.smithing_template.royal_steel_upgrade_smithing_template"
                 + ".upgrade_ingredients",
             "Royal Steel Ingot or Royal Steel Block");
-        provider.add("screen.anvilcraft.smithing_template.ember_metal_upgrade_smithing_template"
+        provider.add("screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template"
                 + ".upgrade_ingredients",
-            "Ember Metal Ingot or Ember Metal Block");
+            "Frost Metal Ingot");
+        provider.add("screen.anvilcraft.smithing_template.ember_metal_upgrade_smithing_template"
+                     + ".upgrade_ingredients",
+                     "Ember Metal Ingot or Ember Metal Block");
 
         provider.add("screen.anvilcraft.item_collector.title", "Item Collector");
         provider.add("screen.anvilcraft.item_collector.range", "Range");
@@ -126,5 +129,17 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.tesla_tower.filter.has_custom_name", "Custom Named Entity Filter");
 
         provider.add("hud.anvilcraft.ionocraft_backpack_power", "Ionocraft Backpack Power: %d%%");
+
+        provider.add(
+            "screen.anvilcraft.frost_metal_upgrade_smithing_template", "Frost Metal Upgrade");
+        provider.add(
+            "screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template.additions_slot_description",
+            "Put the Frost Metal Ingot");
+        provider.add(
+            "screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template.applies_to",
+            "Royal Steel Tools");
+        provider.add(
+            "screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template.base_slot_description",
+            "Put upgradable item");
     }
 }

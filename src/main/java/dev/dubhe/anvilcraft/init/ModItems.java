@@ -25,6 +25,12 @@ import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmberMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
+import dev.dubhe.anvilcraft.item.FrostMetalHoeItem;
+import dev.dubhe.anvilcraft.item.FrostMetalPickaxeItem;
+import dev.dubhe.anvilcraft.item.FrostMetalShovelItem;
+import dev.dubhe.anvilcraft.item.FrostMetalSwordItem;
+import dev.dubhe.anvilcraft.item.FrostMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterAxeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterHoeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
@@ -73,7 +79,6 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
-import net.minecraft.data.recipes.SmithingTrimRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ArmorItem;
@@ -284,6 +289,84 @@ public class ModItems {
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.SWORDS,
             Tags.Items.MELEE_WEAPON_TOOLS)
+        .register();
+    public static final ItemEntry<FrostMetalPickaxeItem> FROST_METAL_PICKAXE = REGISTRATE
+        .item("frost_metal_pickaxe", FrostMetalPickaxeItem::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItemTags.FROST_METAL_PICKAXE_BASE),
+                    Ingredient.of(ModItems.FROST_METAL_INGOT),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
+                .save(provider, AnvilCraft.of("smithing/frost_metal_pickaxe"));
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.PICKAXES,
+             Tags.Items.MINING_TOOL_TOOLS)
+        .register();
+    public static final ItemEntry<FrostMetalAxeItem> FROST_METAL_AXE = REGISTRATE
+        .item("frost_metal_axe", FrostMetalAxeItem::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItemTags.FROST_METAL_AXE_BASE),
+                    Ingredient.of(ModItems.FROST_METAL_INGOT),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
+                .save(provider, AnvilCraft.of("smithing/frost_metal_axe"));
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.AXES,
+             Tags.Items.MELEE_WEAPON_TOOLS)
+        .register();
+    public static final ItemEntry<FrostMetalShovelItem> FROST_METAL_SHOVEL = REGISTRATE
+        .item("frost_metal_shovel", FrostMetalShovelItem::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItemTags.FROST_METAL_SHOVEL_BASE),
+                    Ingredient.of(ModItems.FROST_METAL_INGOT),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.EMBER_METAL_INGOT))
+                .save(provider, AnvilCraft.of("smithing/frost_metal_shovel"));
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.SHOVELS)
+        .register();
+    public static final ItemEntry<FrostMetalHoeItem> FROST_METAL_HOE = REGISTRATE
+        .item("frost_metal_hoe", FrostMetalHoeItem::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItemTags.FROST_METAL_HOE_BASE),
+                    Ingredient.of(ModItems.FROST_METAL_INGOT),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
+                .save(provider, AnvilCraft.of("smithing/frost_metal_hoe"));
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.HOES)
+        .register();
+    public static final ItemEntry<FrostMetalSwordItem> FROST_METAL_SWORD = REGISTRATE
+        .item("frost_metal_sword", FrostMetalSwordItem::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItemTags.FROST_METAL_SWORD_BASE),
+                    Ingredient.of(ModItems.FROST_METAL_INGOT),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
+                .save(provider, AnvilCraft.of("smithing/frost_metal_sword"));
+        })
+        .model((ctx, provider) -> provider.handheld(ctx))
+        .tag(ItemTags.SWORDS,
+             Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<EmberMetalPickaxeItem> EMBER_METAL_PICKAXE = REGISTRATE
         .item("ember_metal_pickaxe", EmberMetalPickaxeItem::new)
@@ -512,6 +595,9 @@ public class ModItems {
     // 升级锻造模板
     public static final ItemEntry<RoyalUpgradeTemplateItem> ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("royal_steel_upgrade_smithing_template", RoyalUpgradeTemplateItem::new)
+        .register();
+    public static final ItemEntry<FrostMetalUpgradeTemplateItem> FROST_METAL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
+        .item("frost_metal_upgrade_smithing_template", FrostMetalUpgradeTemplateItem::new)
         .register();
     public static final ItemEntry<EmberMetalUpgradeTemplateItem> EMBER_METAL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("ember_metal_upgrade_smithing_template", EmberMetalUpgradeTemplateItem::new)
@@ -1706,6 +1792,43 @@ public class ModItems {
     public static final ItemEntry<Item> MULTIPHASE_MATTER = REGISTRATE
         .item("multiphase_matter", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .register();
+
+    public static final ItemEntry<? extends Item> FROST_METAL_INGOT = REGISTRATE
+        .item("frost_metal_ingot", Item::new)
+        .tag(Tags.Items.INGOTS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.FROST_METAL_BLOCK)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.FROST_METAL_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.FROST_METAL_NUGGET)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.FROST_METAL_NUGGET),
+                    RegistrateRecipeProvider.has(ModItems.FROST_METAL_NUGGET))
+                .save(provider);
+        })
+        .register();
+
+    public static final ItemEntry<? extends Item> FROST_METAL_NUGGET = REGISTRATE
+        .item("frost_metal_nugget", Item::new)
+        .tag(Tags.Items.NUGGETS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModItems.FROST_METAL_INGOT)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.FROST_METAL_INGOT),
+                    AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
+        })
         .register();
 
     public static final ItemEntry<? extends Item> EMBER_METAL_INGOT = REGISTRATE
