@@ -43,5 +43,8 @@ public class OtherLang {
         provider.add("enchantment.anvilcraft.harvest", "Harvest");
         provider.add("death.attack.anvilcraft.laser", "%1$s was pierced by laser");
         provider.add("death.attack.anvilcraft.lost_in_time", "%1$s was lost in the river of time");
+
+        provider.add("key.categories.anvilcraft", "AnvilCraft");
+        provider.add("key.anvilcraft.toggle_goggle", "Toggle Goggle Mode");
     }
 }
