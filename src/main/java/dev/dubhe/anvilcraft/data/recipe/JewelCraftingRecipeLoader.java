@@ -109,7 +109,7 @@ public class JewelCraftingRecipeLoader {
                     if (!shaped.getResultItem(server.registryAccess()).is(itemHolder)) return;
                     ShapedRecipePattern pattern = shaped.pattern;
                     if (pattern.width() != 3 || pattern.height() != 3) return;
-                    ShapedRecipePattern.Data data = ((ShapedRecipePatternAccessor)(Object) pattern).accessor$data().orElse(null);
+                    ShapedRecipePattern.Data data = ((ShapedRecipePatternAccessor) (Object) pattern).accessor$data().orElse(null);
                     if (data == null) return;
                     builder.requires(data.key().get(data.pattern().get(1).charAt(1))).save(provider);
                     break;
