@@ -83,7 +83,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
 
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        return state.getValue(POWERED) ? 15 : 0;
+        return state.getValue(FACING) == direction && state.getValue(POWERED) ? 15 : 0;
     }
 
     @Override
