@@ -4,7 +4,7 @@ import com.mojang.datafixers.util.Unit;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModEnchantments;
 import dev.dubhe.anvilcraft.init.ModLootTables;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import dev.dubhe.anvilcraft.loot.conditions.MatchDataComponent;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderOwner;
@@ -24,7 +24,6 @@ import net.minecraft.world.level.storage.loot.functions.LootItemFunction;
 import net.minecraft.world.level.storage.loot.predicates.InvertedLootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
-import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -99,9 +98,8 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
                     LevelBasedValue.perLevel(baseChance, bonusChancePerLevel),
                     new DummyHolder(ModEnchantments.BEHEADING_KEY)))
                 .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                .when(InvertedLootItemCondition.invert(MatchTool.toolMatches(
-                    ItemPredicate.Builder.item()
-                        .hasComponents(DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE).build())
+                .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
+                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE)
                 )))
             )
         );
@@ -123,9 +121,8 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
                     LevelBasedValue.perLevel(baseChance, bonusChancePerLevel),
                     new DummyHolder(ModEnchantments.BEHEADING_KEY)))
                 .when(LootItemKilledByPlayerCondition.killedByPlayer())
-                .when(InvertedLootItemCondition.invert(MatchTool.toolMatches(
-                    ItemPredicate.Builder.item()
-                        .hasComponents(DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE).build())
+                .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
+                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE)
                 )))
             )
         );

@@ -17,6 +17,7 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -144,6 +145,14 @@ public class Util {
                 return false;
             }
             countMap.put(obj, newCount);
+        }
+
+        return true;
+    }
+
+    public static <T> boolean allMatch(Collection<T> collection, Predicate<T> matcher) {
+        for (T t : collection) {
+            if (!matcher.test(t)) return false;
         }
 
         return true;

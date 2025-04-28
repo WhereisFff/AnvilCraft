@@ -17,6 +17,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.StampingRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.StampingUniqueItemsRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SuperHeatingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.UnpackRecipe;
@@ -74,6 +75,8 @@ public class ModRecipeTypes {
         registerType("stamping");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<StampingRecipe>> STAMPING_SERIALIZER =
         RECIPE_SERIALIZERS.register("stamping", StampingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<StampingUniqueItemsRecipe>> STAMPING_UNIQUE_ITEMS_SERIALIZER =
+        RECIPE_SERIALIZERS.register("stamping_unique_items", StampingUniqueItemsRecipe.Serializer::new);
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<SuperHeatingRecipe>> SUPER_HEATING_TYPE =
         registerType("super_heating");
