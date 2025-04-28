@@ -30,7 +30,7 @@ import java.util.List;
 public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultipleToOneSmithingRecipeResult>
     implements Recipe<MultipleToOneSmithingRecipeInput> {
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "checkstyle:MethodName"})
     protected static <T extends Item & IMultipleToOneSmithingRecipeResult> Codec<T> RESULT_CODEC() {
         return CodecUtil.ITEM_CODEC.flatXmap(
             item -> item instanceof IMultipleToOneSmithingRecipeResult
@@ -125,9 +125,8 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
         ByteBufCodecs.INT.encode(buf, recipe.recipeId);
     }
 
-    public static abstract class Builder<
-        T extends Item & IMultipleToOneSmithingRecipeResult,
-        R extends BaseMultipleToOneSmithingRecipe<T>> extends AbstractRecipeBuilder<R> {
+    public static abstract class Builder<T extends Item & IMultipleToOneSmithingRecipeResult, R extends BaseMultipleToOneSmithingRecipe<T>>
+        extends AbstractRecipeBuilder<R> {
 
         protected Ingredient template = template();
         protected Ingredient material;
