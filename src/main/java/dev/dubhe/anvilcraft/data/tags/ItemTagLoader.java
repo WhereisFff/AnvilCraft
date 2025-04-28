@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -159,6 +160,9 @@ public class ItemTagLoader {
             .add(ModItems.NEUTRONIUM_INGOT.getKey())
             .add(ModItems.STABLE_NEUTRONIUM_INGOT.getKey())
             .add(ModItems.CHARGED_NEUTRONIUM_INGOT.getKey());
+        provider.addTag(ModItemTags.TEMPLATES)
+            .addTag(ItemTags.TRIM_TEMPLATES)
+            .add(findResourceKey(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
     }
 
     private static ResourceKey<Item> findResourceKey(Item item) {

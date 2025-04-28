@@ -1,0 +1,34 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "anvilcraft:templates"
+    },
+    {
+      "tag": "anvilcraft:templates"
+    },
+    {
+      "tag": "anvilcraft:templates"
+    },
+    {
+      "tag": "anvilcraft:templates"
+    },
+    {
+      "tag": "anvilcraft:templates"
+    },
+    {
+      "tag": "anvilcraft:templates"
+    },
+    {
+      "tag": "anvilcraft:templates"
+    },
+    {
+      "tag": "anvilcraft:templates"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:eight_to_one_smithing_template"
+  }
+}

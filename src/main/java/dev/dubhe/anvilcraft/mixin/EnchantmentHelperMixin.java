@@ -24,6 +24,6 @@ public class EnchantmentHelperMixin {
         ServerLevel level, ItemStack tool, Entity entity, DamageSource damageSource, MutableFloat mutablefloat,
         Holder<Enchantment> enchantment, int enchantmentLevel, CallbackInfo ci
     ) {
-        if (tool.has(ModComponents.MERCILESS) && enchantment.is(ModEnchantmentTags.TARGETED_DAMAGE)) ci.cancel();
+        if (tool.has(ModComponents.MERCILESS) && !enchantment.is(ModEnchantmentTags.MERCILESS_DAMAGE_PASSED)) ci.cancel();
     }
 }

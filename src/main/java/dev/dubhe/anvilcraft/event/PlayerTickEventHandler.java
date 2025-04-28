@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.item.CrabClawItem;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -18,7 +19,9 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -59,8 +62,15 @@ public class PlayerTickEventHandler {
 
             ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             for (Holder<Enchantment> enchantment : enchantments.keySet()) {
-                if (enchantment.is(ModEnchantmentTags.TARGETED_DAMAGE)) attackDamage += 0.5f * stack.getEnchantmentLevel(enchantment);
-                if (enchantment.is(ModEnchantmentTags.MODIFY_BLOCK_LOOT)) miningEfficiency += stack.getEnchantmentLevel(enchantment);
+                if (!enchantment.is(ModEnchantmentTags.MERCILESS_PASSED)) {
+                    if (!enchantment.value().getEffects(EnchantmentEffectComponents.DAMAGE).isEmpty()) {
+                        attackDamage += stack.getEnchantmentLevel(enchantment);
+                    } else if (!enchantment.value().getEffects(EnchantmentEffectComponents.DAMAGE).isEmpty())
+                }
+                if (enchantment.is(ModEnchantmentTags.MODIFY_BLOCK_LOOT)) {
+                    miningEfficiency += stack.getEnchantmentLevel(enchantment);
+                }
+                MatchTool
             }
 
             if (attackDamage != 0 || miningEfficiency != 0) {
