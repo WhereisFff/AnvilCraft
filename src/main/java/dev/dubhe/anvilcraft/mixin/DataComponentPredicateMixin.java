@@ -23,8 +23,8 @@ public abstract class DataComponentPredicateMixin {
         method = "test(Lnet/minecraft/core/component/DataComponentMap;)Z",
         at = @At(
             value = "INVOKE_ASSIGN",
-            target = "Lnet/minecraft/core/component/DataComponentMap;get(" +
-                     "Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"),
+            target = "Lnet/minecraft/core/component/DataComponentMap;get("
+                     + "Lnet/minecraft/core/component/DataComponentType;)Ljava/lang/Object;"),
         cancellable = true)
     private void cancelWhenMerciless(
         DataComponentMap components, CallbackInfoReturnable<Boolean> cir, @Local TypedDataComponent<?> component
