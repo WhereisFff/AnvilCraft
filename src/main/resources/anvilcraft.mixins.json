@@ -43,6 +43,7 @@
     "accessor.BaseSpawnerAccessor",
     "accessor.CropBlockAccessor",
     "accessor.GrowingPlantAccessor",
+    "accessor.ShapedRecipePatternAccessor",
     "compat.CreatePackagerBlockEntityMixin",
     "forge.FallingBlockEntityMixin",
     "forge.LevelChunkMixin",
