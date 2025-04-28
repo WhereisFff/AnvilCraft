@@ -127,6 +127,21 @@ public class ScreenLang {
 
         provider.add("hud.anvilcraft.ionocraft_backpack_power", "Ionocraft Backpack Power: %d%%");
 
+        provider.add(
+            "screen.anvilcraft.frost_metal_upgrade_smithing_template", "Frost Metal Upgrade");
+        provider.add(
+            "screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template.additions_slot_description",
+            "Put the Frost Metal Ingot");
+        provider.add(
+            "screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template.applies_to",
+            "Royal Steel Tools");
+        provider.add(
+            "screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template.base_slot_description",
+            "Put upgradable item");
+        provider.add(
+            "screen.anvilcraft.smithing_template.frost_metal_upgrade_smithing_template.upgrade_ingredients",
+            "Frost Metal Ingot");
+
         provider.add("screen.anvilcraft.ember_smithing.tooltip.missing_template", "Add Multiple to One Template");
         provider.add("screen.anvilcraft.ember_smithing.tooltip.two_missing_multiphase_matter", "Add Multiphase Matter");
         provider.add(

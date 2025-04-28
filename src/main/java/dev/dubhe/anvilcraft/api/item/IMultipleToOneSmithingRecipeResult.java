@@ -13,8 +13,7 @@ public interface IMultipleToOneSmithingRecipeResult {
      *
      * @param id 配方对于该结果的id，在配方构建时设置
      * @param input 配方输入，包含模板、材料和其它输入
-     * @param <I> 配方输入的具体类型，需继承{@link MultipleToOneSmithingRecipeInput}
      * @return 结果
      */
-    <I extends MultipleToOneSmithingRecipeInput> ItemStack assemble(int id, I input, HolderLookup.Provider registries);
+    ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries);
 }

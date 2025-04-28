@@ -35,17 +35,17 @@ public class MultiphaseMatterAxeItem extends AxeItem implements IMultipleToOneSm
     }
 
     @Override
-    public <I extends MultipleToOneSmithingRecipeInput> ItemStack assemble(int id, I inputI, HolderLookup.Provider registries) {
-        if (id == 0 && inputI instanceof TwoToOneSmithingRecipeInput input) {
+    public ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
+        if (id == 0) {
             Multiphase.PhaseData first = Multiphase.PhaseData.of(
-                input.input0().get(DataComponents.CUSTOM_NAME), input.input0().get(DataComponents.ITEM_NAME),
-                input.input0().getOrDefault(DataComponents.REPAIR_COST, 0),
-                input.input0().get(EnchantmentHelper.getComponentType(input.input0()))
+                input.getInputItem(0).get(DataComponents.CUSTOM_NAME), input.getInputItem(0).get(DataComponents.ITEM_NAME),
+                input.getInputItem(0).getOrDefault(DataComponents.REPAIR_COST, 0),
+                input.getInputItem(0).get(EnchantmentHelper.getComponentType(input.getInputItem(0)))
             );
             Multiphase.PhaseData second = Multiphase.PhaseData.of(
-                input.input1().get(DataComponents.CUSTOM_NAME), input.input1().get(DataComponents.ITEM_NAME),
-                input.input1().getOrDefault(DataComponents.REPAIR_COST, 0),
-                input.input1().get(EnchantmentHelper.getComponentType(input.input1()))
+                input.getInputItem(1).get(DataComponents.CUSTOM_NAME), input.getInputItem(1).get(DataComponents.ITEM_NAME),
+                input.getInputItem(1).getOrDefault(DataComponents.REPAIR_COST, 0),
+                input.getInputItem(1).get(EnchantmentHelper.getComponentType(input.getInputItem(1)))
             );
 
             ItemStack result = this.getDefaultInstance();
