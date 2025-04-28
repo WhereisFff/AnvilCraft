@@ -178,7 +178,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         this.mode = Mode.DEFAULT;
         this.updateBlockAndNeighbours(level, pos, state);
 
-        if ((this.startMode == 0 && this.isInputtingSignal) || this.startMode == 2) {
+        if (this.startMode == 2) {
             this.startWaiting(level, pos, state);
         }
     }
