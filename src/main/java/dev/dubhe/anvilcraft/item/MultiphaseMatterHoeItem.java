@@ -48,8 +48,8 @@ public class MultiphaseMatterHoeItem extends HoeItem implements IMultipleToOneSm
                 input.getInputItem(1).get(EnchantmentHelper.getComponentType(input.getInputItem(1)))
             );
 
+            Multiphase multiphase = Multiphase.make(this, first, second);
             ItemStack result = this.getDefaultInstance();
-            Multiphase multiphase = Multiphase.make(this.getDefaultInstance(), first, second);
             result.set(ModComponents.MULTIPHASE, multiphase);
             multiphase.applyToStack(result);
 

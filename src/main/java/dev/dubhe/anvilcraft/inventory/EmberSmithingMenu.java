@@ -7,7 +7,10 @@ import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.item.template.MultipleToOneTemplateItem;
 import dev.dubhe.anvilcraft.recipe.multiple.BaseMultipleToOneSmithingRecipe;
+import dev.dubhe.anvilcraft.recipe.multiple.EightToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
+import dev.dubhe.anvilcraft.recipe.multiple.TwoToOneSmithingRecipe;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -15,6 +18,7 @@ import net.minecraft.world.inventory.ItemCombinerMenu;
 import net.minecraft.world.inventory.ItemCombinerMenuSlotDefinition;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
@@ -78,23 +82,35 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(1, itemStack)))
             .withSlot(4, 62, 36, itemStack ->
                 !this.inputSlots.getItem(0).is(ModItems.TWO_TO_ONE_SMITHING_TEMPLATE) && this.recipes.stream()
-                    .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(2, itemStack)))
+                    .anyMatch(smithingRecipe ->
+                                  !(smithingRecipe.value() instanceof TwoToOneSmithingRecipe<?>)
+                                  && smithingRecipe.value().isInputIngredient(2, itemStack)))
             .withSlot(5, 98, 36, itemStack ->
                 !this.inputSlots.getItem(0).is(ModItems.TWO_TO_ONE_SMITHING_TEMPLATE) && this.recipes.stream()
-                    .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(3, itemStack)))
+                    .anyMatch(smithingRecipe ->
+                                  !(smithingRecipe.value() instanceof TwoToOneSmithingRecipe<?>)
+                                  && smithingRecipe.value().isInputIngredient(3, itemStack)))
             .withSlot(6, 62, 18, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE) && this.recipes.stream()
-                    .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(4, itemStack)))
+                    .anyMatch(smithingRecipe ->
+                                  smithingRecipe.value() instanceof EightToOneSmithingRecipe<?>
+                                  && smithingRecipe.value().isInputIngredient(4, itemStack)))
             .withSlot(7, 98, 18, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE) && this.recipes.stream()
-                    .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(5, itemStack)))
+                    .anyMatch(smithingRecipe ->
+                                  smithingRecipe.value() instanceof EightToOneSmithingRecipe<?>
+                                  && smithingRecipe.value().isInputIngredient(5, itemStack)))
             .withSlot(8, 62, 54, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE) && this.recipes.stream()
-                    .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(6, itemStack)))
+                    .anyMatch(smithingRecipe ->
+                                  smithingRecipe.value() instanceof EightToOneSmithingRecipe<?>
+                                  && smithingRecipe.value().isInputIngredient(6, itemStack)))
             .withSlot(9, 98, 54, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE) && this.recipes.stream()
-                    .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(7, itemStack)))
-            .withResultSlot(10, 106, 48)
+                    .anyMatch(smithingRecipe ->
+                                  smithingRecipe.value() instanceof EightToOneSmithingRecipe<?>
+                                  && smithingRecipe.value().isInputIngredient(7, itemStack)))
+            .withResultSlot(10, 151, 48)
             .build();
     }
 
@@ -106,6 +122,20 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
     @Override
     protected boolean mayPickup(@NotNull Player player, boolean hasStack) {
         return this.selectedRecipe != null && this.selectedRecipe.value().matches(this.createRecipeInput(), this.level);
+    }
+
+    @Override
+    public void slotsChanged(@NotNull Container inventory) {
+        super.slotsChanged(inventory);
+        if (this.inputSlots.getItem(0).isEmpty()) {
+            for (int i = 1; i < 10; i++) {
+                ItemStack stack = this.inputSlots.getItem(i);
+                if (!stack.isEmpty()) {
+                    this.inputSlots.removeItemNoUpdate(i);
+                    this.moveItemStackTo(stack, 11, 56, false);
+                }
+            }
+        }
     }
 
     @Override
@@ -201,14 +231,14 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
     private static Optional<Integer> findSlotMatchingIngredient(@NotNull BaseMultipleToOneSmithingRecipe<?> recipe, ItemStack stack) {
         if (recipe.isTemplateIngredient(stack)) return Optional.of(0);
         if (recipe.isMaterialIngredient(stack)) return Optional.of(1);
-        if (recipe.isInputIngredient(2, stack)) return Optional.of(2);
-        if (recipe.isInputIngredient(3, stack)) return Optional.of(3);
-        if (recipe.isInputIngredient(4, stack)) return Optional.of(4);
-        if (recipe.isInputIngredient(5, stack)) return Optional.of(5);
-        if (recipe.isInputIngredient(6, stack)) return Optional.of(6);
-        if (recipe.isInputIngredient(7, stack)) return Optional.of(7);
-        if (recipe.isInputIngredient(8, stack)) return Optional.of(8);
-        if (recipe.isInputIngredient(9, stack)) return Optional.of(9);
+        if (recipe.isInputIngredient(0, stack)) return Optional.of(2);
+        if (recipe.isInputIngredient(1, stack)) return Optional.of(3);
+        if (!(recipe instanceof TwoToOneSmithingRecipe<?>) && recipe.isInputIngredient(2, stack)) return Optional.of(4);
+        if (!(recipe instanceof TwoToOneSmithingRecipe<?>) && recipe.isInputIngredient(3, stack)) return Optional.of(5);
+        if (recipe instanceof EightToOneSmithingRecipe<?> && recipe.isInputIngredient(4, stack)) return Optional.of(6);
+        if (recipe instanceof EightToOneSmithingRecipe<?> && recipe.isInputIngredient(5, stack)) return Optional.of(7);
+        if (recipe instanceof EightToOneSmithingRecipe<?> && recipe.isInputIngredient(6, stack)) return Optional.of(8);
+        if (recipe instanceof EightToOneSmithingRecipe<?> && recipe.isInputIngredient(7, stack)) return Optional.of(9);
         return Optional.empty();
     }
 

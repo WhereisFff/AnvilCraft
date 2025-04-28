@@ -11,10 +11,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import org.apache.commons.lang3.tuple.Triple;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -77,12 +77,12 @@ public record Multiphase(Phase alpha, Phase beta) {
     /**
      * 使用输入的数据构建一个全新的多相，并传入物品
      *
-     * @param original  原始物品
+     * @param original 原始物品
      * @param dataS 数据组，只取前两个非null数据作α相和β相
      *
      * @return 一个全新的多相
      */
-    public static Multiphase make(ItemStack original, PhaseData... dataS) {
+    public static Multiphase make(Item original, PhaseData... dataS) {
         Phase[] phases = new Phase[2];
         for (int i = 0; i < 2; i++) {
             PhaseData data = dataS[i];
@@ -99,11 +99,11 @@ public record Multiphase(Phase alpha, Phase beta) {
                         .withItemName(data.itemName().copy());
                 } else {
                     phases[i] = phases[i]
-                        .withItemName(original.getHoverName().copy());
+                        .withItemName(original.getDescription().copy().append(i == 0 ? ALPHA_NAME_SUFFIX : BETA_NAME_SUFFIX));
                 }
             } else {
                 phases[i] = Phase.EMPTY
-                    .withCustomName(original.getHoverName().copy().append(i == 0 ? ALPHA_NAME_SUFFIX : BETA_NAME_SUFFIX));
+                    .withCustomName(original.getDescription().copy().append(i == 0 ? ALPHA_NAME_SUFFIX : BETA_NAME_SUFFIX));
             }
         }
         return new Multiphase(phases[0], phases[1]);

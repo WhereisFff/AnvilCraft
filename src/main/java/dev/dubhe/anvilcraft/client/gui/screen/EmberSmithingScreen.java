@@ -28,9 +28,9 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
     private static final ResourceLocation EMPTY_SLOT_TWO_TO_ONE_SMITHING_TEMPLATE =
         AnvilCraft.of("item/empty_slot_two_to_one_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_FOUR_TO_ONE_SMITHING_TEMPLATE =
-        AnvilCraft.of("item/empty_slot_two_to_one_smithing_template");
+        AnvilCraft.of("item/empty_slot_four_to_one_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE =
-        AnvilCraft.of("item/empty_slot_two_to_one_smithing_template");
+        AnvilCraft.of("item/empty_slot_eight_to_one_smithing_template");
 
     private static final ResourceLocation EMPTY_SLOT_MULTIPHASE_MATTER =
         AnvilCraft.of("item/empty_slot_multiphase_matter");
@@ -119,6 +119,8 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
                     if (material.get().is(ModItems.MULTIPHASE_MATTER)) {
                         this.inputIcons.forEach(icon -> icon.tick(EMPTY_SLOT_TOOLS));
                     }
+                } else {
+                    this.inputIcons.forEach(icon -> icon.tick(List.of()));
                 }
             } else if (item.getSize() == 4) {
                 this.materialIcon.tick(EMPTY_SLOT_MATERIALS_FOUR);
