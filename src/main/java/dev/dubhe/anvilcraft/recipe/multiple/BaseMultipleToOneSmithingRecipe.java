@@ -125,7 +125,7 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
         ByteBufCodecs.INT.encode(buf, recipe.recipeId);
     }
 
-    public static abstract class Builder<T extends Item & IMultipleToOneSmithingRecipeResult, R extends BaseMultipleToOneSmithingRecipe<T>>
+    public abstract static class Builder<T extends Item & IMultipleToOneSmithingRecipeResult, R extends BaseMultipleToOneSmithingRecipe<T>>
         extends AbstractRecipeBuilder<R> {
 
         protected Ingredient template = template();
