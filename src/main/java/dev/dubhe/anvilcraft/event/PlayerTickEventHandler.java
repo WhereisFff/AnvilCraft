@@ -13,6 +13,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
@@ -63,14 +65,15 @@ public class PlayerTickEventHandler {
             ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
             for (Holder<Enchantment> enchantment : enchantments.keySet()) {
                 if (!enchantment.is(ModEnchantmentTags.MERCILESS_PASSED)) {
-                    if (!enchantment.value().getEffects(EnchantmentEffectComponents.DAMAGE).isEmpty()) {
+                    if (enchantment.is(Tags.Enchantments.WEAPON_DAMAGE_ENHANCEMENTS)
+                        || enchantment.is(ModEnchantmentTags.MODIFY_ENTITY_DROPS)
+                        || enchantment.is(EnchantmentTags.SMELTS_LOOT)
+                    ) {
                         attackDamage += stack.getEnchantmentLevel(enchantment);
-                    } else if (!enchantment.value().getEffects(EnchantmentEffectComponents.DAMAGE).isEmpty())
+                    } else if (enchantment.is(ModEnchantmentTags.MODIFY_BLOCK_DROPS)) {
+                        miningEfficiency += stack.getEnchantmentLevel(enchantment);
+                    }
                 }
-                if (enchantment.is(ModEnchantmentTags.MODIFY_BLOCK_LOOT)) {
-                    miningEfficiency += stack.getEnchantmentLevel(enchantment);
-                }
-                MatchTool
             }
 
             if (attackDamage != 0 || miningEfficiency != 0) {
