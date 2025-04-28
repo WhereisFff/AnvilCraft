@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.recipe.SmithingMultiphaseRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BoilingRecipe;
@@ -25,6 +24,10 @@ import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainChanceRecipe;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockConversionRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
+import dev.dubhe.anvilcraft.recipe.multiple.BaseMultipleToOneSmithingRecipe;
+import dev.dubhe.anvilcraft.recipe.multiple.EightToOneSmithingRecipe;
+import dev.dubhe.anvilcraft.recipe.multiple.FourToOneSmithingRecipe;
+import dev.dubhe.anvilcraft.recipe.multiple.TwoToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
@@ -152,13 +155,22 @@ public class ModRecipeTypes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<CanningFoodRecipe>> CANNING_FOOD_SERIALIZER =
         RECIPE_SERIALIZERS.register("canning_food", () -> new SimpleCraftingRecipeSerializer<>(CanningFoodRecipe::new));
 
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<SmithingMultiphaseRecipe>> SMITHING_MULTIPHASE_SERIALIZER =
-        RECIPE_SERIALIZERS.register("smithing_multiphase", SmithingMultiphaseRecipe.Serializer::new);
-
     public static final DeferredHolder<RecipeType<?>, RecipeType<ChargerChargingRecipe>> CHARGER_CHARGING_TYPE =
         registerType("charger_charging");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ChargerChargingRecipe>> CHARGER_CHARGING_SERIALIZER =
         RECIPE_SERIALIZERS.register("charger_charging", ChargerChargingRecipe.Serializer::new);
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<BaseMultipleToOneSmithingRecipe<?>>> MULTIPLE_TO_ONE_SMITHING_TYPE =
+        registerType("multiple_to_one_smithing");
+    public static final DeferredHolder<
+        RecipeSerializer<?>, RecipeSerializer<? extends TwoToOneSmithingRecipe<?>>> TWO_TO_ONE_SMITHING_SERIALIZER =
+        RECIPE_SERIALIZERS.register("two_to_one_smithing", TwoToOneSmithingRecipe.Serializer::new);
+    public static final DeferredHolder<
+        RecipeSerializer<?>, RecipeSerializer<? extends FourToOneSmithingRecipe<?>>> FOUR_TO_ONE_SMITHING_SERIALIZER =
+        RECIPE_SERIALIZERS.register("four_to_one_smithing", FourToOneSmithingRecipe.Serializer::new);
+    public static final DeferredHolder<
+        RecipeSerializer<?>, RecipeSerializer<? extends EightToOneSmithingRecipe<?>>> EIGHT_TO_ONE_SMITHING_SERIALIZER =
+        RECIPE_SERIALIZERS.register("eight_to_one_smithing", EightToOneSmithingRecipe.Serializer::new);
 
     private static <T extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<T>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> new RecipeType<>() {

@@ -1,0 +1,150 @@
+{
+  "type": "anvilcraft:item_compress",
+  "ingredients": [
+    [
+      {
+        "item": "minecraft:netherite_upgrade_smithing_template"
+      },
+      {
+        "item": "minecraft:sentry_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:dune_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:coast_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:wild_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:ward_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:eye_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:vex_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:tide_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:snout_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:rib_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:spire_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:wayfinder_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:shaper_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:silence_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:raiser_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:host_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:flow_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:bolt_armor_trim_smithing_template"
+      },
+      {
+        "item": "anvilcraft:royal_steel_upgrade_smithing_template"
+      },
+      {
+        "item": "anvilcraft:frost_metal_upgrade_smithing_template"
+      },
+      {
+        "item": "anvilcraft:ember_metal_upgrade_smithing_template"
+      }
+    ],
+    [
+      {
+        "item": "minecraft:netherite_upgrade_smithing_template"
+      },
+      {
+        "item": "minecraft:sentry_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:dune_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:coast_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:wild_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:ward_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:eye_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:vex_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:tide_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:snout_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:rib_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:spire_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:wayfinder_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:shaper_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:silence_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:raiser_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:host_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:flow_armor_trim_smithing_template"
+      },
+      {
+        "item": "minecraft:bolt_armor_trim_smithing_template"
+      },
+      {
+        "item": "anvilcraft:royal_steel_upgrade_smithing_template"
+      },
+      {
+        "item": "anvilcraft:frost_metal_upgrade_smithing_template"
+      },
+      {
+        "item": "anvilcraft:ember_metal_upgrade_smithing_template"
+      }
+    ]
+  ],
+  "results": [
+    {
+      "amount": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "anvilcraft:two_to_one_smithing_template"
+      }
+    }
+  ]
+}

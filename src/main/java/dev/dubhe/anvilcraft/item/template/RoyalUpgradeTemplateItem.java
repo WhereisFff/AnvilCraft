@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.item;
+package dev.dubhe.anvilcraft.item.template;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.ChatFormatting;

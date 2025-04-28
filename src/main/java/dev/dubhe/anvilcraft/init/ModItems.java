@@ -24,13 +24,13 @@ import dev.dubhe.anvilcraft.item.EmberMetalHoeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
-import dev.dubhe.anvilcraft.item.EmberMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHoeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalShovelItem;
 import dev.dubhe.anvilcraft.item.FrostMetalSwordItem;
-import dev.dubhe.anvilcraft.item.FrostMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.template.FrostMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterAxeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterHoeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
@@ -50,7 +50,8 @@ import dev.dubhe.anvilcraft.item.RoyalHoeItem;
 import dev.dubhe.anvilcraft.item.RoyalPickaxeItem;
 import dev.dubhe.anvilcraft.item.RoyalShovelItem;
 import dev.dubhe.anvilcraft.item.RoyalSwordItem;
-import dev.dubhe.anvilcraft.item.RoyalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.template.MultipleToOneTemplateItem;
+import dev.dubhe.anvilcraft.item.template.RoyalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.SeedsPackItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
 import dev.dubhe.anvilcraft.item.SuperHeavyItem;
@@ -601,6 +602,19 @@ public class ModItems {
         .register();
     public static final ItemEntry<EmberMetalUpgradeTemplateItem> EMBER_METAL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("ember_metal_upgrade_smithing_template", EmberMetalUpgradeTemplateItem::new)
+        .register();
+
+    public static final ItemEntry<MultipleToOneTemplateItem> TWO_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
+        .item("two_to_one_smithing_template", properties -> new MultipleToOneTemplateItem(properties, 2))
+        .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
+        .register();
+    public static final ItemEntry<MultipleToOneTemplateItem> FOUR_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
+        .item("four_to_one_smithing_template", properties -> new MultipleToOneTemplateItem(properties, 4))
+        .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
+        .register();
+    public static final ItemEntry<MultipleToOneTemplateItem> EIGHT_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
+        .item("eight_to_one_smithing_template", properties -> new MultipleToOneTemplateItem(properties, 8))
+        .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
         .register();
 
     public static final ItemEntry<DiskItem> DISK = REGISTRATE
