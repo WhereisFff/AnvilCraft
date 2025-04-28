@@ -72,7 +72,8 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
         return ItemCombinerMenuSlotDefinition.create()
             .withSlot(0, 8, 48, itemStack -> this.recipes.stream()
                 .anyMatch(smithingRecipe -> smithingRecipe.value().isTemplateIngredient(itemStack)))
-            .withSlot(1, 80, 36, itemStack -> this.recipes.stream()
+            .withSlot(1, 80, 36, itemStack ->
+                !this.inputSlots.getItem(0).isEmpty() && this.recipes.stream()
                 .anyMatch(smithingRecipe -> smithingRecipe.value().isMaterialIngredient(itemStack)))
             .withSlot(2, 80, 18, itemStack ->
                 !this.inputSlots.getItem(0).isEmpty() && this.recipes.stream()
@@ -127,12 +128,12 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
     @Override
     public void slotsChanged(@NotNull Container inventory) {
         super.slotsChanged(inventory);
-        if (this.inputSlots.getItem(0).isEmpty()) {
+        if (inventory == this.inputSlots && this.inputSlots.getItem(0).isEmpty()) {
             for (int i = 1; i < 10; i++) {
                 ItemStack stack = this.inputSlots.getItem(i);
                 if (!stack.isEmpty()) {
                     this.inputSlots.removeItemNoUpdate(i);
-                    this.moveItemStackTo(stack, 11, 56, false);
+                    this.moveItemStackTo(stack, 11, 47, false);
                 }
             }
         }
