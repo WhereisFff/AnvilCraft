@@ -1,0 +1,15 @@
+{
+  "type": "anvilcraft:jewel_crafting",
+  "ingredients": [
+    {
+      "item": "anvilcraft:earth_core_shard"
+    },
+    {
+      "item": "minecraft:diamond"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:snout_armor_trim_smithing_template"
+  }
+}

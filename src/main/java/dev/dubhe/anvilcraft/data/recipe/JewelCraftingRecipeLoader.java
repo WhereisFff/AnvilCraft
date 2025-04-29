@@ -3,27 +3,22 @@ package dev.dubhe.anvilcraft.data.recipe;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.mixin.accessor.ShapedRecipePatternAccessor;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.DiscFragmentItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.OminousBottleItem;
+import net.minecraft.world.item.armortrim.TrimPatterns;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 public class JewelCraftingRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
@@ -76,44 +71,33 @@ public class JewelCraftingRecipeLoader {
             .result(new ItemStack(Items.HEAVY_CORE))
             .save(provider);
 
-        for (Holder<Item> itemHolder : BuiltInRegistries.ITEM.holders().toList()) {
-            MinecraftServer server = ServerLifecycleHooks.getCurrentServer();
-            if (itemHolder.value() instanceof BannerItem) {
+        for (Holder<Item> holder : BuiltInRegistries.ITEM.holders().toList()) {
+            if (holder.value() instanceof BannerItem) {
                 JewelCraftingRecipe.builder()
                     .requires(Items.PAPER)
                     .requires(Items.INK_SAC)
-                    .result(new ItemStack(itemHolder))
+                    .result(new ItemStack(holder))
                     .save(provider);
-            } else if (itemHolder.is(Tags.Items.MUSIC_DISCS)) {
+            } else if (holder.value().getDefaultInstance().has(DataComponents.JUKEBOX_PLAYABLE)) {
                 JewelCraftingRecipe.builder()
                     .requires(ModItems.HARDEND_RESIN, 4)
                     .requires(Items.PAPER)
-                    .result(new ItemStack(itemHolder))
+                    .result(new ItemStack(holder))
                     .save(provider);
             } else if (
-                DecoratedPotPatterns.getPatternFromItem(itemHolder.value()) != null
-                && !itemHolder.value().equals(Items.BRICK)
+                DecoratedPotPatterns.getPatternFromItem(holder.value()) != null
+                && !holder.value().equals(Items.BRICK)
             ) {
                 JewelCraftingRecipe.builder()
                     .requires(Items.BRICK, 2)
-                    .result(new ItemStack(itemHolder))
+                    .result(new ItemStack(holder))
                     .save(provider);
-            } else if (itemHolder.is(ItemTags.TRIM_TEMPLATES) && server != null) {
-                JewelCraftingRecipe.Builder builder = JewelCraftingRecipe.builder()
+            } else if (TrimPatterns.getFromTemplate(provider.getProvider(), holder.value().getDefaultInstance()).isPresent()) {
+                JewelCraftingRecipe.builder()
+                    .requires(ModItems.EARTH_CORE_SHARD)
                     .requires(Items.DIAMOND)
-                    .result(new ItemStack(itemHolder));
-
-                for (RecipeHolder<?> recipeHolder : server.getRecipeManager().getRecipes()) {
-                    Recipe<?> recipe = recipeHolder.value();
-                    if (!(recipe instanceof ShapedRecipe shaped)) return;
-                    if (!shaped.getResultItem(server.registryAccess()).is(itemHolder)) return;
-                    ShapedRecipePattern pattern = shaped.pattern;
-                    if (pattern.width() != 3 || pattern.height() != 3) return;
-                    ShapedRecipePattern.Data data = ((ShapedRecipePatternAccessor) (Object) pattern).accessor$data().orElse(null);
-                    if (data == null) return;
-                    builder.requires(data.key().get(data.pattern().get(1).charAt(1))).save(provider);
-                    break;
-                }
+                    .result(new ItemStack(holder))
+                    .save(provider);
             }
         }
     }

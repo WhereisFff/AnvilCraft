@@ -1,0 +1,24 @@
+{
+  "type": "anvilcraft:jewel_crafting",
+  "ingredients": [
+    {
+      "item": "anvilcraft:hardend_resin"
+    },
+    {
+      "item": "anvilcraft:hardend_resin"
+    },
+    {
+      "item": "anvilcraft:hardend_resin"
+    },
+    {
+      "item": "anvilcraft:hardend_resin"
+    },
+    {
+      "item": "minecraft:paper"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:music_disc_chirp"
+  }
+}
