@@ -160,4 +160,9 @@ public class DeflectionRingBlock extends FlexibleMultiPartBlock<DirectionCube3x3
         }
         return 0;
     }
+
+    @Override
+    protected float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter getter, @NotNull BlockPos pos) {
+        return 1.0F;
+    }
 }
