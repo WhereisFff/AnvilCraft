@@ -9,7 +9,7 @@ import org.lwjgl.glfw.GLFW;
 
 public class ModKeyMappings {
     public static final Lazy<KeyMapping> SWITCH_PHASE = register(
-        "switch_space",
+        "switch_phase",
         KeyConflictContext.IN_GAME,
         InputConstants.Type.KEYSYM,
         GLFW.GLFW_KEY_X
