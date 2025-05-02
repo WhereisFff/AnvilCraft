@@ -3,21 +3,9 @@ package dev.dubhe.anvilcraft.data.recipe;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.mixin.accessor.ShapedRecipePatternAccessor;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.armortrim.TrimPatterns;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapedRecipePattern;
-import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import net.neoforged.neoforge.common.Tags;
 
 public class JewelCraftingRecipeLoader {
@@ -70,35 +58,5 @@ public class JewelCraftingRecipeLoader {
             .requires(ModBlocks.SPACE_OVERCOMPRESSOR)
             .result(new ItemStack(Items.HEAVY_CORE))
             .save(provider);
-
-        for (Holder<Item> holder : BuiltInRegistries.ITEM.holders().toList()) {
-            if (holder.value() instanceof BannerItem) {
-                JewelCraftingRecipe.builder()
-                    .requires(Items.PAPER)
-                    .requires(Items.INK_SAC)
-                    .result(new ItemStack(holder))
-                    .save(provider);
-            } else if (holder.value().getDefaultInstance().has(DataComponents.JUKEBOX_PLAYABLE)) {
-                JewelCraftingRecipe.builder()
-                    .requires(ModItems.HARDEND_RESIN, 4)
-                    .requires(Items.PAPER)
-                    .result(new ItemStack(holder))
-                    .save(provider);
-            } else if (
-                DecoratedPotPatterns.getPatternFromItem(holder.value()) != null
-                && !holder.value().equals(Items.BRICK)
-            ) {
-                JewelCraftingRecipe.builder()
-                    .requires(Items.BRICK, 2)
-                    .result(new ItemStack(holder))
-                    .save(provider);
-            } else if (TrimPatterns.getFromTemplate(provider.getProvider(), holder.value().getDefaultInstance()).isPresent()) {
-                JewelCraftingRecipe.builder()
-                    .requires(ModItems.EARTH_CORE_SHARD)
-                    .requires(Items.DIAMOND)
-                    .result(new ItemStack(holder))
-                    .save(provider);
-            }
-        }
     }
 }
