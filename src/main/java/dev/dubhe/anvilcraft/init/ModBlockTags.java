@@ -53,6 +53,7 @@ public class ModBlockTags {
 
     public static final TagKey<Block> STORAGE_BLOCKS_VOID_MATTER = bindC("storage_blocks/void_matter");
     public static final TagKey<Block> STORAGE_BLOCKS_EARTH_CORE_SHARD = bindC("storage_blocks/earth_core_shard");
+    public static final TagKey<Block> STORAGE_BLOCKS_MULTIPHASE_MATTER = bindC("storage_blocks/multiphase_matter");
 
     public static final TagKey<Block> STORAGE_BLOCKS_TUNGSTEN = bindC("storage_blocks/tungsten");
     public static final TagKey<Block> STORAGE_BLOCKS_TITANIUM = bindC("storage_blocks/titanium");

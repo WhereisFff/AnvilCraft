@@ -42,6 +42,7 @@ public class ModItemTags {
     public static final TagKey<Item> STORAGE_BLOCKS_BRASS = bindC("storage_blocks/brass");
     public static final TagKey<Item> STORAGE_BLOCKS_VOID_MATTER = bindC("storage_blocks/void_matter");
     public static final TagKey<Item> STORAGE_BLOCKS_EARTH_CORE_SHARD = bindC("storage_blocks/earth_core_shard");
+    public static final TagKey<Item> STORAGE_BLOCKS_MULTIPHASE_MATTER = bindC("storage_blocks/multiphase_matter");
     public static final TagKey<Item> STORAGE_BLOCKS_MAGNET = bindC("storage_blocks/magnet");
     public static final TagKey<Item> STORAGE_BLOCKS_TOPAZ = bindC("storage_blocks/topaz");
     public static final TagKey<Item> STORAGE_BLOCKS_SAPPHIRE = bindC("storage_blocks/sapphire");

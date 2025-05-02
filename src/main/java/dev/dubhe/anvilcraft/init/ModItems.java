@@ -933,6 +933,82 @@ public class ModItems {
         })
         .register();
 
+    public static final ItemEntry<? extends Item> FROST_METAL_INGOT = REGISTRATE
+        .item("frost_metal_ingot", Item::new)
+        .tag(Tags.Items.INGOTS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.FROST_METAL_BLOCK)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.FROST_METAL_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.FROST_METAL_NUGGET)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.FROST_METAL_NUGGET),
+                    RegistrateRecipeProvider.has(ModItems.FROST_METAL_NUGGET))
+                .save(provider);
+        })
+        .register();
+
+    public static final ItemEntry<? extends Item> FROST_METAL_NUGGET = REGISTRATE
+        .item("frost_metal_nugget", Item::new)
+        .tag(Tags.Items.NUGGETS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModItems.FROST_METAL_INGOT)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.FROST_METAL_INGOT),
+                    AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
+        })
+        .register();
+
+    public static final ItemEntry<? extends Item> EMBER_METAL_INGOT = REGISTRATE
+        .item("ember_metal_ingot", Item::new)
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(Tags.Items.INGOTS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.EMBER_METAL_BLOCK)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.EMBER_METAL_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.EMBER_METAL_NUGGET)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItemTags.TUNGSTEN_NUGGETS),
+                    RegistrateRecipeProvider.has(ModItemTags.TUNGSTEN_NUGGETS))
+                .save(provider);
+        })
+        .register();
+
+    public static final ItemEntry<? extends Item> EMBER_METAL_NUGGET = REGISTRATE
+        .item("ember_metal_nugget", Item::new)
+        .tag(Tags.Items.NUGGETS)
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModItems.EMBER_METAL_INGOT)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.EMBER_METAL_INGOT),
+                    AnvilCraftDatagen.has(ModItems.EMBER_METAL_INGOT))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
+        })
+        .register();
+
     // 诅咒黄金系
     public static final ItemEntry<CursedItem> CURSED_GOLD_INGOT = REGISTRATE
         .item("cursed_gold_ingot", CursedItem::new)
@@ -1809,81 +1885,13 @@ public class ModItems {
     public static final ItemEntry<Item> MULTIPHASE_MATTER = REGISTRATE
         .item("multiphase_matter", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .register();
-
-    public static final ItemEntry<? extends Item> FROST_METAL_INGOT = REGISTRATE
-        .item("frost_metal_ingot", Item::new)
-        .tag(Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.FROST_METAL_BLOCK)
-                .group(ctx.getId().toString())
+                .requires(ModBlocks.MULTIPHASE_MATTER_BLOCK)
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.FROST_METAL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                    AnvilCraftDatagen.hasItem(ModBlocks.MULTIPHASE_MATTER_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.MULTIPHASE_MATTER_BLOCK))
                 .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
-                .pattern("AAA")
-                .pattern("AAA")
-                .pattern("AAA")
-                .define('A', ModItems.FROST_METAL_NUGGET)
-                .group(ctx.getId().toString())
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModItems.FROST_METAL_NUGGET),
-                    RegistrateRecipeProvider.has(ModItems.FROST_METAL_NUGGET))
-                .save(provider);
-        })
-        .register();
-
-    public static final ItemEntry<? extends Item> FROST_METAL_NUGGET = REGISTRATE
-        .item("frost_metal_nugget", Item::new)
-        .tag(Tags.Items.NUGGETS)
-        .recipe((ctx, provider) -> {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModItems.FROST_METAL_INGOT)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModItems.FROST_METAL_INGOT),
-                    AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
-                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
-        })
-        .register();
-
-    public static final ItemEntry<? extends Item> EMBER_METAL_INGOT = REGISTRATE
-        .item("ember_metal_ingot", Item::new)
-        .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(Tags.Items.INGOTS)
-        .recipe((ctx, provider) -> {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.EMBER_METAL_BLOCK)
-                .group(ctx.getId().toString())
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.EMBER_METAL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
-                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
-                .pattern("AAA")
-                .pattern("AAA")
-                .pattern("AAA")
-                .define('A', ModItems.EMBER_METAL_NUGGET)
-                .group(ctx.getId().toString())
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModItemTags.TUNGSTEN_NUGGETS),
-                    RegistrateRecipeProvider.has(ModItemTags.TUNGSTEN_NUGGETS))
-                .save(provider);
-        })
-        .register();
-
-    public static final ItemEntry<? extends Item> EMBER_METAL_NUGGET = REGISTRATE
-        .item("ember_metal_nugget", Item::new)
-        .tag(Tags.Items.NUGGETS)
-        .initialProperties(() -> new Item.Properties().fireResistant())
-        .recipe((ctx, provider) -> {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModItems.EMBER_METAL_INGOT)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModItems.EMBER_METAL_INGOT),
-                    AnvilCraftDatagen.has(ModItems.EMBER_METAL_INGOT))
-                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
         })
         .register();
 

@@ -3631,6 +3631,30 @@ public class ModBlocks {
             Tags.Blocks.STORAGE_BLOCKS)
         .register();
 
+
+    public static final BlockEntry<? extends Block> MULTIPHASE_MATTER_BLOCK = REGISTRATE
+        .block("multiphase_matter_block", Block::new)
+        .initialProperties(() -> Blocks.DIAMOND_BLOCK)
+        .blockstate((ctx, provider) -> provider.simpleBlock(
+            ctx.get(),
+            DangerUtil.genConfiguredModel("block/multiphase_matter_block").get()))
+        .item()
+        .tag(Tags.Items.STORAGE_BLOCKS,
+             ModItemTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
+        .build()
+        .tag(Tags.Blocks.STORAGE_BLOCKS,
+             ModBlockTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.MULTIPHASE_MATTER)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
+                .save(provider);
+        })
+        .register();
+
     public static final BlockEntry<NegativeMatterBlock> NEGATIVE_MATTER_BLOCK = REGISTRATE
         .block("negative_matter_block", NegativeMatterBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
