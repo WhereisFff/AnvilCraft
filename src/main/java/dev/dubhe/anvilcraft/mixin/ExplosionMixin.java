@@ -2,6 +2,9 @@ package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
@@ -70,6 +73,18 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         }
     }
 
+    @Inject(method = "explode()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
+    private void anvilCraft$explosionBlockTransform(
+            CallbackInfo ci,
+            @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed,
+            @Local(ordinal = 0) BlockPos pos
+    ) {
+        BlockTransform blockTransform;
+        if ((blockTransform = anvilcraft$blockTransformMap.get(level.getBlockState(pos).getBlock())) != null) {
+            isExplosionBlockTransformed.set(!blockTransform.progress(level, pos));
+        }
+    }
+
     @WrapOperation(
             method = "explode",
             at =
@@ -86,13 +101,10 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
             BlockPos pos,
             BlockState state,
             float power,
-            Operation<Boolean> original
+            Operation<Boolean> original,
+            @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed
     ) {
-        BlockTransform blockTransform;
-        if ((blockTransform = anvilcraft$blockTransformMap.get(state.getBlock())) != null) {
-            return !blockTransform.progress(level, pos) && original.call(instance, explosion, reader, pos, state, power);
-        }
-        return original.call(instance, explosion, reader, pos, state, power);
+        return !isExplosionBlockTransformed.get() && original.call(instance, explosion, reader, pos, state, power);
     }
 
     @SuppressWarnings("AddedMixinMembersNamePattern")

@@ -47,7 +47,7 @@ public record BlockTransform(
     public Boolean progress(Level level, BlockPos pos) {
         BlockState output;
         if (inputBlock.is(level.getBlockState(pos)) && (output = outputBlock.getResult(level.random)) != null) {
-            if (chance > level.random.nextFloat()) return false;
+            if (chance < level.random.nextFloat()) return false;
             level.setBlockAndUpdate(pos, output);
             return true;
         }
