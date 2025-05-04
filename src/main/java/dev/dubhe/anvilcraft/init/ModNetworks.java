@@ -26,6 +26,8 @@ import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
+import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
+import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -172,6 +174,21 @@ public class ModNetworks {
             PulseGeneratorUpdatePacket.TYPE,
             PulseGeneratorUpdatePacket.STREAM_CODEC,
             PulseGeneratorUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchPhasePacket.TYPE,
+            SwitchPhasePacket.STREAM_CODEC,
+            SwitchPhasePacket.HANDLER
+        );
+        registrar.playToServer(
+            AdvancedRepeaterUpdatePacket.TYPE,
+            AdvancedRepeaterUpdatePacket.STREAM_CODEC,
+            AdvancedRepeaterUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
+            SyncEmberGrindstonePacket.TYPE,
+            SyncEmberGrindstonePacket.STREAM_CODEC,
+            SyncEmberGrindstonePacket.HANDLER
         );
     }
 }
