@@ -1,14 +1,15 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import dev.dubhe.anvilcraft.block.AdvancedRepeaterBlock;
+import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
-import dev.dubhe.anvilcraft.inventory.AdvancedRepeaterMenu;
+import dev.dubhe.anvilcraft.inventory.PulseGeneratorMenu;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -28,7 +29,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @Setter
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProvider {
+public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvider {
     protected byte startMode = 0;
     protected boolean outputInvert = false;
     protected int waitingTime = 2;
@@ -44,16 +45,16 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     @Setter(AccessLevel.NONE)
     private int signalDurationRemaining;
 
-    public AdvancedRepeaterBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntities.ADVANCED_REPEATER.get(), pos, blockState);
+    public PulseGeneratorBlockEntity(BlockPos pos, BlockState blockState) {
+        super(ModBlockEntities.PULSE_GENERATOR.get(), pos, blockState);
     }
 
-    private AdvancedRepeaterBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    private PulseGeneratorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
-    public static AdvancedRepeaterBlockEntity createBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
-        return new AdvancedRepeaterBlockEntity(type, pos, blockState);
+    public static PulseGeneratorBlockEntity createBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        return new PulseGeneratorBlockEntity(type, pos, blockState);
     }
 
     @Override
@@ -86,7 +87,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         return data;
     }
 
-    public AdvancedRepeaterBlockEntity readDataNbt(CompoundTag data) {
+    public PulseGeneratorBlockEntity readDataNbt(CompoundTag data) {
         this.startMode = data.getByte("StartMode");
         this.outputInvert = data.getBoolean("OutputMode");
         this.waitingTime = data.getInt("WaitingTime");
@@ -94,7 +95,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         return this;
     }
 
-    protected void tickTime() {
+    protected void tickTime(Level level, BlockPos pos, BlockState state) {
         switch (this.mode) {
             case WAITING -> {
                 if (this.waitingTimeRemaining > 0 && !this.isDeadlock) {
@@ -102,7 +103,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
                     this.setChanged();
                 }
                 if (this.waitingTimeRemaining <= 0) {
-                    this.startOutputting();
+                    this.startOutputting(level, pos, state);
                     this.setChanged();
                 }
             }
@@ -112,17 +113,16 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
                     this.setChanged();
                 }
                 if (this.signalDurationRemaining <= 0) {
-                    this.checkOnSignalEnd();
+                    this.checkOnSignalEnd(level, pos, state);
                     this.setChanged();
                 }
             }
         }
     }
 
-    protected void checkIsDeadlock() {
+    protected void checkIsDeadlock(Level level, BlockPos pos, BlockState state) {
         this.isDeadlock = switch (this.startMode) {
-            case 0 -> this.mode == Mode.OUTPUTTING && this.isInputtingSignal;
-            case 1 -> false;
+            case 0, 1 -> false;
             case 2 -> {
                 if (this.isInputtingSignal && !this.isDeadlock) {
                     this.mode = Mode.DEFAULT;
@@ -130,7 +130,7 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
                     this.setChanged();
                     yield true;
                 } else if (this.isDeadlock && !this.isInputtingSignal) {
-                    this.startWaiting();
+                    this.startWaiting(level, pos, state);
                     this.setChanged();
                     yield false;
                 } else {
@@ -141,62 +141,56 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
         };
     }
 
-    public static void tick(Level level, BlockPos pos, BlockState state, AdvancedRepeaterBlockEntity repeaterEntity) {
-        repeaterEntity.tickTime();
-        repeaterEntity.checkIsDeadlock();
+    public static void tick(Level level, BlockPos pos, BlockState state, PulseGeneratorBlockEntity generatorEntity) {
+        if (level.isClientSide) return;
+        generatorEntity.tickTime(level, pos, state);
+        generatorEntity.checkIsDeadlock(level, pos, state);
 
-        level.setBlock(
-            pos,
-            state.setValue(AdvancedRepeaterBlock.POWERED, repeaterEntity.outputInvert != repeaterEntity.isOutputting()),
-            3
-        );
+        generatorEntity.updateBlockAndNeighbours(level, pos, state);
     }
 
-    protected void startWaiting() {
+    protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state) {
+        if (level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity generatorEntity) {
+            Direction direction = state.getValue(PulseGeneratorBlock.FACING).getOpposite();
+            BlockPos neighbourPos = pos.relative(direction);
+            level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, generatorEntity.isOutputting()));
+            level.neighborChanged(neighbourPos, state.getBlock(), pos);
+            level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction);
+        }
+    }
+
+    protected void startWaiting(Level level, BlockPos pos, BlockState state) {
         this.mode = Mode.WAITING;
-        this.waitingTimeRemaining = this.waitingTime;
+        if (this.waitingTime != 0) {
+            this.waitingTimeRemaining = this.waitingTime;
+        } else {
+            this.startOutputting(level, pos, state);
+        }
     }
 
-    protected void startOutputting() {
+    protected void startOutputting(Level level, BlockPos pos, BlockState state) {
         this.mode = Mode.OUTPUTTING;
         this.signalDurationRemaining = this.signalDuration;
+        this.updateBlockAndNeighbours(level, pos, state);
     }
 
-    protected void checkOnSignalEnd() {
+    protected void checkOnSignalEnd(Level level, BlockPos pos, BlockState state) {
         this.mode = Mode.DEFAULT;
+        this.updateBlockAndNeighbours(level, pos, state);
 
         if (this.startMode == 2) {
-            this.startWaiting();
+            this.startWaiting(level, pos, state);
         }
     }
 
-    public void start() {
+    public void start(Level level, BlockPos pos, BlockState state) {
         if (!this.isProcessing()) {
-            this.startWaiting();
-        }
-    }
-
-    public int getOutputSignal() {
-        if (this.isOutputting()) {
-            if (this.outputInvert) {
-                return 0;
-            } else {
-                return 15;
-            }
-        } else {
-            if (this.outputInvert) {
-                return 15;
-            } else {
-                return 0;
-            }
+            this.startWaiting(level, pos, state);
         }
     }
 
     public void setStartMode(int mode) {
         this.startMode = (byte) Math.clamp(mode, 0, 2);
-        if (this.startMode == 2 && this.mode == Mode.DEFAULT) {
-            this.startWaiting();
-        }
         this.setChanged();
     }
 
@@ -215,24 +209,24 @@ public class AdvancedRepeaterBlockEntity extends BlockEntity implements MenuProv
     }
 
     public boolean isOutputting() {
-        return this.mode == Mode.OUTPUTTING;
+        return this.mode == Mode.OUTPUTTING ^ this.outputInvert;
     }
 
     @Override
     public Component getDisplayName() {
-        return Component.translatable("block.anvilcraft.advanced_repeater");
+        return Component.translatable("block.anvilcraft.pulse_generator");
     }
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         if (player.isSpectator()) return null;
-        if (player.level().getBlockEntity(getBlockPos()) instanceof AdvancedRepeaterBlockEntity blockEntity)
-            return new AdvancedRepeaterMenu(ModMenuTypes.ADVANCED_REPEATER.get(), containerId, inventory, blockEntity);
+        if (player.level().getBlockEntity(getBlockPos()) instanceof PulseGeneratorBlockEntity blockEntity)
+            return new PulseGeneratorMenu(ModMenuTypes.PULSE_GENERATOR.get(), containerId, inventory, blockEntity);
         return null;
     }
 
     public static boolean canStart(@Nullable BlockEntity blockEntity, boolean nowInputting) {
-        return blockEntity instanceof AdvancedRepeaterBlockEntity repeater
+        return blockEntity instanceof PulseGeneratorBlockEntity repeater
                && ((repeater.getStartMode() == 0 && !repeater.isInputtingSignal() && nowInputting)
                    || (repeater.getStartMode() == 1 && repeater.isInputtingSignal() && !nowInputting)
                    || (repeater.getStartMode() == 2 && (repeater.isDeadlock || repeater.mode == Mode.DEFAULT)));

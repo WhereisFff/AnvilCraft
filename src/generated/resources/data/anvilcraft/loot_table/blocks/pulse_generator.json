@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "anvilcraft:advanced_repeater"
+          "name": "anvilcraft:pulse_generator"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "anvilcraft:blocks/advanced_repeater"
+  "random_sequence": "anvilcraft:blocks/pulse_generator"
 }

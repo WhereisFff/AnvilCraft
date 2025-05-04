@@ -2,12 +2,13 @@ package dev.dubhe.anvilcraft.init;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent.Switch;
 import dev.dubhe.anvilcraft.block.AccelerationRingBlock;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
-import dev.dubhe.anvilcraft.block.AdvancedRepeaterBlock;
+import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.block.AmberBlock;
 import dev.dubhe.anvilcraft.block.ArrowBlock;
 import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
@@ -162,6 +163,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ColoredFallingBlock;
+import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -182,6 +184,7 @@ import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
+import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -4209,16 +4212,37 @@ public class ModBlocks {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_FUNCTION_BLOCK.getKey());
     }
 
-    public static final BlockEntry<AdvancedRepeaterBlock> ADVANCED_REPEATER = REGISTRATE
-        .block("advanced_repeater", AdvancedRepeaterBlock::new)
+    public static final BlockEntry<PulseGeneratorBlock> PULSE_GENERATOR = REGISTRATE
+        .block("pulse_generator", PulseGeneratorBlock::new)
         .properties(properties -> properties
             .strength(3.0F, 3.5F)
             .sound(SoundType.STONE)
             .noOcclusion()
         )
-        .blockstate((ctx, provider) -> DataGenUtil.diodeBlock(
-            provider, ctx.getId(), ctx.get()
-        ))
+        .blockstate((ctx, provider) -> {
+            ModelFile pulseGenerator = new ModelFile.ExistingModelFile(
+                ctx.getId().withPrefix("block/"), provider.models().existingFileHelper);
+            ModelFile pulseGeneratorOn = new ModelFile.ExistingModelFile(
+                ctx.getId().withPrefix("block/").withSuffix("_on"), provider.models().existingFileHelper);
+
+            provider.getVariantBuilder(ctx.get())
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.SOUTH).with(PulseGeneratorBlock.POWERED, false).addModels(
+                    new ConfiguredModel(pulseGenerator))
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.WEST).with(PulseGeneratorBlock.POWERED, false).addModels(
+                    new ConfiguredModel(pulseGenerator, 0, 90, false))
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.NORTH).with(PulseGeneratorBlock.POWERED, false).addModels(
+                    new ConfiguredModel(pulseGenerator, 0, 180, false))
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.EAST).with(PulseGeneratorBlock.POWERED, false).addModels(
+                    new ConfiguredModel(pulseGenerator, 0, 270, false))
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.SOUTH).with(PulseGeneratorBlock.POWERED, true).addModels(
+                    new ConfiguredModel(pulseGeneratorOn))
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.WEST).with(PulseGeneratorBlock.POWERED, true).addModels(
+                    new ConfiguredModel(pulseGeneratorOn, 0, 90, false))
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.NORTH).with(PulseGeneratorBlock.POWERED, true).addModels(
+                    new ConfiguredModel(pulseGeneratorOn, 0, 180, false))
+                .partialState().with(PulseGeneratorBlock.FACING, Direction.EAST).with(PulseGeneratorBlock.POWERED, true).addModels(
+                    new ConfiguredModel(pulseGeneratorOn, 0, 270, false));
+        })
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .simpleItem()
         .recipe((ctx, provider) ->

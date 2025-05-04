@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.network;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.block.entity.AdvancedRepeaterBlockEntity;
-import dev.dubhe.anvilcraft.inventory.AdvancedRepeaterMenu;
+import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
+import dev.dubhe.anvilcraft.inventory.PulseGeneratorMenu;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -15,15 +15,15 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public record AdvancedRepeaterUpdatePacket(
+public record PulseGeneratorUpdatePacket(
     byte startMode, boolean outputInvert, int waitingTime, int signalDuration
 ) implements CustomPacketPayload {
-    public static final Type<AdvancedRepeaterUpdatePacket> TYPE = new Type<>(AnvilCraft.of("advanced_repeater_update"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, AdvancedRepeaterUpdatePacket> STREAM_CODEC =
-        StreamCodec.ofMember(AdvancedRepeaterUpdatePacket::encode, AdvancedRepeaterUpdatePacket::new);
-    public static final IPayloadHandler<AdvancedRepeaterUpdatePacket> HANDLER = AdvancedRepeaterUpdatePacket::serverHandler;
+    public static final Type<PulseGeneratorUpdatePacket> TYPE = new Type<>(AnvilCraft.of("advanced_repeater_update"));
+    public static final StreamCodec<RegistryFriendlyByteBuf, PulseGeneratorUpdatePacket> STREAM_CODEC =
+        StreamCodec.ofMember(PulseGeneratorUpdatePacket::encode, PulseGeneratorUpdatePacket::new);
+    public static final IPayloadHandler<PulseGeneratorUpdatePacket> HANDLER = PulseGeneratorUpdatePacket::serverHandler;
 
-    public AdvancedRepeaterUpdatePacket(RegistryFriendlyByteBuf buf) {
+    public PulseGeneratorUpdatePacket(RegistryFriendlyByteBuf buf) {
         this(buf.readByte(), buf.readBoolean(), buf.readInt(), buf.readInt());
     }
 
@@ -39,12 +39,12 @@ public record AdvancedRepeaterUpdatePacket(
         buf.writeInt(this.signalDuration);
     }
 
-    public static void serverHandler(AdvancedRepeaterUpdatePacket data, IPayloadContext context) {
+    public static void serverHandler(PulseGeneratorUpdatePacket data, IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {
             if (!player.hasContainerOpen()) return;
-            if (!(player.containerMenu instanceof AdvancedRepeaterMenu menu)) return;
-            AdvancedRepeaterBlockEntity repeater = menu.getBlockEntity();
+            if (!(player.containerMenu instanceof PulseGeneratorMenu menu)) return;
+            PulseGeneratorBlockEntity repeater = menu.getBlockEntity();
             repeater.setStartMode(data.startMode);
             repeater.setOutputInvert(data.outputInvert);
             repeater.setWaitingTime(data.waitingTime);
