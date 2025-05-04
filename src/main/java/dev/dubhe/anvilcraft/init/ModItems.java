@@ -223,6 +223,7 @@ public class ModItems {
         .properties(properties -> properties.durability(1561))
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.PICKAXES,
+            ItemTags.CLUSTER_MAX_HARVESTABLES,
             Tags.Items.MINING_TOOL_TOOLS)
         .register();
     public static final ItemEntry<? extends Item> ROYAL_STEEL_AXE = REGISTRATE
@@ -384,6 +385,7 @@ public class ModItems {
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.PICKAXES,
             ModItemTags.EXPLOSION_PROOF,
+            ItemTags.CLUSTER_MAX_HARVESTABLES,
             Tags.Items.MINING_TOOL_TOOLS)
         .register();
     public static final ItemEntry<EmberMetalAxeItem> EMBER_METAL_AXE = REGISTRATE
