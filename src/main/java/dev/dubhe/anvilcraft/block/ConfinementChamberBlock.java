@@ -89,9 +89,9 @@ public class ConfinementChamberBlock extends BaseEntityBlock {
     protected @NotNull List<ItemStack> getDrops(@NotNull BlockState state, LootParams.Builder params) {
         BlockEntity blockentity = params.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
         if (blockentity instanceof ShulkerBoxBlockEntity shulkerboxblockentity) {
-            params = params.withDynamicDrop(CONTENTS, p_56219_ -> {
+            params = params.withDynamicDrop(CONTENTS, it -> {
                 for (int i = 0; i < shulkerboxblockentity.getContainerSize(); i++) {
-                    p_56219_.accept(shulkerboxblockentity.getItem(i));
+                    it.accept(shulkerboxblockentity.getItem(i));
                 }
             });
         }
