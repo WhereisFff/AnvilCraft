@@ -28,6 +28,8 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.royal_grindstone.remove_curse_count", "Removed curses: %s / %s");
         provider.add("screen.anvilcraft.royal_grindstone.remove_repair_cost", "Removed repair cost: %s / %s");
         provider.add("screen.anvilcraft.royal_grindstone.title", "Remove curse and repair cost");
+        provider.add("screen.anvilcraft.ember_grindstone.title", "Extract enchantment");
+        provider.add("screen.anvilcraft.ember_grindstone.cost", "Exp. Cost: %d");
         provider.add(
             "screen.anvilcraft.royal_steel_upgrade_smithing_template", "Royal Steel Upgrade");
         provider.add(
