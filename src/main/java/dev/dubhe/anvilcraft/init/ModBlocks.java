@@ -2653,7 +2653,7 @@ public class ModBlocks {
                 .noOcclusion()
                 .pushReaction(PushReaction.DESTROY)
         )
-        .item()
+            .item()
         .tag(Tags.Items.STORAGE_BLOCKS,
             ModItemTags.STORAGE_BLOCKS_AMBER)
         .build()

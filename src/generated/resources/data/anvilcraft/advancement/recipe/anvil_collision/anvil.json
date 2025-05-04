@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:jewel_crafting/cogwheel_amulet"
+        "recipe": "anvilcraft:anvil_collision/anvil"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:jewel_crafting/cogwheel_amulet"
+      "anvilcraft:anvil_collision/anvil"
     ]
   }
 }

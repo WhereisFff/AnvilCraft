@@ -154,7 +154,7 @@ public class AnvilCraftConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 100, min = 0)
-    @Comment("Giant anvil max fall damage")
+    @Comment("Giant anvil maxCount fall damage")
     public int giantAnvilFallDamageMax = 40;
 
     @ConfigEntry.Gui.Tooltip
@@ -163,7 +163,7 @@ public class AnvilCraftConfig implements ConfigData {
 
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 15, min = 0)
-    @Comment("Block Devourer upward chain devouring max distance")
+    @Comment("Block Devourer upward chain devouring maxCount distance")
     public int blockDevourerUpwardChainDevouringDistance = 8;
 
     public static class PowerConverter implements ConfigData {
@@ -201,8 +201,13 @@ public class AnvilCraftConfig implements ConfigData {
         public int hudY = 8;
     }
 
-    @Comment("Max acceleration speed")
+    @Comment("Max acceleration speed (m/tick)")
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 999999999, min = 16)
-    public int maxAccelerationSpeed = 16;
+    public int maxAccelerationSpeed = 32;
+
+    @Comment("Anvil collision craft speed (m/tick)")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 999999999, min = 16)
+    public int anvilCollisionCraftSpeed = 16;
 }
