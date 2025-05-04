@@ -181,11 +181,6 @@ public class ModNetworks {
             SwitchPhasePacket.HANDLER
         );
         registrar.playToServer(
-            AdvancedRepeaterUpdatePacket.TYPE,
-            AdvancedRepeaterUpdatePacket.STREAM_CODEC,
-            AdvancedRepeaterUpdatePacket.HANDLER
-        );
-        registrar.playToServer(
             SyncEmberGrindstonePacket.TYPE,
             SyncEmberGrindstonePacket.STREAM_CODEC,
             SyncEmberGrindstonePacket.HANDLER
