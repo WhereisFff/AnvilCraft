@@ -14,8 +14,8 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,7 +29,6 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
-import net.neoforged.neoforge.common.Tags;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -153,8 +152,8 @@ public class RecipeGenerator {
     ) {
         if (!(recipeHolder.value() instanceof JewelCraftingRecipe)) return;
         ItemStack result = recipeHolder.value().getResultItem(cache.registries);
-        if (result.getItem() instanceof BannerItem banner) {
-            cache.remove(banner, 0);
+        if (result.getItem() instanceof BannerPatternItem bannerPattern) {
+            cache.remove(bannerPattern, 0);
         } else if (result.has(DataComponents.JUKEBOX_PLAYABLE)) {
             cache.remove(result.getItem(), 1);
         } else if (DecoratedPotPatterns.getPatternFromItem(result.getItem()) != null && !result.is(Items.BRICK)) {
@@ -166,7 +165,7 @@ public class RecipeGenerator {
 
     public static class JewelCraftingRecipeBuildingCache {
         private final HolderLookup.Provider registries;
-        private final List<Item> banners = new ArrayList<>();
+        private final List<Item> bannerPatterns = new ArrayList<>();
         private final List<Item> musicDiscs = new ArrayList<>();
         private final List<Item> potterySherds = new ArrayList<>();
         private final List<Item> trimTemplates = new ArrayList<>();
@@ -175,9 +174,10 @@ public class RecipeGenerator {
             logger.debug("Initializing jewel crafting recipe building cache");
             this.registries = registries;
             for (Holder<Item> holder : registries.lookupOrThrow(Registries.ITEM).listElements().toList()) {
-                if (holder.value() instanceof BannerItem banner) {
-                    logger.debug("Add a banner {} for building jewel crafting recipes", BuiltInRegistries.ITEM.getKey(holder.value()));
-                    this.banners.add(banner);
+                if (holder.value() instanceof BannerPatternItem bannerPattern) {
+                    logger.debug(
+                        "Add a banner pattern {} for building jewel crafting recipes", BuiltInRegistries.ITEM.getKey(holder.value()));
+                    this.bannerPatterns.add(bannerPattern);
                 } else if (holder.value().getDefaultInstance().has(DataComponents.JUKEBOX_PLAYABLE)) {
                     logger.debug(
                         "Add a music disc {} for building jewel crafting recipes", BuiltInRegistries.ITEM.getKey(holder.value()));
@@ -197,10 +197,10 @@ public class RecipeGenerator {
             }
         }
 
-        private static ResourceLocation generateRecipeId(Item recipeResult) {
+        private static ResourceLocation generateRecipeId(String type, Item recipeResult) {
             ResourceLocation resultId = BuiltInRegistries.ITEM.getKey(recipeResult);
             logger.debug("Generating jewel crafting recipe for {}", resultId);
-            ResourceLocation newId = AnvilCraft.of("jewel_crafting/" + resultId.getPath());
+            ResourceLocation newId = AnvilCraft.of("jewel_crafting/" + resultId.getPath() + "_for_" + type);
             logger.debug("The generated recipe id is {}", newId);
             return newId;
         }
@@ -209,9 +209,9 @@ public class RecipeGenerator {
             switch (type) {
                 case 0 -> {
                     logger.debug(
-                        "Removes a banner {} from jewel's cache, because there has a custom jewel' recipe",
+                        "Removes a banner pattern {} from jewel's cache, because there has a custom jewel' recipe",
                         BuiltInRegistries.ITEM.getKey(item));
-                    this.banners.remove(item);
+                    this.bannerPatterns.remove(item);
                 }
                 case 1 -> {
                     logger.debug(
@@ -235,7 +235,7 @@ public class RecipeGenerator {
         }
 
         public Optional<List<RecipeHolder<JewelCraftingRecipe>>> buildRecipes() {
-            if (this.banners.isEmpty()
+            if (this.bannerPatterns.isEmpty()
                 && this.musicDiscs.isEmpty()
                 && this.potterySherds.isEmpty()
                 && this.trimTemplates.isEmpty()
@@ -245,13 +245,13 @@ public class RecipeGenerator {
 
             List<RecipeHolder<JewelCraftingRecipe>> recipeHolders = new ArrayList<>();
 
-            for (Item banner : this.banners) {
+            for (Item bannerPattern : this.bannerPatterns) {
                 JewelCraftingRecipe recipe = JewelCraftingRecipe.builder()
                     .requires(Items.PAPER)
                     .requires(Items.INK_SAC)
-                    .result(banner.getDefaultInstance())
+                    .result(bannerPattern.getDefaultInstance())
                     .buildRecipe();
-                recipeHolders.add(new RecipeHolder<>(generateRecipeId(banner), recipe));
+                recipeHolders.add(new RecipeHolder<>(generateRecipeId("banner_pattern", bannerPattern), recipe));
             }
             for (Item musicDisc : this.musicDiscs) {
                 JewelCraftingRecipe recipe = JewelCraftingRecipe.builder()
@@ -259,14 +259,14 @@ public class RecipeGenerator {
                     .requires(Items.PAPER)
                     .result(musicDisc.getDefaultInstance())
                     .buildRecipe();
-                recipeHolders.add(new RecipeHolder<>(generateRecipeId(musicDisc), recipe));
+                recipeHolders.add(new RecipeHolder<>(generateRecipeId("music_disc", musicDisc), recipe));
             }
             for (Item potterySherd : this.potterySherds) {
                 JewelCraftingRecipe recipe = JewelCraftingRecipe.builder()
                     .requires(Items.BRICK, 2)
                     .result(potterySherd.getDefaultInstance())
                     .buildRecipe();
-                recipeHolders.add(new RecipeHolder<>(generateRecipeId(potterySherd), recipe));
+                recipeHolders.add(new RecipeHolder<>(generateRecipeId("pottery_sherd", potterySherd), recipe));
             }
             for (Item trimTemplate : this.trimTemplates) {
                 JewelCraftingRecipe recipe = JewelCraftingRecipe.builder()
@@ -274,7 +274,7 @@ public class RecipeGenerator {
                     .requires(Items.DIAMOND)
                     .result(trimTemplate.getDefaultInstance())
                     .buildRecipe();
-                recipeHolders.add(new RecipeHolder<>(generateRecipeId(trimTemplate), recipe));
+                recipeHolders.add(new RecipeHolder<>(generateRecipeId("trim_template", trimTemplate), recipe));
             }
 
             return Optional.of(recipeHolders);
