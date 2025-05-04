@@ -1456,7 +1456,7 @@ public class ModBlocks {
         .block("acceleration_ring", AccelerationRingBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .loot(FlexibleMultiPartBlock::loot)
-        .properties( it -> it
+        .properties(it -> it
                 .isSuffocating(ModBlocks::never)
                 .noOcclusion()
                 .explosionResistance(1200)

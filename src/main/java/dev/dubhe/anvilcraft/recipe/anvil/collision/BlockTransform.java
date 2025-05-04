@@ -16,7 +16,7 @@ public record BlockTransform(
         float chance,
         int maxCount
 ) {
-    public final static Codec<BlockTransform> CODEC = RecordCodecBuilder.create(it -> it.group(
+    public static final Codec<BlockTransform> CODEC = RecordCodecBuilder.create(it -> it.group(
                     InputBlock.CODEC.fieldOf("input").forGetter(BlockTransform::inputBlock),
                     OutputBlock.CODEC.fieldOf("output").forGetter(BlockTransform::outputBlock),
                     Codec.FLOAT.fieldOf("chance").forGetter(BlockTransform::chance),

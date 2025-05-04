@@ -2,15 +2,10 @@ package dev.dubhe.anvilcraft.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableSet;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonSyntaxException;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.mixin.accessor.CropBlockAccessor;
 import dev.dubhe.anvilcraft.mixin.accessor.GrowingPlantAccessor;
-import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderOwner;
@@ -18,7 +13,6 @@ import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -48,10 +42,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static net.minecraft.world.level.block.state.StateHolder.PROPERTY_ENTRY_TO_STRING_FUNCTION;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.BED_PART;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.DOUBLE_BLOCK_HALF;
 
@@ -60,73 +52,26 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
  */
 public class BlockStateUtil {
     /**
-     * 从 Json 读取
-     *
-     * @param stateJson json
-     * @return 方块状态
-     */
-    public static @NotNull BlockState fromJson(@NotNull JsonElement stateJson) {
-        if (!stateJson.isJsonObject()) throw new JsonSyntaxException("Expected item to be object");
-        JsonObject object = stateJson.getAsJsonObject();
-        if (!object.has("block")) throw new JsonSyntaxException("The field block is missing");
-        JsonElement blockElement = object.get("block");
-        if (!blockElement.isJsonPrimitive()) throw new JsonSyntaxException("Expected item to be string");
-        StringBuilder block = new StringBuilder(blockElement.getAsString());
-        if (object.has("state")) {
-            block.append(GsonHelper.getAsString(object, "state"));
-        }
-        HolderLookup<Block> blocks = new BlockHolderLookup();
-        BlockStateParser.BlockResult blockResult;
-        try {
-            blockResult = BlockStateParser.parseForBlock(blocks, block.toString(), true);
-        } catch (CommandSyntaxException e) {
-            throw new RuntimeException(e);
-        }
-        return blockResult.blockState();
-    }
-
-    /**
-     * 序列化方块状态
-     *
-     * @param state 方块状态
-     * @return 序列化JSON
-     */
-    public static @NotNull JsonElement toJson(@NotNull BlockState state) {
-        JsonObject object = new JsonObject();
-        object.addProperty(
-            "block", BuiltInRegistries.BLOCK.getKey(state.getBlock()).toString());
-        if (!state.getValues().isEmpty()) {
-            String stringBuilder = '['
-                + state.getValues().entrySet().stream()
-                .map(PROPERTY_ENTRY_TO_STRING_FUNCTION)
-                .collect(Collectors.joining(","))
-                + ']';
-            object.addProperty("state", stringBuilder);
-        }
-        return object;
-    }
-
-    /**
      * 硬编码一些通过Block#asItem方法获取不到的物品。。。。
      * 这些物品通常可以通过Block#getCloneItemStack方法获取到，但是需要LevelReader实例
      * 为了让获取物品在没有level上下文的情况下也能运作，此处硬编码部分特殊方块
      */
     public static final Map<Block, ItemStack> HARDCODED_SPECIAL_AS_ITEM = ImmutableMap.<Block, ItemStack>builder()
-        .put(Blocks.ATTACHED_MELON_STEM, Items.MELON_SEEDS.getDefaultInstance())
-        .put(Blocks.ATTACHED_PUMPKIN_STEM, Items.PUMPKIN_SEEDS.getDefaultInstance())
-        .put(Blocks.BAMBOO_SAPLING, Items.BAMBOO.getDefaultInstance())
-        .put(Blocks.BIG_DRIPLEAF_STEM, Items.BIG_DRIPLEAF.getDefaultInstance())
-        .put(Blocks.TALL_GRASS, new ItemStack(Items.SHORT_GRASS, 2))
-        .put(Blocks.LARGE_FERN, new ItemStack(Items.FERN, 2))
-        .put(Blocks.PISTON_HEAD, ItemStack.EMPTY)
-        .build();
+            .put(Blocks.ATTACHED_MELON_STEM, Items.MELON_SEEDS.getDefaultInstance())
+            .put(Blocks.ATTACHED_PUMPKIN_STEM, Items.PUMPKIN_SEEDS.getDefaultInstance())
+            .put(Blocks.BAMBOO_SAPLING, Items.BAMBOO.getDefaultInstance())
+            .put(Blocks.BIG_DRIPLEAF_STEM, Items.BIG_DRIPLEAF.getDefaultInstance())
+            .put(Blocks.TALL_GRASS, new ItemStack(Items.SHORT_GRASS, 2))
+            .put(Blocks.LARGE_FERN, new ItemStack(Items.FERN, 2))
+            .put(Blocks.PISTON_HEAD, ItemStack.EMPTY)
+            .build();
 
     public static final Set<IntegerProperty> COUNT_PROPERTIES = ImmutableSet.of(
-        BlockStateProperties.LAYERS,
-        BlockStateProperties.PICKLES,
-        BlockStateProperties.EGGS,
-        BlockStateProperties.CANDLES,
-        BlockStateProperties.FLOWER_AMOUNT
+            BlockStateProperties.LAYERS,
+            BlockStateProperties.PICKLES,
+            BlockStateProperties.EGGS,
+            BlockStateProperties.CANDLES,
+            BlockStateProperties.FLOWER_AMOUNT
     );
 
     /**
@@ -158,12 +103,12 @@ public class BlockStateUtil {
             return cauldron.isFull(state) ? Items.POWDER_SNOW_BUCKET.getDefaultInstance() : ItemStack.EMPTY;
         }
         return Optional.of(cauldron)
-            .filter(c -> c.isFull(state))
-            .map(CauldronFluidContent::getForBlock)
-            .map(c -> c.fluid)
-            .map(Fluid::getBucket)
-            .map(Item::getDefaultInstance)
-            .orElse(ItemStack.EMPTY);
+                .filter(c -> c.isFull(state))
+                .map(CauldronFluidContent::getForBlock)
+                .map(c -> c.fluid)
+                .map(Fluid::getBucket)
+                .map(Item::getDefaultInstance)
+                .orElse(ItemStack.EMPTY);
     }
 
     /**
@@ -180,7 +125,7 @@ public class BlockStateUtil {
             case CropBlock crop -> ((CropBlockAccessor) crop).invoker$getBaseSeedId().asItem().getDefaultInstance();
             case FlowerPotBlock ignored -> Items.FLOWER_POT.getDefaultInstance();
             case GrowingPlantBodyBlock plantHead -> ((GrowingPlantAccessor) plantHead).invoker$getHeadBlock()
-                .asItem().getDefaultInstance();
+                    .asItem().getDefaultInstance();
             case CandleCakeBlock ignored -> Items.CAKE.getDefaultInstance();
             default -> HARDCODED_SPECIAL_AS_ITEM.getOrDefault(block, block.asItem().getDefaultInstance());
         };
@@ -192,20 +137,20 @@ public class BlockStateUtil {
             baseItem = ItemStack.EMPTY;
         } else if (isMultifaceLike(block)) {
             long faceCount = PipeBlock.PROPERTY_BY_DIRECTION.values().stream()
-                .filter(state::hasProperty)
-                .filter(state::getValue)
-                .count();
+                    .filter(state::hasProperty)
+                    .filter(state::getValue)
+                    .count();
             baseItem.setCount((int) faceCount);
         } else if (block instanceof SlabBlock && state.getValue(SlabBlock.TYPE) == SlabType.DOUBLE) {
             baseItem.setCount(2);
         } else {
             ItemStack finalBaseItem = baseItem;
             state.getProperties().stream()
-                .filter(IntegerProperty.class::isInstance)
-                .map(IntegerProperty.class::cast)
-                .filter(COUNT_PROPERTIES::contains)
-                .findFirst()
-                .ifPresent(p -> finalBaseItem.setCount(state.getValue(p)));
+                    .filter(IntegerProperty.class::isInstance)
+                    .map(IntegerProperty.class::cast)
+                    .filter(COUNT_PROPERTIES::contains)
+                    .findFirst()
+                    .ifPresent(p -> finalBaseItem.setCount(state.getValue(p)));
         }
         ItemStack additionalItem = switch (block) {
             case CandleCakeBlock cake -> cake.candleBlock.asItem().getDefaultInstance();
@@ -228,9 +173,9 @@ public class BlockStateUtil {
         @Override
         public @NotNull Stream<Holder.Reference<Block>> listElements() {
             return BuiltInRegistries.BLOCK.stream()
-                .map(BuiltInRegistries.BLOCK::getResourceKey)
-                .filter(Optional::isPresent)
-                .map(key -> BuiltInRegistries.BLOCK.getHolderOrThrow(key.get()));
+                    .map(BuiltInRegistries.BLOCK::getResourceKey)
+                    .filter(Optional::isPresent)
+                    .map(key -> BuiltInRegistries.BLOCK.getHolderOrThrow(key.get()));
         }
 
         @Override

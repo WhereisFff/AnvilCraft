@@ -43,13 +43,6 @@ public class InputBlock {
             InputBlock::encode, InputBlock::decode
     );
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    private InputBlock(Optional<TagKey<Block>> tagKey, Optional<Block> block, Optional<Map<String, String>> stringStringMap) {
-        this.tag = tagKey.orElse(null);
-        this.block = block.orElse(null);
-        this.states = stringStringMap.orElse(null);
-    }
-
     private static void encode(RegistryFriendlyByteBuf buf, InputBlock inputBlock) {
         if (inputBlock.tag == null) {
             buf.writeBoolean(true);
@@ -88,6 +81,13 @@ public class InputBlock {
         this.tag = null;
         this.block = block;
         this.states = states;
+    }
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private InputBlock(Optional<TagKey<Block>> tagKey, Optional<Block> block, Optional<Map<String, String>> stringStringMap) {
+        this.tag = tagKey.orElse(null);
+        this.block = block.orElse(null);
+        this.states = stringStringMap.orElse(null);
     }
 
     public static InputBlock of(BlockEntry<? extends Block> block) {

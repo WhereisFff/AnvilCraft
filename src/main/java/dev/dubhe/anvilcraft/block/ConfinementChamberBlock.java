@@ -40,6 +40,7 @@ public class ConfinementChamberBlock extends BaseEntityBlock {
     public @Nullable BlockEntity newBlockEntity(@NotNull BlockPos blockPos, @NotNull BlockState blockState) {
         return new ConfinementChamberBlockEntity(blockPos, blockState);
     }
+
     @Override
     protected @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
         return RenderShape.MODEL;
@@ -56,7 +57,8 @@ public class ConfinementChamberBlock extends BaseEntityBlock {
             @NotNull BlockHitResult hitResult
     ) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (!(blockEntity instanceof ConfinementChamberBlockEntity confinementChamberBlockEntity)) return ItemInteractionResult.FAIL;
+        if (!(blockEntity instanceof ConfinementChamberBlockEntity confinementChamberBlockEntity))
+            return ItemInteractionResult.FAIL;
         ItemStack itemStack = confinementChamberBlockEntity.getItemHandler().getStackInSlot(0);
         ItemStack handItemStack = player.getItemInHand(hand);
         if (itemStack.is(handItemStack.getItem())) return ItemInteractionResult.FAIL;
@@ -73,7 +75,7 @@ public class ConfinementChamberBlock extends BaseEntityBlock {
                 ItemStack itemstack = new ItemStack(ModBlocks.CONFINEMENT_CHAMBER.asItem());
                 itemstack.applyComponents(blockentity.collectComponents());
                 ItemEntity itementity = new ItemEntity(
-                        level, (double)pos.getX() + 0.5, (double)pos.getY() + 0.5, (double)pos.getZ() + 0.5, itemstack
+                        level, (double) pos.getX() + 0.5, (double) pos.getY() + 0.5, (double) pos.getZ() + 0.5, itemstack
                 );
                 itementity.setDefaultPickUpDelay();
                 level.addFreshEntity(itementity);

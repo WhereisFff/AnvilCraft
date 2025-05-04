@@ -37,7 +37,7 @@ import java.util.Arrays;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3x3PartHalf, DirectionProperty, Direction>
-    implements EntityBlock, IHammerRemovable {
+        implements EntityBlock, IHammerRemovable {
     public static final EnumProperty<DirectionCube3x3PartHalf> HALF = EnumProperty.create("half", DirectionCube3x3PartHalf.class);
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty OVERLOAD = IPowerComponent.OVERLOAD;
@@ -98,7 +98,7 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
             updateState(level, pos, SWITCH, IPowerComponent.Switch.OFF, 3);
         } else if (!isSignal && state.getValue(SWITCH) == IPowerComponent.Switch.OFF) {
             updateState(level, pos, SWITCH, IPowerComponent.Switch.ON, 3);
-            BlockPos centerPos = pos.subtract(state.getValue(HALF).getOffset()).offset(0, 1,0);
+            BlockPos centerPos = pos.subtract(state.getValue(HALF).getOffset()).offset(0, 1, 0);
             if (level.getBlockEntity(centerPos) instanceof IPowerConsumer powerConsumer) {
                 if (powerConsumer.getGrid() == null) return;
                 powerConsumer.getGrid().flush();

@@ -9,6 +9,7 @@ public interface DeflectionEntity {
     default boolean isDeflected() {
         return false;
     }
+
     default Vec3 getFixedDeltaMovement() {
         return Vec3.ZERO;
     }
