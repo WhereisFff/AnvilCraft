@@ -11,7 +11,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
+import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -27,7 +29,6 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
-import java.util.function.BiConsumer;
 
 @Mixin(Explosion.class)
 abstract class ExplosionMixin implements BlockTransformExplosion {
@@ -70,27 +71,28 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     }
 
     @WrapOperation(
-            method = "finalizeExplosion",
+            method = "explode",
             at =
             @At(
                     value = "INVOKE",
                     target =
-                            "Lnet/minecraft/world/level/block/state/BlockState;onExplosionHit(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Explosion;Ljava/util/function/BiConsumer;)V"
+                            "Lnet/minecraft/world/level/ExplosionDamageCalculator;shouldBlockExplode(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;F)Z"
             )
     )
-    private void anvilCraft$explosionBlockTransform(
-            BlockState instance,
-            Level level,
-            BlockPos blockPos,
+    private boolean anvilCraft$explosionBlockTransform(
+            ExplosionDamageCalculator instance,
             Explosion explosion,
-            BiConsumer<ItemStack, BlockPos> biConsumer,
-            Operation<Void> original
+            BlockGetter reader,
+            BlockPos pos,
+            BlockState state,
+            float power,
+            Operation<Boolean> original
     ) {
         BlockTransform blockTransform;
-        if ((blockTransform = anvilcraft$blockTransformMap.get(instance.getBlock())) != null) {
-            blockTransform.progress(level, blockPos);
+        if ((blockTransform = anvilcraft$blockTransformMap.get(state.getBlock())) != null) {
+            return !blockTransform.progress(level, pos) && original.call(instance, explosion, reader, pos, state, power);
         }
-        original.call(instance, level, blockPos, explosion, biConsumer);
+        return original.call(instance, explosion, reader, pos, state, power);
     }
 
     @SuppressWarnings("AddedMixinMembersNamePattern")

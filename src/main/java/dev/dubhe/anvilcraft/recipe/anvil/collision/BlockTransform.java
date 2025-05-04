@@ -44,11 +44,13 @@ public record BlockTransform(
         );
     }
 
-    public void progress(Level level, BlockPos pos) {
+    public Boolean progress(Level level, BlockPos pos) {
         BlockState output;
         if (inputBlock.is(level.getBlockState(pos)) && (output = outputBlock.getResult(level.random)) != null) {
-            if (chance > level.random.nextFloat()) return;
+            if (chance > level.random.nextFloat()) return false;
             level.setBlockAndUpdate(pos, output);
+            return true;
         }
+        return false;
     }
 }
