@@ -2,8 +2,10 @@ package dev.dubhe.anvilcraft.recipe.elements;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import lombok.Getter;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -88,6 +90,10 @@ public class InputBlock {
         this.states = states;
     }
 
+    public static InputBlock of(BlockEntry<? extends Block> block) {
+        return new InputBlock(block.get(), Map.of());
+    }
+
     @SuppressWarnings({"unchecked", "rawtypes"})
     public boolean is(BlockState blockState) {
         StateDefinition<Block, BlockState> stateDef = blockState.getBlock().getStateDefinition();
@@ -107,5 +113,9 @@ public class InputBlock {
             assert tag != null;
             return blockState.is(tag);
         }
+    }
+
+    public String getKey() {
+        return this.tag == null ? BuiltInRegistries.BLOCK.getKey(this.block).getPath() : this.tag.location().getPath();
     }
 }

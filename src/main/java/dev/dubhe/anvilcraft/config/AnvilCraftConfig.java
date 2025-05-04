@@ -208,6 +208,6 @@ public class AnvilCraftConfig implements ConfigData {
 
     @Comment("Anvil collision craft speed (m/tick)")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(max = 999999999, min = 16)
+    @ConfigEntry.BoundedDiscrete(max = 999999999, min = 1)
     public int anvilCollisionCraftSpeed = 16;
 }

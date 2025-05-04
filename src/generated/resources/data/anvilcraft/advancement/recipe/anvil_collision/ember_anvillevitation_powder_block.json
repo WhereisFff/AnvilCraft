@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/anvil"
+        "recipe": "anvilcraft:anvil_collision/ember_anvillevitation_powder_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/anvil"
+      "anvilcraft:anvil_collision/ember_anvillevitation_powder_block"
     ]
   }
 }

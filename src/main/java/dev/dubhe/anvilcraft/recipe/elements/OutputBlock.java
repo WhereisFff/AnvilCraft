@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.recipe.elements;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import com.tterrag.registrate.util.entry.BlockEntry;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -47,6 +48,10 @@ public class OutputBlock {
     public OutputBlock(BlockState blockState, float chance) {
         this.blockState = blockState;
         this.chance = chance;
+    }
+
+    public static OutputBlock of(BlockEntry<? extends Block> block) {
+        return new OutputBlock(block.getDefaultState(), 1f);
     }
 
     private static OutputBlock apply(Block block, Map<String, String> states, float chance) {

@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.collision;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.input.IItemsInput;
@@ -13,6 +14,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
@@ -255,6 +257,14 @@ public record AnvilCollisionCraftRecipe(
         @Override
         public String getType() {
             return "anvil_collision";
+        }
+
+        @Override
+        public void save(RecipeOutput recipeOutput) {
+            save(
+                    recipeOutput,
+                    AnvilCraft.of(this.anvil.getKey() + this.hitBlock.getKey())
+                            .withPrefix(getType() + "/"));
         }
     }
 
