@@ -2,6 +2,8 @@ package dev.dubhe.anvilcraft.client;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.event.GuiLayerRegistrationEventListener;
+import dev.dubhe.anvilcraft.client.event.HammerEffectRenderEventListener;
+import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.client.init.ModModelLayers;
 import dev.dubhe.anvilcraft.client.init.ModShaders;
 import dev.dubhe.anvilcraft.client.renderer.item.decoration.IonoCraftBackpackDecoration;
@@ -37,6 +39,7 @@ public class AnvilCraftClient {
             IConfigScreenFactory.class,
             (c, s) -> AutoConfig.getConfigScreen(AnvilCraftConfig.class, s).get()
         );
+        modBus.addListener(ModKeyMappings::register);
         modBus.addListener(AnvilCraftClient::registerClientExtensions);
         modBus.addListener(AnvilCraftClient::registerCustomItemDecorations);
         modBus.addListener(ModShaders::register);
