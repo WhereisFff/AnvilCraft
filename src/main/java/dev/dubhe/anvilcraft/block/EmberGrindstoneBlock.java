@@ -29,12 +29,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @Getter
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class EmberGrindstone extends BetterGrindstoneBlock implements IHammerRemovable, IEmberBlock {
+public class EmberGrindstoneBlock extends BetterGrindstoneBlock implements IHammerRemovable, IEmberBlock {
 
     private static final Component CONTAINER_TITLE = Component.translatable("container.grindstone_title");
     private BlockState checkBlockState;
 
-    public EmberGrindstone(Properties properties) {
+    public EmberGrindstoneBlock(Properties properties) {
         super(properties);
     }
 

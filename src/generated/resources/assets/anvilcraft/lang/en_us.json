@@ -554,6 +554,8 @@
   "screen.anvilcraft.button.off": "off",
   "screen.anvilcraft.button.on": "on",
   "screen.anvilcraft.button.record": "Retention item filtering: %s",
+  "screen.anvilcraft.ember_grindstone.cost": "Exp. Cost: %d",
+  "screen.anvilcraft.ember_grindstone.title": "Extract enchantment",
   "screen.anvilcraft.ember_metal_upgrade_smithing_template": "Ember Metal Upgrade",
   "screen.anvilcraft.ember_smithing.tooltip.missing_template": "Add Multiple to One Template",
   "screen.anvilcraft.ember_smithing.tooltip.two_missing_multiphase_matter": "Add Multiphase Matter",
