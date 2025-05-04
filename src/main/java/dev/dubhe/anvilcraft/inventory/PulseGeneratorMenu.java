@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.inventory;
 
-import dev.dubhe.anvilcraft.block.entity.AdvancedRepeaterBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -21,22 +21,22 @@ import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class AdvancedRepeaterMenu extends AbstractContainerMenu {
+public class PulseGeneratorMenu extends AbstractContainerMenu {
     @Getter
-    private final AdvancedRepeaterBlockEntity blockEntity;
+    private final PulseGeneratorBlockEntity blockEntity;
     private final Level level;
 
-    public AdvancedRepeaterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull BlockEntity machine) {
+    public PulseGeneratorMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull BlockEntity machine) {
         super(menuType, containerId);
-        this.blockEntity = (AdvancedRepeaterBlockEntity) machine;
+        this.blockEntity = (PulseGeneratorBlockEntity) machine;
         this.level = inventory.player.level();
     }
 
-    public AdvancedRepeaterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
+    public PulseGeneratorMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
         this(
             menuType, containerId, inventory,
             Objects.requireNonNull(
-                inventory.player.level().getBlockEntity(extraData.readBlockPos()) instanceof AdvancedRepeaterBlockEntity repeater
+                inventory.player.level().getBlockEntity(extraData.readBlockPos()) instanceof PulseGeneratorBlockEntity repeater
                 ? repeater.readDataNbt(Objects.requireNonNull(extraData.readNbt())) : null
             ));
     }
@@ -51,7 +51,7 @@ public class AdvancedRepeaterMenu extends AbstractContainerMenu {
         return stillValid(
             ContainerLevelAccess.create(level, blockEntity.getBlockPos()),
             player,
-            ModBlocks.ADVANCED_REPEATER.get()
+            ModBlocks.PULSE_GENERATOR.get()
         );
     }
 
