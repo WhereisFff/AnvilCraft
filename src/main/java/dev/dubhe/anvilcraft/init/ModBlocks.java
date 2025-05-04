@@ -33,7 +33,7 @@ import dev.dubhe.anvilcraft.block.CrushingTableBlock;
 import dev.dubhe.anvilcraft.block.DeflectionRingBlock;
 import dev.dubhe.anvilcraft.block.DischargerBlock;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
-import dev.dubhe.anvilcraft.block.EmberGrindstone;
+import dev.dubhe.anvilcraft.block.EmberGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.EmberMetalBlock;
 import dev.dubhe.anvilcraft.block.EmberMetalPillarBlock;
 import dev.dubhe.anvilcraft.block.EmberMetalSlabBlock;
@@ -445,8 +445,8 @@ public class ModBlocks {
         .tag(ItemTags.ANVIL)
         .build()
         .register();
-    public static final BlockEntry<EmberGrindstone> EMBER_GRINDSTONE = REGISTRATE
-        .block("ember_grindstone", EmberGrindstone::new)
+    public static final BlockEntry<EmberGrindstoneBlock> EMBER_GRINDSTONE = REGISTRATE
+        .block("ember_grindstone", EmberGrindstoneBlock::new)
         .recipe((ctx, provider) -> {
             SmithingTransformRecipeBuilder.smithing(
                     Ingredient.of(ModItems.EMBER_METAL_UPGRADE_SMITHING_TEMPLATE),

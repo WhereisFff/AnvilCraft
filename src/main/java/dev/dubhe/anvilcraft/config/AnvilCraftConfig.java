@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.config;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
-
 import com.google.gson.annotations.SerializedName;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -10,6 +9,11 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = AnvilCraft.MOD_ID)
 public class AnvilCraftConfig implements ConfigData {
+
+    @Comment("The mode of the anvil hammer goggle info")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public GoggleMode goggleMode = GoggleMode.WEARING_HAMMER;
 
     @Comment("Maximum number of items processed by the anvil at the same time")
     @ConfigEntry.Gui.Tooltip
@@ -210,4 +214,11 @@ public class AnvilCraftConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 999999999, min = 1)
     public int anvilCollisionCraftSpeed = 16;
+  
+    public enum GoggleMode implements ConfigData {
+        ALWAYS_SHOW,
+        WEARING_HAMMER,
+        HOLDING_HAMMER,
+        TOGGLE_WITH_KEY
+    }
 }
