@@ -26,6 +26,7 @@ import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
+import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -167,6 +168,11 @@ public class ModNetworks {
             MachineCycleFilterModePacket.TYPE,
             MachineCycleFilterModePacket.STREAM_CODEC,
             MachineCycleFilterModePacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchPhasePacket.TYPE,
+            SwitchPhasePacket.STREAM_CODEC,
+            SwitchPhasePacket.HANDLER
         );
         registrar.playToServer(
             AdvancedRepeaterUpdatePacket.TYPE,

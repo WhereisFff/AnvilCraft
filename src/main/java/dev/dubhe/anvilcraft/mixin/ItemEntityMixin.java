@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.dubhe.anvilcraft.block.HollowMagnetBlock;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.IFireReforging;
@@ -153,7 +154,7 @@ abstract class ItemEntityMixin extends Entity implements MergeColdDownItemEntity
     @Inject(method = "tick", at = @At("HEAD"))
     private void fireReforging(CallbackInfo ci) {
         ItemStack item = this.getItem();
-        if (!item.isEmpty() && item.getItem() instanceof IFireReforging) {
+        if (!item.isEmpty() && item.get(ModComponents.FIRE_REFORGING) != null) {
             if (!this.getItem().isDamaged()) return;
             Block block = this.level().getBlockState(this.blockPosition()).getBlock();
             if (REPAIR_EFFICIENCY.containsKey(block)) {
