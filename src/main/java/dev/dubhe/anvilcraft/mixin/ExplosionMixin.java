@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -37,7 +38,7 @@ import java.util.List;
 abstract class ExplosionMixin implements BlockTransformExplosion {
 
     @Unique
-    public HashMap<Block, BlockTransform> anvilcraft$blockTransformMap = new HashMap<>();
+    public HashMap<Block, ArrayList<BlockTransform>> anvilcraft$blockTransformMap = new HashMap<>();
 
     @Unique
     private final HashMap<BlockTransform, Integer> anvilcraft$counterMap = new HashMap<>();
@@ -82,8 +83,9 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
             @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed,
             @Local(ordinal = 0) BlockPos pos
     ) {
-        BlockTransform blockTransform;
-        if ((blockTransform = anvilcraft$blockTransformMap.get(level.getBlockState(pos).getBlock())) != null) {
+        ArrayList<BlockTransform> blockTransforms;
+        if ((blockTransforms = anvilcraft$blockTransformMap.get(level.getBlockState(pos).getBlock())) != null) {
+            BlockTransform blockTransform = blockTransforms.get(level.random.nextInt(blockTransforms.size()));
             if (anvilcraft$counterMap.getOrDefault(blockTransform, 0) > blockTransform.maxCount()) return;
             isExplosionBlockTransformed.set(!blockTransform.progress(level, pos));
             if (isExplosionBlockTransformed.get()) {
@@ -122,10 +124,23 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     public void setBlockTransformExplosion(Collection<BlockTransform> blockTransformExplosions) {
         for (BlockTransform blockTransform : blockTransformExplosions) {
             if (blockTransform.inputBlock().getTag() == null) {
-                anvilcraft$blockTransformMap.put(blockTransform.inputBlock().getBlock(), blockTransform);
+                if (anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
+                    anvilcraft$blockTransformMap.put(blockTransform.inputBlock().getBlock(), new ArrayList<>() {{
+                        add(blockTransform);
+                    }});
+                } else {
+                    anvilcraft$blockTransformMap.get(blockTransform.inputBlock().getBlock()).add(blockTransform);
+                }
+
             } else {
                 for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(blockTransform.inputBlock().getTag())) {
-                    anvilcraft$blockTransformMap.put(blockHolder.value(), blockTransform);
+                    if (anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
+                        anvilcraft$blockTransformMap.put(blockHolder.value(), new ArrayList<>() {{
+                            add(blockTransform);
+                        }});
+                    } else {
+                        anvilcraft$blockTransformMap.get(blockHolder.value()).add(blockTransform);
+                    }
                 }
             }
         }
