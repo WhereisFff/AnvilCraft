@@ -135,9 +135,11 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
             } else {
                 for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(blockTransform.inputBlock().getTag())) {
                     if (anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
-                        anvilcraft$blockTransformMap.put(blockHolder.value(), new ArrayList<>() {{
-                            add(blockTransform);
-                        }});
+                        anvilcraft$blockTransformMap.put(blockHolder.value(), new ArrayList<>() {
+                            {
+                                add(blockTransform);
+                            }
+                        });
                     } else {
                         anvilcraft$blockTransformMap.get(blockHolder.value()).add(blockTransform);
                     }
