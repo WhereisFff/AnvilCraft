@@ -207,12 +207,12 @@ public class AnvilCraftConfig implements ConfigData {
 
     @Comment("Max acceleration speed (m/tick)")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(max = 999999999, min = 16)
+    @ConfigEntry.BoundedDiscrete(max = 256, min = 16)
     public int maxAccelerationSpeed = 32;
 
     @Comment("Anvil collision craft speed (m/tick)")
     @ConfigEntry.Gui.Tooltip
-    @ConfigEntry.BoundedDiscrete(max = 999999999, min = 1)
+    @ConfigEntry.BoundedDiscrete(max = 256, min = 1)
     public int anvilCollisionCraftSpeed = 16;
   
     public enum GoggleMode implements ConfigData {

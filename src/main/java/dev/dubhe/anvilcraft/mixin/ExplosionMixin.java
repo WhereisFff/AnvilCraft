@@ -39,6 +39,9 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     @Unique
     public HashMap<Block, BlockTransform> anvilcraft$blockTransformMap = new HashMap<>();
 
+    @Unique
+    private final HashMap<BlockTransform, Integer> anvilcraft$counterMap = new HashMap<>();
+
     @Shadow
     @Final
     private Level level;
@@ -81,7 +84,14 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     ) {
         BlockTransform blockTransform;
         if ((blockTransform = anvilcraft$blockTransformMap.get(level.getBlockState(pos).getBlock())) != null) {
+            if (anvilcraft$counterMap.getOrDefault(blockTransform, 0) > blockTransform.maxCount()) return;
             isExplosionBlockTransformed.set(!blockTransform.progress(level, pos));
+            if (isExplosionBlockTransformed.get()) {
+                if (anvilcraft$counterMap.containsKey(blockTransform)) {
+                    anvilcraft$counterMap.put(blockTransform, anvilcraft$counterMap.get(blockTransform) + 1);
+                } else
+                    anvilcraft$counterMap.put(blockTransform, 1);
+            }
         }
     }
 

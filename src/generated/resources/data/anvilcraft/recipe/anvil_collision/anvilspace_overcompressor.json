@@ -4,7 +4,7 @@
     "tag": "minecraft:anvil"
   },
   "consume": true,
-  "hidBlock": {
+  "hitBlock": {
     "id": "anvilcraft:space_overcompressor"
   },
   "output_items": [],

@@ -4,7 +4,7 @@
     "id": "anvilcraft:ember_anvil"
   },
   "consume": false,
-  "hidBlock": {
+  "hitBlock": {
     "id": "minecraft:redstone_block"
   },
   "output_items": [

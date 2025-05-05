@@ -4,7 +4,7 @@
     "tag": "minecraft:anvil"
   },
   "consume": true,
-  "hidBlock": {
+  "hitBlock": {
     "id": "anvilcraft:negative_matter_block"
   },
   "output_items": [

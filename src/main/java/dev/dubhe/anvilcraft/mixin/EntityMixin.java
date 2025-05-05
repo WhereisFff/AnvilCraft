@@ -202,7 +202,7 @@ public abstract class EntityMixin implements DeflectionEntity {
     @Inject(method = "move", at = @At("RETURN"))
     public void anvil$collisionCraft(MoverType type, Vec3 pos, CallbackInfo ci, @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement) {
         if (!((Object) this instanceof FallingBlockEntity) || !this.horizontalCollision) return;
-        BlockPos blockPos = BlockPos.containing(this.position.add(beforeBoundingMovement.get().scale(0.55 / beforeBoundingMovement.get().length()).multiply(1, 0, 1)).add(0, 1, 0));
+        BlockPos blockPos = BlockPos.containing(this.position.add(beforeBoundingMovement.get().scale(0.55 / beforeBoundingMovement.get().length()).multiply(1, 0, 1)));
         NeoForge.EVENT_BUS.post(new FallingBlockCollisionEvent((FallingBlockEntity) (Object) this, blockPos, level, beforeBoundingMovement.get().length()));
     }
 }

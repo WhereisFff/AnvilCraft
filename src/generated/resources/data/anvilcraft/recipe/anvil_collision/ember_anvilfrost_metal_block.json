@@ -4,7 +4,7 @@
     "id": "anvilcraft:ember_anvil"
   },
   "consume": true,
-  "hidBlock": {
+  "hitBlock": {
     "id": "anvilcraft:frost_metal_block"
   },
   "output_items": [

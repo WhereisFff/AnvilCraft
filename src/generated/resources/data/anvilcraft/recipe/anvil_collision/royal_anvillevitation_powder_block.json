@@ -4,7 +4,7 @@
     "id": "anvilcraft:royal_anvil"
   },
   "consume": false,
-  "hidBlock": {
+  "hitBlock": {
     "id": "anvilcraft:levitation_powder_block"
   },
   "output_items": [

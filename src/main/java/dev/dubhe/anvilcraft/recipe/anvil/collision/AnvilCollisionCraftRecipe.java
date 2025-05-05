@@ -95,7 +95,7 @@ public record AnvilCollisionCraftRecipe(
         private static final MapCodec<AnvilCollisionCraftRecipe> CODEC = RecordCodecBuilder.mapCodec(it -> it.group(
                 InputBlock.CODEC.fieldOf("anvil").forGetter(AnvilCollisionCraftRecipe::anvil),
                 Codec.BOOL.fieldOf("consume").forGetter(AnvilCollisionCraftRecipe::consume),
-                InputBlock.CODEC.fieldOf("hidBlock").forGetter(AnvilCollisionCraftRecipe::hitBlock),
+                InputBlock.CODEC.fieldOf("hitBlock").forGetter(AnvilCollisionCraftRecipe::hitBlock),
                 BlockTransform.CODEC.listOf().fieldOf("transform_blocks").forGetter(AnvilCollisionCraftRecipe::transformBlocks),
                 OutputItem.CODEC.listOf().fieldOf("output_items").forGetter(AnvilCollisionCraftRecipe::outputItems)
         ).apply(it, AnvilCollisionCraftRecipe::new));
