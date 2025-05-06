@@ -3,11 +3,13 @@ package dev.dubhe.anvilcraft.recipe.generate;
 import com.mojang.logging.LogUtils;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.CookingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.UnpackRecipe;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -16,6 +18,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BannerPatternItem;
+import net.minecraft.world.item.HoneyBottleItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -29,6 +32,7 @@ import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.slf4j.Logger;
 
 import java.util.ArrayList;
@@ -117,10 +121,15 @@ public class RecipeGenerator {
                     && (pattern.height() == 2 || pattern.height() == 3)
                     && RecipeUtil.allIngredientEquals(pattern.ingredients())
                 ) {
-                    ItemCompressRecipe newRecipe = ItemCompressRecipe.builder()
+                    ItemCompressRecipe.Builder builder = (ItemCompressRecipe.Builder) ItemCompressRecipe.builder()
                         .result(shapedRecipe.result)
-                        .requires(pattern.ingredients().getFirst(), pattern.height() * pattern.height())
-                        .buildRecipe();
+                        .requires(pattern.ingredients().getFirst(), pattern.height() * pattern.height());
+
+                    if (pattern.ingredients().getFirst().test(Items.HONEY_BOTTLE.getDefaultInstance())) {
+                        builder.result(ChanceItemStack.of(Items.GLASS_BOTTLE.getDefaultInstance().copyWithCount(4)));
+                    }
+
+                    ItemCompressRecipe newRecipe = builder.buildRecipe();
                     return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
                 }
             } else {

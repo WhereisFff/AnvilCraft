@@ -134,6 +134,7 @@ public class ModItemTags {
     public static final TagKey<Item> GEMS = bind("gems");
     public static final TagKey<Item> GEM_BLOCKS = bind("gem_blocks");
     public static final TagKey<Item> DEAD_CORALS = bind("dead_corals");
+    public static final TagKey<Item> DEAD_CORAL_BLOCKS = bind("dead_coral_blocks");
     public static final TagKey<Item> VOID_RESISTANT = bind("void_resistant");
     public static final TagKey<Item> REINFORCED_CONCRETE = bind("reinforced_concrete");
     public static final TagKey<Item> SEEDS_PACK_CONTENT = bind("seeds_pack_content");
