@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/ember_anvillevitation_powder_block"
+        "recipe": "anvilcraft:anvil_collision/ember_anvil_and_frost_metal_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/ember_anvillevitation_powder_block"
+      "anvilcraft:anvil_collision/ember_anvil_and_frost_metal_block"
     ]
   }
 }

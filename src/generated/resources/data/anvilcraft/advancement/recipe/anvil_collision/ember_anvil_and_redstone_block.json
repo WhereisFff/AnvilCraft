@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/anvilgiant_anvil"
+        "recipe": "anvilcraft:anvil_collision/ember_anvil_and_redstone_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/anvilgiant_anvil"
+      "anvilcraft:anvil_collision/ember_anvil_and_redstone_block"
     ]
   }
 }

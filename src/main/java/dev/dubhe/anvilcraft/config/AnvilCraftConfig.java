@@ -213,7 +213,7 @@ public class AnvilCraftConfig implements ConfigData {
     @Comment("Anvil collision craft speed (m/tick)")
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 256, min = 1)
-    public int anvilCollisionCraftSpeed = 16;
+    public int anvilCollisionCraftSpeed = 6;
   
     public enum GoggleMode implements ConfigData {
         ALWAYS_SHOW,

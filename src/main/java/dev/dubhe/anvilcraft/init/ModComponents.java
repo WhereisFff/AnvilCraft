@@ -76,12 +76,12 @@ public class ModComponents {
         return componentType;
     }
 
+    public static void register(IEventBus bus) {
+        DR.register(bus);
+    }
+
     private static DataComponentType<Unit> registerEmpty(String name) {
         return register(name, b -> b.persistent(Codec.EMPTY.codec())
             .networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
-    }
-
-    public static void register(IEventBus bus) {
-        DR.register(bus);
     }
 }

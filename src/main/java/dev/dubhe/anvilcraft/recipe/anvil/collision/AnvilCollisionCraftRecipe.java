@@ -263,7 +263,7 @@ public record AnvilCollisionCraftRecipe(
         public void save(RecipeOutput recipeOutput) {
             save(
                     recipeOutput,
-                    AnvilCraft.of(this.anvil.getKey() + this.hitBlock.getKey())
+                    AnvilCraft.of(this.anvil.getKey() + "_and_" + this.hitBlock.getKey())
                             .withPrefix(getType() + "/"));
         }
     }

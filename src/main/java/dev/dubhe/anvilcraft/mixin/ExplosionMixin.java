@@ -41,7 +41,8 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     public HashMap<Block, ArrayList<BlockTransform>> anvilcraft$blockTransformMap = new HashMap<>();
 
     @Unique
-    private final HashMap<BlockTransform, Integer> anvilcraft$counterMap = new HashMap<>();
+    @SuppressWarnings("FieldMayBeFinal")
+    private HashMap<BlockTransform, Integer> anvilcraft$counterMap = new HashMap<>();
 
     @Shadow
     @Final
@@ -86,8 +87,8 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         ArrayList<BlockTransform> blockTransforms;
         if ((blockTransforms = anvilcraft$blockTransformMap.get(level.getBlockState(pos).getBlock())) != null) {
             BlockTransform blockTransform = blockTransforms.get(level.random.nextInt(blockTransforms.size()));
-            if (anvilcraft$counterMap.getOrDefault(blockTransform, 0) > blockTransform.maxCount()) return;
-            isExplosionBlockTransformed.set(!blockTransform.progress(level, pos));
+            if (anvilcraft$counterMap.getOrDefault(blockTransform, 0) >= blockTransform.maxCount()) return;
+            isExplosionBlockTransformed.set(blockTransform.progress(level, pos));
             if (isExplosionBlockTransformed.get()) {
                 if (anvilcraft$counterMap.containsKey(blockTransform)) {
                     anvilcraft$counterMap.put(blockTransform, anvilcraft$counterMap.get(blockTransform) + 1);
@@ -124,17 +125,22 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     public void setBlockTransformExplosion(Collection<BlockTransform> blockTransformExplosions) {
         for (BlockTransform blockTransform : blockTransformExplosions) {
             if (blockTransform.inputBlock().getTag() == null) {
-                if (anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
-                    anvilcraft$blockTransformMap.put(blockTransform.inputBlock().getBlock(), new ArrayList<>() {{
-                        add(blockTransform);
-                    }});
+                if (!anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
+                    anvilcraft$blockTransformMap.put(
+                        blockTransform.inputBlock().getBlock(),
+                        new ArrayList<>() {
+                            {
+                                add(blockTransform);
+                            }
+                        }
+                    );
                 } else {
                     anvilcraft$blockTransformMap.get(blockTransform.inputBlock().getBlock()).add(blockTransform);
                 }
 
             } else {
                 for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(blockTransform.inputBlock().getTag())) {
-                    if (anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
+                    if (!anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
                         anvilcraft$blockTransformMap.put(blockHolder.value(), new ArrayList<>() {
                             {
                                 add(blockTransform);

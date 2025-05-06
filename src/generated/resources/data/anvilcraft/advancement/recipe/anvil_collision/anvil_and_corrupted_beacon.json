@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/anvilcorrupted_beacon"
+        "recipe": "anvilcraft:anvil_collision/anvil_and_corrupted_beacon"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/anvilcorrupted_beacon"
+      "anvilcraft:anvil_collision/anvil_and_corrupted_beacon"
     ]
   }
 }

@@ -209,6 +209,15 @@ public class AmuletUtil {
         }
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean hasAmuletInInventory(Player player, Type type) {
+        try {
+            return hasAmuletInInventory.test(player, type);
+        } catch (NullPointerException ignored) {
+            return false;
+        }
+    }
+
     public static ItemStack getEffectiveAmulet(Player player, ItemEntry<? extends AbstractAmuletItem> entry) {
         try {
             ItemStack stack = InventoryUtil.getFirstItem(player.getInventory(), stack1 -> stack1.getItem() instanceof AbstractAmuletItem);
@@ -219,15 +228,6 @@ public class AmuletUtil {
             }
         } catch (NullPointerException ignored) {
             return ItemStack.EMPTY;
-        }
-    }
-
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-    public static boolean hasAmuletInInventory(Player player, Type type) {
-        try {
-            return hasAmuletInInventory.test(player, type);
-        } catch (NullPointerException ignored) {
-            return false;
         }
     }
 
