@@ -880,7 +880,7 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 4)
                 .pattern("ABA")
                 .pattern(" B ")
                 .pattern("ABA")
@@ -894,7 +894,7 @@ public class ModBlocks {
                     AnvilCraftDatagen.hasItem(Items.QUARTZ_BLOCK),
                     AnvilCraftDatagen.has(Items.QUARTZ_BLOCK))
                 .save(provider);
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 4)
                 .pattern("ABA")
                 .pattern(" B ")
                 .pattern("ABA")
@@ -1056,7 +1056,7 @@ public class ModBlocks {
                 .pattern("ABA")
                 .pattern("ACA")
                 .define('A', Items.AMETHYST_BLOCK)
-                .define('B', Items.JUKEBOX)
+                .define('B', Items.NOTE_BLOCK)
                 .define('C', Items.SCULK_SENSOR)
                 .unlockedBy(
                     AnvilCraftDatagen.hasItem(Items.AMETHYST_BLOCK),
@@ -1123,7 +1123,7 @@ public class ModBlocks {
             else return 0;
         }))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 4)
                 .pattern("AEA")
                 .pattern("BDB")
                 .pattern("ACA")
