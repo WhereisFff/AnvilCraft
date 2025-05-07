@@ -26,6 +26,7 @@ import dev.dubhe.anvilcraft.block.ChocolateCakeBlock;
 import dev.dubhe.anvilcraft.block.ChocolateCreamBlock;
 import dev.dubhe.anvilcraft.block.ChuteBlock;
 import dev.dubhe.anvilcraft.block.ConfinementChamberBlock;
+import dev.dubhe.anvilcraft.block.ControllableSandBlock;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.block.CrabTrapBlock;
 import dev.dubhe.anvilcraft.block.CreamBlock;
@@ -855,7 +856,7 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 4)
                 .pattern("ABA")
                 .pattern(" B ")
                 .pattern("ABA")
@@ -869,7 +870,7 @@ public class ModBlocks {
                     AnvilCraftDatagen.hasItem(Items.QUARTZ_BLOCK),
                     AnvilCraftDatagen.has(Items.QUARTZ_BLOCK))
                 .save(provider);
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 4)
                 .pattern("ABA")
                 .pattern(" B ")
                 .pattern("ABA")
@@ -1024,7 +1025,7 @@ public class ModBlocks {
                 .pattern("ABA")
                 .pattern("ACA")
                 .define('A', Items.AMETHYST_BLOCK)
-                .define('B', Items.JUKEBOX)
+                .define('B', Items.NOTE_BLOCK)
                 .define('C', Items.SCULK_SENSOR)
                 .unlockedBy(
                     AnvilCraftDatagen.hasItem(Items.AMETHYST_BLOCK),
@@ -1089,7 +1090,7 @@ public class ModBlocks {
             else return 0;
         }))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 4)
                 .pattern("AEA")
                 .pattern("BDB")
                 .pattern("ACA")
@@ -2795,12 +2796,32 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_SHOVEL)
         .register();
 
+    public static final BlockEntry<ControllableSandBlock> CONTROLLABLE_SAND = REGISTRATE
+        .block("controllable_sand", ControllableSandBlock::new)
+        .initialProperties(() -> Blocks.SAND)
+        .blockstate((ctx, provider) -> provider
+            .getVariantBuilder(ctx.get()).partialState()
+            .addModels(new ConfiguredModel(provider.models().getExistingFile(ctx.getId().withPrefix("block/")))))
+        .simpleItem()
+        .recipe((ctx, provider) ->
+             ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
+                 .pattern("LRL")
+                 .pattern("RSR")
+                 .pattern("LRL")
+                 .define('L', ModItems.LEVITATION_POWDER)
+                 .define('R', Items.REDSTONE)
+                 .define('S', ItemTags.SAND)
+                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
+                 .save(provider)
+        )
+        .tag(BlockTags.MINEABLE_WITH_SHOVEL)
+        .register();
     public static final BlockEntry<LevitationPowderBlock> LEVITATION_POWDER_BLOCK = REGISTRATE
         .block("levitation_powder_block", LevitationPowderBlock::new)
         .initialProperties(() -> Blocks.SAND)
         .item(LevitationPowderBlockItem::new)
         .recipe((ctx, provider) ->
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
+             ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
                 .requires(ModItems.LEVITATION_POWDER, 9)
                 .unlockedBy(
                     AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
