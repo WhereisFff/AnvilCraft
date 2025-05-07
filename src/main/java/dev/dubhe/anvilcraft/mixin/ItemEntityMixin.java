@@ -330,7 +330,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isMergable()Z"))
     public boolean preventMerge(ItemEntity instance, Operation<Boolean> original) {
-        if (original.call(instance)) return false;
+        if (!original.call(instance)) return false;
         if (anvilCraft$mergeCooldown <= 0) return true;
         anvilCraft$mergeCooldown--;
         return false;
