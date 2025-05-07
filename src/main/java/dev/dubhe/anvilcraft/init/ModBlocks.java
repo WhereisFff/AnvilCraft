@@ -4142,59 +4142,69 @@ public class ModBlocks {
         .register();
 
     public static BlockEntry<Block> CONFINED_TIME_ANVILON = REGISTRATE
-            .block("confined_time_anvilon", Block::new)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
-            .properties(PropertiesProviderUtil::confinedAnvilon)
-            .blockstate(BlockStatProviderUtil::simple)
-            .item()
-            .initialProperties(() -> new Item.Properties().fireResistant())
-            .tag(ModItemTags.EXPLOSION_PROOF)
-            .build()
-            .register();
+        .block("confined_time_anvilon", Block::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
+        .properties(PropertiesProviderUtil::confinedAnvilon)
+        .blockstate(BlockStatProviderUtil::simple)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .register();
 
     public static BlockEntry<Block> CONFINED_SPACE_ANVILON = REGISTRATE
-            .block("confined_space_anvilon", Block::new)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
-            .properties(PropertiesProviderUtil::confinedAnvilon)
-            .blockstate(BlockStatProviderUtil::simple)
-            .item()
-            .initialProperties(() -> new Item.Properties().fireResistant())
-            .tag(ModItemTags.EXPLOSION_PROOF)
-            .build()
-            .register();
+        .block("confined_space_anvilon", Block::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
+        .properties(PropertiesProviderUtil::confinedAnvilon)
+        .blockstate(BlockStatProviderUtil::simple)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .register();
 
     public static BlockEntry<Block> CONFINED_MASS_ANVILON = REGISTRATE
-            .block("confined_mass_anvilon", Block::new)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
-            .properties(PropertiesProviderUtil::confinedAnvilon)
-            .blockstate(BlockStatProviderUtil::simple)
-            .item()
-            .initialProperties(() -> new Item.Properties().fireResistant())
-            .tag(ModItemTags.EXPLOSION_PROOF)
-            .build()
-            .register();
+        .block("confined_mass_anvilon", Block::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
+        .properties(PropertiesProviderUtil::confinedAnvilon)
+        .blockstate(BlockStatProviderUtil::simple)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .register();
 
     public static BlockEntry<Block> CONFINED_ENERGY_ANVILON = REGISTRATE
-            .block("confined_energy_anvilon", Block::new)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
-            .properties(PropertiesProviderUtil::confinedAnvilon)
-            .blockstate(BlockStatProviderUtil::simple)
-            .item()
-            .initialProperties(() -> new Item.Properties().fireResistant())
-            .tag(ModItemTags.EXPLOSION_PROOF)
-            .build()
-            .register();
+        .block("confined_energy_anvilon", Block::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
+        .properties(PropertiesProviderUtil::confinedAnvilon)
+        .blockstate(BlockStatProviderUtil::simple)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .register();
 
     public static BlockEntry<ConfinementChamberBlock> CONFINEMENT_CHAMBER = REGISTRATE
-            .block("confinement_chamber", ConfinementChamberBlock::new)
-            .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
-            .properties(PropertiesProviderUtil::confinedAnvilon)
-            .blockstate(BlockStatProviderUtil::simple)
-            .item()
-            .initialProperties(() -> new Item.Properties().fireResistant())
-            .tag(ModItemTags.EXPLOSION_PROOF)
-            .build()
-            .register();
+        .block("confinement_chamber", ConfinementChamberBlock::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
+        .properties(PropertiesProviderUtil::confinedAnvilon)
+        .blockstate(BlockStatProviderUtil::simple)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("ABA")
+                .pattern("B B")
+                .pattern("ABA")
+                .define('A', ModItems.EMBER_METAL_NUGGET)
+                .define('B', ModItems.MAGNET_INGOT)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.EMBER_METAL_NUGGET))
+                .save(provider);
+        })
+        .register();
 
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_FUNCTION_BLOCK.getKey());

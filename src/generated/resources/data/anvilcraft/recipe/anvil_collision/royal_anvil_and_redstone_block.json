@@ -11,17 +11,17 @@
     {
       "chance": 1.0,
       "count": 6,
-      "id": "anvilcraft:uranium_ingot"
+      "id": "anvilcraft:uranium_nugget"
     },
     {
       "chance": 0.5,
       "count": 4,
-      "id": "anvilcraft:uranium_ingot"
+      "id": "anvilcraft:uranium_nugget"
     },
     {
       "chance": 0.25,
       "count": 2,
-      "id": "anvilcraft:uranium_ingot"
+      "id": "anvilcraft:uranium_nugget"
     }
   ],
   "transform_blocks": []

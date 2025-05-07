@@ -46,7 +46,8 @@ public class ConfinementChamberBlock extends BaseEntityBlock {
         return RenderShape.MODEL;
     }
 
-    @Override
+    //Unimplemented for current version
+    /*@Override
     protected @NotNull ItemInteractionResult useItemOn(
             @NotNull ItemStack stack,
             @NotNull BlockState state,
@@ -65,7 +66,7 @@ public class ConfinementChamberBlock extends BaseEntityBlock {
         player.setItemInHand(hand, itemStack.copy());
         confinementChamberBlockEntity.getItemHandler().setStackInSlot(0, handItemStack.copy());
         return ItemInteractionResult.sidedSuccess(level.isClientSide);
-    }
+    }*/
 
     @Override
     public @NotNull BlockState playerWillDestroy(Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
