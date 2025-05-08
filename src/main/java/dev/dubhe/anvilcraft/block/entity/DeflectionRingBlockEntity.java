@@ -175,17 +175,17 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
             Direction facing = getBlockState().getValue(DeflectionRingBlock.FACING);
             Vec3 fixedPos = switch (facing) {
                 case UP ->
-                        new Vec3(fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity || entity instanceof Player ? -0.5 : 0, -fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                    new Vec3(fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity || entity instanceof Player ? -0.5 : 0, -fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
                 case DOWN ->
-                        new Vec3(-fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity || entity instanceof Player ? -0.5 : 0, fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
+                    new Vec3(-fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.x), entity instanceof FallingBlockEntity || entity instanceof Player ? -0.5 : 0, fixPos(deltaMovement.x, deltaMovement.z, deltaMovement.x));
                 case NORTH ->
-                        new Vec3(fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), -fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
+                    new Vec3(fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), -fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
                 case SOUTH ->
-                        new Vec3(-fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
+                    new Vec3(-fixPos(deltaMovement.y, deltaMovement.y, deltaMovement.x), fixPos(deltaMovement.x, deltaMovement.y, deltaMovement.x), 0);
                 case WEST ->
-                        new Vec3(0, fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), -fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
+                    new Vec3(0, fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), -fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
                 case EAST ->
-                        new Vec3(0, -fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
+                    new Vec3(0, -fixPos(deltaMovement.z, deltaMovement.z, deltaMovement.y), fixPos(deltaMovement.y, deltaMovement.z, deltaMovement.y));
             };
             deltaMovement = switch (facing) {
                 case UP -> new Vec3(deltaMovement.z, 0, -deltaMovement.x);
@@ -230,16 +230,16 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
         }
         Vector2d vector2d = new Vector2d(getBlockPos().getCenter().x, getBlockPos().getCenter().z);
         Optional<FallingGiantAnvilEntity> fallingGiantAnvilEntity = level.getEntitiesOfClass(FallingGiantAnvilEntity.class, new AABB(
-                        getBlockPos().getX(),
-                        getBlockPos().getY() - 2,
-                        getBlockPos().getZ(),
-                        getBlockPos().getX() + 1,
-                        getBlockPos().getY() - 12,
-                        getBlockPos().getZ() + 1
-                )).stream()
-                .sorted((e1, e2) -> new DistanceComparator(getBlockPos().getCenter()).compare(e1.position(), e2.position()))
-                .filter(entity -> vector2d.distance(entity.position().x, entity.position().z) <= 0.25)
-                .findFirst();
+                getBlockPos().getX(),
+                getBlockPos().getY() - 2,
+                getBlockPos().getZ(),
+                getBlockPos().getX() + 1,
+                getBlockPos().getY() - 12,
+                getBlockPos().getZ() + 1
+            )).stream()
+            .sorted((e1, e2) -> new DistanceComparator(getBlockPos().getCenter()).compare(e1.position(), e2.position()))
+            .filter(entity -> vector2d.distance(entity.position().x, entity.position().z) <= 0.25)
+            .findFirst();
         if (fallingGiantAnvilEntity.isPresent()) {
             if (giantAnvilPos != null && fallingGiantAnvilEntity.get().position().distanceTo(getBlockPos().getCenter()) < giantAnvilPos.getCenter().distanceTo(getBlockPos().getCenter())) {
                 giantAnvilPos = BlockPos.containing(fallingGiantAnvilEntity.get().position());
@@ -269,8 +269,8 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
         BlockPos newPos = getBlockPos().below(4);
         for (Cube3x3PartHalf part : Cube3x3PartHalf.values()) {
             level.setBlockAndUpdate(newPos.offset(part.getOffset()), ModBlocks.GIANT_ANVIL.getDefaultState()
-                    .setValue(GiantAnvilBlock.HALF, part)
-                    .setValue(GiantAnvilBlock.CUBE, part.equals(Cube3x3PartHalf.MID_CENTER) ? GiantAnvilCube.CENTER : GiantAnvilCube.CORNER)
+                .setValue(GiantAnvilBlock.HALF, part)
+                .setValue(GiantAnvilBlock.CUBE, part.equals(Cube3x3PartHalf.MID_CENTER) ? GiantAnvilCube.CENTER : GiantAnvilCube.CORNER)
             );
         }
         fallingGiantAnvilEntity.ifPresent(Entity::kill);

@@ -20,14 +20,14 @@ import java.util.Map;
 @Getter
 public class OutputBlock {
     public static final Codec<OutputBlock> CODEC = RecordCodecBuilder.create(it -> it.group(
-                    CodecUtil.BLOCK_CODEC.fieldOf("id").forGetter(OutputBlock::getBlock),
-                    Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("states", new HashMap<>()).forGetter(OutputBlock::getStates),
-                    Codec.FLOAT.orElse(1f).fieldOf("chance").forGetter(OutputBlock::getChance)
-            ).apply(it, OutputBlock::apply)
+            CodecUtil.BLOCK_CODEC.fieldOf("id").forGetter(OutputBlock::getBlock),
+            Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("states", new HashMap<>()).forGetter(OutputBlock::getStates),
+            Codec.FLOAT.orElse(1f).fieldOf("chance").forGetter(OutputBlock::getChance)
+        ).apply(it, OutputBlock::apply)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, OutputBlock> STREAM_CODEC = StreamCodec.of(
-            OutputBlock::encode, OutputBlock::decode
+        OutputBlock::encode, OutputBlock::decode
     );
 
     private static void encode(RegistryFriendlyByteBuf buf, OutputBlock outputBlock) {
@@ -37,8 +37,8 @@ public class OutputBlock {
 
     private static OutputBlock decode(RegistryFriendlyByteBuf buf) {
         return new OutputBlock(
-                CodecUtil.BLOCK_STATE_STREAM_CODEC.decode(buf),
-                buf.readFloat()
+            CodecUtil.BLOCK_STATE_STREAM_CODEC.decode(buf),
+            buf.readFloat()
         );
     }
 
@@ -56,8 +56,8 @@ public class OutputBlock {
 
     private static OutputBlock apply(Block block, Map<String, String> states, float chance) {
         return new OutputBlock(
-                new BlockItemStateProperties(states).apply(block.defaultBlockState()),
-                chance
+            new BlockItemStateProperties(states).apply(block.defaultBlockState()),
+            chance
         );
     }
 

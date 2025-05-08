@@ -11,21 +11,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public record BlockTransform(
-        InputBlock inputBlock,
-        OutputBlock outputBlock,
-        float chance,
-        int maxCount
+    InputBlock inputBlock,
+    OutputBlock outputBlock,
+    float chance,
+    int maxCount
 ) {
     public static final Codec<BlockTransform> CODEC = RecordCodecBuilder.create(it -> it.group(
-                    InputBlock.CODEC.fieldOf("input").forGetter(BlockTransform::inputBlock),
-                    OutputBlock.CODEC.fieldOf("output").forGetter(BlockTransform::outputBlock),
-                    Codec.FLOAT.fieldOf("chance").forGetter(BlockTransform::chance),
-                    Codec.INT.fieldOf("max_count").forGetter(BlockTransform::maxCount)
-            ).apply(it, BlockTransform::new)
+            InputBlock.CODEC.fieldOf("input").forGetter(BlockTransform::inputBlock),
+            OutputBlock.CODEC.fieldOf("output").forGetter(BlockTransform::outputBlock),
+            Codec.FLOAT.fieldOf("chance").forGetter(BlockTransform::chance),
+            Codec.INT.fieldOf("max_count").forGetter(BlockTransform::maxCount)
+        ).apply(it, BlockTransform::new)
     );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockTransform> STREAM_CODEC = StreamCodec.of(
-            BlockTransform::encode, BlockTransform::decode
+        BlockTransform::encode, BlockTransform::decode
     );
 
     private static void encode(RegistryFriendlyByteBuf buf, BlockTransform blockTransform) {
@@ -37,10 +37,10 @@ public record BlockTransform(
 
     private static BlockTransform decode(RegistryFriendlyByteBuf buf) {
         return new BlockTransform(
-                InputBlock.STREAM_CODEC.decode(buf),
-                OutputBlock.STREAM_CODEC.decode(buf),
-                buf.readFloat(),
-                buf.readVarInt()
+            InputBlock.STREAM_CODEC.decode(buf),
+            OutputBlock.STREAM_CODEC.decode(buf),
+            buf.readFloat(),
+            buf.readVarInt()
         );
     }
 

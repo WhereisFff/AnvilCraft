@@ -12,8 +12,8 @@ public class BlockStatProviderUtil {
 
     public static <E extends Block> void simple(DataGenContext<Block, E> context, RegistrateBlockstateProvider provider) {
         provider.simpleBlock(
-                context.get(),
-                DangerUtil.genConfiguredModel("block/" + context.getId().getPath()).get()
+            context.get(),
+            DangerUtil.genConfiguredModel("block/" + context.getId().getPath()).get()
         );
     }
 }

@@ -266,8 +266,8 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
 
     public static boolean canBeAccelerated(Entity entity) {
         return entity instanceof FallingBlockEntity fallingBlockEntity && fallingBlockEntity.getBlockState().is(BlockTags.ANVIL) && !fallingBlockEntity.getBlockState().is(ModBlockTags.NON_MAGNETIC)
-                || entity instanceof Projectile
-                || (entity instanceof Player player && isPlayerCanBeAccelerated(player));
+            || entity instanceof Projectile
+            || (entity instanceof Player player && isPlayerCanBeAccelerated(player));
     }
 
     private static boolean isPlayerCanBeAccelerated(Player player) {

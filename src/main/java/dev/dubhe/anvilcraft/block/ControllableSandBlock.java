@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.block;
 
-import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
 import net.minecraft.core.BlockPos;

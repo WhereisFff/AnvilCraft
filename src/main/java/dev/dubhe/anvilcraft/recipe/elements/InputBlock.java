@@ -21,11 +21,11 @@ import java.util.Optional;
 @Getter
 public class InputBlock {
     public static final Codec<InputBlock> CODEC =
-            RecordCodecBuilder.create(it -> it.group(
-                    TagKey.codec(Registries.BLOCK).optionalFieldOf("tag").forGetter(InputBlock::getOptionalTag),
-                    CodecUtil.BLOCK_CODEC.optionalFieldOf("id").forGetter(InputBlock::getOptionalBlock),
-                    Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("states").forGetter(InputBlock::getOptionalStates)
-            ).apply(it, InputBlock::new));
+        RecordCodecBuilder.create(it -> it.group(
+            TagKey.codec(Registries.BLOCK).optionalFieldOf("tag").forGetter(InputBlock::getOptionalTag),
+            CodecUtil.BLOCK_CODEC.optionalFieldOf("id").forGetter(InputBlock::getOptionalBlock),
+            Codec.unboundedMap(Codec.STRING, Codec.STRING).optionalFieldOf("states").forGetter(InputBlock::getOptionalStates)
+        ).apply(it, InputBlock::new));
 
     private Optional<Block> getOptionalBlock() {
         return Optional.ofNullable(this.block);
@@ -40,7 +40,7 @@ public class InputBlock {
     }
 
     public static final StreamCodec<RegistryFriendlyByteBuf, InputBlock> STREAM_CODEC = StreamCodec.of(
-            InputBlock::encode, InputBlock::decode
+        InputBlock::encode, InputBlock::decode
     );
 
     private static void encode(RegistryFriendlyByteBuf buf, InputBlock inputBlock) {
@@ -57,12 +57,12 @@ public class InputBlock {
     private static InputBlock decode(RegistryFriendlyByteBuf buf) {
         if (buf.readBoolean()) {
             return new InputBlock(
-                    CodecUtil.BLOCK_STREAM_CODEC.decode(buf),
-                    buf.readMap((buf1) -> buf.readUtf(), (buf1) -> buf.readUtf())
+                CodecUtil.BLOCK_STREAM_CODEC.decode(buf),
+                buf.readMap((buf1) -> buf.readUtf(), (buf1) -> buf.readUtf())
             );
         } else {
             return new InputBlock(
-                    new TagKey<>(Registries.BLOCK, buf.readResourceLocation())
+                new TagKey<>(Registries.BLOCK, buf.readResourceLocation())
             );
         }
     }

@@ -46,17 +46,17 @@ public class ItemTooltipManager {
         map.put(
             ModBlocks.MAGNET_BLOCK.asItem(),
             "Attracting the anvil below, when pushed and pulled by the piston, "
-            + "causes adjacent copper blocks to generate charges"
+                + "causes adjacent copper blocks to generate charges"
         );
         map.put(
             ModBlocks.HOLLOW_MAGNET_BLOCK.asItem(),
             "Attracting the anvil below, "
-            + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges"
+                + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges"
         );
         map.put(
             ModBlocks.FERRITE_CORE_MAGNET_BLOCK.asItem(),
             "Attracting the anvil below, "
-            + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges");
+                + "when pushed and pulled by the piston, causes adjacent copper blocks to generate charges");
         map.put(ModBlocks.BATCH_CRAFTER.asItem(), "Received a redstone signal and synthesized all internal items at once, with a power consumption of 4 kW");
         map.put(ModBlocks.ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.SMOOTH_ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");

@@ -214,7 +214,7 @@ public class AnvilCraftConfig implements ConfigData {
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(max = 24, min = 1)
     public int anvilCollisionCraftSpeed = 16;
-  
+
     public enum GoggleMode implements ConfigData {
         ALWAYS_SHOW,
         WEARING_HAMMER,

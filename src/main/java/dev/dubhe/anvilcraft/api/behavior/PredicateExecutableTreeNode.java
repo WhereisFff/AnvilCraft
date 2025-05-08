@@ -29,6 +29,6 @@ public class PredicateExecutableTreeNode<T> extends SetTreeNode<T> {
         return this;
     }
 
-    private static <T> void doNothing(ExecutionContext<T> t){
+    private static <T> void doNothing(ExecutionContext<T> t) {
     }
 }

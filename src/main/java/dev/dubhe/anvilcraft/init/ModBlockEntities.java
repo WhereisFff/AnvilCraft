@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.init;
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import dev.dubhe.anvilcraft.block.entity.AccelerationRingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActiveSilencerBlockEntity;
-import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargerBlockEntity;
@@ -24,6 +23,7 @@ import dev.dubhe.anvilcraft.block.entity.MineralFountainBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MobAmberBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.OverseerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PowerConverterBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.RemoteTransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ResentfulAmberBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.RubyLaserBlockEntity;
@@ -47,7 +47,7 @@ import dev.dubhe.anvilcraft.client.renderer.blockentity.VoidEnergyCollectorRende
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
-public class  ModBlockEntities {
+public class ModBlockEntities {
     public static final BlockEntityEntry<BatchCrafterBlockEntity> BATCH_CRAFTER = REGISTRATE
         .blockEntity("batch_crafter", BatchCrafterBlockEntity::new)
         .renderer(() -> BatchCrafterRenderer::new)
@@ -214,15 +214,15 @@ public class  ModBlockEntities {
         .register();
 
     public static final BlockEntityEntry<DeflectionRingBlockEntity> DEFLECTION_RING = REGISTRATE
-            .blockEntity("deflection_ring", DeflectionRingBlockEntity::createBlockEntity)
-            .validBlocks(ModBlocks.DEFLECTION_RING)
-            .register();
+        .blockEntity("deflection_ring", DeflectionRingBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.DEFLECTION_RING)
+        .register();
 
     public static final BlockEntityEntry<ConfinementChamberBlockEntity> CONFINEMENT_CHAMBER = REGISTRATE
-            .blockEntity("confinement_chamber", ConfinementChamberBlockEntity::createBlockEntity)
-            .renderer(() -> ConfinementChamberRenderer::new)
-            .validBlocks(ModBlocks.CONFINEMENT_CHAMBER)
-            .register();
+        .blockEntity("confinement_chamber", ConfinementChamberBlockEntity::createBlockEntity)
+        .renderer(() -> ConfinementChamberRenderer::new)
+        .validBlocks(ModBlocks.CONFINEMENT_CHAMBER)
+        .register();
 
     public static final BlockEntityEntry<VoidEnergyCollectorBlockEntity> VOID_ENERGY_COLLECTOR = REGISTRATE
         .blockEntity("void_energy_collector", VoidEnergyCollectorBlockEntity::createBlockEntity)

@@ -57,21 +57,21 @@ public class BlockStateUtil {
      * 为了让获取物品在没有level上下文的情况下也能运作，此处硬编码部分特殊方块
      */
     public static final Map<Block, ItemStack> HARDCODED_SPECIAL_AS_ITEM = ImmutableMap.<Block, ItemStack>builder()
-            .put(Blocks.ATTACHED_MELON_STEM, Items.MELON_SEEDS.getDefaultInstance())
-            .put(Blocks.ATTACHED_PUMPKIN_STEM, Items.PUMPKIN_SEEDS.getDefaultInstance())
-            .put(Blocks.BAMBOO_SAPLING, Items.BAMBOO.getDefaultInstance())
-            .put(Blocks.BIG_DRIPLEAF_STEM, Items.BIG_DRIPLEAF.getDefaultInstance())
-            .put(Blocks.TALL_GRASS, new ItemStack(Items.SHORT_GRASS, 2))
-            .put(Blocks.LARGE_FERN, new ItemStack(Items.FERN, 2))
-            .put(Blocks.PISTON_HEAD, ItemStack.EMPTY)
-            .build();
+        .put(Blocks.ATTACHED_MELON_STEM, Items.MELON_SEEDS.getDefaultInstance())
+        .put(Blocks.ATTACHED_PUMPKIN_STEM, Items.PUMPKIN_SEEDS.getDefaultInstance())
+        .put(Blocks.BAMBOO_SAPLING, Items.BAMBOO.getDefaultInstance())
+        .put(Blocks.BIG_DRIPLEAF_STEM, Items.BIG_DRIPLEAF.getDefaultInstance())
+        .put(Blocks.TALL_GRASS, new ItemStack(Items.SHORT_GRASS, 2))
+        .put(Blocks.LARGE_FERN, new ItemStack(Items.FERN, 2))
+        .put(Blocks.PISTON_HEAD, ItemStack.EMPTY)
+        .build();
 
     public static final Set<IntegerProperty> COUNT_PROPERTIES = ImmutableSet.of(
-            BlockStateProperties.LAYERS,
-            BlockStateProperties.PICKLES,
-            BlockStateProperties.EGGS,
-            BlockStateProperties.CANDLES,
-            BlockStateProperties.FLOWER_AMOUNT
+        BlockStateProperties.LAYERS,
+        BlockStateProperties.PICKLES,
+        BlockStateProperties.EGGS,
+        BlockStateProperties.CANDLES,
+        BlockStateProperties.FLOWER_AMOUNT
     );
 
     /**
@@ -103,12 +103,12 @@ public class BlockStateUtil {
             return cauldron.isFull(state) ? Items.POWDER_SNOW_BUCKET.getDefaultInstance() : ItemStack.EMPTY;
         }
         return Optional.of(cauldron)
-                .filter(c -> c.isFull(state))
-                .map(CauldronFluidContent::getForBlock)
-                .map(c -> c.fluid)
-                .map(Fluid::getBucket)
-                .map(Item::getDefaultInstance)
-                .orElse(ItemStack.EMPTY);
+            .filter(c -> c.isFull(state))
+            .map(CauldronFluidContent::getForBlock)
+            .map(c -> c.fluid)
+            .map(Fluid::getBucket)
+            .map(Item::getDefaultInstance)
+            .orElse(ItemStack.EMPTY);
     }
 
     /**
@@ -125,7 +125,7 @@ public class BlockStateUtil {
             case CropBlock crop -> ((CropBlockAccessor) crop).invoker$getBaseSeedId().asItem().getDefaultInstance();
             case FlowerPotBlock ignored -> Items.FLOWER_POT.getDefaultInstance();
             case GrowingPlantBodyBlock plantHead -> ((GrowingPlantAccessor) plantHead).invoker$getHeadBlock()
-                    .asItem().getDefaultInstance();
+                .asItem().getDefaultInstance();
             case CandleCakeBlock ignored -> Items.CAKE.getDefaultInstance();
             default -> HARDCODED_SPECIAL_AS_ITEM.getOrDefault(block, block.asItem().getDefaultInstance());
         };
@@ -137,20 +137,20 @@ public class BlockStateUtil {
             baseItem = ItemStack.EMPTY;
         } else if (isMultifaceLike(block)) {
             long faceCount = PipeBlock.PROPERTY_BY_DIRECTION.values().stream()
-                    .filter(state::hasProperty)
-                    .filter(state::getValue)
-                    .count();
+                .filter(state::hasProperty)
+                .filter(state::getValue)
+                .count();
             baseItem.setCount((int) faceCount);
         } else if (block instanceof SlabBlock && state.getValue(SlabBlock.TYPE) == SlabType.DOUBLE) {
             baseItem.setCount(2);
         } else {
             ItemStack finalBaseItem = baseItem;
             state.getProperties().stream()
-                    .filter(IntegerProperty.class::isInstance)
-                    .map(IntegerProperty.class::cast)
-                    .filter(COUNT_PROPERTIES::contains)
-                    .findFirst()
-                    .ifPresent(p -> finalBaseItem.setCount(state.getValue(p)));
+                .filter(IntegerProperty.class::isInstance)
+                .map(IntegerProperty.class::cast)
+                .filter(COUNT_PROPERTIES::contains)
+                .findFirst()
+                .ifPresent(p -> finalBaseItem.setCount(state.getValue(p)));
         }
         ItemStack additionalItem = switch (block) {
             case CandleCakeBlock cake -> cake.candleBlock.asItem().getDefaultInstance();
@@ -173,9 +173,9 @@ public class BlockStateUtil {
         @Override
         public @NotNull Stream<Holder.Reference<Block>> listElements() {
             return BuiltInRegistries.BLOCK.stream()
-                    .map(BuiltInRegistries.BLOCK::getResourceKey)
-                    .filter(Optional::isPresent)
-                    .map(key -> BuiltInRegistries.BLOCK.getHolderOrThrow(key.get()));
+                .map(BuiltInRegistries.BLOCK::getResourceKey)
+                .filter(Optional::isPresent)
+                .map(key -> BuiltInRegistries.BLOCK.getHolderOrThrow(key.get()));
         }
 
         @Override

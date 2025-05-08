@@ -53,7 +53,7 @@ abstract class FallingBlockEntityMixin extends Entity {
             value = "INVOKE",
             ordinal = 0,
             target =
-                    "Lnet/minecraft/world/entity/item/FallingBlockEntity;level()Lnet/minecraft/world/level/Level;")
+                "Lnet/minecraft/world/entity/item/FallingBlockEntity;level()Lnet/minecraft/world/level/Level;")
     )
     private void anvilPerFallOnGround(CallbackInfo ci) {
         if (this.level().isClientSide()) return;
@@ -68,7 +68,7 @@ abstract class FallingBlockEntityMixin extends Entity {
         @At(
             value = "INVOKE",
             target =
-                    "Lnet/minecraft/world/level/block/Fallable;onLand(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/item/FallingBlockEntity;)V")
+                "Lnet/minecraft/world/level/block/Fallable;onLand(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/entity/item/FallingBlockEntity;)V")
     )
     private void anvilFallOnGround(CallbackInfo ci, @Local BlockPos blockPos) {
         if (this.level().isClientSide()) return;
@@ -78,8 +78,8 @@ abstract class FallingBlockEntityMixin extends Entity {
         NeoForge.EVENT_BUS.post(event);
         if (event.isAnvilDamage()) {
             BlockState state = this.blockState.is(ModBlocks.ROYAL_ANVIL.get())
-                    ? this.blockState
-                    : AnvilBlock.damage(this.blockState);
+                ? this.blockState
+                : AnvilBlock.damage(this.blockState);
             if (state != null) this.level().setBlockAndUpdate(blockPos, state);
             else {
                 this.level().setBlockAndUpdate(blockPos, Blocks.AIR.defaultBlockState());
@@ -91,12 +91,12 @@ abstract class FallingBlockEntityMixin extends Entity {
 
     @SuppressWarnings("UnreachableCode")
     @Inject(
-            method = "causeFallDamage",
-            at =
-            @At(
-                    value = "INVOKE",
-                    target = "Lnet/minecraft/world/level/Level;getEntities(Lnet/minecraft/world/entity/Entity;"
-                            + "Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;)Ljava/util/List;")
+        method = "causeFallDamage",
+        at =
+        @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/Level;getEntities(Lnet/minecraft/world/entity/Entity;"
+                + "Lnet/minecraft/world/phys/AABB;Ljava/util/function/Predicate;)Ljava/util/List;")
     )
     private void anvilHurtEntity(
         float pFallDistance,
@@ -115,13 +115,13 @@ abstract class FallingBlockEntityMixin extends Entity {
     }
 
     @Inject(
-            method = "tick",
-            at =
-            @At(
-                value = "INVOKE",
-                target = "Lnet/minecraft/world/entity/item/FallingBlockEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V",
-                ordinal = 1
-            )
+        method = "tick",
+        at =
+        @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/item/FallingBlockEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V",
+            ordinal = 1
+        )
     )
     private void hurtEntity(CallbackInfo ci) {
         if (
@@ -133,7 +133,7 @@ abstract class FallingBlockEntityMixin extends Entity {
             this.level(),
             this,
             this.position().subtract(0, 0.5, 0).subtract(
-                    ((DeflectionEntity) this).isDeflected() ? ((DeflectionEntity) this).getFixedDeltaMovement() : this.getDeltaMovement()
+                ((DeflectionEntity) this).isDeflected() ? ((DeflectionEntity) this).getFixedDeltaMovement() : this.getDeltaMovement()
             ),
             this.position().subtract(0, 0.5, 0),
             this.getBoundingBox().expandTowards((((DeflectionEntity) this).isDeflected() ? ((DeflectionEntity) this).getFixedDeltaMovement() : this.getDeltaMovement()).multiply(-1, -1, -1)).inflate(1.0),

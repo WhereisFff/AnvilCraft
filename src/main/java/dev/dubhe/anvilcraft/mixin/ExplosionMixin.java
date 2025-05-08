@@ -56,21 +56,21 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     private Explosion.BlockInteraction blockInteraction;
 
     @Inject(
-            method = "finalizeExplosion",
-            at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/world/level/block/state/BlockState;onExplosionHit(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Explosion;Ljava/util/function/BiConsumer;)V",
-                    shift = At.Shift.AFTER),
-            locals = LocalCapture.CAPTURE_FAILSOFT)
+        method = "finalizeExplosion",
+        at =
+        @At(
+            value = "INVOKE",
+            target =
+                "Lnet/minecraft/world/level/block/state/BlockState;onExplosionHit(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Explosion;Ljava/util/function/BiConsumer;)V",
+            shift = At.Shift.AFTER),
+        locals = LocalCapture.CAPTURE_FAILSOFT)
     private void finalizeExplosion(
-            boolean pSpawnParticles,
-            CallbackInfo ci,
-            boolean flag,
-            List<Pair<ItemStack, BlockPos>> list,
-            ObjectListIterator<BlockPos> var4,
-            BlockPos blockpos) {
+        boolean pSpawnParticles,
+        CallbackInfo ci,
+        boolean flag,
+        List<Pair<ItemStack, BlockPos>> list,
+        ObjectListIterator<BlockPos> var4,
+        BlockPos blockpos) {
         BlockState state = this.level.getBlockState(blockpos);
         Block block = state.getBlock();
         if (block instanceof IHasMultiBlock multiBlock) {
@@ -80,9 +80,9 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
 
     @Inject(method = "explode()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
     private void anvilCraft$explosionBlockTransform(
-            CallbackInfo ci,
-            @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed,
-            @Local(ordinal = 0) BlockPos pos
+        CallbackInfo ci,
+        @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed,
+        @Local(ordinal = 0) BlockPos pos
     ) {
         ArrayList<BlockTransform> blockTransforms;
         if ((blockTransforms = anvilcraft$blockTransformMap.get(level.getBlockState(pos).getBlock())) != null) {
@@ -99,23 +99,23 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
     }
 
     @WrapOperation(
-            method = "explode",
-            at =
-            @At(
-                    value = "INVOKE",
-                    target =
-                            "Lnet/minecraft/world/level/ExplosionDamageCalculator;shouldBlockExplode(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;F)Z"
-            )
+        method = "explode",
+        at =
+        @At(
+            value = "INVOKE",
+            target =
+                "Lnet/minecraft/world/level/ExplosionDamageCalculator;shouldBlockExplode(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;F)Z"
+        )
     )
     private boolean anvilCraft$explosionBlockTransform(
-            ExplosionDamageCalculator instance,
-            Explosion explosion,
-            BlockGetter reader,
-            BlockPos pos,
-            BlockState state,
-            float power,
-            Operation<Boolean> original,
-            @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed
+        ExplosionDamageCalculator instance,
+        Explosion explosion,
+        BlockGetter reader,
+        BlockPos pos,
+        BlockState state,
+        float power,
+        Operation<Boolean> original,
+        @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed
     ) {
         return !isExplosionBlockTransformed.get() && original.call(instance, explosion, reader, pos, state, power);
     }

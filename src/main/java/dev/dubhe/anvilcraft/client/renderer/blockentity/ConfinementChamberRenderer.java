@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.client.renderer.blockentity;
 
-import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ConfinementChamberBlockEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.world.item.ItemStack;

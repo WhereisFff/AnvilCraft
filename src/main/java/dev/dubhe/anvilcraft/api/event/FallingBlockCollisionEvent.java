@@ -17,16 +17,16 @@ public class FallingBlockCollisionEvent extends EntityEvent {
     /**
      * 铁砧撞击方块(仅侧向撞击)
      *
-     * @param entity       撞击实体
-     * @param pos          被撞击方块位置
-     * @param level        世界
-     * @param speed 撞击速度
+     * @param entity 撞击实体
+     * @param pos    被撞击方块位置
+     * @param level  世界
+     * @param speed  撞击速度
      */
     public FallingBlockCollisionEvent(
-            FallingBlockEntity entity,
-            BlockPos pos,
-            Level level,
-            double speed
+        FallingBlockEntity entity,
+        BlockPos pos,
+        Level level,
+        double speed
     ) {
         super(entity);
         this.fallingBlockEntity = entity;

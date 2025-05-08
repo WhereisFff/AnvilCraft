@@ -24,19 +24,12 @@ import dev.dubhe.anvilcraft.item.EmberMetalHoeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
-import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHoeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalShovelItem;
 import dev.dubhe.anvilcraft.item.FrostMetalSwordItem;
-import dev.dubhe.anvilcraft.item.template.FrostMetalUpgradeTemplateItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterAxeItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterHoeItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
-import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.GeodeItem;
 import dev.dubhe.anvilcraft.item.GuideBookItem;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
@@ -44,14 +37,17 @@ import dev.dubhe.anvilcraft.item.IonoCraftItem;
 import dev.dubhe.anvilcraft.item.LevitationPowderItem;
 import dev.dubhe.anvilcraft.item.MagnetItem;
 import dev.dubhe.anvilcraft.item.ModFoods;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterAxeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterHoeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
 import dev.dubhe.anvilcraft.item.RoyalAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.RoyalAxeItem;
 import dev.dubhe.anvilcraft.item.RoyalHoeItem;
 import dev.dubhe.anvilcraft.item.RoyalPickaxeItem;
 import dev.dubhe.anvilcraft.item.RoyalShovelItem;
 import dev.dubhe.anvilcraft.item.RoyalSwordItem;
-import dev.dubhe.anvilcraft.item.template.MultipleToOneTemplateItem;
-import dev.dubhe.anvilcraft.item.template.RoyalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.SeedsPackItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
 import dev.dubhe.anvilcraft.item.SuperHeavyItem;
@@ -69,6 +65,10 @@ import dev.dubhe.anvilcraft.item.amulet.RubyAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SapphireAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SilenceAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.TopazAmuletItem;
+import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.template.FrostMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.template.MultipleToOneTemplateItem;
+import dev.dubhe.anvilcraft.item.template.RoyalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -306,7 +306,7 @@ public class ModItems {
         })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.PICKAXES,
-             Tags.Items.MINING_TOOL_TOOLS)
+            Tags.Items.MINING_TOOL_TOOLS)
         .register();
     public static final ItemEntry<FrostMetalAxeItem> FROST_METAL_AXE = REGISTRATE
         .item("frost_metal_axe", FrostMetalAxeItem::new)
@@ -322,7 +322,7 @@ public class ModItems {
         })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.AXES,
-             Tags.Items.MELEE_WEAPON_TOOLS)
+            Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<FrostMetalShovelItem> FROST_METAL_SHOVEL = REGISTRATE
         .item("frost_metal_shovel", FrostMetalShovelItem::new)
@@ -368,7 +368,7 @@ public class ModItems {
         })
         .model((ctx, provider) -> provider.handheld(ctx))
         .tag(ItemTags.SWORDS,
-             Tags.Items.MELEE_WEAPON_TOOLS)
+            Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<EmberMetalPickaxeItem> EMBER_METAL_PICKAXE = REGISTRATE
         .item("ember_metal_pickaxe", EmberMetalPickaxeItem::new)

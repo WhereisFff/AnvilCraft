@@ -69,19 +69,19 @@ public class FallingBlockCollisionEventListener {
                     ? Explosion.BlockInteraction.DESTROY_WITH_DECAY
                     : Explosion.BlockInteraction.DESTROY;
             Explosion explosion = new Explosion(
-                    level,
-                    null,
-                    damageSource,
-                    damageCalculator,
-                    x,
-                    y,
-                    z,
-                    radius,
-                    fire,
-                    blockInteraction,
-                    smallExplosionParticles,
-                    largeExplosionParticles,
-                    explosionSound
+                level,
+                null,
+                damageSource,
+                damageCalculator,
+                x,
+                y,
+                z,
+                radius,
+                fire,
+                blockInteraction,
+                smallExplosionParticles,
+                largeExplosionParticles,
+                explosionSound
             );
             ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.value().transformBlocks());
             explosion.explode();
@@ -142,15 +142,15 @@ public class FallingBlockCollisionEventListener {
                 level.removeBlock(pos, false);
             }
             level.explode(
-                    null,
-                    Explosion.getDefaultDamageSource(level, null),
-                    null,
-                    pos.getCenter().x,
-                    pos.getCenter().y,
-                    pos.getCenter().z,
-                    4F,
-                    true,
-                    Level.ExplosionInteraction.TNT
+                null,
+                Explosion.getDefaultDamageSource(level, null),
+                null,
+                pos.getCenter().x,
+                pos.getCenter().y,
+                pos.getCenter().z,
+                4F,
+                true,
+                Level.ExplosionInteraction.TNT
             );
         }
     }

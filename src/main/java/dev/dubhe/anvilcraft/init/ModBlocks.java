@@ -2,13 +2,11 @@ package dev.dubhe.anvilcraft.init;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.BlockEntry;
-import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent.Switch;
 import dev.dubhe.anvilcraft.block.AccelerationRingBlock;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
-import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.block.AmberBlock;
 import dev.dubhe.anvilcraft.block.ArrowBlock;
 import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
@@ -82,6 +80,7 @@ import dev.dubhe.anvilcraft.block.PiezoelectricCrystalBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterBigBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterMiddleBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterSmallBlock;
+import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.block.RedhotMetalBlock;
 import dev.dubhe.anvilcraft.block.ReinforcedConcreteBlock;
 import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
@@ -167,7 +166,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.ColoredFallingBlock;
-import net.minecraft.world.level.block.DiodeBlock;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -1461,9 +1459,9 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .loot(FlexibleMultiPartBlock::loot)
         .properties(it -> it
-                .isSuffocating(ModBlocks::never)
-                .noOcclusion()
-                .explosionResistance(1200)
+            .isSuffocating(ModBlocks::never)
+            .noOcclusion()
+            .explosionResistance(1200)
         )
         .item(FlexibleMultiPartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
         .build()
@@ -1476,9 +1474,9 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .loot(FlexibleMultiPartBlock::loot)
         .properties(it -> it
-                    .isSuffocating(ModBlocks::never)
-                    .noOcclusion()
-                    .explosionResistance(1200)
+            .isSuffocating(ModBlocks::never)
+            .noOcclusion()
+            .explosionResistance(1200)
         )
         .item(FlexibleMultiPartBlockItem<DirectionCube3x3PartHalf, DirectionProperty, Direction>::new)
         .build()
@@ -1748,11 +1746,11 @@ public class ModBlocks {
         .block("ember_metal_block", properties -> new EmberMetalBlock(properties, 0.5d))
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .tag(BlockTags.BEACON_BASE_BLOCKS,
-             BlockTags.MINEABLE_WITH_PICKAXE,
-             BlockTags.NEEDS_DIAMOND_TOOL,
-             BlockTags.WITHER_IMMUNE,
-             BlockTags.DRAGON_IMMUNE,
-             Tags.Blocks.STORAGE_BLOCKS)
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_DIAMOND_TOOL,
+            BlockTags.WITHER_IMMUNE,
+            BlockTags.DRAGON_IMMUNE,
+            Tags.Blocks.STORAGE_BLOCKS)
         .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
@@ -2229,7 +2227,7 @@ public class ModBlocks {
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/" + ctx.getName()));
             SingleItemRecipeBuilder.stonecutting(
-                Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
+                    Ingredient.of(ModBlocks.POLISHED_HEAVY_IRON_BLOCK),
                     RecipeCategory.BUILDING_BLOCKS,
                     ctx.get(),
                     4)
@@ -2680,10 +2678,10 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.EMERALD_BLOCK)
         .blockstate(BlockStatProviderUtil::none)
         .properties(properties -> properties
-                .noOcclusion()
-                .pushReaction(PushReaction.DESTROY)
+            .noOcclusion()
+            .pushReaction(PushReaction.DESTROY)
         )
-            .item()
+        .item()
         .tag(Tags.Items.STORAGE_BLOCKS,
             ModItemTags.STORAGE_BLOCKS_AMBER)
         .build()
@@ -2804,15 +2802,15 @@ public class ModBlocks {
             .addModels(new ConfiguredModel(provider.models().getExistingFile(ctx.getId().withPrefix("block/")))))
         .simpleItem()
         .recipe((ctx, provider) ->
-             ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
-                 .pattern("LRL")
-                 .pattern("RSR")
-                 .pattern("LRL")
-                 .define('L', ModItems.LEVITATION_POWDER)
-                 .define('R', Items.REDSTONE)
-                 .define('S', ItemTags.SAND)
-                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
-                 .save(provider)
+            ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
+                .pattern("LRL")
+                .pattern("RSR")
+                .pattern("LRL")
+                .define('L', ModItems.LEVITATION_POWDER)
+                .define('R', Items.REDSTONE)
+                .define('S', ItemTags.SAND)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
+                .save(provider)
         )
         .tag(BlockTags.MINEABLE_WITH_SHOVEL)
         .register();
@@ -2821,7 +2819,7 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.SAND)
         .item(LevitationPowderBlockItem::new)
         .recipe((ctx, provider) ->
-             ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
                 .requires(ModItems.LEVITATION_POWDER, 9)
                 .unlockedBy(
                     AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
@@ -3606,10 +3604,10 @@ public class ModBlocks {
             DangerUtil.genConfiguredModel("block/multiphase_matter_block").get()))
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS,
-             ModItemTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
+            ModItemTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
         .build()
         .tag(Tags.Blocks.STORAGE_BLOCKS,
-             ModBlockTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
+            ModBlockTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
                 .pattern("AAA")

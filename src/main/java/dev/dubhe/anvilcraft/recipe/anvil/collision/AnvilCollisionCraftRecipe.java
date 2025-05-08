@@ -37,11 +37,11 @@ import java.util.Map;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public record AnvilCollisionCraftRecipe(
-        InputBlock anvil,
-        boolean consume,
-        InputBlock hitBlock,
-        List<BlockTransform> transformBlocks,
-        List<OutputItem> outputItems
+    InputBlock anvil,
+    boolean consume,
+    InputBlock hitBlock,
+    List<BlockTransform> transformBlocks,
+    List<OutputItem> outputItems
 ) implements Recipe<AnvilCollisionCraftRecipe.Input> {
 
     @Override
@@ -93,15 +93,15 @@ public record AnvilCollisionCraftRecipe(
     public static class Serializer implements RecipeSerializer<AnvilCollisionCraftRecipe> {
 
         private static final MapCodec<AnvilCollisionCraftRecipe> CODEC = RecordCodecBuilder.mapCodec(it -> it.group(
-                InputBlock.CODEC.fieldOf("anvil").forGetter(AnvilCollisionCraftRecipe::anvil),
-                Codec.BOOL.fieldOf("consume").forGetter(AnvilCollisionCraftRecipe::consume),
-                InputBlock.CODEC.fieldOf("hitBlock").forGetter(AnvilCollisionCraftRecipe::hitBlock),
-                BlockTransform.CODEC.listOf().fieldOf("transform_blocks").forGetter(AnvilCollisionCraftRecipe::transformBlocks),
-                OutputItem.CODEC.listOf().fieldOf("output_items").forGetter(AnvilCollisionCraftRecipe::outputItems)
+            InputBlock.CODEC.fieldOf("anvil").forGetter(AnvilCollisionCraftRecipe::anvil),
+            Codec.BOOL.fieldOf("consume").forGetter(AnvilCollisionCraftRecipe::consume),
+            InputBlock.CODEC.fieldOf("hitBlock").forGetter(AnvilCollisionCraftRecipe::hitBlock),
+            BlockTransform.CODEC.listOf().fieldOf("transform_blocks").forGetter(AnvilCollisionCraftRecipe::transformBlocks),
+            OutputItem.CODEC.listOf().fieldOf("output_items").forGetter(AnvilCollisionCraftRecipe::outputItems)
         ).apply(it, AnvilCollisionCraftRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AnvilCollisionCraftRecipe> STREAM_CODEC = StreamCodec.of(
-                AnvilCollisionCraftRecipe.Serializer::encode, AnvilCollisionCraftRecipe.Serializer::decode
+            AnvilCollisionCraftRecipe.Serializer::encode, AnvilCollisionCraftRecipe.Serializer::decode
         );
 
         @Override
@@ -124,11 +124,11 @@ public record AnvilCollisionCraftRecipe(
 
         private static AnvilCollisionCraftRecipe decode(RegistryFriendlyByteBuf buf) {
             return new AnvilCollisionCraftRecipe(
-                    InputBlock.STREAM_CODEC.decode(buf),
-                    buf.readBoolean(),
-                    InputBlock.STREAM_CODEC.decode(buf),
-                    readList(buf, BlockTransform.STREAM_CODEC),
-                    readList(buf, OutputItem.STREAM_CODEC)
+                InputBlock.STREAM_CODEC.decode(buf),
+                buf.readBoolean(),
+                InputBlock.STREAM_CODEC.decode(buf),
+                readList(buf, BlockTransform.STREAM_CODEC),
+                readList(buf, OutputItem.STREAM_CODEC)
             );
         }
 
@@ -193,19 +193,19 @@ public record AnvilCollisionCraftRecipe(
         }
 
         public Builder transformBlock(
-                InputBlock inputBlock,
-                OutputBlock outputBlock,
-                float chance,
-                int maxCount
+            InputBlock inputBlock,
+            OutputBlock outputBlock,
+            float chance,
+            int maxCount
         ) {
             this.transformBlocks.add(new BlockTransform(inputBlock, outputBlock, chance, maxCount));
             return this;
         }
 
         public Builder transformBlock(
-                InputBlock inputBlock,
-                OutputBlock outputBlock,
-                int maxCount
+            InputBlock inputBlock,
+            OutputBlock outputBlock,
+            int maxCount
         ) {
             return transformBlock(inputBlock, outputBlock, 1f, maxCount);
         }
@@ -262,9 +262,9 @@ public record AnvilCollisionCraftRecipe(
         @Override
         public void save(RecipeOutput recipeOutput) {
             save(
-                    recipeOutput,
-                    AnvilCraft.of(this.anvil.getKey() + "_and_" + this.hitBlock.getKey())
-                            .withPrefix(getType() + "/"));
+                recipeOutput,
+                AnvilCraft.of(this.anvil.getKey() + "_and_" + this.hitBlock.getKey())
+                    .withPrefix(getType() + "/"));
         }
     }
 

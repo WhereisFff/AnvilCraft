@@ -102,7 +102,7 @@ public abstract class EntityMixin implements DeflectionEntity {
         isFixed.set(false);
         Vec3 vec3 = new Vec3(x - getX(), y - getY(), z - getZ());
         if (((Object) this instanceof Projectile || (Object) this instanceof FallingBlockEntity
-                || (Object) this instanceof Player) && vec3.length() > 0.98) {
+            || (Object) this instanceof Player) && vec3.length() > 0.98) {
             Vec3 s = position();
             Vec3 e = vec3.add(s);
             ArrayList<Pair<BlockPos, Double>> blockPosList = new ArrayList<>();
