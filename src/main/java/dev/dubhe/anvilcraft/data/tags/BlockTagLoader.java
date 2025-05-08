@@ -231,7 +231,7 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.SNOW))
             .add(findResourceKey(Blocks.MOSS_CARPET))
             .add(findResourceKey(Blocks.LILY_PAD));
-      
+
         provider.addTag(ModBlockTags.SPECTRAL_CAN_THROUGH)
             .addTag(Tags.Blocks.GLASS_BLOCKS)
             .addTag(Tags.Blocks.GLASS_PANES)

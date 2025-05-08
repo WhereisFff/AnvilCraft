@@ -57,8 +57,8 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
             pos.getY(),
             (double) pos.getZ() + 0.5,
             blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-            ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
-            : blockState
+                ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
+                : blockState
         );
         level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
         level.addFreshEntity(falling);
