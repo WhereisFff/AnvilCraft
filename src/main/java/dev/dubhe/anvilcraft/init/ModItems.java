@@ -968,7 +968,7 @@ public class ModItems {
                 .unlockedBy(
                     AnvilCraftDatagen.hasItem(ModItems.FROST_METAL_INGOT),
                     AnvilCraftDatagen.has(ModItems.FROST_METAL_INGOT))
-                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
+                .save(provider);
         })
         .register();
 
