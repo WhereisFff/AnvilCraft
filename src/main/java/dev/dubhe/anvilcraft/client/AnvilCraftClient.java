@@ -10,8 +10,6 @@ import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.init.ModFluids;
 import dev.dubhe.anvilcraft.init.ModItems;
 import me.shedaniel.autoconfig.AutoConfig;
-import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderPlugin;
-import net.createmod.ponder.foundation.PonderIndex;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
