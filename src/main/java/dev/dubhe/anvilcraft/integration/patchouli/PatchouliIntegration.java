@@ -1,0 +1,19 @@
+package dev.dubhe.anvilcraft.integration.patchouli;
+
+import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.integration.Integration;
+import dev.dubhe.anvilcraft.integration.patchouli.element.ItemTagVariableSerializer;
+import dev.dubhe.anvilcraft.integration.patchouli.page.PageSpotlightItemTag;
+import vazkii.patchouli.api.VariableHelper;
+import vazkii.patchouli.client.book.ClientBookRegistry;
+
+@Integration("patchouli")
+public class PatchouliIntegration {
+    public void apply() {
+        VariableHelper.instance().registerSerializer(new ItemTagVariableSerializer(), ItemTagVariableSerializer.getClazz());
+    }
+
+    public void applyClient() {
+        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("spotlight_item_tag"), PageSpotlightItemTag.class);
+    }
+}

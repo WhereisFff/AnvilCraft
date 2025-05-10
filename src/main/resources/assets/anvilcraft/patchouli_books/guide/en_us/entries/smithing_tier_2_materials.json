@@ -30,18 +30,18 @@
       "anchor": "frost_metal_tools",
       "recipe":"anvilcraft:smithing/frost_metal_pickaxe",
       "recipe2":"anvilcraft:smithing/frost_metal_axe",
-      "text": "使用浮霜金属锭升级你的工具，它们将自带$(l:basic_tool_properties#merciless)无情$(/l)属性。"
+      "text": "使用浮霜金属锭升级你的工具，它们将自带$(l:advanced_tool_properties#merciless)无情$(/l)属性。"
     },
     {
       "type": "patchouli:smithing",
       "recipe":"anvilcraft:smithing/frost_metal_shovel",
       "recipe2":"anvilcraft:smithing/frost_metal_hoe",
-      "text": "使用浮霜金属锭升级你的工具，它们将自带$(l:basic_tool_properties#merciless)无情$(/l)属性。"
+      "text": "使用浮霜金属锭升级你的工具，它们将自带$(l:advanced_tool_properties#merciless)无情$(/l)属性。"
     },
     {
       "type": "patchouli:smithing",
       "recipe":"anvilcraft:smithing/frost_metal_sword",
-      "text": "使用浮霜金属锭升级你的工具，它们将自带$(l:basic_tool_properties#merciless)无情$(/l)属性。"
+      "text": "使用浮霜金属锭升级你的工具，它们将自带$(l:advanced_tool_properties#merciless)无情$(/l)属性。"
     },
     {
       "type": "patchouli:spotlight",
@@ -80,19 +80,19 @@
       "anchor": "ember_metal_tools",
       "recipe":"anvilcraft:smithing/ember_metal_pickaxe",
       "recipe2":"anvilcraft:smithing/ember_metal_axe",
-      "text": "使用余烬金属锭升级你的工具，它们将自带$(l:basic_tool_properties#reforging)重铸$(/l)属性。"
+      "text": "使用余烬金属锭升级你的工具，它们将自带$(l:advanced_tool_properties#reforging)重铸$(/l)属性。"
     },
     {
       "type": "patchouli:smithing",
       "recipe":"anvilcraft:smithing/ember_metal_shovel",
       "recipe2":"anvilcraft:smithing/ember_metal_hoe",
-      "text": "使用余烬金属锭升级你的工具，它们将自带$(l:basic_tool_properties#reforging)重铸$(/l)属性。"
+      "text": "使用余烬金属锭升级你的工具，它们将自带$(l:advanced_tool_properties#reforging)重铸$(/l)属性。"
     },
     {
       "type": "patchouli:smithing",
       "recipe":"anvilcraft:smithing/ember_metal_sword",
       "recipe2":"anvilcraft:smithing/ember_anvil_hammer",
-      "text": "使用余烬金属锭升级你的工具，它们将自带$(l:basic_tool_properties#reforging)重铸$(/l)属性。"
+      "text": "使用余烬金属锭升级你的工具，它们将自带$(l:advanced_tool_properties#reforging)重铸$(/l)属性。"
     },
     {
       "type": "patchouli:spotlight",
@@ -105,8 +105,10 @@
       "recipe":"anvilcraft:multiphase_matter_block"
     },
     {
-      "type": "patchouli:spotlight",
-      "item":"anvilcraft:two_to_one_smithing_template",
+      "type": "anvilcraft:spotlight_item_tag",
+      "tag":"#anvilcraft:multiple_to_one_templates",
+      "title": "多合一锻造模板",
+      "link_recipe": true,
       "text": "将多个互不相同的锻造模板进行物品冲压加工获得，由模板数量决定获得的是几合一锻造模板。"
     },
     {
@@ -114,18 +116,18 @@
       "anchor": "multiphase_matter_tools",
       "recipe":"anvilcraft:smithing/multiphase_matter_pickaxe",
       "recipe2":"anvilcraft:smithing/multiphase_matter_axe",
-      "text": "使用多相物质升级你的工具，它们将自带$(l:basic_tool_properties#reforging)重铸$(/l)和$(l:basic_tool_properties#multiphase)多相$(/l)属性。"
+      "text": "使用多相物质升级你的工具，它们将自带$(l:advanced_tool_properties#reforging)重铸$(/l)和$(l:advanced_tool_properties#multiphase)多相$(/l)属性。"
     },
     {
       "type": "patchouli:smithing",
       "recipe":"anvilcraft:smithing/multiphase_matter_shovel",
       "recipe2":"anvilcraft:smithing/multiphase_matter_hoe",
-      "text": "使用多相物质升级你的工具，它们将自带$(l:basic_tool_properties#reforging)重铸$(/l)和$(l:basic_tool_properties#multiphase)多相$(/l)属性。"
+      "text": "使用多相物质升级你的工具，它们将自带$(l:advanced_tool_properties#reforging)重铸$(/l)和$(l:advanced_tool_properties#multiphase)多相$(/l)属性。"
     },
     {
       "type": "patchouli:smithing",
       "recipe":"anvilcraft:smithing/multiphase_matter_sword",
-      "text": "使用多相物质升级你的工具，它们将自带$(l:basic_tool_properties#reforging)重铸$(/l)和$(l:basic_tool_properties#multiphase)多相$(/l)属性。"
+      "text": "使用多相物质升级你的工具，它们将自带$(l:advanced_tool_properties#reforging)重铸$(/l)和$(l:advanced_tool_properties#multiphase)多相$(/l)属性。"
     }
   ]
 }

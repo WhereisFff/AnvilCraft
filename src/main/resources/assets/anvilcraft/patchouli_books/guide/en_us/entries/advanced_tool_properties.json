@@ -1,8 +1,8 @@
 {
   "name": "特殊工具属性",
-  "category": "anvilcraft:basic_gameplay",
+  "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:royal_steel_pickaxe",
-  "sortnum": 1005,
+  "sortnum": 4000,
   "pages": [
     {
       "type": "patchouli:text",
