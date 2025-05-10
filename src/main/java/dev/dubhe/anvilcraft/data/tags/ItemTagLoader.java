@@ -162,7 +162,7 @@ public class ItemTagLoader {
             .add(ModItems.CHARGED_NEUTRONIUM_INGOT.getKey());
         provider.addTag(ModItemTags.TEMPLATES)
             .addTag(ItemTags.TRIM_TEMPLATES)
-            .addTag(ModItemTags.MULTIPLE_TO_ONE_TEMPLATES)
+            .addTag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
             .add(findResourceKey(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
     }
 

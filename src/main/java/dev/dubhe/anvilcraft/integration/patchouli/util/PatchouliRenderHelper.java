@@ -22,12 +22,12 @@ public class PatchouliRenderHelper {
 
     public static void renderArray(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 110, 84, 9, 9, 256, 256);
+        guiGraphics.blit(CRAFTING, x, y, 72, 84, 9, 9, 256, 256);
     }
 
     public static void render1x1(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 16, 77, 24, 24, 256, 256);
+        guiGraphics.blit(CRAFTING, x, y, 84, 77, 24, 24, 256, 256);
     }
 
     public static void render1x2(GuiGraphics guiGraphics, int x, int y) {
@@ -52,12 +52,12 @@ public class PatchouliRenderHelper {
 
     public static void render2x2(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 155, 32, 43, 43, 256, 256);
+        guiGraphics.blit(CRAFTING, x, y, 110, 32, 43, 43, 256, 256);
     }
 
     public static void render2x3(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 155, 77, 43, 62, 256, 256);
+        guiGraphics.blit(CRAFTING, x, y, 110, 77, 43, 62, 256, 256);
     }
 
     public static void renderIngredientWithCount(
