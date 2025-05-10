@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.integration.patchouli.element.ItemTagVariableSerializer;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageSpotlightItemTag;
+import dev.dubhe.anvilcraft.integration.patchouli.page.PageTimeWarp;
 import vazkii.patchouli.api.VariableHelper;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
@@ -15,5 +16,6 @@ public class PatchouliIntegration {
 
     public void applyClient() {
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("spotlight_item_tag"), PageSpotlightItemTag.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("time_warp"), PageTimeWarp.class);
     }
 }
