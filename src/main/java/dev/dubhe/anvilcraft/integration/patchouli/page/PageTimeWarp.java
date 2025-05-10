@@ -70,9 +70,9 @@ public class PageTimeWarp extends PageDoubleRecipeRegistry<TimeWarpRecipe> {
         if (inputs.size() <= 4) {
             PatchouliRenderHelper.render2x2(graphics, recipeX - 8, recipeY + 8);
             for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 2 && i*2 + j < inputs.size(); j++) {
+                for (int j = 0; j < 2 && i * 2 + j < inputs.size(); j++) {
                     PatchouliRenderHelper.renderIngredientWithCount(
-                        parent, graphics, inputs.get(i*2 + j), recipeX - 4 + j*19, recipeY + 12 + i*19, mouseX, mouseY
+                        parent, graphics, inputs.get(i * 2 + j), recipeX - 4 + j * 19, recipeY + 12 + i * 19, mouseX, mouseY
                     );
                 }
             }
@@ -88,7 +88,8 @@ public class PageTimeWarp extends PageDoubleRecipeRegistry<TimeWarpRecipe> {
                     0,
                     0,
                     0xFF000000,
-                    false);
+                    false
+                );
             } else if (recipe.isProduceFluid()) {
                 pose.translate(recipeX - 6, recipeY + 52, 100);
                 pose.scale(0.5f, 0.5f, 1);
@@ -99,15 +100,16 @@ public class PageTimeWarp extends PageDoubleRecipeRegistry<TimeWarpRecipe> {
                     0,
                     0,
                     0xFF000000,
-                    false);
+                    false
+                );
             }
             pose.popPose();
         } else if (inputs.size() <= 6) {
             PatchouliRenderHelper.render2x3(graphics, recipeX - 6, recipeY);
             for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 3 && i*2 + j < inputs.size(); j++) {
+                for (int j = 0; j < 3 && i * 2 + j < inputs.size(); j++) {
                     PatchouliRenderHelper.renderIngredientWithCount(
-                        parent, graphics, inputs.get(i*2 + j), recipeX - 4 + j*19, recipeY + 4 + i*19, mouseX, mouseY
+                        parent, graphics, inputs.get(i * 2 + j), recipeX - 4 + j * 19, recipeY + 4 + i * 19, mouseX, mouseY
                     );
                 }
             }
