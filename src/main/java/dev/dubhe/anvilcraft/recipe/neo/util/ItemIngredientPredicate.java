@@ -60,6 +60,7 @@ public record ItemIngredientPredicate(
         }
     }
 
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private Optional<HolderSet<Item>> items = Optional.empty();
@@ -93,8 +94,8 @@ public record ItemIngredientPredicate(
             return this;
         }
 
-        public <T extends ItemSubPredicate> Builder withSubPredicate(ItemSubPredicate.Type<T> p_333844_, T p_334018_) {
-            this.subPredicates.put(p_333844_, p_334018_);
+        public <T extends ItemSubPredicate> Builder withSubPredicate(ItemSubPredicate.Type<T> type, T predicate) {
+            this.subPredicates.put(type, predicate);
             return this;
         }
 
