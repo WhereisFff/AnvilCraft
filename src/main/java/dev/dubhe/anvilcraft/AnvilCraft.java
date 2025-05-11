@@ -26,6 +26,9 @@ import dev.dubhe.anvilcraft.init.ModLootItemConditions;
 import dev.dubhe.anvilcraft.init.ModLootItemFunctions;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.ModNetworks;
+import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
+import dev.dubhe.anvilcraft.init.ModRecipePredicateTypes;
+import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.init.ModVillagers;
 import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
@@ -104,6 +107,10 @@ public class AnvilCraft {
         integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
+
+        ModRecipeTriggers.TRIGGER.register(modEventBus);
+        ModRecipePredicateTypes.PREDICATE_TYPE.register(modEventBus);
+        ModRecipeOutcomeTypes.OUTCOME_TYPE.register(modEventBus);
     }
 
     private static void registerEvents(@NotNull IEventBus eventBus) {
