@@ -2,68 +2,59 @@ package dev.dubhe.anvilcraft.recipe.neo;
 
 import lombok.Getter;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
 public class InWorldRecipeContext implements RecipeInput {
     @Getter
-    private final MinecraftServer server;
+    private final Level level;
     @Getter
-    private final ServerLevel level;
+    private final Vec3 pos;
     @Getter
-    private final Entity triggerEntity;
+    private final Entity entity;
+    private final Map<ResourceLocation, Object> data = Collections.synchronizedMap(new HashMap<>());
     @Getter
-    private final Vec3 triggerPos;
-    private final Map<ResourceLocation, Object> data = new HashMap<>();
-    @Getter
-    private final List<RecipePredicate<?>> passed = new ArrayList<>();
+    private final List<IRecipePredicate<?>> stack = Collections.synchronizedList(new LinkedList<>());
 
-    private InWorldRecipeContext(MinecraftServer server, ServerLevel level, Entity triggerEntity, Vec3 triggerPos) {
-        this.server = server;
+    public InWorldRecipeContext(Level level, Vec3 pos, Entity entity) {
         this.level = level;
-        this.triggerEntity = triggerEntity;
-        this.triggerPos = triggerPos;
+        this.pos = pos;
+        this.entity = entity;
     }
 
-    public static @NotNull InWorldRecipeContext of(MinecraftServer server, ServerLevel level, Entity triggerEntity, Vec3 triggerPos) {
-        return new InWorldRecipeContext(server, level, triggerEntity, triggerPos);
+    public void push(@NotNull IRecipePredicate<?> predicate) {
+        this.stack.add(predicate);
+        predicate.snapshot(this);
     }
 
-    public static @NotNull InWorldRecipeContext of(MinecraftServer server, ServerLevel level, Entity triggerEntity) {
-        return InWorldRecipeContext.of(server, level, triggerEntity, triggerEntity.position());
+    public void pop(@NotNull IRecipePredicate<?> predicate) {
+        predicate.rollback(this);
+        this.stack.removeLast();
     }
 
-    public <T> void setData(ResourceLocation location, T data) {
-        this.data.put(location, data);
+    public <T> void put(@NotNull InWorldRecipeData<T> key, T value) {
+        this.data.put(key.location(), value);
     }
 
-    public <T> T getData(ResourceLocation location, @SuppressWarnings("unused") Class<T> typeOfT) {
-        //noinspection unchecked
-        return (T) this.data.get(location);
+    @SuppressWarnings("unchecked")
+    public <T> T get(@NotNull InWorldRecipeData<T> key) {
+        T value = (T) this.data.get(key.location());
+        return value != null ? value : key.defaultValue();
     }
 
     @Override
     public @NotNull ItemStack getItem(int i) {
         return ItemStack.EMPTY;
-    }
-
-    public void pass(RecipePredicate<?> predicate) {
-        this.passed.add(predicate);
-        predicate.push(this);
-    }
-
-    public void pop() {
-        this.passed.removeLast().pop(this);
     }
 
     @Override
@@ -74,8 +65,5 @@ public class InWorldRecipeContext implements RecipeInput {
     @Override
     public boolean isEmpty() {
         return true;
-    }
-
-    public void reset() {
     }
 }

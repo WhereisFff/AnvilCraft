@@ -1,28 +1,47 @@
 package dev.dubhe.anvilcraft.init;
 
-import com.mojang.serialization.Lifecycle;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.neo.RecipeOutcomeType;
-import dev.dubhe.anvilcraft.recipe.neo.RecipePredicateType;
-import dev.dubhe.anvilcraft.recipe.neo.RecipeTrigger;
-import net.minecraft.core.MappedRegistry;
+import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
+import dev.dubhe.anvilcraft.recipe.neo.IRecipeTrigger;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.RegistryBuilder;
+import org.jetbrains.annotations.NotNull;
 
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ModRegistries {
-    public static final ResourceKey<Registry<RecipeTrigger>> RECIPE_TRIGGER = ResourceKey.createRegistryKey(AnvilCraft.of("recipe_trigger"));
-    public static final ResourceKey<Registry<RecipeOutcomeType<?>>> RECIPE_OUTCOME = ResourceKey.createRegistryKey(AnvilCraft.of("recipe_outcome"));
-    public static final ResourceKey<Registry<RecipePredicateType<?>>> RECIPE_PREDICATE = ResourceKey.createRegistryKey(AnvilCraft.of("recipe_predicate"));
+    public static final ResourceKey<Registry<IRecipeTrigger>> TRIGGER_KEY = ResourceKey.createRegistryKey(
+        AnvilCraft.of("trigger")
+    );
+    public static final Registry<IRecipeTrigger> TRIGGER_REGISTRY = new RegistryBuilder<>(TRIGGER_KEY)
+        .sync(true)
+        .maxId(512)
+        .create();
 
-    public static class BuiltIn {
-        public static final MappedRegistry<RecipeTrigger> RECIPE_TRIGGER = new MappedRegistry<>(
-            ModRegistries.RECIPE_TRIGGER, Lifecycle.stable(), false
-        );
-        public static final MappedRegistry<RecipeOutcomeType<?>> RECIPE_OUTCOME = new MappedRegistry<>(
-            ModRegistries.RECIPE_OUTCOME, Lifecycle.stable(), false
-        );
-        public static final MappedRegistry<RecipePredicateType<?>> RECIPE_PREDICATE = new MappedRegistry<>(
-            ModRegistries.RECIPE_PREDICATE, Lifecycle.stable(), false
-        );
+    public static final ResourceKey<Registry<IRecipeOutcome.Type<?>>> OUTCOME_KEY = ResourceKey.createRegistryKey(
+        AnvilCraft.of("outcome")
+    );
+    public static final Registry<IRecipeOutcome.Type<?>> OUTCOME_TYPE_REGISTRY = new RegistryBuilder<>(OUTCOME_KEY)
+        .sync(true)
+        .maxId(512)
+        .create();
+
+    public static final ResourceKey<Registry<IRecipePredicate.Type<?>>> PREDICATE_KEY = ResourceKey.createRegistryKey(
+        AnvilCraft.of("predicate")
+    );
+    public static final Registry<IRecipePredicate.Type<?>> PREDICATE_TYPE_REGISTRY = new RegistryBuilder<>(PREDICATE_KEY)
+        .sync(true)
+        .maxId(512)
+        .create();
+
+    @SubscribeEvent
+    public static void registerRegistries(@NotNull NewRegistryEvent event) {
+        event.register(TRIGGER_REGISTRY);
+        event.register(OUTCOME_TYPE_REGISTRY);
+        event.register(PREDICATE_TYPE_REGISTRY);
     }
 }
