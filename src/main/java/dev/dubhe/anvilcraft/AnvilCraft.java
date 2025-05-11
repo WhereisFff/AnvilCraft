@@ -82,7 +82,6 @@ public class AnvilCraft {
         ModItems.register();
         ModBlockEntities.register();
         ModMenuTypes.register();
-        ModDispenserBehavior.register();
         ModComponents.register(modEventBus);
         ModVillagers.register(modEventBus);
         ModRecipeTypes.register(modEventBus);
