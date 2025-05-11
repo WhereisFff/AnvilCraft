@@ -7,11 +7,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.function.Supplier;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Predicate;
+import java.util.function.Supplier;
 
 public class InventoryUtil {
     public static BiConsumer<ArrayList<ItemStack>, LivingEntity> compatConsumer = NonNullBiConsumer.noop();
@@ -46,8 +46,14 @@ public class InventoryUtil {
         return ItemStack.EMPTY;
     }
 
+    public static List<ItemStack> getItems(Inventory inventory, Predicate<ItemStack> filter) {
+        List<ItemStack> items = getItems(inventory);
+        items.removeIf(stack -> !filter.test(stack));
+        return items;
+    }
+
     public static List<ItemStack> getItems(Inventory inventory) {
-        ArrayList<ItemStack> items = new ArrayList<>();
+        List<ItemStack> items = new ArrayList<>();
 
         items.addAll(inventory.items);
         items.addAll(inventory.armor);

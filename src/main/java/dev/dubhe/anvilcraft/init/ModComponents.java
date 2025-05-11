@@ -1,8 +1,10 @@
 package dev.dubhe.anvilcraft.init;
 
+import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
+import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
@@ -11,6 +13,7 @@ import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -57,6 +60,14 @@ public class ModComponents {
             .networkSynchronized(ByteBufCodecs.INT)
     );
 
+    public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
+
+    public static final DataComponentType<Multiphase> MULTIPHASE =
+        register("multiphase", b -> b.persistent(Multiphase.CODEC)
+            .networkSynchronized(Multiphase.STREAM_CODEC));
+
+    public static final DataComponentType<Unit> MERCILESS = registerEmpty("merciless");
+
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();
         customizer.accept(builder);
@@ -67,5 +78,10 @@ public class ModComponents {
 
     public static void register(IEventBus bus) {
         DR.register(bus);
+    }
+
+    private static DataComponentType<Unit> registerEmpty(String name) {
+        return register(name, b -> b.persistent(Codec.EMPTY.codec())
+            .networkSynchronized(StreamCodec.unit(Unit.INSTANCE)));
     }
 }
