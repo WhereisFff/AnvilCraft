@@ -3950,7 +3950,6 @@ public class ModBlocks {
         return REGISTRATE
             .block(id, properties -> new TimeCountedPressurePlateBlock(BlockSetType.IRON, properties, tickCount))
             .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-                ModBlockTags.HAMMER_REMOVABLE,
                 BlockTags.PRESSURE_PLATES)
             .initialProperties(() -> block)
             .properties(properties -> properties
@@ -3983,7 +3982,6 @@ public class ModBlocks {
         return REGISTRATE
             .block(id, plateBlockFactory)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-                ModBlockTags.HAMMER_REMOVABLE,
                 BlockTags.PRESSURE_PLATES)
             .initialProperties(block::get)
             .properties(properties -> properties
@@ -4028,7 +4026,6 @@ public class ModBlocks {
         return REGISTRATE
             .block(id, plateBlockFactory)
             .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-                ModBlockTags.HAMMER_REMOVABLE,
                 BlockTags.PRESSURE_PLATES)
             .initialProperties(block::get)
             .properties(properties -> properties
