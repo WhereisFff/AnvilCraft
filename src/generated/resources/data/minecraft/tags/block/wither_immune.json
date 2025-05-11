@@ -9,6 +9,11 @@
     "anvilcraft:cut_ember_metal_slab",
     "anvilcraft:cut_ember_metal_stairs",
     "anvilcraft:ember_glass",
-    "anvilcraft:sturdy_deepslate"
+    "anvilcraft:sturdy_deepslate",
+    "anvilcraft:confined_time_anvilon",
+    "anvilcraft:confined_space_anvilon",
+    "anvilcraft:confined_mass_anvilon",
+    "anvilcraft:confined_energy_anvilon",
+    "anvilcraft:confinement_chamber"
   ]
 }

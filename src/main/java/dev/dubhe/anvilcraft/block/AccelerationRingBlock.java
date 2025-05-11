@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
+import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.block.entity.AccelerationRingBlockEntity;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -96,6 +98,11 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
             updateState(level, pos, SWITCH, IPowerComponent.Switch.OFF, 3);
         } else if (!isSignal && state.getValue(SWITCH) == IPowerComponent.Switch.OFF) {
             updateState(level, pos, SWITCH, IPowerComponent.Switch.ON, 3);
+            BlockPos centerPos = pos.subtract(state.getValue(HALF).getOffset()).offset(0, 1, 0);
+            if (level.getBlockEntity(centerPos) instanceof IPowerConsumer powerConsumer) {
+                if (powerConsumer.getGrid() == null) return;
+                powerConsumer.getGrid().flush();
+            }
         }
     }
 
@@ -142,5 +149,10 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
         return (level1, pos, state1, entity) -> {
             if (entity instanceof AccelerationRingBlockEntity be) be.tick();
         };
+    }
+
+    @Override
+    protected float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter getter, @NotNull BlockPos pos) {
+        return 1.0F;
     }
 }
