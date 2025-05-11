@@ -31,6 +31,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.Objects;
 
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getSourceItemHandler;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
@@ -45,6 +46,7 @@ public abstract class BaseChuteBlockEntity
     private final FilteredItemStackHandler itemHandler = new FilteredItemStackHandler(9) {
         @Override
         public void onContentsChanged(int slot) {
+            assert level != null;
             if (level.isClientSide) return;
             setChanged();
         }
@@ -147,7 +149,7 @@ public abstract class BaseChuteBlockEntity
                 } else {
                     Vec3 center = getBlockPos().relative(getOutputDirection()).getCenter();
                     AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
-                    if (getLevel().noCollision(aabb)) {
+                    if (Objects.requireNonNull(getLevel()).noCollision(aabb)) {
                         List<ItemEntity> itemEntities = getLevel()
                             .getEntitiesOfClass(
                                 ItemEntity.class,
@@ -200,7 +202,7 @@ public abstract class BaseChuteBlockEntity
                 if (source != null) {
                     resetCD |= ItemHandlerUtil.importFromTarget(getItemHandler(), 64, stack -> true, source);
                 } else {
-                    List<ItemEntity> itemEntities = getLevel()
+                    List<ItemEntity> itemEntities = Objects.requireNonNull(getLevel())
                         .getEntitiesOfClass(
                             ItemEntity.class,
                             new AABB(getBlockPos().relative(getInputDirection())),

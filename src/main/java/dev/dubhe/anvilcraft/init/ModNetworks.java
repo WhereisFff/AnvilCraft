@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
-import dev.dubhe.anvilcraft.network.AdvancedRepeaterUpdatePacket;
 import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
@@ -17,6 +16,7 @@ import dev.dubhe.anvilcraft.network.MachineOutputDirectionPacket;
 import dev.dubhe.anvilcraft.network.MutedSoundSyncPacket;
 import dev.dubhe.anvilcraft.network.PowerGridRemovePacket;
 import dev.dubhe.anvilcraft.network.PowerGridSyncPacket;
+import dev.dubhe.anvilcraft.network.PulseGeneratorUpdatePacket;
 import dev.dubhe.anvilcraft.network.RecipeCacheSyncPacket;
 import dev.dubhe.anvilcraft.network.RemoveMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.RemoveTeslaFilterPacket;
@@ -26,6 +26,8 @@ import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
+import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
+import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -169,9 +171,19 @@ public class ModNetworks {
             MachineCycleFilterModePacket.HANDLER
         );
         registrar.playToServer(
-            AdvancedRepeaterUpdatePacket.TYPE,
-            AdvancedRepeaterUpdatePacket.STREAM_CODEC,
-            AdvancedRepeaterUpdatePacket.HANDLER
+            PulseGeneratorUpdatePacket.TYPE,
+            PulseGeneratorUpdatePacket.STREAM_CODEC,
+            PulseGeneratorUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchPhasePacket.TYPE,
+            SwitchPhasePacket.STREAM_CODEC,
+            SwitchPhasePacket.HANDLER
+        );
+        registrar.playToServer(
+            SyncEmberGrindstonePacket.TYPE,
+            SyncEmberGrindstonePacket.STREAM_CODEC,
+            SyncEmberGrindstonePacket.HANDLER
         );
     }
 }

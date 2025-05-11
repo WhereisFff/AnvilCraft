@@ -22,6 +22,7 @@ import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.Objects;
 
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
 
@@ -90,7 +91,7 @@ public class SimpleChuteBlockEntity extends BlockEntity implements IItemHandlerH
             }
             if (!success) {
                 Vec3 center = getBlockPos().relative(getDirection()).getCenter();
-                List<ItemEntity> itemEntities = getLevel()
+                List<ItemEntity> itemEntities = Objects.requireNonNull(getLevel())
                     .getEntitiesOfClass(
                         ItemEntity.class,
                         new AABB(getBlockPos().relative(getDirection())),
