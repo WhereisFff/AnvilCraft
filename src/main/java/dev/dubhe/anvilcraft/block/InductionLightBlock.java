@@ -26,7 +26,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.RenderShape;
@@ -223,14 +222,6 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
             return;
         }
         level.setBlock(pos, state.setValue(POWERED, level.hasNeighborSignal(pos)), 2);
-    }
-
-    @Override
-    protected BlockState updateShape(BlockState state, Direction facing, BlockState facingState, LevelAccessor level, BlockPos currentPos, BlockPos facingPos) {
-        if (state.getValue(WATERLOGGED)) {
-            level.scheduleTick(currentPos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
-        }
-        return super.updateShape(state, facing, facingState, level, currentPos, facingPos);
     }
 
     @Override
