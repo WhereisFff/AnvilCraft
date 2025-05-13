@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:smithing_transform",
+  "addition": {
+    "item": "anvilcraft:ember_metal_block"
+  },
+  "base": {
+    "item": "anvilcraft:royal_dragon_rod"
+  },
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:ember_dragon_rod"
+  },
+  "template": {
+    "item": "anvilcraft:ember_metal_upgrade_smithing_template"
+  }
+}

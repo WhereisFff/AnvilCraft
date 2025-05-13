@@ -574,7 +574,7 @@ public class ModItems {
                     AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE))
                 .unlocks(AnvilCraftDatagen.hasItem(ModItems.DRAGON_ROD), AnvilCraftDatagen.has(ModItems.DRAGON_ROD))
                 .unlocks(AnvilCraftDatagen.hasItem(ModBlocks.ROYAL_STEEL_BLOCK), AnvilCraftDatagen.has(ModBlocks.ROYAL_STEEL_BLOCK))
-                .save(provider, ctx.getId().withSuffix("smithing/"));
+                .save(provider, ctx.getId().withPrefix("smithing/"));
         })
         .register();
     public static final ItemEntry<DragonRodItem> EMBER_DRAGON_ROD = REGISTRATE
@@ -599,7 +599,7 @@ public class ModItems {
                     RecipeCategory.TOOLS,
                     ctx.get())
                 .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
-                .save(provider, ctx.getId().withSuffix("smithing/"));
+                .save(provider, ctx.getId().withPrefix("smithing/"));
         })
         .register();
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRATE
