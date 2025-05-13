@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.api.itemstack.ItemStackUtil;
+import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -48,9 +47,9 @@ import java.util.List;
 
 import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.dropAllToPos;
-import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportAllToTarget;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportContentsToItemHandlers;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
+import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.isEmptyContainer;
 import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getMainPartPosToRemove;
 
 @ParametersAreNonnullByDefault
@@ -271,50 +270,65 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         }
         devourBlockPos = getMainPartPosToRemove(level, devourBlockPos);
         devourBlockState = level.getBlockState(devourBlockPos);
-        BlockEntity devouredBE = level.getBlockEntity(devourBlockPos);
         List<ItemStack> dropList = switch (anvil) {
             case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
             case EmberAnvilBlock ignore -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
             case null, default -> BreakBlockUtil.drop(level, devourBlockPos);
         };
         IItemHandler source = level.getCapability(Capabilities.ItemHandler.BLOCK, devourBlockPos, null);
+        boolean skipContentTransfer = source == null;
         for (ItemStack itemStack : dropList) {
-            boolean transferContents = source != null && ItemStackUtil.isDefaultComponent(itemStack);
+            skipContentTransfer |= ItemHandlerUtil.isEmptyContainer(itemStack);
             if (insertEnabled) {
                 for (IItemHandler target : itemHandlerList) {
                     itemStack = ItemHandlerHelper.insertItemStacked(target, itemStack, false);
-                    if (transferContents) exportAllToTarget(source, stack -> true, target);
                 }
             }
-            if (itemStack.isEmpty()) continue;
+            if (itemStack.isEmpty() && isEmptyContainer(source)) continue;
             if (dropOriginalPlace) {
                 Block.popResource(level, devourBlockPos, itemStack);
             } else {
                 AnvilUtil.dropItems(List.of(itemStack), level, center);
-                if (transferContents) dropAllToPos(source, level, center);
             }
         }
-        //特判雕纹书架一类
-        if (source != null && dropList.isEmpty()) {
+        if (!skipContentTransfer) {
             if (insertEnabled) exportContentsToItemHandlers(source, itemHandlerList);
             if (!dropOriginalPlace) dropAllToPos(source, level, center);
         }
-        //特判讲台
-        if (devouredBE instanceof LecternBlockEntity lectern) {
-            ItemStack bookStack = lectern.getBook();
-            if (insertEnabled)
-                for (IItemHandler target : itemHandlerList) {
-                    bookStack = ItemHandlerHelper.insertItem(target, bookStack, false);
-                    lectern.setBook(bookStack);
-                }
-            if (!dropOriginalPlace) {
-                AnvilUtil.dropItems(List.of(bookStack), level, center);
-                lectern.setBook(ItemStack.EMPTY);
-            }
+        if (level.getBlockEntity(devourBlockPos) instanceof LecternBlockEntity lectern) {
+            transferLecternContents(level, itemHandlerList, center, lectern, insertEnabled, dropOriginalPlace);
         }
         if (!(devourBlockState.getBlock() instanceof DoublePlantBlock))
             devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
         level.destroyBlock(devourBlockPos, false);
+    }
+
+    /**
+     * 特判讲台的转移
+     * 虽然溜槽/漏斗无法与讲台交互
+     * 但吞噬器这类直接破坏的
+     * 应该正常转移走才正常点(?)
+     */
+    private static void transferLecternContents(
+        ServerLevel level,
+        @Nullable List<IItemHandler> itemHandlerList,
+        Vec3 center,
+        LecternBlockEntity lectern,
+        boolean insertEnabled,
+        boolean dropOriginalPlace
+    ) {
+        ItemStack bookStack = lectern.getBook();
+        if (insertEnabled) {
+            assert itemHandlerList != null;
+            for (IItemHandler target : itemHandlerList) {
+                bookStack = ItemHandlerHelper.insertItem(target, bookStack, false);
+                lectern.setBook(bookStack);
+            }
+        }
+        if (!dropOriginalPlace) {
+            AnvilUtil.dropItems(List.of(bookStack), level, center);
+            lectern.setBook(ItemStack.EMPTY);
+        }
     }
 
     @Override

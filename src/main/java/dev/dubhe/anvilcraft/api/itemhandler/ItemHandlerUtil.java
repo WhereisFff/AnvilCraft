@@ -113,15 +113,6 @@ public class ItemHandlerUtil {
         }
     }
 
-    public static void exportItemsToItemHandlers(List<ItemStack> items, @Nullable List<IItemHandler> itemHandlerList) {
-        if (itemHandlerList == null) return;
-        for (var stack : items) {
-            for (IItemHandler target : itemHandlerList) {
-                stack = ItemHandlerHelper.insertItem(target, stack, false);
-            }
-        }
-    }
-
     public static void dropAllToPos(@NotNull IItemHandler source, Level level, Vec3 pos) {
         List<ItemStack> items = new ArrayList<>();
         for (int slot = 0; slot < source.getSlots(); slot++) {
@@ -193,5 +184,17 @@ public class ItemHandlerUtil {
             items.mergeInt(stack.getItem(), stack.getCount(), Integer::sum);
         }
         return items;
+    }
+
+    public static boolean isEmptyContainer(IItemHandler handler) {
+        if (handler != null)
+            for (int i = 0; i < handler.getSlots(); i++) {
+                if (!handler.getStackInSlot(i).isEmpty()) return true;
+            }
+        return false;
+    }
+
+    public static boolean isEmptyContainer(ItemStack stack) {
+        return ItemHandlerUtil.isEmptyContainer(stack.getCapability(Capabilities.ItemHandler.ITEM));
     }
 }
