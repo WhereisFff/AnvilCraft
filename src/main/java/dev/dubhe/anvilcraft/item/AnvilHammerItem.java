@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getMainPartPosToRemove;
+import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getChainableMainPartPos;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -104,7 +104,7 @@ public class AnvilHammerItem extends Item implements Equipable {
         BlockState state = level.getBlockState(pos);
         Block block = state.getBlock();
         if (!state.is(ModBlockTags.HAMMER_REMOVABLE) && !(block instanceof IHammerRemovable)) return;
-        pos = getMainPartPosToRemove(level, pos);
+        pos = getChainableMainPartPos(level, pos);
         state = level.getBlockState(pos);
         block = state.getBlock();
         BlockPos posToRemove = pos;
