@@ -58,6 +58,7 @@ public class AnvilCraftAdvancement {
                 false)
             .addCriterion("dragon_rod", InventoryChangeTrigger.TriggerInstance.hasItems(
                 ItemPredicate.Builder.item().of(ModItemTags.DRAGON_ROD)))
+            .rewards(AdvancementRewards.Builder.experience(50))
             .build(AnvilCraft.of("anvilcraft/dragon_rod"));
 
         provider.accept(root);

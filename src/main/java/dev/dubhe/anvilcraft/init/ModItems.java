@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.init;
 
+import com.mojang.datafixers.util.Unit;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -579,7 +580,9 @@ public class ModItems {
         .register();
     public static final ItemEntry<DragonRodItem> EMBER_DRAGON_ROD = REGISTRATE
         .item("ember_dragon_rod", DragonRodItem::new)
-        .properties(properties -> properties.durability(2031))
+        .properties(properties -> properties
+            .durability(2031)
+            .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE))
         .tag(ItemTags.MINING_ENCHANTABLE, ModItemTags.DRAGON_ROD)
         .model((ctx, provider) -> {
         })
