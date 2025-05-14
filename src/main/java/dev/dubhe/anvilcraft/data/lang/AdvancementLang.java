@@ -14,5 +14,7 @@ public class AdvancementLang {
             "Pick up the anvil, start from the vanilla, and enter the world of technology and magic");
         provider.add("advancements.anvilcraft.crab_claw.title", "Win half of the resurrection race");
         provider.add("advancements.anvilcraft.crab_claw.description", "Obtain crab claws from the crab trap");
+        provider.add("advancements.anvilcraft.dragon_rod.title", "Humanoid Shield Machine");
+        provider.add("advancements.anvilcraft.dragon_rod.description", "Craft any dragon rod");
     }
 }

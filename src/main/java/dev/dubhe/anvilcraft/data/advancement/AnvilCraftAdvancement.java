@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.data.advancement;
 import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
 import net.minecraft.advancements.Advancement;
@@ -10,6 +11,7 @@ import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.network.chat.Component;
 
@@ -43,7 +45,23 @@ public class AnvilCraftAdvancement {
             .addCriterion("crab_claw", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CRAB_CLAW))
             .build(AnvilCraft.of("anvilcraft/crab_claw"));
 
+        AdvancementHolder dragonRod = Advancement.Builder.advancement()
+            .parent(root)
+            .display(
+                ModItems.DRAGON_ROD,
+                Component.translatable("advancements.anvilcraft.dragon_rod.title"),
+                Component.translatable("advancements.anvilcraft.dragon_rod.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false)
+            .addCriterion("dragon_rod", InventoryChangeTrigger.TriggerInstance.hasItems(
+                ItemPredicate.Builder.item().of(ModItemTags.DRAGON_ROD)))
+            .build(AnvilCraft.of("anvilcraft/dragon_rod"));
+
         provider.accept(root);
         provider.accept(crabClaw);
+        provider.accept(dragonRod);
     }
 }

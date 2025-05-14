@@ -51,7 +51,7 @@ public record DragonRodDevourPacket(ResourceKey<Level> levelKey, InteractionHand
         ServerLevel level = Objects.requireNonNull(player.getServer()).getLevel(packet.levelKey);
         if (level == null) return;
         ctx.enqueueWork(() -> DragonRodItem.devourBlock(
-            level, player, player.getItemInHand(packet.hand),
+            level, player, packet.hand,
             packet.pos, level.getBlockState(packet.pos), packet.blockFace
         ));
     }

@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
@@ -65,6 +66,7 @@ public class PlayerEventListener {
         BlockPos pos = event.getPos();
         BlockState state = level.getBlockState(pos);
         Player player = event.getEntity();
+        InteractionHand hand = event.getHand();
         ItemStack stack = event.getItemStack();
         Direction blockFace = event.getFace();
         if (blockFace == null) return;
@@ -72,9 +74,9 @@ public class PlayerEventListener {
         if (state.getDestroySpeed(level, pos) == 0.0F) return;
 
         if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START && !level.isClientSide) {
-            DragonRodItem.devourBlock((ServerLevel) level, player, stack, pos, state, blockFace);
+            DragonRodItem.devourBlock((ServerLevel) level, player, hand, pos, state, blockFace);
         } else if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.CLIENT_HOLD) {
-            PacketDistributor.sendToServer(new DragonRodDevourPacket(level.dimension(), event.getHand(), pos, blockFace));
+            PacketDistributor.sendToServer(new DragonRodDevourPacket(level.dimension(), hand, pos, blockFace));
         }
     }
 

@@ -37,7 +37,7 @@ public class BreakBlockUtil {
         return DUMMY_SILK_TOUCH_TOOL;
     }
 
-    private static List<ItemStack> dropWithTool(ServerLevel level, BlockPos pos, ItemStack tool) {
+    public static List<ItemStack> dropWithTool(ServerLevel level, BlockPos pos, ItemStack tool) {
         BlockState state = level.getBlockState(pos);
         if (state.isAir()) return List.of();
         LootParams.Builder builder = new LootParams.Builder(level)

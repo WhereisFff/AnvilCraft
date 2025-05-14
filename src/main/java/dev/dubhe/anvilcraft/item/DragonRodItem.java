@@ -14,7 +14,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -28,12 +27,11 @@ import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.IItemHandler;
 
 import java.util.List;
 import java.util.Objects;
-
-import static dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer.anvilCraftBlockPlacer;
 
 @Slf4j
 public class DragonRodItem extends Item {
@@ -66,14 +64,22 @@ public class DragonRodItem extends Item {
         return new InteractionResultHolder<>(superHolder.getResult(), dragonRod);
     }
 
+    @Override
+    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
+        return miningEntity instanceof Player player && canDevour(player, stack);
+    }
+
     @SuppressWarnings("DataFlowIssue")
     public static void devourBlock(
-        ServerLevel level, Player player, ItemStack dragonRod,
+        ServerLevel level, Player player, InteractionHand hand,
         BlockPos centerPos, BlockState centerState, Direction clickedSide
     ) {
-        if (centerState.getDestroySpeed(level, centerPos) != 0.0F) return;
+        if (centerState.getDestroySpeed(level, centerPos) == 0.0F) return;
+        ItemStack dragonRod = player.getItemInHand(hand);
+        if (!canDevour(player, dragonRod)) return;
         int range = dragonRod.getOrDefault(ModComponents.DEVOUR_RANGE, -1);
         if (range == -1) return;
+        range = (range - 1) / 2;
         AABB devouringBox;
         switch (clickedSide) {
             case DOWN, UP -> devouringBox = AabbUtil.create(
@@ -96,8 +102,8 @@ public class DragonRodItem extends Item {
 
         for (BlockPos devouringPos : devouringPoses) {
             BlockState devouringState = level.getBlockState(devouringPos);
-            if (devouringState.isAir()) return;
-            if (devouringState.getBlock().defaultDestroyTime() < 0) return;
+            if (devouringState.isAir()) continue;
+            if (devouringState.getBlock().defaultDestroyTime() < 0) continue;
             if (devouringState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
                 && level.random.nextDouble() > 0.05) {
                 level.destroyBlock(devouringPos, false);
@@ -108,49 +114,70 @@ public class DragonRodItem extends Item {
             //devouringPos = getMainPartPosToRemove(level, devouringPos);
             devouringState = level.getBlockState(devouringPos);
 
-            List<ItemStack> dropList = BreakBlockUtil.drop(level, devouringPos);
-            Inventory inventory = player.getInventory();
-            for (ItemStack drop : dropList) {
-                if (drop.isEmpty()) continue;
-                ItemStack remaining = InventoryUtil.insertItem(inventory, drop);
-                if (!remaining.isEmpty()) {
-                    Block.popResource(level, devouringPos, remaining);
+            if (!player.getAbilities().instabuild) {
+                List<ItemStack> dropList = BreakBlockUtil.dropWithTool(level, devouringPos, dragonRod);
+                Inventory inventory = player.getInventory();
+                for (ItemStack drop : dropList) {
+                    if (drop.isEmpty()) continue;
+                    ItemStack remaining = InventoryUtil.insertItem(inventory, drop);
+                    if (!remaining.isEmpty()) {
+                        Block.popResource(level, devouringPos, remaining);
+                    }
                 }
-            }
-
-            //特判雕纹书架一类
-            IItemHandler source = level.getCapability(Capabilities.ItemHandler.BLOCK, devouringPos, null);
-            if (source != null && dropList.isEmpty()) {
-                for (IntListIterator it = IntIterators.fromTo(0, source.getSlots()); it.hasNext(); ) {
-                    int slot = it.nextInt();
-                    ItemStack stack = source.getStackInSlot(slot);
-                    if (stack.isEmpty()) continue;
-                    stack = InventoryUtil.insertItem(inventory, stack);
-                    if (!stack.isEmpty()) {
-                        Block.popResource(level, devouringPos, stack);
+                //特判雕纹书架一类
+                IItemHandler source = level.getCapability(Capabilities.ItemHandler.BLOCK, devouringPos, null);
+                if (source != null && dropList.isEmpty()) {
+                    for (IntListIterator it = IntIterators.fromTo(0, source.getSlots()); it.hasNext(); ) {
+                        int slot = it.nextInt();
+                        ItemStack stack = source.getStackInSlot(slot);
+                        if (stack.isEmpty()) continue;
+                        stack = InventoryUtil.insertItem(inventory, stack);
+                        if (!stack.isEmpty()) {
+                            Block.popResource(level, devouringPos, stack);
+                        }
+                    }
+                }
+                //特判讲台
+                BlockEntity devouringBlockEntity = level.getBlockEntity(devouringPos);
+                if (devouringBlockEntity instanceof LecternBlockEntity lectern) {
+                    ItemStack bookStack = lectern.getBook();
+                    bookStack = InventoryUtil.insertItem(inventory, bookStack);
+                    lectern.setBook(bookStack);
+                    if (!bookStack.isEmpty()) {
+                        Block.popResource(level, devouringPos, bookStack);
+                        lectern.setBook(ItemStack.EMPTY);
                     }
                 }
             }
-            //特判讲台
-            BlockEntity devouringBlockEntity = level.getBlockEntity(devouringPos);
-            if (devouringBlockEntity instanceof LecternBlockEntity lectern) {
-                ItemStack bookStack = lectern.getBook();
-                bookStack = InventoryUtil.insertItem(inventory, bookStack);
-                lectern.setBook(bookStack);
-                if (!bookStack.isEmpty()) {
-                    Block.popResource(level, devouringPos, bookStack);
-                    lectern.setBook(ItemStack.EMPTY);
-                }
-            }
             if (!(devouringState.getBlock() instanceof DoublePlantBlock)) {
-                devouringState.getBlock().playerWillDestroy(level, devouringPos, devouringState, anvilCraftBlockPlacer.getPlayer());
+                devouringState.getBlock().playerWillDestroy(level, devouringPos, devouringState, player);
             }
             level.destroyBlock(devouringPos, false);
         }
-        player.getCooldowns().addCooldown(dragonRod.getItem(), calculateDragonRodCooldown(player));
+        player.getCooldowns().addCooldown(dragonRod.getItem(), calculateCooldown(player));
+        dragonRod.hurtAndBreak(calculateDamage(dragonRod), level, player, item -> {
+            player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand));
+            EventHooks.onPlayerDestroyItem(player, dragonRod, hand);
+        });
     }
 
-    public static int calculateDragonRodCooldown(Player player) {
+    public static boolean canDevour(Player player, ItemStack dragonRod) {
+        return dragonRod.getDamageValue() < dragonRod.getMaxDamage() - 1
+            && !player.getCooldowns().isOnCooldown(dragonRod.getItem());
+    }
+
+    public static int calculateDamage(ItemStack dragonRod) {
+        Integer range = dragonRod.get(ModComponents.DEVOUR_RANGE);
+        int damage = switch (range) {
+            case 5 -> 1;
+            case 7 -> 2;
+            case 9 -> 4;
+            case null, default -> 0;
+        };
+        return Math.min(damage, Math.max(dragonRod.getMaxDamage() - dragonRod.getDamageValue(), 1));
+    }
+
+    public static int calculateCooldown(Player player) {
         int cooldown = 20;
         if (player.hasEffect(MobEffects.DIG_SPEED)) {
             cooldown -= Objects.requireNonNull(player.getEffect(MobEffects.DIG_SPEED)).getAmplifier() * 4;
