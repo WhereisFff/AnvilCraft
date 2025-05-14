@@ -48,7 +48,7 @@ public record ItemPredicate(
         boolean isOr, boolean isInverted
     ) implements Predicate<ItemStack> {
         public static final Codec<ItemSubPredicate> CODEC = RecordCodecBuilder.create(
-            p_337371_ -> p_337371_.group(
+            ins -> ins.group(
                     RegistryCodecs.homogeneousList(Registries.ITEM).optionalFieldOf("items").forGetter(ItemSubPredicate::items),
                     MinMaxBounds.Ints.CODEC.optionalFieldOf("count", MinMaxBounds.Ints.ANY).forGetter(ItemSubPredicate::count),
                     DataComponentPredicate.CODEC.optionalFieldOf("components", DataComponentPredicate.EMPTY)
@@ -58,7 +58,7 @@ public record ItemPredicate(
                     Codec.BOOL.fieldOf("isOr").forGetter(ItemSubPredicate::isOr),
                     Codec.BOOL.fieldOf("isInverted").forGetter(ItemSubPredicate::isInverted)
                 )
-                .apply(p_337371_, ItemSubPredicate::new)
+                .apply(ins, ItemSubPredicate::new)
         );
 
         public boolean test(ItemStack stack) {
@@ -78,6 +78,7 @@ public record ItemPredicate(
                 return true;
             }
         }
+        
         public static class Builder {
             private final ItemPredicate.Builder parent;
             private Optional<HolderSet<Item>> items = Optional.empty();
@@ -98,7 +99,7 @@ public record ItemPredicate(
             }
 
             public Builder of(ItemLike... items) {
-                this.items = Optional.of(HolderSet.direct(p_298756_ -> p_298756_.asItem().builtInRegistryHolder(), items));
+                this.items = Optional.of(HolderSet.direct(itemLike -> itemLike.asItem().builtInRegistryHolder(), items));
                 return this;
             }
 

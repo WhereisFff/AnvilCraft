@@ -13,12 +13,12 @@ import java.util.List;
 public record TagPredicate<T>(List<TagKey<T>> tags, boolean anyOf, boolean expected) {
     public static <T> Codec<TagPredicate<T>> codec(ResourceKey<? extends Registry<T>> registryKey) {
         return RecordCodecBuilder.create(
-            p_299212_ -> p_299212_.group(
+            ins -> ins.group(
                     TagKey.codec(registryKey).listOf().fieldOf("tags").forGetter(TagPredicate::tags),
                     Codec.BOOL.fieldOf("anyOf").forGetter(TagPredicate::anyOf),
                     Codec.BOOL.fieldOf("expected").forGetter(TagPredicate::expected)
                 )
-                .apply(p_299212_, TagPredicate::new)
+                .apply(ins, TagPredicate::new)
         );
     }
 

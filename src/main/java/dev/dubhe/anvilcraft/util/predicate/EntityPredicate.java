@@ -180,7 +180,7 @@ public record EntityPredicate(List<EntitySubPredicate> subPredicates, boolean is
                         return this.isOr == !this.isInverted;
                     } else if (this.passenger.isPresent()
                                && entity.getPassengers().stream().anyMatch(
-                        p_297893_ -> this.passenger.get().matches(level, position, p_297893_)) == this.isOr
+                        entity1 -> this.passenger.get().matches(level, position, entity1)) == this.isOr
                     ) {
                         return this.isOr == !this.isInverted;
                     } else if (this.targetedEntity.isPresent()
@@ -439,12 +439,12 @@ public record EntityPredicate(List<EntitySubPredicate> subPredicates, boolean is
         Optional<LocationPredicate> located, Optional<LocationPredicate> steppingOn, Optional<LocationPredicate> affectsMovement
     ) {
         public static final MapCodec<LocationWrapper> CODEC = RecordCodecBuilder.mapCodec(
-            p_348475_ -> p_348475_.group(
+            ins -> ins.group(
                     LocationPredicate.CODEC.optionalFieldOf("location").forGetter(LocationWrapper::located),
                     LocationPredicate.CODEC.optionalFieldOf("stepping_on").forGetter(LocationWrapper::steppingOn),
                     LocationPredicate.CODEC.optionalFieldOf("movement_affected_by").forGetter(LocationWrapper::affectsMovement)
                 )
-                .apply(p_348475_, LocationWrapper::new)
+                .apply(ins, LocationWrapper::new)
         );
     }
 }

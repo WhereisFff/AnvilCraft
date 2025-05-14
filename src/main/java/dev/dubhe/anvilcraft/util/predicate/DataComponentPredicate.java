@@ -20,17 +20,17 @@ import java.util.stream.Collectors;
 public final class DataComponentPredicate implements Predicate<DataComponentMap> {
     public static final Codec<DataComponentPredicate> CODEC = DataComponentType.VALUE_MAP_CODEC
         .xmap(
-            p_330430_ -> new DataComponentPredicate(
-                p_330430_.entrySet().stream().map(entry -> TypedDataComponent.createUnchecked(entry.getKey(), entry.getValue()))
+            valueMap -> new DataComponentPredicate(
+                valueMap.entrySet().stream().map(entry -> TypedDataComponent.createUnchecked(entry.getKey(), entry.getValue()))
                     .collect(Collectors.toList())),
-            p_337454_ -> p_337454_.expectedComponents
+            predicate -> predicate.expectedComponents
                 .stream()
-                .filter(p_337453_ -> !p_337453_.type().isTransient())
+                .filter(component -> !component.type().isTransient())
                 .collect(Collectors.toMap(TypedDataComponent::type, TypedDataComponent::value))
         );
     public static final StreamCodec<RegistryFriendlyByteBuf, DataComponentPredicate> STREAM_CODEC = TypedDataComponent.STREAM_CODEC
         .apply(ByteBufCodecs.list())
-        .map(DataComponentPredicate::new, p_331347_ -> p_331347_.expectedComponents);
+        .map(DataComponentPredicate::new, predicate -> predicate.expectedComponents);
     public static final DataComponentPredicate EMPTY = new DataComponentPredicate(List.of());
     private final List<TypedDataComponent<?>> expectedComponents;
 
