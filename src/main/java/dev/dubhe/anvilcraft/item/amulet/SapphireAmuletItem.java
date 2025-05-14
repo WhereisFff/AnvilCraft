@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.item.amulet;
 
+import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.init.ModAmuletTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -26,5 +29,10 @@ public class SapphireAmuletItem extends AbstractAmuletItem {
                 }
             }
         }
+    }
+
+    @Override
+    public Holder<AmuletType> getType() {
+        return ModAmuletTypes.SAPPHIRE.getDelegate();
     }
 }

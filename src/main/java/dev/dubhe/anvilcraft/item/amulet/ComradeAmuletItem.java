@@ -2,9 +2,12 @@ package dev.dubhe.anvilcraft.item.amulet;
 
 import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
+import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.init.ModAmuletTypes;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.Holder;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.FriendlyByteBuf;
@@ -36,6 +39,11 @@ public class ComradeAmuletItem extends AbstractAmuletItem {
     @Override
     void updateAccessory(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         stack.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, !getSignedPlayers(stack).isEmpty());
+    }
+
+    @Override
+    public Holder<AmuletType> getType() {
+        return ModAmuletTypes.COMRADE.getDelegate();
     }
 
     @Override

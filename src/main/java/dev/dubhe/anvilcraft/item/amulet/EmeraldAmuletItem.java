@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.item.amulet;
 
+import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.init.ModAmuletTypes;
+import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -18,5 +21,10 @@ public class EmeraldAmuletItem extends AbstractAmuletItem {
             //如果要直接加村庄英雄：player.addEffect(new MobEffectInstance(MobEffects.HERO_OF_THE_VILLAGE, 1, 2, false, false));
             player.setData(DISCOUNT_RATE, 0.3f);
         }
+    }
+
+    @Override
+    public Holder<AmuletType> getType() {
+        return ModAmuletTypes.EMERALD.getDelegate();
     }
 }

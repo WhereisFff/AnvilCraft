@@ -1,6 +1,9 @@
 package dev.dubhe.anvilcraft.item.amulet;
 
+import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.init.ModAmuletTypes;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
+import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -19,5 +22,10 @@ public class CatAmuletItem extends AbstractAmuletItem {
             root.putBoolean("creepers", true);
             root.putBoolean("phantoms", true);
         }
+    }
+
+    @Override
+    public Holder<AmuletType> getType() {
+        return ModAmuletTypes.CAT.getDelegate();
     }
 }

@@ -1,15 +1,15 @@
 package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.amulet.AmuletManager;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
-import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
-import dev.dubhe.anvilcraft.util.AmuletUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -26,9 +26,6 @@ import net.neoforged.neoforge.event.entity.living.LivingUseTotemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
-import java.util.UUID;
 
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
@@ -70,10 +67,10 @@ public class PlayerEventListener {
     public static void onPlayerUsingTotem(LivingUseTotemEvent event) {
         if (
             event.getEntity() instanceof ServerPlayer player
-                && InventoryUtil.hasItem(player.getInventory(), ModItems.AMULET_BOX.asItem())
+            && ModItems.AMULET_BOX.asStack().is(player.getItemInHand(event.getHandHolding()).getItem())
         ) {
             Inventory inventory = player.getInventory();
-            AmuletUtil.startRaffle(
+            AmuletManager.INSTANCE.startRaffle(
                 player, event.getSource(),
                 InventoryUtil.getFirstItem(inventory, ModItems.AMULET_BOX).get(ModComponents.TOTEM_COUNT) >= 0
             );
@@ -82,21 +79,10 @@ public class PlayerEventListener {
 
     @SubscribeEvent
     public static void onPlayerHurt(LivingIncomingDamageEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            DamageSource source = event.getSource();
-
-            try {
-                ItemStack comrade = AmuletUtil.getEffectiveAmulet(player, ModItems.COMRADE_AMULET);
-                UUID causingEntityUUID = Objects.requireNonNull(source.getEntity()).getUUID();
-                if (!comrade.equals(ItemStack.EMPTY) && ComradeAmuletItem.canIgnorePlayer(comrade, causingEntityUUID)) {
-                    event.setCanceled(true);
-                }
-            } catch (NullPointerException ignored) {
-            }
-
-            if (AmuletUtil.shouldIgnoreDamage(player, source)) {
-                event.setCanceled(true);
-            }
+        if (event.getEntity() instanceof ServerPlayer player
+            && AmuletManager.INSTANCE.shouldIgnoreDamage(player, event.getSource())
+        ) {
+            event.setCanceled(true);
         }
     }
 }
