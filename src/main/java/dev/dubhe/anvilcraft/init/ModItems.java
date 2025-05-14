@@ -582,6 +582,7 @@ public class ModItems {
         .item("ember_dragon_rod", DragonRodItem::new)
         .properties(properties -> properties
             .durability(2031)
+            .fireResistant()
             .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE))
         .tag(ItemTags.MINING_ENCHANTABLE, ModItemTags.DRAGON_ROD)
         .model((ctx, provider) -> {
