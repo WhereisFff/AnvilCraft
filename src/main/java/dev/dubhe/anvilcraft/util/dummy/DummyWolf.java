@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.util.dummy;
 
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.animal.Cat;
+import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
@@ -9,16 +9,16 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class DummyCat extends Cat {
-    public DummyCat(Level level) {
-        super(EntityType.CAT, level);
+public class DummyWolf extends Wolf {
+    public DummyWolf(Level level) {
+        super(EntityType.WOLF, level);
     }
 
-    public static DummyCat fromPlayer(Level level, @Nullable Player player) {
+    public static DummyWolf fromPlayer(Level level, @Nullable Player player) {
         if (player == null) return null;
-        DummyCat cat = new DummyCat(level);
-        cat.setPos(player.position());
-        return cat;
+        DummyWolf wolf = new DummyWolf(level);
+        wolf.setPos(player.position());
+        return wolf;
     }
 
     @Override

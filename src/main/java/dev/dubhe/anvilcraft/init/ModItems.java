@@ -649,8 +649,8 @@ public class ModItems {
         .register();
 
     private static ItemEntry<? extends AmuletItem> createAmuletItem(
-        String type, Supplier<DeferredHolder<AmuletType, ?>> typeGetter
-        , NonNullConsumer<JewelCraftingRecipe.Builder> builderConsumer
+        String type, Supplier<DeferredHolder<AmuletType, ?>> typeGetter,
+        NonNullConsumer<JewelCraftingRecipe.Builder> builderConsumer
     ) {
         return REGISTRATE
             .item(type + "_amulet", properties -> new AmuletItem(properties) {

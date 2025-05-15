@@ -39,7 +39,6 @@
     "ServerGamePacketListenerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SkeletonMixin",
     "VaultServerDataAccessor",
     "VibrationSystemUserMixin",
     "VillagerMixin",
