@@ -42,5 +42,51 @@ public abstract class AmuletType {
         return this.amulet.is(itemLike.asItem());
     }
 
-    public abstract boolean shouldIgnoreDamage(ServerPlayer player, DamageSource source);
+    public abstract void inventoryTick(ServerPlayer player, ItemStack amulet, boolean isEnabled);
+
+    public abstract boolean shouldImmuneDamage(ServerPlayer player, DamageSource source);
+
+    public static class Simple extends AmuletType {
+        public static final Codec<Simple> CODEC = AmuletType.codec(Simple::new);
+
+        public Simple(DamageSourcePredicate damagePredicate, ItemStack amulet) {
+            super(damagePredicate, amulet);
+        }
+
+        @Override
+        public Codec<? extends AmuletType> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public void inventoryTick(ServerPlayer player, ItemStack amulet, boolean isEnabled) {
+        }
+
+        @Override
+        public boolean shouldImmuneDamage(ServerPlayer player, DamageSource source) {
+            return false;
+        }
+    }
+
+    public static class ImmuneDamageFromObtain extends AmuletType {
+        public static final Codec<ImmuneDamageFromObtain> CODEC = AmuletType.codec(ImmuneDamageFromObtain::new);
+
+        public ImmuneDamageFromObtain(DamageSourcePredicate damagePredicate, ItemStack amulet) {
+            super(damagePredicate, amulet);
+        }
+
+        @Override
+        public Codec<? extends AmuletType> codec() {
+            return CODEC;
+        }
+
+        @Override
+        public void inventoryTick(ServerPlayer player, ItemStack amulet, boolean isEnabled) {
+        }
+
+        @Override
+        public boolean shouldImmuneDamage(ServerPlayer player, DamageSource source) {
+            return this.matchesByDamage(player, source);
+        }
+    }
 }

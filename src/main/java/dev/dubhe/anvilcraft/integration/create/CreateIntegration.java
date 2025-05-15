@@ -6,7 +6,6 @@ import com.simibubi.create.api.registry.SimpleRegistry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletType;
-import dev.dubhe.anvilcraft.api.amulet.SimpleAmuletType;
 import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.block.GlowingMetalBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
@@ -19,7 +18,7 @@ import dev.dubhe.anvilcraft.init.ModItemGroups;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModRegistries;
-import dev.dubhe.anvilcraft.item.amulet.CogwheelAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.util.predicate.DamageSourcePredicate;
 import net.minecraft.core.BlockPos;
@@ -92,8 +91,8 @@ public class CreateIntegration {
         }
     }
 
-    public static final ItemEntry<? extends CogwheelAmuletItem> COGWHEEL_AMULET = REGISTRATE
-        .item("cogwheel_amulet", properties -> new CogwheelAmuletItem(properties) {
+    public static final ItemEntry<? extends AmuletItem> COGWHEEL_AMULET = REGISTRATE
+        .item("cogwheel_amulet", properties -> new AmuletItem(properties) {
             @Override
             public Holder<AmuletType> getType() {
                 return COGWHEEL.getDelegate();
@@ -109,8 +108,8 @@ public class CreateIntegration {
         .register();
 
     private static final DeferredRegister<AmuletType> REGISTER = DeferredRegister.create(ModRegistries.AMULET_TYPE_KEY, AnvilCraft.MOD_ID);
-    private static final DeferredHolder<AmuletType, SimpleAmuletType> COGWHEEL = REGISTER.register(
-        "cogwheel", () -> new SimpleAmuletType(
+    private static final DeferredHolder<AmuletType, ? extends AmuletType> COGWHEEL = REGISTER.register(
+        "cogwheel", () -> new AmuletType.ImmuneDamageFromObtain(
         DamageSourcePredicate.Builder.builder()
             .type(ModDamageTypeTags.COGWHEEL_AMULET_VALID)
             .type("create")

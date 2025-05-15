@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.component.BundleContents;
 import org.apache.commons.lang3.math.Fraction;
 
 import javax.annotation.Nullable;
@@ -89,6 +88,10 @@ public final class BoxContents implements TooltipComponent {
 
     public Stream<ItemStack> itemCopyStream() {
         return this.items().stream().map(ItemStack::copy);
+    }
+
+    public List<ItemStack> amulets() {
+        return this.amulets;
     }
 
     public List<ItemStack> items() {

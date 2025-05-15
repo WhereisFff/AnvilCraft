@@ -12,7 +12,7 @@
     "BlockMixin",
     "ComparatorBlockEntityMixin",
     "CraftingMenuMixin",
-    "CreeperMixin",
+    "AvoidEntityGoalMixin",
     "DamageSourcesMixin",
     "DataComponentPredicateMixin",
     "DefaultDispenseItemBehaviorMixin",
