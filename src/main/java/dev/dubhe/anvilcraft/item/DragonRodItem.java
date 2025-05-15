@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
@@ -154,7 +155,15 @@ public class DragonRodItem extends Item {
             }
             level.destroyBlock(devouringPos, false);
         }
-        player.getCooldowns().addCooldown(dragonRod.getItem(), calculateCooldown(player));
+
+        if (dragonRod.getItem() instanceof DragonRodItem) {
+            player.getCooldowns().addCooldown(ModItems.DRAGON_ROD.asItem(), calculateCooldown(player));
+            player.getCooldowns().addCooldown(ModItems.ROYAL_DRAGON_ROD.asItem(), calculateCooldown(player));
+            player.getCooldowns().addCooldown(ModItems.EMBER_DRAGON_ROD.asItem(), calculateCooldown(player));
+        } else {
+            player.getCooldowns().addCooldown(dragonRod.getItem(), calculateCooldown(player));
+        }
+
         dragonRod.hurtAndBreak(calculateDamage(dragonRod), level, player, item -> {
             player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand));
             EventHooks.onPlayerDestroyItem(player, dragonRod, hand);
