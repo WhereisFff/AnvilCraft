@@ -88,30 +88,7 @@ public class ItemHandlerUtil implements IItemHandler {
                 i++;
                 inputBlockPos = inputBlockPos.relative(context.getOpposite());
             } else {
-                IItemHandler input = level.getCapability(
-                    Capabilities.ItemHandler.BLOCK,
-                    inputBlockPos,
-                    context
-                );
-                if (input != null) {
-                    return input;
-                }
-                AABB aabb = new AABB(inputBlockPos);
-                List<ContainerEntity> entities =
-                    level.getEntitiesOfClass(
-                            Entity.class,
-                            aabb,
-                            e -> e instanceof ContainerEntity && !((ContainerEntity) e).isEmpty()
-                        ).stream()
-                        .map(it -> (ContainerEntity) it)
-                        .toList();
-                if (!entities.isEmpty()) {
-                    input = ((Entity) entities.getFirst()).getCapability(
-                        Capabilities.ItemHandler.ENTITY,
-                        null
-                    );
-                }
-                return input;
+                return getSourceItemHandler(inputBlockPos, context, level);
             }
         } while (i < AnvilCraft.config.blockPlacerRecursiveRetrievalDistanceMax);
         return null;
