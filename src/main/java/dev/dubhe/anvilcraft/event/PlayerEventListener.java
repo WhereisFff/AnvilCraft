@@ -69,9 +69,11 @@ public class PlayerEventListener {
         InteractionHand hand = event.getHand();
         ItemStack stack = event.getItemStack();
         Direction blockFace = event.getFace();
+
         if (blockFace == null) return;
-        if (!stack.has(ModComponents.DEVOUR_RANGE)) return;
         if (state.getDestroySpeed(level, pos) == 0.0F) return;
+        if (!stack.has(ModComponents.DEVOUR_RANGE)) return;
+        if (!DragonRodItem.canDevour(player, stack)) event.setCanceled(true);
 
         if (event.getAction() == PlayerInteractEvent.LeftClickBlock.Action.START && !level.isClientSide) {
             DragonRodItem.devourBlock((ServerLevel) level, player, hand, pos, state, blockFace);

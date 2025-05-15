@@ -67,7 +67,7 @@ public class DragonRodItem extends Item {
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
-        return miningEntity instanceof Player player && canDevour(player, stack);
+        return false;
     }
 
     @SuppressWarnings("DataFlowIssue")

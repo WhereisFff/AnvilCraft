@@ -10,6 +10,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
@@ -48,7 +49,8 @@ public record DragonRodDevourPacket(ResourceKey<Level> levelKey, InteractionHand
 
     private static void serverHandler(DragonRodDevourPacket packet, IPayloadContext ctx) {
         Player player = ctx.player();
-        ServerLevel level = Objects.requireNonNull(player.getServer()).getLevel(packet.levelKey);
+        if (!(player instanceof ServerPlayer serverPlayer)) return;
+        ServerLevel level = serverPlayer.server.overworld().getServer().getLevel(packet.levelKey);
         if (level == null) return;
         ctx.enqueueWork(() -> DragonRodItem.devourBlock(
             level, player, packet.hand,
