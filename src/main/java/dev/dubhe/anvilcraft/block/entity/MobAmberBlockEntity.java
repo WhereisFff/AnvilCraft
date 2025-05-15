@@ -36,7 +36,7 @@ public class MobAmberBlockEntity extends HasMobBlockEntity {
     }
 
     private void setYRot(LivingEntity displayEntity, float yRot) {
-        if (displayEntity.getYHeadRot() != yRot) {
+        if (displayEntity.yHeadRot != yRot) {
             displayEntity.yHeadRot = yRot;
             displayEntity.yHeadRotO = yRot;
         }
