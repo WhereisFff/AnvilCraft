@@ -72,7 +72,7 @@ public class PlayerEventListener {
             Inventory inventory = player.getInventory();
             AmuletManager.INSTANCE.startRaffle(
                 player, event.getSource(),
-                InventoryUtil.getFirstItem(inventory, ModItems.AMULET_BOX).get(ModComponents.TOTEM_COUNT) >= 0
+                InventoryUtil.getFirstItem(inventory, ModItems.AMULET_BOX).get(ModComponents.BOX_CONTENTS).totemCount() >= 0
             );
         }
     }

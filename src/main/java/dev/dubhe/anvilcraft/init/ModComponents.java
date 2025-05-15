@@ -4,12 +4,12 @@ import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
+import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
-import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
@@ -56,11 +56,6 @@ public class ModComponents {
             .networkSynchronized(ByteBufCodecs.INT)
     );
 
-    public static final DataComponentType<Integer> TOTEM_COUNT = register(
-        "totem_count", b -> b.persistent(Codec.INT)
-            .networkSynchronized(ByteBufCodecs.INT)
-    );
-
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
     public static final DataComponentType<Multiphase> MULTIPHASE =
@@ -69,9 +64,9 @@ public class ModComponents {
 
     public static final DataComponentType<Unit> MERCILESS = registerEmpty("merciless");
 
-    public static final DataComponentType<AmuletBoxItem.BoxContents> BOX_CONTENTS = register(
-        "box_contents", b -> b.persistent(AmuletBoxItem.BoxContents.CODEC)
-            .networkSynchronized(AmuletBoxItem.BoxContents.STREAM_CODEC));
+    public static final DataComponentType<BoxContents> BOX_CONTENTS = register(
+        "box_contents", b -> b.persistent(BoxContents.CODEC)
+            .networkSynchronized(BoxContents.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();

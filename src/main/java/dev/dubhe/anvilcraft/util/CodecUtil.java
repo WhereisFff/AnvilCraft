@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.util;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -13,6 +14,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -163,4 +165,8 @@ public class CodecUtil {
             (buf, blockState) -> buf.writeInt(Block.getId(blockState)),
             (buf) -> Block.stateById(buf.readInt())
         );
+
+    public static <B, F, S> StreamCodec<B, Pair<F, S>> createPairStreamCodec(StreamCodec<? super B, F> first, StreamCodec<? super B, S> second) {
+        return StreamCodec.composite(first, Pair::getFirst, second, Pair::getSecond, Pair::new);
+    }
 }
