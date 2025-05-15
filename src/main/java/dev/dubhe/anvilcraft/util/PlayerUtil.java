@@ -17,4 +17,11 @@ public class PlayerUtil {
     public static EquipmentSlot handToSlot(InteractionHand hand) {
         return hand == InteractionHand.MAIN_HAND ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
     }
+
+    public static InteractionHand anotherHand(InteractionHand hand) {
+        return switch (hand) {
+            case MAIN_HAND -> InteractionHand.OFF_HAND;
+            case OFF_HAND -> InteractionHand.MAIN_HAND;
+        };
+    }
 }
