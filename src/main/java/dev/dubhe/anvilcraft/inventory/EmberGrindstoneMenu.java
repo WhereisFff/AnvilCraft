@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.inventory;
 import com.google.common.collect.Collections2;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
-
+import dev.dubhe.anvilcraft.util.EnchantmentUtil;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import lombok.Getter;
 import net.minecraft.core.component.DataComponentType;
@@ -28,7 +28,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -127,6 +126,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
 
                 selectedIndex = -1;
 
+                resultBook.setItem(0, ItemStack.EMPTY);
             }
         });
         int i;
@@ -161,6 +161,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
             entry -> new EnchantmentInstance(entry.getKey(), entry.getIntValue())));
         this.enchantments.removeIf(
             inst -> inst.enchantment.is(EnchantmentTags.CURSE));
+        this.enchantments.sort(EnchantmentUtil::compareEnchantmentInstance);
     }
 
     public int getCost() {
@@ -230,7 +231,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
                         this.getSlot(index).setByPlayer(ItemStack.EMPTY);
                     } else if (
                         (book = this.getSlot(1).getItem()).is(Items.BOOK)
-                        && book.getCount() < book.getMaxStackSize()
+                            && book.getCount() < book.getMaxStackSize()
                     ) {
                         int canSet = book.getMaxStackSize() - book.getCount();
                         canSet = Math.min(itemStack.getCount(), canSet);

@@ -88,6 +88,7 @@ public class CreateIntegration {
     public static final ItemEntry<CogwheelAmuletItem> COGWHEEL_AMULET = REGISTRATE
         .item("cogwheel_amulet", CogwheelAmuletItem::new)
         .properties(properties -> properties.stacksTo(1))
+        .removeTab(ModItemGroups.ANVILCRAFT_INGREDIENTS.getKey())
         .recipe((ctx, provider) -> JewelCraftingRecipe.builder()
             .requires(ModItems.SILVER_INGOT, 1)
             .requires(AllItems.PRECISION_MECHANISM, 16)
@@ -99,7 +100,7 @@ public class CreateIntegration {
         AmuletUtil.registerCustomType(new AmuletUtil.Type(
             "cogwheel", (sources, source) ->
             ModList.get().isLoaded("create")
-            && Objects.requireNonNull(sources.damageTypes.getKey(source.type())).getNamespace().contains("create"),
+                && Objects.requireNonNull(sources.damageTypes.getKey(source.type())).getNamespace().contains("create"),
             COGWHEEL_AMULET
         ));
     }
