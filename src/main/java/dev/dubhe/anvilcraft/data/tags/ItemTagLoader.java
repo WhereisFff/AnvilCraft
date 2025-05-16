@@ -102,6 +102,12 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.DEAD_BUBBLE_CORAL_FAN))
             .add(findResourceKey(Items.DEAD_FIRE_CORAL_FAN))
             .add(findResourceKey(Items.DEAD_HORN_CORAL_FAN));
+        provider.addTag(ModItemTags.DEAD_CORAL_BLOCKS)
+            .add(findResourceKey(Items.DEAD_BRAIN_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_BUBBLE_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_FIRE_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_HORN_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_TUBE_CORAL_BLOCK));
         provider.addTag(ModItemTags.SEEDS_PACK_CONTENT)
             .addOptionalTag(ModItemTags.SEEDS)
             .addOptionalTag(ModItemTags.BERRIES)
