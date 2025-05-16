@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.init.ModDamageTypes;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 public class DamageTypeTagLoader {
@@ -30,7 +29,7 @@ public class DamageTypeTagLoader {
             .addOptionalTag(ModDamageTypeTags.COGWHEEL_AMULET_VALID);
 
         provider.addTag(ModDamageTypeTags.TOPAZ_AMULET_VALID)
-            .add(DamageTypes.LIGHTNING_BOLT);
+            .addTag(DamageTypeTags.IS_LIGHTNING);
 
         provider.addTag(ModDamageTypeTags.RUBY_AMULET_VALID)
             .addTag(DamageTypeTags.IS_FIRE)
