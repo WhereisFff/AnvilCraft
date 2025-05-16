@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.recipe.generate;
 
-import com.mojang.logging.LogUtils;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import net.minecraft.core.Holder;
@@ -10,7 +9,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BannerPatternItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.armortrim.TrimPatterns;
 import net.minecraft.world.item.crafting.RecipeHolder;

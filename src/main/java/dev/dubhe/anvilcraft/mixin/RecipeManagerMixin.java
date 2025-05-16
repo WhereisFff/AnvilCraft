@@ -33,20 +33,23 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Map;
-import java.util.Optional;
 
 @Mixin(RecipeManager.class)
 abstract class RecipeManagerMixin {
+    @Shadow
+    @Final
+    private HolderLookup.Provider registries;
 
-    @Shadow @Final private HolderLookup.Provider registries;
+    @Shadow
+    private Map<ResourceLocation, RecipeHolder<?>> byName;
 
-    @Shadow private Map<ResourceLocation, RecipeHolder<?>> byName;
-
-    @Shadow private Multimap<RecipeType<?>, RecipeHolder<?>> byType;
+    @Shadow
+    private Multimap<RecipeType<?>, RecipeHolder<?>> byType;
 
     @Inject(
         method = "lambda$apply$0",
-        at = @At(value = "INVOKE",
+        at = @At(
+            value = "INVOKE",
             target =
                 "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;",
             shift = At.Shift.AFTER
@@ -70,7 +73,7 @@ abstract class RecipeManagerMixin {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;")
     )
     private void beforeBuildRecipe(
@@ -87,9 +90,9 @@ abstract class RecipeManagerMixin {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         at = @At(value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
-                                                   + "Lcom/google/common/collect/ImmutableMap;")
+            + "Lcom/google/common/collect/ImmutableMap;")
     )
     private void afterBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
