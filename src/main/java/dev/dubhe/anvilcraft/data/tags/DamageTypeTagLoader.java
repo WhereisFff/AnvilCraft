@@ -3,9 +3,11 @@ package dev.dubhe.anvilcraft.data.tags;
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import dev.dubhe.anvilcraft.init.ModDamageTypeTags;
 import dev.dubhe.anvilcraft.init.ModDamageTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 public class DamageTypeTagLoader {
@@ -29,7 +31,8 @@ public class DamageTypeTagLoader {
             .addOptionalTag(ModDamageTypeTags.COGWHEEL_AMULET_VALID);
 
         provider.addTag(ModDamageTypeTags.TOPAZ_AMULET_VALID)
-            .addTag(DamageTypeTags.IS_LIGHTNING);
+            .addTag(DamageTypeTags.IS_LIGHTNING)
+            .addOptional(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "wire_shock"));
 
         provider.addTag(ModDamageTypeTags.RUBY_AMULET_VALID)
             .addTag(DamageTypeTags.IS_FIRE)
