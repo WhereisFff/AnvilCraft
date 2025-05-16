@@ -30,10 +30,12 @@ public abstract class BaseGeneratingCache<T extends Recipe<?>> {
         return LoggerFactory.getLogger(STACK_WALKER.getCallerClass());
     }
 
-    protected ResourceLocation generateRecipeId(String type, Item recipeResult) {
+    protected ResourceLocation generateRecipeId(String type, Item recipeInput, Item recipeResult) {
+        ResourceLocation inputId = BuiltInRegistries.ITEM.getKey(recipeInput);
         ResourceLocation resultId = BuiltInRegistries.ITEM.getKey(recipeResult);
         logger().debug("Generating {} for {}", this.recipeName, resultId);
-        ResourceLocation newId = AnvilCraft.of(this.recipeId + "/" + resultId.getPath() + "_for_" + type);
+        ResourceLocation newId = AnvilCraft.of("%s/%s_from_%s_for_%s".formatted(
+            this.recipeId, resultId.toString().replace(':', '_'), inputId.toString().replace(':', '_'), type));
         logger().debug("The generated recipe id is {}", newId);
         return newId;
     }

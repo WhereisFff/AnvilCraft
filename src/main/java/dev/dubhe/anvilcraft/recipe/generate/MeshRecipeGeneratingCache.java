@@ -93,15 +93,6 @@ public class MeshRecipeGeneratingCache extends BaseGeneratingCache<MeshRecipe> {
         return Optional.of(recipeHolders);
     }
 
-    protected ResourceLocation generateRecipeId(String type, Item recipeInput, Item recipeResult) {
-        ResourceLocation inputId = BuiltInRegistries.ITEM.getKey(recipeInput);
-        ResourceLocation resultId = BuiltInRegistries.ITEM.getKey(recipeResult);
-        logger().debug("Generating {} for {}", this.recipeName, resultId);
-        ResourceLocation newId = AnvilCraft.of(this.recipeId + "/" + resultId.getPath() + "_from_" + inputId.getPath() + "_for_" + type);
-        logger().debug("The generated recipe id is {}", newId);
-        return newId;
-    }
-
     private static String getTreeId(Block source, ResourceLocation idFull) {
         int lastUnderscore = idFull.getPath().trim().lastIndexOf('_');
         if (lastUnderscore == -1 || (source instanceof BushBlock && !idFull.getPath().contains("sapling"))) return idFull.getPath();
