@@ -145,6 +145,7 @@ public class ModItemTags {
     public static final TagKey<Item> AMULET = bind("amulet");
     public static final TagKey<Item> ANVIL_HAMMER = bind("tools/anvil_hammer");
     public static final TagKey<Item> TEMPLATES = bind("templates");
+    public static final TagKey<Item> MULTIPLE_TO_ONE_SMITHING_TEMPLATES = bind("multiple_to_one_smithing_templates");
 
     public static final Object2ObjectMap<Color, TagKey<Item>> DYED_COLORS = initDyedTags();
 
