@@ -83,7 +83,6 @@ public class AnvilCraft {
         ModItems.register();
         ModBlockEntities.register();
         ModMenuTypes.register();
-        ModDispenserBehavior.register();
         ModComponents.register(modEventBus);
         ModVillagers.register(modEventBus);
         ModRecipeTypes.register(modEventBus);
@@ -152,6 +151,7 @@ public class AnvilCraft {
 
     public static void loadComplete(@NotNull FMLLoadCompleteEvent event) {
         event.enqueueWork(() -> {
+            ModDispenserBehavior.register();
             ModInteractionMap.initInteractionMap();
             if (Util.isLoaded("theoneprobe")) {
                 LOGGER.info("TheOneProbe found. Loading AnvilCraft TheOneProbe plugin...");

@@ -47,7 +47,8 @@
     "accessor.CropBlockAccessor",
     "accessor.GrowingPlantAccessor",
     "accessor.ShapedRecipePatternAccessor",
-    "compat.CreatePackagerBlockEntityMixin",
+    "compat.BatchCrafterBlockEntityMixin",
+    "compat.BatchCrafterBlockMixin",
     "forge.FallingBlockEntityMixin",
     "forge.LevelChunkMixin",
     "forge.LightningBoltMixin",
@@ -68,6 +69,7 @@
     "MouseHandlerMixin",
     "SectionCompilerMixin",
     "SoundEngineMixin",
+    "accessor.ScreenAccessor",
     "compat.EmbChunkBuilderMeshingTaskMixin",
     "compat.SodiumChunkBuilderMeshingTaskMixin"
   ],
