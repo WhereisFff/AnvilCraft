@@ -58,6 +58,9 @@ public class AnvilUtil {
                 for (Ingredient ingredient : recipe.value().getIngredients()) {
                     for (ItemStack stack : items.values()) {
                         if (ingredient.test(stack)) {
+                            if (!stack.getCraftingRemainingItem().equals(ItemStack.EMPTY)) {
+                                results.mergeInt(stack.getItem(), stack.getCount(), Integer::sum);
+                            }
                             stack.shrink(1);
                             break;
                         }
