@@ -101,18 +101,13 @@ public class RecipeGenerator {
             if (recipe instanceof ShapedRecipe shapedRecipe) {
                 ShapedRecipePattern pattern = shapedRecipe.pattern;
                 if (pattern.height() == pattern.width()
-                    && (pattern.height() == 2 || pattern.height() == 3)
+                    && pattern.height() != 1
                     && RecipeUtil.allIngredientEquals(pattern.ingredients())
                 ) {
-                    ItemCompressRecipe.Builder builder = (ItemCompressRecipe.Builder) ItemCompressRecipe.builder()
+                    ItemCompressRecipe newRecipe = ItemCompressRecipe.builder()
                         .result(shapedRecipe.result)
-                        .requires(pattern.ingredients().getFirst(), pattern.height() * pattern.height());
-
-                    if (pattern.ingredients().getFirst().test(Items.HONEY_BOTTLE.getDefaultInstance())) {
-                        builder.result(ChanceItemStack.of(Items.GLASS_BOTTLE.getDefaultInstance().copyWithCount(4)));
-                    }
-
-                    ItemCompressRecipe newRecipe = builder.buildRecipe();
+                        .requires(pattern.ingredients().getFirst(), pattern.height() * pattern.height())
+                        .buildRecipe();
                     return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
                 }
             } else {

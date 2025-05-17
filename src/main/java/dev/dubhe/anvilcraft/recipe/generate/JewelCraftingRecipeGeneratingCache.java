@@ -71,7 +71,7 @@ public class JewelCraftingRecipeGeneratingCache extends BaseGeneratingCache<Jewe
                 .requires(Items.INK_SAC)
                 .result(bannerPattern.getDefaultInstance())
                 .buildRecipe();
-            recipeHolders.add(new RecipeHolder<>(generateRecipeId("banner_pattern", bannerPattern), recipe));
+            recipeHolders.add(new RecipeHolder<>(generateRecipeId("banner_patterns", bannerPattern, bannerPattern), recipe));
         }
         for (Item musicDisc : this.musicDiscs) {
             JewelCraftingRecipe recipe = JewelCraftingRecipe.builder()
@@ -79,14 +79,14 @@ public class JewelCraftingRecipeGeneratingCache extends BaseGeneratingCache<Jewe
                 .requires(Items.PAPER)
                 .result(musicDisc.getDefaultInstance())
                 .buildRecipe();
-            recipeHolders.add(new RecipeHolder<>(generateRecipeId("music_disc", musicDisc), recipe));
+            recipeHolders.add(new RecipeHolder<>(generateRecipeId("music_discs", musicDisc, musicDisc), recipe));
         }
         for (Item potterySherd : this.potterySherds) {
             JewelCraftingRecipe recipe = JewelCraftingRecipe.builder()
                 .requires(Items.BRICK, 2)
                 .result(potterySherd.getDefaultInstance())
                 .buildRecipe();
-            recipeHolders.add(new RecipeHolder<>(generateRecipeId("pottery_sherd", potterySherd), recipe));
+            recipeHolders.add(new RecipeHolder<>(generateRecipeId("pottery_sherds", potterySherd, potterySherd), recipe));
         }
         for (Item trimTemplate : this.trimTemplates) {
             JewelCraftingRecipe recipe = JewelCraftingRecipe.builder()
@@ -94,7 +94,7 @@ public class JewelCraftingRecipeGeneratingCache extends BaseGeneratingCache<Jewe
                 .requires(Items.DIAMOND)
                 .result(trimTemplate.getDefaultInstance())
                 .buildRecipe();
-            recipeHolders.add(new RecipeHolder<>(generateRecipeId("trim_template", trimTemplate), recipe));
+            recipeHolders.add(new RecipeHolder<>(generateRecipeId("trim_templates", trimTemplate, trimTemplate), recipe));
         }
 
         return Optional.of(recipeHolders);
