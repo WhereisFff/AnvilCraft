@@ -72,7 +72,7 @@ public class AmuletBoxItem extends Item {
         } else {
             ItemStack itemStack2 = slot.getItem();
             BoxContents.Mutable mutable = new BoxContents.Mutable(contents);
-            if (clickAction == ClickAction.PRIMARY && !itemStack2.isEmpty()) {
+            if (clickAction == ClickAction.SECONDARY && !itemStack2.isEmpty()) {
                 if (mutable.tryTransfer(slot, player) > 0) {
                     playInsertSound(player);
                 }
@@ -80,7 +80,7 @@ public class AmuletBoxItem extends Item {
                 itemStack.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
                 this.broadcastChangesOnContainerMenu(player);
                 return true;
-            } else if (clickAction == ClickAction.SECONDARY && itemStack2.isEmpty()) {
+            } else if (clickAction == ClickAction.PRIMARY && itemStack2.isEmpty()) {
                 ItemStack itemStack3 = mutable.removeOne();
                 if (itemStack3 != null) {
                     ItemStack itemStack4 = slot.safeInsert(itemStack3);
@@ -101,25 +101,25 @@ public class AmuletBoxItem extends Item {
     }
 
     @Override
-    public boolean overrideOtherStackedOnMe(ItemStack itemStack, ItemStack itemStack2, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess) {
-        if (clickAction == ClickAction.PRIMARY && itemStack2.isEmpty()) {
+    public boolean overrideOtherStackedOnMe(ItemStack box, ItemStack other, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess) {
+        if (clickAction == ClickAction.SECONDARY && other.isEmpty()) {
             return false;
         } else {
-            BoxContents bundleContents = itemStack.get(ModComponents.BOX_CONTENTS);
-            if (bundleContents == null) {
+            BoxContents contents = box.get(ModComponents.BOX_CONTENTS);
+            if (contents == null) {
                 return false;
             } else {
-                BoxContents.Mutable mutable = new BoxContents.Mutable(bundleContents);
-                if (clickAction == ClickAction.PRIMARY && !itemStack2.isEmpty()) {
-                    if (slot.allowModification(player) && mutable.tryInsert(itemStack2.copy()) > 0) {
+                BoxContents.Mutable mutable = new BoxContents.Mutable(contents);
+                if (clickAction == ClickAction.SECONDARY && !other.isEmpty()) {
+                    if (slot.allowModification(player) && mutable.tryInsert(other.copy()) > 0) {
                         playInsertSound(player);
-                        itemStack2.shrink(itemStack2.getCount());
+                        other.shrink(other.getCount());
                     }
 
-                    itemStack.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
+                    box.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
                     this.broadcastChangesOnContainerMenu(player);
                     return true;
-                } else if (clickAction == ClickAction.SECONDARY && itemStack2.isEmpty()) {
+                } else if (clickAction == ClickAction.PRIMARY && other.isEmpty()) {
                     if (slot.allowModification(player)) {
                         ItemStack itemStack3 = mutable.removeOne();
                         if (itemStack3 != null) {
@@ -128,7 +128,7 @@ public class AmuletBoxItem extends Item {
                         }
                     }
 
-                    itemStack.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
+                    box.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
                     this.broadcastChangesOnContainerMenu(player);
                     return true;
                 } else {
