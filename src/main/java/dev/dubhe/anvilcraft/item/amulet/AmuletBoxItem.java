@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -204,8 +205,19 @@ public class AmuletBoxItem extends Item {
         if (contents != null) {
             count = Mth.mulAndTruncate(contents.weight(), 16);
         }
-        tooltipComponents.add(Component.translatable("tooltip.anvilcraft.item.amulet_box.line_1").withStyle(ChatFormatting.GRAY));
-        tooltipComponents.add(Component.translatable("tooltip.anvilcraft.item.amulet_box.line_2").withStyle(ChatFormatting.GRAY));
+        if (Screen.hasShiftDown()) {
+            tooltipComponents.add(Component.translatable(
+                "tooltip.anvilcraft.press_key",
+                Component.literal("Shift").withStyle(ChatFormatting.WHITE)
+            ).withStyle(ChatFormatting.GRAY));
+            tooltipComponents.add(Component.translatable("tooltip.anvilcraft.item.amulet_box.line_1").withStyle(ChatFormatting.GRAY));
+            tooltipComponents.add(Component.translatable("tooltip.anvilcraft.item.amulet_box.line_2").withStyle(ChatFormatting.GRAY));
+        } else {
+            tooltipComponents.add(Component.translatable(
+                "tooltip.anvilcraft.press_key",
+                Component.literal("Shift")
+            ).withStyle(ChatFormatting.GRAY));
+        }
         tooltipComponents.add(Component.empty());
         tooltipComponents.add(Component.translatable(
             "tooltip.anvilcraft.item.amulet_box.fullness", count, 16
