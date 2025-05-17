@@ -2,20 +2,17 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletManager;
+import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
-import dev.dubhe.anvilcraft.util.InventoryUtil;
-import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -65,14 +62,14 @@ public class PlayerEventListener {
     @SuppressWarnings("DataFlowIssue")
     @SubscribeEvent
     public static void onPlayerUsingTotem(LivingUseTotemEvent event) {
-        if (
-            event.getEntity() instanceof ServerPlayer player
-            && ModItems.AMULET_BOX.asStack().is(player.getItemInHand(event.getHandHolding()).getItem())
+        if (event.getEntity() instanceof ServerPlayer player
+            && player.getItemInHand(event.getHandHolding()).is(ModItems.AMULET_BOX.asItem())
         ) {
-            Inventory inventory = player.getInventory();
+            ItemStack availableItem = player.getItemInHand(event.getHandHolding());
+            BoxContents boxContents = availableItem.get(ModComponents.BOX_CONTENTS);
             AmuletManager.INSTANCE.startRaffle(
                 player, event.getSource(),
-                InventoryUtil.getFirstItem(inventory, ModItems.AMULET_BOX).get(ModComponents.BOX_CONTENTS).totemCount() >= 0
+                boxContents.getTotemCount() >= 0
             );
         }
     }

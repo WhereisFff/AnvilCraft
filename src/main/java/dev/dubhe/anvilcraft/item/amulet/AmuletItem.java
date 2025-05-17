@@ -10,4 +10,8 @@ public abstract class AmuletItem extends Item {
     }
 
     public abstract Holder<AmuletType> getType();
+
+    public int getWeight() {
+        return 6;
+    }
 }

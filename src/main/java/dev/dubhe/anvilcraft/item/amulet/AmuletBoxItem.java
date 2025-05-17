@@ -12,6 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -31,7 +32,6 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
-import org.apache.commons.lang3.math.Fraction;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -40,11 +40,9 @@ import java.util.function.Consumer;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class AmuletBoxItem extends Item {
-    public static final int MAX_SHOWN_GRID_ITEMS_X = 4;
-    public static final int MAX_SHOWN_GRID_ITEMS = 12;
-    public static final int OVERFLOWING_MAX_SHOWN_GRID_ITEMS = 11;
     private static final int FULL_BAR_COLOR = 0xFF5454FF;
     private static final int BAR_COLOR = 0x7087FFFF;
+    public static final int CAPACITY = 16;
 
     public AmuletBoxItem(Properties properties) {
         super(properties.component(ModComponents.BOX_CONTENTS, BoxContents.EMPTY));
@@ -62,112 +60,88 @@ public class AmuletBoxItem extends Item {
 
     public static float getFullnessDisplay(ItemStack itemStack) {
         BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-        return contents.weight().floatValue();
+        return contents.getUsage() / (float) CAPACITY;
     }
 
     @Override
     public boolean overrideStackedOnOther(ItemStack itemStack, Slot slot, ClickAction clickAction, Player player) {
-        BoxContents contents = itemStack.get(ModComponents.BOX_CONTENTS);
-        if (contents == null) {
-            return false;
+        if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
+        BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
+        BoxContents.Mutable mutable = contents.mutable();
+        ItemStack other = slot.getItem();
+        if (other.isEmpty()) {
+            ItemStack popped = mutable.pop();
+            if (popped.isEmpty()) return false;
+            slot.set(popped);
+            playRemoveOneSound(player);
         } else {
-            ItemStack itemStack2 = slot.getItem();
-            BoxContents.Mutable mutable = new BoxContents.Mutable(contents);
-            if (clickAction == ClickAction.SECONDARY && !itemStack2.isEmpty()) {
-                if (mutable.tryTransfer(slot, player) > 0) {
-                    playInsertSound(player);
-                }
-
-                itemStack.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
-                this.broadcastChangesOnContainerMenu(player);
-                return true;
-            } else if (clickAction == ClickAction.PRIMARY && itemStack2.isEmpty()) {
-                ItemStack itemStack3 = mutable.removeOne();
-                if (itemStack3 != null) {
-                    ItemStack itemStack4 = slot.safeInsert(itemStack3);
-                    if (itemStack4.getCount() > 0) {
-                        mutable.tryInsert(itemStack4);
-                    } else {
-                        playRemoveOneSound(player);
-                    }
-                }
-
-                itemStack.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
-                this.broadcastChangesOnContainerMenu(player);
-                return true;
-            } else {
+            if (!mutable.tryInsert(other)) {
                 return false;
             }
+            playInsertSound(player);
+            slot.set(ItemStack.EMPTY);
         }
+        itemStack.set(ModComponents.BOX_CONTENTS, mutable.immutable());
+        return true;
     }
 
     @Override
-    public boolean overrideOtherStackedOnMe(ItemStack box, ItemStack other, Slot slot, ClickAction clickAction, Player player, SlotAccess slotAccess) {
-        if (clickAction == ClickAction.SECONDARY && other.isEmpty()) {
-            return false;
+    public boolean overrideOtherStackedOnMe(
+        ItemStack box,
+        ItemStack other,
+        Slot slot,
+        ClickAction clickAction,
+        Player player,
+        SlotAccess slotAccess
+    ) {
+        if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
+        System.out.println("other = " + other);
+        BoxContents.Mutable contents = box.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).mutable();
+        if (other.isEmpty()) {
+            ItemStack itemStack = contents.pop();
+            if (itemStack.isEmpty()) return false;
+            slotAccess.set(itemStack);
+            playRemoveOneSound(player);
+            broadcastChangesOnContainerMenu(player);
         } else {
-            BoxContents contents = box.get(ModComponents.BOX_CONTENTS);
-            if (contents == null) {
-                return false;
-            } else {
-                BoxContents.Mutable mutable = new BoxContents.Mutable(contents);
-                if (clickAction == ClickAction.SECONDARY && !other.isEmpty()) {
-                    if (slot.allowModification(player) && mutable.tryInsert(other.copy()) > 0) {
-                        playInsertSound(player);
-                        other.shrink(other.getCount());
-                    }
-
-                    box.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
-                    this.broadcastChangesOnContainerMenu(player);
-                    return true;
-                } else if (clickAction == ClickAction.PRIMARY && other.isEmpty()) {
-                    if (slot.allowModification(player)) {
-                        ItemStack itemStack3 = mutable.removeOne();
-                        if (itemStack3 != null) {
-                            playRemoveOneSound(player);
-                            slotAccess.set(itemStack3);
-                        }
-                    }
-
-                    box.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
-                    this.broadcastChangesOnContainerMenu(player);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
+            if (!contents.tryInsert(other)) return false;
+            playInsertSound(player);
+            broadcastChangesOnContainerMenu(player);
+            slotAccess.set(ItemStack.EMPTY);
         }
+        box.set(ModComponents.BOX_CONTENTS, contents.immutable());
+        return true;
     }
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         Inventory inventory = player.getInventory();
-        ItemStack box = InventoryUtil.getFirstItem(inventory, this);
+        ItemStack box = player.getItemInHand(usedHand);
         if (!level.isClientSide) {
-            BoxContents contents = box.get(ModComponents.BOX_CONTENTS);
-            if (contents == null) return InteractionResultHolder.fail(box);
-            BoxContents.Mutable mutable = new BoxContents.Mutable(contents);
+            BoxContents contents = box.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
+            BoxContents.Mutable mutable = contents.mutable();
             if (!player.isShiftKeyDown()) {
                 List<ItemStack> items = InventoryUtil.getItems(inventory);
                 for (ItemStack stack : items) {
                     if (stack.isEmpty() || !stack.is(Items.TOTEM_OF_UNDYING)) continue;
-                    if (mutable.tryInsert(stack.copy()) != 0) {
+                    if (mutable.tryInsert(stack.copy())) {
                         inventory.removeItem(stack);
                     }
                 }
-                box.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
+                playInsertSound(player);
+                box.set(ModComponents.BOX_CONTENTS, mutable.immutable());
             } else {
-                boolean droped = false;
-                for (int i = 0; i < contents.totemCount(); i++) {
-                    ItemStack stack = mutable.removeOneTotem();
-                    if (stack == null) continue;
+                boolean dropped = false;
+                for (int i = 0; i < contents.getTotemCount(); i++) {
+                    ItemStack stack = mutable.popTotem();
+                    if (stack.isEmpty()) break;
                     InventoryUtil.addToInventory(player.getInventory(), stack);
-                    droped = true;
+                    dropped = true;
                 }
-                if (droped) {
+                if (dropped) {
                     playDropContentsSound(level, player);
                 }
-                box.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
+                box.set(ModComponents.BOX_CONTENTS, mutable.immutable());
             }
             player.awardStat(Stats.ITEM_USED.get(this));
             return InteractionResultHolder.success(box);
@@ -178,19 +152,35 @@ public class AmuletBoxItem extends Item {
     @Override
     public boolean isBarVisible(ItemStack itemStack) {
         BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-        return contents.weight().compareTo(Fraction.ZERO) > 0;
+        return contents.getUsage() > 0;
     }
 
     @Override
     public int getBarWidth(ItemStack itemStack) {
         BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-        return Math.min(1 + Mth.mulAndTruncate(contents.weight(), MAX_SHOWN_GRID_ITEMS), 13);
+        return (int) (Math.clamp(contents.getUsage() / 13f, 0f, 1f) * 13);
     }
 
     @Override
     public int getBarColor(ItemStack itemStack) {
         BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-        return contents.weight().compareTo(Fraction.ONE) >= 0 ? FULL_BAR_COLOR : BAR_COLOR;
+
+        return lerpColor(contents.getUsage() / (float) CAPACITY, BAR_COLOR, FULL_BAR_COLOR);
+    }
+
+    private int lerpColor(float ratio, int from, int to) {
+        int r1 = FastColor.ARGB32.red(from);
+        int g1 = FastColor.ARGB32.green(from);
+        int b1 = FastColor.ARGB32.blue(from);
+        int r2 = FastColor.ARGB32.red(to);
+        int g2 = FastColor.ARGB32.green(to);
+        int b2 = FastColor.ARGB32.blue(to);
+        return FastColor.ARGB32.color(
+            255,
+            (int) Mth.lerp(ratio, r1, r2),
+            (int) Mth.lerp(ratio, g1, g2),
+            (int) Mth.lerp(ratio, b1, b2)
+        );
     }
 
     @Override
@@ -200,11 +190,7 @@ public class AmuletBoxItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        BoxContents contents = stack.get(ModComponents.BOX_CONTENTS);
-        int count = 0;
-        if (contents != null) {
-            count = Mth.mulAndTruncate(contents.weight(), 16);
-        }
+        BoxContents contents = stack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
         if (Screen.hasShiftDown()) {
             tooltipComponents.add(Component.translatable(
                 "tooltip.anvilcraft.press_key",
@@ -220,7 +206,7 @@ public class AmuletBoxItem extends Item {
         }
         tooltipComponents.add(Component.empty());
         tooltipComponents.add(Component.translatable(
-            "tooltip.anvilcraft.item.amulet_box.fullness", count, 16
+            "tooltip.anvilcraft.item.amulet_box.fullness", contents.getUsage(), CAPACITY
         ).withStyle(ChatFormatting.GRAY));
     }
 
@@ -229,7 +215,7 @@ public class AmuletBoxItem extends Item {
         BoxContents contents = itemEntity.getItem().get(ModComponents.BOX_CONTENTS);
         if (contents != null) {
             itemEntity.getItem().set(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-            ItemUtils.onContainerDestroyed(itemEntity, contents.itemsCopy());
+            ItemUtils.onContainerDestroyed(itemEntity, contents.allItems());
         }
     }
 
@@ -243,7 +229,12 @@ public class AmuletBoxItem extends Item {
 
     private static void playDropContentsSound(Level level, Entity entity) {
         level.playSound(
-            null, entity.blockPosition(), SoundEvents.BUNDLE_DROP_CONTENTS, SoundSource.PLAYERS, 0.8F, 0.8F + entity.level().getRandom().nextFloat() * 0.4F
+            null,
+            entity.blockPosition(),
+            SoundEvents.BUNDLE_DROP_CONTENTS,
+            SoundSource.PLAYERS,
+            0.8F,
+            0.8F + entity.level().getRandom().nextFloat() * 0.4F
         );
     }
 

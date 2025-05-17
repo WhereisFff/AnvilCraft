@@ -1,10 +1,15 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
+import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
+import net.minecraft.advancements.critereon.UsedTotemTrigger;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -18,8 +23,6 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
@@ -46,44 +49,54 @@ public abstract class LivingEntityMixin extends Entity {
         beheadingLoot.getRandomItems(lootParams, thiz.getLootTableSeed(), thiz::spawnAtLocation);
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "checkTotemDeathProtection",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/item/ItemStack;is(Lnet/minecraft/world/item/Item;)Z"
         )
     )
-    private boolean alsoCheckAmuletBox(ItemStack instance, Item item) {
-        return instance.is(item)
-               || (instance.is(ModItems.AMULET_BOX)
-                   && instance.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).totemCount() > 0);
+    private boolean redirectTotemCheck(ItemStack instance, Item item, Operation<Boolean> original) {
+        return original.call(instance, item)
+            || (instance.is(ModItems.AMULET_BOX)
+            && instance.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotemCount() > 0);
     }
 
-    @ModifyArg(
+    @WrapOperation(
         method = "checkTotemDeathProtection",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/advancements/critereon/UsedTotemTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/item/ItemStack;)V"
-        ),
-        index = 1
+        )
     )
-    private ItemStack onlyUseTotemToTrigger(ItemStack stack) {
-        return Items.TOTEM_OF_UNDYING.getDefaultInstance();
+    private void onlyUseTotemToTrigger(UsedTotemTrigger instance, ServerPlayer player, ItemStack item, Operation<Void> original) {
+        if (item.getItem() instanceof AmuletBoxItem) {
+            original.call(
+                instance,
+                player,
+                Items.TOTEM_OF_UNDYING.getDefaultInstance()
+            );
+        }
+        original.call(
+            instance,
+            player,
+            item
+        );
     }
 
-    @SuppressWarnings("DataFlowIssue")
-    @Redirect(
+
+    @WrapOperation(
         method = "checkTotemDeathProtection",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V")
     )
-    private void shrinkCorrect(ItemStack instance, int decrement) {
+    private void shrinkCorrect(ItemStack instance, int decrement, Operation<Void> original) {
         if (instance.is(ModItems.AMULET_BOX) && instance.has(ModComponents.BOX_CONTENTS)) {
             BoxContents contents = instance.get(ModComponents.BOX_CONTENTS);
-            BoxContents.Mutable mutable = new BoxContents.Mutable(contents);
-            mutable.removeOneTotem();
-            instance.set(ModComponents.BOX_CONTENTS, mutable.toImmutable());
-        } else {
-            instance.shrink(decrement);
+            BoxContents.Mutable mutable = contents.mutable();
+            mutable.popTotem();
+            instance.set(ModComponents.BOX_CONTENTS, mutable.immutable());
+            return;
         }
+        original.call(instance, decrement);
     }
 }
