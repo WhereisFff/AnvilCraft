@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.api.tooltip.impl;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProducer;
+import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProvider;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.network.chat.Component;
@@ -15,9 +15,9 @@ public class InjectedBlockTooltipProvider extends ITooltipProvider.BlockTooltipP
     public InjectedBlockTooltipProvider() {
     }
 
-    protected Optional<IInjectedTooltipProducer> cast(Block value) {
+    protected Optional<IInjectedTooltipProvider> cast(Block value) {
         try {
-            if (value instanceof IInjectedTooltipProducer producer) {
+            if (value instanceof IInjectedTooltipProvider producer) {
                 return Optional.of(producer);
             } else {
                 return Optional.empty();
