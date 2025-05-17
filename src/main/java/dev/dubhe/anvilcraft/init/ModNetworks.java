@@ -16,6 +16,7 @@ import dev.dubhe.anvilcraft.network.MachineOutputDirectionPacket;
 import dev.dubhe.anvilcraft.network.MutedSoundSyncPacket;
 import dev.dubhe.anvilcraft.network.PowerGridRemovePacket;
 import dev.dubhe.anvilcraft.network.PowerGridSyncPacket;
+import dev.dubhe.anvilcraft.network.PulseGeneratorUpdatePacket;
 import dev.dubhe.anvilcraft.network.RecipeCacheSyncPacket;
 import dev.dubhe.anvilcraft.network.RemoveMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.RemoveTeslaFilterPacket;
@@ -25,6 +26,8 @@ import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
+import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
+import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -166,6 +169,21 @@ public class ModNetworks {
             MachineCycleFilterModePacket.TYPE,
             MachineCycleFilterModePacket.STREAM_CODEC,
             MachineCycleFilterModePacket.HANDLER
+        );
+        registrar.playToServer(
+            PulseGeneratorUpdatePacket.TYPE,
+            PulseGeneratorUpdatePacket.STREAM_CODEC,
+            PulseGeneratorUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchPhasePacket.TYPE,
+            SwitchPhasePacket.STREAM_CODEC,
+            SwitchPhasePacket.HANDLER
+        );
+        registrar.playToServer(
+            SyncEmberGrindstonePacket.TYPE,
+            SyncEmberGrindstonePacket.STREAM_CODEC,
+            SyncEmberGrindstonePacket.HANDLER
         );
     }
 }

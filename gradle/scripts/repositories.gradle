@@ -37,7 +37,7 @@ repositories {
     }
     maven { // KubeJS, Rhino
         name = "Saps Maven"
-        url = "https://maven.saps.dev/minecraft"
+        url = "https://maven.latvian.dev/releases"
         content {
             includeGroup "dev.latvian.mods"
             includeGroup "dev.latvian.apps"
@@ -67,5 +67,12 @@ repositories {
     maven {  // ForgeConfigAPIPort
         name = "ForgeConfigAPIPort Maven"
         url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
+    }
+    maven {
+        url "https://maven.latvian.dev/releases"
+        content {
+            includeGroup "dev.latvian.mods"
+            includeGroup "dev.latvian.apps"
+        }
     }
 }

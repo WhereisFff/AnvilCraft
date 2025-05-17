@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-import static dev.dubhe.anvilcraft.util.ItemHandlerUtil.getTargetItemHandler;
+import static dev.dubhe.anvilcraft.util.ItemHandlerUtil.getSourceItemHandler;
 
 @Getter
 public class SimpleChuteBlockEntity extends BlockEntity implements IItemHandlerHolder {
@@ -59,7 +59,7 @@ public class SimpleChuteBlockEntity extends BlockEntity implements IItemHandlerH
     public void tick() {
         if (cooldown <= 0) {
             if (getBlockState().getValue(SimpleChuteBlock.ENABLED)) {
-                IItemHandler target = getTargetItemHandler(
+                IItemHandler target = getSourceItemHandler(
                     getBlockPos().relative(getOutputDirection()),
                     getOutputDirection().getOpposite(),
                     level
@@ -103,7 +103,7 @@ public class SimpleChuteBlockEntity extends BlockEntity implements IItemHandlerH
                                 itemEntity.setDefaultPickUpDelay();
                                 getLevel().addFreshEntity(itemEntity);
                                 this.itemHandler.setStackInSlot(i, stack);
-                                cooldown = AnvilCraft.config.chuteMaxCooldown;
+                                cooldown = AnvilCraft.config.chuteMaxCooldown - 1;
                                 break;
                             }
 

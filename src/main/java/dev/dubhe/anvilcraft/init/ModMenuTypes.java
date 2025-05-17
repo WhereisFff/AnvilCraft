@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.client.gui.screen.ItemCollectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemDetectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.JewelCraftingScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.MagneticChuteScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.PulseGeneratorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.RoyalAnvilScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.RoyalGrindstoneScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.RoyalSmithingScreen;
@@ -27,6 +28,7 @@ import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
 import dev.dubhe.anvilcraft.inventory.ItemDetectorMenu;
 import dev.dubhe.anvilcraft.inventory.JewelCraftingMenu;
 import dev.dubhe.anvilcraft.inventory.MagneticChuteMenu;
+import dev.dubhe.anvilcraft.inventory.PulseGeneratorMenu;
 import dev.dubhe.anvilcraft.inventory.RoyalAnvilMenu;
 import dev.dubhe.anvilcraft.inventory.RoyalGrindstoneMenu;
 import dev.dubhe.anvilcraft.inventory.RoyalSmithingMenu;
@@ -111,6 +113,10 @@ public class ModMenuTypes {
 
     public static final MenuEntry<TeslaTowerMenu> TESLA_TOWER = REGISTRATE
         .menu("tesla_tower", TeslaTowerMenu::new, () -> TeslaTowerScreen::new)
+        .register();
+
+    public static final MenuEntry<PulseGeneratorMenu> PULSE_GENERATOR = REGISTRATE
+        .menu("pulse_generator", PulseGeneratorMenu::new, () -> PulseGeneratorScreen::new)
         .register();
 
     public static void register() {

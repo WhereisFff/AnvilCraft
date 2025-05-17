@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.config;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
-
 import com.google.gson.annotations.SerializedName;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import me.shedaniel.autoconfig.ConfigData;
 import me.shedaniel.autoconfig.annotation.Config;
 import me.shedaniel.autoconfig.annotation.ConfigEntry;
@@ -10,6 +9,11 @@ import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.Comment;
 
 @Config(name = AnvilCraft.MOD_ID)
 public class AnvilCraftConfig implements ConfigData {
+
+    @Comment("The mode of the anvil hammer goggle info")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.Gui.EnumHandler(option = ConfigEntry.Gui.EnumHandler.EnumDisplayOption.BUTTON)
+    public GoggleMode goggleMode = GoggleMode.WEARING_HAMMER;
 
     @Comment("Maximum number of items processed by the anvil at the same time")
     @ConfigEntry.Gui.Tooltip
@@ -152,6 +156,25 @@ public class AnvilCraftConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public IonoCraftBackpackHud ionoCraftBackpackHud = new IonoCraftBackpackHud();
 
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 100, min = 0)
+    @Comment("Giant anvil maxCount fall damage")
+    public int giantAnvilFallDamageMax = 40;
+
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Block Devourer upward chain devouring blocks within tag #anvilcraft:block_devourer_chain_devouring")
+    public boolean blockDevourerUpwardChainDevouring = true;
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 15, min = 0)
+    @Comment("Block Devourer upward chain devouring maxCount distance")
+    public int blockDevourerUpwardChainDevouringDistance = 8;
+
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 20, min = 0)
+    @Comment("Block Placer recursive retrieval of container max distance")
+    public int blockPlacerRecursiveRetrievalDistanceMax = 7;
+
     public static class PowerConverter implements ConfigData {
         @Comment("The working interval of power converters")
         @ConfigEntry.Gui.Tooltip
@@ -185,5 +208,22 @@ public class AnvilCraftConfig implements ConfigData {
         @Comment("The gui hud y position")
         @ConfigEntry.Gui.Tooltip
         public int hudY = 8;
+    }
+
+    @Comment("Max acceleration speed (m/tick)")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 256, min = 16)
+    public int maxAccelerationSpeed = 32;
+
+    @Comment("Anvil collision craft speed (m/tick)")
+    @ConfigEntry.Gui.Tooltip
+    @ConfigEntry.BoundedDiscrete(max = 24, min = 1)
+    public int anvilCollisionCraftSpeed = 16;
+
+    public enum GoggleMode implements ConfigData {
+        ALWAYS_SHOW,
+        WEARING_HAMMER,
+        HOLDING_HAMMER,
+        TOGGLE_WITH_KEY
     }
 }
