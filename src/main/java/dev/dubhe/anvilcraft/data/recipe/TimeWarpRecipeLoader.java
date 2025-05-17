@@ -89,7 +89,7 @@ public class TimeWarpRecipeLoader {
             .result(ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(3)))
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
             .consumeFluid(true)
-            .save(provider, AnvilCraft.of("time_warp/ember_metal_nugget_0"));
+            .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_0"));
 
         TimeWarpRecipe.builder()
             .requires(ModItemTags.NETHERITE_BLOCK)
@@ -98,7 +98,7 @@ public class TimeWarpRecipeLoader {
             .result(ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(4)))
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
             .consumeFluid(true)
-            .save(provider, AnvilCraft.of("time_warp/ember_metal_nugget_1"));
+            .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_1"));
 
         TimeWarpRecipe.builder()
             .requires(ModItemTags.NETHERITE_BLOCK)
@@ -107,7 +107,7 @@ public class TimeWarpRecipeLoader {
             .result(ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(5)))
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
             .consumeFluid(true)
-            .save(provider, AnvilCraft.of("time_warp/ember_metal_nugget_2"));
+            .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_2"));
 
         TimeWarpRecipe.builder()
             .requires(ModItemTags.NETHERITE_BLOCK)
@@ -116,7 +116,7 @@ public class TimeWarpRecipeLoader {
             .result(ChanceItemStack.of(ModItems.EMBER_METAL_INGOT.asStack(6)))
             .requiredFluidLevel(CauldronUtil.maxLevel(ModBlocks.FIRE_CAULDRON.get()))
             .consumeFluid(true)
-            .save(provider, AnvilCraft.of("time_warp/ember_metal_nugget_3"));
+            .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_3"));
 
         TimeWarpRecipe.builder()
             .requires(Items.SKELETON_SKULL)
