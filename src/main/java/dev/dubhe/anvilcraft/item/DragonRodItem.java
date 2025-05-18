@@ -37,9 +37,16 @@ import java.util.Objects;
 @Slf4j
 public class DragonRodItem extends Item {
     public static final int DEFAULT_RANGE = 3;
+    private final int enchantmentValue;
 
-    public DragonRodItem(Properties properties) {
+    public DragonRodItem(Properties properties, int enchantmentValue) {
         super(properties.component(ModComponents.DEVOUR_RANGE, DEFAULT_RANGE));
+        this.enchantmentValue = enchantmentValue;
+    }
+
+    @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return this.enchantmentValue;
     }
 
     @Override

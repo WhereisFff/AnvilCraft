@@ -535,9 +535,9 @@ public class ModItems {
         })
         .register();
     public static final ItemEntry<DragonRodItem> DRAGON_ROD = REGISTRATE
-        .item("dragon_rod", DragonRodItem::new)
+        .item("dragon_rod", properties -> new DragonRodItem(properties, 3))
         .properties(properties -> properties.durability(35))
-        .tag(ItemTags.PICKAXES, ModItemTags.DRAGON_ROD)
+        .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
         .model((ctx, provider) -> {
         })
         .recipe((ctx, provider) -> ShapelessRecipeBuilder
@@ -550,9 +550,9 @@ public class ModItems {
         .register();
 
     public static final ItemEntry<DragonRodItem> ROYAL_DRAGON_ROD = REGISTRATE
-        .item("royal_dragon_rod", DragonRodItem::new)
+        .item("royal_dragon_rod", properties -> new DragonRodItem(properties, 6))
         .properties(properties -> properties.durability(150))
-        .tag(ItemTags.PICKAXES, ModItemTags.DRAGON_ROD)
+        .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
         .model((ctx, provider) -> {
         })
         .recipe((ctx, provider) -> {
@@ -579,12 +579,12 @@ public class ModItems {
         })
         .register();
     public static final ItemEntry<DragonRodItem> EMBER_DRAGON_ROD = REGISTRATE
-        .item("ember_dragon_rod", DragonRodItem::new)
+        .item("ember_dragon_rod", properties -> new DragonRodItem(properties, 9))
         .properties(properties -> properties
             .durability(2031)
             .fireResistant()
             .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE))
-        .tag(ItemTags.PICKAXES, ModItemTags.DRAGON_ROD)
+        .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
         .model((ctx, provider) -> {
         })
         .recipe((ctx, provider) -> {
