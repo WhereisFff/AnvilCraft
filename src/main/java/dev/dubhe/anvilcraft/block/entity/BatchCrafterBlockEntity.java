@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.IHasDisplayItem;
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
+import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import dev.dubhe.anvilcraft.api.itemhandler.PollableFilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -12,7 +13,6 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.BatchCrafterMenu;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
-import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -45,7 +45,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,6 +53,7 @@ import org.joml.Vector3f;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -88,17 +88,6 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
                 }
             }
             setChanged();
-        }
-
-        @Override
-        public boolean isItemValid(int slot, ItemStack stack) {
-            // 临时解决方案
-            if (Util.findCaller("craft")) {
-                if (!this.isFilterEnabled()) return !this.isSlotDisabled(slot);
-                return !this.isSlotDisabled(slot) && this.isFiltered(slot, stack);
-            } else {
-                return super.isItemValid(slot, stack);
-            }
         }
     };
 
@@ -196,19 +185,18 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     }
 
     private boolean ejectItems(ItemStack result, List<ItemStack> craftRemaining, Direction direction) {
-        IItemHandler cap = getLevel()
-            .getCapability(
-                Capabilities.ItemHandler.BLOCK,
-                getBlockPos().relative(direction),
-                direction.getOpposite());
+        IItemHandler cap = Objects.requireNonNull(getLevel()).getCapability(
+            Capabilities.ItemHandler.BLOCK,
+            getBlockPos().relative(direction),
+            direction.getOpposite());
         if (cap != null) {
             // 尝试向容器插入物品
-            ItemStack remained = ItemHandlerHelper.insertItem(cap, result, true);
+            ItemStack remained = ItemHandlerUtil.insertItem(cap, result, true);
             if (!remained.isEmpty()) return true;
-            remained = ItemHandlerHelper.insertItem(cap, result, false);
+            remained = ItemHandlerUtil.insertItem(cap, result, false);
             spawnItemEntity(remained);
             for (ItemStack stack : craftRemaining) {
-                remained = ItemHandlerHelper.insertItem(cap, stack, false);
+                remained = ItemHandlerUtil.insertItem(cap, stack, false);
                 spawnItemEntity(remained);
             }
         } else {
