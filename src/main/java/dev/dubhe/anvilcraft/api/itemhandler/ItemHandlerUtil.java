@@ -1,8 +1,11 @@
 package dev.dubhe.anvilcraft.api.itemhandler;
 
 import dev.dubhe.anvilcraft.util.AnvilUtil;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -13,14 +16,19 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
+
+import static dev.dubhe.anvilcraft.block.BlockPlacerBlock.ORIENTATION;
 
 public class ItemHandlerUtil {
     public static boolean exportToTarget(
@@ -184,6 +192,42 @@ public class ItemHandlerUtil {
             items.mergeInt(stack.getItem(), stack.getCount(), Integer::sum);
         }
         return items;
+    }
+
+    @Nullable
+    public static IItemHandler getSourceItemHandlerRecursive(Block source, BlockPos inputBlockPos, Direction context, Level level) {
+        int i = 0;
+        do {
+            if (level == null) return null;
+            if (level.getBlockState(inputBlockPos).is(source)
+                && level.getBlockState(inputBlockPos).getValue(ORIENTATION).getDirection() == context
+            ) {
+                i++;
+                inputBlockPos = inputBlockPos.relative(context.getOpposite());
+            } else {
+                return dev.dubhe.anvilcraft.util.ItemHandlerUtil.getSourceItemHandler(inputBlockPos, context, level);
+            }
+        } while (i < AnvilCraft.config.blockPlacerRecursiveRetrievalDistanceMax);
+        return null;
+    }
+
+    public static ItemStack insertItem(IItemHandler dest, ItemStack stack, boolean simulate) {
+        if (dest == null || stack.isEmpty()) {
+            return stack;
+        }
+
+        if (dest instanceof PollableFilteredItemStackHandler pollable) {
+            for (int i = 0; i < dest.getSlots(); i++) {
+                stack = pollable.insertItemNoPolling(i, stack, simulate);
+                if (stack.isEmpty()) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            return stack;
+        } else {
+            return ItemHandlerHelper.insertItem(dest, stack, simulate);
+        }
     }
 
     public static boolean isEmptyContainer(IItemHandler handler) {
