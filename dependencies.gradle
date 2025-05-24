@@ -25,8 +25,9 @@ dependencies {
     compileOnly(libs.emi)
 
     // Patchouli
-    compileOnlyApi("vazkii.patchouli:Patchouli:${libs.versions.patchouli.get()}:api")
-    runtimeOnly(libs.patchouli)
+    //compileOnlyApi("vazkii.patchouli:Patchouli:${libs.versions.patchouli.get()}:api")
+    //runtimeOnly(libs.patchouli)
+    implementation(libs.patchouli)
 
     // Sodium, Iris, Embeddium
     compileOnly("maven.modrinth:sodium:mc1.21.1-0.6.3-neoforge")
@@ -43,6 +44,7 @@ dependencies {
     implementation(libs.ponder)
     implementation(libs.flywheelApi)
     implementation(libs.flywheel)
+    compileOnly(libs.ae2)
 
     // CERBON's Better Beacons
     implementation(libs.cerbonsApi)
