@@ -13,6 +13,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     private static boolean hasZetaPiston = false;
     private static boolean hasCreate = false;
     private static boolean hasReiScreen = false;
+    private static boolean hasCerbonBetterBeacons = false;
 
     private boolean isLoaded(String clazz) {
         return AnvilCraftMixinPlugin.class.getClassLoader().getResource(clazz) != null;
@@ -23,6 +24,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
         hasZetaPiston = this.isLoaded("org/violetmoon/zeta/piston/ZetaPistonStructureResolver.class");
         hasReiScreen = this.isLoaded("me/shedaniel/rei/impl/client/gui/screen/DefaultDisplayViewingScreen.class");
         hasCreate = this.isLoaded("com/simibubi/create/Create.class");
+        hasCerbonBetterBeacons = this.isLoaded("com/cerbon/better_beacons/BetterBeacons.class");
     }
 
     @Override
@@ -34,9 +36,8 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
         if (mixinClassName.endsWith("PistonStructureResolverMixin")) return !hasZetaPiston;
         if (mixinClassName.endsWith("DefaultDisplayViewingScreenMixin")) return hasReiScreen;
-        if (mixinClassName.contains("Create")) {
-            return hasCreate;
-        }
+        if (mixinClassName.contains("Create")) return hasCreate;
+        if (mixinClassName.contains("Cerbon")) return hasCerbonBetterBeacons;
         return true;
     }
 

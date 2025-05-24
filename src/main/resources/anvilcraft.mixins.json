@@ -48,6 +48,8 @@
     "accessor.CropBlockAccessor",
     "accessor.GrowingPlantAccessor",
     "accessor.ShapedRecipePatternAccessor",
+    "compat.CerbonCorruptedBeaconBlockMixin",
+    "compat.CerbonNewBeaconMenuMixin",
     "compat.CreatePackagerBlockEntityMixin",
     "forge.FallingBlockEntityMixin",
     "forge.LevelChunkMixin",
