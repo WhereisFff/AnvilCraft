@@ -13,7 +13,9 @@ import dev.dubhe.anvilcraft.entity.IonocraftEntity;
 import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
+import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
+import net.minecraft.client.renderer.entity.ThrownTridentRenderer;
 import net.minecraft.world.entity.MobCategory;
 
 public class ModEntities {
@@ -59,6 +61,11 @@ public class ModEntities {
             .eyeHeight(0.5625F)
             .clientTrackingRange(10)
         ).renderer(() -> IonocraftRenderer::new)
+        .register();
+
+    public static final EntityEntry<? extends ThrownHeavyHalberdEntity> THROWN_HEAVY_HALBERD = AnvilCraft.REGISTRATE
+        .entity("thrown_heavy_halberd", ThrownHeavyHalberdEntity::new, MobCategory.MISC)
+        .renderer(() -> ThrownTridentRenderer::new)
         .register();
 
     public static void register() {

@@ -532,6 +532,40 @@ public class ModItems {
         .model((ctx, provider) -> {
         })
         .register();
+    public static final ItemEntry<EmberAnvilHammerItem> FROST_METAL_HEAVY_HALBERD = REGISTRATE
+        .item("ember_anvil_hammer", EmberAnvilHammerItem::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.EMBER_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItems.ROYAL_ANVIL_HAMMER),
+                    Ingredient.of(ModBlocks.EMBER_METAL_BLOCK),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("smithing/ember_anvil_hammer"));
+        })
+        .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
+        .properties(properties -> properties.durability(2031))
+        .model((ctx, provider) -> {
+        })
+        .register();
+    public static final ItemEntry<EmberAnvilHammerItem> EMBER_ANVIL_HAMMER = REGISTRATE
+        .item("ember_anvil_hammer", EmberAnvilHammerItem::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.EMBER_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItems.ROYAL_ANVIL_HAMMER),
+                    Ingredient.of(ModBlocks.EMBER_METAL_BLOCK),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("smithing/ember_anvil_hammer"));
+        })
+        .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
+        .properties(properties -> properties.durability(2031))
+        .model((ctx, provider) -> {
+        })
+        .register();
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRATE
         .item("ionocraft", IonoCraftItem::new)
         .initialProperties(Item.Properties::new)
@@ -1895,6 +1929,18 @@ public class ModItems {
                     AnvilCraftDatagen.has(ModBlocks.MULTIPHASE_MATTER_BLOCK))
                 .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
         })
+        .register();
+
+    public static final ItemEntry<Item> HEAVY_HALBERD_CORE = REGISTRATE
+        .item("heavy_halberd_core", Item::new)
+        .recipe((ctx, provider) ->
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("HHH")
+                .pattern("HMH")
+                .pattern("HHH")
+                .define('H', ModBlocks.HEAVY_IRON_BLOCK)
+                .define('M', ModItems.MULTIPHASE_MATTER)
+                .save(provider))
         .register();
 
     public static final ItemEntry<Item> NEGATIVE_MATTER = REGISTRATE
