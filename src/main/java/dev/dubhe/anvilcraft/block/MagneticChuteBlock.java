@@ -157,6 +157,7 @@ public class MagneticChuteBlock extends BetterBaseEntityBlock implements HammerR
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
         Direction facing = context.getNearestLookingDirection();
+        if (player != null && player.isShiftKeyDown()) facing = facing.getOpposite();
         BlockState neighborState = level.getBlockState(pos.relative(facing));
         boolean cannotPlace = facing == Direction.UP
             && (neighborState.is(ModBlocks.SIMPLE_CHUTE) || neighborState.is(ModBlocks.CHUTE)
@@ -165,9 +166,6 @@ public class MagneticChuteBlock extends BetterBaseEntityBlock implements HammerR
             if (player != null)
                 player.displayClientMessage(Component.translatable("message.anvilcraft.chute.cannot_place"), true);
             return null;
-        }
-        if (player != null && player.isShiftKeyDown()) {
-            facing = facing.getOpposite();
         }
         BlockState result = this.defaultBlockState()
             .setValue(FACING, facing)
