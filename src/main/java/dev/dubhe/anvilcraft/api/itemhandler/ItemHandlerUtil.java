@@ -1,11 +1,9 @@
 package dev.dubhe.anvilcraft.api.itemhandler;
 
-import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.util.AnvilUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -13,15 +11,13 @@ import net.minecraft.world.entity.vehicle.ContainerEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -205,7 +201,7 @@ public class ItemHandlerUtil {
                 i++;
                 inputBlockPos = inputBlockPos.relative(context.getOpposite());
             } else {
-                return dev.dubhe.anvilcraft.util.ItemHandlerUtil.getSourceItemHandler(inputBlockPos, context, level);
+                return getSourceItemHandler(inputBlockPos, context, level);
             }
         } while (i < AnvilCraft.config.blockPlacerRecursiveRetrievalDistanceMax);
         return null;
