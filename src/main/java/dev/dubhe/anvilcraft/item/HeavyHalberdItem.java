@@ -177,8 +177,6 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         level.playSound(null, player, soundEvent.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
     }
 
-    public abstract ThrownHeavyHalberdEntity createThrown(Level level, LivingEntity shooter, ItemStack pickupItemStack);
-
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
@@ -264,6 +262,8 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         thrown.pickup = AbstractArrow.Pickup.ALLOWED;
         return thrown;
     }
+
+    public abstract ThrownHeavyHalberdEntity createThrown(Level level, LivingEntity shooter, ItemStack pickupItemStack);
 
     public abstract ThrownHeavyHalberdEntity createThrown(Level level, double x, double y, double z, ItemStack pickupItemStack);
 
