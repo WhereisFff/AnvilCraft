@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.client.event;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
-import dev.dubhe.anvilcraft.client.ModInspectionClient;
-import dev.dubhe.anvilcraft.client.PowerGridClient;
+import dev.dubhe.anvilcraft.client.support.InspectionSupport;
+import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
@@ -36,7 +36,7 @@ public class RenderEventListener {
         PoseStack poseStack = event.getPoseStack();
         DeltaTracker deltaTracker = event.getPartialTick();
         LevelRenderer renderer = event.getLevelRenderer();
-        ModInspectionClient.INSTANCE.onRenderInspectionAction(
+        InspectionSupport.INSTANCE.onRenderInspectionAction(
             poseStack,
             renderer,
             camera,
@@ -57,7 +57,7 @@ public class RenderEventListener {
         double camX = vec3.x();
         double camY = vec3.y();
         double camZ = vec3.z();
-        PowerGridClient.renderTransmitterLine(event.getPoseStack(), bufferSource, vec3);
+        PowerGridSupport.renderTransmitterLine(event.getPoseStack(), bufferSource, vec3);
         VertexConsumer vertexConsumer3 = bufferSource.getBuffer(RenderType.lines());
         if (entity instanceof LivingEntity livingEntity) {
             ItemStack mainHandItem = livingEntity.getItemInHand(InteractionHand.MAIN_HAND);
@@ -70,7 +70,7 @@ public class RenderEventListener {
         }
         if (!(entity instanceof Player player)) return;
         if (!AnvilHammerItem.isWearing(player)) return;
-        PowerGridClient.render(event.getPoseStack(), bufferSource, vec3);
+        PowerGridSupport.render(event.getPoseStack(), bufferSource, vec3);
         HitResult hit = Minecraft.getInstance().hitResult;
         if (hit == null || hit.getType() != HitResult.Type.BLOCK) {
             return;

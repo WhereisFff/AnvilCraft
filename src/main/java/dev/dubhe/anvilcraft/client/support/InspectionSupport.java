@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.client;
+package dev.dubhe.anvilcraft.client.support;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -27,8 +27,8 @@ import java.util.List;
 import java.util.Map;
 
 @Slf4j
-public class ModInspectionClient {
-    public static final ModInspectionClient INSTANCE = new ModInspectionClient();
+public class InspectionSupport {
+    public static final InspectionSupport INSTANCE = new InspectionSupport();
     private final Map<ResourceLocation, InspectionAction> inspectionActionMap = new HashMap<>();
     private final Object2BooleanMap<ResourceLocation> inspectionState = new Object2BooleanAVLTreeMap<>();
 
@@ -58,7 +58,7 @@ public class ModInspectionClient {
     /**
      * 注册检查项
      * <p>
-     * 检查项需同时在 {@link ModInspections} 和 {@link dev.dubhe.anvilcraft.client.ModInspectionClient} 中注册
+     * 检查项需同时在 {@link ModInspections} 和 {@link InspectionSupport} 中注册
      * </p>
      * <p>
      * 对于 {@link ModInspections}

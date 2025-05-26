@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.client;
+package dev.dubhe.anvilcraft.client.support;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -17,11 +17,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PowerGridClient {
+public class PowerGridSupport {
     private static final Map<Integer, SimplePowerGrid> GRID_MAP = Collections.synchronizedMap(new HashMap<>());
 
     public static Map<Integer, SimplePowerGrid> getGridMap() {
-        return PowerGridClient.GRID_MAP;
+        return PowerGridSupport.GRID_MAP;
     }
 
     /**
@@ -31,7 +31,7 @@ public class PowerGridClient {
         if (Minecraft.getInstance().level == null) return;
         String level = Minecraft.getInstance().level.dimension().location().toString();
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.lines());
-        for (SimplePowerGrid grid : PowerGridClient.GRID_MAP.values()) {
+        for (SimplePowerGrid grid : PowerGridSupport.GRID_MAP.values()) {
             if (!grid.shouldRender(camera)) continue;
             if (!grid.getLevel().equals(level)) continue;
             for (Line line : grid.getPowerGridBoundLines()) {
@@ -56,7 +56,7 @@ public class PowerGridClient {
         String level = Minecraft.getInstance().level.dimension().location().toString();
 
         VertexConsumer consumer1 = bufferSource.getBuffer(ModRenderTypes.LINE_BLOOM);
-        for (SimplePowerGrid grid : PowerGridClient.GRID_MAP.values()) {
+        for (SimplePowerGrid grid : PowerGridSupport.GRID_MAP.values()) {
             if (!grid.shouldRender(camera)) continue;
             if (!grid.getLevel().equals(level)) continue;
             grid.getPowerTransmitterLines().forEach(it -> it.render(poseStack, consumer1, camera, 0x9966ccff));
@@ -74,7 +74,7 @@ public class PowerGridClient {
         if (Minecraft.getInstance().level == null) return;
         String level = Minecraft.getInstance().level.dimension().location().toString();
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.LINES);
-        for (SimplePowerGrid grid : PowerGridClient.GRID_MAP.values()) {
+        for (SimplePowerGrid grid : PowerGridSupport.GRID_MAP.values()) {
             if (!grid.shouldRender(camera)) continue;
             if (!grid.getLevel().equals(level)) continue;
             grid.getPowerTransmitterLines().forEach(it -> it.render(poseStack, consumer, camera, 0x9966ccff));

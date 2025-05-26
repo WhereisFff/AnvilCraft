@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.event;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
+import dev.dubhe.anvilcraft.client.support.AmuletSelectorSupport;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
@@ -16,10 +17,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.InputEvent.Key;
 import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
@@ -59,13 +62,27 @@ public class ClientEventListener {
     }
 
     @SubscribeEvent
+    public static void onMouseScrolled(ScreenEvent.MouseScrolled.Pre event) {
+        if (AmuletSelectorSupport.hasHoveringItem()) {
+            int amount = (int) Math.min(event.getScrollDeltaX(), event.getScrollDeltaY());
+            AmuletSelectorSupport.mouseScrolled(amount);
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
     public static void onRenderTooltip(RenderTooltipEvent.Pre event) {
         GuiGraphics guiGraphics = event.getGraphics();
         int x = event.getX();
         int y = event.getY();
+
         ItemStack itemStack = event.getItemStack();
         if (itemStack.is(ModItems.AMULET_BOX)) {
-            guiGraphics.fill(x, y, x + 16, y + 16, 0xbb00ffff);
+            event.setY(y + 13);
+            AmuletSelectorSupport.setCurrentHoveringItemStack(itemStack);
+            AmuletSelectorSupport.render(guiGraphics, x, y);
+        } else {
+            AmuletSelectorSupport.setCurrentHoveringItemStack(null);
         }
     }
 }

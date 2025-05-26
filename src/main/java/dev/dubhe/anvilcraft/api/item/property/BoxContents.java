@@ -93,6 +93,18 @@ public final class BoxContents implements TooltipComponent {
             && Objects.equals(amulets, that.amulets);
     }
 
+    public boolean isEmpty() {
+        return usage <= 0;
+    }
+
+    public boolean isAmuletEmpty() {
+        return usage >= 0 && amulets.isEmpty() && totemCount > 0;
+    }
+
+    public int getMaxSelection() {
+        return amulets.size() - 1 + 1; // this makes sense
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(amulets, totemCount, selection, usage);
