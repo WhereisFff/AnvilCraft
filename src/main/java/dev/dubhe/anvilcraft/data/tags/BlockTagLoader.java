@@ -166,6 +166,10 @@ public class BlockTagLoader {
             .add(ModBlocks.DEEPSLATE_LEAD_ORE.getKey())
             .add(ModBlocks.DEEPSLATE_URANIUM_ORE.getKey());
 
+        provider.addTag(ModBlockTags.CRAFTING_MATRIX_ELEMENT)
+                .add(ModBlocks.SPACE_OVERCOMPRESSOR.getKey())
+                .addTag(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
+
         //mekanism integration
         provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
             .add(ModBlocks.GIANT_ANVIL.getKey())

@@ -107,7 +107,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
     public static final RecipeType<RecipeHolder<BulgingRecipe>> BULGING = createRecipeHolderType("bulging");
     public static final RecipeType<RecipeHolder<TimeWarpRecipe>> TIME_WARP = createRecipeHolderType("time_warp");
 
-    public static final RecipeType<RecipeHolder<MultiblockRecipe>> MULTI_BLOCK =
+    public static final RecipeType<RecipeHolder<MultiblockRecipe>> MULTIBLOCK_CRAFTING =
         createRecipeHolderType("multiblock");
     public static final RecipeType<RecipeHolder<MultiblockConversionRecipe>> MULTIBLOCK_CONVERSION =
         createRecipeHolderType("multiblock_conversion");
