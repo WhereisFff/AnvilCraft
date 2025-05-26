@@ -41,13 +41,17 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
         super((EntityType<? extends AbstractArrow>) type, level);
     }
 
-    public ThrownHeavyHalberdEntity(EntityType<? extends ThrownHeavyHalberdEntity> type, Level level, LivingEntity shooter, ItemStack pickupItemStack) {
+    public ThrownHeavyHalberdEntity(
+        EntityType<? extends ThrownHeavyHalberdEntity> type, Level level, LivingEntity shooter, ItemStack pickupItemStack
+    ) {
         super(type, shooter, level, pickupItemStack, null);
         this.entityData.set(ID_LOYALTY, this.getLoyaltyFromItem(pickupItemStack));
         this.entityData.set(ID_FOIL, pickupItemStack.hasFoil());
     }
 
-    public ThrownHeavyHalberdEntity(EntityType<? extends ThrownHeavyHalberdEntity> type, Level level, double x, double y, double z, ItemStack pickupItemStack) {
+    public ThrownHeavyHalberdEntity(
+        EntityType<? extends ThrownHeavyHalberdEntity> type, Level level, double x, double y, double z, ItemStack pickupItemStack
+    ) {
         super(type, x, y, z, level, pickupItemStack, pickupItemStack);
         this.entityData.set(ID_LOYALTY, this.getLoyaltyFromItem(pickupItemStack));
         this.entityData.set(ID_FOIL, pickupItemStack.hasFoil());
@@ -56,7 +60,7 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
         super.defineSynchedData(builder);
-        builder.define(ID_LOYALTY, (byte)0);
+        builder.define(ID_LOYALTY, (byte) 0);
         builder.define(ID_FOIL, false);
     }
 
@@ -78,12 +82,12 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
             } else {
                 this.setNoPhysics(true);
                 Vec3 vec3 = entity.getEyePosition().subtract(this.position());
-                this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015 * (double)i, this.getZ());
+                this.setPosRaw(this.getX(), this.getY() + vec3.y * 0.015 * (double) i, this.getZ());
                 if (this.level().isClientSide) {
                     this.yOld = this.getY();
                 }
 
-                double d0 = 0.05 * (double)i;
+                double d0 = 0.05 * (double) i;
                 this.setDeltaMovement(this.getDeltaMovement().scale(0.95).add(vec3.normalize().scale(d0)));
                 if (this.clientSideReturnHeavyHalberdTickCount == 0) {
                     this.playSound(SoundEvents.TRIDENT_RETURN, 10.0F, 1.0F);
