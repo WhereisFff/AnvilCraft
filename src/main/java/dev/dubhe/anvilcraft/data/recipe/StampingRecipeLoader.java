@@ -36,7 +36,6 @@ public class StampingRecipeLoader {
         StampingRecipe.builder()
             .requires(Items.MILK_BUCKET)
             .result(ModItems.CREAM, 4)
-            .result(Items.BUCKET)
             .save(provider, AnvilCraft.of("stamping/cream"));
         StampingRecipe.builder()
             .requires(Items.SUGAR_CANE)
