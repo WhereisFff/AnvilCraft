@@ -66,7 +66,9 @@ public class ModComponents {
         register("multiphase", b -> b.persistent(Multiphase.CODEC)
             .networkSynchronized(Multiphase.STREAM_CODEC));
 
-    public static final DataComponentType<Unit> MERCILESS = registerEmpty("merciless");
+    public static final DataComponentType<Boolean> MERCILESS =
+        register("merciless", b -> b.persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.BOOL));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();

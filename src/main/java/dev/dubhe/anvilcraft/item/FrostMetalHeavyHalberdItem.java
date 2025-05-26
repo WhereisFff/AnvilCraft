@@ -14,7 +14,7 @@ public class FrostMetalHeavyHalberdItem extends HeavyHalberdItem {
             ModTiers.FROST_METAL,
             properties
                 .attributes(HeavyHalberdItem.createAttributes(ModTiers.FROST_METAL, 13, -2.4f))
-                .component(ModComponents.MERCILESS, Unit.INSTANCE)
+                .component(ModComponents.MERCILESS, true)
         );
     }
 

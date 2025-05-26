@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IMultipleResult;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -83,6 +84,14 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         rules.addAll(SwordItem.createToolProperties().rules());
         rules.addAll(tier.createToolProperties(BlockTags.MINEABLE_WITH_AXE).rules());
         return new Tool(rules, 1.0F, 2);
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+        if (isTooDamagedToUse(stack)) {
+            stack.set(ModComponents.MERCILESS, false);
+        }
     }
 
     @Override
