@@ -20,18 +20,21 @@ import dev.dubhe.anvilcraft.item.CursedItem;
 import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.EmberAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.EmberMetalAxeItem;
+import dev.dubhe.anvilcraft.item.EmberMetalHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.EmberMetalHoeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
+import dev.dubhe.anvilcraft.item.FrostMetalHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHoeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalPickaxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalShovelItem;
 import dev.dubhe.anvilcraft.item.FrostMetalSwordItem;
 import dev.dubhe.anvilcraft.item.GeodeItem;
 import dev.dubhe.anvilcraft.item.GuideBookItem;
+import dev.dubhe.anvilcraft.item.HeavyHalberdCoreItem;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import dev.dubhe.anvilcraft.item.IonoCraftItem;
 import dev.dubhe.anvilcraft.item.LevitationPowderItem;
@@ -39,6 +42,7 @@ import dev.dubhe.anvilcraft.item.MagnetItem;
 import dev.dubhe.anvilcraft.item.ModFoods;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterAxeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterHoeItem;
+import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
@@ -65,10 +69,13 @@ import dev.dubhe.anvilcraft.item.amulet.RubyAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SapphireAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.SilenceAmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.TopazAmuletItem;
+import dev.dubhe.anvilcraft.item.template.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.template.FourToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.FrostMetalUpgradeTemplateItem;
-import dev.dubhe.anvilcraft.item.template.MultipleToOneTemplateItem;
+import dev.dubhe.anvilcraft.item.template.BaseMultipleToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.RoyalUpgradeTemplateItem;
+import dev.dubhe.anvilcraft.item.template.TwoToOneTemplateItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -532,37 +539,19 @@ public class ModItems {
         .model((ctx, provider) -> {
         })
         .register();
-    public static final ItemEntry<EmberAnvilHammerItem> FROST_METAL_HEAVY_HALBERD = REGISTRATE
-        .item("ember_anvil_hammer", EmberAnvilHammerItem::new)
-        .recipe((ctx, provider) -> {
-            SmithingTransformRecipeBuilder.smithing(
-                    Ingredient.of(ModItems.EMBER_METAL_UPGRADE_SMITHING_TEMPLATE),
-                    Ingredient.of(ModItems.ROYAL_ANVIL_HAMMER),
-                    Ingredient.of(ModBlocks.EMBER_METAL_BLOCK),
-                    RecipeCategory.TOOLS,
-                    ctx.get())
-                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
-                .save(provider, AnvilCraft.of("smithing/ember_anvil_hammer"));
-        })
-        .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
-        .properties(properties -> properties.durability(2031))
+    public static final ItemEntry<FrostMetalHeavyHalberdItem> FROST_METAL_HEAVY_HALBERD = REGISTRATE
+        .item("frost_metal_heavy_halberd", FrostMetalHeavyHalberdItem::new)
+        .tag(
+            ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
+            ModItemTags.HEAVY_HALBERD, ModItemTags.EXPLOSION_PROOF)
         .model((ctx, provider) -> {
         })
         .register();
-    public static final ItemEntry<EmberAnvilHammerItem> EMBER_ANVIL_HAMMER = REGISTRATE
-        .item("ember_anvil_hammer", EmberAnvilHammerItem::new)
-        .recipe((ctx, provider) -> {
-            SmithingTransformRecipeBuilder.smithing(
-                    Ingredient.of(ModItems.EMBER_METAL_UPGRADE_SMITHING_TEMPLATE),
-                    Ingredient.of(ModItems.ROYAL_ANVIL_HAMMER),
-                    Ingredient.of(ModBlocks.EMBER_METAL_BLOCK),
-                    RecipeCategory.TOOLS,
-                    ctx.get())
-                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
-                .save(provider, AnvilCraft.of("smithing/ember_anvil_hammer"));
-        })
-        .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
-        .properties(properties -> properties.durability(2031))
+    public static final ItemEntry<EmberMetalHeavyHalberdItem> EMBER_METAL_HEAVY_HALBERD = REGISTRATE
+        .item("ember_metal_heavy_halberd", EmberMetalHeavyHalberdItem::new)
+        .tag(
+            ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
+            ModItemTags.HEAVY_HALBERD, ModItemTags.EXPLOSION_PROOF)
         .model((ctx, provider) -> {
         })
         .register();
@@ -643,16 +632,16 @@ public class ModItems {
         .tag(ModItemTags.TEMPLATES)
         .register();
 
-    public static final ItemEntry<MultipleToOneTemplateItem> TWO_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
-        .item("two_to_one_smithing_template", properties -> new MultipleToOneTemplateItem(properties, 2))
+    public static final ItemEntry<TwoToOneTemplateItem> TWO_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
+        .item("two_to_one_smithing_template", TwoToOneTemplateItem::new)
         .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
         .register();
-    public static final ItemEntry<MultipleToOneTemplateItem> FOUR_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
-        .item("four_to_one_smithing_template", properties -> new MultipleToOneTemplateItem(properties, 4))
+    public static final ItemEntry<FourToOneTemplateItem> FOUR_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
+        .item("four_to_one_smithing_template", FourToOneTemplateItem::new)
         .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
         .register();
-    public static final ItemEntry<MultipleToOneTemplateItem> EIGHT_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
-        .item("eight_to_one_smithing_template", properties -> new MultipleToOneTemplateItem(properties, 8))
+    public static final ItemEntry<EightToOneTemplateItem> EIGHT_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
+        .item("eight_to_one_smithing_template", EightToOneTemplateItem::new)
         .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
         .register();
 
@@ -1918,9 +1907,10 @@ public class ModItems {
                 .save(provider);
         })
         .register();
-    public static final ItemEntry<Item> MULTIPHASE_MATTER = REGISTRATE
-        .item("multiphase_matter", Item::new)
-        .initialProperties(() -> new Item.Properties().fireResistant())
+    public static final ItemEntry<MultiphaseMatterItem> MULTIPHASE_MATTER = REGISTRATE
+        .item("multiphase_matter", MultiphaseMatterItem::new)
+        .properties(Item.Properties::fireResistant)
+        .tag(ModItemTags.EXPLOSION_PROOF)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.MULTIPHASE_MATTER_BLOCK)
@@ -1931,8 +1921,10 @@ public class ModItems {
         })
         .register();
 
-    public static final ItemEntry<Item> HEAVY_HALBERD_CORE = REGISTRATE
-        .item("heavy_halberd_core", Item::new)
+    public static final ItemEntry<HeavyHalberdCoreItem> HEAVY_HALBERD_CORE = REGISTRATE
+        .item("heavy_halberd_core", HeavyHalberdCoreItem::new)
+        .properties(Item.Properties::fireResistant)
+        .tag(ModItemTags.EXPLOSION_PROOF)
         .recipe((ctx, provider) ->
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("HHH")
@@ -1940,6 +1932,8 @@ public class ModItems {
                 .pattern("HHH")
                 .define('H', ModBlocks.HEAVY_IRON_BLOCK)
                 .define('M', ModItems.MULTIPHASE_MATTER)
+                .unlockedBy("has_heavy_iron_block", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider))
         .register();
 

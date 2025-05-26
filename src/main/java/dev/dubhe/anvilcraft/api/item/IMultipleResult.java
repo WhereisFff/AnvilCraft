@@ -7,7 +7,7 @@ import net.minecraft.world.item.ItemStack;
 /**
  * 多合一配方的结果
  */
-public interface IMultipleToOneSmithingRecipeResult {
+public interface IMultipleResult {
     /**
      * 定义多合一时对输入物品的操作逻辑
      *
