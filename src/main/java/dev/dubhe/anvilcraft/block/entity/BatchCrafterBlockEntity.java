@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.IHasDisplayItem;
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
+import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import dev.dubhe.anvilcraft.api.itemhandler.PollableFilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -44,7 +45,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -53,6 +53,7 @@ import org.joml.Vector3f;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Predicate;
@@ -72,7 +73,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     private PowerGrid grid;
 
     private final Deque<AutoCrafterCache> cache = new ArrayDeque<>();
-    private final FilteredItemStackHandler itemHandler = new PollableFilteredItemStackHandler(9) {
+    private final PollableFilteredItemStackHandler itemHandler = new PollableFilteredItemStackHandler(9) {
         @Override
         public void onContentsChanged(int slot) {
             if (level != null) {
@@ -175,37 +176,41 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
                 .map(stack -> stack.copyWithCount(stack.getCount() * times))
                 .collect(Collectors.toList());
         }
-        IItemHandler cap = getLevel()
-            .getCapability(
-                Capabilities.ItemHandler.BLOCK,
-                getBlockPos().relative(getDirection()),
-                getDirection().getOpposite());
+        if (ejectItems(result, craftRemaining, getDirection())) return false;
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            itemHandler.extractItem(i, times, false);
+        }
+        level.updateNeighborsAt(getBlockPos(), ModBlocks.BATCH_CRAFTER.get());
+        return true;
+    }
+
+    private boolean ejectItems(ItemStack result, List<ItemStack> craftRemaining, Direction direction) {
+        IItemHandler cap = Objects.requireNonNull(getLevel()).getCapability(
+            Capabilities.ItemHandler.BLOCK,
+            getBlockPos().relative(direction),
+            direction.getOpposite());
         if (cap != null) {
             // 尝试向容器插入物品
-            ItemStack remained = ItemHandlerHelper.insertItem(cap, result, true);
-            if (!remained.isEmpty()) return false;
-            remained = ItemHandlerHelper.insertItem(cap, result, false);
+            ItemStack remained = ItemHandlerUtil.insertItem(cap, result, true);
+            if (!remained.isEmpty()) return true;
+            remained = ItemHandlerUtil.insertItem(cap, result, false);
             spawnItemEntity(remained);
             for (ItemStack stack : craftRemaining) {
-                remained = ItemHandlerHelper.insertItem(cap, stack, false);
+                remained = ItemHandlerUtil.insertItem(cap, stack, false);
                 spawnItemEntity(remained);
             }
         } else {
             // 尝试向世界喷出物品
             Vec3 center = getBlockPos().relative(getDirection()).getCenter();
             AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
-            if (!getLevel().noCollision(aabb)) return false;
+            if (!getLevel().noCollision(aabb)) return true;
 
             spawnItemEntity(result);
             for (ItemStack stack : craftRemaining) {
                 spawnItemEntity(stack);
             }
         }
-        for (int i = 0; i < itemHandler.getSlots(); i++) {
-            itemHandler.extractItem(i, times, false);
-        }
-        level.updateNeighborsAt(getBlockPos(), ModBlocks.BATCH_CRAFTER.get());
-        return true;
+        return false;
     }
 
     @Nullable
