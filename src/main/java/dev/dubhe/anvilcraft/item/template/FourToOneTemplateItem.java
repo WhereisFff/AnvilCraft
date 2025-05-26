@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.item.template;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.client.gui.screen.EmberSmithingScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 

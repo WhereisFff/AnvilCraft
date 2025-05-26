@@ -31,22 +31,6 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
     private static final ResourceLocation EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE =
         AnvilCraft.of("item/empty_slot_eight_to_one_smithing_template");
 
-    // 空槽位纹理 - 输入
-    public static final ResourceLocation EMPTY_SLOT_AXE =
-        ResourceLocation.withDefaultNamespace("item/empty_slot_axe");
-    public static final ResourceLocation EMPTY_SLOT_HOE =
-        ResourceLocation.withDefaultNamespace("item/empty_slot_hoe");
-    public static final ResourceLocation EMPTY_SLOT_PICKAXE =
-        ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe");
-    public static final ResourceLocation EMPTY_SLOT_SHOVEL =
-        ResourceLocation.withDefaultNamespace("item/empty_slot_shovel");
-    public static final ResourceLocation EMPTY_SLOT_SWORD =
-        ResourceLocation.withDefaultNamespace("item/empty_slot_sword");
-    public static final ResourceLocation EMPTY_SLOT_TRIDENT =
-        AnvilCraft.of("item/empty_slot_trident");
-    public static final ResourceLocation EMPTY_SLOT_MACE =
-        AnvilCraft.of("item/empty_slot_mace");
-
     // tooltips
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable(
         "screen.anvilcraft.ember_smithing.tooltip.missing_template");
@@ -56,13 +40,6 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
         EMPTY_SLOT_TWO_TO_ONE_SMITHING_TEMPLATE,
         EMPTY_SLOT_FOUR_TO_ONE_SMITHING_TEMPLATE,
         EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE
-    );
-    public static final List<ResourceLocation> EMPTY_SLOT_TOOLS = List.of(
-        EMPTY_SLOT_AXE,
-        EMPTY_SLOT_HOE,
-        EMPTY_SLOT_PICKAXE,
-        EMPTY_SLOT_SHOVEL,
-        EMPTY_SLOT_SWORD
     );
 
     private final CyclingSlotBackground templateIcon = new CyclingSlotBackground(0);

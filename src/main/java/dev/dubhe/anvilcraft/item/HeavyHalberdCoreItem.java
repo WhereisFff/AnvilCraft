@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IMultipleToOneSmithingRecipeMaterial;
-import dev.dubhe.anvilcraft.client.gui.screen.EmberSmithingScreen;
-import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -15,11 +14,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class HeavyHalberdCoreItem extends Item implements IMultipleToOneSmithingRecipeMaterial {
+    private static final ResourceLocation EMPTY_SLOT_SWORD =
+        ResourceLocation.withDefaultNamespace("item/empty_slot_sword");
+    private static final ResourceLocation EMPTY_SLOT_AXE =
+        ResourceLocation.withDefaultNamespace("item/empty_slot_axe");
+    private static final ResourceLocation EMPTY_SLOT_TRIDENT =
+        AnvilCraft.of("item/empty_slot_trident");
+    private static final ResourceLocation EMPTY_SLOT_MACE =
+        AnvilCraft.of("item/empty_slot_mace");
     private static final Component MISSING_TOOLS_TOOLTIP = Component.translatable(
         "screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools");
     private static final List<ResourceLocation> EMPTY_SLOT_TEXTURES = List.of(
-        EmberSmithingScreen.EMPTY_SLOT_SWORD, EmberSmithingScreen.EMPTY_SLOT_AXE,
-        EmberSmithingScreen.EMPTY_SLOT_TRIDENT, EmberSmithingScreen.EMPTY_SLOT_MACE);
+        EMPTY_SLOT_SWORD, EMPTY_SLOT_AXE, EMPTY_SLOT_TRIDENT, EMPTY_SLOT_MACE);
 
     public HeavyHalberdCoreItem(Properties properties) {
         super(properties);
@@ -35,13 +41,13 @@ public class HeavyHalberdCoreItem extends Item implements IMultipleToOneSmithing
         List<ResourceLocation> textures = new ArrayList<>(EMPTY_SLOT_TEXTURES);
         for (ItemStack input : inputs) {
             if (input.is(ItemTags.SWORDS)) {
-                textures.remove(EmberSmithingScreen.EMPTY_SLOT_SWORD);
+                textures.remove(EMPTY_SLOT_SWORD);
             } else if (input.is(ItemTags.AXES)) {
-                textures.remove(EmberSmithingScreen.EMPTY_SLOT_AXE);
+                textures.remove(EMPTY_SLOT_AXE);
             } else if (input.is(Items.TRIDENT)) {
-                textures.remove(EmberSmithingScreen.EMPTY_SLOT_TRIDENT);
+                textures.remove(EMPTY_SLOT_TRIDENT);
             } else if (input.is(Tags.Items.TOOLS_MACE)) {
-                textures.remove(EmberSmithingScreen.EMPTY_SLOT_MACE);
+                textures.remove(EMPTY_SLOT_MACE);
             }
         }
         return textures;
