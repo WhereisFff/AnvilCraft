@@ -90,13 +90,8 @@ public class MagneticChuteBlock extends BetterBaseEntityBlock implements HammerR
     }
 
     @Override
-    public VoxelShape getShape(
-        BlockState blockState,
-        BlockGetter blockGetter,
-        BlockPos blockPos,
-        CollisionContext collisionContext
-    ) {
-        return switch (blockState.getValue(FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext collisionContext) {
+        return switch (state.getValue(FACING)) {
             case NORTH -> SHAPE_N;
             case SOUTH -> SHAPE_S;
             case WEST -> SHAPE_W;
@@ -156,8 +151,8 @@ public class MagneticChuteBlock extends BetterBaseEntityBlock implements HammerR
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
-        Direction facing = context.getNearestLookingDirection();
-        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) {
+        Direction facing = context.getClickedFace().getOpposite();
+        if (player != null && player.isShiftKeyDown()) {
             facing = facing.getOpposite();
         }
         BlockState result = this.defaultBlockState()
