@@ -34,20 +34,20 @@ public class ThrownHeavyHalberdModel<T extends Entity> extends EntityModel<T> {
 
         PartDefinition group2 = partdefinition.addOrReplaceChild("group2", CubeListBuilder.create(), PartPose.offset(0.0F, 16.0F, 0.0F));
 
-        PartDefinition cube_r1 = group2.addOrReplaceChild(
+        PartDefinition cubeR1 = group2.addOrReplaceChild(
             "cube_r1", CubeListBuilder.create().texOffs(16, 8).addBox(0.5F, 0.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 8).addBox(-2.5F, -2.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(8, 8).addBox(0.5F, -2.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)),
             PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, 3.1416F, 0.0F, 2.3562F)
         );
 
-        PartDefinition cube_r2 = group2.addOrReplaceChild(
+        PartDefinition cubeR2 = group2.addOrReplaceChild(
             "cube_r2", CubeListBuilder.create().texOffs(8, 8).mirror()
                 .addBox(-2.5F, -2.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false),
             PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, -3.1416F, 0.0F, -2.3562F)
         );
 
-        PartDefinition cube_r3 = group2.addOrReplaceChild(
+        PartDefinition cubeR3 = group2.addOrReplaceChild(
             "cube_r3", CubeListBuilder.create().texOffs(16, 8).addBox(0.5F, 0.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(8, 8).addBox(0.5F, -2.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
                 .texOffs(0, 8).addBox(-2.5F, -2.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F))
@@ -55,7 +55,7 @@ public class ThrownHeavyHalberdModel<T extends Entity> extends EntityModel<T> {
             PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, 0.0F, 0.0F, 0.7854F)
         );
 
-        PartDefinition cube_r4 = group2.addOrReplaceChild(
+        PartDefinition cubeR4 = group2.addOrReplaceChild(
             "cube_r4", CubeListBuilder.create().texOffs(8, 8).mirror()
                 .addBox(-2.5F, -2.5F, -2.5F, 2.0F, 2.0F, 2.0F, new CubeDeformation(0.0F)).mirror(false),
             PartPose.offsetAndRotation(0.0F, -6.0F, 0.0F, 0.0F, 0.0F, -0.7854F)
@@ -67,7 +67,7 @@ public class ThrownHeavyHalberdModel<T extends Entity> extends EntityModel<T> {
                 .texOffs(20, 1).addBox(2.5F, -8.5F, -0.5F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)), PartPose.offset(-3.0F, 13.0F, 0.0F)
         );
 
-        PartDefinition cube_r5 = group.addOrReplaceChild(
+        PartDefinition cubeR5 = group.addOrReplaceChild(
             "cube_r5", CubeListBuilder.create().texOffs(20, 1).mirror().addBox(
                     -2.3F, -4.5F, -0.5F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F)).mirror(false)
                 .texOffs(6, 0).mirror().addBox(-4.3F, -6.5F, 0.0F, 3.0F, 8.0F, 0.0F, new CubeDeformation(0.0F)).mirror(false)
@@ -75,7 +75,7 @@ public class ThrownHeavyHalberdModel<T extends Entity> extends EntityModel<T> {
             PartPose.offsetAndRotation(3.0F, -3.0F, 0.0F, 0.0F, 0.0F, -0.3927F)
         );
 
-        PartDefinition cube_r6 = group.addOrReplaceChild(
+        PartDefinition cubeR6 = group.addOrReplaceChild(
             "cube_r6", CubeListBuilder.create().texOffs(6, 0).addBox(1.3F, -6.5F, 0.0F, 3.0F, 8.0F, 0.0F, new CubeDeformation(0.0F))
                 .texOffs(20, 1).addBox(1.3F, -4.5F, -0.5F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
                 .texOffs(24, 0).addBox(1.3F, -2.5F, -0.5F, 2.0F, 3.0F, 1.0F, new CubeDeformation(0.0F)),
