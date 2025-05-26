@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item.template;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberSmithingScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -10,7 +11,7 @@ public class FourToOneTemplateItem extends BaseMultipleToOneTemplateItem {
     public static final Component MISSING_TOOLTIP = Component.translatable(
         "screen.anvilcraft.ember_smithing.four.missing");
     public static final List<ResourceLocation> EMPTY_SLOT_TEXTURES = List.of(
-        EmberSmithingScreen.EMPTY_SLOT_MULTIPHASE_MATTER
+        AnvilCraft.of("item/empty_slot_multiphase_matter")
     );
 
     public FourToOneTemplateItem(Properties properties) {

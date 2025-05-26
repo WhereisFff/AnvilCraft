@@ -31,10 +31,6 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
     private static final ResourceLocation EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE =
         AnvilCraft.of("item/empty_slot_eight_to_one_smithing_template");
 
-    // 空槽位纹理 - 材料
-    public static final ResourceLocation EMPTY_SLOT_MULTIPHASE_MATTER =
-        AnvilCraft.of("item/empty_slot_multiphase_matter");
-
     // 空槽位纹理 - 输入
     public static final ResourceLocation EMPTY_SLOT_AXE =
         ResourceLocation.withDefaultNamespace("item/empty_slot_axe");
