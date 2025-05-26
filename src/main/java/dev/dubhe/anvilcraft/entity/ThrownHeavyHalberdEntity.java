@@ -166,7 +166,7 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
             null,
             vec3,
             level.getBlockState(hitResult.getBlockPos()),
-            p_348680_ -> this.kill()
+            item -> this.kill()
         );
     }
 
