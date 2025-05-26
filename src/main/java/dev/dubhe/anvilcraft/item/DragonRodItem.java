@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DoublePlantBlock;
@@ -40,7 +41,7 @@ public class DragonRodItem extends Item {
     private final int enchantmentValue;
 
     public DragonRodItem(Properties properties, int enchantmentValue) {
-        super(properties.component(ModComponents.DEVOUR_RANGE, DEFAULT_RANGE));
+        super(properties.component(ModComponents.DEVOUR_RANGE, DEFAULT_RANGE).rarity(Rarity.EPIC));
         this.enchantmentValue = enchantmentValue;
     }
 
