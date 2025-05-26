@@ -1,10 +1,12 @@
 package dev.dubhe.anvilcraft.client.support;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +24,7 @@ public class AmuletSelectorSupport {
     private static int currentSelectedIndex = -1;
     private static int maxSelection = -1;
     private static Layout layout = null;
+    private static BoxContents contents = null;
 
     public static void render(GuiGraphics guiGraphics, int x, int y) {
         if (currentHoveringItemStack == null) return;
@@ -39,6 +42,10 @@ public class AmuletSelectorSupport {
             BACKGROUND_WIDTH,
             BACKGROUND_HEIGHT
         );
+        if (layout != null && contents != null) {
+            RenderSystem.disableDepthTest();
+            layout.render(guiGraphics, left, top, contents);
+        }
     }
 
     public static boolean hasHoveringItem() {
@@ -47,16 +54,24 @@ public class AmuletSelectorSupport {
 
     public static void setCurrentHoveringItemStack(ItemStack itemStack) {
         AmuletSelectorSupport.currentHoveringItemStack = itemStack;
-        BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-        if (contents.isEmpty()) {
+        if (itemStack == null) {
             currentSelectedIndex = -1;
             AmuletSelectorSupport.layout = null;
+            maxSelection = -1;
+            return;
+        }
+        BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
+        AmuletSelectorSupport.contents = contents;
+        if (contents.isEmpty()) {
+            currentSelectedIndex = -1;
+            AmuletSelectorSupport.layout = Layout.EMPTY;
             maxSelection = -1;
         } else {
             AmuletSelectorSupport.layout = Layout.layout(contents);
             currentSelectedIndex = contents.getSelection();
             maxSelection = contents.getMaxSelection();
         }
+        System.out.println("AmuletSelectorSupport.layout = " + AmuletSelectorSupport.layout);
     }
 
     public static void mouseScrolled(int amount) {
@@ -85,33 +100,92 @@ public class AmuletSelectorSupport {
     public enum Layout {
         EMPTY {
             @Override
-            public void render(int x, int y, BoxContents content) {
+            public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
             }
         },
         NO_AMULET {
             @Override
-            public void render(int x, int y, BoxContents content) {
-                if (content.getTotemCount() <= 0) return;
-                ItemStack totem = new ItemStack(Items.TOTEM_OF_UNDYING, content.getTotemCount());
+            public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+                PoseStack poseStack = guiGraphics.pose();
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 1000);
+                renderTotem(guiGraphics, x + 3, y + 3, content);
+                poseStack.popPose();
             }
         },
         BIG_AMULET_1 {
             @Override
-            public void render(int x, int y, BoxContents content) {
+            public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+                //TODO: 占大空间的护符
             }
         },
         SMALL_AMULET_1 {
             @Override
-            public void render(int x, int y, BoxContents content) {
+            public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+                PoseStack poseStack = guiGraphics.pose();
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 1000);
+                guiGraphics.fill(
+                    x + 3,
+                    y + 3,
+                    x + 3 + 53,
+                    y + 3 + 35,
+                    0x5522b14c
+                );
+                Layout.renderTotem(guiGraphics, x + 57, y + 3, content);
+                poseStack.popPose();
             }
         },
         SMALL_AMULET_2 {
             @Override
-            public void render(int x, int y, BoxContents content) {
+            public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+                PoseStack poseStack = guiGraphics.pose();
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 1000);
+                guiGraphics.fill(
+                    x + 3,
+                    y + 3,
+                    x + 3 + 35,
+                    y + 3 + 53,
+                    0x5522b14c
+                );
+                guiGraphics.fill(
+                    x + 39,
+                    y + 3,
+                    x + 39 + 35,
+                    y + 3 + 53,
+                    0x5500a2e8
+                );
+                Layout.renderTotem(guiGraphics, x + 3, y + 57, content);
+                poseStack.popPose();
             }
         };
 
-        public abstract void render(int x, int y, BoxContents content);
+        private static void renderTotem(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+            if (content.getTotemCount() <= 0) return;
+            ItemStack totem = new ItemStack(Items.TOTEM_OF_UNDYING, content.getTotemCount());
+            guiGraphics.fill(
+                x,
+                y,
+                x + 17,
+                y + 17,
+                0x55ffc90e
+            );
+            guiGraphics.renderFakeItem(
+                totem,
+                x,
+                y
+            );
+            guiGraphics.renderItemDecorations(
+                Minecraft.getInstance().font,
+                totem,
+                x,
+                y
+            );
+
+        }
+
+        public abstract void render(GuiGraphics guiGraphics, int x, int y, BoxContents content);
 
         public static Layout layout(BoxContents content) {
             if (content.isEmpty()) {
