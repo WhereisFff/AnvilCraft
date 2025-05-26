@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IMultipleResult;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
-import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -36,6 +35,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.ProjectileItem;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
@@ -60,6 +60,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
             properties
                 .component(DataComponents.TOOL, createToolProperties(tier))
                 .durability(tier.getUses())
+                .rarity(Rarity.EPIC)
         );
     }
 
@@ -84,14 +85,6 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         rules.addAll(SwordItem.createToolProperties().rules());
         rules.addAll(tier.createToolProperties(BlockTags.MINEABLE_WITH_AXE).rules());
         return new Tool(rules, 1.0F, 2);
-    }
-
-    @Override
-    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
-        super.inventoryTick(stack, level, entity, slotId, isSelected);
-        if (isTooDamagedToUse(stack)) {
-            stack.set(ModComponents.MERCILESS, false);
-        }
     }
 
     @Override
@@ -199,7 +192,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         }
     }
 
-    private static boolean isTooDamagedToUse(ItemStack stack) {
+    protected static boolean isTooDamagedToUse(ItemStack stack) {
         return stack.getDamageValue() >= stack.getMaxDamage() - 1;
     }
 

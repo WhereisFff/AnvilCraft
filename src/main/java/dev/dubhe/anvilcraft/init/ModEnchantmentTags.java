@@ -10,6 +10,7 @@ import org.jetbrains.annotations.NotNull;
 public class ModEnchantmentTags {
     public static final TagKey<Enchantment> MERCILESS_DAMAGE_PASSED = bind("merciless_damage_passed");
     public static final TagKey<Enchantment> MERCILESS_PASSED = bind("merciless_passed");
+    public static final TagKey<Enchantment> FROST_PASSED = bind("frost_passed");
 
     public static @NotNull TagKey<Enchantment> bindC(String id) {
         return TagKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath("c", id));

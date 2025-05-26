@@ -73,7 +73,6 @@ import dev.dubhe.anvilcraft.item.template.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.template.FourToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.FrostMetalUpgradeTemplateItem;
-import dev.dubhe.anvilcraft.item.template.BaseMultipleToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.RoyalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.template.TwoToOneTemplateItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
@@ -542,7 +541,7 @@ public class ModItems {
     public static final ItemEntry<FrostMetalHeavyHalberdItem> FROST_METAL_HEAVY_HALBERD = REGISTRATE
         .item("frost_metal_heavy_halberd", FrostMetalHeavyHalberdItem::new)
         .tag(
-            ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
+            ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
             ModItemTags.HEAVY_HALBERD, ModItemTags.EXPLOSION_PROOF)
         .model((ctx, provider) -> {
         })
@@ -550,7 +549,7 @@ public class ModItems {
     public static final ItemEntry<EmberMetalHeavyHalberdItem> EMBER_METAL_HEAVY_HALBERD = REGISTRATE
         .item("ember_metal_heavy_halberd", EmberMetalHeavyHalberdItem::new)
         .tag(
-            ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
+            ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
             ModItemTags.HEAVY_HALBERD, ModItemTags.EXPLOSION_PROOF)
         .model((ctx, provider) -> {
         })
