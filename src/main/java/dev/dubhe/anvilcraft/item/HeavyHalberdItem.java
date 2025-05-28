@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.init.ModEnchantmentTags;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -15,6 +16,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Position;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
@@ -53,10 +55,12 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.ArrayList;
+import java.util.function.Consumer;
 
 public abstract class HeavyHalberdItem extends TieredItem implements ProjectileItem, IMultipleResult {
     public HeavyHalberdItem(Tier tier, Properties properties) {
@@ -178,6 +182,16 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
                 stack.set(DataComponents.TOOL, createToolProperties(tier));
             }
         }
+    }
+
+    @Override
+    @SuppressWarnings({"removal"})
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        ItemProperties.register(
+            this,
+            ResourceLocation.withDefaultNamespace("throwing"),
+            (stack, level, entity, data) -> entity != null && entity.isUsingItem() && entity.getUseItem() == stack ? 1.0F : 0.0F
+        );
     }
 
     @Override
