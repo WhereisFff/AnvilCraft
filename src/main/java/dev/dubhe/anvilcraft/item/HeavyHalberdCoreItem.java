@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IMultipleToOneSmithingRecipeMaterial;
+import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
@@ -38,7 +39,7 @@ public class HeavyHalberdCoreItem extends Item implements IMultipleToOneSmithing
 
     @Override
     public List<ResourceLocation> getEmptySlotTextures(int id, List<ItemStack> inputs) {
-        List<ResourceLocation> textures = new ArrayList<>(EMPTY_SLOT_TEXTURES);
+        List<ResourceLocation> textures = ListUtil.cycle(EMPTY_SLOT_TEXTURES, id);
         for (ItemStack input : inputs) {
             if (input.is(ItemTags.SWORDS)) {
                 textures.remove(EMPTY_SLOT_SWORD);
