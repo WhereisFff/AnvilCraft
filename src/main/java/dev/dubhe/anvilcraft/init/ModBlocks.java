@@ -1753,7 +1753,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE,
             Tags.Blocks.STORAGE_BLOCKS)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/ember_metal_block").get()))
@@ -1782,7 +1784,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/cut_ember_metal_block").get()))
@@ -1816,7 +1820,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate(BlockStatProviderUtil::none)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -1847,7 +1853,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate(BlockStatProviderUtil::none)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -1892,7 +1900,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate(BlockStatProviderUtil::none)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -1929,7 +1939,9 @@ public class ModBlocks {
     public static final BlockEntry<TranscendiumBlock> TRANSCENDIUM_BLOCK = REGISTRATE
         .block("transcendium_block", TranscendiumBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 7)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .tag(BlockTags.BEACON_BASE_BLOCKS,
              BlockTags.MINEABLE_WITH_PICKAXE,
              Tags.Blocks.NEEDS_NETHERITE_TOOL,
