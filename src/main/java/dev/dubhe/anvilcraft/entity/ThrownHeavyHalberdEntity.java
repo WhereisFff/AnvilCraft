@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.entity;
 
+import dev.dubhe.anvilcraft.item.HeavyHalberdItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -45,6 +46,7 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
         EntityType<? extends ThrownHeavyHalberdEntity> type, Level level, LivingEntity shooter, ItemStack pickupItemStack
     ) {
         super(type, shooter, level, pickupItemStack, null);
+        this.setBaseDamage(HeavyHalberdItem.getAttackDamage(pickupItemStack));
         this.entityData.set(ID_LOYALTY, this.getLoyaltyFromItem(pickupItemStack));
         this.entityData.set(ID_FOIL, pickupItemStack.hasFoil());
     }
@@ -53,6 +55,7 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
         EntityType<? extends ThrownHeavyHalberdEntity> type, Level level, double x, double y, double z, ItemStack pickupItemStack
     ) {
         super(type, x, y, z, level, pickupItemStack, pickupItemStack);
+        this.setBaseDamage(HeavyHalberdItem.getAttackDamage(pickupItemStack));
         this.entityData.set(ID_LOYALTY, this.getLoyaltyFromItem(pickupItemStack));
         this.entityData.set(ID_FOIL, pickupItemStack.hasFoil());
     }

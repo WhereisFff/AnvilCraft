@@ -48,7 +48,7 @@ public class PlayerTickEventHandler {
         }
     }
 
-    private static final ResourceLocation MERCILESS_ID = AnvilCraft.of("merciless");
+    public static final ResourceLocation MERCILESS_ID = AnvilCraft.of("merciless");
 
     private static void processMerciless(ServerPlayer player) {
         List<ItemStack> mercilessItems = InventoryUtil.getItems(

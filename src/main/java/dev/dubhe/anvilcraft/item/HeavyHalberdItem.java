@@ -2,9 +2,13 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IMultipleResult;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
+import dev.dubhe.anvilcraft.event.PlayerTickEventHandler;
+import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModEnchantmentTags;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -47,6 +51,7 @@ import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
@@ -80,11 +85,110 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
             .build();
     }
 
+    public static double getAttackDamage(ItemStack stack) {
+        for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
+            if ((entry.matches(Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_ID)
+                 || entry.matches(Attributes.ATTACK_DAMAGE, PlayerTickEventHandler.MERCILESS_ID))
+                && entry.modifier().operation().equals(AttributeModifier.Operation.ADD_VALUE)
+            ) {
+                return entry.modifier().amount();
+            }
+        }
+        return 2.0;
+    }
+
     public static Tool createToolProperties(Tier tier) {
         ArrayList<Tool.Rule> rules = new ArrayList<>();
         rules.addAll(SwordItem.createToolProperties().rules());
         rules.addAll(tier.createToolProperties(BlockTags.MINEABLE_WITH_AXE).rules());
         return new Tool(rules, 1.0F, 2);
+    }
+
+    public static void checkTooDamaged(Tier tier, ItemStack stack) {
+        if (isTooDamagedToUse(stack)) {
+            if (stack.has(ModComponents.MERCILESS)) {
+                stack.set(ModComponents.MERCILESS, false);
+            }
+            if (stack.has(DataComponents.ENCHANTMENTS)) {
+                ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+                ItemEnchantments enchantmentsStored = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
+                ItemEnchantments.Mutable enchantmentsMutable = new ItemEnchantments.Mutable(enchantments);
+                ItemEnchantments.Mutable storedMutable = new ItemEnchantments.Mutable(enchantmentsStored);
+                for (Object2IntMap.Entry<Holder<Enchantment>> enchantment : enchantments.entrySet()) {
+                    Holder<Enchantment> enchantmentHolder = enchantment.getKey();
+                    if (enchantmentHolder.is(ModEnchantmentTags.FROST_PASSED)) continue;
+                    int enchantmentLevel = enchantment.getIntValue();
+                    int enchantmentStoredLevel = enchantmentsStored.getLevel(enchantmentHolder);
+                    if (enchantmentLevel == enchantmentStoredLevel) {
+                        storedMutable.set(enchantmentHolder, enchantmentLevel + 1);
+                    } else if (enchantmentLevel > enchantmentStoredLevel) {
+                        storedMutable.set(enchantmentHolder, enchantmentLevel);
+                    }
+                    enchantmentsMutable.removeIf(holder -> holder.equals(enchantmentHolder));
+                }
+                stack.set(DataComponents.STORED_ENCHANTMENTS, storedMutable.toImmutable());
+                stack.set(DataComponents.ENCHANTMENTS, enchantmentsMutable.toImmutable());
+            }
+            if (stack.has(DataComponents.ATTRIBUTE_MODIFIERS)) {
+                ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
+                for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
+                    if (!entry.matches(Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_ID)) {
+                        builder.add(entry.attribute(), entry.modifier(), entry.slot());
+                    }
+                }
+                stack.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.build());
+            }
+            if (stack.has(DataComponents.TOOL)) {
+                stack.remove(DataComponents.TOOL);
+            }
+        } else {
+            if (stack.has(ModComponents.MERCILESS)) {
+                stack.set(ModComponents.MERCILESS, true);
+            }
+            if (stack.has(DataComponents.STORED_ENCHANTMENTS)) {
+                ItemEnchantments enchantmentsStored = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
+                ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+                ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(enchantments);
+                for (Object2IntMap.Entry<Holder<Enchantment>> enchantmentStored : enchantmentsStored.entrySet()) {
+                    Holder<Enchantment> enchantmentStoredHolder = enchantmentStored.getKey();
+                    int enchantmentStoredLevel = enchantmentStored.getIntValue();
+                    int enchantmentLevel = enchantments.getLevel(enchantmentStoredHolder);
+                    if (enchantmentStoredLevel == enchantmentLevel) {
+                        mutable.set(enchantmentStoredHolder, enchantmentStoredLevel + 1);
+                    } else if (enchantmentStoredLevel > enchantmentLevel) {
+                        mutable.set(enchantmentStoredHolder, enchantmentStoredLevel);
+                    }
+                }
+                stack.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
+                stack.remove(DataComponents.STORED_ENCHANTMENTS);
+            }
+            if (stack.has(DataComponents.ATTRIBUTE_MODIFIERS)) {
+                ItemAttributeModifiers modifiers = stack.getAttributeModifiers()
+                    .withModifierAdded(
+                        Attributes.ATTACK_DAMAGE,
+                        new AttributeModifier(
+                            BASE_ATTACK_DAMAGE_ID,
+                            13 + tier.getAttackDamageBonus(),
+                            AttributeModifier.Operation.ADD_VALUE),
+                        EquipmentSlotGroup.MAINHAND
+                    );
+                stack.set(DataComponents.ATTRIBUTE_MODIFIERS, modifiers);
+            }
+            if (!stack.has(DataComponents.TOOL)) {
+                stack.set(DataComponents.TOOL, createToolProperties(tier));
+            }
+        }
+    }
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+        checkTooDamaged(this.getTier(), stack);
+    }
+
+    @Override
+    public boolean canAttackBlock(BlockState state, Level level, BlockPos pos, Player player) {
+        return !player.isCreative();
     }
 
     @Override
