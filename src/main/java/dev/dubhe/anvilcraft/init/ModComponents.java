@@ -67,7 +67,9 @@ public class ModComponents {
         register("multiphase", b -> b.persistent(Multiphase.CODEC)
             .networkSynchronized(Multiphase.STREAM_CODEC));
 
-    public static final DataComponentType<Unit> MERCILESS = registerEmpty("merciless");
+    public static final DataComponentType<Boolean> MERCILESS =
+        register("merciless", b -> b.persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.BOOL));
 
     public static final DataComponentType<Integer> DEVOUR_RANGE = register(
         "devour_range", b -> b.persistent(Codec.INT)

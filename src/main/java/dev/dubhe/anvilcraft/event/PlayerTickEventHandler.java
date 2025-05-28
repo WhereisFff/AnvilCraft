@@ -12,7 +12,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -22,7 +21,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 
 import java.util.List;
@@ -50,10 +48,11 @@ public class PlayerTickEventHandler {
         }
     }
 
-    private static final ResourceLocation MERCILESS_ID = AnvilCraft.of("merciless");
+    public static final ResourceLocation MERCILESS_ID = AnvilCraft.of("merciless");
 
     private static void processMerciless(ServerPlayer player) {
-        List<ItemStack> mercilessItems = InventoryUtil.getItems(player.getInventory(), stack -> stack.has(ModComponents.MERCILESS));
+        List<ItemStack> mercilessItems = InventoryUtil.getItems(
+            player.getInventory(), stack -> stack.has(ModComponents.MERCILESS));
 
         for (ItemStack stack : mercilessItems) {
             float attackDamage = 0;
@@ -67,7 +66,7 @@ public class PlayerTickEventHandler {
                 }
             }
 
-            if (attackDamage != 0 || miningEfficiency != 0) {
+            if ((attackDamage != 0 || miningEfficiency != 0) && stack.getOrDefault(ModComponents.MERCILESS, false)) {
                 ItemAttributeModifiers attributeModifiers = stack.getAttributeModifiers()
                     .withModifierAdded(
                         Attributes.ATTACK_DAMAGE,

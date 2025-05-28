@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.renderer.entity.AscendingBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.IonocraftRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SpectralBlockRenderer;
+import dev.dubhe.anvilcraft.client.renderer.entity.ThrownHeavyHalberdRenderer;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.entity.FallingSpectralBlockEntity;
@@ -13,6 +14,8 @@ import dev.dubhe.anvilcraft.entity.IonocraftEntity;
 import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
+import dev.dubhe.anvilcraft.entity.ThrownEmberMetalHeavyHalberdEntity;
+import dev.dubhe.anvilcraft.entity.ThrownFrostMetalHeavyHalberdEntity;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.world.entity.MobCategory;
 
@@ -59,6 +62,24 @@ public class ModEntities {
             .eyeHeight(0.5625F)
             .clientTrackingRange(10)
         ).renderer(() -> IonocraftRenderer::new)
+        .register();
+
+    public static final EntityEntry<? extends ThrownFrostMetalHeavyHalberdEntity> THROWN_FROST_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRATE
+        .<ThrownFrostMetalHeavyHalberdEntity>entity("thrown_frost_metal_heavy_halberd", ThrownFrostMetalHeavyHalberdEntity::new, MobCategory.MISC)
+        .properties(it -> it.sized(0.5F, 0.5F)
+            .eyeHeight(0.13F)
+            .clientTrackingRange(4)
+            .updateInterval(20))
+        .renderer(() -> ThrownHeavyHalberdRenderer::new)
+        .register();
+
+    public static final EntityEntry<? extends ThrownEmberMetalHeavyHalberdEntity> THROWN_EMBER_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRATE
+        .<ThrownEmberMetalHeavyHalberdEntity>entity("thrown_ember_metal_heavy_halberd", ThrownEmberMetalHeavyHalberdEntity::new, MobCategory.MISC)
+        .properties(it -> it.sized(0.5F, 0.5F)
+            .eyeHeight(0.13F)
+            .clientTrackingRange(4)
+            .updateInterval(20))
+        .renderer(() -> ThrownHeavyHalberdRenderer::new)
         .register();
 
     public static void register() {

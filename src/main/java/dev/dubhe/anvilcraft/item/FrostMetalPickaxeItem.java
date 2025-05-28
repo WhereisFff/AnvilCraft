@@ -16,7 +16,7 @@ public class FrostMetalPickaxeItem extends PickaxeItem {
             ModTiers.FROST_METAL,
             properties.fireResistant()
                 .attributes(AxeItem.createAttributes(ModTiers.FROST_METAL, 7, -2.8f))
-                .component(ModComponents.MERCILESS, Unit.INSTANCE)
+                .component(ModComponents.MERCILESS, true)
         );
     }
 }
