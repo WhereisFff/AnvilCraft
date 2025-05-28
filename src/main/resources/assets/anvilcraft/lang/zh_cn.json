@@ -620,6 +620,8 @@
   "text.autoconfig.anvilcraft.option.blockDevourerUpwardChainDevouring.@Tooltip": "方块吞噬器是否向上连锁吞噬带有#anvilcraft:block_devourer_chain_devouring标签的方块",
   "text.autoconfig.anvilcraft.option.blockDevourerUpwardChainDevouringDistance": "方块吞噬器向上连锁吞噬距离",
   "text.autoconfig.anvilcraft.option.blockDevourerUpwardChainDevouringDistance.@Tooltip": "方块吞噬器向上连锁吞噬的最大距离",
+  "text.autoconfig.anvilcraft.option.blockPlacerRecursiveRetrievalDistanceMax": "Block Placer Recursive Retrieval Distance Max",
+  "text.autoconfig.anvilcraft.option.blockPlacerRecursiveRetrievalDistanceMax.@Tooltip": "Block Placer recursive retrieval of container max distance",
   "text.autoconfig.anvilcraft.option.chuteMaxCooldown": "溜槽传输冷却",
   "text.autoconfig.anvilcraft.option.chuteMaxCooldown.@Tooltip": "溜槽每次传输物品的时间间隔（单位：ticks）",
   "text.autoconfig.anvilcraft.option.displayAnvilAnimation": "显示铁砧动画",
