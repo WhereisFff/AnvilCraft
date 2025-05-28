@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.init;
 
+import com.mojang.datafixers.util.Unit;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
@@ -18,6 +19,7 @@ import dev.dubhe.anvilcraft.item.CapacitorItem;
 import dev.dubhe.anvilcraft.item.CrabClawItem;
 import dev.dubhe.anvilcraft.item.CursedItem;
 import dev.dubhe.anvilcraft.item.DiskItem;
+import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.item.EmberAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.EmberMetalAxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalHeavyHalberdItem;
@@ -536,6 +538,77 @@ public class ModItems {
         .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
         .properties(properties -> properties.durability(2031))
         .model((ctx, provider) -> {
+        })
+        .register();
+    public static final ItemEntry<DragonRodItem> DRAGON_ROD = REGISTRATE
+        .item("dragon_rod", properties -> new DragonRodItem(properties, 3))
+        .properties(properties -> properties.durability(35))
+        .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
+        .model((ctx, provider) -> {
+        })
+        .recipe((ctx, provider) -> ShapelessRecipeBuilder
+            .shapeless(RecipeCategory.TOOLS, ctx.get())
+            .requires(ModBlocks.BLOCK_DEVOURER)
+            .requires(ModItems.ANVIL_HAMMER)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLOCK_DEVOURER), RegistrateRecipeProvider.has(ModBlocks.BLOCK_DEVOURER))
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.ANVIL_HAMMER), RegistrateRecipeProvider.has(ModItems.ANVIL_HAMMER))
+            .save(provider))
+        .register();
+    public static final ItemEntry<DragonRodItem> ROYAL_DRAGON_ROD = REGISTRATE
+        .item("royal_dragon_rod", properties -> new DragonRodItem(properties, 6))
+        .properties(properties -> properties.durability(150))
+        .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
+        .model((ctx, provider) -> {
+        })
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.TOOLS, ctx.get())
+                .requires(ModBlocks.BLOCK_DEVOURER)
+                .requires(ModItems.ROYAL_ANVIL_HAMMER)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLOCK_DEVOURER), RegistrateRecipeProvider.has(ModBlocks.BLOCK_DEVOURER))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.ROYAL_ANVIL_HAMMER), RegistrateRecipeProvider.has(ModItems.ROYAL_ANVIL_HAMMER))
+                .save(provider);
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItems.DRAGON_ROD),
+                    Ingredient.of(ModBlocks.ROYAL_STEEL_BLOCK),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks(
+                    AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE),
+                    AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE))
+                .unlocks(AnvilCraftDatagen.hasItem(ModItems.DRAGON_ROD), AnvilCraftDatagen.has(ModItems.DRAGON_ROD))
+                .unlocks(AnvilCraftDatagen.hasItem(ModBlocks.ROYAL_STEEL_BLOCK), AnvilCraftDatagen.has(ModBlocks.ROYAL_STEEL_BLOCK))
+                .save(provider, ctx.getId().withPrefix("smithing/"));
+        })
+        .register();
+    public static final ItemEntry<DragonRodItem> EMBER_DRAGON_ROD = REGISTRATE
+        .item("ember_dragon_rod", properties -> new DragonRodItem(properties, 9))
+        .properties(properties -> properties
+            .durability(2031)
+            .fireResistant()
+            .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE))
+        .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
+        .model((ctx, provider) -> {
+        })
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder
+                .shapeless(RecipeCategory.TOOLS, ctx.get())
+                .requires(ModBlocks.BLOCK_DEVOURER)
+                .requires(ModItems.EMBER_ANVIL_HAMMER)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLOCK_DEVOURER), RegistrateRecipeProvider.has(ModBlocks.BLOCK_DEVOURER))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.EMBER_ANVIL_HAMMER), RegistrateRecipeProvider.has(ModItems.EMBER_ANVIL_HAMMER))
+                .save(provider);
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.EMBER_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItems.ROYAL_DRAGON_ROD),
+                    Ingredient.of(ModBlocks.EMBER_METAL_BLOCK),
+                    RecipeCategory.TOOLS,
+                    ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
+                .save(provider, ctx.getId().withPrefix("smithing/"));
         })
         .register();
     public static final ItemEntry<FrostMetalHeavyHalberdItem> FROST_METAL_HEAVY_HALBERD = REGISTRATE

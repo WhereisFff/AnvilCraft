@@ -50,6 +50,7 @@
     "accessor.ShapedRecipePatternAccessor",
     "compat.BatchCrafterBlockEntityMixin",
     "compat.BatchCrafterBlockMixin",
+    "compat.CerbonNewBeaconMenuMixin",
     "forge.FallingBlockEntityMixin",
     "forge.LevelChunkMixin",
     "forge.LightningBoltMixin",
