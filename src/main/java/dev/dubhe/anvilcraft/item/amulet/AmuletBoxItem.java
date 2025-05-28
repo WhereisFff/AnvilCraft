@@ -42,7 +42,7 @@ public class AmuletBoxItem extends Item {
                 }
             } else {
                 for (int i = box.get(ModComponents.TOTEM_COUNT); i > 0; i--) {
-                    InventoryUtil.addToInventory(player.getInventory(), Items.TOTEM_OF_UNDYING.getDefaultInstance());
+                    player.getInventory().placeItemBackInInventory(Items.TOTEM_OF_UNDYING.getDefaultInstance());
                 }
                 box.set(ModComponents.TOTEM_COUNT, 0);
             }
