@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
@@ -26,15 +27,22 @@ public class MobAmberBlockEntity extends HasMobBlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     public void clientTick(ClientLevel level, BlockPos blockPos) {
-        Entity entity = this.getOrCreateDisplayEntity(level);
-        if (!(entity instanceof LivingEntity)) return;
-        LivingEntity displayEntity = (LivingEntity) entity;
+        BlockState state = level.getBlockState(blockPos);
+        Entity entity = getOrCreateDisplayEntity(level);
+        if (!state.is(ModBlocks.MOB_AMBER_BLOCK) || !(entity instanceof LivingEntity displayEntity)) return;
+
         displayEntity.setPos(blockPos.getCenter());
+        setYRot(displayEntity, state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot());
+    }
 
-        displayEntity.setYHeadRot(level.getBlockState(blockPos).getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot());
-        displayEntity.yBodyRot = displayEntity.yHeadRot;
-        displayEntity.yHeadRotO = displayEntity.yHeadRot;
-        displayEntity.yBodyRotO = displayEntity.yBodyRot;
-
+    private void setYRot(LivingEntity displayEntity, float yRot) {
+        if (displayEntity.yHeadRot != yRot) {
+            displayEntity.yHeadRot = yRot;
+            displayEntity.yHeadRotO = yRot;
+        }
+        if (displayEntity.yBodyRot != yRot) {
+            displayEntity.yBodyRot = yRot;
+            displayEntity.yBodyRotO = yRot;
+        }
     }
 }
