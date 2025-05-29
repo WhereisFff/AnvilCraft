@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.item.IMultipleToOneSmithingRecipeMaterial;
+import dev.dubhe.anvilcraft.api.item.IMultipleMaterial;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -11,10 +11,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class HeavyHalberdCoreItem extends Item implements IMultipleToOneSmithingRecipeMaterial {
+public class HeavyHalberdCoreItem extends Item implements IMultipleMaterial {
     private static final ResourceLocation EMPTY_SLOT_SWORD =
         ResourceLocation.withDefaultNamespace("item/empty_slot_sword");
     private static final ResourceLocation EMPTY_SLOT_AXE =

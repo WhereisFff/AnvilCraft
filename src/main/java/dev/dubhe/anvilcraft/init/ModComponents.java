@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.item.DiskItem;
-import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
@@ -73,8 +72,7 @@ public class ModComponents {
 
     public static final DataComponentType<Integer> DEVOUR_RANGE = register(
         "devour_range", b -> b.persistent(Codec.INT)
-            .networkSynchronized(ByteBufCodecs.INT)
-    );
+            .networkSynchronized(ByteBufCodecs.INT));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();

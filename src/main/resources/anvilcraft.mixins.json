@@ -71,6 +71,7 @@
     "MouseHandlerMixin",
     "SectionCompilerMixin",
     "SoundEngineMixin",
+    "accessor.MultiPlayerGameModeAccessor",
     "accessor.ScreenAccessor",
     "compat.EmbChunkBuilderMeshingTaskMixin",
     "compat.SodiumChunkBuilderMeshingTaskMixin"

@@ -159,7 +159,7 @@ public class ItemTooltipManager {
         if (stack.has(ModComponents.MULTIPHASE)) {
             propertyTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
         }
-        if (stack.has(ModComponents.MERCILESS)) {
+        if (stack.getOrDefault(ModComponents.MERCILESS, false)) {
             propertyTooltip("merciless", tooltip);
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {

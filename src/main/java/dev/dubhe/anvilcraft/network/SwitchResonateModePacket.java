@@ -14,6 +14,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.component.CustomModelData;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -52,12 +53,13 @@ public record SwitchResonateModePacket(InteractionHand hand, int mode) implement
     public static void serverHandler(SwitchResonateModePacket data, IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {
-            if (data.mode == -1) {
+            if (data.mode == -2) {
                 PlayerUtil.getHand(player, stack -> stack.is(ModItemTags.RESONATOR))
                     .ifPresent(hand -> PacketDistributor.sendToPlayer(
                         player,
                         new SwitchResonateModePacket(
-                            hand, (int) player.getItemInHand(hand).getOrDefault(DataComponents.CUSTOM_MODEL_DATA, 0))
+                            hand, player.getItemInHand(hand).getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()
+                        )
                     ));
             } else {
                 ResonatorItem.set((ServerPlayer) context.player(), data.hand, data.mode);

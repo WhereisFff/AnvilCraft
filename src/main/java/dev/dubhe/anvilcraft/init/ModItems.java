@@ -50,6 +50,7 @@ import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
+import dev.dubhe.anvilcraft.item.ResonatorCoreItem;
 import dev.dubhe.anvilcraft.item.RoyalAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.RoyalAxeItem;
 import dev.dubhe.anvilcraft.item.RoyalHoeItem;
@@ -2025,6 +2026,23 @@ public class ModItems {
                 .unlockedBy("has_heavy_iron_block", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider))
+        .register();
+    public static final ItemEntry<ResonatorCoreItem> RESONATOR_CORE = REGISTRATE
+        .item("resonator_core", ResonatorCoreItem::new)
+        .properties(Item.Properties::fireResistant)
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .recipe((ctx, provider) ->
+             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                 .pattern("AEA")
+                 .pattern("EME")
+                 .pattern("AEA")
+                 .define('A', Items.AMETHYST_SHARD)
+                 .define('E', Items.ECHO_SHARD)
+                 .define('M', ModItems.MULTIPHASE_MATTER)
+                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.AMETHYST_SHARD), AnvilCraftDatagen.has(Items.AMETHYST_SHARD))
+                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.ECHO_SHARD), AnvilCraftDatagen.has(Items.ECHO_SHARD))
+                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
+                 .save(provider))
         .register();
 
     public static final ItemEntry<Item> NEGATIVE_MATTER = REGISTRATE

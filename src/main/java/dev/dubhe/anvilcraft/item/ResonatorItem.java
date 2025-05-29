@@ -7,26 +7,31 @@ import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.AxeItem;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShearsItem;
-import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
@@ -36,13 +41,20 @@ import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.gameevent.GameEvent;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Range;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Consumer;
 
-public class ResonatorItem extends TieredItem implements IMultipleResult {
+public abstract class ResonatorItem extends TieredItem implements IMultipleResult {
     public static final int AUTO_MODE = 0;
     public static final int AXE_MODE = 1;
     public static final int SHOVEL_MODE = 2;
@@ -78,26 +90,34 @@ public class ResonatorItem extends TieredItem implements IMultipleResult {
     public static Tool createToolProperties(Tier tier) {
         List<Tool.Rule> rules = new ArrayList<>();
         rules.addAll(SwordItem.createToolProperties().rules());
-        rules.addAll(ShearsItem.createToolProperties().rules());
+        rules.add(Tool.Rule.overrideSpeed(BlockTags.LEAVES, 15.0F));
+        rules.add(Tool.Rule.overrideSpeed(BlockTags.WOOL, 5.0F));
+        rules.add(Tool.Rule.overrideSpeed(List.of(Blocks.VINE, Blocks.GLOW_LICHEN), 2.0F));
         rules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_AXE, tier.getSpeed()));
         rules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, tier.getSpeed()));
         rules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, tier.getSpeed()));
         rules.add(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, tier.getSpeed()));
-        return new Tool(List.copyOf(rules), 1.0F, 1);
+        return new Tool(List.copyOf(rules), tier.getSpeed(), 1);
     }
 
     public static Tool createToolProperties(@Range(from = 0, to = 4) int mode, Tier tier) {
         return switch (mode) {
             case AUTO_MODE -> createToolProperties(tier);
-            case AXE_MODE -> new Tool(List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_AXE, tier.getSpeed())), 1.0F, 1);
-            case SHOVEL_MODE -> new Tool(List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, tier.getSpeed())), 1.0F, 1);
-            case HOE_MODE -> new Tool(List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, tier.getSpeed())), 1.0F, 1);
-            case PICKAXE_MODE -> new Tool(List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, tier.getSpeed())), 1.0F, 1);
+            case AXE_MODE -> new Tool(
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_AXE, tier.getSpeed())), tier.getSpeed(), 1);
+            case SHOVEL_MODE -> new Tool(
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, tier.getSpeed())), tier.getSpeed(), 1);
+            case HOE_MODE -> new Tool(
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, tier.getSpeed())), tier.getSpeed(), 1);
+            case PICKAXE_MODE -> new Tool(
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, tier.getSpeed())), tier.getSpeed(), 1);
             default -> throw new IllegalStateException("Unexpected mode: " + mode);
         };
     }
 
     public static void checkTooDamaged(Tier tier, ItemStack stack) {
+        Item item = stack.getItem();
+        if (!(item instanceof ResonatorItem resonator)) return;
         if (isTooDamagedToUse(stack)) {
             if (stack.has(ModComponents.MERCILESS)) {
                 stack.set(ModComponents.MERCILESS, false);
@@ -161,16 +181,28 @@ public class ResonatorItem extends TieredItem implements IMultipleResult {
                         Attributes.ATTACK_DAMAGE,
                         new AttributeModifier(
                             BASE_ATTACK_DAMAGE_ID,
-                            13 + tier.getAttackDamageBonus(),
-                            AttributeModifier.Operation.ADD_VALUE),
+                            resonator.getBaseAttackDamage() + tier.getAttackDamageBonus(),
+                            AttributeModifier.Operation.ADD_VALUE
+                        ),
                         EquipmentSlotGroup.MAINHAND
                     );
                 stack.set(DataComponents.ATTRIBUTE_MODIFIERS, modifiers);
             }
             if (!stack.has(DataComponents.TOOL)) {
-                stack.set(DataComponents.TOOL, createToolProperties((int) stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, 0), tier));
+                stack.set(
+                    DataComponents.TOOL,
+                    createToolProperties(stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value(), tier)
+                );
             }
         }
+    }
+
+    protected abstract double getBaseAttackDamage();
+
+    @Override
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+        super.inventoryTick(stack, level, entity, slotId, isSelected);
+        checkTooDamaged(this.getTier(), stack);
     }
 
     @Override
@@ -202,6 +234,7 @@ public class ResonatorItem extends TieredItem implements IMultipleResult {
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {
+        if (isTooDamagedToUse(stack)) return 1.0f;
         Tool tool = stack.get(DataComponents.TOOL);
         return tool != null ? tool.getMiningSpeed(state) : this.getTier().getSpeed();
     }
@@ -222,29 +255,123 @@ public class ResonatorItem extends TieredItem implements IMultipleResult {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        return switch ((int) context.getItemInHand().getOrDefault(DataComponents.CUSTOM_MODEL_DATA, 0)) {
-            case AXE_MODE -> useOnAsAxe(this, context);
-            case SHOVEL_MODE -> useOnAsShovel(this, context);
-            case HOE_MODE -> useOnAsHoe(this, context);
-            case PICKAXE_MODE -> useOnAsPickaxe(this, context);
+        return switch (context.getItemInHand().getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()) {
+            case AXE_MODE -> this.useOnAsAxe(context);
+            case SHOVEL_MODE -> this.useOnAsShovel(context);
+            case HOE_MODE -> this.useOnAsHoe(context);
+            case PICKAXE_MODE -> this.useOnAsPickaxe(context);
             default -> super.useOn(context);
         };
     }
 
-    public static InteractionResult useOnAsAxe(ResonatorItem resonator, UseOnContext ctx) {
-        return new AxeItem(resonator.getTier(), new Properties()).useOn(ctx);
+    public InteractionResult useOnAsAxe(UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        BlockState state = level.getBlockState(pos);
+        Player player = context.getPlayer();
+        if (player == null) return InteractionResult.PASS;
+        if (context.getHand().equals(InteractionHand.MAIN_HAND)
+            && player.getOffhandItem().is(Items.SHIELD)
+            && !player.isSecondaryUseActive()
+        ) return InteractionResult.PASS;
+        Optional<BlockState> optional = Optional.<BlockState>empty()
+            .or(() -> {
+                Optional<BlockState> optional1 = Optional.ofNullable(state.getToolModifiedState(context, ItemAbilities.AXE_STRIP, false));
+                optional1.ifPresent(it -> level.playSound(player, pos, SoundEvents.AXE_STRIP, SoundSource.BLOCKS, 1.0F, 1.0F));
+                return optional1;
+            })
+            .or(() -> {
+                Optional<BlockState> optional1 = Optional.ofNullable(state.getToolModifiedState(context, ItemAbilities.AXE_SCRAPE, false));
+                optional1.ifPresent(it -> {
+                    level.playSound(player, pos, SoundEvents.AXE_SCRAPE, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.levelEvent(player, 3005, pos, 0);
+                });
+                return optional1;
+            })
+            .or(() -> {
+                Optional<BlockState> optional1 = Optional.ofNullable(state.getToolModifiedState(context, ItemAbilities.AXE_WAX_OFF, false));
+                optional1.ifPresent(it -> {
+                    level.playSound(player, pos, SoundEvents.AXE_WAX_OFF, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    level.levelEvent(player, 3004, pos, 0);
+                });
+                return optional1;
+            });
+        if (optional.isEmpty()) return InteractionResult.PASS;
+
+        ItemStack stack = context.getItemInHand();
+        if (player instanceof ServerPlayer) {
+            CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer) player, pos, stack);
+        }
+
+        level.setBlock(pos, optional.get(), 11);
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, optional.get()));
+        stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
+
+        return InteractionResult.sidedSuccess(level.isClientSide);
     }
 
-    public static InteractionResult useOnAsShovel(ResonatorItem resonator, UseOnContext ctx) {
-        return new ShovelItem(resonator.getTier(), new Properties()).useOn(ctx);
+    public InteractionResult useOnAsShovel(UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        BlockState state = level.getBlockState(pos);
+        if (context.getClickedFace() == Direction.DOWN) return InteractionResult.PASS;
+        Player player = context.getPlayer();
+        BlockState finalState = state;
+        Optional<BlockState> optional = Optional.<BlockState>empty()
+            .or(() -> {
+                Optional<BlockState> optional1 = Optional.ofNullable(
+                    finalState.getToolModifiedState(context, ItemAbilities.SHOVEL_FLATTEN, false));
+                optional1.ifPresent(it -> {
+                    if (level.getBlockState(pos.above()).isAir()) {
+                        level.playSound(player, pos, SoundEvents.SHOVEL_FLATTEN, SoundSource.BLOCKS, 1.0F, 1.0F);
+                    }
+                });
+                return optional1;
+            })
+            .or(() -> {
+                Optional<BlockState> optional1 = Optional.ofNullable(
+                    finalState.getToolModifiedState(context, ItemAbilities.SHOVEL_DOUSE, false));
+                optional1.ifPresent(it -> {
+                    if (!level.isClientSide()) {
+                        level.levelEvent(null, 1009, pos, 0);
+                    }
+                });
+                return optional1;
+            });
+        if (optional.isEmpty()) return InteractionResult.PASS;
+
+        if (level.isClientSide) return InteractionResult.sidedSuccess(true);
+        state = optional.get();
+        level.setBlock(pos, state, 11);
+        level.gameEvent(GameEvent.BLOCK_CHANGE, pos, GameEvent.Context.of(player, state));
+        if (player != null) {
+            context.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
+        }
+        return InteractionResult.sidedSuccess(false);
     }
 
-    public static InteractionResult useOnAsHoe(ResonatorItem resonator, UseOnContext ctx) {
-        return new HoeItem(resonator.getTier(), new Properties()).useOn(ctx);
+    public InteractionResult useOnAsHoe(UseOnContext context) {
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        BlockState state = level.getBlockState(pos).getToolModifiedState(context, ItemAbilities.HOE_TILL, false);
+        Consumer<UseOnContext> contextConsumer =
+            state == null ? null : HoeItem.changeIntoState(state);
+        if (contextConsumer == null) return InteractionResult.PASS;
+
+        Player player = context.getPlayer();
+        level.playSound(player, pos, SoundEvents.HOE_TILL, SoundSource.BLOCKS, 1.0F, 1.0F);
+        if (level.isClientSide) return InteractionResult.sidedSuccess(true);
+
+        contextConsumer.accept(context);
+        if (player != null) {
+            context.getItemInHand().hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
+        }
+        return InteractionResult.sidedSuccess(false);
     }
 
-    public static InteractionResult useOnAsPickaxe(ResonatorItem resonator, UseOnContext ctx) {
-        return new PickaxeItem(resonator.getTier(), new Properties()).useOn(ctx);
+    @SuppressWarnings("unused")
+    public InteractionResult useOnAsPickaxe(UseOnContext context) {
+        return InteractionResult.PASS;
     }
 
     public static void set(ServerPlayer player, InteractionHand hand, @Range(from = 0, to = 4) int mode) {
@@ -254,5 +381,16 @@ public class ResonatorItem extends TieredItem implements IMultipleResult {
         if (!(item instanceof TieredItem resonatorItem)) return;
         resonator.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(mode));
         resonator.set(DataComponents.TOOL, createToolProperties(mode, resonatorItem.getTier()));
+    }
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+        return switch (stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()) {
+            case AXE_MODE -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(itemAbility);
+            case SHOVEL_MODE -> ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(itemAbility);
+            case HOE_MODE -> ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility);
+            case PICKAXE_MODE -> ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(itemAbility);
+            default -> false;
+        };
     }
 }

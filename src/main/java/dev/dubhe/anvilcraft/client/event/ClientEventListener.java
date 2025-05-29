@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
+import dev.dubhe.anvilcraft.client.gui.screen.ResonatorScreen;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
@@ -11,6 +12,7 @@ import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.world.InteractionHand;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -56,7 +58,9 @@ public class ClientEventListener {
         if (ModKeyMappings.SWITCH_PHASE.get().isDown()) PacketDistributor.sendToServer(new SwitchPhasePacket());
         if (event.getKey() == ModKeyMappings.SWITCH_RESONATE_MODE.get().getKey().getValue()) {
             if (event.getAction() == InputConstants.PRESS) {
-                PacketDistributor.sendToServer(new SwitchResonateModePacket());
+                PacketDistributor.sendToServer(new SwitchResonateModePacket(InteractionHand.MAIN_HAND, -2));
+            } else if (event.getAction() == InputConstants.RELEASE && Minecraft.getInstance().screen instanceof ResonatorScreen screen) {
+                screen.wheel.onClosing();
             }
         }
     }

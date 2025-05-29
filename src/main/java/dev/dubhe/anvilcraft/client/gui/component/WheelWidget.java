@@ -44,6 +44,7 @@ public class WheelWidget extends AbstractWidget {
 
     private long displayTime = System.currentTimeMillis();
     private float currentAngle = 0;
+    @Getter
     private int currentSectionIndex = -1;
     private Vector2f selectionEffectPos;
     private boolean animationStarted = false;
@@ -53,10 +54,34 @@ public class WheelWidget extends AbstractWidget {
 
     public WheelWidget(
         int x, int y, int width, int height,
+        float ringInnerRadius, float ringOuterRadius, float textScale,
+        List<Pair<Component, Consumer4<GuiGraphics, PoseStack, Integer, Integer>>> sections
+    ) {
+        this(x, y, width, height, Component.empty(), ringInnerRadius, ringOuterRadius, textScale, sections);
+    }
+
+    public WheelWidget(
+        int x, int y, int width, int height,
         float ringInnerRadius, float ringOuterRadius,
         List<Pair<Component, Consumer4<GuiGraphics, PoseStack, Integer, Integer>>> sections
     ) {
         this(x, y, width, height, Component.empty(), ringInnerRadius, ringOuterRadius, sections);
+    }
+
+    public WheelWidget(
+        int x, int y, int width, int height, Component message,
+        float ringInnerRadius, float ringOuterRadius, float textScale,
+        List<Pair<Component, Consumer4<GuiGraphics, PoseStack, Integer, Integer>>> sections
+    ) {
+        this(
+            x, y, width, height, message,
+            ringInnerRadius, ringOuterRadius,
+            150, 300, 150,
+            0x88000000,
+            0xddffff00, 20, 5f,
+            0xfdfdfd, textScale,
+            sections
+        );
     }
 
     public WheelWidget(
@@ -122,11 +147,11 @@ public class WheelWidget extends AbstractWidget {
             Pair<Component, Consumer4<GuiGraphics, PoseStack, Integer, Integer>> section = sections.get(i);
             float rotation = degreeEachRotation * i;
             Vector2f rotated = MathUtil.rotationDegrees(ROTATION_START, rotation)
-                .mul(-1, 1)
-                .mul(this.getRadius())
+                .mul(1, -1)
+                .mul(this.getSectionCircleDiameter())
                 .add(this.centerPos);
-            float detectionStart = (float) (Math.toRadians(rotation - degreeEachRotation / 2f) + Math.PI);
-            float detectionEnd = (float) (Math.toRadians(rotation + degreeEachRotation / 2f) + Math.PI);
+            float detectionStart = (float) (Math.toRadians(rotation - degreeEachRotation / 2f) + Math.PI * 2);
+            float detectionEnd = (float) (Math.toRadians(rotation + degreeEachRotation / 2f) + Math.PI * 2);
             detectionStart = detectionStart % (float) (Math.PI * 2);
             detectionEnd = detectionEnd % (float) (Math.PI * 2);
             this.sections.add(new WheelSection(
@@ -140,19 +165,24 @@ public class WheelWidget extends AbstractWidget {
         }
         this.selectionEffectPos = MathUtil.rotate(
             MathUtil.copy(ROTATION_START)
-                .mul(this.getRadius()),
-            -this.currentAngle
-        ).mul(1, -1);
+                .mul(this.getSectionCircleDiameter()),
+            this.currentAngle
+        );
     }
 
     public WheelWidget setCurrentIndex(int index) {
         this.currentSectionIndex = index;
         this.currentAngle = this.sections.get(index).angle;
+        this.selectionEffectPos = MathUtil.rotate(
+            MathUtil.copy(ROTATION_START)
+                .mul(this.getSectionCircleDiameter()),
+            this.currentAngle
+        );
         return this;
     }
 
-    public float getRadius() {
-        return this.ringOuterRadius - this.ringInnerRadius / 2f + this.ringInnerRadius;
+    public float getSectionCircleDiameter() {
+        return this.ringOuterRadius - this.ringInnerRadius + this.ringInnerRadius * 2;
     }
 
     public int getSectionSize() {
@@ -174,85 +204,91 @@ public class WheelWidget extends AbstractWidget {
                 this.currentSectionIndex--;
             }
         }
-        this.currentAngle = this.sections.stream()
-            .filter(it -> this.sections.indexOf(it) == this.currentSectionIndex)
-            .findFirst()
-            .orElseThrow()
-            .angle;
+        for (WheelSection section : this.sections) {
+            if (this.sections.indexOf(section) == this.currentSectionIndex) {
+                this.currentAngle = section.angle;
+                return true;
+            }
+        }
         return true;
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (this.closingAnimationStarted) return true;
+    public void checkMousePos(double mouseX, double mouseY) {
+        if (this.closingAnimationStarted) return;
         float centerX = this.centerPos.x;
         float centerY = this.centerPos.y;
         Vector2f cursorPos = new Vector2f((float) mouseX - centerX, (float) mouseY - centerY);
-        if (cursorPos.length() < IGNORE_CURSOR_MOVE_LENGTH) return true;
+        if (cursorPos.length() < IGNORE_CURSOR_MOVE_LENGTH) return;
         Vector2f rotationStart = new Vector2f(0, 1);
         cursorPos.normalize();
         double rot = Math.acos(rotationStart.dot(cursorPos) / (rotationStart.length() * cursorPos.length()));
         double rotation = cursorPos.x < 0 ? Math.PI - rot : Math.PI + rot;
-        this.sections.stream()
-            .filter(it -> {
-                if (it.angleStart > it.angleEnd) {
-                    return rotation >= it.angleStart;
-                }
-                return rotation >= it.angleStart && rotation <= it.angleEnd;
-            })
-            .findFirst()
-            .ifPresent(it -> {
-                this.currentAngle = it.angle;
-                this.currentSectionIndex = this.sections.indexOf(it);
-            });
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+        for (WheelSection section : this.sections) {
+            if (section.angleStart > section.angleEnd && rotation >= section.angleStart
+                || rotation >= section.angleStart && rotation <= section.angleEnd
+            ) {
+                this.currentAngle = section.angle;
+                this.currentSectionIndex = this.sections.indexOf(section);
+                break;
+            }
+        }
     }
+
     public boolean shouldRender() {
         if (this.animationStarted) return true;
         return (this.displayTime + this.delay) <= System.currentTimeMillis();
     }
 
     @Override
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        this.checkMousePos(mouseX, mouseY);
+        this.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderSystem.enableDepthTest();
         RenderSystem.enableBlend();
-        renderClosingAnimation(guiGraphics);
-        if (!shouldRender()) {
+        this.renderClosingAnimation(guiGraphics);
+        if (!this.shouldRender()) {
             return;
         }
-        if (closingAnimationStarted) return;
-        if (!animationStarted) {
-            animationStarted = true;
-            displayTime = System.currentTimeMillis();
+        if (this.closingAnimationStarted) return;
+        if (!this.animationStarted) {
+            this.animationStarted = true;
+            this.displayTime = System.currentTimeMillis();
         }
         PoseStack poseStack = guiGraphics.pose();
-        float delta = displayTime + this.animationMs - System.currentTimeMillis();
+        float delta = this.displayTime + this.animationMs - System.currentTimeMillis();
         if (delta > 0) {
             float progress = 1 - (delta / this.animationMs);
             progress = (float) (-Math.pow(progress, 2) + 2 * progress);
             if (progress == 0) return;
-            renderProgressAnimation(guiGraphics, progress);
+            this.renderProgressAnimation(guiGraphics, progress);
             return;
         }
         AnvilHammerScreen.renderRing(
             guiGraphics,
-            this.width / 2f,
-            this.height / 2f,
+            this.centerPos.x,
+            this.centerPos.y,
             this.ringColor,
             this.ringInnerRadius * 2,
             this.ringOuterRadius * 2
         );
-        renderSelection(guiGraphics);
+        this.renderSelection(guiGraphics);
         for (WheelSection value : this.sections) {
             float x = value.center.x;
             float y = value.center.y;
+            poseStack.pushPose();
+            poseStack.translate(x - 10, y - 10, 100);
             value.renderer.accept(guiGraphics, poseStack, 20, 20);
+            poseStack.popPose();
             poseStack.pushPose();
             float coordinateScale = 0.7f;
             float offsetX = 0.1f * this.width;
             float offsetY = 0.1f * this.height;
             float adjustedX = (x - offsetX) / coordinateScale;
-            float adjustedY = (y - offsetY - 20) / coordinateScale;
+            float adjustedY = (y - offsetY - 20 * this.textScale) / coordinateScale;
 
             poseStack.translate(offsetX, offsetY, 0);
             poseStack.scale(coordinateScale, coordinateScale, coordinateScale);
@@ -278,7 +314,7 @@ public class WheelWidget extends AbstractWidget {
         if (progress >= 1 || progress <= 0) {
             this.minecraft.setScreen(null);
         }
-        renderProgressAnimation(guiGraphics, progress);
+        this.renderProgressAnimation(guiGraphics, progress);
     }
 
     private void renderProgressAnimation(GuiGraphics guiGraphics, float progress) {
@@ -288,20 +324,19 @@ public class WheelWidget extends AbstractWidget {
         poseStack.pushPose();
         AnvilHammerScreen.renderRing(
             guiGraphics,
-            this.width / 2f,
-            this.height / 2f,
+            this.centerPos.x,
+            this.centerPos.y,
             this.ringColor,
             this.ringInnerRadius * 2 * progress,
             this.ringOuterRadius * 2 * progress
         );
         poseStack.popPose();
-        float finalProgress = progress;
         if (this.currentSectionIndex != -1) {
             WheelSection section = this.sections.get(this.currentSectionIndex);
             Vector2f center = new Vector2f(
-                (section.center.x - this.centerPos.x) / this.getRadius(),
-                (section.center.y - this.centerPos.y) / this.getRadius()
-            ).mul(this.getRadius() * finalProgress).add(this.centerPos.x, this.centerPos.y);
+                (section.center.x - this.centerPos.x) / this.getSectionCircleDiameter(),
+                (section.center.y - this.centerPos.y) / this.getSectionCircleDiameter()
+            ).mul(this.getSectionCircleDiameter() * progress).add(this.centerPos.x, this.centerPos.y);
             AnvilHammerScreen.renderSelectionEffect(
                 guiGraphics,
                 center.x,
@@ -312,19 +347,14 @@ public class WheelWidget extends AbstractWidget {
         }
         for (WheelSection value : this.sections) {
             Vector2f center = new Vector2f(
-                (value.center.x - this.centerPos.x) / this.getRadius(),
-                (value.center.y - this.centerPos.y) / this.getRadius()
-            ).mul(this.getRadius() * progress).add(this.centerPos.x, this.centerPos.y);
+                (value.center.x - this.centerPos.x) / this.getSectionCircleDiameter(),
+                (value.center.y - this.centerPos.y) / this.getSectionCircleDiameter()
+            ).mul(this.getSectionCircleDiameter() * progress).add(this.centerPos.x, this.centerPos.y);
             float x = center.x;
             float y = center.y;
             poseStack.pushPose();
-            poseStack.translate(x, y, 100);
-            value.renderer.accept(
-                guiGraphics,
-                poseStack,
-                20,
-                20
-            );
+            poseStack.translate(x - 10, y - 10, 100);
+            value.renderer.accept(guiGraphics, poseStack, 20, 20);
             poseStack.popPose();
             int textAlpha = (int) (progress * 0xff) << 24;
             poseStack.pushPose();
@@ -332,13 +362,14 @@ public class WheelWidget extends AbstractWidget {
             float offsetX = 0.1f * this.width;
             float offsetY = 0.1f * this.height;
             float adjustedX = (x - offsetX) / coordinateScale;
-            float adjustedY = (y - offsetY - 20) / coordinateScale;
+            float adjustedY = (y - offsetY - 20 * this.textScale) / coordinateScale;
+
             poseStack.translate(offsetX, offsetY, 0);
             poseStack.scale(coordinateScale, coordinateScale, coordinateScale);
             poseStack.translate(adjustedX, adjustedY, 0);
             poseStack.scale(this.textScale / coordinateScale, this.textScale / coordinateScale, this.textScale / coordinateScale);
             guiGraphics.drawCenteredString(
-                minecraft.font,
+                this.minecraft.font,
                 value.subTitle,
                 0,
                 0,
@@ -350,7 +381,7 @@ public class WheelWidget extends AbstractWidget {
 
     private void renderSelection(GuiGraphics guiGraphics) {
         float selectionEffectAngle = MathUtil.angle(
-            MathUtil.copy(ROTATION_START).negate(),
+            MathUtil.copy(ROTATION_START),
             this.selectionEffectPos
         );
 
@@ -369,7 +400,7 @@ public class WheelWidget extends AbstractWidget {
 
         Vector2f pos = MathUtil.copy(this.selectionEffectPos)
             .mul(1, -1)
-            .add(centerPos);
+            .add(this.centerPos);
 
         AnvilHammerScreen.renderSelectionEffect(
             guiGraphics,
@@ -378,6 +409,15 @@ public class WheelWidget extends AbstractWidget {
             this.selectionEffectColor,
             this.selectionEffectRadius
         );
+    }
+
+    public void onClosing() {
+        if (this.shouldRender() && !this.closingAnimationStarted) {
+            this.displayTime = System.currentTimeMillis();
+            this.closingAnimationStarted = true;
+        } else {
+            this.minecraft.setScreen(null);
+        }
     }
 
     @Override
