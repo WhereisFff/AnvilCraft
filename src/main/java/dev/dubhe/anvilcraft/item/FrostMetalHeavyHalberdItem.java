@@ -23,7 +23,7 @@ public class FrostMetalHeavyHalberdItem extends HeavyHalberdItem {
     }
 
     @Override
-    protected double getAttackDamage() {
+    protected double getBaseAttackDamage() {
         return 13;
     }
 

@@ -176,7 +176,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
                         Attributes.ATTACK_DAMAGE,
                         new AttributeModifier(
                             BASE_ATTACK_DAMAGE_ID,
-                            heavyHalberd.getAttackDamage() + tier.getAttackDamageBonus(),
+                            heavyHalberd.getBaseAttackDamage() + tier.getAttackDamageBonus(),
                             AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.MAINHAND
                     );
@@ -393,7 +393,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         return thrown;
     }
 
-    protected abstract double getAttackDamage();
+    protected abstract double getBaseAttackDamage();
 
     public abstract ThrownHeavyHalberdEntity createThrown(Level level, LivingEntity shooter, ItemStack pickupItemStack);
 

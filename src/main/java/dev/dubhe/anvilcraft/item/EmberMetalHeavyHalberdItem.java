@@ -19,7 +19,7 @@ public class EmberMetalHeavyHalberdItem extends HeavyHalberdItem {
     }
 
     @Override
-    protected double getAttackDamage() {
+    protected double getBaseAttackDamage() {
         return 10;
     }
 
