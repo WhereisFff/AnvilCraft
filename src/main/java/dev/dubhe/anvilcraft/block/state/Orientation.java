@@ -131,6 +131,17 @@ public enum Orientation implements StringRepresentable {
         }
     }
 
+    /**
+     * 朝向上下时翻转水平方向
+     * 用于获取放置器假玩家的Orientation
+     */
+    public Orientation flipHorizontalIfVertical() {
+        return switch (this) {
+            case UP_NORTH, UP_SOUTH, UP_WEST, UP_EAST, DOWN_NORTH, DOWN_SOUTH, DOWN_WEST, DOWN_EAST -> this.rotate(Rotation.CLOCKWISE_180);
+            default -> this;
+        };
+    }
+
     public Orientation mirror(Mirror mirror) {
         switch (mirror) {
             case NONE -> {
@@ -173,6 +184,29 @@ public enum Orientation implements StringRepresentable {
             case UP_NORTH, UP_SOUTH, UP_WEST, UP_EAST -> Direction.UP;
             case DOWN_NORTH, DOWN_SOUTH, DOWN_WEST, DOWN_EAST -> Direction.DOWN;
             default -> Direction.NORTH;
+        };
+    }
+
+    /**
+     * 获取水平旋转
+     */
+    public float getYRotation() {
+        return switch (this) {
+            case WEST_UP, UP_WEST, DOWN_WEST -> 90;
+            case SOUTH_UP, UP_SOUTH, DOWN_SOUTH -> 0;
+            case EAST_UP, UP_EAST, DOWN_EAST -> -90;
+            case NORTH_UP, UP_NORTH, DOWN_NORTH -> 180;
+        };
+    }
+
+    /**
+     * 获取垂直旋转
+     */
+    public float getXRotation() {
+        return switch (this) {
+            case NORTH_UP, SOUTH_UP, WEST_UP, EAST_UP -> 0;
+            case UP_NORTH, UP_SOUTH, UP_WEST, UP_EAST -> -90;
+            case DOWN_NORTH, DOWN_SOUTH, DOWN_WEST, DOWN_EAST -> 90;
         };
     }
 }
