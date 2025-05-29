@@ -19,6 +19,11 @@ public class EmberMetalHeavyHalberdItem extends HeavyHalberdItem {
     }
 
     @Override
+    protected double getAttackDamage() {
+        return 10;
+    }
+
+    @Override
     public ThrownHeavyHalberdEntity createThrown(Level level, LivingEntity shooter, ItemStack pickupItemStack) {
         return new ThrownEmberMetalHeavyHalberdEntity(level, shooter, pickupItemStack);
     }
