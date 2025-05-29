@@ -192,7 +192,7 @@ public class ModNetworks {
             DragonRodDevourPacket.STREAM_CODEC,
             DragonRodDevourPacket.HANDLER
         );
-        registrar.playBidirectional(
+        registrar.playToServer(
             SwitchResonateModePacket.TYPE,
             SwitchResonateModePacket.STREAM_CODEC,
             SwitchResonateModePacket.HANDLER
