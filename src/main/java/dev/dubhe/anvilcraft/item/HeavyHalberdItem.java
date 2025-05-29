@@ -38,6 +38,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.MaceItem;
 import net.minecraft.world.item.ProjectileItem;
@@ -58,6 +59,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -89,13 +91,13 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
             .build();
     }
 
-    public static double getAttackDamage(ItemStack stack) {
+    public static double getThrownBaseDamage(ItemStack stack) {
         for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
             if ((entry.matches(Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_ID)
                  || entry.matches(Attributes.ATTACK_DAMAGE, PlayerTickEventHandler.MERCILESS_ID))
                 && entry.modifier().operation().equals(AttributeModifier.Operation.ADD_VALUE)
             ) {
-                return entry.modifier().amount();
+                return entry.modifier().amount() / 3;
             }
         }
         return 2.0;
@@ -109,6 +111,8 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
     }
 
     public static void checkTooDamaged(Tier tier, ItemStack stack) {
+        Item item = stack.getItem();
+        if (!(item instanceof HeavyHalberdItem heavyHalberd)) return;
         if (isTooDamagedToUse(stack)) {
             if (stack.has(ModComponents.MERCILESS)) {
                 stack.set(ModComponents.MERCILESS, false);
@@ -172,7 +176,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
                         Attributes.ATTACK_DAMAGE,
                         new AttributeModifier(
                             BASE_ATTACK_DAMAGE_ID,
-                            13 + tier.getAttackDamageBonus(),
+                            heavyHalberd.getBaseAttackDamage() + tier.getAttackDamageBonus(),
                             AttributeModifier.Operation.ADD_VALUE),
                         EquipmentSlotGroup.MAINHAND
                     );
@@ -310,6 +314,12 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         }
     }
 
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
+        int willDamage = super.damageItem(stack, amount, entity, onBroken);
+        return stack.getDamageValue() - willDamage >= stack.getMaxDamage() - 1 ? 0 : willDamage;
+    }
+
     protected static boolean isTooDamagedToUse(ItemStack stack) {
         return stack.getDamageValue() >= stack.getMaxDamage() - 1;
     }
@@ -382,6 +392,8 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         thrown.pickup = AbstractArrow.Pickup.ALLOWED;
         return thrown;
     }
+
+    protected abstract double getBaseAttackDamage();
 
     public abstract ThrownHeavyHalberdEntity createThrown(Level level, LivingEntity shooter, ItemStack pickupItemStack);
 
