@@ -25,6 +25,7 @@ import dev.dubhe.anvilcraft.item.EmberMetalAxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.EmberMetalHoeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
+import dev.dubhe.anvilcraft.item.EmberMetalResonatorItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
@@ -32,6 +33,7 @@ import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHoeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalPickaxeItem;
+import dev.dubhe.anvilcraft.item.FrostMetalResonatorItem;
 import dev.dubhe.anvilcraft.item.FrostMetalShovelItem;
 import dev.dubhe.anvilcraft.item.FrostMetalSwordItem;
 import dev.dubhe.anvilcraft.item.GeodeItem;
@@ -624,6 +626,22 @@ public class ModItems {
         .tag(
             ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
             ModItemTags.HEAVY_HALBERD, ModItemTags.EXPLOSION_PROOF)
+        .model((ctx, provider) -> {
+        })
+        .register();
+    public static final ItemEntry<FrostMetalResonatorItem> FROST_METAL_RESONATOR = REGISTRATE
+        .item("frost_metal_resonator", FrostMetalResonatorItem::new)
+        .tag(
+            ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE,
+            ModItemTags.RESONATOR, ModItemTags.EXPLOSION_PROOF)
+        .model((ctx, provider) -> {
+        })
+        .register();
+    public static final ItemEntry<EmberMetalResonatorItem> EMBER_METAL_RESONATOR = REGISTRATE
+        .item("ember_metal_resonator", EmberMetalResonatorItem::new)
+        .tag(
+            ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE,
+            ModItemTags.RESONATOR, ModItemTags.EXPLOSION_PROOF)
         .model((ctx, provider) -> {
         })
         .register();

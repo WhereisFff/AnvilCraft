@@ -1,11 +1,13 @@
 package dev.dubhe.anvilcraft.client.event;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
+import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -52,5 +54,10 @@ public class ClientEventListener {
     public static void onKeyPress(Key event) {
         if (ModKeyMappings.TOGGLE_GOGGLE.get().isDown()) AnvilHammerItem.goggleEnabled = !AnvilHammerItem.goggleEnabled;
         if (ModKeyMappings.SWITCH_PHASE.get().isDown()) PacketDistributor.sendToServer(new SwitchPhasePacket());
+        if (event.getKey() == ModKeyMappings.SWITCH_RESONATE_MODE.get().getKey().getValue()) {
+            if (event.getAction() == InputConstants.PRESS) {
+                PacketDistributor.sendToServer(new SwitchResonateModePacket());
+            }
+        }
     }
 }

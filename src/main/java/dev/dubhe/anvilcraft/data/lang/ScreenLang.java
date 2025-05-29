@@ -151,5 +151,7 @@ public class ScreenLang {
         provider.add(
             "screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools",
             "Add a sword and an axe of the same type, a trident and a mace");
+
+        provider.add("screen.anvilcraft.resonator.auto", "Auto");
     }
 }

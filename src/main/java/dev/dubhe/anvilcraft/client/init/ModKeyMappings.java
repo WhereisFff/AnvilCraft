@@ -20,6 +20,12 @@ public class ModKeyMappings {
         Type.KEYSYM,
         GLFW.GLFW_KEY_UNKNOWN
     );
+    public static final Lazy<KeyMapping> SWITCH_RESONATE_MODE = register(
+        "switch_resonate_mode",
+        KeyConflictContext.IN_GAME,
+        Type.KEYSYM,
+        GLFW.GLFW_KEY_LEFT_ALT
+    );
 
     @SuppressWarnings("SameParameterValue")
     private static Lazy<KeyMapping> register(String name, KeyConflictContext context, Type type, int key) {

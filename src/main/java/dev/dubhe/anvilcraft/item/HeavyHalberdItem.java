@@ -68,7 +68,6 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
             tier,
             properties
                 .component(DataComponents.TOOL, createToolProperties(tier))
-                .durability(tier.getUses())
                 .rarity(Rarity.EPIC)
         );
     }
