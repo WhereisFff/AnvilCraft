@@ -190,7 +190,7 @@
 	],
 	"gui_light": "front",
 	"overrides": [
-		{"predicate": {"throwing": 1}, "model": "item/trident_throwing"}
+		{"predicate": {"throwing": 1}, "model": "anvilcraft:item/ember_metal_heavy_halberd_throwing"}
 	],
 	"display": {
 		"thirdperson_righthand": {
