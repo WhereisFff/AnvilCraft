@@ -186,7 +186,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
 
     private static void capacitorTick(IDynamicPowerComponentHolder holder, AtomicInteger flightTime) {
         if (holder.anvilCraft$getPowerComponent().getPowerGrid() != null
-            && holder.anvilCraft$getPowerComponent().getPowerGrid().isWorking()
+            && holder.anvilCraft$getPowerComponent().getPowerGrid().getRemaining() >= 64
         ) return;
         if (flightTime.get() > AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2) return;
 
@@ -196,7 +196,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
         if (slot < 0) return;
 
         inventory.removeItem(slot, 1);
-        inventory.placeItemBackInInventory(ModItems.CAPACITOR_EMPTY.asStack());
+        inventory.add(slot, ModItems.CAPACITOR_EMPTY.asStack());
         flightTime.addAndGet(AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2);
     }
 
