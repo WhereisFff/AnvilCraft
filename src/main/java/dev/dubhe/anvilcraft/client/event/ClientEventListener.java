@@ -72,14 +72,14 @@ public class ClientEventListener {
                 if (stack.getItem() instanceof ResonatorItem) {
                     Minecraft.getInstance().setScreen(new ResonatorScreen(
                         InteractionHand.MAIN_HAND,
-                        stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()
+                        ResonatorItem.getMode(stack)
                     ));
                 }
                 stack = player.getOffhandItem();
                 if (stack.getItem() instanceof ResonatorItem) {
                     Minecraft.getInstance().setScreen(new ResonatorScreen(
                         InteractionHand.MAIN_HAND,
-                        stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()
+                        ResonatorItem.getMode(stack)
                     ));
                 }
             } else if (event.getAction() == InputConstants.RELEASE && Minecraft.getInstance().screen instanceof ResonatorScreen screen) {

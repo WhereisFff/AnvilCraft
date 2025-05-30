@@ -31,7 +31,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.ShearsItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
@@ -88,8 +87,7 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
     }
 
     public static Tool createToolProperties(Tier tier) {
-        List<Tool.Rule> rules = new ArrayList<>();
-        rules.addAll(SwordItem.createToolProperties().rules());
+        List<Tool.Rule> rules = new ArrayList<>(SwordItem.createToolProperties().rules());
         rules.add(Tool.Rule.overrideSpeed(BlockTags.LEAVES, 15.0F));
         rules.add(Tool.Rule.overrideSpeed(BlockTags.WOOL, 5.0F));
         rules.add(Tool.Rule.overrideSpeed(List.of(Blocks.VINE, Blocks.GLOW_LICHEN), 2.0F));
@@ -113,6 +111,10 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
                 List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, tier.getSpeed())), 1.0f, 1);
             default -> throw new IllegalStateException("Unexpected mode: " + mode);
         };
+    }
+
+    public static int getMode(ItemStack stack) {
+        return stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value();
     }
 
     public static void checkTooDamaged(Tier tier, ItemStack stack) {
@@ -191,7 +193,7 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
             if (!stack.has(DataComponents.TOOL)) {
                 stack.set(
                     DataComponents.TOOL,
-                    createToolProperties(stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value(), tier)
+                    createToolProperties(ResonatorItem.getMode(stack), tier)
                 );
             }
         }
@@ -234,7 +236,7 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (isTooDamagedToUse(stack)) return 1.0f;
+        if (isTooDamagedToUse(stack) || getMode(stack) != AUTO_MODE) return 1.0f;
         Tool tool = stack.get(DataComponents.TOOL);
         return tool != null ? tool.getMiningSpeed(state) : this.getTier().getSpeed();
     }
@@ -385,7 +387,7 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
 
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
-        return switch (stack.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()) {
+        return switch (ResonatorItem.getMode(stack)) {
             case AXE_MODE -> ItemAbilities.DEFAULT_AXE_ACTIONS.contains(itemAbility);
             case SHOVEL_MODE -> ItemAbilities.DEFAULT_SHOVEL_ACTIONS.contains(itemAbility);
             case HOE_MODE -> ItemAbilities.DEFAULT_HOE_ACTIONS.contains(itemAbility);
