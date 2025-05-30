@@ -1,13 +1,20 @@
 package dev.dubhe.anvilcraft.util;
 
+import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
+import com.tterrag.registrate.providers.RegistrateProvider;
+import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import dev.dubhe.anvilcraft.block.plate.PowerLevelPressurePlateBlock;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.DiodeBlock;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DataGenUtil {
     public static void powerLevelPressurePlate(
         RegistrateBlockstateProvider provider, ResourceLocation id,
@@ -56,5 +63,20 @@ public class DataGenUtil {
                 new ConfiguredModel(diodeOn, 0, 180, false))
             .partialState().with(DiodeBlock.FACING, Direction.EAST).with(DiodeBlock.POWERED, true).addModels(
                 new ConfiguredModel(diodeOn, 0, 270, false));
+    }
+
+    @SuppressWarnings("unused")
+    public static <T extends RegistrateProvider> void noExtraModelOrState(DataGenContext<?, ?> context, T provider) {
+    }
+
+    @SuppressWarnings("unused")
+    public static <T> void noLoot(RegistrateBlockLootTables tables, T value) {
+    }
+
+    public static <E extends Block> void simple(DataGenContext<Block, E> context, RegistrateBlockstateProvider provider) {
+        provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/" + context.getId().getPath()).get()
+        );
     }
 }

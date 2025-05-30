@@ -78,6 +78,7 @@ import dev.dubhe.anvilcraft.item.template.FrostMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.template.RoyalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.template.TwoToOneTemplateItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import dev.dubhe.anvilcraft.util.DataGenUtil;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -117,8 +118,7 @@ public class ModItems {
         .item("guide_book", GuideBookItem::new)
         .properties(p -> p.stacksTo(1))
         .tag(ItemTags.BOOKSHELF_BOOKS)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .lang("AnvilCraft Guide Book")
         .register();
     // 工具
@@ -487,8 +487,7 @@ public class ModItems {
         .item("anvil_hammer", AnvilHammerItem::new)
         .properties(properties -> properties.durability(35))
         .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.TOOLS, ctx.get())
             .pattern("A")
@@ -520,8 +519,7 @@ public class ModItems {
         })
         .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
         .properties(properties -> properties.durability(150))
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
     public static final ItemEntry<EmberAnvilHammerItem> EMBER_ANVIL_HAMMER = REGISTRATE
         .item("ember_anvil_hammer", EmberAnvilHammerItem::new)
@@ -537,15 +535,13 @@ public class ModItems {
         })
         .tag(ItemTags.MACE_ENCHANTABLE, ModItemTags.ANVIL_HAMMER)
         .properties(properties -> properties.durability(2031))
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
     public static final ItemEntry<DragonRodItem> DRAGON_ROD = REGISTRATE
         .item("dragon_rod", properties -> new DragonRodItem(properties, 3))
         .properties(properties -> properties.durability(35))
         .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .recipe((ctx, provider) -> ShapelessRecipeBuilder
             .shapeless(RecipeCategory.TOOLS, ctx.get())
             .requires(ModBlocks.BLOCK_DEVOURER)
@@ -558,8 +554,7 @@ public class ModItems {
         .item("royal_dragon_rod", properties -> new DragonRodItem(properties, 6))
         .properties(properties -> properties.durability(150))
         .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.TOOLS, ctx.get())
@@ -590,8 +585,7 @@ public class ModItems {
             .fireResistant()
             .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE))
         .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder
                 .shapeless(RecipeCategory.TOOLS, ctx.get())
@@ -616,16 +610,14 @@ public class ModItems {
         .tag(
             ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
             ModItemTags.HEAVY_HALBERD, ModItemTags.EXPLOSION_PROOF)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
     public static final ItemEntry<EmberMetalHeavyHalberdItem> EMBER_METAL_HEAVY_HALBERD = REGISTRATE
         .item("ember_metal_heavy_halberd", EmberMetalHeavyHalberdItem::new)
         .tag(
             ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MACE_ENCHANTABLE, ItemTags.TRIDENT_ENCHANTABLE, ItemTags.SWORD_ENCHANTABLE,
             ModItemTags.HEAVY_HALBERD, ModItemTags.EXPLOSION_PROOF)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRATE
         .item("ionocraft", IonoCraftItem::new)
@@ -740,8 +732,7 @@ public class ModItems {
         .register();
     public static final ItemEntry<CrabClawItem> CRAB_CLAW = REGISTRATE
         .item("crab_claw", CrabClawItem::new)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
 
     public static final ItemEntry<AmuletBoxItem> AMULET_BOX = REGISTRATE
@@ -823,14 +814,12 @@ public class ModItems {
 
     public static final ItemEntry<CapacitorItem> CAPACITOR = REGISTRATE
         .item("capacitor", CapacitorItem::new)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .tag(ModItemTags.CAPACITOR)
         .register();
     public static final ItemEntry<EmptyCapacitorItem> CAPACITOR_EMPTY = REGISTRATE
         .item("capacitor_empty", EmptyCapacitorItem::new)
-        .model((ctx, provider) -> {
-        })
+        .model(DataGenUtil::noExtraModelOrState)
         .tag(ModItemTags.CAPACITOR)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.MISC, ctx.get())
