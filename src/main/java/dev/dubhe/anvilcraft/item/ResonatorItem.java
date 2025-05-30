@@ -104,13 +104,13 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
         return switch (mode) {
             case AUTO_MODE -> createToolProperties(tier);
             case AXE_MODE -> new Tool(
-                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_AXE, tier.getSpeed())), tier.getSpeed(), 1);
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_AXE, tier.getSpeed())), 1.0f, 1);
             case SHOVEL_MODE -> new Tool(
-                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, tier.getSpeed())), tier.getSpeed(), 1);
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL, tier.getSpeed())), 1.0f, 1);
             case HOE_MODE -> new Tool(
-                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, tier.getSpeed())), tier.getSpeed(), 1);
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_HOE, tier.getSpeed())), 1.0f, 1);
             case PICKAXE_MODE -> new Tool(
-                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, tier.getSpeed())), tier.getSpeed(), 1);
+                List.of(Tool.Rule.minesAndDrops(BlockTags.MINEABLE_WITH_PICKAXE, tier.getSpeed())), 1.0f, 1);
             default -> throw new IllegalStateException("Unexpected mode: " + mode);
         };
     }
