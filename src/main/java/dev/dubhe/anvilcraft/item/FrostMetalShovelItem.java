@@ -15,7 +15,7 @@ public class FrostMetalShovelItem extends ShovelItem {
             ModTiers.FROST_METAL,
             properties.fireResistant()
                 .attributes(ShovelItem.createAttributes(ModTiers.FROST_METAL, 8, -3f))
-                .component(ModComponents.MERCILESS, Unit.INSTANCE)
+                .component(ModComponents.MERCILESS, true)
         );
     }
 }

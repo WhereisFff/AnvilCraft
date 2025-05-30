@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
 import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
+import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
@@ -184,6 +185,11 @@ public class ModNetworks {
             SyncEmberGrindstonePacket.TYPE,
             SyncEmberGrindstonePacket.STREAM_CODEC,
             SyncEmberGrindstonePacket.HANDLER
+        );
+        registrar.playToServer(
+            DragonRodDevourPacket.TYPE,
+            DragonRodDevourPacket.STREAM_CODEC,
+            DragonRodDevourPacket.HANDLER
         );
     }
 }

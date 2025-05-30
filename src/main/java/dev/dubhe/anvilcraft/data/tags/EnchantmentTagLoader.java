@@ -24,9 +24,14 @@ public class EnchantmentTagLoader {
             .addTag(EnchantmentTags.CURSE)
             .add(Enchantments.UNBREAKING)
             .add(Enchantments.MENDING)
-            .add(Enchantments.EFFICIENCY);
+            .add(Enchantments.EFFICIENCY)
+            .add(Enchantments.LOYALTY)
+            .add(Enchantments.RIPTIDE);
 
         provider.addTag(Tags.Enchantments.INCREASE_BLOCK_DROPS)
             .addOptional(ModEnchantments.HARVEST_KEY.location());
+
+        provider.addTag(ModEnchantmentTags.FROST_PASSED)
+            .add(Enchantments.MENDING);
     }
 }

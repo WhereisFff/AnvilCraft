@@ -4,13 +4,12 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 
-@MethodsReturnNonnullByDefault
-public record MultipleToOneSmithingRecipeInput(ItemStack template, ItemStack material, ItemStack[] inputs,
-                                               int inputSize)
-    implements RecipeInput {
+import java.util.List;
 
-    public MultipleToOneSmithingRecipeInput(ItemStack template, ItemStack material, int inputSize, ItemStack... inputs) {
-        this(template, material, inputs, inputSize);
+@MethodsReturnNonnullByDefault
+public record MultipleToOneSmithingRecipeInput(ItemStack template, ItemStack material, List<ItemStack> inputs) implements RecipeInput {
+    public MultipleToOneSmithingRecipeInput(ItemStack template, ItemStack material, ItemStack... inputs) {
+        this(template, material, List.of(inputs));
     }
 
     @Override
@@ -19,8 +18,8 @@ public record MultipleToOneSmithingRecipeInput(ItemStack template, ItemStack mat
             case 0 -> this.template();
             case 1 -> this.material();
             default -> {
-                if (id - 2 < this.inputs.length) {
-                    yield this.inputs[id - 2];
+                if (id - 2 < this.inputs.size()) {
+                    yield this.inputs.get(id - 2);
                 } else {
                     throw new IllegalArgumentException("Recipe does not contain input " + id);
                 }
@@ -29,8 +28,8 @@ public record MultipleToOneSmithingRecipeInput(ItemStack template, ItemStack mat
     }
 
     public ItemStack getInputItem(int id) {
-        if (id < this.inputs.length) {
-            return this.inputs[id];
+        if (id < this.inputs.size()) {
+            return this.inputs.get(id);
         } else {
             throw new IllegalArgumentException("Recipe inputs does not contain index " + id);
         }
@@ -38,6 +37,6 @@ public record MultipleToOneSmithingRecipeInput(ItemStack template, ItemStack mat
 
     @Override
     public int size() {
-        return this.inputSize() + 2;
+        return this.inputs.size() + 2;
     }
 }
