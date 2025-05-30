@@ -236,7 +236,7 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
     }
 
     public float getDestroySpeed(ItemStack stack, BlockState state) {
-        if (isTooDamagedToUse(stack) || getMode(stack) != AUTO_MODE) return 1.0f;
+        if (isTooDamagedToUse(stack)) return 1.0f;
         Tool tool = stack.get(DataComponents.TOOL);
         return tool != null ? tool.getMiningSpeed(state) : this.getTier().getSpeed();
     }
