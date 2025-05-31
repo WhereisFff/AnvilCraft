@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.client.gui.screen.JewelCraftingScreen;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.integration.jei.category.BeaconConversionCategory;
+import dev.dubhe.anvilcraft.integration.jei.category.ChargerChargingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.EndPortalConversionCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.JewelCraftingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.VoidDecayCategory;
@@ -35,6 +36,7 @@ import dev.dubhe.anvilcraft.integration.jei.recipe.EndPortalConversionRecipe;
 import dev.dubhe.anvilcraft.integration.jei.recipe.MeshRecipeGroup;
 import dev.dubhe.anvilcraft.integration.jei.recipe.VoidDecayRecipe;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
+import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
@@ -114,6 +116,8 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
 
     public static final RecipeType<RecipeHolder<JewelCraftingRecipe>> JEWEL_CRAFTING =
         createRecipeHolderType("jewel_crafting");
+    public static final RecipeType<RecipeHolder<ChargerChargingRecipe>> CHARGER_CHARGING =
+        createRecipeHolderType("charger_charging");
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -145,6 +149,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         EndPortalConversionCategory.registerRecipes(registration);
         BeaconConversionCategory.registerRecipes(registration);
         VoidDecayCategory.registerRecipes(registration);
+        ChargerChargingCategory.registerRecipes(registration);
 
         registration.addItemStackInfo(
             new ItemStack(ModItems.GEODE.get()),
@@ -192,6 +197,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         EndPortalConversionCategory.registerRecipeCatalysts(registration);
         BeaconConversionCategory.registerRecipeCatalysts(registration);
         VoidDecayCategory.registerRecipeCatalysts(registration);
+        ChargerChargingCategory.registerRecipeCatalysts(registration);
 
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BATCH_CRAFTER), RecipeTypes.CRAFTING);
 
@@ -201,7 +207,6 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.SPECTRAL_ANVIL), RecipeTypes.ANVIL);
 
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROYAL_SMITHING_TABLE), RecipeTypes.SMITHING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EMBER_SMITHING_TABLE), RecipeTypes.SMITHING);
     }
 
     @Override
@@ -232,6 +237,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new EndPortalConversionCategory(guiHelper));
         registration.addRecipeCategories(new BeaconConversionCategory(guiHelper));
         registration.addRecipeCategories(new VoidDecayCategory(guiHelper));
+        registration.addRecipeCategories(new ChargerChargingCategory(guiHelper));
     }
 
     @Override
