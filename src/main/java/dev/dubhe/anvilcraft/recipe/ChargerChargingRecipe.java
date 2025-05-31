@@ -83,7 +83,7 @@ public class ChargerChargingRecipe implements Recipe<SingleRecipeInput> {
         return ingredient.test(input.getItem(0));
     }
 
-    public Block getProcessingBlock(){
+    public Block getProcessingBlock() {
         return (this.power < 0 ? ModBlocks.CHARGER : ModBlocks.DISCHARGER).get();
     }
 

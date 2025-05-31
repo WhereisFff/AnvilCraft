@@ -42,10 +42,10 @@ public class ChargerChargingCategory implements IRecipeCategory<RecipeHolder<Cha
     private final IDrawable arrowIn;
     private final IDrawable arrowOut;
 
-    private final String KEY_CATEGORY = "gui.anvilcraft.category.charger_charging";
-    private final String KEY_POWER_CONSUME = KEY_CATEGORY + ".power_consume";
-    private final String KEY_POWER_PRODUCE = KEY_CATEGORY + ".power_produce";
-    private final String KEY_TIME = KEY_CATEGORY + ".time";
+    private static final String KEY_CATEGORY = "gui.anvilcraft.category.charger_charging";
+    private static final String KEY_POWER_CONSUME = KEY_CATEGORY + ".power_consume";
+    private static final String KEY_POWER_PRODUCE = KEY_CATEGORY + ".power_produce";
+    private static final String KEY_TIME = KEY_CATEGORY + ".time";
 
     public ChargerChargingCategory(IGuiHelper helper) {
         icon = helper.createDrawableItemStack(ModBlocks.CHARGER.asStack());
