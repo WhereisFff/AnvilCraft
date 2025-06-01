@@ -62,6 +62,7 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
     protected final Ingredient material;
     @Getter
     protected final List<Ingredient> inputs;
+    @Getter
     protected final T result;
     protected final int recipeId;
 
