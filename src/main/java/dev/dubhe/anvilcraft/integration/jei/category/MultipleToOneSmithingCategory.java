@@ -101,7 +101,7 @@ public class MultipleToOneSmithingCategory implements
             });
         builder.addSlot(RecipeIngredientRole.INPUT, CENTER_INPUT_X, CENTER_INPUT_Y)
             .addIngredients(smithingRecipe.getMaterial());
-        for(int i = 0; i < Math.min(8, smithingRecipe.getInputs().size()); i++) {
+        for (int i = 0; i < Math.min(8, smithingRecipe.getInputs().size()); i++) {
             builder.addSlot(RecipeIngredientRole.INPUT, INPUT_X[i], INPUT_Y[i])
                 .addIngredients(smithingRecipe.getInputs().get(i));
         }
@@ -116,7 +116,7 @@ public class MultipleToOneSmithingCategory implements
                      double mouseX,
                      double mouseY) {
         background.draw(guiGraphics);
-        for(int i = Math.min(8, recipe.value().getInputs().size()); i < 8; i++){
+        for (int i = Math.min(8, recipe.value().getInputs().size()); i < 8; i++) {
             disabledSlotIcon.draw(guiGraphics, INPUT_X[i], INPUT_Y[i]);
         }
     }
