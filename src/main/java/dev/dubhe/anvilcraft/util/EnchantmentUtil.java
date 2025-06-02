@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.util;
 
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
@@ -7,6 +8,10 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import java.util.Comparator;
 
 public class EnchantmentUtil {
+    public static EnchantmentInstance toInstance(Object2IntMap.Entry<Holder<Enchantment>> entry) {
+        return new EnchantmentInstance(entry.getKey(), entry.getIntValue());
+    }
+
     public static int compareEnchantmentHolder(Holder<Enchantment> o1, Holder<Enchantment> o2) {
         return o1.getRegisteredName().compareTo(o2.getRegisteredName());
     }
