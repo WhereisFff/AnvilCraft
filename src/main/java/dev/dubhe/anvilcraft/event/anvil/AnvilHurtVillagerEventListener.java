@@ -8,6 +8,7 @@ import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.npc.VillagerData;
 import net.minecraft.world.entity.npc.VillagerProfession;
+import net.minecraft.world.entity.npc.VillagerType;
 import net.neoforged.bus.api.SubscribeEvent;
 
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -24,19 +25,24 @@ public class AnvilHurtVillagerEventListener {
     public static void onAnvilHurtEntity(@NotNull AnvilHurtEntityEvent event) {
         if (event.getHurtedEntity() instanceof Villager villager) {
             RandomSource random = event.getLevel().random;
-            VillagerData villagerData = villager.getVillagerData();
-            if (random.nextDouble() <= 0.2) {
-                villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NITWIT));
-            }
-            if (villagerData.getProfession() != VillagerProfession.NITWIT) {
-                villager.setVillagerData(villagerData.setProfession(VillagerProfession.NONE));
-            }
-            villager.setVillagerData(villagerData.setLevel(1));
-            villager.setVillagerXp(0);
+            VillagerData villageData = villager.getVillagerData();
+
             villager.releasePoi(MemoryModuleType.HOME);
             villager.releasePoi(MemoryModuleType.JOB_SITE);
             villager.releasePoi(MemoryModuleType.POTENTIAL_JOB_SITE);
             villager.releasePoi(MemoryModuleType.MEETING_POINT);
+
+            if (villageData.getProfession() ==  VillagerProfession.NITWIT) {
+                return;
+            }
+
+            if (random.nextDouble() <= 0.2) {
+                villageData = villageData.setProfession(VillagerProfession.NITWIT);
+            } else {
+                villageData = villageData.setProfession(VillagerProfession.NONE).setLevel(1);
+            }
+            villager.setVillagerXp(0);
+            villager.setVillagerData(villageData);
         }
     }
 }
