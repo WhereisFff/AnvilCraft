@@ -145,8 +145,11 @@ public class ScreenLang {
             "Frost Metal Ingot");
 
         provider.add("screen.anvilcraft.ember_smithing.tooltip.missing_template", "Add Multiple to One Template");
-        provider.add("screen.anvilcraft.ember_smithing.tooltip.two_missing_multiphase_matter", "Add Multiphase Matter");
+        provider.add("screen.anvilcraft.ember_smithing.two.missing", "Add Multiphase Matter");
+        provider.add("screen.anvilcraft.ember_smithing.four.missing", "Add Heavy Halberd Core");
+        provider.add("screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools", "Add same Ember Metal tools or weapons");
         provider.add(
-            "screen.anvilcraft.ember_smithing.tooltip.two_multiphase_matter_missing_tool", "Add same Ember Metal tools or weapons");
+            "screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools",
+            "Add a sword and an axe of the same type, a trident and a mace");
     }
 }

@@ -23,6 +23,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     private static boolean hasCreate = false;
     private static boolean hasReiScreen = false;
     public static boolean hasAE2 = false;
+    private static boolean hasCerbonBetterBeacons = false;
 
     private boolean isLoaded(String clazz) {
         return AnvilCraftMixinPlugin.class.getClassLoader().getResource(clazz) != null;
@@ -34,6 +35,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
         hasReiScreen = this.isLoaded("me/shedaniel/rei/impl/client/gui/screen/DefaultDisplayViewingScreen.class");
         hasCreate = this.isLoaded("com/simibubi/create/Create.class");
         hasAE2 = LoadingModList.get().getMods().stream().anyMatch(it -> it.getModId().equals("ae2"));
+        hasCerbonBetterBeacons = this.isLoaded("com/cerbon/better_beacons/BetterBeacons.class");
     }
 
     @Override
@@ -51,6 +53,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("BatchCrafterBlockMixin") || mixinClassName.contains("BatchCrafterBlockEntityMixin")) {
             return hasAE2;
         }
+        if (mixinClassName.contains("Cerbon")) return hasCerbonBetterBeacons;
         return true;
     }
 

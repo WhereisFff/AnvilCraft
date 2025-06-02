@@ -4,6 +4,7 @@
     "minecraft:hopper",
     "minecraft:dropper",
     "minecraft:dispenser",
+    "minecraft:crafter",
     "minecraft:lightning_rod"
   ]
 }

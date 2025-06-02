@@ -90,6 +90,15 @@ public class PowerGrid {
         return this.getComponentCount() <= 0;
     }
 
+    /**
+     * 获取电网中的剩余电量
+     *
+     * @return 剩余电量，可为负值
+     */
+    public int getRemaining() {
+        return this.generate - this.consume;
+    }
+
     public void markChanged() {
         this.changed = true;
     }

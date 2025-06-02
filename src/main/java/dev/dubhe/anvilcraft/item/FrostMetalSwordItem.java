@@ -16,7 +16,7 @@ public class FrostMetalSwordItem extends SwordItem {
             ModTiers.FROST_METAL,
             properties.fireResistant()
                 .attributes(AxeItem.createAttributes(ModTiers.FROST_METAL, 10, -2.4f))
-                .component(ModComponents.MERCILESS, Unit.INSTANCE)
+                .component(ModComponents.MERCILESS, true)
         );
     }
 }

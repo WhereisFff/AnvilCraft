@@ -7,7 +7,9 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
+import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.StampingRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.StampingUniqueItemsRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -23,6 +25,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -64,7 +67,14 @@ public class StampingCategory extends AbstractItemProgressCategory<StampingRecip
         arrowOut.draw(guiGraphics, 92, 31);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.mergedIngredients.size());
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
+
+        List<ChanceItemStack> results = this.getResults(recipe);
+        if (recipe instanceof StampingUniqueItemsRecipe) {
+            ChanceItemStack result = results.getFirst();
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, result.getStack().getCount());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, results.size());
+        }
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
