@@ -39,8 +39,8 @@ public class AnvilHurtVillagerEventListener {
                 villageData = villageData.setProfession(VillagerProfession.NITWIT);
             } else {
                 villageData = villageData.setProfession(VillagerProfession.NONE).setLevel(1);
+                villager.setVillagerXp(0);
             }
-            villager.setVillagerXp(0);
             villager.setVillagerData(villageData);
         }
     }
