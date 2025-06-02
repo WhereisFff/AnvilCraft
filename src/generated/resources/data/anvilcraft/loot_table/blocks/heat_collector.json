@@ -11,11 +11,11 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "anvilcraft:thermoelectric_converter"
+          "name": "anvilcraft:heat_collector"
         }
       ],
       "rolls": 1.0
     }
   ],
-  "random_sequence": "anvilcraft:blocks/thermoelectric_converter"
+  "random_sequence": "anvilcraft:blocks/heat_collector"
 }

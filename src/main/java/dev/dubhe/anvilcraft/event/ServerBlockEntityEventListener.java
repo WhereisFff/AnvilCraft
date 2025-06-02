@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
-import dev.dubhe.anvilcraft.api.chargecollector.HeatedBlockRecorder;
 import dev.dubhe.anvilcraft.api.event.BlockEntityEvent;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -44,10 +43,6 @@ public class ServerBlockEntityEventListener {
         if (event.getEntity() instanceof OverseerBlockEntity overseerBlockEntity) {
             LevelLoadManager.unregister(overseerBlockEntity.getBlockPos(), event.getLevel());
             return;
-        }
-        if (event.getEntity() instanceof HeliostatsBlockEntity heliostatsBlockEntity) {
-            HeatedBlockRecorder.getInstance(event.getLevel())
-                .remove(heliostatsBlockEntity.getIrritatePos(), heliostatsBlockEntity);
         }
     }
 }

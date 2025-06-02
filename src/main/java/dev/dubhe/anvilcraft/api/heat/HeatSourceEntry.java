@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.chargecollector;
+package dev.dubhe.anvilcraft.api.heat;
 
 import lombok.Getter;
 import net.minecraft.world.level.block.Block;
@@ -7,52 +7,50 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.function.Function;
 
 @Getter
-public abstract class ThermoEntry {
+public abstract class HeatSourceEntry {
     private final int charge;
-    private final boolean canIrritated;
 
-    public ThermoEntry(int charge, boolean canIrritated) {
+    public HeatSourceEntry(int charge) {
         this.charge = charge;
-        this.canIrritated = canIrritated;
-    }
-
-    public int ttl() {
-        return 2;
-    }
-
-    public static ThermoEntry predicate(
-        int charge,
-        java.util.function.Predicate<BlockState> predicate,
-        Function<BlockState, BlockState> transformer,
-        boolean canIrritated) {
-        return new Predicate(charge, predicate, transformer, canIrritated);
     }
 
     public abstract int accepts(BlockState state);
 
     public abstract BlockState transform(BlockState state);
 
-    public static ThermoEntry simple(int charge, Block input, Block output, boolean canIrritated) {
-        return new Simple(charge, input, output, canIrritated);
+    public int timeToTransform() {
+        return 40;
+    }
+
+    public static HeatSourceEntry predicate(
+        int charge,
+        java.util.function.Predicate<BlockState> predicate,
+        Function<BlockState, BlockState> transformer
+    ) {
+        return new Predicate(charge, predicate, transformer);
+    }
+
+    public static HeatSourceEntry simple(int charge, Block input, Block output) {
+        return new Simple(charge, input, output);
     }
 
     /**
      * not really forever
      */
-    public static ThermoEntry forever(int charge, Block block, boolean canIrritated) {
-        return new Always(charge, block, canIrritated);
+    public static HeatSourceEntry forever(int charge, Block block) {
+        return new Always(charge, block);
     }
 
-    static class Predicate extends ThermoEntry {
+    static class Predicate extends HeatSourceEntry {
         private final java.util.function.Predicate<BlockState> input;
         private final Function<BlockState, BlockState> transformer;
 
         public Predicate(
             int charge,
             java.util.function.Predicate<BlockState> input,
-            Function<BlockState, BlockState> transformer,
-            boolean canIrritated) {
-            super(charge, canIrritated);
+            Function<BlockState, BlockState> transformer
+        ) {
+            super(charge);
             this.input = input;
             this.transformer = transformer;
         }
@@ -71,13 +69,12 @@ public abstract class ThermoEntry {
         }
     }
 
-    static class Simple extends ThermoEntry {
-
+    static class Simple extends HeatSourceEntry {
         private final Block input;
         private final Block output;
 
-        public Simple(int charge, Block input, Block output, boolean canIrritated) {
-            super(charge, canIrritated);
+        public Simple(int charge, Block input, Block output) {
+            super(charge);
             this.input = input;
             this.output = output;
         }
@@ -93,27 +90,26 @@ public abstract class ThermoEntry {
         }
     }
 
-    static class Always extends ThermoEntry {
+    static class Always extends HeatSourceEntry {
+        private final Block input;
 
-        private final Block block;
-
-        public Always(int charge, Block input, boolean canIrritated) {
-            super(charge, canIrritated);
-            this.block = input;
+        public Always(int charge, Block input) {
+            super(charge);
+            this.input = input;
         }
 
         @Override
         public int accepts(BlockState state) {
-            return state.is(block) ? getCharge() : 0;
+            return state.is(input) ? getCharge() : 0;
         }
 
         @Override
         public BlockState transform(BlockState state) {
-            return block.defaultBlockState();
+            return input.defaultBlockState();
         }
 
         @Override
-        public int ttl() {
+        public int timeToTransform() {
             return Integer.MAX_VALUE;
         }
     }

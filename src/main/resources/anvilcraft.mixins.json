@@ -38,7 +38,6 @@
     "RecipeManagerMixin",
     "RedstoneWireBlockMixin",
     "ServerGamePacketListenerMixin",
-    "ServerLevelMixin",
     "ServerPlayerMixin",
     "SkeletonMixin",
     "VaultServerDataAccessor",

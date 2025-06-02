@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
@@ -148,6 +149,7 @@ public class ModItemTags {
     public static final TagKey<Item> MULTIPLE_TO_ONE_SMITHING_TEMPLATES = bind("multiple_to_one_smithing_templates");
     public static final TagKey<Item> DRAGON_ROD = bind("tools/dragon_rod");
     public static final TagKey<Item> HEAVY_HALBERD = bind("tools/heavy_halberd");
+    public static final TagKey<Item> HEATABLE_BLOCKS = bind("heatable_blocks");
 
     public static final Object2ObjectMap<Color, TagKey<Item>> DYED_COLORS = initDyedTags();
 

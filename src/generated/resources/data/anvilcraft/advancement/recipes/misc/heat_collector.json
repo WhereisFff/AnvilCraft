@@ -11,11 +11,21 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_copper_ingot": {
+    "has_charge_collector": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:copper_ingot"
+            "items": "anvilcraft:charge_collector"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_plates/copper": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:plates/copper"
           }
         ]
       },
@@ -31,11 +41,11 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_sapphire_block": {
+    "has_sapphire": {
       "conditions": {
         "items": [
           {
-            "items": "anvilcraft:sapphire_block"
+            "items": "anvilcraft:sapphire"
           }
         ]
       },
@@ -43,7 +53,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:thermoelectric_converter"
+        "recipe": "anvilcraft:heat_collector"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -51,15 +61,16 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_royal_steel_ingot",
-      "has_copper_ingot",
-      "has_sapphire_block",
-      "has_blue_ice"
+      "has_sapphire",
+      "has_plates/copper",
+      "has_charge_collector",
+      "has_blue_ice",
+      "has_royal_steel_ingot"
     ]
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:thermoelectric_converter"
+      "anvilcraft:heat_collector"
     ]
   }
 }

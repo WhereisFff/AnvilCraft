@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.chargecollector.HeatedBlockRecorder;
+import dev.dubhe.anvilcraft.api.heat.TempVariationManager;
 import dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
@@ -178,18 +178,7 @@ public class HeliostatsBlockEntity extends BlockEntity {
             PacketDistributor.sendToServer(new HeliostatsIrradiationPacket(getBlockPos(), irritatePos));
         workResult = validatePos(irritatePos);
         if (workResult.isWorking()) {
-            HeatedBlockRecorder.getInstance(getLevel()).addOrIncrease(irritatePos, this);
-        } else {
-            HeatedBlockRecorder.getInstance(getLevel()).remove(irritatePos, this);
-        }
-    }
-
-    /**
-     *
-     */
-    public void notifyRemoved() {
-        if (irritatePos != null) {
-            HeatedBlockRecorder.getInstance(getLevel()).remove(irritatePos, this);
+            TempVariationManager.addHeliostats(getBlockPos(), getLevel());
         }
     }
 

@@ -170,6 +170,8 @@ public class ItemTagLoader {
             .addTag(ItemTags.TRIM_TEMPLATES)
             .addTag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
             .add(findResourceKey(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
+        provider.addTag(ModItemTags.HEATABLE_BLOCKS)
+            .add(findResourceKey(Items.NETHERITE_BLOCK));
     }
 
     private static ResourceKey<Item> findResourceKey(Item item) {

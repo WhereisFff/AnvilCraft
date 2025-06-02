@@ -43,7 +43,8 @@ import dev.dubhe.anvilcraft.block.EndDustBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
-import dev.dubhe.anvilcraft.block.GlowingMetalBlock;
+import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
+import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.HeavyIronBeamBlock;
 import dev.dubhe.anvilcraft.block.HeavyIronDoorBlock;
@@ -54,7 +55,8 @@ import dev.dubhe.anvilcraft.block.HeliostatsBlock;
 import dev.dubhe.anvilcraft.block.HollowMagnetBlock;
 import dev.dubhe.anvilcraft.block.HoneyCauldronBlock;
 import dev.dubhe.anvilcraft.block.ImpactPileBlock;
-import dev.dubhe.anvilcraft.block.IncandescentMetalBlock;
+import dev.dubhe.anvilcraft.block.heatable.HeatedBlock;
+import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
 import dev.dubhe.anvilcraft.block.InductionLightBlock;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
@@ -82,7 +84,8 @@ import dev.dubhe.anvilcraft.block.PowerConverterBigBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterMiddleBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterSmallBlock;
 import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
-import dev.dubhe.anvilcraft.block.RedhotMetalBlock;
+import dev.dubhe.anvilcraft.block.heatable.NormalBlock;
+import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
 import dev.dubhe.anvilcraft.block.ReinforcedConcreteBlock;
 import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.ResentfulAmberBlock;
@@ -103,7 +106,6 @@ import dev.dubhe.anvilcraft.block.StepEffectSlabBlock;
 import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
 import dev.dubhe.anvilcraft.block.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
-import dev.dubhe.anvilcraft.block.ThermoelectricConverterBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
 import dev.dubhe.anvilcraft.block.VoidEnergyCollectorBlock;
@@ -937,8 +939,8 @@ public class ModBlocks {
                 .save(p);
         })
         .register();
-    public static final BlockEntry<ThermoelectricConverterBlock> THERMOELECTRIC_CONVERTER = REGISTRATE
-        .block("thermoelectric_converter", ThermoelectricConverterBlock::new)
+    public static final BlockEntry<HeatCollectorBlock> HEAT_COLLECTOR = REGISTRATE
+        .block("heat_collector", HeatCollectorBlock::new)
         .simpleItem()
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .properties(BlockBehaviour.Properties::noOcclusion)
@@ -946,22 +948,19 @@ public class ModBlocks {
         .blockstate(DataGenUtil::noExtraModelOrState)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
-                .pattern("ABA")
-                .pattern("CDC")
-                .pattern("ABA")
-                .define('A', ModItems.ROYAL_STEEL_INGOT)
-                .define('B', Items.COPPER_INGOT)
-                .define('C', ModBlocks.SAPPHIRE_BLOCK)
-                .define('D', Items.BLUE_ICE)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_INGOT),
-                    AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(Items.COPPER_INGOT), AnvilCraftDatagen.has(Items.COPPER_INGOT))
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.SAPPHIRE_BLOCK),
-                    AnvilCraftDatagen.has(ModBlocks.SAPPHIRE_BLOCK))
+                .pattern("CBC")
+                .pattern("BIB")
+                .pattern("RHR")
+                .define('B', ModItems.SAPPHIRE)
+                .define('C', ModItemTags.COPPER_PLATES)
+                .define('H', ModBlocks.CHARGE_COLLECTOR)
+                .define('I', Items.BLUE_ICE)
+                .define('R', ModItems.ROYAL_STEEL_INGOT)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.SAPPHIRE), AnvilCraftDatagen.has(ModItems.SAPPHIRE))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItemTags.COPPER_PLATES), AnvilCraftDatagen.has(ModItemTags.COPPER_PLATES))
+                .unlockedBy("has_charge_collector", AnvilCraftDatagen.has(ModBlocks.CHARGE_COLLECTOR))
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.BLUE_ICE), AnvilCraftDatagen.has(Items.BLUE_ICE))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_INGOT), AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
                 .save(provider);
         })
         .register();
@@ -2452,18 +2451,20 @@ public class ModBlocks {
                 .save(provider);
         })
         .register();
-    public static final BlockEntry<? extends Block> TUNGSTEN_BLOCK = REGISTRATE
-        .block("tungsten_block", Block::new)
+    public static final BlockEntry<NormalBlock> TUNGSTEN_BLOCK = REGISTRATE
+        .block("tungsten_block", NormalBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.STORAGE_BLOCKS_TUNGSTEN,
-            Tags.Items.STORAGE_BLOCKS)
+            Tags.Items.STORAGE_BLOCKS,
+            ModItemTags.HEATABLE_BLOCKS)
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
             Tags.Blocks.STORAGE_BLOCKS,
-            ModBlockTags.STORAGE_BLOCKS_TUNGSTEN)
+            ModBlockTags.STORAGE_BLOCKS_TUNGSTEN,
+            ModBlockTags.HEATABLE_BLOCKS)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
                 .pattern("AAA")
@@ -3188,94 +3189,98 @@ public class ModBlocks {
     public static final Object2ObjectMap<Color, BlockEntry<WallBlock>> REINFORCED_CONCRETE_WALLS =
         registerReinforcedConcreteWalls();
 
-    public static final BlockEntry<Block> HEATED_NETHERITE = REGISTRATE
-        .block("heated_netherite_block", Block::new)
+    public static final BlockEntry<HeatedBlock> HEATED_NETHERITE = REGISTRATE
+        .block("heated_netherite_block", HeatedBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, Items.NETHERITE_BLOCK))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-            BlockTags.NEEDS_DIAMOND_TOOL)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, Blocks.NETHERITE_BLOCK))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
-    public static final BlockEntry<Block> HEATED_TUNGSTEN = REGISTRATE
-        .block("heated_tungsten_block", Block::new)
+    public static final BlockEntry<HeatedBlock> HEATED_TUNGSTEN = REGISTRATE
+        .block("heated_tungsten_block", HeatedBlock::new)
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, ModBlocks.TUNGSTEN_BLOCK))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.TUNGSTEN_BLOCK))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
-    public static final BlockEntry<RedhotMetalBlock> REDHOT_NETHERITE = REGISTRATE
-        .block("redhot_netherite_block", RedhotMetalBlock::new)
+    public static final BlockEntry<RedhotBlock> REDHOT_NETHERITE = REGISTRATE
+        .block("redhot_netherite_block", RedhotBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 3))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, Items.NETHERITE_BLOCK))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-            BlockTags.NEEDS_DIAMOND_TOOL)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_NETHERITE))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
-    public static final BlockEntry<RedhotMetalBlock> REDHOT_TUNGSTEN = REGISTRATE
-        .block("redhot_tungsten_block", RedhotMetalBlock::new)
+    public static final BlockEntry<RedhotBlock> REDHOT_TUNGSTEN = REGISTRATE
+        .block("redhot_tungsten_block", RedhotBlock::new)
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 3))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, ModBlocks.TUNGSTEN_BLOCK))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_TUNGSTEN))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
-    public static final BlockEntry<GlowingMetalBlock> GLOWING_NETHERITE = REGISTRATE
-        .block("glowing_netherite_block", GlowingMetalBlock::new)
+    public static final BlockEntry<GlowingBlock> GLOWING_NETHERITE = REGISTRATE
+        .block("glowing_netherite_block", GlowingBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 7))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, ModBlocks.HEATED_NETHERITE))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-            BlockTags.NEEDS_DIAMOND_TOOL)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_NETHERITE))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
-    public static final BlockEntry<GlowingMetalBlock> GLOWING_TUNGSTEN = REGISTRATE
-        .block("glowing_tungsten_block", GlowingMetalBlock::new)
+    public static final BlockEntry<GlowingBlock> GLOWING_TUNGSTEN = REGISTRATE
+        .block("glowing_tungsten_block", GlowingBlock::new)
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 7))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, ModBlocks.HEATED_TUNGSTEN))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_TUNGSTEN))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
-    public static final BlockEntry<IncandescentMetalBlock> INCANDESCENT_NETHERITE = REGISTRATE
-        .block("incandescent_netherite_block", IncandescentMetalBlock::new)
+    public static final BlockEntry<IncandescentBlock> INCANDESCENT_NETHERITE = REGISTRATE
+        .block("incandescent_netherite_block", IncandescentBlock::new)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 15))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, ModBlocks.REDHOT_NETHERITE))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-            BlockTags.NEEDS_DIAMOND_TOOL)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_NETHERITE))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
-    public static final BlockEntry<IncandescentMetalBlock> INCANDESCENT_TUNGSTEN = REGISTRATE
-        .block("incandescent_tungsten_block", IncandescentMetalBlock::new)
+    public static final BlockEntry<IncandescentBlock> INCANDESCENT_TUNGSTEN = REGISTRATE
+        .block("incandescent_tungsten_block", IncandescentBlock::new)
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 15))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> tables.dropOther(block, ModBlocks.REDHOT_TUNGSTEN))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_NETHERITE))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
         .register();
 
     // raw blocks
