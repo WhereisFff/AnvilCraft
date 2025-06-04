@@ -21,6 +21,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer {
+    private static final int MAX_OUTPUT_POWER = 4096;
     private final Set<BlockPos> collectablePosesGetter;
     @Getter
     private int time = 0;
@@ -69,6 +70,7 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
                 }
             }
         }
+        this.outputPower = Math.min(this.outputPower, MAX_OUTPUT_POWER);
     }
 
     public void clientTick() {
