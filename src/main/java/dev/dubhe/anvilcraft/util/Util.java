@@ -170,9 +170,9 @@ public class Util {
     /**
      * 将传入的值强转为{@code T}类型
      *
+     * @param <T> 想要转为的类型
      * @param o 一个值
      * @return 传入的值，但是类型为{@code T}
-     * @param <T> 想要转为的类型
      * @throws ClassCastException 当无法将传入的值强转时抛出
      */
     @SuppressWarnings("unchecked")
@@ -181,11 +181,11 @@ public class Util {
     }
 
     /**
-     * 若传入的值可被强转为{@code T}类型，则返回包含传入的值的{@link Optional<T>}
+     * 若传入的值可被强转为{@code T}类型，则返回包含传入的值的{@link Optional}
      *
+     * @param <T> 想要转为的类型
      * @param o 一个值，可为null
      * @return 传入的值，但是类型为{@code T}
-     * @param <T> 想要转为的类型
      */
     public static <T> Optional<T> castSafely(@Nullable Object o, Class<T> clazz) {
         return Optional.ofNullable(o)
