@@ -74,6 +74,15 @@ public class JeiLang {
         provider.add("gui.anvilcraft.category.void_decay.around", "Put this block adjacent to the center block");
         provider.add("gui.anvilcraft.category.void_decay.not_consumed", "Not consumed in conversion");
 
+        provider.add("gui.anvilcraft.category.charger_charging", "Charger Charging");
+        provider.add("gui.anvilcraft.category.charger_charging.power_consume", "Power Consume: %s");
+        provider.add("gui.anvilcraft.category.charger_charging.power_produce", "Power Produce: %s");
+        provider.add("gui.anvilcraft.category.charger_charging.time", "Time: %s second");
+
+        provider.add("gui.anvilcraft.category.multiple_to_one_smithing", "Multiple To One Smithing");
+
+        provider.add("jei.anvilcraft.tooltip.not_consumed", "Not Consumed");
+
         provider.add("jei.anvilcraft.info.geode_1", "Finds Amethyst Geodes nearby when using.");
         provider.add("jei.anvilcraft.info.geode_2", "Dropped by Budding Amethyst blocks.");
         provider.add("jei.anvilcraft.info.geode_3", "You can also find it in the Bonus Chest");

@@ -170,6 +170,9 @@ public class ItemTagLoader {
             .addTag(ItemTags.TRIM_TEMPLATES)
             .addTag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
             .add(findResourceKey(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
+        provider.addTag(ModItemTags.UNCHARGED_NEUTRONIUM_INGOTS)
+            .add(ModItems.NEUTRONIUM_INGOT.getKey())
+            .add(ModItems.STABLE_NEUTRONIUM_INGOT.getKey());
     }
 
     private static ResourceKey<Item> findResourceKey(Item item) {
