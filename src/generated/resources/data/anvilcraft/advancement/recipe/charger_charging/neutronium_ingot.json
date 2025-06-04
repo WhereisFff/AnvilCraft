@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:charger_charging/magnet_ingot_from_iron_ingot"
+        "recipe": "anvilcraft:charger_charging/neutronium_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:charger_charging/magnet_ingot_from_iron_ingot"
+      "anvilcraft:charger_charging/neutronium_ingot"
     ]
   }
 }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:charger_charging/capacitor_empty_from_capacitor"
+        "recipe": "anvilcraft:charger_charging/magnet_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:charger_charging/capacitor_empty_from_capacitor"
+      "anvilcraft:charger_charging/magnet_ingot"
     ]
   }
 }
