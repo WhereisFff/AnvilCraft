@@ -4,7 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.RipeningManager;
 import dev.dubhe.anvilcraft.api.hammer.HammerManager;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import dev.dubhe.anvilcraft.api.heat.TempVariationManager;
+import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
 import dev.dubhe.anvilcraft.api.world.load.LevelLoadManager;
 import dev.dubhe.anvilcraft.api.world.load.RandomChuckTickLoadManager;
 import dev.dubhe.anvilcraft.init.ModHammerInits;
@@ -33,7 +33,7 @@ public class ServerLifecycleEventListener {
     public static void onTick(@NotNull ServerTickEvent.Pre event) {
         PowerGrid.tickGrid();
         RipeningManager.tickAll();
-        TempVariationManager.tickAll();
+        HeatProducerManager.tickAll();
         RandomChuckTickLoadManager.tick();
     }
 

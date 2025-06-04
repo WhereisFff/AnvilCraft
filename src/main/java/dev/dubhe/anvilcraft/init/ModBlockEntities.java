@@ -23,6 +23,7 @@ import dev.dubhe.anvilcraft.block.entity.MagneticChuteBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MineralFountainBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MobAmberBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.OverseerBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.PlasmaJetsBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PowerConverterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.RemoteTransmissionPoleBlockEntity;
@@ -48,6 +49,7 @@ import dev.dubhe.anvilcraft.client.renderer.blockentity.HasMobBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HeatCollectorRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HeliostatsRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.LaserBlockRenderer;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.PlasmaJetsRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.VoidEnergyCollectorRenderer;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
@@ -256,6 +258,12 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<IncandescentBlockEntity> INCANDESCENT_BLOCK = REGISTRATE
         .blockEntity("incandescent_block", IncandescentBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.INCANDESCENT_NETHERITE, ModBlocks.INCANDESCENT_TUNGSTEN)
+        .register();
+
+    public static final BlockEntityEntry<PlasmaJetsBlockEntity> PLASMA_JETS = REGISTRATE
+        .blockEntity("plasma_jets", PlasmaJetsBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.PLASMA_JETS)
+        .renderer(() -> PlasmaJetsRenderer::new)
         .register();
 
     public static void register() {

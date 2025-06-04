@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block.heatable;
 
-import dev.dubhe.anvilcraft.api.heat.TempVariationManager;
+import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -15,6 +15,6 @@ public abstract class HeatableBlock extends Block implements EntityBlock {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
-        TempVariationManager.addHeatableBlock(pos, level);
+        HeatProducerManager.addHeatableBlock(pos, level);
     }
 }

@@ -1,9 +1,11 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
 import dev.dubhe.anvilcraft.api.rendering.CacheableBERenderingPipeline;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModDamageTypes;
+import dev.dubhe.anvilcraft.init.ModHeatProducerInfos;
 import dev.dubhe.anvilcraft.network.LaserEmitPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -121,13 +123,20 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
 
     public void tick(@NotNull Level level) {
         if (changed) {
-            if (level instanceof ServerLevel) {
+            if (level instanceof ServerLevel serverLevel) {
                 PacketDistributor.sendToPlayersTrackingChunk(
-                    (ServerLevel) level,
+                    serverLevel,
                     level.getChunkAt(getBlockPos()).getPos(),
                     new LaserEmitPacket(laserLevel, getBlockPos(), irradiateBlockPos)
                 );
             }
+        }
+        //noinspection ConstantValue
+        if (level instanceof ServerLevel serverLevel
+            && getIrradiateBlockPos() != null
+            && serverLevel.getBlockState(getIrradiateBlockPos()).is(ModBlockTags.HEATABLE_BLOCKS)
+        ) {
+            HeatProducerManager.addProducer(getBlockPos(), getLevel(), ModHeatProducerInfos.LASER_EMITTER);
         }
         tickCount++;
     }

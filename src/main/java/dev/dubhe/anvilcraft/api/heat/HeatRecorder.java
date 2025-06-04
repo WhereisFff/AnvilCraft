@@ -12,18 +12,26 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.function.Supplier;
 
-public class HeatableBlockRecorder {
+public class HeatRecorder {
     public static final Map<Block, ResourceLocation> BLOCK_TO_ID = new HashMap<>();
     private static final Map<ResourceLocation, NavigableMap<HeatTier, Block>> HEATABLE_BLOCKS = new HashMap<>();
+    static final Set<HeatProducerInfo<?>> PRODUCER_INFOS = new HashSet<>();
 
-    public static RegisterHelper register(ResourceLocation id) {
+    public static RegisterHelper registerHeatables(ResourceLocation id) {
         return new RegisterHelper(id);
+    }
+
+    public static <T> HeatProducerInfo<T> registerProducerInfo(HeatProducerInfo<T> info) {
+        PRODUCER_INFOS.add(info);
+        return info;
     }
 
     @SuppressWarnings({"unused", "UnusedReturnValue"})
@@ -149,13 +157,13 @@ public class HeatableBlockRecorder {
     }
 
     static {
-        register(AnvilCraft.of("netherite"))
+        registerHeatables(AnvilCraft.of("netherite"))
             .normal(Blocks.NETHERITE_BLOCK)
             .heated(ModBlocks.HEATED_NETHERITE)
             .redhot(ModBlocks.REDHOT_NETHERITE)
             .glowing(ModBlocks.GLOWING_NETHERITE)
             .incandescent(ModBlocks.INCANDESCENT_NETHERITE);
-        register(AnvilCraft.of("tungsten"))
+        registerHeatables(AnvilCraft.of("tungsten"))
             .normal(ModBlocks.TUNGSTEN_BLOCK)
             .heated(ModBlocks.HEATED_TUNGSTEN)
             .redhot(ModBlocks.REDHOT_TUNGSTEN)

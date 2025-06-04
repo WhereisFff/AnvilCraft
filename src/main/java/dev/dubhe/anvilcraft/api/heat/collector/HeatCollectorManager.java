@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.heat;
+package dev.dubhe.anvilcraft.api.heat.collector;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.AabbUtil;

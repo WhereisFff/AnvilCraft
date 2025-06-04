@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.util;
 
-import dev.dubhe.anvilcraft.api.heat.HeatableBlockRecorder;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -66,7 +65,7 @@ public class BreakBlockUtil {
             && drops.getFirst().is(ModItemTags.HEATABLE_BLOCKS)
             && Util.castSafely(drops.getFirst().getItem(), BlockItem.class).isPresent()
         ) return List.of(
-            HeatableBlockRecorder.getHeatableBlockNextTier(Block.byItem(drops.getFirst().getItem()))
+            HeatRecorder.getHeatableBlockNextTier(Block.byItem(drops.getFirst().getItem()))
                 .map(block -> block.asItem().getDefaultInstance())
                 .orElse(ItemStack.EMPTY)
         );

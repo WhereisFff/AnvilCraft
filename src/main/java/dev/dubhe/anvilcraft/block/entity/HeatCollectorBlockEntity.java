@@ -1,11 +1,9 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import com.google.common.collect.AbstractIterator;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import dev.dubhe.anvilcraft.api.heat.HeatCollectorManager;
-import dev.dubhe.anvilcraft.api.heat.HeatSourceEntry;
-import dev.dubhe.anvilcraft.util.Lazy;
+import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
+import dev.dubhe.anvilcraft.api.heat.collector.HeatSourceEntry;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -21,8 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
-
-import static dev.dubhe.anvilcraft.api.power.PowerGrid.GRID_TICK;
 
 public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer {
     private final Set<BlockPos> collectablePosesGetter;

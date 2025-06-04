@@ -1,8 +1,9 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import dev.dubhe.anvilcraft.api.heat.TempVariationManager;
+import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModHeatProducerInfos;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainRecipe;
 import net.minecraft.core.BlockPos;
@@ -62,7 +63,8 @@ public class MineralFountainBlockEntity extends BlockEntity {
                 level.setBlockAndUpdate(getBlockPos().above(), Blocks.LAVA.defaultBlockState());
                 return;
             }
-            TempVariationManager.addLavaMineralFountains(getBlockPos(), getLevel());
+            HeatProducerManager.addProducer(getBlockPos(), getLevel(), ModHeatProducerInfos.LAVA_MINERAL_FOUNTAIN);
+            return;
         } else if (aboveState.is(Blocks.AIR)) {
             level.setBlockAndUpdate(getBlockPos().above(), ModBlocks.CINERITE.getDefaultState());
         } else {
@@ -94,6 +96,7 @@ public class MineralFountainBlockEntity extends BlockEntity {
                         recipe.value().getToBlock().defaultBlockState());
                 });
         }
+        HeatProducerManager.removeProducer(getBlockPos(), getLevel(), ModHeatProducerInfos.LAVA_MINERAL_FOUNTAIN);
     }
 
     private static final Direction[] HORIZONTAL_DIRECTION = {

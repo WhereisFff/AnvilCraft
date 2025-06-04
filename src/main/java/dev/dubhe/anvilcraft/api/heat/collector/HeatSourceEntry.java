@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.heat;
+package dev.dubhe.anvilcraft.api.heat.collector;
 
 import lombok.Getter;
 import net.minecraft.world.level.block.Block;
