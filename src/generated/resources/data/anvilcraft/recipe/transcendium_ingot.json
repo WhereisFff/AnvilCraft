@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "group": "anvilcraft:transcendium_ingot",
+  "key": {
+    "A": {
+      "item": "anvilcraft:transcendium_nugget"
+    }
+  },
+  "pattern": [
+    "AAA",
+    "AAA",
+    "AAA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:transcendium_ingot"
+  }
+}

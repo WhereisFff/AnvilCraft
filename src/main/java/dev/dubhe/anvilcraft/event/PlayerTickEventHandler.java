@@ -33,7 +33,7 @@ public class PlayerTickEventHandler {
         CrabClawItem.holdingCrabClawIncreasesRange(event.getEntity());
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
             applyPowerGrid(serverPlayer);
-            IonoCraftBackpackItem.flightTick(serverPlayer);
+            IonoCraftBackpackItem.playerTick(serverPlayer);
             processMerciless(serverPlayer);
         }
     }

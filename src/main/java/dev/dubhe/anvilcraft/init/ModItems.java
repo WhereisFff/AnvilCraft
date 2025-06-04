@@ -1095,6 +1095,45 @@ public class ModItems {
         })
         .register();
 
+    public static final ItemEntry<? extends Item> TRANSCENDIUM_INGOT = REGISTRATE
+        .item("transcendium_ingot", Item::new)
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(Tags.Items.INGOTS, ModItemTags.EXPLOSION_PROOF)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.EMBER_METAL_BLOCK)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.EMBER_METAL_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.TRANSCENDIUM_NUGGET)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.TRANSCENDIUM_NUGGET),
+                    RegistrateRecipeProvider.has(ModItems.TRANSCENDIUM_NUGGET))
+                .save(provider);
+        })
+        .register();
+
+    public static final ItemEntry<? extends Item> TRANSCENDIUM_NUGGET = REGISTRATE
+        .item("transcendium_nugget", Item::new)
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(Tags.Items.NUGGETS, ModItemTags.EXPLOSION_PROOF)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModItems.TRANSCENDIUM_INGOT)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.TRANSCENDIUM_INGOT),
+                    AnvilCraftDatagen.has(ModItems.TRANSCENDIUM_INGOT))
+                .save(provider, AnvilCraft.of(ctx.getId().getPath() + "_from_ingot"));
+        })
+        .register();
+
     // 诅咒黄金系
     public static final ItemEntry<CursedItem> CURSED_GOLD_INGOT = REGISTRATE
         .item("cursed_gold_ingot", CursedItem::new)
