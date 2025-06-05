@@ -26,11 +26,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Optional;
 import java.util.Set;
+import java.util.function.BiConsumer;
 
 import static dev.dubhe.anvilcraft.api.power.PowerGrid.GRID_TICK;
 
@@ -101,11 +103,13 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         return new Pair<>(noMagnet, magnet);
     }
 
+    private static final BiConsumer<PlasmaJetsBlockEntity, Level> CLIENT_TICK = (entity, level) -> entity.clientTick((ClientLevel) level);
+
     public static void tick(Level level, BlockPos ignored, BlockState ignored1, PlasmaJetsBlockEntity entity) {
         if (level instanceof ServerLevel serverLevel) {
             entity.serverTick(serverLevel);
-        } else if (level instanceof ClientLevel clientLevel) {
-            entity.clientTick(clientLevel);
+        } else if (level.isClientSide) {
+            CLIENT_TICK.accept(entity, level);
         }
     }
 
@@ -119,6 +123,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         this.provideCharge(level);
     }
 
+    @OnlyIn(Dist.CLIENT)
     private void clientTick(ClientLevel level) {
         this.summonParticles(level);
     }
@@ -214,6 +219,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         }
     }
 
+    @OnlyIn(Dist.CLIENT)
     protected void summonParticles(ClientLevel level) {
         Vec3 start = this.getParticleStartPos(level);
         Vec3 vector = start.vectorTo(this.getParticleEndPos());
