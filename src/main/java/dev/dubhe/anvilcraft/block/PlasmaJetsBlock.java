@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.block;
 
+import com.mojang.serialization.MapCodec;
+import dev.dubhe.anvilcraft.block.entity.PlasmaJetsBlockEntity;
+import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
@@ -7,19 +10,29 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class PlasmaJetsBlock extends Block implements EntityBlock {
+import java.util.Set;
+
+public class PlasmaJetsBlock extends BaseEntityBlock {
     public PlasmaJetsBlock(Properties properties) {
         super(properties);
+    }
+
+    @Override
+    protected MapCodec<? extends BaseEntityBlock> codec() {
+        return simpleCodec(PlasmaJetsBlock::new);
     }
 
     public static boolean trySpawn(BlockPos pos, Level level) {
@@ -33,12 +46,9 @@ public class PlasmaJetsBlock extends Block implements EntityBlock {
             if (!level.getBlockState(pos.above(i)).isAir()) return false;
         }
         level.setBlock(pos, ModBlocks.PLASMA_JETS.getDefaultState(), 3);
+        level.setBlockEntity(new PlasmaJetsBlockEntity(pos, ModBlocks.PLASMA_JETS.getDefaultState(), 6000, Set.of()));
+        FireCauldronBlock.lowerFillLevel(cauldron, level, pos.below());
         return true;
-    }
-
-    @Override
-    protected RenderShape getRenderShape(BlockState state) {
-        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 
     @Override
@@ -48,7 +58,7 @@ public class PlasmaJetsBlock extends Block implements EntityBlock {
 
     @Override
     public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return box(0, 0, 0, 16, 16, 16);
+        return Shapes.empty();
     }
 
     @Override
@@ -62,7 +72,12 @@ public class PlasmaJetsBlock extends Block implements EntityBlock {
     }
 
     @Override
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        return createTickerHelper(type, ModBlockEntities.PLASMA_JETS.get(), PlasmaJetsBlockEntity::tick);
+    }
+
+    @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return null;
+        return ModBlockEntities.PLASMA_JETS.create(pos, state);
     }
 }

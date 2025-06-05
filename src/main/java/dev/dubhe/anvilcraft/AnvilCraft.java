@@ -26,6 +26,7 @@ import dev.dubhe.anvilcraft.init.ModLootItemConditions;
 import dev.dubhe.anvilcraft.init.ModLootItemFunctions;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.ModNetworks;
+import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.init.ModVillagers;
 import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
@@ -86,6 +87,7 @@ public class AnvilCraft {
         ModVillagers.register(modEventBus);
         ModRecipeTypes.register(modEventBus);
         ModDataAttachments.register(modEventBus);
+        ModParticles.register(modEventBus);
         ModInspections.initialize();
 
         ModLootContextParamSets.registerAll();

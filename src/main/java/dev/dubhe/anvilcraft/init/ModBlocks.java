@@ -1531,6 +1531,7 @@ public class ModBlocks {
         .block("plasma_jets", PlasmaJetsBlock::new)
         .properties(properties -> properties
             .lightLevel(state -> 16)
+            .emissiveRendering(ModBlocks::never)
             .replaceable()
             .noCollission()
             .noOcclusion()

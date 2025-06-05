@@ -69,8 +69,10 @@ public class HeatProducerManager {
     public void tick() {
         if (this.level.getGameTime() % GRID_TICK != 0) return;
         Map<BlockPos, HeatTierLine.Point> heatableBlocks = new HashMap<>();
-        for (HeatProducerInfo<?> info : this.producers.keySet()) {
-            this.tickProducers(info, heatableBlocks);
+        synchronized (this.producers) {
+            for (HeatProducerInfo<?> info : this.producers.keySet()) {
+                this.tickProducers(info, heatableBlocks);
+            }
         }
 
         Set<BlockPos> poses = new HashSet<>();
@@ -87,17 +89,19 @@ public class HeatProducerManager {
     ) {
         Collection<BlockPos> producerPoses = this.producers.get(info);
         Object2IntMap<BlockPos> heatablePosesAndProducerCount = new Object2IntArrayMap<>();
-        for (Iterator<BlockPos> it = producerPoses.iterator(); it.hasNext();) {
-            BlockPos producerPos = it.next();
-            Optional<T> producerOp = info.getter().apply(this.level, producerPos);
-            if (producerOp.isEmpty()) {
-                it.remove();
+        synchronized (this.producers) {
+            for (Iterator<BlockPos> it = producerPoses.iterator(); it.hasNext(); ) {
+                BlockPos producerPos = it.next();
+                Optional<T> producerOp = info.getter().apply(this.level, producerPos);
+                if (producerOp.isEmpty()) {
+                    it.remove();
+                }
+                producerOp.map(producer -> new Pair<>(info.posesGetter().apply(producer), info.countGetter().applyAsInt(producer)))
+                    .ifPresent(
+                        pair -> pair.getFirst()
+                            .forEach(heatablePos -> heatablePosesAndProducerCount.mergeInt(heatablePos, pair.getSecond(), Integer::sum))
+                    );
             }
-            producerOp.map(producer -> new Pair<>(info.posesGetter().apply(producer), info.countGetter().applyAsInt(producer)))
-                .ifPresent(
-                    pair -> pair.getFirst()
-                        .forEach(heatablePos -> heatablePosesAndProducerCount.mergeInt(heatablePos, pair.getSecond(), Integer::sum))
-                );
         }
         for (BlockPos heatablePos : heatablePosesAndProducerCount.keySet()) {
             Optional<HeatTierLine.Point> pointOp = info.line().getPoint(heatablePosesAndProducerCount.getInt(heatablePos));
