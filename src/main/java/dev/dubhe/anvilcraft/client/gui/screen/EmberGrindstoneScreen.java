@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
+import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
@@ -20,6 +21,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Optional;
 
 public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindstoneMenu> {
     private static final ResourceLocation BACKGROUND =
@@ -87,7 +90,10 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                 int x = this.leftPos + 65 + 18 * (i % 3);
                 int y = this.topPos + 23 + 18 * (i / 3);
 
-                EnchantmentInstance enchantment = ListUtil.safelyGet(this.menu.getEnchantments(), i + scrollOver);
+                EnchantmentInstance enchantment = Optional.ofNullable(ListUtil.safelyGet(
+                    this.menu.getEnchantments(), i + scrollOver))
+                    .map(Pair::getFirst)
+                    .orElse(null);
                 if (enchantment == null) continue;
                 ItemStack willRender = EnchantedBookItem.createForEnchantment(enchantment);
                 boolean selected = false;

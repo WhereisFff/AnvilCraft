@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.block;
+package dev.dubhe.anvilcraft.api.block;
 
 import dev.dubhe.anvilcraft.init.ModFluidTags;
 import net.minecraft.core.BlockPos;

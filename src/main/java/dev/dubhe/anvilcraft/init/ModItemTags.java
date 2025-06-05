@@ -149,6 +149,7 @@ public class ModItemTags {
     public static final TagKey<Item> DRAGON_ROD = bind("tools/dragon_rod");
     public static final TagKey<Item> HEAVY_HALBERD = bind("tools/heavy_halberd");
     public static final TagKey<Item> RESONATOR = bind("tools/resonator");
+    public static final TagKey<Item> UNCHARGED_NEUTRONIUM_INGOTS = bind("uncharged_neutronium_ingots");
 
     public static final Object2ObjectMap<Color, TagKey<Item>> DYED_COLORS = initDyedTags();
 

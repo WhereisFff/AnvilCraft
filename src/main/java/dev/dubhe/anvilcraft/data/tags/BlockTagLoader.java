@@ -38,6 +38,7 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.HOPPER))
             .add(findResourceKey(Blocks.DROPPER))
             .add(findResourceKey(Blocks.DISPENSER))
+            .add(findResourceKey(Blocks.CRAFTER))
             .add(findResourceKey(Blocks.LIGHTNING_ROD));
 
         provider.addTag(ModBlockTags.HAMMER_REMOVABLE)
@@ -56,10 +57,12 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.HOPPER))
             .add(findResourceKey(Blocks.DROPPER))
             .add(findResourceKey(Blocks.DISPENSER))
+            .add(findResourceKey(Blocks.CRAFTER))
             .add(findResourceKey(Blocks.HONEY_BLOCK))
             .add(findResourceKey(Blocks.SLIME_BLOCK))
             .add(findResourceKey(Blocks.PISTON))
             .add(findResourceKey(Blocks.STICKY_PISTON))
+            .add(findResourceKey(Blocks.PISTON_HEAD))
             .add(findResourceKey(Blocks.LIGHTNING_ROD))
             .add(findResourceKey(Blocks.DAYLIGHT_DETECTOR))
             .add(findResourceKey(Blocks.LECTERN))

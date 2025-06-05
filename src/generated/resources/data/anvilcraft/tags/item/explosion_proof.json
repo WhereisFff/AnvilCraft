@@ -1,5 +1,6 @@
 {
   "values": [
+    "anvilcraft:transcendium_block",
     "anvilcraft:confined_time_anvilon",
     "anvilcraft:confined_space_anvilon",
     "anvilcraft:confined_mass_anvilon",
@@ -9,6 +10,8 @@
     "anvilcraft:multiphase_matter_pickaxe",
     "anvilcraft:frost_metal_heavy_halberd",
     "anvilcraft:ember_metal_heavy_halberd",
+    "anvilcraft:transcendium_ingot",
+    "anvilcraft:transcendium_nugget",
     "anvilcraft:frost_metal_resonator",
     "anvilcraft:ember_metal_resonator",
     "anvilcraft:multiphase_matter",

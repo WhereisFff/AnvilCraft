@@ -23,9 +23,8 @@ public class FrostMetalHeavyHalberdItem extends HeavyHalberdItem {
     }
 
     @Override
-    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
-        int willDamage = super.damageItem(stack, amount, entity, onBroken);
-        return (stack.getMaxDamage() - 1 - stack.getDamageValue() - willDamage) < 0 ? 0 : willDamage;
+    protected double getBaseAttackDamage() {
+        return 13;
     }
 
     @Override

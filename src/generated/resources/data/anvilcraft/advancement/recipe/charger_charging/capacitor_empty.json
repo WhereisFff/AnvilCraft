@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:charger_charging/charged_neutronium_ingot_from_neutronium_ingot"
+        "recipe": "anvilcraft:charger_charging/capacitor_empty"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:charger_charging/charged_neutronium_ingot_from_neutronium_ingot"
+      "anvilcraft:charger_charging/capacitor_empty"
     ]
   }
 }

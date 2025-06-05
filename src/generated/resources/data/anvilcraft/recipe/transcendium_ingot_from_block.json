@@ -1,0 +1,14 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "group": "anvilcraft:transcendium_ingot",
+  "ingredients": [
+    {
+      "item": "anvilcraft:ember_metal_block"
+    }
+  ],
+  "result": {
+    "count": 9,
+    "id": "anvilcraft:transcendium_ingot"
+  }
+}
