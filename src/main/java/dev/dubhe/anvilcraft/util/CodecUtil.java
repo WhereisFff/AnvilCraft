@@ -13,6 +13,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -163,4 +164,8 @@ public class CodecUtil {
             (buf, blockState) -> buf.writeInt(Block.getId(blockState)),
             (buf) -> Block.stateById(buf.readInt())
         );
+
+    public static <T extends Enum<T>> Codec<T> enumCodec(T[] values) {
+        return Codec.INT.xmap(index -> values[index], Enum::ordinal);
+    }
 }

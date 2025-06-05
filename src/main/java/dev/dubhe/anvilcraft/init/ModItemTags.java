@@ -39,6 +39,7 @@ public class ModItemTags {
     public static final TagKey<Item> STORAGE_BLOCKS_LEAD = bindC("storage_blocks/lead");
     public static final TagKey<Item> STORAGE_BLOCKS_SILVER = bindC("storage_blocks/silver");
     public static final TagKey<Item> STORAGE_BLOCKS_URANIUM = bindC("storage_blocks/uranium");
+    public static final TagKey<Item> STORAGE_BLOCKS_PLUTONIUM = bindC("storage_blocks/plutonium");
     public static final TagKey<Item> STORAGE_BLOCKS_BRONZE = bindC("storage_blocks/bronze");
     public static final TagKey<Item> STORAGE_BLOCKS_BRASS = bindC("storage_blocks/brass");
     public static final TagKey<Item> STORAGE_BLOCKS_VOID_MATTER = bindC("storage_blocks/void_matter");
@@ -63,6 +64,7 @@ public class ModItemTags {
     public static final TagKey<Item> LEAD_INGOTS = bindC("ingots/lead");
     public static final TagKey<Item> SILVER_INGOTS = bindC("ingots/silver");
     public static final TagKey<Item> URANIUM_INGOTS = bindC("ingots/uranium");
+    public static final TagKey<Item> PLUTONIUM_INGOTS = bindC("ingots/plutonium");
     public static final TagKey<Item> BRONZE_INGOTS = bindC("ingots/bronze");
     public static final TagKey<Item> BRASS_INGOTS = bindC("ingots/brass");
     public static final TagKey<Item> MAGNET_INGOTS = bindC("ingots/magnet");
@@ -74,6 +76,7 @@ public class ModItemTags {
     public static final TagKey<Item> LEAD_NUGGETS = bindC("nuggets/lead");
     public static final TagKey<Item> SILVER_NUGGETS = bindC("nuggets/silver");
     public static final TagKey<Item> URANIUM_NUGGETS = bindC("nuggets/uranium");
+    public static final TagKey<Item> PLUTONIUM_NUGGETS = bindC("nuggets/plutonium");
     public static final TagKey<Item> BRONZE_NUGGETS = bindC("nuggets/bronze");
     public static final TagKey<Item> BRASS_NUGGETS = bindC("nuggets/brass");
     public static final TagKey<Item> COPPER_NUGGETS = bindC("nuggets/copper");

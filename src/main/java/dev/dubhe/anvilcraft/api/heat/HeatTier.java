@@ -1,6 +1,11 @@
 package dev.dubhe.anvilcraft.api.heat;
 
+import com.mojang.serialization.Codec;
+import dev.dubhe.anvilcraft.util.CodecUtil;
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Optional;
 
@@ -13,6 +18,7 @@ public enum HeatTier implements Comparable<HeatTier> {
     ;
 
     public static final HeatTier[] TIERS = new HeatTier[] {NORMAL, HEATED, REDHOT, GLOWING, INCANDESCENT};
+    public static final Codec<HeatTier> CODEC = CodecUtil.enumCodec(TIERS);
 
     @Getter
     private final int remainCount;

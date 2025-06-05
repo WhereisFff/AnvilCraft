@@ -82,6 +82,7 @@ public class HeatCollectorManager {
 
         registerEntry(HeatSourceEntry.forever(2, ModBlocks.URANIUM_BLOCK.get()));
         registerEntry(HeatSourceEntry.forever(4, ModBlocks.EMBER_METAL_BLOCK.get()));
+        registerEntry(HeatSourceEntry.forever(8, ModBlocks.PLUTONIUM_BLOCK.get()));
     }
 
     HeatCollectorManager() {

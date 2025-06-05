@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:time_warp/raw_uranium"
+        "recipe": "anvilcraft:item_compress/plutonium_nugget_from_neutronium_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:time_warp/raw_uranium"
+      "anvilcraft:item_compress/plutonium_nugget_from_neutronium_ingot"
     ]
   }
 }

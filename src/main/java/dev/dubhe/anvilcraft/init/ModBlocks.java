@@ -2588,6 +2588,28 @@ public class ModBlocks {
                 .save(provider);
         })
         .register();
+    public static final BlockEntry<? extends Block> PLUTONIUM_BLOCK = REGISTRATE
+        .block("plutonium_block", Block::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+             BlockTags.BEACON_BASE_BLOCKS,
+             Tags.Blocks.STORAGE_BLOCKS,
+             ModBlockTags.STORAGE_BLOCKS_PLUTONIUM)
+        .item()
+        .tag(ModItemTags.STORAGE_BLOCKS_PLUTONIUM, Tags.Items.STORAGE_BLOCKS)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItemTags.PLUTONIUM_INGOTS)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItemTags.PLUTONIUM_INGOTS),
+                    AnvilCraftDatagen.has(ModItemTags.PLUTONIUM_INGOTS))
+                .save(provider);
+        })
+        .register();
     public static final BlockEntry<? extends Block> BRONZE_BLOCK = REGISTRATE
         .block("bronze_block", Block::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)

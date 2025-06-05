@@ -1772,6 +1772,43 @@ public class ModItems {
                 .save(provider, AnvilCraft.of("blasting/" + ctx.getName() + "_from_ore"));
         })
         .register();
+    public static final ItemEntry<Item> PLUTONIUM_NUGGET = REGISTRATE
+        .item("plutonium_nugget", Item::new)
+        .tag(ModItemTags.PLUTONIUM_NUGGETS, Tags.Items.NUGGETS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModItemTags.PLUTONIUM_INGOTS)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItemTags.PLUTONIUM_INGOTS),
+                    RegistrateRecipeProvider.has(ModItemTags.PLUTONIUM_INGOTS))
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
+        })
+        .register();
+    public static final ItemEntry<Item> PLUTONIUM_INGOT = REGISTRATE
+        .item("plutonium_ingot", Item::new)
+        .tag(ModItemTags.PLUTONIUM_INGOTS, Tags.Items.INGOTS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.URANIUM_BLOCK)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.URANIUM_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.PLUTONIUM_BLOCK)
+                )
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItemTags.PLUTONIUM_NUGGETS)
+                .group(ctx.getId().toString())
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItemTags.PLUTONIUM_NUGGETS),
+                    RegistrateRecipeProvider.has(ModItemTags.PLUTONIUM_NUGGETS)
+                )
+                .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_nuggets"));
+        })
+        .register();
     public static final ItemEntry<Item> COPPER_NUGGET = REGISTRATE
         .item("copper_nugget", Item::new)
         .tag(ModItemTags.COPPER_NUGGETS,
