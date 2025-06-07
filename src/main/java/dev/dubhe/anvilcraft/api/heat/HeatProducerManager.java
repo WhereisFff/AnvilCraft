@@ -4,10 +4,8 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import com.mojang.datafixers.util.Pair;
-import dev.dubhe.anvilcraft.block.PlasmaJetsBlock;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.Util;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -117,13 +115,14 @@ public class HeatProducerManager {
         this.heatableBlocks.add(pos);
 
         HeatableBlockEntity heatable = Util.castSafely(this.level.getBlockEntity(pos), HeatableBlockEntity.class).orElse(null);
-        ResourceLocation id = HeatRecorder.BLOCK_TO_ID.get(heatableState.getBlock());
-        HeatTier tier = HeatRecorder.getCurrentTier(heatableState.getBlock())
+        Optional<ResourceLocation> idOp = HeatRecorder.getId(this.level, pos, heatableState);
+        if (idOp.isEmpty()) return;
+        HeatTier tier = HeatRecorder.getTier(this.level, pos, heatableState)
             .orElseThrow(() -> new IllegalStateException("Unexpected non tier heatable block!"));
         HeatTier tierDelta = Optional.ofNullable(point).map(HeatTierLine.Point::tier).orElse(tier);
         int durationDelta = Optional.ofNullable(point).map(HeatTierLine.Point::duration).orElse(0);
         if (tierDelta.compareTo(tier) > 0) {
-            Block deltaBlock = HeatRecorder.getHeatableBlock(id, tierDelta)
+            Block deltaBlock = HeatRecorder.getHeatableBlock(idOp.get(), tierDelta)
                 .orElseThrow(() -> new IllegalStateException("Unexpected non heatable block tier!"));
             this.level.setBlockAndUpdate(pos, deltaBlock.defaultBlockState());
             if (!(deltaBlock instanceof EntityBlock deltaEntityBlock)) return;
@@ -143,7 +142,7 @@ public class HeatProducerManager {
         }
 
         if (heatable.getDuration() <= 0) {
-            Optional<Block> prevTierOp = HeatRecorder.getHeatableBlockPrevTier(heatable.getBlockState().getBlock());
+            Optional<Block> prevTierOp = HeatRecorder.getPrevTierHeatableBlock(this.level, pos, heatable.getBlockState());
             if (prevTierOp.isEmpty()) return;
             Block prevBlock = prevTierOp.get();
             this.level.setBlockAndUpdate(pos, prevBlock.defaultBlockState());

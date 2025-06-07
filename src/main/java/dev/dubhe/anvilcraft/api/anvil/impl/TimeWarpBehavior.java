@@ -160,13 +160,14 @@ public class TimeWarpBehavior implements IAnvilBehavior {
                 if (!state.is(ModBlockTags.HEATABLE_BLOCKS)) continue;
 
                 HeatableBlockEntity heatable = Util.castSafely(level.getBlockEntity(pos), HeatableBlockEntity.class).orElse(null);
-                ResourceLocation id = HeatRecorder.BLOCK_TO_ID.get(state.getBlock());
-                HeatTier currentTier = HeatRecorder.getCurrentTier(state.getBlock())
+                Optional<ResourceLocation> idOp = HeatRecorder.getId(level, pos, state);
+                if (idOp.isEmpty()) continue;
+                HeatTier currentTier = HeatRecorder.getTier(level, pos, state)
                     .orElseThrow(() -> new IllegalStateException("Unexpected non tier heatable block!"));
                 HeatTier tier = heatRecipe.getTier();
                 int durationDelta = heatRecipe.getDuration();
                 if (tier.compareTo(currentTier) > 0) {
-                    Block deltaBlock = HeatRecorder.getHeatableBlock(id, tier)
+                    Block deltaBlock = HeatRecorder.getHeatableBlock(idOp.get(), tier)
                         .orElseThrow(() -> new IllegalStateException("Unexpected non heatable block tier!"));
                     level.setBlockAndUpdate(pos, deltaBlock.defaultBlockState());
                     if (!(deltaBlock instanceof EntityBlock deltaEntityBlock)) continue;

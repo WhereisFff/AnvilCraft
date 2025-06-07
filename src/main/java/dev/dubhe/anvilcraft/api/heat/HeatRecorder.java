@@ -1,28 +1,35 @@
 package dev.dubhe.anvilcraft.api.heat;
 
+import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.heatable.HeatedBlock;
 import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
 import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.util.ListUtil;
+import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.Tags;
+import net.neoforged.neoforge.common.util.TriPredicate;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
-import java.util.NavigableMap;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.function.Supplier;
 
 public class HeatRecorder {
-    public static final Map<Block, ResourceLocation> BLOCK_TO_ID = new HashMap<>();
-    private static final Map<ResourceLocation, NavigableMap<HeatTier, Block>> HEATABLE_BLOCKS = new HashMap<>();
+    private static final Map<HeatableBlockEntry, ResourceLocation> ENTRY_TO_ID = new HashMap<>();
+    private static final Map<ResourceLocation, List<HeatableBlockEntry>> ENTRIES = new HashMap<>();
     static final Set<HeatProducerInfo<?>> PRODUCER_INFOS = new HashSet<>();
 
     public static RegisterHelper registerHeatables(ResourceLocation id) {
@@ -50,12 +57,28 @@ public class HeatRecorder {
             return this.customTier(HeatTier.NORMAL, normal.get());
         }
 
+        public RegisterHelper normal(Block normal, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.NORMAL, normal, predicate);
+        }
+
+        public RegisterHelper normal(Supplier<? extends Block> normal, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.NORMAL, normal.get(), predicate);
+        }
+
         public RegisterHelper heated(HeatedBlock heated) {
             return this.customTier(HeatTier.HEATED, heated);
         }
 
         public RegisterHelper heated(Supplier<? extends HeatedBlock> heated) {
             return this.customTier(HeatTier.HEATED, heated.get());
+        }
+
+        public RegisterHelper heated(HeatedBlock heated, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.HEATED, heated, predicate);
+        }
+
+        public RegisterHelper heated(Supplier<? extends HeatedBlock> heated, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.HEATED, heated.get(), predicate);
         }
 
         public RegisterHelper redhot(RedhotBlock redhot) {
@@ -66,12 +89,28 @@ public class HeatRecorder {
             return this.customTier(HeatTier.REDHOT, redhot.get());
         }
 
+        public RegisterHelper redhot(RedhotBlock redhot, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.REDHOT, redhot, predicate);
+        }
+
+        public RegisterHelper redhot(Supplier<? extends RedhotBlock> redhot, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.REDHOT, redhot.get(), predicate);
+        }
+
         public RegisterHelper glowing(GlowingBlock glowing) {
             return this.customTier(HeatTier.GLOWING, glowing);
         }
 
         public RegisterHelper glowing(Supplier<? extends GlowingBlock> glowing) {
             return this.customTier(HeatTier.GLOWING, glowing.get());
+        }
+
+        public RegisterHelper glowing(GlowingBlock glowing, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.GLOWING, glowing, predicate);
+        }
+
+        public RegisterHelper glowing(Supplier<? extends GlowingBlock> glowing, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.GLOWING, glowing.get(), predicate);
         }
 
         public RegisterHelper incandescent(IncandescentBlock incandescent) {
@@ -82,89 +121,138 @@ public class HeatRecorder {
             return this.customTier(HeatTier.INCANDESCENT, incandescent.get());
         }
 
+        public RegisterHelper incandescent(IncandescentBlock incandescent, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.INCANDESCENT, incandescent, predicate);
+        }
+
+        public RegisterHelper incandescent(
+            Supplier<? extends IncandescentBlock> incandescent, TriPredicate<Level, BlockPos, BlockState> predicate
+        ) {
+            return this.customTier(HeatTier.INCANDESCENT, incandescent.get(), predicate);
+        }
+
         public RegisterHelper customTier(HeatTier tier, Block heatable) {
-            BLOCK_TO_ID.put(heatable, this.id);
+            HeatableBlockEntry entry = HeatableBlockEntry.simple(tier, heatable);
+            ENTRY_TO_ID.put(entry, this.id);
+            ENTRIES.computeIfAbsent(this.id, o -> new ArrayList<>()).add(entry);
+            ENTRIES.get(this.id).sort(HeatableBlockEntry::compareTo);
+            return this;
+        }
 
-            if (HEATABLE_BLOCKS.containsKey(this.id)) {
-                HEATABLE_BLOCKS.get(this.id).put(tier, heatable);
-            } else {
-                NavigableMap<HeatTier, Block> tierBlockMap = Collections.synchronizedNavigableMap(new TreeMap<>());
-                tierBlockMap.put(tier, heatable);
-                HEATABLE_BLOCKS.put(this.id, tierBlockMap);
-            }
-
+        public RegisterHelper customTier(HeatTier tier, Block heatable, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            HeatableBlockEntry entry = HeatableBlockEntry.predicate(tier, heatable, predicate);
+            ENTRY_TO_ID.put(entry, this.id);
+            ENTRIES.computeIfAbsent(this.id, o -> new ArrayList<>()).add(entry);
+            ENTRIES.get(this.id).sort(HeatableBlockEntry::compareTo);
             return this;
         }
     }
 
+    public static Optional<HeatableBlockEntry> getEntry(ResourceLocation id, HeatTier tier) {
+        return Optional.ofNullable(ENTRIES.get(id).get(tier.ordinal()));
+    }
+
     public static Optional<Block> getHeatableBlock(ResourceLocation id, HeatTier tier) {
-        return Optional.ofNullable(HEATABLE_BLOCKS.get(id).get(tier));
+        return getEntry(id, tier).map(HeatableBlockEntry::getDefaultBlock);
     }
 
-    public static Optional<Block> getHeatableBlock(Block prevTier, HeatTier tier) {
-        ResourceLocation id = BLOCK_TO_ID.get(prevTier);
-        if (id == null) return Optional.empty();
-        for (Map.Entry<HeatTier, Block> entry : HEATABLE_BLOCKS.get(id).entrySet()) {
-            if (entry.getKey().equals(tier)) return Optional.empty();
-            if (entry.getValue().equals(prevTier)) return Optional.ofNullable(HEATABLE_BLOCKS.get(id).get(tier));
+    public static Optional<HeatableBlockEntry> getEntry(ResourceLocation id, Level level, BlockPos pos, BlockState state) {
+        for (HeatableBlockEntry entry : ENTRIES.get(id)) {
+            if (entry.isValidBlock(level, pos, state)) return Optional.of(entry);
         }
         return Optional.empty();
     }
 
-    public static Optional<Block> getHeatableBlockPrevTier(Block value) {
-        ResourceLocation id = BLOCK_TO_ID.get(value);
-        if (id == null) return Optional.empty();
-        Block prevTier = null;
-        for (Map.Entry<HeatTier, Block> entry : HEATABLE_BLOCKS.get(id).entrySet()) {
-            if (entry.getValue().equals(value)) return Optional.ofNullable(prevTier);
-            prevTier = entry.getValue();
-        }
-        return Optional.empty();
-    }
-
-    public static Optional<HeatTier> getPrevTier(Block value) {
-        ResourceLocation id = BLOCK_TO_ID.get(value);
-        if (id == null) return Optional.empty();
-        HeatTier prevTier = null;
-        for (Map.Entry<HeatTier, Block> entry : HEATABLE_BLOCKS.get(id).entrySet()) {
-            if (entry.getValue().equals(value)) return Optional.ofNullable(prevTier);
-            prevTier = entry.getKey();
-        }
-        return Optional.empty();
-    }
-
-    public static Optional<HeatTier> getCurrentTier(Block value) {
-        ResourceLocation id = BLOCK_TO_ID.get(value);
-        if (id == null) return Optional.empty();
-        for (Map.Entry<HeatTier, Block> entry : HEATABLE_BLOCKS.get(id).entrySet()) {
-            if (entry.getValue().equals(value)) return Optional.of(entry.getKey());
-        }
-        return Optional.empty();
-    }
-
-    public static Optional<Block> getHeatableBlockNextTier(Block value) {
-        ResourceLocation id = BLOCK_TO_ID.get(value);
-        if (id == null) return Optional.empty();
-        boolean isNextReturn = false;
-        for (Map.Entry<HeatTier, Block> entry : HEATABLE_BLOCKS.get(id).entrySet()) {
-            if (entry.getValue().equals(value)) {
-                isNextReturn = true;
-                continue;
+    private static Pair<Optional<ResourceLocation>, Optional<HeatableBlockEntry>> getIdAndEntry(HeatTier tier) {
+        for (List<HeatableBlockEntry> entries : ENTRIES.values()) {
+            for (HeatableBlockEntry entry : entries) {
+                if (entry.getTier().equals(tier)) {
+                    return new Pair<>(Optional.ofNullable(ENTRY_TO_ID.get(entry)), Optional.of(entry));
+                }
             }
-            if (isNextReturn) return Optional.of(entry.getValue());
         }
-        return Optional.empty();
+        return new Pair<>(Optional.empty(), Optional.empty());
+    }
+
+    private static Pair<Optional<ResourceLocation>, Optional<HeatableBlockEntry>> getIdAndEntry(
+        Level level, BlockPos pos, BlockState state
+    ) {
+        for (List<HeatableBlockEntry> entries : ENTRIES.values()) {
+            for (HeatableBlockEntry entry : entries) {
+                if (entry.isValidBlock(level, pos, state)) {
+                    return new Pair<>(Optional.ofNullable(ENTRY_TO_ID.get(entry)), Optional.of(entry));
+                }
+            }
+        }
+        return new Pair<>(Optional.empty(), Optional.empty());
+    }
+
+    public static Optional<ResourceLocation> getId(HeatTier tier) {
+        return getIdAndEntry(tier).getFirst();
+    }
+
+    public static Optional<ResourceLocation> getId(Level level, BlockPos pos, BlockState state) {
+        return getIdAndEntry(level, pos, state).getFirst();
+    }
+
+    public static Optional<HeatableBlockEntry> getEntry(HeatTier tier) {
+        return getIdAndEntry(tier).getSecond();
+    }
+
+    public static Optional<HeatableBlockEntry> getEntry(Level level, BlockPos pos, BlockState state) {
+        return getIdAndEntry(level, pos, state).getSecond();
+    }
+
+    public static Optional<HeatTier> getTier(Level level, BlockPos pos, BlockState state) {
+        return getEntry(level, pos, state).map(HeatableBlockEntry::getTier);
+    }
+
+    public static Optional<HeatableBlockEntry> getEntry(Level level, BlockPos pos, BlockState prevState, HeatTier tier) {
+        return getId(level, pos, prevState)
+            .flatMap(id -> Optional.ofNullable(ENTRIES.get(id).get(tier.ordinal())));
+    }
+
+    public static Optional<Block> getHeatableBlock(Level level, BlockPos pos, BlockState prevState, HeatTier tier) {
+        return getEntry(level, pos, prevState, tier).map(HeatableBlockEntry::getDefaultBlock);
+    }
+
+    public static Optional<HeatableBlockEntry> getPrevTierEntry(Level level, BlockPos pos, BlockState state) {
+        Pair<Optional<ResourceLocation>, Optional<HeatableBlockEntry>> pair = getIdAndEntry(level, pos, state);
+        Optional<ResourceLocation> idOp = pair.getFirst();
+        Optional<HeatableBlockEntry> entryOp = pair.getSecond();
+        if (idOp.isEmpty() || entryOp.isEmpty()) return Optional.empty();
+        return Optional.ofNullable(ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() - 1));
+    }
+
+    public static Optional<HeatTier> getPrevTier(Level level, BlockPos pos, BlockState state) {
+        return getPrevTierEntry(level, pos, state).map(HeatableBlockEntry::getTier);
+    }
+
+    public static Optional<Block> getPrevTierHeatableBlock(Level level, BlockPos pos, BlockState state) {
+        return getPrevTierEntry(level, pos, state).map(HeatableBlockEntry::getDefaultBlock);
+    }
+
+    public static Optional<HeatableBlockEntry> getNextTierEntry(Level level, BlockPos pos, BlockState state) {
+        Pair<Optional<ResourceLocation>, Optional<HeatableBlockEntry>> pair = getIdAndEntry(level, pos, state);
+        Optional<ResourceLocation> idOp = pair.getFirst();
+        Optional<HeatableBlockEntry> entryOp = pair.getSecond();
+        if (idOp.isEmpty() || entryOp.isEmpty()) return Optional.empty();
+        return Optional.ofNullable(ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() + 1));
+    }
+
+    public static Optional<Block> getNextTierHeatableBlock(Level level, BlockPos pos, BlockState state) {
+        return getNextTierEntry(level, pos, state).map(HeatableBlockEntry::getDefaultBlock);
     }
 
     static {
         registerHeatables(AnvilCraft.of("netherite"))
-            .normal(Blocks.NETHERITE_BLOCK)
+            .normal(Blocks.NETHERITE_BLOCK, (level, pos, state) -> state.is(Tags.Blocks.STORAGE_BLOCKS_NETHERITE))
             .heated(ModBlocks.HEATED_NETHERITE)
             .redhot(ModBlocks.REDHOT_NETHERITE)
             .glowing(ModBlocks.GLOWING_NETHERITE)
             .incandescent(ModBlocks.INCANDESCENT_NETHERITE);
         registerHeatables(AnvilCraft.of("tungsten"))
-            .normal(ModBlocks.TUNGSTEN_BLOCK)
+            .normal(ModBlocks.TUNGSTEN_BLOCK, (level, pos, state) -> state.is(ModBlockTags.STORAGE_BLOCKS_TUNGSTEN))
             .heated(ModBlocks.HEATED_TUNGSTEN)
             .redhot(ModBlocks.REDHOT_TUNGSTEN)
             .glowing(ModBlocks.GLOWING_TUNGSTEN)

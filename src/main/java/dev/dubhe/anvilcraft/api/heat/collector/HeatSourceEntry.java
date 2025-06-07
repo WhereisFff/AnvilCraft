@@ -30,6 +30,14 @@ public abstract class HeatSourceEntry {
         return new Predicate(charge, predicate, transformer);
     }
 
+    public static HeatSourceEntry predicateAlways(
+        int charge,
+        java.util.function.Predicate<BlockState> predicate,
+        Block transformToAlways
+    ) {
+        return new Predicate(charge, predicate, state -> transformToAlways.defaultBlockState());
+    }
+
     public static HeatSourceEntry simple(int charge, Block input, Block output) {
         return new Simple(charge, input, output);
     }

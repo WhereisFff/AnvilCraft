@@ -65,7 +65,7 @@ public class BreakBlockUtil {
             && drops.getFirst().is(ModItemTags.HEATABLE_BLOCKS)
             && Util.castSafely(drops.getFirst().getItem(), BlockItem.class).isPresent()
         ) return List.of(
-            HeatRecorder.getHeatableBlockNextTier(Block.byItem(drops.getFirst().getItem()))
+            HeatRecorder.getNextTierHeatableBlock(level, pos, Block.byItem(drops.getFirst().getItem()).defaultBlockState())
                 .map(block -> block.asItem().getDefaultInstance())
                 .orElse(ItemStack.EMPTY)
         );
