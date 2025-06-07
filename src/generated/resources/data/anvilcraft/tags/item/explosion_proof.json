@@ -1,5 +1,6 @@
 {
   "values": [
+    "anvilcraft:transcendium_block",
     "anvilcraft:confined_time_anvilon",
     "anvilcraft:confined_space_anvilon",
     "anvilcraft:confined_mass_anvilon",
@@ -7,6 +8,12 @@
     "anvilcraft:confinement_chamber",
     "anvilcraft:ember_metal_pickaxe",
     "anvilcraft:multiphase_matter_pickaxe",
+    "anvilcraft:frost_metal_heavy_halberd",
+    "anvilcraft:ember_metal_heavy_halberd",
+    "anvilcraft:transcendium_ingot",
+    "anvilcraft:transcendium_nugget",
+    "anvilcraft:multiphase_matter",
+    "anvilcraft:heavy_halberd_core",
     "anvilcraft:earth_core_shard_block",
     "anvilcraft:earth_core_shard_ore",
     "anvilcraft:earth_core_shard",

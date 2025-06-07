@@ -620,6 +620,8 @@
   "text.autoconfig.anvilcraft.option.blockDevourerUpwardChainDevouring.@Tooltip": "Block Devourer upward chain devouring blocks within tag #anvilcraft:block_devourer_chain_devouring",
   "text.autoconfig.anvilcraft.option.blockDevourerUpwardChainDevouringDistance": "Block Devourer Upward Chain Devouring Distance",
   "text.autoconfig.anvilcraft.option.blockDevourerUpwardChainDevouringDistance.@Tooltip": "Block Devourer upward chain devouring maxCount distance",
+  "text.autoconfig.anvilcraft.option.blockPlacerRecursiveRetrievalDistanceMax": "Block Placer Recursive Retrieval Distance Max",
+  "text.autoconfig.anvilcraft.option.blockPlacerRecursiveRetrievalDistanceMax.@Tooltip": "Block Placer recursive retrieval of container max distance",
   "text.autoconfig.anvilcraft.option.chuteMaxCooldown": "Максимальная перезарядка парашюта",
   "text.autoconfig.anvilcraft.option.chuteMaxCooldown.@Tooltip": "Максимальное расстояние желоба(в тиках)",
   "text.autoconfig.anvilcraft.option.displayAnvilAnimation": "Отображение анимации наковальни",

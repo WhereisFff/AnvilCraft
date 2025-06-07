@@ -135,7 +135,7 @@ public class AmuletBoxItem extends Item {
                 for (int i = 0; i < contents.getTotemCount(); i++) {
                     ItemStack stack = mutable.popTotem();
                     if (stack.isEmpty()) break;
-                    InventoryUtil.addToInventory(player.getInventory(), stack);
+                    player.getInventory().placeItemBackInInventory(stack);
                     dropped = true;
                 }
                 if (dropped) {

@@ -38,9 +38,9 @@ public class IonocraftRenderer extends EntityRenderer<IonocraftEntity> {
         poseStack.pushPose();
         poseStack.scale(1, -1, 1);
         poseStack.translate(0, -1.5f, 0);
-        model.setupAnim(pEntity, 0, 0, 0, 0, 0);
-        VertexConsumer consumer = bufferSource.getBuffer(model.renderType(this.getTextureLocation(pEntity)));
-        model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
+        this.model.setupAnim(pEntity, 0, 0, 0, 0, 0);
+        VertexConsumer consumer = bufferSource.getBuffer(this.model.renderType(this.getTextureLocation(pEntity)));
+        this.model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
     }
 

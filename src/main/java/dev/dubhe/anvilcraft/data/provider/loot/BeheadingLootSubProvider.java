@@ -99,7 +99,7 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
                     new DummyHolder(ModEnchantments.BEHEADING_KEY)))
                 .when(LootItemKilledByPlayerCondition.killedByPlayer())
                 .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
-                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE)
+                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, true)
                 )))
             )
         );
@@ -122,7 +122,7 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
                     new DummyHolder(ModEnchantments.BEHEADING_KEY)))
                 .when(LootItemKilledByPlayerCondition.killedByPlayer())
                 .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
-                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE)
+                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, true)
                 )))
             )
         );

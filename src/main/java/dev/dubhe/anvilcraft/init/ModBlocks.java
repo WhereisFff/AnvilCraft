@@ -103,6 +103,7 @@ import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
 import dev.dubhe.anvilcraft.block.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.ThermoelectricConverterBlock;
+import dev.dubhe.anvilcraft.block.TranscendiumBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
 import dev.dubhe.anvilcraft.block.VoidEnergyCollectorBlock;
@@ -1752,7 +1753,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE,
             Tags.Blocks.STORAGE_BLOCKS)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/ember_metal_block").get()))
@@ -1781,7 +1784,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/cut_ember_metal_block").get()))
@@ -1815,7 +1820,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate(BlockStatProviderUtil::none)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -1846,7 +1853,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate(BlockStatProviderUtil::none)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -1891,7 +1900,9 @@ public class ModBlocks {
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
         .blockstate(BlockStatProviderUtil::none)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -1923,6 +1934,37 @@ public class ModBlocks {
                 )
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_EMBER_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_ember_metal_stairs_from_cut_ember_metal_block"));
+        })
+        .register();
+    public static final BlockEntry<TranscendiumBlock> TRANSCENDIUM_BLOCK = REGISTRATE
+        .block("transcendium_block", TranscendiumBlock::new)
+        .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 7)
+            .noOcclusion()
+            .emissiveRendering(ModBlocks::always))
+        .tag(BlockTags.BEACON_BASE_BLOCKS,
+             BlockTags.MINEABLE_WITH_PICKAXE,
+             Tags.Blocks.NEEDS_NETHERITE_TOOL,
+             BlockTags.WITHER_IMMUNE,
+             BlockTags.DRAGON_IMMUNE,
+             Tags.Blocks.STORAGE_BLOCKS)
+        .blockstate((context, provider) -> provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/transcendium_block").get()))
+        .item()
+        .properties(Item.Properties::fireResistant)
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.TRANSCENDIUM_INGOT)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.TRANSCENDIUM_INGOT),
+                    RegistrateRecipeProvider.has(ModItems.TRANSCENDIUM_INGOT))
+                .save(provider);
         })
         .register();
     public static final BlockEntry<? extends Block> HEAVY_IRON_BLOCK = REGISTRATE

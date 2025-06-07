@@ -15,7 +15,7 @@ public class FrostMetalHoeItem extends HoeItem {
             ModTiers.FROST_METAL,
             properties.fireResistant()
                 .attributes(HoeItem.createAttributes(ModTiers.FROST_METAL, 2, 0))
-                .component(ModComponents.MERCILESS, Unit.INSTANCE)
+                .component(ModComponents.MERCILESS, true)
         );
     }
 }

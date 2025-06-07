@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.item.DiskItem;
+import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
@@ -62,7 +63,14 @@ public class ModComponents {
         register("multiphase", b -> b.persistent(Multiphase.CODEC)
             .networkSynchronized(Multiphase.STREAM_CODEC));
 
-    public static final DataComponentType<Unit> MERCILESS = registerEmpty("merciless");
+    public static final DataComponentType<Boolean> MERCILESS =
+        register("merciless", b -> b.persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.BOOL));
+
+    public static final DataComponentType<Integer> DEVOUR_RANGE = register(
+        "devour_range", b -> b.persistent(Codec.INT)
+            .networkSynchronized(ByteBufCodecs.INT)
+    );
 
     public static final DataComponentType<BoxContents> BOX_CONTENTS = register(
         "box_contents", b -> b.persistent(BoxContents.CODEC)

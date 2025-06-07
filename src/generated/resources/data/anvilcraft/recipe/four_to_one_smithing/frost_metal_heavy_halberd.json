@@ -1,0 +1,25 @@
+{
+  "type": "anvilcraft:four_to_one_smithing",
+  "inputs": [
+    {
+      "item": "anvilcraft:frost_metal_sword"
+    },
+    {
+      "item": "anvilcraft:frost_metal_axe"
+    },
+    {
+      "item": "minecraft:trident"
+    },
+    {
+      "tag": "c:tools/mace"
+    }
+  ],
+  "material": {
+    "item": "anvilcraft:heavy_halberd_core"
+  },
+  "recipeId": 0,
+  "result": "anvilcraft:frost_metal_heavy_halberd",
+  "template": {
+    "item": "anvilcraft:four_to_one_smithing_template"
+  }
+}

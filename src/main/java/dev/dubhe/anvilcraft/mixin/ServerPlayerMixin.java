@@ -59,7 +59,7 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
         ItemStack itemStack = IonoCraftBackpackItem.getByPlayer(this);
         if (itemStack.is(ModItems.IONOCRAFT_BACKPACK)
             && anvilCraft$component.getPowerGrid() != null
-            && anvilCraft$component.getPowerGrid().isWorking()
+            && anvilCraft$component.getPowerGrid().getRemaining() >= 64
         ) {
             int flightTime = IonoCraftBackpackItem.getFlightTime(itemStack);
             flightTime = flightTime + AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 120;
