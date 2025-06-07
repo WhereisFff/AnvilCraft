@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.api.DeferTaskSubmittable;
 import dev.dubhe.anvilcraft.api.itemhandler.PollableFilteredItemStackHandler;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -49,7 +50,7 @@ public abstract class BatchCrafterBlockEntityMixin
     @Final
     private CraftingContainer craftingContainer;
     @Unique
-    private final Deque<Consumer<BatchCrafterBlockEntity>> deferredTasks = new ArrayDeque<>();
+    private final Deque<Consumer<BatchCrafterBlockEntity>> anvilcraft$deferredTasks = new ArrayDeque<>();
 
 
     public BatchCrafterBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -71,11 +72,12 @@ public abstract class BatchCrafterBlockEntityMixin
     ) {
         if (patternDetails instanceof AECraftingPattern pattern && this.itemHandler.isEmpty()) {
             pattern.fillCraftingGrid(inputs, this);
-            if (level.isClientSide) {
+            if (this.level == null) return true;
+            if (this.level.isClientSide) {
                 this.setChanged();
             } else {
                 this.level.blockEntityChanged(worldPosition);
-                this.submitTask(it -> {
+                this.anvilcraft$submitTask(it -> {
                     ItemStack result = pattern.assemble(this.craftingContainer.asCraftInput(), level);
                     if (result.isEmpty()) return;
                     this.ejectItems(result, List.of(), ejectionDirection);
@@ -95,8 +97,8 @@ public abstract class BatchCrafterBlockEntityMixin
         at = @At("HEAD")
     )
     void runDeferredTask(Level level, BlockPos pos, CallbackInfo ci) {
-        for (Consumer<BatchCrafterBlockEntity> deferredTask : this.deferredTasks) {
-            deferredTask.accept((BatchCrafterBlockEntity) (Object) this);
+        for (Consumer<BatchCrafterBlockEntity> deferredTask : this.anvilcraft$deferredTasks) {
+            deferredTask.accept(Util.cast(this));
         }
     }
 
@@ -111,7 +113,7 @@ public abstract class BatchCrafterBlockEntityMixin
     }
 
     @Override
-    public void submitTask(Consumer<BatchCrafterBlockEntity> fn) {
-        deferredTasks.add(fn);
+    public void anvilcraft$submitTask(Consumer<BatchCrafterBlockEntity> fn) {
+        anvilcraft$deferredTasks.add(fn);
     }
 }
