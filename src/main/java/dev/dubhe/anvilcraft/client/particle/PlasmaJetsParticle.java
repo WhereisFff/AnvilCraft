@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.client.particle;
 
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.ExplodeParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -19,8 +18,8 @@ public class PlasmaJetsParticle extends TextureSheetParticle {
         SpriteSet sprites
     ) {
         super(level, x, y, z);
-        this.gravity = 0.7F;
-        this.friction = 0.3F;
+        this.gravity = 0.2F;
+        this.friction = 0.9F;
         this.sprites = sprites;
         this.xd = xSpeed + (Math.random() * 2.0 - 1.0) * 0.05F;
         this.yd = ySpeed + (Math.random() * 2.0 - 1.0) * 0.05F;
@@ -35,7 +34,7 @@ public class PlasmaJetsParticle extends TextureSheetParticle {
 
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
     @Override
@@ -56,7 +55,7 @@ public class PlasmaJetsParticle extends TextureSheetParticle {
         } else if (age < oneThird * 2) {
             g -= (age - oneThird) / oneThird;
             b = 0;
-        } else if (age < maxAge) {
+        } else if (age <= maxAge) {
             r -= (age - oneThird * 2) / oneThird;
             g = 0;
             b = 0;

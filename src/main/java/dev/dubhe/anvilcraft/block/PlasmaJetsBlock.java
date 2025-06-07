@@ -46,18 +46,11 @@ public class PlasmaJetsBlock extends BaseEntityBlock {
             if (!level.getBlockState(pos.above(i)).isAir()) return false;
         }
         level.setBlock(pos, ModBlocks.PLASMA_JETS.getDefaultState(), 3);
-        level.setBlockEntity(new PlasmaJetsBlockEntity(pos, ModBlocks.PLASMA_JETS.getDefaultState(), 6000, Set.of()));
-        FireCauldronBlock.lowerFillLevel(cauldron, level, pos.below());
         return true;
     }
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return Shapes.empty();
-    }
-
-    @Override
-    public VoxelShape getVisualShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return Shapes.empty();
     }
 

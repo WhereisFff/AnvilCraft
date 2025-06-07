@@ -37,10 +37,10 @@ import java.util.function.BiConsumer;
 import static dev.dubhe.anvilcraft.api.power.PowerGrid.GRID_TICK;
 
 public class PlasmaJetsBlockEntity extends BlockEntity {
-    private static final int MAX_DURATION = 12000;
+    private static final int MAX_DURATION = 10 * 60 * 20;
     private final Set<TubeWallLayer> tubeWalls = new HashSet<>();
     private BlockPos cauldronPos = null;
-    private int duration;
+    private int duration = 0;
 
     public PlasmaJetsBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -50,6 +50,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         super(ModBlockEntities.PLASMA_JETS.get(), pos, blockState);
         this.duration = duration;
         this.tubeWalls.addAll(tubeWalls);
+        this.cauldronPos = this.getBlockPos().below(this.tubeWalls.size() + 1);
     }
 
     public static PlasmaJetsBlockEntity createBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
@@ -143,7 +144,6 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 break;
             }
         }
-        this.cauldronPos = this.getBlockPos().below(this.tubeWalls.size() + 1);
         boolean cauldronExisting = level.getBlockState(cauldronPos)
             .is(ModBlocks.FIRE_CAULDRON);
         boolean belowCauldronIsNotHeater = !level.getBlockState(cauldronPos.below(1))
@@ -160,18 +160,19 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
 
     protected void refreshDuration(Level level) {
         this.duration--;
+        if (level.getBlockState(cauldronPos).getOptionalValue(FireCauldronBlock.LEVEL).orElse(0) > 0
+            && this.duration + MAX_DURATION / 2 < MAX_DURATION
+        ) {
+            this.duration += MAX_DURATION / 2;
+            FireCauldronBlock.lowerFillLevel(level.getBlockState(cauldronPos), level, cauldronPos);
+        }
         if (this.duration < 0) {
             level.removeBlock(this.getBlockPos(), false);
-        }
-        BlockState cauldronState = level.getBlockState(cauldronPos);
-        int cauldronLevel = cauldronState.getOptionalValue(FireCauldronBlock.LEVEL).orElse(0);
-        if (cauldronLevel > 0 && this.duration + 6000 < MAX_DURATION) {
-            this.duration += 6000;
-            FireCauldronBlock.lowerFillLevel(cauldronState, level, cauldronPos);
         }
     }
 
     protected void hurtEntities(Level level) {
+        if (level.getGameTime() % 10 != 0) return;
         Collection<Entity> entities = level.getEntities(
             EntityTypeTest.forClass(Entity.class),
             AabbUtil.create(this.getBlockPos(), this.getBlockPos().below(this.tubeWalls.size())),
@@ -179,7 +180,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         );
         for (Entity entity : entities) {
             entity.igniteForSeconds(15.0f);
-            if (entity.hurt(entity.damageSources().inFire(), 32.0f)) {
+            if (entity.hurt(entity.damageSources().inFire(), 16.0f)) {
                 entity.playSound(SoundEvents.GENERIC_BURN, 0.4f, 2.0f + RandomSource.create().nextFloat() * 0.4f);
             }
         }
@@ -229,9 +230,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 ModParticles.PLASMA_JETS.get(),
                 true,
                 start.x, start.y, start.z,
-                (random.nextIntBetweenInclusive(0, 50) - 25) / 100.0,
-                vector.y * 0.75,
-                (random.nextIntBetweenInclusive(0, 50) - 25) / 100.0
+                (random.nextIntBetweenInclusive(0, 20) - 10) / 100.0,
+                vector.y * 0.125,
+                (random.nextIntBetweenInclusive(0, 20) - 10) / 100.0
             );
         }
     }
@@ -272,9 +273,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
 
         public boolean isBroken(Level level) {
             return level.getBlockState(this.second.getFirst()).isAir()
-                   && level.getBlockState(this.second.getSecond()).isAir()
-                   && level.getBlockState(this.first.getFirst()).isAir()
-                   && level.getBlockState(this.first.getSecond()).isAir();
+                   || level.getBlockState(this.second.getSecond()).isAir()
+                   || level.getBlockState(this.first.getFirst()).isAir()
+                   || level.getBlockState(this.first.getSecond()).isAir();
         }
 
         /**

@@ -161,6 +161,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -1532,11 +1533,13 @@ public class ModBlocks {
         .properties(properties -> properties
             .lightLevel(state -> 16)
             .emissiveRendering(ModBlocks::never)
+            .isViewBlocking(ModBlocks::never)
+            .isValidSpawn(ModBlocks::never)
+            .isRedstoneConductor(ModBlocks::never)
+            .noTerrainParticles()
             .replaceable()
             .noCollission()
-            .noOcclusion()
             .strength(-1.0F, 3600000.0F)
-            .isValidSpawn(ModBlocks::never)
             .noLootTable())
         .blockstate(DataGenUtil::noExtraModelOrState)
         .register();
