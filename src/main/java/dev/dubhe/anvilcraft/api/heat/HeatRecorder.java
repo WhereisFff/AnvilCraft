@@ -152,15 +152,24 @@ public class HeatRecorder {
         return Optional.ofNullable(ENTRIES.get(id).get(tier.ordinal()));
     }
 
-    public static Optional<Block> getHeatableBlock(ResourceLocation id, HeatTier tier) {
-        return getEntry(id, tier).map(HeatableBlockEntry::getDefaultBlock);
-    }
-
     public static Optional<HeatableBlockEntry> getEntry(ResourceLocation id, Level level, BlockPos pos, BlockState state) {
         for (HeatableBlockEntry entry : ENTRIES.get(id)) {
             if (entry.isValidBlock(level, pos, state)) return Optional.of(entry);
         }
         return Optional.empty();
+    }
+
+    public static Optional<HeatableBlockEntry> getEntry(HeatTier tier) {
+        return getIdAndEntry(tier).getSecond();
+    }
+
+    public static Optional<HeatableBlockEntry> getEntry(Level level, BlockPos pos, BlockState state) {
+        return getIdAndEntry(level, pos, state).getSecond();
+    }
+
+    public static Optional<HeatableBlockEntry> getEntry(Level level, BlockPos pos, BlockState prevState, HeatTier tier) {
+        return getId(level, pos, prevState)
+            .flatMap(id -> Optional.ofNullable(ENTRIES.get(id).get(tier.ordinal())));
     }
 
     private static Pair<Optional<ResourceLocation>, Optional<HeatableBlockEntry>> getIdAndEntry(HeatTier tier) {
@@ -195,25 +204,16 @@ public class HeatRecorder {
         return getIdAndEntry(level, pos, state).getFirst();
     }
 
-    public static Optional<HeatableBlockEntry> getEntry(HeatTier tier) {
-        return getIdAndEntry(tier).getSecond();
-    }
-
-    public static Optional<HeatableBlockEntry> getEntry(Level level, BlockPos pos, BlockState state) {
-        return getIdAndEntry(level, pos, state).getSecond();
-    }
-
     public static Optional<HeatTier> getTier(Level level, BlockPos pos, BlockState state) {
         return getEntry(level, pos, state).map(HeatableBlockEntry::getTier);
     }
 
-    public static Optional<HeatableBlockEntry> getEntry(Level level, BlockPos pos, BlockState prevState, HeatTier tier) {
-        return getId(level, pos, prevState)
-            .flatMap(id -> Optional.ofNullable(ENTRIES.get(id).get(tier.ordinal())));
-    }
-
     public static Optional<Block> getHeatableBlock(Level level, BlockPos pos, BlockState prevState, HeatTier tier) {
         return getEntry(level, pos, prevState, tier).map(HeatableBlockEntry::getDefaultBlock);
+    }
+
+    public static Optional<Block> getHeatableBlock(ResourceLocation id, HeatTier tier) {
+        return getEntry(id, tier).map(HeatableBlockEntry::getDefaultBlock);
     }
 
     public static Optional<HeatableBlockEntry> getPrevTierEntry(Level level, BlockPos pos, BlockState state) {
@@ -238,6 +238,10 @@ public class HeatRecorder {
         Optional<HeatableBlockEntry> entryOp = pair.getSecond();
         if (idOp.isEmpty() || entryOp.isEmpty()) return Optional.empty();
         return Optional.ofNullable(ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() + 1));
+    }
+
+    public static Optional<HeatTier> getNextTier(Level level, BlockPos pos, BlockState state) {
+        return getNextTierEntry(level, pos, state).map(HeatableBlockEntry::getTier);
     }
 
     public static Optional<Block> getNextTierHeatableBlock(Level level, BlockPos pos, BlockState state) {
