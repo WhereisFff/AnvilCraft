@@ -1,6 +1,8 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import com.mojang.datafixers.util.Pair;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
@@ -16,11 +18,15 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -120,6 +126,8 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         this.checkTubeWallIntegrity(level);
         this.refreshDuration(level);
 
+        HeatProducerManager.addProducer(this.getBlockPos(), level, ModHeatProducerInfos.NO_MAGNET_PLASMA_JETS);
+        HeatProducerManager.addProducer(this.getBlockPos(), level, ModHeatProducerInfos.MAGNET_PLASMA_JETS);
         this.hurtEntities(level);
         this.provideCharge(level);
     }
@@ -144,8 +152,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 break;
             }
         }
-        boolean cauldronExisting = level.getBlockState(cauldronPos)
-            .is(ModBlocks.FIRE_CAULDRON);
+        this.cauldronPos = this.getBlockPos().below(this.tubeWalls.size() + 1);
+        boolean cauldronExisting = level.getBlockState(cauldronPos).is(ModBlocks.FIRE_CAULDRON)
+                                   || level.getBlockState(cauldronPos).is(Blocks.CAULDRON);
         boolean belowCauldronIsNotHeater = !level.getBlockState(cauldronPos.below(1))
             .is(ModBlocks.HEATER);
         boolean heaterOverload = level.getBlockState(cauldronPos.below(1))
@@ -258,17 +267,36 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("duration", this.duration);
+        ListTag tubeWalls = new ListTag();
+        for (TubeWallLayer layer : this.tubeWalls) {
+            tubeWalls.add(TubeWallLayer.CODEC.encode(layer, NbtOps.INSTANCE, new CompoundTag()).getOrThrow());
+        }
+        tag.put("tube_walls", tubeWalls);
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.duration = tag.getInt("duration");
+        ListTag tubeWalls = tag.getList("tube_walls", Tag.TAG_COMPOUND);
+        for (Tag tubeWallTag1 : tubeWalls) {
+            if (!(tubeWallTag1 instanceof CompoundTag tubeWallTag)) continue;
+            this.tubeWalls.add(TubeWallLayer.CODEC.decode(NbtOps.INSTANCE, tubeWallTag).getOrThrow().getFirst());
+        }
+        this.cauldronPos = this.getBlockPos().below(this.tubeWalls.size() + 1);
     }
 
     public record TubeWallLayer(Pair<BlockPos, BlockPos> first, Pair<BlockPos, BlockPos> second) {
+        public static final Codec<TubeWallLayer> CODEC = RecordCodecBuilder.create(ins -> ins.group(
+            BlockPos.CODEC.fieldOf("center").forGetter(TubeWallLayer::getCenter)
+        ).apply(ins, TubeWallLayer::of));
+
         public static TubeWallLayer of(BlockPos center) {
             return new TubeWallLayer(new Pair<>(center.north(), center.south()), new Pair<>(center.east(), center.west()));
+        }
+
+        private BlockPos getCenter() {
+            return this.first.getFirst().south();
         }
 
         public boolean isBroken(Level level) {

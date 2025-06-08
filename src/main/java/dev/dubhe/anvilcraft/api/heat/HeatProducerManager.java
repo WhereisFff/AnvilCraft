@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.api.heat;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.Multimaps;
 import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
@@ -18,11 +19,12 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -53,23 +55,35 @@ public class HeatProducerManager {
     }
 
     public static void addProducer(BlockPos pos, Level level, HeatProducerInfo<?> info) {
-        HeatProducerManager.getInstance(level).producers.put(info, pos);
+        synchronized (HeatProducerManager.getInstance(level).producers) {
+            HeatProducerManager.getInstance(level).producers.put(info, pos);
+        }
     }
 
     public static void removeProducer(BlockPos pos, Level level, HeatProducerInfo<?> info) {
-        HeatProducerManager.getInstance(level).producers.remove(info, pos);
+        synchronized (HeatProducerManager.getInstance(level).producers) {
+            HeatProducerManager.getInstance(level).producers.remove(info, pos);
+        }
     }
 
     public static void tickAll() {
-        INSTANCES.forEach((ignored, manager) -> manager.tick());
+        INSTANCES.forEach((level, manager) -> {
+            if (level.getGameTime() % GRID_TICK != 0) return;
+            manager.tick();
+        });
     }
 
     public void tick() {
-        if (this.level.getGameTime() % GRID_TICK != 0) return;
-        Map<BlockPos, HeatTierLine.Point> heatableBlocks = new HashMap<>();
+        Multimap<HeatProducerInfo<?>, BlockPos> producers;
         synchronized (this.producers) {
-            for (HeatProducerInfo<?> info : this.producers.keySet()) {
-                this.tickProducers(info, heatableBlocks);
+            producers = MultimapBuilder.hashKeys().arrayListValues().build(this.producers);
+        }
+        Map<BlockPos, HeatTierLine.Point> heatableBlocks = new HashMap<>();
+        for (HeatProducerInfo<?> info : producers.keySet()) {
+            List<BlockPos> removals = new ArrayList<>();
+            this.tickProducers(info, heatableBlocks, removals);
+            for (BlockPos removal : removals) {
+                this.producers.remove(info, removal);
             }
         }
 
@@ -83,23 +97,21 @@ public class HeatProducerManager {
 
     private <T> void tickProducers(
         HeatProducerInfo<T> info,
-        Map<BlockPos, HeatTierLine.Point> heatableBlocks
+        Map<BlockPos, HeatTierLine.Point> heatableBlocks,
+        List<BlockPos> removals
     ) {
         Collection<BlockPos> producerPoses = this.producers.get(info);
         Object2IntMap<BlockPos> heatablePosesAndProducerCount = new Object2IntArrayMap<>();
-        synchronized (this.producers) {
-            for (Iterator<BlockPos> it = producerPoses.iterator(); it.hasNext(); ) {
-                BlockPos producerPos = it.next();
-                Optional<T> producerOp = info.getter().apply(this.level, producerPos);
-                if (producerOp.isEmpty()) {
-                    it.remove();
-                }
-                producerOp.map(producer -> new Pair<>(info.posesGetter().apply(producer), info.countGetter().applyAsInt(producer)))
-                    .ifPresent(
-                        pair -> pair.getFirst()
-                            .forEach(heatablePos -> heatablePosesAndProducerCount.mergeInt(heatablePos, pair.getSecond(), Integer::sum))
-                    );
+        for (BlockPos producerPos : producerPoses) {
+            Optional<T> producerOp = info.getter().apply(this.level, producerPos);
+            if (producerOp.isEmpty()) {
+                removals.add(producerPos);
             }
+            producerOp.map(producer -> new Pair<>(info.posesGetter().apply(producer), info.countGetter().applyAsInt(producer)))
+                .ifPresent(
+                    pair -> pair.getFirst()
+                        .forEach(heatablePos -> heatablePosesAndProducerCount.mergeInt(heatablePos, pair.getSecond(), Integer::sum))
+                );
         }
         for (BlockPos heatablePos : heatablePosesAndProducerCount.keySet()) {
             Optional<HeatTierLine.Point> pointOp = info.line().getPoint(heatablePosesAndProducerCount.getInt(heatablePos));
