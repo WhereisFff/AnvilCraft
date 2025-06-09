@@ -4,10 +4,10 @@ import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
-import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 
-import java.util.Optional;
+import java.util.Locale;
 
 public enum HeatTier implements Comparable<HeatTier> {
     NORMAL(0, 4, 0),
@@ -17,8 +17,9 @@ public enum HeatTier implements Comparable<HeatTier> {
     INCANDESCENT(80, Integer.MAX_VALUE, 128),
     ;
 
-    public static final HeatTier[] TIERS = new HeatTier[] {NORMAL, HEATED, REDHOT, GLOWING, INCANDESCENT};
-    public static final Codec<HeatTier> CODEC = CodecUtil.enumCodec(TIERS);
+    public static final Codec<HeatTier> INDEX_CODEC = CodecUtil.enumCodecInInt(HeatTier.class);
+    public static final Codec<HeatTier> LOWER_NAME_CODEC = CodecUtil.enumCodecInLowerName(HeatTier.class);
+    public static final StreamCodec<ByteBuf, HeatTier> STREAM_CODEC = CodecUtil.enumStreamCodec(HeatTier.class);
 
     @Getter
     private final int remainCount;
@@ -33,20 +34,12 @@ public enum HeatTier implements Comparable<HeatTier> {
         this.powerProduce = powerProduce;
     }
 
-    public Optional<HeatTier> getPrevTier() {
-        if (this.ordinal() - 1 < 0) return Optional.empty();
-        return Optional.of(TIERS[this.ordinal() - 1]);
+    public Component toComponent() {
+        return Component.translatable("tooltip.anvilcraft.heat.tier." + this);
     }
 
-    public Optional<HeatTier> getNextTier() {
-        if (this.ordinal() + 1 >= TIERS.length) return Optional.empty();
-        return Optional.of(TIERS[this.ordinal() + 1]);
-    }
-
-    public static HeatTier findTierByCount(int count) {
-        for (HeatTier tier : TIERS) {
-            if (count < tier.toNextCount) return tier;
-        }
-        throw new IllegalArgumentException("Invalid count " + count);
+    @Override
+    public String toString() {
+        return this.name().toLowerCase(Locale.ROOT);
     }
 }

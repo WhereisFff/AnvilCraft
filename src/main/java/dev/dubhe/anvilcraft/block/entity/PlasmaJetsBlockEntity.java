@@ -123,6 +123,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
     private void serverTick(ServerLevel level) {
         if (this.tryRaise()) return;
 
+        this.refreshCauldronPos(level);
         this.checkTubeWallIntegrity(level);
         this.refreshDuration(level);
 
@@ -134,6 +135,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
 
     @OnlyIn(Dist.CLIENT)
     private void clientTick(ClientLevel level) {
+        this.refreshCauldronPos(level);
         this.summonParticles(level);
     }
 
@@ -152,7 +154,6 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 break;
             }
         }
-        this.cauldronPos = this.getBlockPos().below(this.tubeWalls.size() + 1);
         boolean cauldronExisting = level.getBlockState(cauldronPos).is(ModBlocks.FIRE_CAULDRON)
                                    || level.getBlockState(cauldronPos).is(Blocks.CAULDRON);
         boolean belowCauldronIsNotHeater = !level.getBlockState(cauldronPos.below(1))
@@ -240,22 +241,31 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 true,
                 start.x, start.y, start.z,
                 (random.nextIntBetweenInclusive(0, 20) - 10) / 100.0,
-                vector.y * 0.125,
+                vector.y * 0.13,
                 (random.nextIntBetweenInclusive(0, 20) - 10) / 100.0
             );
         }
     }
 
+    protected void refreshCauldronPos(Level level) {
+        if (this.cauldronPos != null
+            && (level.getBlockState(this.cauldronPos).is(ModBlocks.FIRE_CAULDRON)
+                || level.getBlockState(this.cauldronPos).is(Blocks.CAULDRON))
+        ) return;
+        for (int i = 1; i < 6; i++) {
+            if (level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)
+                || level.getBlockState(this.getBlockPos().below(i)).is(Blocks.CAULDRON)) {
+                this.cauldronPos = this.getBlockPos().below(i);
+                break;
+            }
+        }
+    }
+
     public Vec3 getParticleStartPos(Level level) {
         if (this.cauldronPos == null) {
-            for (int i = 1; i < 6; i++) {
-                if (level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)) {
-                    this.cauldronPos = this.getBlockPos().below(i);
-                    break;
-                }
-            }
-            if (this.cauldronPos == null) return this.getBlockPos().getBottomCenter();
+            this.refreshCauldronPos(level);
         }
+        if (this.cauldronPos == null) return this.getBlockPos().getBottomCenter();
         return this.cauldronPos.getCenter();
     }
 

@@ -88,13 +88,13 @@ public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
             Codec.BOOL.fieldOf("produce_fluid").forGetter(HeatProduceTimeWarpRecipe::isProduceFluid),
             Codec.BOOL.fieldOf("consume_fluid").forGetter(HeatProduceTimeWarpRecipe::isConsumeFluid),
             Codec.INT.optionalFieldOf("requiredFluidLevel", 0).forGetter(HeatProduceTimeWarpRecipe::getRequiredFluidLevel),
-            HeatTier.CODEC.fieldOf("tier").forGetter(HeatProduceTimeWarpRecipe::getTier),
+            HeatTier.LOWER_NAME_CODEC.fieldOf("tier").forGetter(HeatProduceTimeWarpRecipe::getTier),
             Codec.INT.fieldOf("duration").forGetter(HeatProduceTimeWarpRecipe::getDuration)
         ).apply(ins, HeatProduceTimeWarpRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, HeatProduceTimeWarpRecipe> STREAM_CODEC = StreamCodec.composite(
             TimeWarpRecipe.Serializer.STREAM_CODEC, recipe -> recipe,
-            ByteBufCodecs.VAR_INT.map(i -> HeatTier.TIERS[i], Enum::ordinal), HeatProduceTimeWarpRecipe::getTier,
+            HeatTier.STREAM_CODEC, HeatProduceTimeWarpRecipe::getTier,
             ByteBufCodecs.VAR_INT, HeatProduceTimeWarpRecipe::getDuration,
             HeatProduceTimeWarpRecipe::new
         );

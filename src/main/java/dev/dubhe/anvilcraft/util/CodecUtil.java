@@ -26,6 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Locale;
 import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -165,7 +166,17 @@ public class CodecUtil {
             (buf) -> Block.stateById(buf.readInt())
         );
 
-    public static <T extends Enum<T>> Codec<T> enumCodec(T[] values) {
-        return Codec.INT.xmap(index -> values[index], Enum::ordinal);
+    public static <T extends Enum<T>> Codec<T> enumCodecInInt(Class<T> clazz) {
+        return Codec.INT.xmap(index -> clazz.getEnumConstants()[index], Enum::ordinal);
+    }
+
+    public static <T extends Enum<T>> Codec<T> enumCodecInLowerName(Class<T> clazz) {
+        return Codec.STRING.xmap(
+            name -> Enum.valueOf(clazz, name.toUpperCase(Locale.ROOT)),
+            value -> value.name().toLowerCase(Locale.ROOT));
+    }
+
+    public static <B extends ByteBuf, T extends Enum<T>> StreamCodec<B, T> enumStreamCodec(Class<T> clazz) {
+        return ByteBufCodecs.VAR_INT.<B>cast().map(index -> clazz.getEnumConstants()[index], Enum::ordinal);
     }
 }

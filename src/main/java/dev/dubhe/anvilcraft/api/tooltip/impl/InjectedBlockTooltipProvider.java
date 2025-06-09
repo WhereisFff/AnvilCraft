@@ -4,7 +4,9 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProducer;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
 import dev.dubhe.anvilcraft.util.Util;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -15,27 +17,16 @@ public class InjectedBlockTooltipProvider extends ITooltipProvider.BlockTooltipP
     public InjectedBlockTooltipProvider() {
     }
 
-    protected Optional<IInjectedTooltipProducer> cast(Block value) {
-        try {
-            if (value instanceof IInjectedTooltipProducer producer) {
-                return Optional.of(producer);
-            } else {
-                return Optional.empty();
-            }
-        } catch (ClassCastException ignored) {
-            return Optional.empty();
-        }
+    @Override
+    public boolean accepts(Level level, BlockPos pos, BlockState value) {
+        return Util.instanceOfAny(value.getBlock(), IInjectedTooltipProducer.class);
     }
 
     @Override
-    public boolean accepts(Block value) {
-        return cast(value).isPresent();
-    }
-
-    @Override
-    public List<Component> tooltip(BlockState state) {
+    public List<Component> tooltip(Level level, BlockPos pos, BlockState state) {
         if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
-        return cast(state.getBlock()).map(producer -> producer.anvilcraft$getTooltip(state)).orElse(null);
+        return Util.castSafely(state.getBlock(), IInjectedTooltipProducer.class)
+            .map(producer -> producer.anvilcraft$getTooltip(state)).orElse(null);
     }
 
     @Override
