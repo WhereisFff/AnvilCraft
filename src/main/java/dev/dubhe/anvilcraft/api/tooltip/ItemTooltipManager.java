@@ -8,11 +8,15 @@ import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
 import java.util.List;
@@ -161,7 +165,18 @@ public class ItemTooltipManager {
             propertyTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
         }
         if (stack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
-            propertyTooltip("merciless", tooltip);
+            if (!Screen.hasShiftDown()) {
+                propertyTooltip("merciless", tooltip, Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
+            } else {
+                propertyTooltip("merciless.shifting", tooltip, ComponentUtils.formatList(
+                    List.of(
+                        Component.translatable("enchantment.minecraft.unbreaking"),
+                        Component.translatable("enchantment.minecraft.mending"),
+                        Component.translatable("enchantment.minecraft.loyalty"),
+                        Component.translatable("enchantment.minecraft.riptide"),
+                        Component.translatable("tooltip.anvilcraft.property.merciless.curse")
+                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+            }
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));
@@ -174,6 +189,24 @@ public class ItemTooltipManager {
                     .withStyle(ChatFormatting.GRAY)
             );
         }
+    }
+
+    // TODO: remove
+    private static @NotNull Component getMercilessArg() {
+        Component arg;
+        if (!Screen.hasShiftDown()) {
+            arg = Minecraft.getInstance().options.keyShift.getKey().getDisplayName();
+        } else {
+            arg = ComponentUtils.formatList(
+                List.of(
+                    Component.translatable("enchantment.minecraft.unbreaking"),
+                    Component.translatable("enchantment.minecraft.mending"),
+                    Component.translatable("enchantment.minecraft.loyalty"),
+                    Component.translatable("enchantment.minecraft.riptide"),
+                    Component.translatable("tooltip.anvilcraft.property.merciless.curse")
+                ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR);
+        }
+        return arg;
     }
 
     private static Component getItemTooltip(Item item) {

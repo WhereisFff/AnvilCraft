@@ -35,5 +35,6 @@ public class ModKeyMappings {
     public static void register(RegisterKeyMappingsEvent event) {
         event.register(SWITCH_PHASE.get());
         event.register(TOGGLE_GOGGLE.get());
+        event.register(SWITCH_RESONATE_MODE.get());
     }
 }
