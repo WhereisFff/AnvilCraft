@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
 import dev.dubhe.anvilcraft.api.heat.collector.HeatSourceEntry;
+import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -14,13 +15,14 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer {
+public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer, IHasAffectRange {
     private static final int MAX_OUTPUT_POWER = 4096;
     private final Set<BlockPos> collectablePosesGetter;
     @Getter
@@ -102,5 +104,10 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     @Override
     public @NotNull BlockPos getPos() {
         return this.getBlockPos();
+    }
+
+    @Override
+    public AABB shape() {
+        return AABB.ofSize(getBlockPos().getCenter(), 5, 5, 5);
     }
 }
