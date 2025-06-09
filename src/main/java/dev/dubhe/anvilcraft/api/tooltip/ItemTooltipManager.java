@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.api.tooltip;
 
 import com.google.common.collect.Maps;
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
@@ -159,7 +160,7 @@ public class ItemTooltipManager {
         if (stack.has(ModComponents.MULTIPHASE)) {
             propertyTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
         }
-        if (stack.getOrDefault(ModComponents.MERCILESS, false)) {
+        if (stack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
             propertyTooltip("merciless", tooltip);
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {

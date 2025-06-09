@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.init.ModComponents;
 
 public class FrostMetalResonatorItem extends ResonatorItem {
@@ -8,7 +9,7 @@ public class FrostMetalResonatorItem extends ResonatorItem {
             ModTiers.FROST_METAL,
             properties
                 .attributes(ResonatorItem.createAttributes(ModTiers.FROST_METAL, 13, -3f))
-                .component(ModComponents.MERCILESS, true)
+                .component(ModComponents.MERCILESS, Merciless.DEFAULT)
         );
     }
 

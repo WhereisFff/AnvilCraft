@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
@@ -66,9 +67,9 @@ public class ModComponents {
         register("multiphase", b -> b.persistent(Multiphase.CODEC)
             .networkSynchronized(Multiphase.STREAM_CODEC));
 
-    public static final DataComponentType<Boolean> MERCILESS =
-        register("merciless", b -> b.persistent(Codec.BOOL)
-            .networkSynchronized(ByteBufCodecs.BOOL));
+    public static final DataComponentType<Merciless> MERCILESS =
+        register("merciless", b -> b.persistent(Merciless.CODEC)
+            .networkSynchronized(Merciless.STREAM_CODEC));
 
     public static final DataComponentType<Integer> DEVOUR_RANGE = register(
         "devour_range", b -> b.persistent(Codec.INT)
