@@ -4,7 +4,7 @@
   "group": "anvilcraft:transcendium_ingot",
   "ingredients": [
     {
-      "item": "anvilcraft:transcendium_block"
+      "item": "anvilcraft:ember_metal_block"
     }
   ],
   "result": {
