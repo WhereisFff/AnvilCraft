@@ -122,7 +122,7 @@ public class ChargerBlockEntity extends BlockEntity
         if (isCharger) {
             itemHandler.setStackInSlot(1, stack);
         } else {
-            ItemStack transformed = recipe.getResult();
+            ItemStack transformed = recipe.getResult().copy();
             itemHandler.setStackInSlot(1, transformed);
         }
         timeLeft = recipe.time + 1; //since there is a "timeLeft--" after this, here +1 to negate
@@ -139,7 +139,7 @@ public class ChargerBlockEntity extends BlockEntity
         if (isCharger) {
             ChargerChargingRecipe recipe = getItemRecipe(stack);
             if (checkRecipeItemNotValid(recipe, stack)) return;
-            ItemStack transformed = recipe.getResult();
+            ItemStack transformed = recipe.getResult().copy();
             itemHandler.setStackInSlot(2, transformed);
         } else {
             itemHandler.setStackInSlot(2, stack);
