@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
+import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -40,6 +41,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Getter
 public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRecipe.Input> {
 
     public static final Codec<MobTransformWithItemRecipe> CODEC = RecordCodecBuilder.create(ins -> ins.group(
@@ -65,11 +67,11 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
     public static final StreamCodec<RegistryFriendlyByteBuf, MobTransformWithItemRecipe> STREAM_CODEC = StreamCodec.of(
         (buf, recipe) -> buf.writeNbt(intoTag(recipe)), friendlyByteBuf -> fromTag(friendlyByteBuf.readNbt()));
 
-    private final EntityType<?> input;
-    private final Ingredient itemInput;
-    private final TransformResult specialResult;
-    private final ItemStack itemResult;
-    private final int chancePercentPerItem;
+    public final EntityType<?> input;
+    public final Ingredient itemInput;
+    public final TransformResult specialResult;
+    public final ItemStack itemResult;
+    public final int chancePercentPerItem;
     private final List<NumericTagValuePredicate> predicates;
     private final List<TagModification> tagModifications;
     private final List<TransformOptions> options;

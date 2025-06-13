@@ -81,6 +81,10 @@ public class JeiLang {
 
         provider.add("gui.anvilcraft.category.multiple_to_one_smithing", "Multiple To One Smithing");
 
+        provider.add("gui.anvilcraft.category.mob_transform", "Mob Transform in Corrupted Beacon Beam");
+        provider.add("gui.anvilcraft.category.mob_transform_with_item", "Mob Transform with Held Item");
+        provider.add("gui.anvilcraft.category.mob_transform_with_item.chance_per_item", "Chance Per Item: %s%%");
+
         provider.add("jei.anvilcraft.tooltip.not_consumed", "Not Consumed");
 
         provider.add("jei.anvilcraft.info.geode_1", "Finds Amethyst Geodes nearby when using.");
@@ -96,5 +100,7 @@ public class JeiLang {
         provider.add("jei.anvilcraft.info.capacitor", "You can charge the empty capacitor in the charger to obtain it.");
 
         provider.add("jei.anvilcraft.info.end_dust", "Any falling block, except for anvils and Dragon Egg, will be converted into End Dust when fall through end portal.");
+
+        provider.add("jei.anvilcraft.info.mob_transform_with_item", "Right-clicking mobs with the corresponding item in its Mob-Transform-with-Held-Item recipes can force the mob to hold it.");
     }
 }
