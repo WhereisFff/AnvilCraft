@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
+import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.api.entity.player.AnvilCraftBlockPlacer;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModHeatProducerInfos;
+import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
 import lombok.Getter;
 import lombok.Setter;
@@ -179,9 +179,9 @@ public class HeliostatsBlockEntity extends BlockEntity {
             PacketDistributor.sendToServer(new HeliostatsIrradiationPacket(getBlockPos(), irritatePos));
         workResult = validatePos(irritatePos);
         if (workResult.isWorking()) {
-            HeatProducerManager.addProducer(getBlockPos(), getLevel(), ModHeatProducerInfos.HELIOSTATS);
+            HeaterManager.addProducer(getBlockPos(), getLevel(), ModHeaterInfos.HELIOSTATS);
         } else {
-            HeatProducerManager.removeProducer(getBlockPos(), getLevel(), ModHeatProducerInfos.HELIOSTATS);
+            HeaterManager.removeProducer(getBlockPos(), getLevel(), ModHeaterInfos.HELIOSTATS);
         }
     }
 

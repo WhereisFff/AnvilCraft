@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity.heatable;
 
-import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
+import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -51,6 +51,6 @@ public abstract class HeatableBlockEntity extends BlockEntity {
     }
 
     public static void tick(Level level, BlockPos pos) {
-        HeatProducerManager.addHeatableBlock(pos, level);
+        HeaterManager.addHeatableBlock(pos, level);
     }
 }

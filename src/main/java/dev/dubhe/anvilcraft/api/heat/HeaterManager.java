@@ -31,38 +31,38 @@ import java.util.Set;
 
 import static dev.dubhe.anvilcraft.api.power.PowerGrid.GRID_TICK;
 
-public class HeatProducerManager {
-    private static final Map<Level, HeatProducerManager> INSTANCES = new HashMap<>();
+public class HeaterManager {
+    private static final Map<Level, HeaterManager> INSTANCES = new HashMap<>();
 
     private final Level level;
     private final Set<BlockPos> heatableBlocks = Collections.synchronizedSet(new HashSet<>());
-    private final Multimap<HeatProducerInfo<?>, BlockPos> producers = Multimaps.synchronizedSetMultimap(HashMultimap.create());
+    private final Multimap<HeaterInfo<?>, BlockPos> producers = Multimaps.synchronizedSetMultimap(HashMultimap.create());
 
-    public static HeatProducerManager getInstance(Level level) {
-        if (level.isClientSide) return new HeatProducerManager(level);
+    public static HeaterManager getInstance(Level level) {
+        if (level.isClientSide) return new HeaterManager(level);
         if (!INSTANCES.containsKey(level)) {
-            INSTANCES.put(level, new HeatProducerManager(level));
+            INSTANCES.put(level, new HeaterManager(level));
         }
         return INSTANCES.get(level);
     }
 
-    public HeatProducerManager(Level level) {
+    public HeaterManager(Level level) {
         this.level = level;
     }
 
     public static void addHeatableBlock(BlockPos pos, Level level) {
-        HeatProducerManager.getInstance(level).heatableBlocks.add(pos);
+        HeaterManager.getInstance(level).heatableBlocks.add(pos);
     }
 
-    public static void addProducer(BlockPos pos, Level level, HeatProducerInfo<?> info) {
-        synchronized (HeatProducerManager.getInstance(level).producers) {
-            HeatProducerManager.getInstance(level).producers.put(info, pos);
+    public static void addProducer(BlockPos pos, Level level, HeaterInfo<?> info) {
+        synchronized (HeaterManager.getInstance(level).producers) {
+            HeaterManager.getInstance(level).producers.put(info, pos);
         }
     }
 
-    public static void removeProducer(BlockPos pos, Level level, HeatProducerInfo<?> info) {
-        synchronized (HeatProducerManager.getInstance(level).producers) {
-            HeatProducerManager.getInstance(level).producers.remove(info, pos);
+    public static void removeProducer(BlockPos pos, Level level, HeaterInfo<?> info) {
+        synchronized (HeaterManager.getInstance(level).producers) {
+            HeaterManager.getInstance(level).producers.remove(info, pos);
         }
     }
 
@@ -74,12 +74,12 @@ public class HeatProducerManager {
     }
 
     public void tick() {
-        Multimap<HeatProducerInfo<?>, BlockPos> producers;
+        Multimap<HeaterInfo<?>, BlockPos> producers;
         synchronized (this.producers) {
             producers = MultimapBuilder.hashKeys().arrayListValues().build(this.producers);
         }
         Map<BlockPos, HeatTierLine.Point> heatableBlocks = new HashMap<>();
-        for (HeatProducerInfo<?> info : producers.keySet()) {
+        for (HeaterInfo<?> info : producers.keySet()) {
             List<BlockPos> removals = new ArrayList<>();
             this.tickProducers(info, heatableBlocks, removals);
             for (BlockPos removal : removals) {
@@ -96,7 +96,7 @@ public class HeatProducerManager {
     }
 
     private <T> void tickProducers(
-        HeatProducerInfo<T> info,
+        HeaterInfo<T> info,
         Map<BlockPos, HeatTierLine.Point> heatableBlocks,
         List<BlockPos> removals
     ) {

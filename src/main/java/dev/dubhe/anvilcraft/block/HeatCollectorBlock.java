@@ -1,12 +1,14 @@
 package dev.dubhe.anvilcraft.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -24,7 +26,7 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class HeatCollectorBlock extends BaseEntityBlock {
+public class HeatCollectorBlock extends BaseEntityBlock implements IHammerRemovable {
     public static final VoxelShape SHAPE = Shapes.or(Block.box(0, 0, 0, 16, 4, 16));
     public static BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -72,9 +74,14 @@ public class HeatCollectorBlock extends BaseEntityBlock {
     }
 
     @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        if (!HeatCollectorManager.canPlaceCollector(context.getClickedPos(), context.getLevel())) return null;
+        return super.getStateForPlacement(context);
+    }
+
+    @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         if (level.isClientSide() || state.is(oldState.getBlock())) return;
-        if (!HeatCollectorManager.canPlaceCollector(pos, level)) return;
         if (state.getValue(POWERED) && !level.getBlockTicks().hasScheduledTick(pos, this)) {
             level.setBlock(pos, state.setValue(POWERED, false), 18);
         }

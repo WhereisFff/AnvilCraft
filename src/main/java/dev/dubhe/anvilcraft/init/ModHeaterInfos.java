@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.init;
 
-import dev.dubhe.anvilcraft.api.heat.HeatProducerInfo;
+import dev.dubhe.anvilcraft.api.heat.HeaterInfo;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.api.heat.HeatTierLine;
@@ -14,8 +14,8 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.Optional;
 import java.util.Set;
 
-public class ModHeatProducerInfos {
-    public static final HeatProducerInfo<HeliostatsBlockEntity> HELIOSTATS = HeatRecorder.registerProducerInfo(HeatProducerInfo.blockEntity(
+public class ModHeaterInfos {
+    public static final HeaterInfo<HeliostatsBlockEntity> HELIOSTATS = HeatRecorder.registerProducerInfo(HeaterInfo.blockEntity(
         ModBlockEntities.HELIOSTATS,
         heliostats -> Set.of(heliostats.getIrritatePos()),
         HeatTierLine.builder()
@@ -26,16 +26,16 @@ public class ModHeatProducerInfos {
             .addPoint(HeatTier.INCANDESCENT, 4)
             .build())
     );
-    public static final HeatProducerInfo<MineralFountainBlockEntity> LAVA_MINERAL_FOUNTAIN = HeatRecorder.registerProducerInfo(
-        HeatProducerInfo.blockEntity(
+    public static final HeaterInfo<MineralFountainBlockEntity> LAVA_MINERAL_FOUNTAIN = HeatRecorder.registerProducerInfo(
+        HeaterInfo.blockEntity(
             (level, pos) -> level.getBlockEntity(pos, ModBlockEntities.MINERAL_FOUNTAIN.get())
                 .filter(mineralFountain -> mineralFountain.getAroundBlock().is(Blocks.LAVA)),
             mineralFountain -> Set.of(mineralFountain.getBlockPos()),
             HeatTierLine.always(HeatTier.REDHOT, 20))
     );
     @SuppressWarnings("OptionalOfNullableMisuse")
-    public static final HeatProducerInfo<BaseLaserBlockEntity> LASER_EMITTER = HeatRecorder.registerProducerInfo(
-        HeatProducerInfo.blockEntity(
+    public static final HeaterInfo<BaseLaserBlockEntity> LASER_EMITTER = HeatRecorder.registerProducerInfo(
+        HeaterInfo.blockEntity(
             (level, pos) -> Util.castSafely(level.getBlockEntity(pos), BaseLaserBlockEntity.class),
             laserEmitter -> Optional.ofNullable(laserEmitter.getIrradiateBlockPos())
                 .map(Set::of)
@@ -53,14 +53,14 @@ public class ModHeatProducerInfos {
                 .build(),
             BaseLaserBlockEntity::getLaserLevel)
     );
-    public static final HeatProducerInfo<PlasmaJetsBlockEntity> NO_MAGNET_PLASMA_JETS = HeatRecorder.registerProducerInfo(
-        HeatProducerInfo.blockEntity(
+    public static final HeaterInfo<PlasmaJetsBlockEntity> NO_MAGNET_PLASMA_JETS = HeatRecorder.registerProducerInfo(
+        HeaterInfo.blockEntity(
             ModBlockEntities.PLASMA_JETS,
             plasmaJets -> plasmaJets.getHeatingPoses().getFirst(),
             HeatTierLine.always(HeatTier.GLOWING, 20))
     );
-    public static final HeatProducerInfo<PlasmaJetsBlockEntity> MAGNET_PLASMA_JETS = HeatRecorder.registerProducerInfo(
-        HeatProducerInfo.blockEntity(
+    public static final HeaterInfo<PlasmaJetsBlockEntity> MAGNET_PLASMA_JETS = HeatRecorder.registerProducerInfo(
+        HeaterInfo.blockEntity(
             ModBlockEntities.PLASMA_JETS,
             plasmaJets -> plasmaJets.getHeatingPoses().getSecond(),
             HeatTierLine.always(HeatTier.INCANDESCENT, 20))

@@ -30,13 +30,13 @@ import java.util.function.Supplier;
 public class HeatRecorder {
     private static final Map<HeatableBlockEntry, ResourceLocation> ENTRY_TO_ID = new HashMap<>();
     private static final Map<ResourceLocation, List<HeatableBlockEntry>> ENTRIES = new HashMap<>();
-    static final Set<HeatProducerInfo<?>> PRODUCER_INFOS = new HashSet<>();
+    static final Set<HeaterInfo<?>> PRODUCER_INFOS = new HashSet<>();
 
     public static RegisterHelper registerHeatables(ResourceLocation id) {
         return new RegisterHelper(id);
     }
 
-    public static <T> HeatProducerInfo<T> registerProducerInfo(HeatProducerInfo<T> info) {
+    public static <T> HeaterInfo<T> registerProducerInfo(HeaterInfo<T> info) {
         PRODUCER_INFOS.add(info);
         return info;
     }

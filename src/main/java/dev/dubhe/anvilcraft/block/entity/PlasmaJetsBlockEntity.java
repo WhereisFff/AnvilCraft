@@ -4,13 +4,13 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
-import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
+import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModHeatProducerInfos;
+import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import net.createmod.catnip.data.TriState;
@@ -65,8 +65,8 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
 
     private boolean tryRaise() {
         if (this.tubeWalls.size() >= 4) return false;
-        HeatProducerManager.removeProducer(this.getBlockPos(), level, ModHeatProducerInfos.NO_MAGNET_PLASMA_JETS);
-        HeatProducerManager.removeProducer(this.getBlockPos(), level, ModHeatProducerInfos.MAGNET_PLASMA_JETS);
+        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
+        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
         BlockPos pos = this.getBlockPos();
         if (this.level != null
             && (this.level.getBlockState(pos.north()).isAir()
@@ -78,16 +78,16 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         this.level.removeBlock(pos, false);
         this.level.setBlock(pos.above(), ModBlocks.PLASMA_JETS.getDefaultState(), 3);
         this.level.setBlockEntity(new PlasmaJetsBlockEntity(pos.above(), this.getBlockState(), this.duration, this.tubeWalls));
-        HeatProducerManager.addProducer(this.getBlockPos().above(), level, ModHeatProducerInfos.NO_MAGNET_PLASMA_JETS);
-        HeatProducerManager.addProducer(this.getBlockPos().above(), level, ModHeatProducerInfos.MAGNET_PLASMA_JETS);
+        HeaterManager.addProducer(this.getBlockPos().above(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
+        HeaterManager.addProducer(this.getBlockPos().above(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
         return true;
     }
 
     @Override
     public void setRemoved() {
         super.setRemoved();
-        HeatProducerManager.removeProducer(this.getBlockPos(), level, ModHeatProducerInfos.NO_MAGNET_PLASMA_JETS);
-        HeatProducerManager.removeProducer(this.getBlockPos(), level, ModHeatProducerInfos.MAGNET_PLASMA_JETS);
+        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
+        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
     }
 
     public Pair<Set<BlockPos>, Set<BlockPos>> getHeatingPoses() {
@@ -127,8 +127,8 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         this.checkTubeWallIntegrity(level);
         this.refreshDuration(level);
 
-        HeatProducerManager.addProducer(this.getBlockPos(), level, ModHeatProducerInfos.NO_MAGNET_PLASMA_JETS);
-        HeatProducerManager.addProducer(this.getBlockPos(), level, ModHeatProducerInfos.MAGNET_PLASMA_JETS);
+        HeaterManager.addProducer(this.getBlockPos(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
+        HeaterManager.addProducer(this.getBlockPos(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
         this.hurtEntities(level);
         this.provideCharge(level);
     }
@@ -163,8 +163,8 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         if (wallBroken || blocked || !cauldronExisting || belowCauldronIsNotHeater || heaterOverload) {
             level.removeBlockEntity(this.getBlockPos());
             level.removeBlock(this.getBlockPos(), false);
-            HeatProducerManager.removeProducer(this.getBlockPos(), level, ModHeatProducerInfos.NO_MAGNET_PLASMA_JETS);
-            HeatProducerManager.removeProducer(this.getBlockPos(), level, ModHeatProducerInfos.MAGNET_PLASMA_JETS);
+            HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
+            HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
         }
     }
 

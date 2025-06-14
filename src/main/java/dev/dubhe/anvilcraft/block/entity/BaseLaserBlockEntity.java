@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.heat.HeatProducerManager;
+import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.api.rendering.CacheableBERenderingPipeline;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModDamageTypes;
-import dev.dubhe.anvilcraft.init.ModHeatProducerInfos;
+import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.network.LaserEmitPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -136,7 +136,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
             && getIrradiateBlockPos() != null
             && serverLevel.getBlockState(getIrradiateBlockPos()).is(ModBlockTags.HEATABLE_BLOCKS)
         ) {
-            HeatProducerManager.addProducer(getBlockPos(), getLevel(), ModHeatProducerInfos.LASER_EMITTER);
+            HeaterManager.addProducer(getBlockPos(), getLevel(), ModHeaterInfos.LASER_EMITTER);
         }
         tickCount++;
     }
