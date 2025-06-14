@@ -3,24 +3,19 @@ package dev.dubhe.anvilcraft.block.entity;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
-import dev.dubhe.anvilcraft.api.heat.collector.HeatSourceEntry;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
-import dev.dubhe.anvilcraft.block.ChargeCollectorBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
-import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashSet;
@@ -29,7 +24,6 @@ import java.util.Set;
 
 public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer, IHasAffectRange {
     private static final int MAX_OUTPUT_POWER = 4096;
-    private final Set<BlockPos> collectablePosesGetter;
     @Getter
     private int time = 0;
     @Getter
@@ -43,7 +37,6 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
 
     public HeatCollectorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
-        this.collectablePosesGetter = this.getCollectableSourcePoses();
     }
 
     public static HeatCollectorBlockEntity createBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
