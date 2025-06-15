@@ -1112,11 +1112,11 @@ public class ModItems {
         .tag(Tags.Items.INGOTS, ModItemTags.EXPLOSION_PROOF)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.EMBER_METAL_BLOCK)
+                .requires(ModBlocks.TRANSCENDIUM_BLOCK)
                 .group(ctx.getId().toString())
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.EMBER_METAL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
+                    AnvilCraftDatagen.hasItem(ModBlocks.TRANSCENDIUM_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.TRANSCENDIUM_BLOCK))
                 .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("AAA")
