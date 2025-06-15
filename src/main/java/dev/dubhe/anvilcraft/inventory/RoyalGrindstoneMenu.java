@@ -146,11 +146,7 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
         goldUsed += removedRepairCost;
         goldUsable -= removedRepairCost;
         int remainRepairCost = repairCost - removedRepairCost;
-        if (remainRepairCost > 0) {
-            result.set(DataComponents.REPAIR_COST, remainRepairCost);
-        } else {
-            result.remove(DataComponents.REPAIR_COST);
-        }
+        result.set(DataComponents.REPAIR_COST, remainRepairCost);
         int removedCurseCount = 0;
         DataComponentType<ItemEnchantments> enchantmentComponent = result.is(Items.ENCHANTED_BOOK) ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS;
         ItemEnchantments enchantments = result.get(enchantmentComponent);
