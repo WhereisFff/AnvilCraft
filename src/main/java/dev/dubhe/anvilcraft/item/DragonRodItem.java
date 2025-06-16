@@ -120,7 +120,7 @@ public class DragonRodItem extends Item {
                 continue;
             }
 
-            devouringPos = MultiPartBlockUtil.getMainPartPos(level, devouringPos);
+            devouringPos = MultiPartBlockUtil.getChainableMainPartPos(level, devouringPos);
             devouringState = level.getBlockState(devouringPos);
 
             if (!player.getAbilities().instabuild) {
