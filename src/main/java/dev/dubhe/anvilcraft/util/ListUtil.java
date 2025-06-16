@@ -13,10 +13,10 @@ public class ListUtil {
     }
 
     public static <T> List<T> cycle(List<T> original, int times) {
-        if (times == 0) return original;
+        if (times == 0) return new ArrayList<>(original);
         times %= original.size();
-        if (times == 0) return original;
-        List<T> cycled = new ArrayList<>(original.size());
+        if (times == 0) return new ArrayList<>(original);
+        List<T> cycled = new ArrayList<>();
         for (int i = 0; i < original.size(); i++) {
             cycled.add(original.get((i + times) % original.size()));
         }

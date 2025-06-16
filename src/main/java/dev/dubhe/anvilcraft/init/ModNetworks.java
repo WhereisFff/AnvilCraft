@@ -28,6 +28,7 @@ import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
+import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
 import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
@@ -190,6 +191,11 @@ public class ModNetworks {
             DragonRodDevourPacket.TYPE,
             DragonRodDevourPacket.STREAM_CODEC,
             DragonRodDevourPacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchResonateModePacket.TYPE,
+            SwitchResonateModePacket.STREAM_CODEC,
+            SwitchResonateModePacket.HANDLER
         );
     }
 }

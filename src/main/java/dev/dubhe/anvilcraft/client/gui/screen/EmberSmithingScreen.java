@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.item.IMultipleToOneSmithingRecipeMaterial;
+import dev.dubhe.anvilcraft.api.item.IMultipleMaterial;
 import dev.dubhe.anvilcraft.inventory.EmberSmithingMenu;
 import dev.dubhe.anvilcraft.item.template.BaseMultipleToOneTemplateItem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -79,7 +79,7 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
         Optional<ItemStack> materialOptional = this.getMaterialItem();
         if (templateOptional.isPresent()) {
             this.materialIcon.tick(templateOptional.get().getEmptySlotTextures());
-            if (materialOptional.isPresent() && materialOptional.get().getItem() instanceof IMultipleToOneSmithingRecipeMaterial material) {
+            if (materialOptional.isPresent() && materialOptional.get().getItem() instanceof IMultipleMaterial material) {
                 this.inputIcons.forEach(
                     icon -> icon.tick(material.getEmptySlotTextures(icon.slotIndex - 2, this.menu.getInputStacks())));
             } else {
@@ -121,22 +121,27 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
         this.materialIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
         this.inputIcons.forEach(icon -> icon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos));
 
-        for (int i = 2 + this.menu.getInputSize(); i < 10; i++) {
+        for (int i = 2; i < 10; i++) {
+            if (this.isSlotEnabled(i)) continue;
             Slot slot = this.menu.getSlot(i);
             guiGraphics.blit(DISABLED_SLOT, this.leftPos + slot.x, this.topPos + slot.y, 0, 0, 16, 16, 16, 16);
         }
     }
 
+    protected boolean isSlotEnabled(int slot) {
+        return slot >= 2 && slot < 10 && slot - 2 < this.menu.getInputSize();
+    }
+
     @Override
     protected void renderErrorIcon(@NotNull GuiGraphics guiGraphics, int x, int y) {
         if (this.menu.canCreateResult()) {
-            guiGraphics.blit(ERROR, x + 83, y + 48, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(ERROR, x + 123, y + 48, 0, 0, 16, 16, 16, 16);
         }
     }
 
     private void renderOnboardingTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         Optional<Component> optional = Optional.empty();
-        if (this.menu.canCreateResult() && this.isHovering(83, 48, 16, 16, mouseX, mouseY)) {
+        if (this.menu.canCreateResult() && this.isHovering(123, 48, 16, 16, mouseX, mouseY)) {
             optional = Optional.of(ERROR_TOOLTIP);
         }
         if (this.hoveredSlot != null) {
@@ -153,7 +158,8 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
                         optional = Optional.of(templateItem.getMaterialTooltip());
                     } else if (
                         this.hoveredSlot.index >= 2 && this.hoveredSlot.index <= 9
-                        && material.getItem() instanceof IMultipleToOneSmithingRecipeMaterial materialItem
+                        && material.getItem() instanceof IMultipleMaterial materialItem
+                        && this.isSlotEnabled(this.hoveredSlot.index)
                     ) {
                         optional = Optional.of(materialItem.getInputTooltip());
                     }

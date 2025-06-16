@@ -47,10 +47,15 @@ public class OtherLang {
         provider.add("tooltip.anvilcraft.property.multiphase", "Multiphase: press [%s] to switch phases");
         provider.add("tooltip.anvilcraft.property.multiphase.suffix.alpha", "-α");
         provider.add("tooltip.anvilcraft.property.multiphase.suffix.beta", "-β");
-        provider.add("tooltip.anvilcraft.property.merciless", "Merciless: treat everyone equally, greatness in simplicity");
+        provider.add("tooltip.anvilcraft.property.merciless", "Merciless: disable all enchantments except specific [Hold %s] "
+                                                              + "and convert them into attack damage and mining efficiency");
+        provider.add("tooltip.anvilcraft.property.merciless.shifting", "Merciless: disable all enchantments except specific (%s) "
+                                                                       + "and convert them into attack damage and mining efficiency");
+        provider.add("tooltip.anvilcraft.property.merciless.curse", "All curses");
 
         provider.add("key.categories.anvilcraft", "AnvilCraft");
         provider.add("key.anvilcraft.switch_phase", "Switch Phase");
         provider.add("key.anvilcraft.toggle_goggle", "Toggle Goggle Mode");
+        provider.add("key.anvilcraft.switch_resonate_mode", "Switch Resonate Mode");
     }
 }
