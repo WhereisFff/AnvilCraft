@@ -520,7 +520,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         );
     }
 
-    private static void renderSelectionEffect(
+    public static void renderSelectionEffect(
         GuiGraphics guiGraphics,
         float centerX,
         float centerY,
@@ -621,7 +621,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         return !shouldRebuildChunk;
     }
 
-    private static void renderRing(
+    public static void renderRing(
         GuiGraphics guiGraphics,
         float centerX,
         float centerY,

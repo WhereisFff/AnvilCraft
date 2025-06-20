@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.entity.ThrownFrostMetalHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.init.ModComponents;
@@ -18,7 +19,7 @@ public class FrostMetalHeavyHalberdItem extends HeavyHalberdItem {
             ModTiers.FROST_METAL,
             properties
                 .attributes(HeavyHalberdItem.createAttributes(ModTiers.FROST_METAL, 13, -2.4f))
-                .component(ModComponents.MERCILESS, true)
+                .component(ModComponents.MERCILESS, Merciless.DEFAULT)
         );
     }
 

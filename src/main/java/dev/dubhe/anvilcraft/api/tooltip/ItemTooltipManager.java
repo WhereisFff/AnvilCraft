@@ -1,14 +1,18 @@
 package dev.dubhe.anvilcraft.api.tooltip;
 
 import com.google.common.collect.Maps;
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -159,8 +163,19 @@ public class ItemTooltipManager {
         if (stack.has(ModComponents.MULTIPHASE)) {
             propertyTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
         }
-        if (stack.has(ModComponents.MERCILESS)) {
-            propertyTooltip("merciless", tooltip);
+        if (stack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
+            if (!Screen.hasShiftDown()) {
+                propertyTooltip("merciless", tooltip, Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
+            } else {
+                propertyTooltip("merciless.shifting", tooltip, ComponentUtils.formatList(
+                    List.of(
+                        Component.translatable("enchantment.minecraft.unbreaking"),
+                        Component.translatable("enchantment.minecraft.mending"),
+                        Component.translatable("enchantment.minecraft.loyalty"),
+                        Component.translatable("enchantment.minecraft.riptide"),
+                        Component.translatable("tooltip.anvilcraft.property.merciless.curse")
+                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+            }
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));

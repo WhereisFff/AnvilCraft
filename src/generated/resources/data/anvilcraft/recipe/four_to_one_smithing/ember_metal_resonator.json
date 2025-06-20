@@ -1,0 +1,25 @@
+{
+  "type": "anvilcraft:four_to_one_smithing",
+  "inputs": [
+    {
+      "item": "anvilcraft:ember_metal_axe"
+    },
+    {
+      "item": "anvilcraft:ember_metal_shovel"
+    },
+    {
+      "item": "anvilcraft:ember_metal_hoe"
+    },
+    {
+      "item": "anvilcraft:ember_metal_pickaxe"
+    }
+  ],
+  "material": {
+    "item": "anvilcraft:resonator_core"
+  },
+  "recipeId": 0,
+  "result": "anvilcraft:ember_metal_resonator",
+  "template": {
+    "item": "anvilcraft:four_to_one_smithing_template"
+  }
+}

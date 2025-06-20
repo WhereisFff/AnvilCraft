@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import com.mojang.datafixers.util.Unit;
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.AxeItem;
@@ -16,7 +16,7 @@ public class FrostMetalPickaxeItem extends PickaxeItem {
             ModTiers.FROST_METAL,
             properties.fireResistant()
                 .attributes(AxeItem.createAttributes(ModTiers.FROST_METAL, 7, -2.8f))
-                .component(ModComponents.MERCILESS, true)
+                .component(ModComponents.MERCILESS, Merciless.DEFAULT)
         );
     }
 }

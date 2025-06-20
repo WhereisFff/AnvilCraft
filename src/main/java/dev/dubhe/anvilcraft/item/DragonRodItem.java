@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
+import dev.dubhe.anvilcraft.util.MultiPartBlockUtil;
 import it.unimi.dsi.fastutil.ints.IntIterators;
 import it.unimi.dsi.fastutil.ints.IntListIterator;
 import lombok.extern.slf4j.Slf4j;
@@ -119,8 +120,7 @@ public class DragonRodItem extends Item {
                 continue;
             }
 
-            // TODO: 同步一点六的多方块兼容
-            //devouringPos = getMainPartPosToRemove(level, devouringPos);
+            devouringPos = MultiPartBlockUtil.getChainableMainPartPos(level, devouringPos);
             devouringState = level.getBlockState(devouringPos);
 
             if (!player.getAbilities().instabuild) {
