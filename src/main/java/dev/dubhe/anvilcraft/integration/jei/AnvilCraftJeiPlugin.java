@@ -9,6 +9,8 @@ import dev.dubhe.anvilcraft.integration.jei.category.BeaconConversionCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.ChargerChargingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.EndPortalConversionCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.JewelCraftingCategory;
+import dev.dubhe.anvilcraft.integration.jei.category.MobTransformCategory;
+import dev.dubhe.anvilcraft.integration.jei.category.MobTransformWithItemCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.MultipleToOneSmithingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.VoidDecayCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.BlockCompressCategory;
@@ -58,6 +60,8 @@ import dev.dubhe.anvilcraft.recipe.anvil.UnpackRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockConversionRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.BaseMultipleToOneSmithingRecipe;
+import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
+import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -74,6 +78,7 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
@@ -126,6 +131,12 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
     public static final RecipeType<RecipeHolder<BaseMultipleToOneSmithingRecipe<?>>> MULTIPLE_TO_ONE_SMITHING =
         createRecipeHolderType("multiple_to_one_smithing");
 
+    public static final RecipeType<RecipeHolder<MobTransformRecipe>> MOB_TRANSFORM =
+        createRecipeHolderType("mob_transform");
+    public static final RecipeType<RecipeHolder<MobTransformWithItemRecipe>> MOB_TRANSFORM_WITH_ITEM =
+        createRecipeHolderType("mob_transform_with_item");
+
+
     @Override
     public ResourceLocation getPluginUid() {
         return AnvilCraft.of("jei_plugin");
@@ -158,6 +169,8 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         VoidDecayCategory.registerRecipes(registration);
         ChargerChargingCategory.registerRecipes(registration);
         MultipleToOneSmithingCategory.registerRecipes(registration);
+        MobTransformCategory.registerRecipes(registration);
+        MobTransformWithItemCategory.registerRecipes(registration);
 
         registration.addItemStackInfo(
             new ItemStack(ModItems.GEODE.get()),
@@ -178,6 +191,9 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         registration.addItemStackInfo(
             ModBlocks.END_DUST.asStack(),
             Component.translatable("jei.anvilcraft.info.end_dust"));
+        registration.addItemStackInfo(
+            Items.ZOMBIE_SPAWN_EGG.getDefaultInstance(),
+            Component.translatable("jei.anvilcraft.info.mob_transform_with_item"));
     }
 
     @Override
@@ -207,6 +223,8 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         VoidDecayCategory.registerRecipeCatalysts(registration);
         ChargerChargingCategory.registerRecipeCatalysts(registration);
         MultipleToOneSmithingCategory.registerRecipeCatalysts(registration);
+        MobTransformCategory.registerRecipeCatalysts(registration);
+        MobTransformWithItemCategory.registerRecipeCatalysts(registration);
 
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BATCH_CRAFTER), RecipeTypes.CRAFTING);
 
@@ -248,6 +266,8 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new VoidDecayCategory(guiHelper));
         registration.addRecipeCategories(new ChargerChargingCategory(guiHelper));
         registration.addRecipeCategories(new MultipleToOneSmithingCategory(guiHelper));
+        registration.addRecipeCategories(new MobTransformCategory(guiHelper));
+        registration.addRecipeCategories(new MobTransformWithItemCategory(guiHelper));
     }
 
     @Override

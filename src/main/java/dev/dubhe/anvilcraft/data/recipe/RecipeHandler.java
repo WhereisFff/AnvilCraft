@@ -21,6 +21,7 @@ public class RecipeHandler {
         MultiBlockRecipeLoader.init(provider);
         MultiBlockConversionRecipeLoader.init(provider);
         MobTransformRecipeLoader.init(provider);
+        MobTransformWithItemRecipeLoader.init(provider);
         ConcreteRecipeLoader.init(provider);
         MineralFountainRecipeLoader.init(provider);
         VanillaRecipesLoader.init(provider);

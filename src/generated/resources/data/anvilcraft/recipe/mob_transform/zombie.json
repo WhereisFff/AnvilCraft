@@ -1,0 +1,17 @@
+{
+  "type": "anvilcraft:mob_transform",
+  "input": "minecraft:zombie",
+  "results": [
+    {
+      "probability": 0.5,
+      "resultEntityType": "minecraft:husk"
+    },
+    {
+      "probability": 0.5,
+      "resultEntityType": "minecraft:drowned"
+    }
+  ],
+  "transformOptions": [
+    "keepInventory"
+  ]
+}
