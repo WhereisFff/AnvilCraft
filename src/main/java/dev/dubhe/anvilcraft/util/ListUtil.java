@@ -20,4 +20,14 @@ public class ListUtil {
         }
         return cycled;
     }
+
+    public static <T, R extends T> List<R> subList(List<T> original, Class<R> clazz) {
+        ArrayList<R> results = new ArrayList<>();
+        for (T t : original) {
+            if (clazz.isInstance(t)) {
+                results.add(clazz.cast(t));
+            }
+        }
+        return results;
+    }
 }

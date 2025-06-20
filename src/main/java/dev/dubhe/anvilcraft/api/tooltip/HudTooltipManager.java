@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.api.tooltip;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.dubhe.anvilcraft.api.tooltip.impl.AffectRangeProviderImpl;
+import dev.dubhe.anvilcraft.api.tooltip.impl.ChargerTooltipProvider;
 import dev.dubhe.anvilcraft.api.tooltip.impl.HeliostatsTooltip;
 import dev.dubhe.anvilcraft.api.tooltip.impl.HeliostatsTooltipProvider;
 import dev.dubhe.anvilcraft.api.tooltip.impl.InjectedBlockEntityTooltipProvider;
@@ -43,6 +44,7 @@ public class HudTooltipManager {
     private final List<IHandHeldItemTooltipProvider> handItemProviders = new ArrayList<>();
 
     static {
+        INSTANCE.registerBlockEntityTooltip(new ChargerTooltipProvider());
         INSTANCE.registerBlockEntityTooltip(new PowerComponentTooltipProvider());
         INSTANCE.registerAffectRange(new AffectRangeProviderImpl());
         INSTANCE.registerBlockEntityTooltip(new RubyPrismTooltipProvider());

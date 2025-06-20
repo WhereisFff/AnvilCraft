@@ -86,6 +86,9 @@ public class ScreenLang {
         provider.add("tooltip.anvilcraft.heliostats.unspecified_irradiation_block", "  Unspecified irradiation block");
         provider.add("tooltip.anvilcraft.heliostats.unknown", "  Unknown reason");
 
+        provider.add("tooltip.anvilcraft.working_progress.title", "Working progress:");
+        provider.add("tooltip.anvilcraft.working_progress.progress", "  %s %s%%");
+
         provider.add("tooltip.anvilcraft.space_overcompressor.stored_mass", "Stored Mass: %s");
 
         provider.add(

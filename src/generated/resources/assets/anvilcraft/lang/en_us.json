@@ -550,7 +550,7 @@
   "jei.anvilcraft.info.geode_2": "Dropped by Budding Amethyst blocks.",
   "jei.anvilcraft.info.geode_3": "You can also find it in the Bonus Chest",
   "jei.anvilcraft.info.geode_4": "Or trade it from a Jeweler Villager",
-  "jei.anvilcraft.info.mob_transform_with_item": "Right-clicking mobs with the corresponding item in its Mob Transform with Held Item recipes can force the mob to hold it.",
+  "jei.anvilcraft.info.mob_transform_with_item": "Right-clicking mobs with the corresponding item in its Mob-Transform-with-Held-Item recipes can force the mob to hold it.",
   "jei.anvilcraft.info.royal_steel_upgrade_smithing_template_1": "You can find it in the chest of the village weapons smith.",
   "jei.anvilcraft.info.royal_steel_upgrade_smithing_template_2": "Or you can trade with the jeweler.",
   "jei.anvilcraft.tooltip.not_consumed": "Not Consumed",
@@ -868,5 +868,7 @@
   "tooltip.anvilcraft.redstone.output_power": "  Output Power: %d",
   "tooltip.anvilcraft.redstone.power": "  Power: %d",
   "tooltip.anvilcraft.redstone.title": "Redstone Stats:",
-  "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s"
+  "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s",
+  "tooltip.anvilcraft.working_progress.progress": "  %s %s%%",
+  "tooltip.anvilcraft.working_progress.title": "Working progress:"
 }

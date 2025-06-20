@@ -3,6 +3,8 @@ package dev.dubhe.anvilcraft.util;
 import com.google.common.base.CaseFormat;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.StringUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -117,5 +119,42 @@ public class FormattingUtil {
         }
 
         return result.toString();
+    }
+
+    /**
+     * @param progress 进度，0-1
+     * @param unfilled 未填充的进度条的style，无需reset
+     * @return 进度条文本
+     */
+    public static Component toPipeProgress(double progress, int pipeCount, ChatFormatting[] filled, ChatFormatting[] unfilled) {
+        int filledPipeCount = (int) Math.floor(pipeCount * progress);
+        int unfilledPipeCount = pipeCount - filledPipeCount;
+        return Component.literal("|".repeat(filledPipeCount)).withStyle(filled)
+            .append(Component.literal("|".repeat(unfilledPipeCount)).withStyle(ChatFormatting.RESET).withStyle(unfilled));
+    }
+
+    /**
+     * @param progress 进度，0-1
+     * @return 进度条文本
+     */
+    public static Component toShadeProgress(double progress, int length, ChatFormatting... format) {
+        double eachShade = 1.0 / length;
+        double alreadyUsed = 0;
+        StringBuilder progressStr = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            double partProgress = Math.min(progress - alreadyUsed, eachShade);
+            double partProgressPercent = partProgress / eachShade;
+            char part = '░';
+            if (partProgressPercent > 0.99) {
+                part = '█';
+            } else if (partProgressPercent > 0.66) {
+                part = '▓';
+            } else if (partProgressPercent > 0.33) {
+                part = '▒';
+            }
+            progressStr.append(part);
+            alreadyUsed += partProgress;
+        }
+        return Component.literal(progressStr.toString()).withStyle(format);
     }
 }
