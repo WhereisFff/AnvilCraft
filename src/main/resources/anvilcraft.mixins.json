@@ -36,6 +36,7 @@
     "ServerGamePacketListenerMixin",
     "ServerPlayerMixin",
     "SkeletonMixin",
+    "VaultBlockEntityServerMixin",
     "VaultServerDataAccessor",
     "VibrationSystemUserMixin",
     "VillagerMixin",

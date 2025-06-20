@@ -33,6 +33,7 @@ import dev.dubhe.anvilcraft.recipe.multiple.EightToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.FourToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.TwoToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
+import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -140,6 +141,10 @@ public class ModRecipeTypes {
         registerType("mob_transform");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<MobTransformRecipe>>
         MOB_TRANSFORM_SERIALIZER = RECIPE_SERIALIZERS.register("mob_transform", MobTransformRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<MobTransformWithItemRecipe>> MOB_TRANSFORM_WITH_ITEM_TYPE =
+        registerType("mob_transform_with_item");
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<MobTransformWithItemRecipe>>
+        MOB_TRANSFORM_WITH_ITEM_SERIALIZER = RECIPE_SERIALIZERS.register("mob_transform_with_item", MobTransformWithItemRecipe.Serializer::new);
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<MultiblockRecipe>> MULTIBLOCK_TYPE =
         registerType("multiblock");

@@ -121,6 +121,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     /// *rad*
     private float targetAngle = 0f;
     private boolean shouldRebuildChunk = true;
+    private boolean validate = true;
 
     public AnvilHammerScreen(BlockPos targetBlockPos, BlockState initialBlockState, Property<?> property, List<BlockState> possibleStates) {
         super(Component.translatable("screen.anvilcraft.anvil_hammer.title"));
@@ -314,7 +315,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
             buffers.endLastBatch();
         }
         BlockEntity blockEntity = minecraft.level.getBlockEntity(targetBlockPos);
-        if (blockEntity != null) {
+        if (blockEntity != null && blockEntity.getBlockState().is(block.getBlock())) {
             BlockEntityRenderer<BlockEntity> renderer = minecraft.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
             if (renderer != null) {
                 Level originalLevel = blockEntity.getLevel();
@@ -412,6 +413,11 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         RenderSystem.enableBlend();
         float centerX = this.width / 2f;
         float centerY = this.height / 2f;
+        if (validate && !isValidState(this.currentBlockState)) {
+            validate = false;
+            displayTime = System.currentTimeMillis();
+            closingAnimationStarted = true;
+        }
         renderClosingAnimation(guiGraphics, mouseX, mouseY, partialTick);
         if (!shouldRender()) {
             return;
@@ -561,6 +567,12 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         BufferUploader.drawWithShader(bufferBuilder.build());
     }
 
+    private boolean isValidState(BlockState selected) {
+        BlockState state = minecraft.level.getBlockState(targetBlockPos);
+        if (!state.is(selected.getBlock())) return false;
+        BlockEntity entity = minecraft.level.getBlockEntity(targetBlockPos);
+        return entity == null || entity.getType().isValid(selected);
+    }
 
     @Override
     public boolean isPauseScreen() {
@@ -571,6 +583,10 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     public void removed() {
         if (!animationStarted) {
             currentBlockState = currentBlockState.cycle(property);
+        }
+        if (!validate) {
+            super.removed();
+            return;
         }
         Minecraft.getInstance().level.setBlock(
             targetBlockPos,

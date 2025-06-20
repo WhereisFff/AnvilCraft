@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -20,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ItemTooltipManager {
 
@@ -202,7 +204,12 @@ public class ItemTooltipManager {
     private static void propertyTooltip(String propertyName, List<Component> tooltip) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
+            if (tooltip.get(j).toString().contains("enchantment")
+                && ListUtil.safelyGet(tooltip, j + 1)
+                    .map(Objects::toString)
+                    .filter(key -> key.contains("enchantment"))
+                    .isEmpty()
+            ) {
                 i = j;
                 break;
             }
@@ -216,7 +223,12 @@ public class ItemTooltipManager {
     private static void propertyTooltip(String propertyName, List<Component> tooltip, Object... args) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
+            if (tooltip.get(j).toString().contains("enchantment")
+                && ListUtil.safelyGet(tooltip, j + 1)
+                    .map(Objects::toString)
+                    .filter(key -> !key.contains("enchantment"))
+                    .isPresent()
+            ) {
                 i = j;
                 break;
             }
