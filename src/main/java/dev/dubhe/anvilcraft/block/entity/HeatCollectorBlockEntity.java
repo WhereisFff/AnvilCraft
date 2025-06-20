@@ -44,6 +44,11 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     }
 
     @Override
+    public int getRange() {
+        return 2;
+    }
+
+    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putInt("tickCache", this.time);

@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.util.FormattingUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
@@ -25,16 +24,15 @@ public class HeatableBlockTooltipProvider extends ITooltipProvider.BlockEntityTo
         if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
         List<Component> components = new ArrayList<>();
         HeatRecorder.getTier(entity.getLevel(), entity.getBlockPos(), entity.getBlockState()).ifPresent(
-            tier -> components.add(Component.translatable(
-                "tooltip.anvilcraft.heat.tier", tier.toComponent()
-            ).withStyle(ChatFormatting.GRAY)));
-        Util.castSafely(entity, HeatableBlockEntity.class)
-            .map(HeatableBlockEntity::getDuration)
-            .ifPresent(
-                duration -> components.add(
-                    Component.translatable(
-                        "tooltip.anvilcraft.heat.duration",
-                        FormattingUtil.toFormattedTime(duration)).withStyle(ChatFormatting.GRAY)));
+            tier -> components.add(
+                ITooltipProvider.withIndentAndMerge(Component.translatable(
+                    "tooltip.anvilcraft.heat.tier", tier.toComponent()
+                ).withStyle(ChatFormatting.GRAY))));
+        Util.castSafely(entity, HeatableBlockEntity.class).map(HeatableBlockEntity::getDuration).ifPresent(
+            duration -> components.add(
+                ITooltipProvider.withIndentAndMerge(Component.translatable(
+                    "tooltip.anvilcraft.heat.duration", FormattingUtil.toFormattedTime(duration, 1)
+                ).withStyle(ChatFormatting.GRAY))));
         if (!components.isEmpty()) {
             components.addFirst(Component.translatable("tooltip.anvilcraft.heat.title").withStyle(ChatFormatting.BLUE));
         }

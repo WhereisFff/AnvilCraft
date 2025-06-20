@@ -6,7 +6,10 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.Util;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectAVLTreeMap;
 import it.unimi.dsi.fastutil.doubles.Double2ObjectMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
@@ -107,11 +110,14 @@ public class HeatCollectorManager {
         getInstance(level).heatCollectors.remove(pos);
     }
 
-    public static boolean canPlaceCollector(BlockPos pos, Level level) {
+    public static boolean canPlaceCollector(BlockPlaceContext ctx, BlockPos pos, Level level) {
         HeatCollectorManager manager = getInstance(level);
         AABB validRange = AABB.ofSize(pos.getCenter(), 9, 9, 9);
         for (BlockPos checkedPos : manager.heatCollectors) {
             if (validRange.contains(checkedPos.getCenter())) {
+                Optional.ofNullable(ctx.getPlayer()).ifPresent(player -> player.displayClientMessage(
+                    Component.translatable("block.anvilcraft.heat_collector.placement_too_close_to_another")
+                        .withStyle(ChatFormatting.RED), true));
                 return false;
             }
         }

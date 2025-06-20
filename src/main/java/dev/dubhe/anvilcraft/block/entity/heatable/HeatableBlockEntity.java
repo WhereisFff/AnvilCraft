@@ -50,7 +50,9 @@ public abstract class HeatableBlockEntity extends BlockEntity {
         this.duration = tag.getInt("duration");
     }
 
-    public static void tick(Level level, BlockPos pos) {
-        HeaterManager.addHeatableBlock(pos, level);
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        HeaterManager.addHeatableBlock(this.getBlockPos(), this.getLevel());
     }
 }
