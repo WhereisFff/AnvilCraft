@@ -102,6 +102,11 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
                 return false;
             }
 
+            @Override
+            public boolean mayPickup(Player player) {
+                return player.experienceLevel >= getCost();
+            }
+
             public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
                 if (!hasSelectedEnchantment()) return;
                 if (!player.level().isClientSide) player.giveExperienceLevels(-getCost());
@@ -196,7 +201,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
     }
 
     private Optional<Pair<EnchantmentInstance, DataComponentType<ItemEnchantments>>> getSelectedEnchantmentPair() {
-        return Optional.ofNullable(ListUtil.safelyGet(this.enchantments, this.getSelectedIndex()));
+        return ListUtil.safelyGet(this.enchantments, this.getSelectedIndex());
     }
 
     private Optional<EnchantmentInstance> getSelectedEnchantment() {

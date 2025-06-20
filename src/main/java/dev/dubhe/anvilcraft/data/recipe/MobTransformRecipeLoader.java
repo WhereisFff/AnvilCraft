@@ -4,6 +4,7 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.dubhe.anvilcraft.recipe.transform.TagModification;
+import dev.dubhe.anvilcraft.recipe.transform.TransformOptions;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 
@@ -41,6 +42,11 @@ public class MobTransformRecipeLoader {
                     .operation(TagModification.ModifyOperation.SET)
                     .value(tag);
             })
+            .save(provider);
+        MobTransformRecipe.from(EntityType.ZOMBIE)
+            .result(EntityType.HUSK, 0.5)
+            .result(EntityType.DROWNED, 0.5)
+            .option(TransformOptions.KEEP_INVENTORY)
             .save(provider);
     }
 }

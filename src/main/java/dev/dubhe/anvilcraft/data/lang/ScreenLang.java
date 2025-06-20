@@ -146,10 +146,18 @@ public class ScreenLang {
 
         provider.add("screen.anvilcraft.ember_smithing.tooltip.missing_template", "Add Multiple to One Template");
         provider.add("screen.anvilcraft.ember_smithing.two.missing", "Add Multiphase Matter");
-        provider.add("screen.anvilcraft.ember_smithing.four.missing", "Add Heavy Halberd Core");
-        provider.add("screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools", "Add same Ember Metal tools or weapons");
+        provider.add("screen.anvilcraft.ember_smithing.four.missing", "Add Resonator Core or Heavy Halberd Core");
+        provider.add("screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools", "Add same Ember metal tools or weapons");
         provider.add(
             "screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools",
             "Add a sword and an axe of the same type, a trident and a mace");
+        provider.add("screen.anvilcraft.ember_smithing.resonator_core.missing_tools", "Add same Ember or Frost metal tools");
+
+        provider.add("screen.anvilcraft.resonator.title", "Switch resonate mode");
+        provider.add("screen.anvilcraft.resonator.auto", "Auto");
+        provider.add("screen.anvilcraft.resonator.axe", "Axe");
+        provider.add("screen.anvilcraft.resonator.shovel", "Shovel");
+        provider.add("screen.anvilcraft.resonator.hoe", "Hoe");
+        provider.add("screen.anvilcraft.resonator.pickaxe", "Pickaxe");
     }
 }

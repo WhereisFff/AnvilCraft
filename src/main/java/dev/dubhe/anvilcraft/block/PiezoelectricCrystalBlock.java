@@ -29,7 +29,7 @@ import java.util.Map;
 @MethodsReturnNonnullByDefault
 public class PiezoelectricCrystalBlock extends Block implements IHammerRemovable {
 
-    private static final Map<Block, List<Integer>> ANVIL_TYPES = new HashMap<>();
+    public static final Map<Block, List<Integer>> ANVIL_TYPES = new HashMap<>();
 
     static {
         ANVIL_TYPES.put(ModBlocks.SPECTRAL_ANVIL.get(), List.of(1, 2, 3, 4));

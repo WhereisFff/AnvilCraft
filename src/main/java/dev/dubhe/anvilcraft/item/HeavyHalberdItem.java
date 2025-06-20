@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IMultipleResult;
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
-import dev.dubhe.anvilcraft.event.PlayerTickEventHandler;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModEnchantmentTags;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
@@ -70,7 +70,6 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
             tier,
             properties
                 .component(DataComponents.TOOL, createToolProperties(tier))
-                .durability(tier.getUses())
                 .rarity(Rarity.EPIC)
         );
     }
@@ -94,7 +93,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
     public static double getThrownBaseDamage(ItemStack stack) {
         for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
             if ((entry.matches(Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_ID)
-                 || entry.matches(Attributes.ATTACK_DAMAGE, PlayerTickEventHandler.MERCILESS_ID))
+                 || entry.matches(Attributes.ATTACK_DAMAGE, Merciless.MERCILESS_ID))
                 && entry.modifier().operation().equals(AttributeModifier.Operation.ADD_VALUE)
             ) {
                 return entry.modifier().amount() / 3;
@@ -115,16 +114,16 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         if (!(item instanceof HeavyHalberdItem heavyHalberd)) return;
         if (isTooDamagedToUse(stack)) {
             if (stack.has(ModComponents.MERCILESS)) {
-                stack.set(ModComponents.MERCILESS, false);
+                stack.set(ModComponents.MERCILESS, Merciless.DISABLED);
             }
-            if (stack.has(DataComponents.ENCHANTMENTS)) {
+            if (stack.has(DataComponents.ENCHANTMENTS) && !stack.has(ModComponents.MERCILESS)) {
                 ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
                 ItemEnchantments enchantmentsStored = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
                 ItemEnchantments.Mutable enchantmentsMutable = new ItemEnchantments.Mutable(enchantments);
                 ItemEnchantments.Mutable storedMutable = new ItemEnchantments.Mutable(enchantmentsStored);
                 for (Object2IntMap.Entry<Holder<Enchantment>> enchantment : enchantments.entrySet()) {
                     Holder<Enchantment> enchantmentHolder = enchantment.getKey();
-                    if (enchantmentHolder.is(ModEnchantmentTags.FROST_PASSED)) continue;
+                    if (enchantmentHolder.is(ModEnchantmentTags.DISABLED_PASSED)) continue;
                     int enchantmentLevel = enchantment.getIntValue();
                     int enchantmentStoredLevel = enchantmentsStored.getLevel(enchantmentHolder);
                     if (enchantmentLevel == enchantmentStoredLevel) {
@@ -151,9 +150,9 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
             }
         } else {
             if (stack.has(ModComponents.MERCILESS)) {
-                stack.set(ModComponents.MERCILESS, true);
+                stack.set(ModComponents.MERCILESS, Merciless.DEFAULT);
             }
-            if (stack.has(DataComponents.STORED_ENCHANTMENTS)) {
+            if (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.has(ModComponents.MERCILESS)) {
                 ItemEnchantments enchantmentsStored = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
                 ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
                 ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(enchantments);

@@ -78,7 +78,8 @@ public class RenderEventListener {
         }
 
         if (!(entity instanceof Player player)) return;
-        PowerGridSupport.render(event.getPoseStack(), bufferSource, vec3);
+        if (!AnvilHammerItem.isWearing(player)) return;
+        PowerGridClient.render(pose, bufferSource, vec3);
         HitResult hit = Minecraft.getInstance().hitResult;
         if (!(hit instanceof BlockHitResult hitResult)) return;
         renderDragonRodOutline(pose, hitResult, vertexConsumer3, camX, camY, camZ, handItem);

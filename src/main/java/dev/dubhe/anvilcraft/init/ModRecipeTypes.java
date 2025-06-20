@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.item.IMultipleResult;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
@@ -33,8 +32,8 @@ import dev.dubhe.anvilcraft.recipe.multiple.EightToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.FourToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.TwoToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
+import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -43,7 +42,6 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Supplier;
 
 public class ModRecipeTypes {
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
@@ -140,6 +138,10 @@ public class ModRecipeTypes {
         registerType("mob_transform");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<MobTransformRecipe>>
         MOB_TRANSFORM_SERIALIZER = RECIPE_SERIALIZERS.register("mob_transform", MobTransformRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<MobTransformWithItemRecipe>> MOB_TRANSFORM_WITH_ITEM_TYPE =
+        registerType("mob_transform_with_item");
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<MobTransformWithItemRecipe>>
+        MOB_TRANSFORM_WITH_ITEM_SERIALIZER = RECIPE_SERIALIZERS.register("mob_transform_with_item", MobTransformWithItemRecipe.Serializer::new);
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<MultiblockRecipe>> MULTIBLOCK_TYPE =
         registerType("multiblock");

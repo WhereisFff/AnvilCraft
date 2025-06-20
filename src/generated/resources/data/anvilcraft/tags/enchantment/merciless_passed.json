@@ -1,10 +1,8 @@
 {
   "values": [
-    "#anvilcraft:merciless_damage_passed",
     "#minecraft:curse",
     "minecraft:unbreaking",
     "minecraft:mending",
-    "minecraft:efficiency",
     "minecraft:loyalty",
     "minecraft:riptide"
   ]

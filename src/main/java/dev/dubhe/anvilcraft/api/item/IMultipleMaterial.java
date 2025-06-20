@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * 多合一配方的材料
  */
-public interface IMultipleToOneSmithingRecipeMaterial {
+public interface IMultipleMaterial {
     /**
      * 获取在余烬锻造台内鼠标悬停时显示的tooltip
      *

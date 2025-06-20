@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
+import dev.dubhe.anvilcraft.util.MultiPartBlockUtil;
 import it.unimi.dsi.fastutil.ints.IntIterators;
 import it.unimi.dsi.fastutil.ints.IntListIterator;
 import lombok.extern.slf4j.Slf4j;
@@ -119,8 +120,7 @@ public class DragonRodItem extends Item {
                 continue;
             }
 
-            // TODO: 同步一点六的多方块兼容
-            //devouringPos = getMainPartPosToRemove(level, devouringPos);
+            devouringPos = MultiPartBlockUtil.getChainableMainPartPos(level, devouringPos);
             devouringState = level.getBlockState(devouringPos);
 
             if (!player.getAbilities().instabuild) {
@@ -164,12 +164,12 @@ public class DragonRodItem extends Item {
             level.destroyBlock(devouringPos, false);
         }
 
-        if (dragonRod.getItem() instanceof DragonRodItem) {
-            player.getCooldowns().addCooldown(ModItems.DRAGON_ROD.asItem(), calculateCooldown(player));
-            player.getCooldowns().addCooldown(ModItems.ROYAL_DRAGON_ROD.asItem(), calculateCooldown(player));
-            player.getCooldowns().addCooldown(ModItems.EMBER_DRAGON_ROD.asItem(), calculateCooldown(player));
-        } else {
-            player.getCooldowns().addCooldown(dragonRod.getItem(), calculateCooldown(player));
+        int cooldown = calculateCooldown(player);
+        player.getCooldowns().addCooldown(ModItems.DRAGON_ROD.asItem(), cooldown);
+        player.getCooldowns().addCooldown(ModItems.ROYAL_DRAGON_ROD.asItem(), cooldown);
+        player.getCooldowns().addCooldown(ModItems.EMBER_DRAGON_ROD.asItem(), cooldown);
+        if (!(dragonRod.getItem() instanceof DragonRodItem)) {
+            player.getCooldowns().addCooldown(dragonRod.getItem(), cooldown);
         }
 
         dragonRod.hurtAndBreak(calculateDamage(dragonRod), level, player, item -> {
@@ -178,18 +178,19 @@ public class DragonRodItem extends Item {
         });
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean canDevour(Player player, ItemStack dragonRod) {
         return dragonRod.getDamageValue() < dragonRod.getMaxDamage() - 1
             && !player.getCooldowns().isOnCooldown(dragonRod.getItem());
     }
 
     public static int calculateDamage(ItemStack dragonRod) {
-        Integer range = dragonRod.get(ModComponents.DEVOUR_RANGE);
+        int range = dragonRod.getOrDefault(ModComponents.DEVOUR_RANGE, 0);
         int damage = switch (range) {
             case 5 -> 1;
             case 7 -> 2;
             case 9 -> 4;
-            case null, default -> 0;
+            default -> 0;
         };
         return Math.min(damage, Math.max(dragonRod.getMaxDamage() - dragonRod.getDamageValue(), 1));
     }

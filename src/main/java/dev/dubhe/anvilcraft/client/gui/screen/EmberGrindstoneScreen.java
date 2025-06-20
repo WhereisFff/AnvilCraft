@@ -22,8 +22,6 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Optional;
-
 public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindstoneMenu> {
     private static final ResourceLocation BACKGROUND =
         AnvilCraft.of("textures/gui/container/smithing/background/ember_grindstone.png");
@@ -90,8 +88,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                 int x = this.leftPos + 65 + 18 * (i % 3);
                 int y = this.topPos + 23 + 18 * (i / 3);
 
-                EnchantmentInstance enchantment = Optional.ofNullable(ListUtil.safelyGet(
-                    this.menu.getEnchantments(), i + scrollOver))
+                EnchantmentInstance enchantment = ListUtil.safelyGet(this.menu.getEnchantments(), i + scrollOver)
                     .map(Pair::getFirst)
                     .orElse(null);
                 if (enchantment == null) continue;

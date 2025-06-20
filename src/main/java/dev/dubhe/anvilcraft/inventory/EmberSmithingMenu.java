@@ -143,7 +143,6 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
     protected void onTake(@NotNull Player player, @NotNull ItemStack stack) {
         stack.onCraftedBy(player.level(), player, stack.getCount());
         this.resultSlots.awardUsedRecipes(player, this.getRelevantItems());
-        this.shrinkStackInSlot(1);
         this.shrinkStackInSlot(2);
         this.shrinkStackInSlot(3);
         this.shrinkStackInSlot(4);
@@ -152,6 +151,7 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
         this.shrinkStackInSlot(7);
         this.shrinkStackInSlot(8);
         this.shrinkStackInSlot(9);
+        this.shrinkStackInSlot(1);
         this.access.execute((level, blockPos) -> level.levelEvent(1044, blockPos, 0));
     }
 

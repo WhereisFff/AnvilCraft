@@ -25,6 +25,7 @@ import dev.dubhe.anvilcraft.item.EmberMetalAxeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.EmberMetalHoeItem;
 import dev.dubhe.anvilcraft.item.EmberMetalPickaxeItem;
+import dev.dubhe.anvilcraft.item.EmberMetalResonatorItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
@@ -32,6 +33,7 @@ import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHoeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalPickaxeItem;
+import dev.dubhe.anvilcraft.item.FrostMetalResonatorItem;
 import dev.dubhe.anvilcraft.item.FrostMetalShovelItem;
 import dev.dubhe.anvilcraft.item.FrostMetalSwordItem;
 import dev.dubhe.anvilcraft.item.GeodeItem;
@@ -48,6 +50,7 @@ import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
+import dev.dubhe.anvilcraft.item.ResonatorCoreItem;
 import dev.dubhe.anvilcraft.item.RoyalAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.RoyalAxeItem;
 import dev.dubhe.anvilcraft.item.RoyalHoeItem;
@@ -621,6 +624,22 @@ public class ModItems {
         .model((ctx, provider) -> {
         })
         .register();
+    public static final ItemEntry<FrostMetalResonatorItem> FROST_METAL_RESONATOR = REGISTRATE
+        .item("frost_metal_resonator", FrostMetalResonatorItem::new)
+        .tag(
+            ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE,
+            ModItemTags.RESONATOR, ModItemTags.EXPLOSION_PROOF)
+        .model((ctx, provider) -> {
+        })
+        .register();
+    public static final ItemEntry<EmberMetalResonatorItem> EMBER_METAL_RESONATOR = REGISTRATE
+        .item("ember_metal_resonator", EmberMetalResonatorItem::new)
+        .tag(
+            ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE,
+            ModItemTags.RESONATOR, ModItemTags.EXPLOSION_PROOF)
+        .model((ctx, provider) -> {
+        })
+        .register();
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRATE
         .item("ionocraft", IonoCraftItem::new)
         .initialProperties(Item.Properties::new)
@@ -1110,11 +1129,11 @@ public class ModItems {
         .tag(Tags.Items.INGOTS, ModItemTags.EXPLOSION_PROOF)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.EMBER_METAL_BLOCK)
+                .requires(ModBlocks.TRANSCENDIUM_BLOCK)
                 .group(ctx.getId().toString())
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.EMBER_METAL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
+                    AnvilCraftDatagen.hasItem(ModBlocks.TRANSCENDIUM_BLOCK.asItem()),
+                    AnvilCraftDatagen.has(ModBlocks.TRANSCENDIUM_BLOCK))
                 .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("AAA")
@@ -2044,6 +2063,23 @@ public class ModItems {
                 .unlockedBy("has_heavy_iron_block", AnvilCraftDatagen.has(ModBlocks.HEAVY_IRON_BLOCK))
                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider))
+        .register();
+    public static final ItemEntry<ResonatorCoreItem> RESONATOR_CORE = REGISTRATE
+        .item("resonator_core", ResonatorCoreItem::new)
+        .properties(Item.Properties::fireResistant)
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .recipe((ctx, provider) ->
+             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                 .pattern("AEA")
+                 .pattern("EME")
+                 .pattern("AEA")
+                 .define('A', Items.AMETHYST_SHARD)
+                 .define('E', Items.ECHO_SHARD)
+                 .define('M', ModItems.MULTIPHASE_MATTER)
+                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.AMETHYST_SHARD), AnvilCraftDatagen.has(Items.AMETHYST_SHARD))
+                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.ECHO_SHARD), AnvilCraftDatagen.has(Items.ECHO_SHARD))
+                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
+                 .save(provider))
         .register();
 
     public static final ItemEntry<Item> NEGATIVE_MATTER = REGISTRATE
