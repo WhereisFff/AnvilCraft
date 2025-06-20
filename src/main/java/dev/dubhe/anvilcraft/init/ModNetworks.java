@@ -22,6 +22,7 @@ import dev.dubhe.anvilcraft.network.RecipeCacheSyncPacket;
 import dev.dubhe.anvilcraft.network.RemoveMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.RemoveTeslaFilterPacket;
 import dev.dubhe.anvilcraft.network.RocketJumpPacket;
+import dev.dubhe.anvilcraft.network.SilencerSyncPacket;
 import dev.dubhe.anvilcraft.network.SliderInitPacket;
 import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
@@ -191,6 +192,11 @@ public class ModNetworks {
             DragonRodDevourPacket.TYPE,
             DragonRodDevourPacket.STREAM_CODEC,
             DragonRodDevourPacket.HANDLER
+        );
+        registrar.playBidirectional(
+            SilencerSyncPacket.TYPE,
+            SilencerSyncPacket.STREAM_CODEC,
+            SilencerSyncPacket.HANDLER
         );
         registrar.playToServer(
             SwitchResonateModePacket.TYPE,
