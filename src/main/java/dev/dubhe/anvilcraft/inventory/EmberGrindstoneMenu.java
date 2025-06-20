@@ -196,7 +196,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
     }
 
     private Optional<Pair<EnchantmentInstance, DataComponentType<ItemEnchantments>>> getSelectedEnchantmentPair() {
-        return Optional.ofNullable(ListUtil.safelyGet(this.enchantments, this.getSelectedIndex()));
+        return ListUtil.safelyGet(this.enchantments, this.getSelectedIndex());
     }
 
     private Optional<EnchantmentInstance> getSelectedEnchantment() {
