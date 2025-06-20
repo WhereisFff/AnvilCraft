@@ -221,7 +221,7 @@ public class HeatRecorder {
         Optional<ResourceLocation> idOp = pair.getFirst();
         Optional<HeatableBlockEntry> entryOp = pair.getSecond();
         if (idOp.isEmpty() || entryOp.isEmpty()) return Optional.empty();
-        return Optional.ofNullable(ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() - 1));
+        return ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() - 1);
     }
 
     public static Optional<HeatTier> getPrevTier(Level level, BlockPos pos, BlockState state) {
@@ -237,7 +237,7 @@ public class HeatRecorder {
         Optional<ResourceLocation> idOp = pair.getFirst();
         Optional<HeatableBlockEntry> entryOp = pair.getSecond();
         if (idOp.isEmpty() || entryOp.isEmpty()) return Optional.empty();
-        return Optional.ofNullable(ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() + 1));
+        return ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() + 1);
     }
 
     public static Optional<HeatTier> getNextTier(Level level, BlockPos pos, BlockState state) {
