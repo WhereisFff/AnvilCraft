@@ -49,15 +49,4 @@ public class MutedSoundSyncPacket implements CustomPacketPayload {
             }
         });
     }
-
-    /**
-     *
-     */
-    public void serverHandler(IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (Minecraft.getInstance().screen instanceof ActiveSilencerScreen screen) {
-                screen.handleSync(this.sounds);
-            }
-        });
-    }
 }
