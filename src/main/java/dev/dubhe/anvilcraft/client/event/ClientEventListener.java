@@ -97,8 +97,8 @@ public class ClientEventListener {
     @SubscribeEvent
     public static void onMouseScrolled(ScreenEvent.MouseScrolled.Pre event) {
         if (AmuletSelectorSupport.hasHoveringItem()) {
-            int amount = (int) Math.min(event.getScrollDeltaX(), event.getScrollDeltaY());
-            AmuletSelectorSupport.mouseScrolled(amount);
+            int amount = (int) event.getScrollDeltaY();
+            AmuletSelectorSupport.mouseScrolled(-amount);
             event.setCanceled(true);
         }
     }
@@ -115,7 +115,7 @@ public class ClientEventListener {
             AmuletSelectorSupport.setCurrentHoveringItemStack(itemStack);
             AmuletSelectorSupport.render(guiGraphics, x, y);
         } else {
-            AmuletSelectorSupport.setCurrentHoveringItemStack(null);
+            AmuletSelectorSupport.setCurrentHoveringItemStack(ItemStack.EMPTY);
         }
     }
 }

@@ -11,8 +11,6 @@ import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
-import dev.dubhe.anvilcraft.util.InventoryUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -33,10 +31,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
-import java.util.UUID;
-import java.util.function.BooleanSupplier;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class PlayerEventListener {
@@ -102,10 +96,7 @@ public class PlayerEventListener {
         ) {
             ItemStack availableItem = player.getItemInHand(event.getHandHolding());
             BoxContents boxContents = availableItem.get(ModComponents.BOX_CONTENTS);
-            AmuletManager.INSTANCE.startRaffle(
-                player, event.getSource(),
-                boxContents.getTotemCount() >= 0
-            );
+            AmuletManager.INSTANCE.startRaffle(player, event.getSource(), !boxContents.getTotems().isEmpty());
         }
     }
 

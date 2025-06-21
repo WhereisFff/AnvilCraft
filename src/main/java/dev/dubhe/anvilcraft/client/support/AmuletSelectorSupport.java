@@ -10,9 +10,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.List;
+import java.util.Objects;
 
 public class AmuletSelectorSupport {
     public static final ResourceLocation BACKGROUND = AnvilCraft.of("textures/gui/container/amulet_box/background.png");
@@ -20,8 +20,7 @@ public class AmuletSelectorSupport {
     public static final int BACKGROUND_WIDTH = 78;
     public static final int BACKGROUND_HEIGHT = 80;
 
-    private static ItemStack currentHoveringItemStack = null;
-    private static int currentSelectedIndex = -1;
+    private static ItemStack currentHoveringItemStack = ItemStack.EMPTY;
     private static int maxSelection = -1;
     private static Layout layout = null;
     private static BoxContents contents = null;
@@ -49,33 +48,35 @@ public class AmuletSelectorSupport {
     }
 
     public static boolean hasHoveringItem() {
-        return currentHoveringItemStack != null;
+        return !currentHoveringItemStack.isEmpty();
     }
 
     public static void setCurrentHoveringItemStack(ItemStack itemStack) {
+        if (ItemStack.isSameItemSameComponents(currentHoveringItemStack, itemStack)) return;
         AmuletSelectorSupport.currentHoveringItemStack = itemStack;
-        if (itemStack == null) {
-            currentSelectedIndex = -1;
+        if (itemStack.isEmpty()) {
+            AmuletSelectorSupport.contents = null;
             AmuletSelectorSupport.layout = null;
             maxSelection = -1;
             return;
         }
+
         BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
+        if (Objects.equals(AmuletSelectorSupport.contents, contents)) return;
         AmuletSelectorSupport.contents = contents;
         if (contents.isEmpty()) {
-            currentSelectedIndex = -1;
             AmuletSelectorSupport.layout = Layout.EMPTY;
             maxSelection = -1;
+            setCurrentSelectedIndex(-1);
         } else {
             AmuletSelectorSupport.layout = Layout.layout(contents);
-            currentSelectedIndex = contents.getSelection();
             maxSelection = contents.getMaxSelection();
+            setCurrentSelectedIndex(contents.getSelection());
         }
-        System.out.println("AmuletSelectorSupport.layout = " + AmuletSelectorSupport.layout);
     }
 
     public static void mouseScrolled(int amount) {
-        if (currentSelectedIndex == -1) return;
+        if (getCurrentSelectedIndex() == -1) return;
         if (amount > 0) {
             next();
         } else {
@@ -94,95 +95,217 @@ public class AmuletSelectorSupport {
     }
 
     public static void selectDelta(int delta) {
+        int index = getCurrentSelectedIndex() + delta;
+        if (index < 0) {
+            index = maxSelection - 1;
+        } else if (index > maxSelection - 1) {
+            index = 0;
+        }
+        setCurrentSelectedIndex(index);
+    }
 
+    private static int getCurrentSelectedIndex() {
+        if (contents == null) return -1;
+        return contents.getSelection();
+    }
+
+    private static void setCurrentSelectedIndex(int selection) {
+        if (!hasHoveringItem() || contents == null) return;
+        if (contents.getSelection() == selection) return;
+        BoxContents.Mutable mutable = contents.mutable();
+        mutable.select(Math.clamp(selection, 0, maxSelection - 1));
+        contents = mutable.immutable();
+        currentHoveringItemStack.set(ModComponents.BOX_CONTENTS, contents);
     }
 
     public enum Layout {
-        EMPTY {
+        EMPTY((byte) 0, new boolean[][] {
+            new boolean[] {false, false, false, false},
+            new boolean[] {false, false, false, false},
+            new boolean[] {false, false, false, false},
+            new boolean[] {false, false, false, false}}
+        ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
             }
         },
-        NO_AMULET {
+        NO_AMULET((byte) 0, new boolean[][] {
+            new boolean[] {false, false, false, false},
+            new boolean[] {false, false, false, false},
+            new boolean[] {false, false, false, false},
+            new boolean[] {false, false, false, false}}
+        ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
                 PoseStack poseStack = guiGraphics.pose();
                 poseStack.pushPose();
                 poseStack.translate(0, 0, 1000);
-                renderTotem(guiGraphics, x + 3, y + 3, content);
+                this.renderTotem(guiGraphics, x + 3, y + 3, content);
                 poseStack.popPose();
             }
         },
-        BIG_AMULET_1 {
+        BIG_AMULET_1((byte) 1, new boolean[][] {
+            new boolean[] {true, true, true, false},
+            new boolean[] {true, true, true, false},
+            new boolean[] {true, true, true, false},
+            new boolean[] {false, false, false, false}}
+        ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
-                //TODO: 占大空间的护符
-            }
-        },
-        SMALL_AMULET_1 {
-            @Override
-            public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+                List<ItemStack> amulets = content.getAmulets();
+                if (amulets.isEmpty()) return;
+
                 PoseStack poseStack = guiGraphics.pose();
                 poseStack.pushPose();
                 poseStack.translate(0, 0, 1000);
-                guiGraphics.fill(
-                    x + 3,
-                    y + 3,
-                    x + 3 + 53,
-                    y + 3 + 35,
-                    0x5522b14c
-                );
-                Layout.renderTotem(guiGraphics, x + 57, y + 3, content);
+                guiGraphics.fill(x + 3, y + 3, x + 3 + 53, y + 3 + 53, COLOR_FIRST);
+                this.renderTotem(guiGraphics, x + 3, y + 3, content);
+
+                if (getCurrentSelectedIndex() == 0) {
+                    this.renderSelectionBox(guiGraphics, x + 3, y + 3, x + 3 + 35, y + 3 + 53);
+                }
+                poseStack.popPose();
+
+                poseStack.pushPose();
+                poseStack.translate(x + 4, y + 4 + 9, 1001);
+                poseStack.scale(34f / 16, 34f / 16, 0);
+                ItemStack amulet1 = amulets.getFirst();
+                guiGraphics.renderFakeItem(amulet1, 0, 0);
+                guiGraphics.renderItemDecorations(Minecraft.getInstance().font, amulet1, 0, 0);
                 poseStack.popPose();
             }
         },
-        SMALL_AMULET_2 {
+        SMALL_AMULET_1((byte) 1, new boolean[][] {
+            new boolean[] {true, true, false, false},
+            new boolean[] {true, true, false, false},
+            new boolean[] {true, true, false, false},
+            new boolean[] {false, false, false, false}}
+        ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+                List<ItemStack> amulets = content.getAmulets();
+                if (amulets.isEmpty()) return;
+
                 PoseStack poseStack = guiGraphics.pose();
                 poseStack.pushPose();
                 poseStack.translate(0, 0, 1000);
-                guiGraphics.fill(
-                    x + 3,
-                    y + 3,
-                    x + 3 + 35,
-                    y + 3 + 53,
-                    0x5522b14c
-                );
-                guiGraphics.fill(
-                    x + 39,
-                    y + 3,
-                    x + 39 + 35,
-                    y + 3 + 53,
-                    0x5500a2e8
-                );
-                Layout.renderTotem(guiGraphics, x + 3, y + 57, content);
+                guiGraphics.fill(x + 3, y + 3, x + 3 + 35, y + 3 + 53, COLOR_FIRST);
+                this.renderTotem(guiGraphics, x + 3, y + 3, content);
+
+                if (getCurrentSelectedIndex() == 0) {
+                    this.renderSelectionBox(guiGraphics, x + 3, y + 3, x + 3 + 35, y + 3 + 53);
+                }
+                poseStack.popPose();
+
+                poseStack.pushPose();
+                poseStack.translate(x + 4, y + 4 + 9, 1001);
+                poseStack.scale(34f / 16, 34f / 16, 0);
+                ItemStack amulet1 = amulets.getFirst();
+                guiGraphics.renderFakeItem(amulet1, 0, 0);
+                guiGraphics.renderItemDecorations(Minecraft.getInstance().font, amulet1, 0, 0);
+                poseStack.popPose();
+            }
+        },
+        SMALL_AMULET_2((byte) 2, new boolean[][] {
+            new boolean[] {true, true, true, true},
+            new boolean[] {true, true, true, true},
+            new boolean[] {true, true, true, true},
+            new boolean[] {false, false, false, false}}
+        ) {
+            @Override
+            public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+                List<ItemStack> amulets = content.getAmulets();
+                if (amulets.size() < 2) return;
+
+                PoseStack poseStack = guiGraphics.pose();
+                poseStack.pushPose();
+                poseStack.translate(0, 0, 1000);
+                guiGraphics.fill(x + 3, y + 3, x + 3 + 35, y + 3 + 53, COLOR_FIRST);
+                guiGraphics.fill(x + 39, y + 3, x + 39 + 35, y + 3 + 53, COLOR_SECOND);
+                this.renderTotem(guiGraphics, x + 3, y + 3, content);
+
+                switch (getCurrentSelectedIndex()) {
+                    case 0 -> this.renderSelectionBox(guiGraphics, x + 3, y + 3, x + 3 + 35, y + 3 + 53);
+                    case 1 -> this.renderSelectionBox(guiGraphics, x + 39, y + 3, x + 39 + 35, y + 3 + 53);
+                }
+                poseStack.popPose();
+
+                poseStack.pushPose();
+                poseStack.translate(x + 4, y + 4 + 9, 1001);
+                poseStack.scale(34f / 16, 34f / 16, 0);
+                ItemStack amulet1 = amulets.getFirst();
+                guiGraphics.renderFakeItem(amulet1, 0, 0);
+                guiGraphics.renderItemDecorations(Minecraft.getInstance().font, amulet1, 0, 0);
+                poseStack.popPose();
+
+                poseStack.pushPose();
+                poseStack.translate(x + 40, y + 4 + 9, 1001);
+                poseStack.scale(34f / 16, 34f / 16, 0);
+                ItemStack amulet2 = amulets.get(1);
+                guiGraphics.renderFakeItem(amulet2, 0, 0);
+                guiGraphics.renderItemDecorations(Minecraft.getInstance().font, amulet2, 0, 0);
                 poseStack.popPose();
             }
         };
 
-        private static void renderTotem(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
-            if (content.getTotemCount() <= 0) return;
-            ItemStack totem = new ItemStack(Items.TOTEM_OF_UNDYING, content.getTotemCount());
-            guiGraphics.fill(
-                x,
-                y,
-                x + 17,
-                y + 17,
-                0x55ffc90e
-            );
-            guiGraphics.renderFakeItem(
-                totem,
-                x,
-                y
-            );
-            guiGraphics.renderItemDecorations(
-                Minecraft.getInstance().font,
-                totem,
-                x,
-                y
-            );
+        private static final int COLOR_FIRST = 0x5522b14c;
+        private static final int COLOR_SECOND = 0x5500a2e8;
+        private static final int COLOR_TOTEM = 0x55ffc90e;
+        private static final int COLOR_SELECTION_BOX_FRAME = 0xff663112;
 
+        private final byte alreadyUsedIndexes;
+        private final boolean[][] alreadyUsed;
+
+        Layout(byte alreadyUsedIndexes, boolean[][] alreadyUsed) {
+            this.alreadyUsedIndexes = alreadyUsedIndexes;
+            this.alreadyUsed = alreadyUsed;
+        }
+
+        void renderTotem(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
+            List<ItemStack> totems = content.getTotems();
+            if (totems.isEmpty()) return;
+            int index = 0;
+            for (int i = 0; i < 16; i++) {
+                if (index >= totems.size()) return;
+                if (this.alreadyUsed[i / 4][i % 4]) continue;
+                ItemStack totem = totems.get(index++);
+                int pX = x + i % 4 * 18;
+                int pY = y + i / 4 * 18;
+                guiGraphics.fill(pX, pY, pX + 17, pY + 17, COLOR_TOTEM);
+                guiGraphics.renderFakeItem(totem, pX + 1, pY + 1);
+                guiGraphics.renderItemDecorations(Minecraft.getInstance().font, totem, pX + 1, pY + 1);
+
+                if (index + this.alreadyUsedIndexes - 1 != getCurrentSelectedIndex()) continue;
+                this.renderSelectionBox(guiGraphics, pX, pY, pX + 18, pY + 18);
+            }
+        }
+
+        void renderSelectionBox(GuiGraphics guiGraphics, int minX, int minY, int maxX, int maxY) {
+            maxX -= 9;
+            maxY -= 9;
+            guiGraphics.blit(SELECTION_BOX, minX, minY, 9, 9, 0, 0, 9, 9, 18, 18);
+            guiGraphics.blit(SELECTION_BOX, maxX, minY, 9, 9, 9, 0, 9, 9, 18, 18);
+            guiGraphics.blit(SELECTION_BOX, minX, maxY, 9, 9, 0, 9, 9, 9, 18, 18);
+            guiGraphics.blit(SELECTION_BOX, maxX, maxY, 9, 9, 9, 9, 9, 9, 18, 18);
+
+            int uWidth = maxX - minX - 9;
+            int vHeight = maxY - minY - 9;
+            if (uWidth != 0) {
+                minX += 9;
+                maxY += 9;
+                guiGraphics.fill(minX, minY, minX + uWidth, minY + 1, COLOR_SELECTION_BOX_FRAME);
+                guiGraphics.fill(minX, maxY - 1, minX + uWidth, maxY, COLOR_SELECTION_BOX_FRAME);
+                minX -= 9;
+                maxY -= 9;
+            }
+            if (vHeight != 0) {
+                minY += 9;
+                maxX += 9;
+                guiGraphics.fill(minX, minY, minX + 1, minY + vHeight, COLOR_SELECTION_BOX_FRAME);
+                guiGraphics.fill(maxX - 1, minY, maxX, minY + vHeight, COLOR_SELECTION_BOX_FRAME);
+                minY -= 9;
+                maxX -= 9;
+            }
         }
 
         public abstract void render(GuiGraphics guiGraphics, int x, int y, BoxContents content);

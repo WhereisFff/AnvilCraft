@@ -95,7 +95,6 @@ public class AmuletBoxItem extends Item {
         SlotAccess slotAccess
     ) {
         if (clickAction != ClickAction.SECONDARY || !slot.allowModification(player)) return false;
-        System.out.println("other = " + other);
         BoxContents.Mutable contents = box.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).mutable();
         if (other.isEmpty()) {
             ItemStack itemStack = contents.pop();
@@ -130,9 +129,9 @@ public class AmuletBoxItem extends Item {
                 }
                 playInsertSound(player);
                 box.set(ModComponents.BOX_CONTENTS, mutable.immutable());
-            } else {
+            } else if (AnvilCraft.config.amuletBoxTakeOutAllTotem) {
                 boolean dropped = false;
-                for (int i = 0; i < contents.getTotemCount(); i++) {
+                for (int i = 0; i < contents.getTotems().size(); i++) {
                     ItemStack stack = mutable.popTotem();
                     if (stack.isEmpty()) break;
                     player.getInventory().placeItemBackInInventory(stack);

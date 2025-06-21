@@ -59,7 +59,7 @@ public abstract class LivingEntityMixin extends Entity {
     private boolean redirectTotemCheck(ItemStack instance, Item item, Operation<Boolean> original) {
         return original.call(instance, item)
             || (instance.is(ModItems.AMULET_BOX)
-            && instance.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotemCount() > 0);
+                && !instance.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotems().isEmpty());
     }
 
     @WrapOperation(
@@ -71,17 +71,9 @@ public abstract class LivingEntityMixin extends Entity {
     )
     private void onlyUseTotemToTrigger(UsedTotemTrigger instance, ServerPlayer player, ItemStack item, Operation<Void> original) {
         if (item.getItem() instanceof AmuletBoxItem) {
-            original.call(
-                instance,
-                player,
-                Items.TOTEM_OF_UNDYING.getDefaultInstance()
-            );
+            original.call(instance, player, Items.TOTEM_OF_UNDYING.getDefaultInstance());
         }
-        original.call(
-            instance,
-            player,
-            item
-        );
+        original.call(instance, player, item);
     }
 
 
@@ -92,6 +84,7 @@ public abstract class LivingEntityMixin extends Entity {
     private void shrinkCorrect(ItemStack instance, int decrement, Operation<Void> original) {
         if (instance.is(ModItems.AMULET_BOX) && instance.has(ModComponents.BOX_CONTENTS)) {
             BoxContents contents = instance.get(ModComponents.BOX_CONTENTS);
+            @SuppressWarnings("DataFlowIssue") // 当运行这段代码时，contents一定是非null的
             BoxContents.Mutable mutable = contents.mutable();
             mutable.popTotem();
             instance.set(ModComponents.BOX_CONTENTS, mutable.immutable());

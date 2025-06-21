@@ -20,51 +20,48 @@ import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")
 public final class BoxContents implements TooltipComponent {
-    public static final BoxContents EMPTY = new BoxContents(List.of(), 0, 0);
+    public static final BoxContents EMPTY = new BoxContents(List.of(), List.of(), 0);
     public static final Codec<BoxContents> CODEC = RecordCodecBuilder.create(ins -> ins.group(
-        ItemStack.CODEC.listOf().fieldOf("amulets").forGetter(o -> o.amulets),
-        Codec.INT.fieldOf("totems").forGetter(o -> o.totemCount),
-        Codec.INT.fieldOf("selection").forGetter(o -> o.selection)
+        ItemStack.CODEC.listOf().fieldOf("amulets").forGetter(BoxContents::getAmulets),
+        ItemStack.CODEC.listOf().fieldOf("totems").forGetter(BoxContents::getTotems),
+        Codec.INT.fieldOf("selection").forGetter(BoxContents::getSelection)
     ).apply(ins, BoxContents::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, BoxContents> STREAM_CODEC = StreamCodec.composite(
-        ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
-        it -> it.amulets,
-        ByteBufCodecs.INT,
-        it -> it.totemCount,
-        ByteBufCodecs.INT,
-        it -> it.selection,
+        ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()), BoxContents::getAmulets,
+        ItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()), BoxContents::getTotems,
+        ByteBufCodecs.INT, BoxContents::getSelection,
         BoxContents::new
     );
     @Getter
     private final List<ItemStack> amulets;
     @Getter
-    private final int totemCount;
+    private final List<ItemStack> totems;
     @Getter
     private final int selection;
     @Getter
     private final int usage;
 
-    BoxContents(List<ItemStack> amulets, int totemCount, int selectedItemIndex) {
+    BoxContents(List<ItemStack> amulets, List<ItemStack> totems, int selectedItemIndex) {
         this.amulets = amulets;
-        this.totemCount = totemCount;
+        this.totems = totems;
         this.selection = selectedItemIndex;
         this.usage = computeUsage();
     }
 
-    BoxContents(List<ItemStack> amulets, int totemCount, int selectedItemIndex, int computedUsage) {
+    BoxContents(List<ItemStack> amulets, List<ItemStack> totems, int selectedItemIndex, int computedUsage) {
         this.amulets = amulets;
-        this.totemCount = totemCount;
+        this.totems = totems;
         this.selection = selectedItemIndex;
         this.usage = computedUsage;
     }
 
     public int sum(ToIntFunction<ItemStack> fn) {
-        int sum = 0;
+        int sum = totems.size();
         for (ItemStack it : amulets) {
             int i = fn.applyAsInt(it);
             sum += i;
         }
-        return sum + totemCount;
+        return sum;
     }
 
     int computeUsage() {
@@ -74,9 +71,7 @@ public final class BoxContents implements TooltipComponent {
     public List<ItemStack> allItems() {
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
         builder.addAll(amulets);
-        for (int i = 0; i < totemCount; i++) {
-            builder.add(Items.TOTEM_OF_UNDYING.getDefaultInstance());
-        }
+        builder.addAll(totems);
         return builder.build();
     }
 
@@ -87,10 +82,10 @@ public final class BoxContents implements TooltipComponent {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof BoxContents that)) return false;
-        return totemCount == that.totemCount
-            && selection == that.selection
-            && usage == that.usage
-            && Objects.equals(amulets, that.amulets);
+        return selection == that.selection
+               && usage == that.usage
+               && Objects.equals(amulets, that.amulets)
+               && Objects.equals(totems, that.totems);
     }
 
     public boolean isEmpty() {
@@ -98,27 +93,27 @@ public final class BoxContents implements TooltipComponent {
     }
 
     public boolean isAmuletEmpty() {
-        return usage >= 0 && amulets.isEmpty() && totemCount > 0;
+        return usage >= 0 && amulets.isEmpty() && !totems.isEmpty();
     }
 
     public int getMaxSelection() {
-        return amulets.size() - 1 + 1; // this makes sense
+        return amulets.size() + totems.size(); // this makes sense
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amulets, totemCount, selection, usage);
+        return Objects.hash(amulets, totems, selection, usage);
     }
 
     public static class Mutable {
         private final List<ItemStack> amulets;
-        private int totemCount;
+        private final List<ItemStack> totems;
         private int selection;
         private int usage;
 
         Mutable(BoxContents contents) {
             this.amulets = new ArrayList<>(contents.amulets);
-            this.totemCount = contents.totemCount;
+            this.totems = new ArrayList<>(contents.totems);
             this.usage = contents.computeUsage();
             this.selection = contents.selection;
         }
@@ -129,46 +124,50 @@ public final class BoxContents implements TooltipComponent {
                 usage += item.getWeight();
                 amulets.add(itemStack.copy());
                 return true;
-            }
-            if (itemStack.is(Items.TOTEM_OF_UNDYING)) {
+            } else if (itemStack.is(Items.TOTEM_OF_UNDYING)) {
                 if (usage + 1 > AmuletBoxItem.CAPACITY) return false;
                 usage++;
-                totemCount++;
+                totems.add(itemStack.copy());
                 return true;
             }
             return false;
         }
 
         public ItemStack pop() {
-            if (amulets.isEmpty()) {
-                if (totemCount <= 0) return ItemStack.EMPTY;
-                totemCount--;
-                usage--;
-                return Items.TOTEM_OF_UNDYING.getDefaultInstance();
+            if (!amulets.isEmpty()) {
+                ItemStack first = amulets.removeFirst();
+                if (first.getItem() instanceof AmuletItem item) {
+                    usage -= item.getWeight();
+                }
+                usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
+                return first.copy();
+            } else if (!totems.isEmpty()) {
+                ItemStack first = totems.removeFirst();
+                if (first.is(Items.TOTEM_OF_UNDYING)) {
+                    usage--;
+                }
+                usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
+                return first.copy();
             }
-            ItemStack first = amulets.removeFirst();
-            if (first.getItem() instanceof AmuletItem item) {
-                usage -= item.getWeight();
-            }
-            usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
-            return first.copy();
+            return ItemStack.EMPTY;
         }
 
         public void select(int selection) {
-
+            this.selection = selection;
         }
 
         public BoxContents immutable() {
-            return new BoxContents(ImmutableList.copyOf(this.amulets), totemCount, selection);
+            return new BoxContents(ImmutableList.copyOf(this.amulets), ImmutableList.copyOf(totems), selection);
         }
 
         public ItemStack popTotem() {
-            if (totemCount > 0) {
-                totemCount--;
-                usage = Math.clamp(usage - 1, 0, AmuletBoxItem.CAPACITY);
-                return Items.TOTEM_OF_UNDYING.getDefaultInstance();
+            if (totems.isEmpty()) return ItemStack.EMPTY;
+            ItemStack first = totems.removeFirst();
+            if (first.is(Items.TOTEM_OF_UNDYING)) {
+                usage--;
             }
-            return ItemStack.EMPTY;
+            usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
+            return first;
         }
     }
 }
