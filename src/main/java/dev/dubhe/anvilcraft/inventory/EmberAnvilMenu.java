@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.inventory;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.item.ICursed;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -144,7 +145,7 @@ public class EmberAnvilMenu extends AnvilMenu {
                             ? enchantmentsOnRightLevel + 1
                             : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
 
-                        if (enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
+                        if (!AnvilCraft.config.emberAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
                             enchantmentsOnRightLevel = enchantment.getMaxLevel();
                         }
 

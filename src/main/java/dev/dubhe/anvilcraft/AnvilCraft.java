@@ -155,6 +155,11 @@ public class AnvilCraft {
                 LOGGER.info("TheOneProbe found. Loading AnvilCraft TheOneProbe plugin...");
                 AnvilCraftTopPlugin.init();
             }
+            if (Util.isLoaded("apothic_enchanting")) {
+                LOGGER.info("Apothic Enchanting found. Set royalAnvilBeyondMaxLevel and emberAnvilBeyondMaxLevel to true.");
+                config.royalAnvilBeyondMaxLevel = true;
+                config.emberAnvilBeyondMaxLevel = true;
+            }
         });
     }
 
