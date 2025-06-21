@@ -134,22 +134,22 @@ public final class BoxContents implements TooltipComponent {
         }
 
         public ItemStack pop() {
-            if (!amulets.isEmpty()) {
-                ItemStack first = amulets.removeFirst();
-                if (first.getItem() instanceof AmuletItem item) {
+            ItemStack stack = ItemStack.EMPTY;
+
+            if (amulets.size() > this.selection) {
+                stack = amulets.remove(this.selection);
+                if (stack.getItem() instanceof AmuletItem item) {
                     usage -= item.getWeight();
                 }
-                usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
-                return first.copy();
-            } else if (!totems.isEmpty()) {
-                ItemStack first = totems.removeFirst();
-                if (first.is(Items.TOTEM_OF_UNDYING)) {
+            } else if (totems.size() > this.selection - amulets.size()) {
+                stack = totems.remove(this.selection - amulets.size());
+                if (stack.is(Items.TOTEM_OF_UNDYING)) {
                     usage--;
                 }
-                usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
-                return first.copy();
             }
-            return ItemStack.EMPTY;
+
+            usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
+            return stack.copy();
         }
 
         public void select(int selection) {
@@ -157,7 +157,7 @@ public final class BoxContents implements TooltipComponent {
         }
 
         public BoxContents immutable() {
-            return new BoxContents(ImmutableList.copyOf(this.amulets), ImmutableList.copyOf(totems), selection);
+            return new BoxContents(ImmutableList.copyOf(amulets), ImmutableList.copyOf(totems), selection);
         }
 
         public ItemStack popTotem() {

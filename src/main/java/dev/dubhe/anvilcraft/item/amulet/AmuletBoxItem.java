@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -31,11 +30,9 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.function.Consumer;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -46,21 +43,6 @@ public class AmuletBoxItem extends Item {
 
     public AmuletBoxItem(Properties properties) {
         super(properties.component(ModComponents.BOX_CONTENTS, BoxContents.EMPTY));
-    }
-
-    @SuppressWarnings("removal")
-    @Override
-    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
-        ItemProperties.register(
-            this,
-            AnvilCraft.of("box_contents"),
-            (stack, level, entity, seed) -> getFullnessDisplay(stack)
-        );
-    }
-
-    public static float getFullnessDisplay(ItemStack itemStack) {
-        BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-        return contents.getUsage() / (float) CAPACITY;
     }
 
     @Override
@@ -157,13 +139,12 @@ public class AmuletBoxItem extends Item {
     @Override
     public int getBarWidth(ItemStack itemStack) {
         BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-        return (int) (Math.clamp(contents.getUsage() / 13f, 0f, 1f) * 13);
+        return (int) (Math.clamp(contents.getUsage() / (float) CAPACITY, 0f, 1f) * 13);
     }
 
     @Override
     public int getBarColor(ItemStack itemStack) {
         BoxContents contents = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY);
-
         return lerpColor(contents.getUsage() / (float) CAPACITY, BAR_COLOR, FULL_BAR_COLOR);
     }
 
@@ -198,10 +179,7 @@ public class AmuletBoxItem extends Item {
             tooltipComponents.add(Component.translatable("tooltip.anvilcraft.item.amulet_box.line_1").withStyle(ChatFormatting.GRAY));
             tooltipComponents.add(Component.translatable("tooltip.anvilcraft.item.amulet_box.line_2").withStyle(ChatFormatting.GRAY));
         } else {
-            tooltipComponents.add(Component.translatable(
-                "tooltip.anvilcraft.press_key",
-                Component.literal("Shift")
-            ).withStyle(ChatFormatting.GRAY));
+            tooltipComponents.add(Component.translatable("tooltip.anvilcraft.press_key", Component.literal("Shift")));
         }
         tooltipComponents.add(Component.empty());
         tooltipComponents.add(Component.translatable(

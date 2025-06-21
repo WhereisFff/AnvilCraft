@@ -111,9 +111,10 @@ public class AmuletSelectorSupport {
 
     private static void setCurrentSelectedIndex(int selection) {
         if (!hasHoveringItem() || contents == null) return;
+        selection = Math.clamp(selection, 0, maxSelection - 1);
         if (contents.getSelection() == selection) return;
         BoxContents.Mutable mutable = contents.mutable();
-        mutable.select(Math.clamp(selection, 0, maxSelection - 1));
+        mutable.select(selection);
         contents = mutable.immutable();
         currentHoveringItemStack.set(ModComponents.BOX_CONTENTS, contents);
     }
@@ -280,6 +281,7 @@ public class AmuletSelectorSupport {
             }
         }
 
+        @SuppressWarnings("UnusedAssignment")
         void renderSelectionBox(GuiGraphics guiGraphics, int minX, int minY, int maxX, int maxY) {
             maxX -= 9;
             maxY -= 9;
