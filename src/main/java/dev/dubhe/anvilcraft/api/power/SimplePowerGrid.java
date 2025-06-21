@@ -198,12 +198,6 @@ public class SimplePowerGrid {
 
     public boolean collideFast(AABB aabb) {
         for (PowerComponentInfo it : this.powerComponentInfoList) {
-//            if (new AABB(
-//                it.pos().offset(-it.range(), -it.range(), -it.range()).getCenter(),
-//                it.pos().offset(it.range(), it.range(), it.range()).getCenter()
-//            ).intersects(aabb)) {
-//                return true;
-//            }
             if (new AABB(it.pos()).inflate(it.range()).intersects(aabb)) return true;
         }
         return false;
