@@ -183,9 +183,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
 
     protected void hurtEntities(Level level) {
         if (level.getGameTime() % 10 != 0) return;
-        Collection<Entity> entities = level.getEntities(
-            EntityTypeTest.forClass(Entity.class),
-            AabbUtil.create(this.getBlockPos(), this.getBlockPos().below(this.tubeWalls.size())),
+        Collection<Entity> entities = level.getEntitiesOfClass(
+            Entity.class,
+            AabbUtil.create(this.getBlockPos().below(this.tubeWalls.size()), this.getBlockPos()),
             entity -> !entity.fireImmune()
         );
         for (Entity entity : entities) {
@@ -322,16 +322,17 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
          * {@link TriState#FALSE false} 说明 {@link TubeWallLayer#second() 第二对} 是可加热方块
          */
         public TriState isMagnet(Level level) {
-            if (level.getBlockState(this.first.getFirst()).is(ModBlockTags.MAGNET)
+            if (level.getBlockState(this.second.getFirst()).is(ModBlockTags.MAGNET)
+                && level.getBlockState(this.second.getSecond()).is(ModBlockTags.MAGNET)
+                && level.getBlockState(this.first.getFirst()).is(ModBlockTags.HEATABLE_BLOCKS)
+                && level.getBlockState(this.first.getSecond()).is(ModBlockTags.HEATABLE_BLOCKS)
+            ) {
+                return TriState.TRUE;
+            } else if (
+                level.getBlockState(this.first.getFirst()).is(ModBlockTags.MAGNET)
                 && level.getBlockState(this.first.getSecond()).is(ModBlockTags.MAGNET)
                 && level.getBlockState(this.second.getFirst()).is(ModBlockTags.HEATABLE_BLOCKS)
                 && level.getBlockState(this.second.getSecond()).is(ModBlockTags.HEATABLE_BLOCKS)
-            ) {
-                return TriState.TRUE;
-            } else if (level.getBlockState(this.second.getFirst()).is(ModBlockTags.MAGNET)
-                       && level.getBlockState(this.second.getSecond()).is(ModBlockTags.MAGNET)
-                       && level.getBlockState(this.first.getFirst()).is(ModBlockTags.HEATABLE_BLOCKS)
-                       && level.getBlockState(this.first.getSecond()).is(ModBlockTags.HEATABLE_BLOCKS)
             ) {
                 return TriState.FALSE;
             }

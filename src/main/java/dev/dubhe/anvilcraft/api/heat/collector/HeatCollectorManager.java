@@ -59,17 +59,9 @@ public class HeatCollectorManager {
         ));
         registerEntry(HeatSourceEntry.simple(4, Blocks.LAVA_CAULDRON, ModBlocks.OBSIDIAN_CAULDRON.get()));
 
-        registerEntry(HeatSourceEntry.predicateAlways(
-            2,
-            state -> state.is(ModBlockTags.STORAGE_BLOCKS_URANIUM),
-            ModBlocks.URANIUM_BLOCK.get()
-        ));
+        registerEntry(HeatSourceEntry.predicateAlways(2, state -> state.is(ModBlockTags.STORAGE_BLOCKS_URANIUM)));
         registerEntry(HeatSourceEntry.forever(4, ModBlocks.EMBER_METAL_BLOCK.get()));
-        registerEntry(HeatSourceEntry.predicateAlways(
-            8,
-            state -> state.is(ModBlockTags.STORAGE_BLOCKS_PLUTONIUM),
-            ModBlocks.PLUTONIUM_BLOCK.get()
-        ));
+        registerEntry(HeatSourceEntry.predicateAlways(8, state -> state.is(ModBlockTags.STORAGE_BLOCKS_PLUTONIUM)));
     }
 
     private final Level level;

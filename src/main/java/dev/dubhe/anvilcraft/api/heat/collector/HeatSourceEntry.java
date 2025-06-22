@@ -32,10 +32,9 @@ public abstract class HeatSourceEntry {
 
     public static HeatSourceEntry predicateAlways(
         int charge,
-        java.util.function.Predicate<BlockState> predicate,
-        Block transformToAlways
+        java.util.function.Predicate<BlockState> predicate
     ) {
-        return new Predicate(charge, predicate, state -> transformToAlways.defaultBlockState());
+        return new Predicate(charge, predicate, Function.identity());
     }
 
     public static HeatSourceEntry simple(int charge, Block input, Block output) {
