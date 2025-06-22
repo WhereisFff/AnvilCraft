@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeData;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import org.jetbrains.annotations.NotNull;
@@ -35,10 +34,10 @@ public class DamageAnvil implements IRecipeOutcome<DamageAnvil> {
             return StreamCodec.of(Type::encode, Type::decode);
         }
 
-        public static void encode(@NotNull FriendlyByteBuf buf, @NotNull DamageAnvil hasItem) {
+        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull DamageAnvil damageAnvil) {
         }
 
-        public static @NotNull DamageAnvil decode(@NotNull FriendlyByteBuf buf) {
+        public static @NotNull DamageAnvil decode(@NotNull RegistryFriendlyByteBuf buf) {
             return new DamageAnvil();
         }
     }

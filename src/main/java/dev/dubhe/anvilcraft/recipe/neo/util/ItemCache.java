@@ -220,8 +220,8 @@ public class ItemCache {
         return input;
     }
 
-    public ICacheOutput getOutput(ItemStack stackPredicate, Vec3 pos) {
-        return this.getOutput(stackPredicate, pos, new Vec3(0.05, 0.05, 0.05));
+    public ICacheOutput getOutput(ItemStack stack, Vec3 pos) {
+        return this.getOutput(stack, pos, new Vec3(0.05, 0.05, 0.05));
     }
 
     public ICacheOutput getOutput(ItemStack stack, Vec3 pos, Vec3 range) {

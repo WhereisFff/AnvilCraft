@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.builder.predicate.item.HasItemBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.builder.predicate.item.HasItemIngredientBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.DamageAnvil;
+import dev.dubhe.anvilcraft.recipe.neo.outcome.SpawnItem;
 import lombok.EqualsAndHashCode;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -97,6 +99,18 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     public InWorldRecipeBuilder out(@NotNull IRecipeOutcome<?> outcome) {
         this.outcomes.add(outcome);
         return this;
+    }
+
+    public InWorldRecipeBuilder spawnItem(ItemStack stack) {
+        return this.spawnItem(stack, -1.0, -1.0, -1.0);
+    }
+
+    public InWorldRecipeBuilder spawnItem(ItemStack stack, double offsetX, double offsetY, double offsetZ) {
+        return this.spawnItem(stack, new Vec3(offsetX, offsetY, offsetZ));
+    }
+
+    public InWorldRecipeBuilder spawnItem(ItemStack stack, Vec3 offset) {
+        return this.out(new SpawnItem(stack, offset));
     }
 
     public InWorldRecipeBuilder damageAnvil() {
