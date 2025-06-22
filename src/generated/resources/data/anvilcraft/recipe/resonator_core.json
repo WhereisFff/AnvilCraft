@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "minecraft:amethyst_shard"
+    },
+    "E": {
+      "item": "minecraft:echo_shard"
+    },
+    "M": {
+      "item": "anvilcraft:multiphase_matter"
+    }
+  },
+  "pattern": [
+    "AEA",
+    "EME",
+    "AEA"
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:resonator_core"
+  }
+}

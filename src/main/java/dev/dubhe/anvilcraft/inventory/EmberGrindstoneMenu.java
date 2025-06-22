@@ -1,8 +1,10 @@
 package dev.dubhe.anvilcraft.inventory;
 
 import com.google.common.collect.Collections2;
+import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.util.EnchantmentUtil;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import lombok.Getter;
 import net.minecraft.core.component.DataComponentType;
@@ -24,15 +26,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 @ParametersAreNonnullByDefault
@@ -45,8 +46,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
     @Getter
     private int selectedIndex = -1;
     @Getter
-    private final List<EnchantmentInstance> enchantments = new CopyOnWriteArrayList<>();
-    private DataComponentType<ItemEnchantments> componentType;
+    private final List<Pair<EnchantmentInstance, DataComponentType<ItemEnchantments>>> enchantments = new CopyOnWriteArrayList<>();
 
     public EmberGrindstoneMenu(MenuType<EmberGrindstoneMenu> type, int containerId, Inventory playerInventory) {
         this(type, containerId, playerInventory, ContainerLevelAccess.NULL);
@@ -102,6 +102,11 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
                 return false;
             }
 
+            @Override
+            public boolean mayPickup(Player player) {
+                return player.experienceLevel >= getCost();
+            }
+
             public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
                 if (!hasSelectedEnchantment()) return;
                 if (!player.level().isClientSide) player.giveExperienceLevels(-getCost());
@@ -109,10 +114,11 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
                 player.playSound(SoundEvents.GRINDSTONE_USE);
 
                 ItemStack toolItem = tool.getItem(0);
+                Pair<EnchantmentInstance, DataComponentType<ItemEnchantments>> enchantmentPair = getSelectedEnchantmentPair().orElseThrow();
                 ItemEnchantments.Mutable enchantmentsCopy = new ItemEnchantments.Mutable(
-                    toolItem.getOrDefault(componentType, ItemEnchantments.EMPTY));
-                enchantmentsCopy.removeIf(holder -> holder.equals(enchantments.get(selectedIndex).enchantment));
-                toolItem.set(componentType, enchantmentsCopy.toImmutable());
+                    toolItem.getOrDefault(enchantmentPair.getSecond(), ItemEnchantments.EMPTY));
+                enchantmentsCopy.removeIf(holder -> holder.equals(enchantmentPair.getFirst().enchantment));
+                toolItem.set(enchantmentPair.getSecond(), enchantmentsCopy.toImmutable());
                 toolItem.set(
                     DataComponents.REPAIR_COST,
                     AnvilMenu.calculateIncreasedRepairCost(toolItem.getOrDefault(DataComponents.REPAIR_COST, 0)));
@@ -125,6 +131,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
 
                 selectedIndex = -1;
 
+                resultBook.setItem(0, ItemStack.EMPTY);
             }
         });
         int i;
@@ -144,7 +151,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
             && !this.getSlot(0).getItem().isEmpty()
             && !this.getSlot(1).getItem().isEmpty()
         ) {
-            return EnchantedBookItem.createForEnchantment(Objects.requireNonNull(this.getSelectedEnchantment()));
+            return EnchantedBookItem.createForEnchantment(this.getSelectedEnchantment().orElseThrow());
         } else {
             return ItemStack.EMPTY;
         }
@@ -152,19 +159,22 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
 
     private void refreshEnchantments() {
         ItemStack input = this.getSlot(0).getItem();
-        this.componentType = EnchantmentHelper.getComponentType(input);
         this.enchantments.clear();
         this.enchantments.addAll(Collections2.transform(
-            input.getOrDefault(componentType, ItemEnchantments.EMPTY).entrySet(),
-            entry -> new EnchantmentInstance(entry.getKey(), entry.getIntValue())));
-        this.enchantments.removeIf(
-            inst -> inst.enchantment.is(EnchantmentTags.CURSE));
+            input.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).entrySet(),
+            entry -> new Pair<>(EnchantmentUtil.toInstance(entry), DataComponents.ENCHANTMENTS)));
+        this.enchantments.addAll(Collections2.transform(
+            input.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY).entrySet(),
+            entry -> new Pair<>(EnchantmentUtil.toInstance(entry), DataComponents.STORED_ENCHANTMENTS)));
+        this.enchantments.removeIf(pair -> pair.getFirst().enchantment.is(EnchantmentTags.CURSE));
+        this.enchantments.sort(Comparator.comparing(Pair::getFirst, EnchantmentUtil::compareEnchantmentInstance));
     }
 
     public int getCost() {
         ItemStack input = this.getSlot(0).getItem();
-        EnchantmentInstance enchantment = this.getSelectedEnchantment();
-        if (enchantment == null) return 0;
+        Optional<EnchantmentInstance> enchantmentOp = this.getSelectedEnchantment();
+        if (enchantmentOp.isEmpty()) return 0;
+        EnchantmentInstance enchantment = enchantmentOp.get();
         int repairCost = input.getOrDefault(DataComponents.REPAIR_COST, 0);
         int anvilCost = enchantment.enchantment.value().getAnvilCost();
         return Math.clamp(
@@ -190,8 +200,12 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
         return selected != -1 && selected < this.enchantments.size();
     }
 
-    private @Nullable EnchantmentInstance getSelectedEnchantment() {
+    private Optional<Pair<EnchantmentInstance, DataComponentType<ItemEnchantments>>> getSelectedEnchantmentPair() {
         return ListUtil.safelyGet(this.enchantments, this.getSelectedIndex());
+    }
+
+    private Optional<EnchantmentInstance> getSelectedEnchantment() {
+        return this.getSelectedEnchantmentPair().map(Pair::getFirst);
     }
 
     @Override

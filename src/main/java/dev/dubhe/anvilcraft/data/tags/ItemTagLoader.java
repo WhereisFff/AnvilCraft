@@ -102,6 +102,12 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.DEAD_BUBBLE_CORAL_FAN))
             .add(findResourceKey(Items.DEAD_FIRE_CORAL_FAN))
             .add(findResourceKey(Items.DEAD_HORN_CORAL_FAN));
+        provider.addTag(ModItemTags.DEAD_CORAL_BLOCKS)
+            .add(findResourceKey(Items.DEAD_BRAIN_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_BUBBLE_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_FIRE_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_HORN_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_TUBE_CORAL_BLOCK));
         provider.addTag(ModItemTags.SEEDS_PACK_CONTENT)
             .addOptionalTag(ModItemTags.SEEDS)
             .addOptionalTag(ModItemTags.BERRIES)
@@ -162,7 +168,11 @@ public class ItemTagLoader {
             .add(ModItems.CHARGED_NEUTRONIUM_INGOT.getKey());
         provider.addTag(ModItemTags.TEMPLATES)
             .addTag(ItemTags.TRIM_TEMPLATES)
+            .addTag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
             .add(findResourceKey(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
+        provider.addTag(ModItemTags.UNCHARGED_NEUTRONIUM_INGOTS)
+            .add(ModItems.NEUTRONIUM_INGOT.getKey())
+            .add(ModItems.STABLE_NEUTRONIUM_INGOT.getKey());
     }
 
     private static ResourceKey<Item> findResourceKey(Item item) {

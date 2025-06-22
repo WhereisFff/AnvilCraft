@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
+import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -37,6 +38,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
+@Getter
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class MobTransformRecipe implements Recipe<MobTransformInput> {
@@ -61,8 +63,8 @@ public class MobTransformRecipe implements Recipe<MobTransformInput> {
     public static final StreamCodec<RegistryFriendlyByteBuf, MobTransformRecipe> STREAM_CODEC = StreamCodec.of(
         (buf, recipe) -> buf.writeNbt(intoTag(recipe)), friendlyByteBuf -> fromTag(friendlyByteBuf.readNbt()));
 
-    private final EntityType<?> input;
-    private final List<TransformResult> results;
+    public final EntityType<?> input;
+    public final List<TransformResult> results;
     private final List<NumericTagValuePredicate> predicates;
     private final List<TagModification> tagModifications;
     private final List<TransformOptions> options;

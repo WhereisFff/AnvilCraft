@@ -150,6 +150,7 @@ public class ChuteBlock extends BetterBaseEntityBlock implements HammerRotateBeh
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction dir = context.getClickedFace().getOpposite();
+        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) dir = dir.getOpposite();
         Direction facing = dir.getAxis() == Direction.Axis.Y ? Direction.DOWN : dir;
         BlockState result = getState(context.getLevel(), context.getClickedPos(), facing);
         Player player = context.getPlayer();
@@ -225,12 +226,8 @@ public class ChuteBlock extends BetterBaseEntityBlock implements HammerRotateBeh
     }
 
     @Override
-    public VoxelShape getShape(
-        BlockState blockState,
-        BlockGetter blockGetter,
-        BlockPos blockPos,
-        CollisionContext collisionContext) {
-        return switch (blockState.getValue(FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext collisionContext) {
+        return switch (state.getValue(FACING)) {
             case NORTH -> AABB_N;
             case SOUTH -> AABB_S;
             case WEST -> AABB_W;

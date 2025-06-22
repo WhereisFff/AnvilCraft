@@ -22,19 +22,24 @@ public class AnvilHurtVillagerEventListener {
     public static void onAnvilHurtEntity(@NotNull AnvilHurtEntityEvent event) {
         if (event.getHurtedEntity() instanceof Villager villager) {
             RandomSource random = event.getLevel().random;
-            double change = random.nextDouble();
-            if (change <= 0.2) {
-                villager.setVillagerData(villager.getVillagerData().setProfession(VillagerProfession.NITWIT));
-                return;
-            }
-            VillagerData villagerData = villager.getVillagerData();
-            if (villagerData.getProfession() == VillagerProfession.NITWIT) {
-                villager.setVillagerData(villagerData.setProfession(VillagerProfession.NITWIT));
-            } else villager.setVillagerData(villagerData.setProfession(VillagerProfession.NONE));
+            VillagerData villageData = villager.getVillagerData();
+
             villager.releasePoi(MemoryModuleType.HOME);
             villager.releasePoi(MemoryModuleType.JOB_SITE);
             villager.releasePoi(MemoryModuleType.POTENTIAL_JOB_SITE);
             villager.releasePoi(MemoryModuleType.MEETING_POINT);
+
+            if (villageData.getProfession() ==  VillagerProfession.NITWIT) {
+                return;
+            }
+
+            if (random.nextDouble() <= 0.2) {
+                villageData = villageData.setProfession(VillagerProfession.NITWIT);
+            } else {
+                villageData = villageData.setProfession(VillagerProfession.NONE).setLevel(1);
+                villager.setVillagerXp(0);
+            }
+            villager.setVillagerData(villageData);
         }
     }
 }

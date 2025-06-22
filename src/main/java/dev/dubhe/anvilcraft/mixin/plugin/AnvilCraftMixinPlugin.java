@@ -1,18 +1,29 @@
 package dev.dubhe.anvilcraft.mixin.plugin;
 
+import net.neoforged.fml.loading.LoadingModList;
 import org.jetbrains.annotations.NotNull;
+import org.objectweb.asm.Opcodes;
+import org.objectweb.asm.tree.AbstractInsnNode;
 import org.objectweb.asm.tree.ClassNode;
+import org.objectweb.asm.tree.LdcInsnNode;
+import org.objectweb.asm.tree.LineNumberNode;
+import org.objectweb.asm.tree.MethodInsnNode;
 import org.objectweb.asm.tree.MethodNode;
+import org.objectweb.asm.tree.VarInsnNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Set;
 
 public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     private static boolean hasZetaPiston = false;
     private static boolean hasCreate = false;
     private static boolean hasReiScreen = false;
+    public static boolean hasAE2 = false;
+    private static boolean hasCerbonBetterBeacons = false;
 
     private boolean isLoaded(String clazz) {
         return AnvilCraftMixinPlugin.class.getClassLoader().getResource(clazz) != null;
@@ -23,6 +34,8 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
         hasZetaPiston = this.isLoaded("org/violetmoon/zeta/piston/ZetaPistonStructureResolver.class");
         hasReiScreen = this.isLoaded("me/shedaniel/rei/impl/client/gui/screen/DefaultDisplayViewingScreen.class");
         hasCreate = this.isLoaded("com/simibubi/create/Create.class");
+        hasAE2 = LoadingModList.get().getMods().stream().anyMatch(it -> it.getModId().equals("ae2"));
+        hasCerbonBetterBeacons = this.isLoaded("com/cerbon/better_beacons/BetterBeacons.class");
     }
 
     @Override
@@ -37,6 +50,10 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
         if (mixinClassName.contains("Create")) {
             return hasCreate;
         }
+        if (mixinClassName.contains("BatchCrafterBlockMixin") || mixinClassName.contains("BatchCrafterBlockEntityMixin")) {
+            return hasAE2;
+        }
+        if (mixinClassName.contains("Cerbon")) return hasCerbonBetterBeacons;
         return true;
     }
 
@@ -55,11 +72,5 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public void postApply(@NotNull String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
-        if (!targetClassName.contains("dev.dubhe.anvilcraft.integration.emi.DoubleBlockIcon")) return;
-        for (MethodNode methodNode : targetClass.methods) {
-            if (methodNode.name.equals("method_25394")) {
-                methodNode.name = "render";
-            }
-        }
     }
 }

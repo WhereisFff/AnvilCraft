@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import com.mojang.datafixers.util.Unit;
-import dev.dubhe.anvilcraft.api.item.IMultipleToOneSmithingRecipeResult;
+import dev.dubhe.anvilcraft.api.item.IMultipleResult;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
@@ -18,7 +18,7 @@ import java.util.Objects;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class MultiphaseMatterHoeItem extends HoeItem implements IMultipleToOneSmithingRecipeResult {
+public class MultiphaseMatterHoeItem extends HoeItem implements IMultipleResult {
     public static final Multiphase DEFAULT_MULTIPHASE = Multiphase.make(
         Component.translatable("item.anvilcraft.multiphase_matter_hoe")
     );

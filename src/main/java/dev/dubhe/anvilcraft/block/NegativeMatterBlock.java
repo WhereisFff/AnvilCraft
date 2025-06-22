@@ -1,14 +1,10 @@
 package dev.dubhe.anvilcraft.block;
 
+import dev.dubhe.anvilcraft.api.block.INegativeMatterBlock;
 import net.minecraft.world.level.block.Block;
 
-public class NegativeMatterBlock extends Block implements INegativeShapeBlock<NegativeMatterBlock> {
+public class NegativeMatterBlock extends Block implements INegativeMatterBlock {
     public NegativeMatterBlock(Properties properties) {
         super(properties);
-    }
-
-    @Override
-    public Class<NegativeMatterBlock> getBlockType() {
-        return NegativeMatterBlock.class;
     }
 }

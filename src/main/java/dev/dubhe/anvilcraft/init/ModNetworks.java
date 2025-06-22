@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
 import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
+import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
@@ -27,6 +28,7 @@ import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
+import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
 import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
@@ -184,6 +186,16 @@ public class ModNetworks {
             SyncEmberGrindstonePacket.TYPE,
             SyncEmberGrindstonePacket.STREAM_CODEC,
             SyncEmberGrindstonePacket.HANDLER
+        );
+        registrar.playToServer(
+            DragonRodDevourPacket.TYPE,
+            DragonRodDevourPacket.STREAM_CODEC,
+            DragonRodDevourPacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchResonateModePacket.TYPE,
+            SwitchResonateModePacket.STREAM_CODEC,
+            SwitchResonateModePacket.HANDLER
         );
     }
 }
