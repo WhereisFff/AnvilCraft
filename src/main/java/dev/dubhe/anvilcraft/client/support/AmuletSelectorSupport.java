@@ -111,7 +111,8 @@ public class AmuletSelectorSupport {
 
     private static void setCurrentSelectedIndex(int selection) {
         if (!hasHoveringItem() || contents == null) return;
-        selection = Math.clamp(selection, 0, maxSelection - 1);
+        if (maxSelection <= 0) return;
+        selection = Math.clamp(selection, 0, Math.max(0, maxSelection - 1));
         if (contents.getSelection() == selection) return;
         BoxContents.Mutable mutable = contents.mutable();
         mutable.select(selection);
