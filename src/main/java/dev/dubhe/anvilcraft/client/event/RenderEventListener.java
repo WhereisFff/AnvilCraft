@@ -3,24 +3,31 @@ package dev.dubhe.anvilcraft.client.event;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
+import dev.dubhe.anvilcraft.api.tooltip.TooltipRenderHelper;
 import dev.dubhe.anvilcraft.client.ModInspectionClient;
 import dev.dubhe.anvilcraft.client.PowerGridClient;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
+import dev.dubhe.anvilcraft.util.AabbUtil;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -50,6 +57,7 @@ public class RenderEventListener {
         if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_BLOCK_ENTITIES) return;
         if (Minecraft.getInstance().options.hideGui) return;
         Entity entity = event.getCamera().getEntity();
+        PoseStack pose = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource =
             event.getLevelRenderer().renderBuffers.bufferSource();
 
@@ -57,30 +65,67 @@ public class RenderEventListener {
         double camX = vec3.x();
         double camY = vec3.y();
         double camZ = vec3.z();
-        PowerGridClient.renderTransmitterLine(event.getPoseStack(), bufferSource, vec3);
+        PowerGridClient.renderTransmitterLine(pose, bufferSource, vec3);
+
+        if (!(entity instanceof LivingEntity livingEntity)) return;
+        ItemStack mainHandItem = livingEntity.getItemInHand(InteractionHand.MAIN_HAND);
+        ItemStack offHandItem = livingEntity.getItemInHand(InteractionHand.OFF_HAND);
+        ItemStack handItem = mainHandItem.isEmpty() ? offHandItem : mainHandItem;
         VertexConsumer vertexConsumer3 = bufferSource.getBuffer(RenderType.lines());
-        if (entity instanceof LivingEntity livingEntity) {
-            ItemStack mainHandItem = livingEntity.getItemInHand(InteractionHand.MAIN_HAND);
-            ItemStack offHandItem = livingEntity.getItemInHand(InteractionHand.OFF_HAND);
-            ItemStack handItem = mainHandItem.isEmpty() ? offHandItem : mainHandItem;
-            if (!handItem.isEmpty()) {
-                HudTooltipManager.INSTANCE.renderHandItemLevelTooltip(
-                    handItem, event.getPoseStack(), vertexConsumer3, camX, camY, camZ);
-            }
+        if (!handItem.isEmpty()) {
+            HudTooltipManager.INSTANCE.renderHandItemLevelTooltip(handItem, pose, vertexConsumer3, camX, camY, camZ);
         }
+
         if (!(entity instanceof Player player)) return;
         if (!AnvilHammerItem.isWearing(player)) return;
-        PowerGridClient.render(event.getPoseStack(), bufferSource, vec3);
+        PowerGridClient.render(pose, bufferSource, vec3);
         HitResult hit = Minecraft.getInstance().hitResult;
-        if (hit == null || hit.getType() != HitResult.Type.BLOCK) {
-            return;
-        }
-        if (hit.getType() == HitResult.Type.BLOCK) {
-            BlockPos blockPos = ((BlockHitResult) hit).getBlockPos();
-            if (Minecraft.getInstance().level == null) return;
-            BlockEntity e = Minecraft.getInstance().level.getBlockEntity(blockPos);
-            if (e == null) return;
-            HudTooltipManager.INSTANCE.renderAffectRange(e, event.getPoseStack(), vertexConsumer3, camX, camY, camZ);
+        if (!(hit instanceof BlockHitResult hitResult)) return;
+        renderDragonRodOutline(pose, hitResult, vertexConsumer3, camX, camY, camZ, handItem);
+        if (!AnvilHammerItem.isWearing(player)) return;
+        renderAffectRange(pose, hitResult, vertexConsumer3, camX, camY, camZ);
+    }
+
+    private static void renderAffectRange(
+        PoseStack pose, BlockHitResult hit, VertexConsumer vertexConsumer3,
+        double camX, double camY, double camZ
+    ) {
+        BlockPos blockPos = hit.getBlockPos();
+        if (Minecraft.getInstance().level == null) return;
+        BlockEntity e = Minecraft.getInstance().level.getBlockEntity(blockPos);
+        if (e == null) return;
+        HudTooltipManager.INSTANCE.renderAffectRange(e, pose, vertexConsumer3, camX, camY, camZ);
+    }
+
+    private static void renderDragonRodOutline(
+        PoseStack pose, BlockHitResult hitResult, VertexConsumer consumer, double camX, double camY, double camZ, ItemStack handItem
+    ) {
+        if (handItem.has(ModComponents.DEVOUR_RANGE)) {
+            int range = handItem.getOrDefault(ModComponents.DEVOUR_RANGE, -1);
+            if (range == -1) return;
+            int half = (range - 1) / 2;
+
+            if (hitResult.miss) return;
+
+            BlockPos pos = hitResult.getBlockPos();
+            VoxelShape willDevourShape;
+            switch (hitResult.getDirection()) {
+                case DOWN, UP -> {
+                    willDevourShape = Shapes.create(0, 0, 0, range, 1, range);
+                    pos = pos.relative(Direction.NORTH, half).relative(Direction.WEST, half);
+                }
+                case NORTH, SOUTH -> {
+                    willDevourShape = Shapes.create(0, 0, 0, range, range, 1);
+                    pos = pos.relative(Direction.WEST, half).relative(Direction.DOWN, half);
+                }
+                case WEST, EAST -> {
+                    willDevourShape = Shapes.create(0, 0, 0, 1, range, range);
+                    pos = pos.relative(Direction.NORTH, half).relative(Direction.DOWN, half);
+                }
+                default -> willDevourShape = Shapes.block();
+            }
+
+            TooltipRenderHelper.renderOutline(pose, consumer, camX, camY, camZ, pos, willDevourShape, 0xFFFFFFFE);
         }
     }
 }

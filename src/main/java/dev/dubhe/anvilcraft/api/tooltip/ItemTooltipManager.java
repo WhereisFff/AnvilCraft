@@ -1,14 +1,19 @@
 package dev.dubhe.anvilcraft.api.tooltip;
 
 import com.google.common.collect.Maps;
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -16,6 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 public class ItemTooltipManager {
 
@@ -159,8 +165,19 @@ public class ItemTooltipManager {
         if (stack.has(ModComponents.MULTIPHASE)) {
             propertyTooltip("multiphase", tooltip, ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
         }
-        if (stack.has(ModComponents.MERCILESS)) {
-            propertyTooltip("merciless", tooltip);
+        if (stack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
+            if (!Screen.hasShiftDown()) {
+                propertyTooltip("merciless", tooltip, Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
+            } else {
+                propertyTooltip("merciless.shifting", tooltip, ComponentUtils.formatList(
+                    List.of(
+                        Component.translatable("enchantment.minecraft.unbreaking"),
+                        Component.translatable("enchantment.minecraft.mending"),
+                        Component.translatable("enchantment.minecraft.loyalty"),
+                        Component.translatable("enchantment.minecraft.riptide"),
+                        Component.translatable("tooltip.anvilcraft.property.merciless.curse")
+                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+            }
         }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));
@@ -187,7 +204,12 @@ public class ItemTooltipManager {
     private static void propertyTooltip(String propertyName, List<Component> tooltip) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
+            if (tooltip.get(j).toString().contains("enchantment")
+                && ListUtil.safelyGet(tooltip, j + 1)
+                    .map(Objects::toString)
+                    .filter(key -> key.contains("enchantment"))
+                    .isEmpty()
+            ) {
                 i = j;
                 break;
             }
@@ -201,7 +223,12 @@ public class ItemTooltipManager {
     private static void propertyTooltip(String propertyName, List<Component> tooltip, Object... args) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment") && !tooltip.get(j + 1).toString().contains("enchantment")) {
+            if (tooltip.get(j).toString().contains("enchantment")
+                && ListUtil.safelyGet(tooltip, j + 1)
+                    .map(Objects::toString)
+                    .filter(key -> !key.contains("enchantment"))
+                    .isPresent()
+            ) {
                 i = j;
                 break;
             }

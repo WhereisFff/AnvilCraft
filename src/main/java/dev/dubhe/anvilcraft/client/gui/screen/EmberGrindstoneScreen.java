@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
+import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
@@ -87,7 +88,9 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                 int x = this.leftPos + 65 + 18 * (i % 3);
                 int y = this.topPos + 23 + 18 * (i / 3);
 
-                EnchantmentInstance enchantment = ListUtil.safelyGet(this.menu.getEnchantments(), i + scrollOver);
+                EnchantmentInstance enchantment = ListUtil.safelyGet(this.menu.getEnchantments(), i + scrollOver)
+                    .map(Pair::getFirst)
+                    .orElse(null);
                 if (enchantment == null) continue;
                 ItemStack willRender = EnchantedBookItem.createForEnchantment(enchantment);
                 boolean selected = false;

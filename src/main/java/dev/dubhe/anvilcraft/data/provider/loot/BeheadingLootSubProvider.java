@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.provider.loot;
 
-import com.mojang.datafixers.util.Unit;
+import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModEnchantments;
 import dev.dubhe.anvilcraft.init.ModLootTables;
@@ -99,7 +99,7 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
                     new DummyHolder(ModEnchantments.BEHEADING_KEY)))
                 .when(LootItemKilledByPlayerCondition.killedByPlayer())
                 .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
-                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE)
+                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Merciless.DEFAULT)
                 )))
             )
         );
@@ -122,7 +122,7 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
                     new DummyHolder(ModEnchantments.BEHEADING_KEY)))
                 .when(LootItemKilledByPlayerCondition.killedByPlayer())
                 .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
-                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Unit.INSTANCE)
+                    DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Merciless.DEFAULT)
                 )))
             )
         );

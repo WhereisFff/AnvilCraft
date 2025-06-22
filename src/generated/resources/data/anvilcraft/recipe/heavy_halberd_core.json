@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "H": {
+      "item": "anvilcraft:heavy_iron_block"
+    },
+    "M": {
+      "item": "anvilcraft:multiphase_matter"
+    }
+  },
+  "pattern": [
+    "HHH",
+    "HMH",
+    "HHH"
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:heavy_halberd_core"
+  }
+}

@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
@@ -38,17 +39,23 @@ public class CorruptedBeaconBlock extends BeaconBlock implements IHammerRemovabl
 
     public CorruptedBeaconBlock(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(LIT, false));
+        BlockState defaultState = this.defaultBlockState();
+        if (defaultState.equals(this.stateDefinition.any())) {
+            this.registerDefaultState(this.stateDefinition.any().setValue(LIT, false));
+        } else {
+            this.registerDefaultState(defaultState.setValue(LIT, false));
+        }
     }
 
     @Override
     @Nullable
     public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
-        return this.defaultBlockState().setValue(LIT, false);
+        return Objects.requireNonNull(super.getStateForPlacement(context)).setValue(LIT, false);
     }
 
     @Override
     protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
         builder.add(LIT);
     }
 

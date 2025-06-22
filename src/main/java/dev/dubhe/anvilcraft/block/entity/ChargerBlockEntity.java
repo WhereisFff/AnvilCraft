@@ -19,6 +19,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -78,15 +79,13 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     private boolean containsValidItem(ItemStack stack) {
-        ChargerChargingRecipe.Input input =
-            new ChargerChargingRecipe.Input(stack);
+        SingleRecipeInput input = new SingleRecipeInput(stack);
         if (level != null) {
             Optional<RecipeHolder<ChargerChargingRecipe>> x = level.getRecipeManager()
                 .getRecipeFor(ModRecipeTypes.CHARGER_CHARGING_TYPE.get(), input, level);
             if (x.isPresent()) {
                 if (x.get().value().power == 0) return false;
                 return isCharger == x.get().value().power < 0;
-                // (isCharger && isRecipePowerCharging) || (isDisCharger && RecipePowerDischarging)
             }
         }
         return false;
@@ -94,8 +93,7 @@ public class ChargerBlockEntity extends BlockEntity
 
     @Nullable
     private ChargerChargingRecipe getItemRecipe(ItemStack stack) {
-        ChargerChargingRecipe.Input input =
-            new ChargerChargingRecipe.Input(stack);
+        SingleRecipeInput input = new SingleRecipeInput(stack);
         if (level != null) {
             Optional<RecipeHolder<ChargerChargingRecipe>> x = level.getRecipeManager()
                 .getRecipeFor(ModRecipeTypes.CHARGER_CHARGING_TYPE.get(), input, level);
@@ -124,8 +122,7 @@ public class ChargerBlockEntity extends BlockEntity
         if (isCharger) {
             itemHandler.setStackInSlot(1, stack);
         } else {
-            ItemStack transformed = recipe.getResult().getDefaultInstance();
-            transformed.setCount(1);
+            ItemStack transformed = recipe.getResult().copy();
             itemHandler.setStackInSlot(1, transformed);
         }
         timeLeft = recipe.time + 1; //since there is a "timeLeft--" after this, here +1 to negate
@@ -142,8 +139,7 @@ public class ChargerBlockEntity extends BlockEntity
         if (isCharger) {
             ChargerChargingRecipe recipe = getItemRecipe(stack);
             if (checkRecipeItemNotValid(recipe, stack)) return;
-            ItemStack transformed = recipe.getResult().getDefaultInstance();
-            transformed.setCount(1);
+            ItemStack transformed = recipe.getResult().copy();
             itemHandler.setStackInSlot(2, transformed);
         } else {
             itemHandler.setStackInSlot(2, stack);
@@ -181,7 +177,6 @@ public class ChargerBlockEntity extends BlockEntity
     @Override
     public int getInputPower() {
         return isCharger ? -powerValue : 0;
-        //return locked && isCharger && !powered ? 32 : 0;
     }
 
     @Override
@@ -192,7 +187,6 @@ public class ChargerBlockEntity extends BlockEntity
     @Override
     public int getOutputPower() {
         return !isCharger ? powerValue : 0;
-        //return locked && !isCharger && !powered ? 24 : 0;
     }
 
     @Override

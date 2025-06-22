@@ -238,7 +238,7 @@ public class AmuletUtil {
         if (raffleProbability > random.nextIntBetweenInclusive(0, 100)) {
             Type type = getType(player, source);
             if (type != null) {
-                InventoryUtil.addToInventory(player.getInventory(), type.getEntry().asStack());
+                player.getInventory().placeItemBackInInventory(type.getEntry().asStack());
             }
 
             AmuletUtil.setRaffleProbability(player, source, value -> 20);

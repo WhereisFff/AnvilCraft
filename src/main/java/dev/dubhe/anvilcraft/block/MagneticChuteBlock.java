@@ -90,13 +90,8 @@ public class MagneticChuteBlock extends BetterBaseEntityBlock implements HammerR
     }
 
     @Override
-    public VoxelShape getShape(
-        BlockState blockState,
-        BlockGetter blockGetter,
-        BlockPos blockPos,
-        CollisionContext collisionContext
-    ) {
-        return switch (blockState.getValue(FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext collisionContext) {
+        return switch (state.getValue(FACING)) {
             case NORTH -> SHAPE_N;
             case SOUTH -> SHAPE_S;
             case WEST -> SHAPE_W;
@@ -157,23 +152,19 @@ public class MagneticChuteBlock extends BetterBaseEntityBlock implements HammerR
         BlockPos pos = context.getClickedPos();
         Player player = context.getPlayer();
         Direction facing = context.getNearestLookingDirection();
-        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) {
-            facing = facing.getOpposite();
+        if (player != null && player.isShiftKeyDown()) facing = facing.getOpposite();
+        BlockState neighborState = level.getBlockState(pos.relative(facing));
+        boolean cannotPlace = facing == Direction.UP
+            && (neighborState.is(ModBlocks.SIMPLE_CHUTE) || neighborState.is(ModBlocks.CHUTE)
+            && neighborState.getValue(FACING_HOPPER) == Direction.DOWN);
+        if (cannotPlace) {
+            if (player != null)
+                player.displayClientMessage(Component.translatable("message.anvilcraft.chute.cannot_place"), true);
+            return null;
         }
         BlockState result = this.defaultBlockState()
             .setValue(FACING, facing)
             .setValue(ENABLED, !context.getLevel().hasNeighborSignal(context.getClickedPos()));
-        if (facing == Direction.UP) {
-            BlockState neighborState = level.getBlockState(pos.relative(facing));
-            if ((neighborState.is(ModBlocks.SIMPLE_CHUTE)
-                || neighborState.is(ModBlocks.CHUTE))
-                && neighborState.getValue(FACING_HOPPER) == Direction.DOWN) {
-                if (player != null) {
-                    player.displayClientMessage(Component.translatable("message.anvilcraft.chute.cannot_place"), true);
-                }
-                return null;
-            }
-        }
         return result;
     }
 
