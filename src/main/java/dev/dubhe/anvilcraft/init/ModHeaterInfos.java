@@ -30,7 +30,7 @@ public class ModHeaterInfos {
         HeaterInfo.blockEntity(
             (level, pos) -> level.getBlockEntity(pos, ModBlockEntities.MINERAL_FOUNTAIN.get())
                 .filter(mineralFountain -> mineralFountain.getAroundBlock().is(Blocks.LAVA)),
-            mineralFountain -> Set.of(mineralFountain.getBlockPos()),
+            mineralFountain -> Set.of(mineralFountain.getBlockPos().above()),
             HeatTierLine.always(HeatTier.REDHOT, 20))
     );
     @SuppressWarnings("OptionalOfNullableMisuse")
