@@ -4,7 +4,9 @@ import dev.dubhe.anvilcraft.api.heat.HeaterInfo;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.api.heat.HeatTierLine;
+import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.entity.BaseLaserBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.HeaterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MineralFountainBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PlasmaJetsBlockEntity;
@@ -25,6 +27,13 @@ public class ModHeaterInfos {
             .addPoint(80, HeatTier.GLOWING, 4)
             .addPoint(HeatTier.INCANDESCENT, 4)
             .build())
+    );
+    public static final HeaterInfo<HeaterBlockEntity> HEATER = HeatRecorder.registerProducerInfo(
+        HeaterInfo.blockEntity(
+            (level, pos) -> level.getBlockEntity(pos, ModBlockEntities.HEATER.get())
+                .filter(heater -> !heater.getBlockState().getValue(HeaterBlock.OVERLOAD)),
+            heater -> Set.of(heater.getBlockPos().above()),
+            HeatTierLine.always(HeatTier.HEATED, 20))
     );
     public static final HeaterInfo<MineralFountainBlockEntity> LAVA_MINERAL_FOUNTAIN = HeatRecorder.registerProducerInfo(
         HeaterInfo.blockEntity(
