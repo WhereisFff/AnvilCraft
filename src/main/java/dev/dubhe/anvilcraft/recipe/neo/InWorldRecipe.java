@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 @Getter
-@SuppressWarnings("ClassCanBeRecord")
 public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized {
     @Unmodifiable
     private final ItemStack icon;

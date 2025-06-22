@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.component.DataComponentPredicate;
@@ -18,28 +19,28 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 import java.util.Optional;
 
-public record ItemIngredientPredicate(
+public record ItemPredicate(
     Optional<HolderSet<Item>> items,
-    int count,
+    MinMaxBounds.Ints count,
     DataComponentPredicate components,
     Map<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates
 ) implements IItemStackPredicate {
-    public static final Codec<ItemIngredientPredicate> CODEC = RecordCodecBuilder.create(
+    public static final Codec<ItemPredicate> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             RegistryCodecs
                 .homogeneousList(Registries.ITEM)
                 .optionalFieldOf("items")
-                .forGetter(ItemIngredientPredicate::items),
-            Codec.INT
-                .fieldOf("count")
-                .forGetter(ItemIngredientPredicate::count),
+                .forGetter(ItemPredicate::items),
+            MinMaxBounds.Ints.CODEC
+                .optionalFieldOf("count", MinMaxBounds.Ints.ANY)
+                .forGetter(ItemPredicate::count),
             DataComponentPredicate.CODEC
                 .optionalFieldOf("components", DataComponentPredicate.EMPTY)
-                .forGetter(ItemIngredientPredicate::components),
+                .forGetter(ItemPredicate::components),
             ItemSubPredicate.CODEC
                 .optionalFieldOf("predicates", Map.of())
-                .forGetter(ItemIngredientPredicate::subPredicates)
-        ).apply(instance, ItemIngredientPredicate::new));
+                .forGetter(ItemPredicate::subPredicates)
+        ).apply(instance, ItemPredicate::new));
 
     @Override
     public boolean test(ItemStack itemStack) {
@@ -48,19 +49,19 @@ public record ItemIngredientPredicate(
 
     @Override
     public boolean testCount(int count) {
-        return this.count < count;
+        return this.count.matches(count);
     }
 
     @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
         private Optional<HolderSet<Item>> items = Optional.empty();
-        private int count;
+        private MinMaxBounds.Ints count;
         private DataComponentPredicate components;
         private final ImmutableMap.Builder<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates;
 
         private Builder() {
-            this.count = 1;
+            this.count = MinMaxBounds.Ints.ANY;
             this.components = DataComponentPredicate.EMPTY;
             this.subPredicates = ImmutableMap.builder();
         }
@@ -80,7 +81,7 @@ public record ItemIngredientPredicate(
             return this;
         }
 
-        public Builder withCount(int count) {
+        public Builder withCount(MinMaxBounds.Ints count) {
             this.count = count;
             return this;
         }
@@ -95,8 +96,8 @@ public record ItemIngredientPredicate(
             return this;
         }
 
-        public ItemIngredientPredicate build() {
-            return new ItemIngredientPredicate(this.items, this.count, this.components, this.subPredicates.build());
+        public ItemPredicate build() {
+            return new ItemPredicate(this.items, this.count, this.components, this.subPredicates.build());
         }
     }
 }

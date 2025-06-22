@@ -12,7 +12,6 @@ import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.AmuletUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -38,7 +37,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.BooleanSupplier;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class PlayerEventListener {

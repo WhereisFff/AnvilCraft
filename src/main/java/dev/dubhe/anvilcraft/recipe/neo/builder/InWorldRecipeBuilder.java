@@ -153,9 +153,9 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
         this.criteria.forEach(builder::addCriterion);
         InWorldRecipe recipe = this.build();
         recipeOutput.accept(
-            ResourceLocation.fromNamespaceAndPath(id.getNamespace(), (this.group != null ? this.group + "/" : "") + id.getPath()),
+            ResourceLocation.fromNamespaceAndPath(id.getNamespace(), this.group + "/" + id.getPath()),
             recipe,
-            builder.build(id.withPrefix("recipes/" + (this.group != null ? this.group + "/" : "")))
+            builder.build(id.withPrefix("recipes/" + this.group + "/"))
         );
     }
 }

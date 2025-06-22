@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.recipe.neo.builder.predicate.item;
 
 import dev.dubhe.anvilcraft.recipe.neo.builder.InWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.item.HasItem;
-import net.minecraft.advancements.critereon.ItemPredicate;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.component.DataComponentPredicate;

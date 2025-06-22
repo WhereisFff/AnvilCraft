@@ -1,6 +1,10 @@
 package dev.dubhe.anvilcraft.recipe.neo;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.recipe.neo.builder.InWorldRecipeBuilder;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
@@ -13,6 +17,13 @@ public class InWorldRecipeManager {
     public final Map<IRecipeTrigger, Set<InWorldRecipe>> recipes = Collections.synchronizedMap(new HashMap<>());
 
     public InWorldRecipeManager() {
+        InWorldRecipe recipe = InWorldRecipeBuilder
+            .incompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON.get())
+            .hasItemIngredient(ItemTags.LOGS)
+            .hasItemIngredient(Items.BIRCH_LOG)
+            .damageAnvil()
+            .build();
+        this.register(recipe);
     }
 
     public void register(@NotNull InWorldRecipe recipe) {
