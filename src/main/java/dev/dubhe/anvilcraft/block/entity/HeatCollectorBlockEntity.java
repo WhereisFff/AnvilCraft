@@ -107,10 +107,10 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     }
 
     /**
-     * 向集热器添加热量
+     * 向集热器添加热能
      *
-     * @param num 添加至收集器的热量
-     * @return 溢出的热量(即未被添加至该收集器的热量)
+     * @param num 添加至收集器的热能
+     * @return 溢出的热能(即未被添加至该收集器的热能)
      */
     public int inputtingHeat(int num) {
         int overflow = num - (MAX_OUTPUT_POWER - this.inputtingPower);
