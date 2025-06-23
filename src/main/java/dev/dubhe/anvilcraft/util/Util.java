@@ -153,14 +153,6 @@ public class Util {
         return true;
     }
 
-    public static <T> boolean allMatch(Collection<T> collection, Predicate<T> matcher) {
-        for (T t : collection) {
-            if (!matcher.test(t)) return false;
-        }
-
-        return true;
-    }
-
     public static <T> boolean anyMatch(Collection<T> collection, Predicate<T> matcher) {
         for (T t : collection) {
             if (matcher.test(t)) return true;
