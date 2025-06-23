@@ -2,7 +2,7 @@
   "name": "原版改进",
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:dispenser",
-  "sortnum": "1004",
+  "sortnum": 1004,
   "pages": [
     {
       "type": "patchouli:text",

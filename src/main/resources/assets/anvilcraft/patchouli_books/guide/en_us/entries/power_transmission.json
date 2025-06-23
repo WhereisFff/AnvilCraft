@@ -2,7 +2,7 @@
   "name": "Power Transmission",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:transmission_pole",
-  "sortnum": "2001",
+  "sortnum": 2001,
   "pages": [
     {
       "type": "patchouli:text",

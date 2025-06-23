@@ -2,7 +2,7 @@
   "name": "More Processing",
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:spawner",
-  "sortnum": "1003",
+  "sortnum": 1003,
   "pages": [
     {
       "type": "patchouli:text",

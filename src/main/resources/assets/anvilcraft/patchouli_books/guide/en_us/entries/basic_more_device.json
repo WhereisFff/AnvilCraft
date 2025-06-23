@@ -2,7 +2,7 @@
   "name": "More Practical Device",
   "category": "anvilcraft:basic_gameplay",
   "icon": "anvilcraft:block_placer",
-  "sortnum": "1005",
+  "sortnum": 1005,
   "pages": [
     {
       "type": "patchouli:text",

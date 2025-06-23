@@ -2,7 +2,7 @@
   "name": "电能产生",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:charge_collector",
-  "sortnum": "2002",
+  "sortnum": 2002,
   "pages": [
     {
       "type": "patchouli:text",

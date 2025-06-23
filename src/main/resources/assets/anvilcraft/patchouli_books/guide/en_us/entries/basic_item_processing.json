@@ -2,7 +2,7 @@
   "name": "Basic Item Processing",
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:iron_ingot",
-  "sortnum": "1002",
+  "sortnum": 1002,
   "pages": [
     {
       "type": "patchouli:text",

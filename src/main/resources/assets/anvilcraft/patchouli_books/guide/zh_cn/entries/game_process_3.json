@@ -2,7 +2,7 @@
   "name": "流程3-开始铁砧加工",
   "category": "anvilcraft:process",
   "icon": "minecraft:anvil",
-  "sortnum": "0003",
+  "sortnum": 3,
   "pages": [
     {
       "type": "patchouli:text",

@@ -2,7 +2,7 @@
   "name": "腐化信标",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:corrupted_beacon",
-  "sortnum": 24,
+  "sortnum": 3003,
   "pages": [
     {
       "type": "patchouli:text",

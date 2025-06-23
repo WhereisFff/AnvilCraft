@@ -2,7 +2,7 @@
   "name": "Process 1-Opening",
   "category": "anvilcraft:process",
   "icon": "anvilcraft:geode",
-  "sortnum": "0001",
+  "sortnum": 1,
   "pages": [
     {
       "type": "patchouli:text",

@@ -2,7 +2,7 @@
   "name": "Power Usage",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:heater",
-  "sortnum": "2003",
+  "sortnum": 2003,
   "pages": [
     {
       "type": "patchouli:text",

@@ -3,7 +3,7 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:magnetoelectric_core",
   "priority": "true",
-  "sortnum": "2000",
+  "sortnum": 2000,
   "pages": [
     {
       "type": "patchouli:text",

@@ -1,0 +1,9 @@
+{
+  "name": "一阶材料",
+  "category": "anvilcraft:smithing_system",
+  "icon": "anvilcraft:royal_steel_ingot",
+  "sortnum": 3002,
+  "pages": [
+    "本页面展示了所有可用的$(thing)一阶材料$()。"
+  ]
+}

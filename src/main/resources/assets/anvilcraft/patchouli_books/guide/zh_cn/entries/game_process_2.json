@@ -2,7 +2,7 @@
   "name": "流程2-获得磁铁",
   "category": "anvilcraft:process",
   "icon": "anvilcraft:magnet_ingot",
-  "sortnum": "0002",
+  "sortnum": 2,
   "pages": [
     {
       "type": "patchouli:text",

@@ -1,0 +1,9 @@
+{
+  "name": "Tier 1 Materials",
+  "category": "anvilcraft:smithing_system",
+  "icon": "anvilcraft:royal_steel_ingot",
+  "sortnum": 3002,
+  "pages": [
+    "This page shows all available $(thing)tier 1 materials$()."
+  ]
+}

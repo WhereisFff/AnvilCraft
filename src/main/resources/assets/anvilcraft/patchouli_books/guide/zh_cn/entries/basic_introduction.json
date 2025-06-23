@@ -3,7 +3,7 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:anvil",
   "priority": "true",
-  "sortnum": "1000",
+  "sortnum": 1000,
   "pages": [
     {
       "type": "patchouli:text",

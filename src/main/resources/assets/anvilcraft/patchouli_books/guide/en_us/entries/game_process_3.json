@@ -2,7 +2,7 @@
   "name": "Process 3-Anvil Processing",
   "category": "anvilcraft:process",
   "icon": "minecraft:anvil",
-  "sortnum": "0003",
+  "sortnum": 3,
   "pages": [
     "The $(item)Anvil$() can be processed by landing on the block to be processed. When the anvil falls on the block such as $(item)Stamping Platform$(), $(item)Cauldron$(), $(item)Iron Trapdoor$(), $(item)Scaffolding$(), etc., it will process items in or on it. Use the $(item)Magnet Block$() to help you with semi-automatic: The magnet block automatically picks up an anvil within five blocks below, and the magnet block is activated by redstone and loses its magnetism, causing the anvil to fall. If you don't have a magnet block, you can also manually remove the anvil and place it, or design a redstone machine.",
     {
