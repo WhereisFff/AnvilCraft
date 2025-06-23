@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.api.power;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.client.PowerGridClient;
+import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
 import dev.dubhe.anvilcraft.client.renderer.Line;
 import dev.dubhe.anvilcraft.util.ColorUtil;
 import dev.dubhe.anvilcraft.util.ShapeUtil;
@@ -291,7 +291,7 @@ public class SimplePowerGrid {
      * 寻找电网
      */
     public static Optional<SimplePowerGrid> findPowerGrid(BlockPos pos) {
-        for (SimplePowerGrid value : PowerGridClient.getGridMap().values()) {
+        for (SimplePowerGrid value : PowerGridSupport.getGridMap().values()) {
             for (BlockPos block : value.blocks) {
                 if (block.equals(pos)) {
                     return Optional.of(value);

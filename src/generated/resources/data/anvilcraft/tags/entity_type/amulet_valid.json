@@ -1,0 +1,48 @@
+{
+  "values": [
+    {
+      "id": "#anvilcraft:amulet_valid/emerald",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/topaz",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/ruby",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/sapphire",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/anvil",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/comrade",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/feather",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/cat",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/dog",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/silence",
+      "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/cogwheel",
+      "required": false
+    }
+  ]
+}

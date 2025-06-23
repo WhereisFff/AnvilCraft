@@ -1,0 +1,58 @@
+package dev.dubhe.anvilcraft.block.entity.heatable;
+
+import dev.dubhe.anvilcraft.api.heat.HeaterManager;
+import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
+import lombok.Getter;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.network.PacketDistributor;
+
+public abstract class HeatableBlockEntity extends BlockEntity {
+    protected static final int MAX_DURATION = 1200 * 20;
+    @Getter
+    protected int duration = 0;
+
+    protected HeatableBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        super(type, pos, blockState);
+    }
+
+    /**
+     * 增加1秒
+     */
+    public void addDuration(int second) {
+        this.addDurationInTick(second * 20);
+    }
+
+    public void addDurationInTick(int tick) {
+        this.setDuration(Math.clamp(this.duration + tick, 0, MAX_DURATION));
+    }
+
+    public void setDuration(int duration) {
+        this.duration = duration;
+        if (this.level == null || this.level.getGameTime() % 10 != 0) return;
+        PacketDistributor.sendToAllPlayers(new HeatableSyncPacket(this.getBlockPos(), duration));
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.saveAdditional(tag, registries);
+        tag.putInt("duration", this.duration);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+        super.loadAdditional(tag, registries);
+        this.duration = tag.getInt("duration");
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        HeaterManager.addHeatableBlock(this.getBlockPos(), this.getLevel());
+    }
+}

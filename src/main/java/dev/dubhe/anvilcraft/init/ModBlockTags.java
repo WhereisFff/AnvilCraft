@@ -32,6 +32,7 @@ public class ModBlockTags {
     public static final TagKey<Block> VOID_DECAY_PRODUCTS = bind("void_decay_products");
     public static final TagKey<Block> CRAFTING_MATRIX_ELEMENT = bind("crafting_matrix_element");
     public static final TagKey<Block> SPECTRAL_CAN_THROUGH = bind("spectral_can_through");
+    public static final TagKey<Block> HEATABLE_BLOCKS = bind("heatable_blocks");
 
     // common tags
     public static final TagKey<Block> ORES_TUNGSTEN = bindC("ores/tungsten");
@@ -63,6 +64,7 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_LEAD = bindC("storage_blocks/lead");
     public static final TagKey<Block> STORAGE_BLOCKS_SILVER = bindC("storage_blocks/silver");
     public static final TagKey<Block> STORAGE_BLOCKS_URANIUM = bindC("storage_blocks/uranium");
+    public static final TagKey<Block> STORAGE_BLOCKS_PLUTONIUM = bindC("storage_blocks/plutonium");
     public static final TagKey<Block> STORAGE_BLOCKS_BRONZE = bindC("storage_blocks/bronze");
     public static final TagKey<Block> STORAGE_BLOCKS_BRASS = bindC("storage_blocks/brass");
     public static final TagKey<Block> STORAGE_BLOCKS_MAGNET = bindC("storage_blocks/magnet");

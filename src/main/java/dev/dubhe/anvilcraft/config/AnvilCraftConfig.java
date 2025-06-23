@@ -220,6 +220,10 @@ public class AnvilCraftConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(max = 24, min = 1)
     public int anvilCollisionCraftSpeed = 16;
 
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Press shift and right click to take out all totem stored in the holding amulet box")
+    public boolean amuletBoxTakeOutAllTotem = true;
+
     public enum GoggleMode implements ConfigData {
         ALWAYS_SHOW,
         WEARING_HAMMER,

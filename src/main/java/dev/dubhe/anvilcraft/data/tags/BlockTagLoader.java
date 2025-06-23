@@ -240,5 +240,8 @@ public class BlockTagLoader {
             .addTag(Tags.Blocks.GLASS_BLOCKS)
             .addTag(Tags.Blocks.GLASS_PANES)
             .addTag(BlockTags.LEAVES);
+
+        provider.addTag(ModBlockTags.HEATABLE_BLOCKS)
+            .add(findResourceKey(Blocks.NETHERITE_BLOCK));
     }
 }

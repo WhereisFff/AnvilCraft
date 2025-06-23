@@ -7,7 +7,7 @@ import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractItemProcessBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.input.ItemProcessInput;
 import dev.dubhe.anvilcraft.util.CodecUtil;
-import dev.dubhe.anvilcraft.util.Util;
+import dev.dubhe.anvilcraft.util.CollectionUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -39,7 +39,7 @@ public class StampingUniqueItemsRecipe extends StampingRecipe {
     public boolean matches(ItemProcessInput pInput, Level pLevel) {
         if (pInput.items().size() != Set.copyOf(pInput.items()).size()) return false;
         if (pInput.items().size() != this.ingredients.size()) return false;
-        if (!Util.allMatch(pInput.items(), itemStack -> itemStack.getCount() == 1)) return false;
+        if (!CollectionUtil.allMatch(pInput.items(), itemStack -> itemStack.getCount() == 1)) return false;
 
         for (int i = 0; i < pInput.size(); i++) {
             if (!this.ingredients.get(i).test(pInput.getItem(i))) return false;

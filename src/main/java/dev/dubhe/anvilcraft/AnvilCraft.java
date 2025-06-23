@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.init.ModAmuletTypes;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModCommands;
@@ -26,6 +27,7 @@ import dev.dubhe.anvilcraft.init.ModLootItemConditions;
 import dev.dubhe.anvilcraft.init.ModLootItemFunctions;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.ModNetworks;
+import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.init.ModVillagers;
 import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
@@ -86,6 +88,7 @@ public class AnvilCraft {
         ModVillagers.register(modEventBus);
         ModRecipeTypes.register(modEventBus);
         ModDataAttachments.register(modEventBus);
+        ModParticles.register(modEventBus);
         ModInspections.initialize();
 
         ModLootContextParamSets.registerAll();
@@ -94,6 +97,7 @@ public class AnvilCraft {
         ModLootItemFunctions.LOOT_FUNCTION_TYPES.register(modEventBus);
         ModLootItemConditions.LOOT_CONDITION_TYPES.register(modEventBus);
         TeslaFilter.init();
+        ModAmuletTypes.register(modEventBus);
         // datagen
         AnvilCraftDatagen.init();
 
