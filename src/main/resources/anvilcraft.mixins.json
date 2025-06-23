@@ -47,6 +47,7 @@
     "accessor.CropBlockAccessor",
     "accessor.GrowingPlantAccessor",
     "accessor.ShapedRecipePatternAccessor",
+    "accessor.StateHolderAccessor",
     "compat.BatchCrafterBlockEntityMixin",
     "compat.BatchCrafterBlockMixin",
     "compat.CerbonNewBeaconMenuMixin",
