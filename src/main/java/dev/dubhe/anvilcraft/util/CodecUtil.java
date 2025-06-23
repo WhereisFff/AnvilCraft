@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.util;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -178,5 +179,9 @@ public class CodecUtil {
 
     public static <B extends ByteBuf, T extends Enum<T>> StreamCodec<B, T> enumStreamCodec(Class<T> clazz) {
         return ByteBufCodecs.VAR_INT.<B>cast().map(index -> clazz.getEnumConstants()[index], Enum::ordinal);
+    }
+
+    public static <B, F, S> StreamCodec<B, Pair<F, S>> createPairStreamCodec(StreamCodec<? super B, F> first, StreamCodec<? super B, S> second) {
+        return StreamCodec.composite(first, Pair::getFirst, second, Pair::getSecond, Pair::new);
     }
 }

@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.init.ModAmuletTypes;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModCommands;
@@ -96,6 +97,7 @@ public class AnvilCraft {
         ModLootItemFunctions.LOOT_FUNCTION_TYPES.register(modEventBus);
         ModLootItemConditions.LOOT_CONDITION_TYPES.register(modEventBus);
         TeslaFilter.init();
+        ModAmuletTypes.register(modEventBus);
         // datagen
         AnvilCraftDatagen.init();
 
