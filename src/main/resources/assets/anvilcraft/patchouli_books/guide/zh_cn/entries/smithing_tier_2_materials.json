@@ -4,10 +4,7 @@
   "icon": "anvilcraft:frost_metal_ingot",
   "sortnum": 3004,
   "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "本页面展示了目前所有可用的二阶材料。"
-    },
+    "本页面展示了目前所有可用的二阶材料。",
     {
       "type": "patchouli:spotlight",
       "anchor": "frost_metal",
@@ -117,15 +114,15 @@
     },
     {
       "type": "patchouli:text",
-      "text": "（等待对撞章节完成）在对撞装置尾部放上$(l:smithing_tier_2_materials#frost_metal_block_and_nugget)一块浮霜金属块$(/l)，并成功执行一次对撞获得。"
+      "text": "（此处为对撞配方，等待对撞适配）在对撞装置尾部放上$(l:smithing_tier_2_materials#frost_metal_block_and_nugget)一块浮霜金属块$(/l)，并成功执行一次对撞获得。"
     },
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:multiphase_matter_block"
     },
     {
-      "type": "anvilcraft:spotlight_item_tag",
-      "tag": "#anvilcraft:multiple_to_one_smithing_templates",
+      "type": "patchouli:spotlight",
+      "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "多合一锻造模板",
       "link_recipe": true,
       "text": "将多个互不相同的锻造模板进行物品冲压加工获得，由模板数量决定获得的是几合一锻造模板。"
