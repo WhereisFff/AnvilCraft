@@ -3,11 +3,14 @@ package dev.dubhe.anvilcraft.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.dubhe.anvilcraft.block.HollowMagnetBlock;
+import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
+import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.util.IDiscardableItemEntity;
 import dev.dubhe.anvilcraft.util.MergeCooldownItemEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -20,6 +23,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -47,8 +51,10 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
 
+import static dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity.PoachingCollectorMap;
+
 @Mixin(ItemEntity.class)
-abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity {
+abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity, IDiscardableItemEntity {
     @Shadow
     public abstract ItemStack getItem();
 
@@ -340,5 +346,69 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     @Override
     public void setMergeCooldown(int cooldown) {
         anvilCraft$mergeCooldown = cooldown;
+    }
+
+    @Inject(
+        method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V",
+        at = @At("TAIL")
+    )
+    public void itemCollectorPoach0(CallbackInfo ci) {
+        this.anvilcraft$poach(ci);
+    }
+
+    @Inject(
+        method = "<init>(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;DDD)V",
+        at = @At("TAIL")
+    )
+    public void itemCollectorPoach1(CallbackInfo ci) {
+        this.anvilcraft$poach(ci);
+    }
+
+    @Inject(
+        method = "<init>(Lnet/minecraft/world/entity/item/ItemEntity;)V",
+        at = @At("TAIL")
+    )
+    public void itemCollectorPoach2(CallbackInfo ci) {
+        this.anvilcraft$poach(ci);
+    }
+
+    @Unique
+    public boolean anvilcraft$discarded = false;
+
+    @Unique
+    private void anvilcraft$poach(CallbackInfo ci) {
+        Level level = this.level();
+        if (level.isClientSide) return;
+        Map<ChunkPos, List<ItemCollectorBlockEntity>> map = PoachingCollectorMap.get(level);
+        if (map == null) return;
+        ChunkPos chunkPos = this.chunkPosition();
+        List<ItemCollectorBlockEntity> list = map.get(chunkPos);
+        if (list == null || list.isEmpty()) return;
+        ItemStack itemStack = this.getItem();
+        boolean flag = false;
+        for (ItemCollectorBlockEntity collector : list) {
+            if (collector.isGridWorking()
+                && !collector.getBlockState().getValue(ItemCollectorBlock.POWERED)
+                && collector.shape().contains(this.position())) {
+                int slotIndex = 0;
+                while (!itemStack.isEmpty() && slotIndex < 9) {
+                    itemStack = collector.getItemHandler().insertItem(slotIndex++, itemStack, false);
+                }
+                flag = true;
+                if (itemStack.isEmpty()) break;
+            }
+        }
+        if (!itemStack.isEmpty()) {
+            this.setItem(itemStack);
+        } else if (flag) {
+            this.remove(Entity.RemovalReason.DISCARDED);
+            this.discard();
+            anvilcraft$discarded = true;
+        }
+    }
+
+    @Override
+    public boolean anvilcraft$getDiscarded() {
+        return anvilcraft$discarded;
     }
 }
