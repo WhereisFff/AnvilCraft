@@ -2,7 +2,7 @@
   "name": "Vanilla Improve",
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:dispenser",
-  "sortnum": 4,
+  "sortnum": "1004",
   "pages": [
     {
       "type": "patchouli:text",

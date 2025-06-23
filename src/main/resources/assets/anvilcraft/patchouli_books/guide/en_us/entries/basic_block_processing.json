@@ -2,7 +2,7 @@
   "name": "Basic Block Processing",
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:stone",
-  "sortnum": 1,
+  "sortnum": "1001",
   "pages": [
     {
       "type": "patchouli:text",
@@ -21,11 +21,11 @@
           "C": "minecraft:cobblestone",
           "G": "minecraft:gravel"
         },
-        "pattern":  [
-          [ "   ", "D M", "P L" ],
-          [ "   ", "  A", "   " ],
-          [ "   ", "A  ", "   " ],
-          [ "   ", "G0C", "   " ]
+        "pattern": [
+          ["   ", "D M", "P L"],
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "G0C", "   "]
         ]
       },
       "enable_visualize": "false",
@@ -42,9 +42,9 @@
           "0": "anvilcraft:arrow"
         },
         "pattern": [
-          [ "   ", "  A", "   " ],
-          [ "   ", "A  ", "   " ],
-          [ "   ", "S0G", "   " ]
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "S0G", "   "]
         ]
       },
       "enable_visualize": "false",
@@ -66,10 +66,10 @@
           "0": "anvilcraft:arrow"
         },
         "pattern": [
-          [ "   ", "  A", "   " ],
-          [ "   ", "   ", "   " ],
-          [ "   ", "A M", "   " ],
-          [ "   ", "G0D", "   " ]
+          ["   ", "  A", "   "],
+          ["   ", "   ", "   "],
+          ["   ", "A M", "   "],
+          ["   ", "G0D", "   "]
         ]
       },
       "enable_visualize": "false",
