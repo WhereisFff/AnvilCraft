@@ -4,7 +4,7 @@
   "icon": "anvilcraft:frost_metal_ingot",
   "sortnum": 3004,
   "pages": [
-    "This page shows all available tier 2 materials.",
+    "This page shows all available $(thing)tier 2 materials$().",
     {
       "type": "patchouli:spotlight",
       "anchor": "frost_metal",
@@ -13,6 +13,7 @@
     },
     {
       "type": "anvilcraft:time_warp",
+      "title": "Frost Metal Template",
       "recipe": "anvilcraft:time_warp/frost_metal_ingot",
       "text": "Use time warp with 1 $(item)Titanium Ingot$(), 1 $(item)Silver Ingot$() and 1 $(item)Iron Ingot$() to craft it."
     },
@@ -68,6 +69,7 @@
     },
     {
       "type": "patchouli:spotlight",
+      "title": "Ember Metal Template",
       "item": "anvilcraft:ember_metal_upgrade_smithing_template",
       "text": "You can find this template in the Village's Weaponsmith. Trade with $(l:smithing_jewelcrafting_table)Jeweler$(/l) villager can also get this template."
     },
@@ -114,7 +116,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "（此处为对撞配方，等待对撞适配）在对撞装置尾部放上$(l:smithing_tier_2_materials#frost_metal_block_and_nugget)一块浮霜金属块$(/l)，并成功执行一次对撞获得。"
+      "text": "(This will be Anvil Collision recipe, until it has support)Put a $(l:smithing_tier_2_materials#frost_metal_block_and_nugget)Frost Metal Block$(/l) on the tail of Collision facility and do it once to craft the Multiphase Matter."
     },
     {
       "type": "patchouli:crafting",
@@ -123,9 +125,9 @@
     {
       "type": "patchouli:spotlight",
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
-      "title": "多合一锻造模板",
+      "title": "Multiple to One Smithing Template",
       "link_recipe": true,
-      "text": "将多个互不相同的锻造模板进行物品冲压加工获得，由模板数量决定获得的是几合一锻造模板。"
+      "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template."
     },
     {
       "type": "anvilcraft:multiple_to_one_smithing",
@@ -141,7 +143,7 @@
       "type": "anvilcraft:multiple_to_one_smithing",
       "anchor": "multiphase_matter_tools",
       "recipe": "anvilcraft:two_to_one_smithing/multiphase_matter_sword",
-      "text": "使用多相物质升级你的工具，它们将自带$(l:advanced_tool_properties#reforging)重铸$(/l)和$(l:advanced_tool_properties#multiphase)多相$(/l)属性。"
+      "text": "Use $(item)Multiphase Matter$() to upgrade your tools. They will include $(l:advanced_tool_properties#reforging)Fire Reforging$(/l) and $(l:advanced_tool_properties#multiphase)Multiphase$(/l) property."
     }
   ]
 }
