@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.api.tooltip;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.dubhe.anvilcraft.api.tooltip.impl.AffectRangeProviderImpl;
+import dev.dubhe.anvilcraft.api.tooltip.impl.HeatableBlockTooltipProvider;
 import dev.dubhe.anvilcraft.api.tooltip.impl.HeliostatsTooltip;
 import dev.dubhe.anvilcraft.api.tooltip.impl.HeliostatsTooltipProvider;
 import dev.dubhe.anvilcraft.api.tooltip.impl.InjectedBlockEntityTooltipProvider;
@@ -21,6 +22,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -52,6 +54,7 @@ public class HudTooltipManager {
         INSTANCE.registerHandHeldItemTooltip(ModItems.STRUCTURE_TOOL.get());
         INSTANCE.registerBlockTooltip(new InjectedBlockTooltipProvider());
         INSTANCE.registerBlockEntityTooltip(new InjectedBlockEntityTooltipProvider());
+        INSTANCE.registerBlockEntityTooltip(new HeatableBlockTooltipProvider());
     }
 
     private void registerAffectRange(AffectRangeProviderImpl affectRangeProvider) {
@@ -81,6 +84,8 @@ public class HudTooltipManager {
      */
     public void renderTooltip(
         GuiGraphics guiGraphics,
+        Level level,
+        BlockPos pos,
         BlockState state,
         float partialTick,
         int screenWidth,
@@ -90,14 +95,14 @@ public class HudTooltipManager {
         final int tooltipPosX = screenWidth / 2 + 10;
         final int tooltipPosY = screenHeight / 2 + 10;
         Font font = Minecraft.getInstance().font;
-        ITooltipProvider.BlockTooltipProvider currentProvider = determineBlockTooltipProvider(state);
+        ITooltipProvider.BlockTooltipProvider currentProvider = determineBlockTooltipProvider(level, pos, state);
         if (currentProvider == null) return;
-        List<Component> tooltip = currentProvider.tooltip(state);
+        List<Component> tooltip = currentProvider.tooltip(level, pos, state);
         if (tooltip == null || tooltip.isEmpty()) return;
         renderTooltipWithItemIcon(
             guiGraphics,
             font,
-            currentProvider.icon(state),
+            currentProvider.icon(level, pos, state),
             tooltip,
             tooltipPosX,
             tooltipPosY,
@@ -193,10 +198,10 @@ public class HudTooltipManager {
             .orElse(null);
     }
 
-    private ITooltipProvider.BlockTooltipProvider determineBlockTooltipProvider(BlockState state) {
+    private ITooltipProvider.BlockTooltipProvider determineBlockTooltipProvider(Level level, BlockPos pos, BlockState state) {
         if (state == null) return null;
         return blockProviders.stream()
-            .filter(it -> it.accepts(state))
+            .filter(it -> it.accepts(level, pos, state))
             .min(Comparator.comparingInt(ITooltipProvider::priority))
             .orElse(null);
     }

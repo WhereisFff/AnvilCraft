@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
+import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
 import dev.dubhe.anvilcraft.network.InspectionStateChangedPacket;
 import dev.dubhe.anvilcraft.network.ItemDetectorChangeRangePacket;
@@ -196,6 +197,11 @@ public class ModNetworks {
             SwitchResonateModePacket.TYPE,
             SwitchResonateModePacket.STREAM_CODEC,
             SwitchResonateModePacket.HANDLER
+        );
+        registrar.playToClient(
+            HeatableSyncPacket.TYPE,
+            HeatableSyncPacket.STREAM_CODEC,
+            HeatableSyncPacket.HANDLER
         );
     }
 }

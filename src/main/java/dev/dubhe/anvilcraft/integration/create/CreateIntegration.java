@@ -8,10 +8,10 @@ import com.tterrag.registrate.util.entry.ItemEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletType;
 import dev.dubhe.anvilcraft.api.integration.Integration;
-import dev.dubhe.anvilcraft.block.GlowingMetalBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
-import dev.dubhe.anvilcraft.block.IncandescentMetalBlock;
-import dev.dubhe.anvilcraft.block.RedhotMetalBlock;
+import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
+import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
+import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModDamageTypeTags;
 import dev.dubhe.anvilcraft.init.ModEntityTypeTags;
@@ -39,9 +39,9 @@ import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 @Integration("create")
 public class CreateIntegration {
     private static final BoilerHeater HEATER = CreateIntegration::heater;
-    private static final BoilerHeater REDHOT_METAL = new ConstantValueHeater(1);
-    private static final BoilerHeater GLOWING_METAL = new ConstantValueHeater(2);
-    private static final BoilerHeater INCANDESCENT_METAL = new ConstantValueHeater(3);
+    private static final BoilerHeater REDHOT = new ConstantValueHeater(1);
+    private static final BoilerHeater GLOWING = new ConstantValueHeater(2);
+    private static final BoilerHeater INCANDESCENT = new ConstantValueHeater(3);
 
     public void apply() {
         BoilerHeater.REGISTRY.registerProvider(new MyProvider());
@@ -64,14 +64,14 @@ public class CreateIntegration {
             if (block == ModBlocks.HEATER.get()) {
                 return HEATER;
             }
-            if (block instanceof IncandescentMetalBlock) {
-                return INCANDESCENT_METAL;
+            if (block instanceof IncandescentBlock) {
+                return INCANDESCENT;
             }
-            if (block instanceof GlowingMetalBlock) {
-                return GLOWING_METAL;
+            if (block instanceof GlowingBlock) {
+                return GLOWING;
             }
-            if (block instanceof RedhotMetalBlock) {
-                return REDHOT_METAL;
+            if (block instanceof RedhotBlock) {
+                return REDHOT;
             }
             return null;
         }

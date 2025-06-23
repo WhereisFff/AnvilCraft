@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.advancements.critereon.UsedTotemTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
@@ -43,7 +44,7 @@ public abstract class LivingEntityMixin extends Entity {
         boolean hitByPlayer,
         CallbackInfo ci,
         @Local LootParams lootParams) {
-        LivingEntity thiz = (LivingEntity) (Object) this;
+        LivingEntity thiz = Util.cast(this);
         LootTable beheadingLoot = ModLootTables.getBeheadingLoot(thiz);
         if (beheadingLoot == LootTable.EMPTY) return;
         beheadingLoot.getRandomItems(lootParams, thiz.getLootTableSeed(), thiz::spawnAtLocation);
