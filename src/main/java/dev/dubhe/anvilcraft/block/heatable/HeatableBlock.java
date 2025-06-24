@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.heatable;
 
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -12,7 +13,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-public abstract class HeatableBlock extends Block implements EntityBlock {
+public abstract class HeatableBlock extends Block implements IMoveableEntityBlock {
     protected HeatableBlock(Properties properties) {
         super(properties);
     }
