@@ -140,7 +140,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
     }
 
     protected void checkTubeWallIntegrity(Level level) {
-        boolean wallBroken = false;
+        boolean wallBroken = this.tubeWalls.isEmpty();
         for (TubeWallLayer layer : this.tubeWalls) {
             if (layer.isBroken(level)) {
                 wallBroken = true;
@@ -206,7 +206,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
             };
             if (posPair == null) continue;
             BlockPos pos = posPair.getFirst();
-            double uncharged = 512;
+            double uncharged = 256; // makes sense
             for (ChargeCollectorManager.Entry entry : ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos)) {
                 ChargeCollectorBlockEntity entity = entry.getBlockEntity();
                 if (ChargeCollectorManager.getInstance(level).canCollect(entity, pos)) {
@@ -217,7 +217,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 }
             }
             pos = posPair.getSecond();
-            uncharged = 512;
+            uncharged = 256; // makes sense
             for (ChargeCollectorManager.Entry entry : ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos)) {
                 ChargeCollectorBlockEntity entity = entry.getBlockEntity();
                 if (ChargeCollectorManager.getInstance(level).canCollect(entity, pos)) {
