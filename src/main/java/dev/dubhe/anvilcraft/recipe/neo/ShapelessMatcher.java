@@ -7,6 +7,7 @@ import java.util.List;
 
 public class ShapelessMatcher {
     public static boolean incompatible(@NotNull List<IRecipePredicate<?>> predicates, @NotNull InWorldRecipeContext ctx) {
+        if (predicates.isEmpty()) return true;
         for (IRecipePredicate<?> predicate : predicates) {
             if (!predicate.test(ctx)) continue;
             List<IRecipePredicate<?>> next = new ArrayList<>();

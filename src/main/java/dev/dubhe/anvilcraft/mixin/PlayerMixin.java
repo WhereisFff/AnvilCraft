@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
-public class PlayerMixin {
+abstract class PlayerMixin {
     //飘升机背包飞行时无挖掘惩罚
     @ModifyExpressionValue(method = "getDigSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;onGround()Z"))
     private boolean modifyOnGround(boolean original) {

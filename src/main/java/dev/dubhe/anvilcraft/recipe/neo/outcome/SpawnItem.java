@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.recipe.neo.outcome;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
@@ -20,10 +21,12 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
     protected static final InWorldRecipeData<ItemCache> ITEM_CACHE = InWorldRecipeData.of(AnvilCraft.of("item_cache"));
     private final ItemStack item;
     private final Vec3 offset;
+    private final double chance;
 
-    public SpawnItem(ItemStack item, Vec3 offset) {
+    public SpawnItem(ItemStack item, Vec3 offset, double chance) {
         this.item = item;
         this.offset = offset;
+        this.chance = chance;
     }
 
     @Override
@@ -48,7 +51,9 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
                 ItemStack.CODEC.fieldOf("item")
                     .forGetter(SpawnItem::getItem),
                 Vec3.CODEC.fieldOf("offset")
-                    .forGetter(SpawnItem::getOffset)
+                    .forGetter(SpawnItem::getOffset),
+                Codec.DOUBLE.fieldOf("chance")
+                    .forGetter(SpawnItem::getChance)
             ).apply(instance, SpawnItem::new)
         );
 
@@ -65,12 +70,17 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
         public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SpawnItem spawnItem) {
             ItemStack.STREAM_CODEC.encode(buf, spawnItem.item);
             buf.writeVec3(spawnItem.offset);
+            buf.writeDouble(spawnItem.chance);
         }
 
         public static @NotNull SpawnItem decode(@NotNull RegistryFriendlyByteBuf buf) {
             ItemStack stack = ItemStack.STREAM_CODEC.decode(buf);
             Vec3 vec3 = buf.readVec3();
-            return new SpawnItem(stack, vec3);
+            double chance = buf.readDouble();
+            return new SpawnItem(stack, vec3, chance);
         }
+    }
+
+    public static class Builder {
     }
 }

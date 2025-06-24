@@ -34,12 +34,12 @@ public class ItemCrushRecipe extends AbstractItemProcessRecipe {
 
     @Override
     public RecipeType<?> getType() {
-        return ModRecipeTypes.ITEM_CRUSH_TYPE.get();
+        return null;
     }
 
     @Override
     public RecipeSerializer<?> getSerializer() {
-        return ModRecipeTypes.ITEM_CRUSH_SERIALIZERS.get();
+        return null;
     }
 
     public static class Serializer implements RecipeSerializer<ItemCrushRecipe> {

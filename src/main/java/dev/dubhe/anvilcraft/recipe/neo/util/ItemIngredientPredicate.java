@@ -48,7 +48,7 @@ public record ItemIngredientPredicate(
 
     @Override
     public boolean testCount(int count) {
-        return this.count < count;
+        return this.count <= count;
     }
 
     @SuppressWarnings("UnusedReturnValue")

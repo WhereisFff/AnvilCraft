@@ -117,8 +117,9 @@ public class ItemCache {
         Set<ICacheElement> input = new HashSet<>();
         Set<ICacheElement> output = new HashSet<>();
         if (entity instanceof ItemEntity itemEntity) {
-            input.add(new ItemEntityCacheElement(itemCache, itemEntity));
-            output.add(new ItemEntityCacheElement(itemCache, itemEntity));
+            ItemEntityCacheElement element = new ItemEntityCacheElement(itemCache, itemEntity);
+            input.add(element);
+            output.add(element);
             return Map.entry(input, output);
         }
         double xRange = Math.abs(entity.getBoundingBox().maxX - entity.getBoundingBox().minX);
@@ -238,6 +239,11 @@ public class ItemCache {
             if (!output.is(stack)) continue;
             outputs.add(output);
         }
+        if (outputs.isEmpty()) {
+            ItemEntityCacheElement output = ItemEntityCacheElement.create(this, stack, pos);
+            this.outputs.add(output);
+            outputs.add(output);
+        }
         ICacheInputOutputImpl output = new ICacheInputOutputImpl(stack, this, pos, range1, outputs);
         this.outputCache.add(output);
         return output;
@@ -326,13 +332,16 @@ public class ItemCache {
 
     public abstract static class AbstractCacheElement implements ICacheElement {
         protected final ItemCache cache;
-        protected final ItemStack simulate;
+        protected final ItemStack type;
+        protected ItemStack simulate;
         protected final Deque<CacheOperation> growSimulateStack = new ArrayDeque<>();
         protected final Deque<CacheOperation> shrinkSimulateStack = new ArrayDeque<>();
 
-        protected AbstractCacheElement(ItemCache cache, ItemStack simulate) {
+        protected AbstractCacheElement(ItemCache cache, @NotNull ItemStack simulate) {
             this.cache = cache;
             this.simulate = simulate;
+            this.type = simulate.copy();
+            this.type.setCount(1);
         }
 
         @Override
@@ -354,7 +363,12 @@ public class ItemCache {
             int remainingCount = growCount - grownCount;
             if (remainingCount > 0) copy.setCount(remainingCount);
             else copy = ItemStack.EMPTY;
-            this.simulate.grow(grownCount);
+            if (!this.simulate.isEmpty()) {
+                this.simulate.grow(grownCount);
+            } else {
+                this.simulate = this.type.copy();
+                this.simulate.setCount(grownCount);
+            }
             this.growSimulateStack.push(new CacheOperation(grownCount));
             return copy;
         }
@@ -376,13 +390,13 @@ public class ItemCache {
         }
 
         public boolean is(@NotNull Predicate<ItemStack> stack) {
-            return stack.test(this.simulate);
+            return stack.test(this.type);
         }
 
         @Override
         public boolean is(ItemStack stack) {
             if (stack == null) return false;
-            return ItemStack.isSameItemSameComponents(stack, this.simulate);
+            return ItemStack.isSameItemSameComponents(stack, this.type);
         }
 
         @Override
@@ -394,6 +408,7 @@ public class ItemCache {
     @EqualsAndHashCode(callSuper = false)
     public static class ItemEntityCacheElement extends AbstractCacheElement implements ICacheElement {
         private final ItemEntity entity;
+        private boolean isInLevel;
         @Getter
         private final Vec3 pos;
 
@@ -401,6 +416,15 @@ public class ItemCache {
             super(cache, entity.getItem().copy());
             this.pos = entity.position().add(0.0, 0.125, 0.0);
             this.entity = entity;
+            this.isInLevel = true;
+        }
+
+        public static @NotNull ItemEntityCacheElement create(@NotNull ItemCache cache, ItemStack stack, @NotNull Vec3 pos) {
+            ItemEntity itemEntity = new ItemEntity(cache.level, pos.x, pos.y, pos.z, stack,0.0d,0.0d,0.0d);
+            ItemEntityCacheElement element = new ItemEntityCacheElement(cache, itemEntity);
+            element.isInLevel = false;
+            element.simulate.setCount(0);
+            return element;
         }
 
         @Override
@@ -408,6 +432,8 @@ public class ItemCache {
             this.growSimulateStack.clear();
             this.shrinkSimulateStack.clear();
             this.entity.setItem(this.simulate);
+            if (this.isInLevel) return;
+            this.cache.level.addFreshEntity(this.entity);
         }
 
         @Override

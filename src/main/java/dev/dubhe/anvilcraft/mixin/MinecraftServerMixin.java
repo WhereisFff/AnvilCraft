@@ -7,7 +7,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(MinecraftServer.class)
-public class MinecraftServerMixin implements InWorldRecipeManagerInjector {
+abstract class MinecraftServerMixin implements InWorldRecipeManagerInjector {
     @Unique
     private final InWorldRecipeManager anvilcraft$inWorldRecipeManager = new InWorldRecipeManager();
 

@@ -7,13 +7,18 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilHurtEntityEvent;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
+import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
+import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeManager;
+import dev.dubhe.anvilcraft.recipe.neo.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
+import dev.dubhe.anvilcraft.util.injection.IRecipeManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -60,6 +65,7 @@ public class AnvilEventListener {
      */
     @SubscribeEvent
     public static void onLand(@NotNull AnvilFallOnLandEvent event) {
+        onLandNeo(event);
         if (!behaviorRegistered) {
             IAnvilBehavior.register();
             behaviorRegistered = true;
@@ -89,6 +95,18 @@ public class AnvilEventListener {
                 return;
             }
         }
+    }
+
+    public static void onLandNeo(@NotNull AnvilFallOnLandEvent event) {
+        Level level = event.getLevel();
+        BlockPos pos = event.getPos();
+        FallingBlockEntity entity = event.getEntity();
+        InWorldRecipeManager manager = ((IRecipeManager) level.getRecipeManager()).anc$getInWorldRecipeManager();
+        InWorldRecipeContext context = new InWorldRecipeContext(level, pos.getCenter(), entity);
+        manager.trigger(ModRecipeTriggers.ON_ANVIL_FALL_ON.get(), context);
+        boolean damageAnvil = context.get(DamageAnvil.DAMAGE_ANVIL);
+        if (!event.isAnvilDamage()) event.setAnvilDamage(damageAnvil);
+        context.accept();
     }
 
     private static void handleBlockCrushRecipe(Level level, final BlockPos pos) {

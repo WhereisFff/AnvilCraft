@@ -15,6 +15,7 @@ import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -123,5 +124,35 @@ public class BlockStatePredicate implements Predicate<BlockState> {
             return Collections.unmodifiableMap(map1);
         }).toList();
         return new BlockStatePredicate(block, list);
+    }
+
+    public static class Builder {
+        private final Block block;
+        private final List<Map<Property<?>, Comparable<?>>> stateOr = new ArrayList<>();
+        private Map<Property<?>, Comparable<?>> stateAnd = new HashMap<>();
+
+        private Builder(Block block) {
+            this.block = block;
+        }
+
+        public static @NotNull Builder of(Block block) {
+            return new Builder(block);
+        }
+
+        public Builder or() {
+            this.stateOr.add(Collections.unmodifiableMap(stateAnd));
+            this.stateAnd = new HashMap<>();
+            return this;
+        }
+
+        public <T extends Comparable<T>> Builder with(Property<T> property, T value) {
+            this.stateAnd.put(property, value);
+            return this;
+        }
+
+        public BlockStatePredicate build() {
+            this.or();
+            return new BlockStatePredicate(block, stateOr);
+        }
     }
 }

@@ -93,12 +93,12 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public @NotNull RecipeSerializer<? extends InWorldRecipe> getSerializer() {
         return ModRecipeTypes.IN_WORLD_RECIPE_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public @NotNull RecipeType<? extends InWorldRecipe> getType() {
         return ModRecipeTypes.IN_WORLD_RECIPE.get();
     }
 

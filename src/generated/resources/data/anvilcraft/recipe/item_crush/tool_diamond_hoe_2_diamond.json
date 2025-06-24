@@ -1,21 +1,18 @@
 {
   "type": "anvilcraft:item_crush",
+  "chances": [
+    0.5
+  ],
   "ingredients": [
     {
-      "item": "minecraft:diamond_hoe"
+      "count": 1,
+      "items": "minecraft:diamond_hoe"
     }
   ],
   "results": [
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.5
-      },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:diamond"
-      }
+      "count": 1,
+      "id": "minecraft:diamond"
     }
   ]
 }

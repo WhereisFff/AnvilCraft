@@ -73,13 +73,18 @@ public class Range implements Iterable<BlockPos> {
     }
 
     public AABB toAABB() {
+        return this.toAABB(Vec3.ZERO);
+    }
+
+
+    public AABB toAABB(@NotNull Vec3 offset) {
         return new AABB(
-            this.start.x,
-            this.start.y,
-            this.start.z,
-            this.end.x,
-            this.end.y,
-            this.end.z
+            offset.x + this.start.x,
+            offset.y + this.start.y,
+            offset.z + this.start.z,
+            offset.x + this.end.x,
+            offset.y + this.end.y,
+            offset.z + this.end.z
         );
     }
 

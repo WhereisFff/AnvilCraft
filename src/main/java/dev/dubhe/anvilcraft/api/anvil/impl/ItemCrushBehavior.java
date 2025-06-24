@@ -17,11 +17,12 @@ public class ItemCrushBehavior implements IAnvilBehavior {
         float fallDistance,
         AnvilFallOnLandEvent event
     ) {
-        return AnvilUtil.itemProcess(
-            ModRecipeTypes.ITEM_CRUSH_TYPE.get(),
-            level,
-            hitBlockPos,
-            hitBlockPos.getCenter().add(0.0, -0.125, 0.0)
-        );
+//        return AnvilUtil.itemProcess(
+//            ModRecipeTypes.ITEM_CRUSH_TYPE.get(),
+//            level,
+//            hitBlockPos,
+//            hitBlockPos.getCenter().add(0.0, -0.125, 0.0)
+//        );
+        return false;
     }
 }

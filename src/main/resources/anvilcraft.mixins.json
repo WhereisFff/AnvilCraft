@@ -22,6 +22,7 @@
     "ExplosionMixin",
     "FlyingHitEntityMixin",
     "HopperBlockMixin",
+    "IdDispatchCodecMixin",
     "InventoryMixin",
     "ItemEntityMixin",
     "LivingEntityMixin",

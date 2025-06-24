@@ -110,7 +110,7 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     }
 
     public InWorldRecipeBuilder spawnItem(ItemStack stack, Vec3 offset) {
-        return this.out(new SpawnItem(stack, offset));
+        return this.out(new SpawnItem(stack, offset, 1.0));
     }
 
     public InWorldRecipeBuilder damageAnvil() {

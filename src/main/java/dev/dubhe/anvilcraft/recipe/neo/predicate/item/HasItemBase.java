@@ -31,7 +31,7 @@ public abstract class HasItemBase<T extends HasItemBase<T, P>, P extends IItemSt
 
     public ItemCache.ICacheInput getItem(@NotNull InWorldRecipeContext context) {
         final InWorldRecipeData<ItemCache.ICacheInput> cacheInput = InWorldRecipeData.of(
-            AnvilCraft.of("item_cache_input$%s".formatted(this.hashCode()))
+            AnvilCraft.of("item_cache_input/%s".formatted(this.hashCode()))
         );
         ItemCache.ICacheInput input = context.get(cacheInput);
         if (input == null) {
@@ -41,7 +41,7 @@ public abstract class HasItemBase<T extends HasItemBase<T, P>, P extends IItemSt
                 itemCache = new ItemCache(level);
                 context.put(ITEM_CACHE, itemCache);
             }
-            input = itemCache.getInput(this.item.testIgnoreCount(), this.offset, this.range);
+            input = itemCache.getInput(this.item.testIgnoreCount(), context.getPos().add(this.offset), this.range);
             context.put(cacheInput, input);
         }
         return input;

@@ -36,7 +36,8 @@ public class InWorldRecipeManager {
 
     public void trigger(IRecipeTrigger trigger, @NotNull InWorldRecipeContext ctx) {
         if (ctx.getLevel().isClientSide()) return;
-        recipes.getOrDefault(trigger, Collections.emptySet()).forEach(recipe -> {
+        Set<InWorldRecipe> recipeSet = recipes.getOrDefault(trigger, Collections.emptySet());
+        for (InWorldRecipe recipe : recipeSet) {
             boolean accept = false;
             for (int i = 0; i < AnvilCraft.config.anvilEfficiency; i++) {
                 if (!recipe.matches(ctx, ctx.getLevel())) {
@@ -46,6 +47,6 @@ public class InWorldRecipeManager {
                 accept = true;
                 recipe.assemble(ctx, ctx.getLevel().registryAccess());
             }
-        });
+        }
     }
 }
