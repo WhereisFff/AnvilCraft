@@ -1,5 +1,6 @@
 {
   "name": "Forging System",
   "description": "Stronger anvil, forging and enchantments.",
+  "sortnum": 3,
   "icon": "anvilcraft:royal_anvil"
 }
