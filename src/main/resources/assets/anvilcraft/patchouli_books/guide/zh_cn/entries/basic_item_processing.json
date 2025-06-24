@@ -4,14 +4,11 @@
   "icon": "minecraft:iron_ingot",
   "sortnum": 1002,
   "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "让$(item)铁砧$()落在特定方块上就可以加工该方块上或内部的物品，不同的特定方块有不同的处理，本条目的后续页面依次介绍。本模组增加了一种方块可以让直接被砸的物品不因碰撞箱挤压而乱飞：$(item)冲压平台$()。"
-    },
+    "让$(item)铁砧$()落在特定方块上就可以加工该方块顶部或内部的物品，不同的特定方块有不同的处理，本条目的后续页面依次介绍。本模组增加了一种方块可以让直接被砸的物品不因碰撞箱挤压而乱飞：$(item)冲压平台$()。",
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:stamping_platform",
-      "text": "铁压力板可以换成任意模组的铁板。"
+      "text": "铁压力板可以替换成任意模组的铁板。"
     },
     {
       "type": "patchouli:multiblock",

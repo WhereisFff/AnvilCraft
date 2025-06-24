@@ -4,10 +4,7 @@
   "icon": "minecraft:stone",
   "sortnum": 1001,
   "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "Let $(item)anvil$() fall on the block to process the block. A single block, multiple blocks, a block and a cauldron, a block and a stonecutter will all trigger different effects. The flowing pages of this entry will introduce relevant content in sequence. Before that, understanding how magnets help anvil machining will make it easier for you to get started."
-    },
+    "Let $(item)anvil$() fall on the block to process the block. A single block, multiple blocks, a block and a cauldron, a block and a stonecutter will all trigger different effects. The flowing pages of this entry will introduce relevant content in sequence. $(br)Before that, understanding how magnets help anvil machining will make it easier for you to get started.",
     {
       "type": "patchouli:multiblock",
       "name": "Magnets Control Anvils",
@@ -50,10 +47,7 @@
       "enable_visualize": "false",
       "text": "The list on the right gives more examples of where such transformation can occur, some of which can occur consecutively."
     },
-    {
-      "type": "patchouli:text",
-      "text": "Cobblestone → Gravel → Sand; Polished Granite → Granite → Red Sand;$(br)Polished Andesite → Andesite → Cinerite;$(br)Polished Diorite → Diorite → Quartz Sand;$(br)Stone Bricks → Cracked Stone Brick;$(br)Deepslate Bricks → Cracked Deepslate Bricks;$(br)Deepslate Tiles → Cracked Deepslate Tiles;$(br)Nether Bricks → Cracked Nether Bricks;$(br)Polished Blackstone Bricks → Cracked Polished Blackstone Bricks;$(br)Netherrack → Nether Dust;$(br)End Stone → End Dust;$(br)Soul Soil → Soul Sand;$(br)Deepslate → Deepslate Chips;$(br)Blackstone → Black Sand"
-    },
+    "$(item)Cobblestone$() → $(item)Gravel$() → $(item)Sand$();$(br)$(item)Polished Granite$() → $(item)Granite$() → $(item)Red Sand$();$(br)$(item)Polished Andesite$() → $(item)Andesite$() → $(item)Cinerite$();$(br)$(item)Polished Diorite$() → $(item)Diorite$() → $(item)Quartz Sand$();$(br)$(thing)Blocks with cracked variants$() → $(thing)Their cracked variants$();$(br)$(item)Netherrack$() → $(item)Nether Dust$();$(br)$(item)End Stone$() → $(item)End Dust$();$(br)$(item)Soul Soil$() → $(item)Soul Sand$();$(br)$(item)Deepslate$() → $(item)Deepslate Chips$();$(br)$(item)Blackstone$() → $(item)Black Sand$()",
     {
       "type": "patchouli:multiblock",
       "name": "Press",
@@ -75,10 +69,7 @@
       "enable_visualize": "false",
       "text": "The list on the right gives more examples of where such transformation can occur."
     },
-    {
-      "type": "patchouli:text",
-      "text": "Moss Block + Dirt → Grass Block;$(br)Any Leaves + Dirt → Podzol;$(br)Any Mushroom Block + Dirt → Mycelium;$(br)Nether Wart Block + Netherrack → Crimson Nylium;$(br)Warped Wart Block + Netherrack → Warped Nylium;$(br)Stone + Stone → Deepslate;$(br)Ice + Ice → Packed Ice;$(br)Packed Ice + Packed Ice → Blue Ice;$(br)Basalt + Basalt → Blackstone"
-    },
+    "$(item)Moss Block$() + $(item)Dirt$() → $(item)Grass Block$();$(br)$(thing)Any Leaves$() + $(item)Dirt$() → $(item)Podzol$();$(br)$(thing)Any Mushroom Block$() + $(item)Dirt$() → $(item)Mycelium$();$(br)$(item)Nether Wart Block$() + $(item)Netherrack$() → $(item)Crimson Nylium$();$(br)$(item)Warped Wart Block$() + $(item)Netherrack$() → $(item)Warped Nylium$();$(br)$(item)Stone$() + $(item)Stone$() → $(item)Deepslate$();$(br)$(item)Ice$() + $(item)Ice$() → $(item)Packed Ice$();$(br)$(item)Packed Ice$() + $(item)Packed Ice$() → $(item)Blue Ice$();$(br)$(item)Basalt$() + $(item)Basalt$() → $(item)Blackstone$()",
     {
       "type": "patchouli:multiblock",
       "name": "Daub",
@@ -100,10 +91,7 @@
       "enable_visualize": "false",
       "text": "Unlike pressing, the block above will not be consumed. The list on the right gives more examples of where such transformation can occur."
     },
-    {
-      "type": "patchouli:text",
-      "text": "Moss Block + Cobblestone → Mossy Stone;$(br)Moss Block + Stone Bricks → Moss Stone Bricks;$(br)Honeycomb Block + Any Copper Block → Corresponding Waxed Copper Block"
-    },
+    "$(item)Moss Block$() + $(item)Cobblestone$() → $(item)Mossy Stone$();$(br)$(item)Moss Block$() + $(item)Stone Bricks$() → $(item)Moss Stone Bricks$();$(br)$(item)Honeycomb Block$() + $(thing)Any Copper Block$() → $(thing)Their Waxed variants$()",
     {
       "type": "patchouli:multiblock",
       "name": "Squeeze",
@@ -126,10 +114,7 @@
       "enable_visualize": "false",
       "text": "A single layer of liquid will appear in the cauldron. The list on the right gives more examples of where such transformation can occur, some of which can occur consecutively."
     },
-    {
-      "type": "patchouli:text",
-      "text": "Wet Sponge → Sponge + Water;$(br)Moss blocks → Moss Carpet + Water;$(br)Magma Block → Netherrack + Lava;$(br)Snow Block → Ice + Powder Snow;$(br)Full Bee Nest → Empty Bee Nest + Honey(Specially, when there are three layers of honey below, if you continue to squeeze the full bee nest, it will be crushed into a honey block. The above bee nest can be replaced with beehive)"
-    },
+    "$(item)Wet Sponge$() → $(item)Sponge$() + $(item)Water$();$(br)$(item)Moss blocks$() → $(item)Moss Carpet$() + $(item)Water$();$(br)$(item)Magma Block$() → $(item)Netherrack$() + $(item)Lava$();$(br)$(item)Snow Block$() → $(item)Ice$() + $(item)Powder Snow$();$(br)$(item)Full Bee Nest$() → $(item)Empty Bee Nest$() + $(item)Honey$()(Specially, when there are three layers of $(item)Honey$() below, if you continue to squeeze the $(item)Full Bee Nest$(), it will be crushed into a $(item)Honey Block$(). The above $(item)Bee Nest$() can be replaced with $(item)Beehive$())",
     {
       "type": "patchouli:multiblock",
       "name": "break",
@@ -150,9 +135,6 @@
       "enable_visualize": "false",
       "text": "Block becomes dropped item. Detailed instructions on the right."
     },
-    {
-      "type": "patchouli:text",
-      "text": "Block destruction follows the drop table of TNT destruction, i.e. it has no fortune or silk touch enchantment. If the block is higher than the blast resistance that the TNT explosion can break, such as obsidian, it can still be broken, but the anvil will be damaged by one durability level. In order to prevent the anvil from falling on the stonecutter and becoming the drop after the block is broken, you need to control the timing of the redstone circuit."
-    }
+    "When use normal $(item)Anvil$() to trigger this, the block destruction will follows the drop table of TNT destruction, i.e. it has no $(thing)Fortune$() or $(thing)Silk Touch$() enchantment. Use $(item)Royal Anvil$() will contain fortune affection, and $(item)Ember Anvil$() will contain silk touch affection. If the block can not be break by normal TNT explosion, such as obsidian, it can still be broken, but the anvil will be damaged by one durability level. In order to prevent the anvil from falling on the stonecutter and becoming the drop after the block is broken, you need to control the timing of the redstone circuit."
   ]
 }
