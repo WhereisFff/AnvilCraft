@@ -11,6 +11,11 @@ public class NormalBlock extends HeatableBlock {
     }
 
     @Override
+    protected boolean hasBlockEntity() {
+        return false;
+    }
+
+    @Override
     public @Nullable HeatableBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return null;
     }

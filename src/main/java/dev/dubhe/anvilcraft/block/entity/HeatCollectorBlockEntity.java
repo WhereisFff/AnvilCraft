@@ -9,7 +9,6 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Vec3i;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -18,9 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.HashSet;
 import java.util.Objects;
-import java.util.Set;
 
 public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer, IHasAffectRange {
     private static final int MAX_OUTPUT_POWER = 4096;
@@ -34,6 +31,9 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     private int inputtingPower = 0;
     @Getter
     private float rotation = 0;
+    @Getter
+    @Setter
+    private WorkResult result = WorkResult.SUCCESS;
 
     public HeatCollectorBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -62,7 +62,7 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
 
     @Override
     public void gridTick() {
-        if (level == null || level.isClientSide()) return;
+        if (!this.isWorking() || level == null || level.isClientSide()) return;
         int oldPower = this.outputPower;
         this.outputPower = this.inputtingPower;
         if (this.outputPower > 0 && this.getBlockState().getBlock() instanceof HeatCollectorBlock collector) {
@@ -86,33 +86,23 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     }
 
     public void clientTick() {
+        if (!this.isWorking()) return;
         rotation += (float) (getServerPower() * 0.03);
     }
 
-    public Set<BlockPos> getCollectableSourcePoses() {
-        Set<BlockPos> poses = new HashSet<>();
-        for (int x = -2; x <= 2; x++) {
-            for (int z = -2; z <= 2; z++) {
-                for (int y = -2; y <= 2; y++) {
-                    BlockPos pos = this.getBlockPos().subtract(new Vec3i(-x, -y, -z)).immutable();
-                    if (this.getLevel() != null
-                        && (this.getLevel().getMinBuildHeight() > this.getPos().getY()
-                        || this.getLevel().getMaxBuildHeight() < this.getPos().getY())
-                    ) continue;
-                    poses.add(pos);
-                }
-            }
-        }
-        return poses;
+    public boolean isWorking() {
+        return this.result.isWorking();
     }
 
     /**
      * 向集热器添加热能
      *
      * @param num 添加至收集器的热能
+     *
      * @return 溢出的热能(即未被添加至该收集器的热能)
      */
     public int inputtingHeat(int num) {
+        if (!this.isWorking()) return num;
         int overflow = num - (MAX_OUTPUT_POWER - this.inputtingPower);
         if (overflow < 0) {
             overflow = 0;
@@ -135,5 +125,25 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     @Override
     public AABB shape() {
         return AABB.ofSize(getBlockPos().getCenter(), 5, 5, 5);
+    }
+
+    public enum WorkResult {
+        SUCCESS(""),
+        TOO_CLOSE("block.anvilcraft.heat_collector.placement_too_close_to_another"),
+        ;
+
+        private final String key;
+
+        WorkResult(String key) {
+            this.key = key;
+        }
+
+        public String getTranslateKey() {
+            return this.key;
+        }
+
+        public boolean isWorking() {
+            return this == SUCCESS;
+        }
     }
 }

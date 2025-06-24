@@ -21,6 +21,11 @@ public class RedhotBlock extends HeatableBlock {
     }
 
     @Override
+    protected boolean hasBlockEntity() {
+        return true;
+    }
+
+    @Override
     public HeatableBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return ModBlockEntities.REDHOT_BLOCK.create(pos, state);
     }

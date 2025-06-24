@@ -31,7 +31,7 @@ public class HeatableBlockTooltipProvider extends ITooltipProvider.BlockEntityTo
         Util.castSafely(entity, HeatableBlockEntity.class).map(HeatableBlockEntity::getDuration).ifPresent(
             duration -> components.add(
                 ITooltipProvider.withIndentAndMerge(Component.translatable(
-                    "tooltip.anvilcraft.heat.duration", FormattingUtil.toFormattedTime(duration, 1)
+                    "tooltip.anvilcraft.heat.duration", FormattingUtil.toFormattedTime(Math.max(duration, 0), 1)
                 ).withStyle(ChatFormatting.GRAY))));
         if (!components.isEmpty()) {
             components.addFirst(Component.translatable("tooltip.anvilcraft.heat.title").withStyle(ChatFormatting.BLUE));

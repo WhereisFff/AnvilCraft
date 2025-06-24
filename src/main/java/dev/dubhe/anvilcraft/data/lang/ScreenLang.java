@@ -83,6 +83,7 @@ public class ScreenLang {
         provider.add("tooltip.anvilcraft.heat.duration", "Duration: %s");
 
         provider.add("block.anvilcraft.heat_collector.placement_too_close_to_another", "Too close to another heat collector");
+        provider.add("tooltip.anvilcraft.heat_collector.not_work", "Heat Collector is not working");
 
         provider.add("screen.anvilcraft.active_silencer.title", "Active Silencer");
 
