@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.block;
 
+import com.google.common.collect.Streams;
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -204,50 +204,52 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             level
         );
         Vec3 center = outputPos.getCenter();
-        final List<BlockPos> devourBlockPosList;
-        AABB devourBlockBoundingBox;
+        Iterable<BlockPos> devourBlockPosList;
+        int maxY;
         switch (devourerDirection) {
-            case DOWN, UP -> devourBlockBoundingBox = AabbUtil.create(
-                devourCenterPos.relative(Direction.NORTH, range).relative(Direction.WEST, range),
-                devourCenterPos.relative(Direction.SOUTH, range).relative(Direction.EAST, range));
-            case NORTH, SOUTH -> devourBlockBoundingBox = AabbUtil.create(
-                devourCenterPos.relative(Direction.UP, range).relative(Direction.WEST, range),
-                devourCenterPos.relative(Direction.DOWN, range).relative(Direction.EAST, range));
-            case WEST, EAST -> devourBlockBoundingBox = AabbUtil.create(
-                devourCenterPos.relative(Direction.UP, range).relative(Direction.NORTH, range),
-                devourCenterPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range));
-            default -> devourBlockBoundingBox = new AABB(devourCenterPos);
+            case DOWN, UP -> {
+                devourBlockPosList = BlockPos.betweenClosed(
+                    devourCenterPos.relative(Direction.NORTH, range).relative(Direction.WEST, range),
+                    devourCenterPos.relative(Direction.SOUTH, range).relative(Direction.EAST, range));
+                maxY = devourCenterPos.getY();
+            }
+            case NORTH, SOUTH -> {
+                devourBlockPosList = BlockPos.betweenClosed(
+                    devourCenterPos.relative(Direction.UP, range).relative(Direction.WEST, range),
+                    devourCenterPos.relative(Direction.DOWN, range).relative(Direction.EAST, range));
+                maxY = devourCenterPos.relative(Direction.UP, range).getY();
+            }
+            case WEST, EAST -> {
+                devourBlockPosList = BlockPos.betweenClosed(
+                    devourCenterPos.relative(Direction.UP, range).relative(Direction.NORTH, range),
+                    devourCenterPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range));
+                maxY = devourCenterPos.relative(Direction.UP, range).getY();
+            }
+            default -> {
+                devourBlockPosList = List.of(devourCenterPos);
+                maxY = devourCenterPos.getY();
+            }
         }
-        devourBlockPosList = BlockPos.betweenClosedStream(devourBlockBoundingBox)
-            .map(BlockPos::immutable)
-            .toList();
+        devourBlockPosList = Streams.stream(devourBlockPosList).map(BlockPos::immutable).toList();
 
         final List<BlockPos> chainDevourBlockPosList = new ArrayList<>();
         final List<BlockPos> filteredBlockPosList = new ArrayList<>();
         for (BlockPos devourBlockPos : devourBlockPosList) {
             if (
-                AnvilCraft.config.blockDevourerUpwardChainDevouring
-                    && devourBlockPos.getY() == devourBlockBoundingBox.maxY
+                AnvilCraft.config.blockDevourerUpwardChainDevouring && devourBlockPos.getY() == maxY
             ) {
                 for (BlockPos chainDevourBlockPos : BlockPos.betweenClosed(
                     devourBlockPos.above(), devourBlockPos.above(AnvilCraft.config.blockDevourerUpwardChainDevouringDistance)
                 )) {
-                    if (level.getBlockState(chainDevourBlockPos).is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)) {
-                        chainDevourBlockPosList.add(chainDevourBlockPos.immutable());
-                    } else {
-                        break;
-                    }
+                    if (!level.getBlockState(chainDevourBlockPos).is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)) break;
+                    chainDevourBlockPosList.add(chainDevourBlockPos.immutable());
                 }
             }
 
-            devourSingleBlockInternalLogic(
-                level, anvil, devourBlockPos, filteredBlockPosList, itemHandlerList, center
-            );
+            devourSingleBlockInternalLogic(level, anvil, devourBlockPos, filteredBlockPosList, itemHandlerList, center);
         }
         for (BlockPos devourBlockPos : chainDevourBlockPosList) {
-            devourSingleBlockInternalLogic(
-                level, anvil, devourBlockPos, filteredBlockPosList, itemHandlerList, center
-            );
+            devourSingleBlockInternalLogic(level, anvil, devourBlockPos, filteredBlockPosList, itemHandlerList, center);
         }
     }
 

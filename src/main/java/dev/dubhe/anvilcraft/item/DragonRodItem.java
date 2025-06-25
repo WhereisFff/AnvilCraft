@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
+import com.google.common.collect.Streams;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
 import dev.dubhe.anvilcraft.util.MultiPartBlockUtil;
@@ -28,7 +28,6 @@ import net.minecraft.world.level.block.DoublePlantBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.LecternBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.event.EventHooks;
 import net.neoforged.neoforge.items.IItemHandler;
@@ -90,25 +89,23 @@ public class DragonRodItem extends Item {
         int range = dragonRod.getOrDefault(ModComponents.DEVOUR_RANGE, -1);
         if (range == -1) return;
         range = (range - 1) / 2;
-        AABB devouringBox;
+        Iterable<BlockPos> devouringPoses;
         switch (clickedSide) {
-            case DOWN, UP -> devouringBox = AabbUtil.create(
+            case DOWN, UP -> devouringPoses = BlockPos.betweenClosed(
                 centerPos.relative(Direction.NORTH, range).relative(Direction.WEST, range),
                 centerPos.relative(Direction.SOUTH, range).relative(Direction.EAST, range)
             );
-            case NORTH, SOUTH -> devouringBox = AabbUtil.create(
+            case NORTH, SOUTH -> devouringPoses = BlockPos.betweenClosed(
                 centerPos.relative(Direction.UP, range).relative(Direction.WEST, range),
                 centerPos.relative(Direction.DOWN, range).relative(Direction.EAST, range)
             );
-            case WEST, EAST -> devouringBox = AabbUtil.create(
+            case WEST, EAST -> devouringPoses = BlockPos.betweenClosed(
                 centerPos.relative(Direction.UP, range).relative(Direction.NORTH, range),
                 centerPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range)
             );
-            default -> devouringBox = new AABB(centerPos);
+            default -> devouringPoses = List.of(centerPos);
         }
-        final List<BlockPos> devouringPoses = BlockPos.betweenClosedStream(devouringBox)
-            .map(BlockPos::immutable)
-            .toList();
+        devouringPoses = Streams.stream(devouringPoses).map(BlockPos::immutable).toList();
 
         for (BlockPos devouringPos : devouringPoses) {
             BlockState devouringState = level.getBlockState(devouringPos);
