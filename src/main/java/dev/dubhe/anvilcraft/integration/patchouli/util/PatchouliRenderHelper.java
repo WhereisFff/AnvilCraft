@@ -10,54 +10,61 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Blocks;
+import vazkii.patchouli.api.PatchouliAPI;
 import vazkii.patchouli.client.book.gui.GuiBookEntry;
 
 public class PatchouliRenderHelper {
-    public static final ResourceLocation CRAFTING = AnvilCraft.of("textures/gui/patchouli/crafting.png");
+    public static final ResourceLocation CRAFTING = ResourceLocation.fromNamespaceAndPath(PatchouliAPI.MOD_ID, "textures/gui/crafting.png");
+    public static final ResourceLocation EXTRA = AnvilCraft.of("textures/gui/patchouli/crafting.png");
 
     public static void renderCraftingCustomUV(GuiGraphics guiGraphics, int x, int y, float uOffset, float vOffset, int width, int height) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, uOffset, vOffset, width, height, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, uOffset, vOffset, width, height, 256, 256);
     }
 
     public static void renderArray(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 72, 84, 9, 9, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 72, 84, 9, 9, 256, 256);
     }
 
     public static void render1x1(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 84, 77, 24, 24, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 84, 77, 24, 24, 256, 256);
     }
 
     public static void render1x2(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 8, 6, 43, 24, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 8, 6, 43, 24, 256, 256);
     }
 
     public static void render1x3(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 54, 6, 62, 24, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 54, 6, 62, 24, 256, 256);
     }
 
     public static void render1x4(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 118, 6, 81, 24, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 118, 6, 81, 24, 256, 256);
     }
 
     public static void render1x5(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 8, 32, 100, 24, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 8, 32, 100, 24, 256, 256);
+    }
+
+    public static void render2x1(GuiGraphics guiGraphics, int x, int y) {
+        RenderSystem.enableBlend();
+        guiGraphics.blit(CRAFTING, x, y, 11, 135, 24, 43, 128, 256);
     }
 
     public static void render2x2(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 110, 32, 43, 43, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 110, 32, 43, 43, 256, 256);
     }
 
     public static void render2x3(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
-        guiGraphics.blit(CRAFTING, x, y, 110, 77, 43, 62, 256, 256);
+        guiGraphics.blit(EXTRA, x, y, 110, 77, 43, 62, 256, 256);
     }
 
     public static void renderIngredientWithCount(
@@ -83,7 +90,6 @@ public class PatchouliRenderHelper {
     }
 
     public static void renderAnvilWithAnimation(GuiBookEntry parent, GuiGraphics guiGraphics, int x, int y) {
-
         int time = 30 - parent.ticksInBook % 30;
         float anvilYOffset = time < 15 ? (float) Math.sin(time / 15d * 2d * Math.PI + Math.PI / 2) * 6 : 6;
         RenderHelper.renderBlock(
