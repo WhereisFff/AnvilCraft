@@ -31,6 +31,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -185,7 +187,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         if (level.getGameTime() % 10 != 0) return;
         Collection<Entity> entities = level.getEntitiesOfClass(
             Entity.class,
-            AabbUtil.create(this.getBlockPos().below(this.tubeWalls.size()), this.getBlockPos()),
+            AABB.of(BoundingBox.fromCorners(this.getBlockPos().below(this.tubeWalls.size()), this.getBlockPos())),
             entity -> !entity.fireImmune()
         );
         for (Entity entity : entities) {
