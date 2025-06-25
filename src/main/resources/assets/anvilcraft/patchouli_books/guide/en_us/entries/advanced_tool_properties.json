@@ -2,7 +2,7 @@
   "name": "Special Tool Properties",
   "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:frost_metal_pickaxe",
-  "sortnum": 4000,
+  "sortnum": 4001,
   "pages": [
     "This page shows all available $(thing)Special Tool Properties$() and their affections.",
     {

@@ -2,7 +2,7 @@
   "name": "特殊工具属性",
   "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:frost_metal_pickaxe",
-  "sortnum": 4000,
+  "sortnum": 4001,
   "pages": [
     "本页面展示了目前所有可用的特殊工具属性，以及它们的效果。",
     {
