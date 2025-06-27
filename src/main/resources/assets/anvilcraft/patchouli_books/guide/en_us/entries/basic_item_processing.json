@@ -2,16 +2,13 @@
   "name": "Basic Item Processing",
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:iron_ingot",
-  "sortnum": 2,
+  "sortnum": 1002,
   "pages": [
-    {
-      "type": "patchouli:text",
-      "text": "Let $(item)Anvil$() fall on the specific blocks to process the items inside or on. Different specific blocks have different processing. The flowing pages of this entry will introduce relevant content in sequence. This mod adds a block that prevents hit items from flying around due to hitbox squeezing: $(item)Stamping Platform$()."
-    },
+    "Let $(item)Anvil$() fall on the specific blocks to process the items inside or on. Different specific blocks have different processing. The flowing pages of this entry will introduce relevant content in sequence. This mod adds a block that prevents hit items from flying around due to hitbox squeezing: $(item)Stamping Platform$().",
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:stamping_platform",
-      "text": "The iron pressure plate can be replaced with an iron plate for any mod."
+      "text": "The iron pressure plate can be replaced with an iron plate from any mod."
     },
     {
       "type": "patchouli:multiblock",
@@ -144,9 +141,6 @@
       "enable_visualize": "false",
       "text": "When the cauldron and the campfire is below, the cooking is performed, and both materials and products are in the cauldron.  A few recipes require water and consume a layer of water. Detailed instructions on the right."
     },
-    {
-      "type": "patchouli:text",
-      "text": "Auto-compatible with all smoker recipes and campfire recipes, no water required.$(br)In the presence of water, the following transformations can occur: Resin→Slime Ball."
-    }
+    "Auto-compatible with all smoker recipes and campfire recipes, no water required.$(br)In the presence of water, the following transformations can occur: Resin→Slime Ball."
   ]
 }

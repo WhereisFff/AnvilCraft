@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.integration.patchouli;
+package dev.dubhe.anvilcraft.integration.patchouli.util;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.server.level.ServerPlayer;
