@@ -760,6 +760,7 @@
   "tooltip.anvilcraft.heat.tier.normal": "Normal",
   "tooltip.anvilcraft.heat.tier.redhot": "RedHot",
   "tooltip.anvilcraft.heat.title": "Heat Stats:",
+  "tooltip.anvilcraft.heat_collector.not_work": "Heat Collector is not working",
   "tooltip.anvilcraft.heliostats.adjacent_heliostats": "Adjacent heliostats detected.",
   "tooltip.anvilcraft.heliostats.no_sun": "  No sunlight",
   "tooltip.anvilcraft.heliostats.not_work": "Heliostats are not working",

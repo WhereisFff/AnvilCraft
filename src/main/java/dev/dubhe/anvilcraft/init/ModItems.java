@@ -1806,10 +1806,10 @@ public class ModItems {
         .tag(ModItemTags.PLUTONIUM_INGOTS, Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.URANIUM_BLOCK)
+                .requires(ModBlocks.PLUTONIUM_BLOCK)
                 .group(ctx.getId().toString())
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.URANIUM_BLOCK.asItem()),
+                    AnvilCraftDatagen.hasItem(ModBlocks.PLUTONIUM_BLOCK.asItem()),
                     AnvilCraftDatagen.has(ModBlocks.PLUTONIUM_BLOCK)
                 )
                 .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));

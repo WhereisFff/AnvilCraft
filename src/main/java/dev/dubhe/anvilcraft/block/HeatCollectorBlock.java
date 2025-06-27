@@ -75,7 +75,7 @@ public class HeatCollectorBlock extends BaseEntityBlock implements IHammerRemova
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        if (!HeatCollectorManager.canPlaceCollector(context, context.getClickedPos(), context.getLevel())) return null;
+        HeatCollectorManager.checkWhenPlaceCollector(context, context.getClickedPos(), context.getLevel());
         return super.getStateForPlacement(context);
     }
 

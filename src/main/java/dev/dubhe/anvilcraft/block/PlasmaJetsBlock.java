@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.block.entity.PlasmaJetsBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -36,6 +37,10 @@ public class PlasmaJetsBlock extends BaseEntityBlock {
         ) return false;
         for (int i = 0; i < 8; i++) {
             if (!level.getBlockState(pos.above(i)).isAir()) return false;
+        }
+        for (Direction direction : Direction.values()) {
+            if (!direction.getAxis().isHorizontal()) continue;
+            if (level.getBlockState(pos.relative(direction)).isAir()) return false;
         }
         level.setBlock(pos, ModBlocks.PLASMA_JETS.getDefaultState(), 3);
         return true;

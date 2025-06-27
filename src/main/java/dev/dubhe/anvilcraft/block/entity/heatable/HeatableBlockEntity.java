@@ -29,7 +29,7 @@ public abstract class HeatableBlockEntity extends BlockEntity {
     }
 
     public void addDurationInTick(int tick) {
-        this.setDuration(Math.clamp(this.duration + tick, 0, MAX_DURATION));
+        this.setDuration(Math.clamp(this.duration + tick, -1, MAX_DURATION));
     }
 
     public void setDuration(int duration) {
@@ -54,5 +54,9 @@ public abstract class HeatableBlockEntity extends BlockEntity {
     public void onLoad() {
         super.onLoad();
         HeaterManager.addHeatableBlock(this.getBlockPos(), this.getLevel());
+    }
+
+    public static void tick(Level level, BlockPos pos) {
+        HeaterManager.addHeatableBlock(pos, level);
     }
 }

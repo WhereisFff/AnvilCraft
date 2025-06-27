@@ -147,7 +147,7 @@ public class HeaterManager {
         }
         if (heatable == null) return;
 
-        if (durationDelta <= 0) {
+        if (durationDelta == 0) {
             heatable.addDuration(-1);
         } else {
             heatable.addDurationInTick(durationDelta);

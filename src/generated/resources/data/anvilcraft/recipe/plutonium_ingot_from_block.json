@@ -4,7 +4,7 @@
   "group": "anvilcraft:plutonium_ingot",
   "ingredients": [
     {
-      "item": "anvilcraft:uranium_block"
+      "item": "anvilcraft:plutonium_block"
     }
   ],
   "result": {

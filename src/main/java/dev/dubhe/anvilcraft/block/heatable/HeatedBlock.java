@@ -11,6 +11,11 @@ public class HeatedBlock extends HeatableBlock {
     }
 
     @Override
+    protected boolean hasBlockEntity() {
+        return true;
+    }
+
+    @Override
     public HeatableBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return ModBlockEntities.HEATED_BLOCK.create(pos, state);
     }

@@ -102,7 +102,7 @@ public class HeatCollectorManager {
         getInstance(level).heatCollectors.remove(pos);
     }
 
-    public static boolean canPlaceCollector(BlockPlaceContext ctx, BlockPos pos, Level level) {
+    public static void checkWhenPlaceCollector(BlockPlaceContext ctx, BlockPos pos, Level level) {
         HeatCollectorManager manager = getInstance(level);
         AABB validRange = AABB.ofSize(pos.getCenter(), 9, 9, 9);
         for (BlockPos checkedPos : manager.heatCollectors) {
@@ -110,11 +110,11 @@ public class HeatCollectorManager {
                 Optional.ofNullable(ctx.getPlayer()).ifPresent(player -> player.displayClientMessage(
                     Component.translatable("block.anvilcraft.heat_collector.placement_too_close_to_another")
                         .withStyle(ChatFormatting.RED), true));
-                return false;
+                manager.heatCollectors.add(pos);
+                return;
             }
         }
         manager.heatCollectors.add(pos);
-        return true;
     }
 
     HeatCollectorManager(Level level) {
@@ -130,19 +130,7 @@ public class HeatCollectorManager {
         List<HeatCollectorBlockEntity> collectors = this.getCollectorsFromNWToSE();
         Map<Entry, Double2ObjectMap<HeatCollectorBlockEntity>> heatSources = new HashMap<>();
         for (HeatCollectorBlockEntity collector : collectors) {
-            for (BlockPos pos : collector.getCollectableSourcePoses()) {
-                BlockState state = this.level.getBlockState(pos);
-                getEntry(state)
-                    .ifPresent(entry -> heatSources
-                        .computeIfAbsent(
-                            new Entry(pos, state, entry), it -> new Double2ObjectAVLTreeMap<>())
-                        .put(
-                            Vector3i.distance(
-                                pos.getX(), pos.getY(), pos.getZ(),
-                                collector.getPos().getX(), collector.getPos().getY(), collector.getPos().getZ()
-                            ), collector)
-                    );
-            }
+            this.collectSources(collector, heatSources);
         }
         for (Entry entry : heatSources.keySet()) {
             int heat = entry.accepts();
@@ -153,6 +141,45 @@ public class HeatCollectorManager {
             if (this.level.getGameTime() % entry.entry().timeToTransform() == 0) {
                 this.level.setBlockAndUpdate(entry.pos(), entry.transform());
             }
+        }
+    }
+
+    private void collectSources(HeatCollectorBlockEntity collector, Map<Entry, Double2ObjectMap<HeatCollectorBlockEntity>> heatSources) {
+        BlockPos collectorPos = collector.getPos();
+        Map<Entry, Double2ObjectMap<HeatCollectorBlockEntity>> heatSourcesCache = new HashMap<>();
+        for (BlockPos pos : BlockPos.betweenClosed(
+            collectorPos.above(4).east(4).south(4),
+            collectorPos.below(4).west(4).north(4))
+        ) {
+            pos = pos.immutable();
+            BlockState state = this.level.getBlockState(pos);
+            if (state.is(ModBlocks.HEAT_COLLECTOR) && !pos.equals(collectorPos)) {
+                collector.setResult(HeatCollectorBlockEntity.WorkResult.TOO_CLOSE);
+                //heatSources.values().removeIf(map -> map.values().removeIf(entity -> entity.equals(collector)));
+                return;
+            }
+            if (Math.abs(pos.getX() - collectorPos.getX()) > 2
+                || Math.abs(pos.getY() - collectorPos.getY()) > 2
+                || Math.abs(pos.getZ() - collectorPos.getZ()) > 2
+            ) continue;
+            BlockPos finalPos = pos;
+            getEntry(state)
+                .ifPresent(entry -> heatSourcesCache
+                    .computeIfAbsent(
+                        new Entry(finalPos, state, entry), it -> new Double2ObjectAVLTreeMap<>())
+                    .put(
+                        Vector3i.distance(
+                            finalPos.getX(), finalPos.getY(), finalPos.getZ(),
+                            collector.getPos().getX(), collector.getPos().getY(), collector.getPos().getZ()
+                        ), collector
+                    )
+                );
+        }
+        collector.setResult(HeatCollectorBlockEntity.WorkResult.SUCCESS);
+        for (var entry : heatSourcesCache.entrySet()) {
+            heatSources
+                .computeIfAbsent(entry.getKey(), it -> new Double2ObjectAVLTreeMap<>())
+                .putAll(entry.getValue());
         }
     }
 
