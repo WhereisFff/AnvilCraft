@@ -135,7 +135,7 @@ public class IonocraftEntity extends VehicleEntity {
     @Override
     public void move(MoverType type, Vec3 motion) {
         super.move(type, motion);
-        if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
+        if (this.getDeltaMovement().y == 0) return;
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().expandTowards(0, 1F, 0),
