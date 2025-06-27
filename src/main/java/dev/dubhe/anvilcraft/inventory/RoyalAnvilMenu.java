@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.inventory;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.item.ICursed;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -159,7 +160,7 @@ public class RoyalAnvilMenu extends AnvilMenu {
                             flag3 = true;
                         } else {
                             flag2 = true;
-                            if (j2 > enchantment.getMaxLevel()) {
+                            if (!AnvilCraft.config.emberAnvilBeyondMaxLevel && j2 > enchantment.getMaxLevel()) {
                                 j2 = enchantment.getMaxLevel();
                             }
 

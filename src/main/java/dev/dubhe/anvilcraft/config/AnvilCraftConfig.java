@@ -175,6 +175,14 @@ public class AnvilCraftConfig implements ConfigData {
     @Comment("Block Placer recursive retrieval of container max distance")
     public int blockPlacerRecursiveRetrievalDistanceMax = 7;
 
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Combining items with Enchanted Books beyond max level in Royal Anvil")
+    public boolean royalAnvilBeyondMaxLevel = false;
+
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Combining items with Enchanted Books beyond max level in Ember Anvil")
+    public boolean emberAnvilBeyondMaxLevel = false;
+
     public static class PowerConverter implements ConfigData {
         @Comment("The working interval of power converters")
         @ConfigEntry.Gui.Tooltip
