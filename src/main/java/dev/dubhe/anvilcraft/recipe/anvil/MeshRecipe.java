@@ -92,6 +92,11 @@ public class MeshRecipe implements Recipe<MeshRecipe.Input> {
         }
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public static class Serializer implements RecipeSerializer<MeshRecipe> {
         private static final MapCodec<MeshRecipe> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
                 Ingredient.CODEC_NONEMPTY.fieldOf("input").forGetter(MeshRecipe::getInput),

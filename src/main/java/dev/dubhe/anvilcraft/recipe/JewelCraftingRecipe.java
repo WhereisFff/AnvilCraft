@@ -92,6 +92,11 @@ public class JewelCraftingRecipe implements Recipe<JewelCraftingRecipe.Input> {
         return cacheTimes >= 1;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(ItemStack source, List<ItemStack> items) implements RecipeInput, IItemsInput {
 
         @Override

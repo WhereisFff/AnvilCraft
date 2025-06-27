@@ -97,6 +97,11 @@ public class BlockCompressRecipe implements Recipe<BlockCompressRecipe.Input> {
         return ItemStack.EMPTY;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(List<Block> inputs) implements RecipeInput {
 
         @Override

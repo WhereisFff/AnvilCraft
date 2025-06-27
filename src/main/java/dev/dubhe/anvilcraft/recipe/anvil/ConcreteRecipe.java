@@ -99,6 +99,11 @@ public class ConcreteRecipe implements Recipe<ItemProcessInput> {
         return cacheMaxCraftTime;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public static class Serializer implements RecipeSerializer<ConcreteRecipe> {
         private static final MapCodec<ConcreteRecipe> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
                 CodecUtil.createIngredientListCodec("ingredients", 16, "concrete")

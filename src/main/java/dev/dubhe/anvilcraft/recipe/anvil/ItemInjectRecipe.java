@@ -113,6 +113,11 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
         return contents.values().intStream().allMatch(count -> count >= 0);
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(List<ItemStack> items, Block inputBlock) implements RecipeInput {
 
         @Override

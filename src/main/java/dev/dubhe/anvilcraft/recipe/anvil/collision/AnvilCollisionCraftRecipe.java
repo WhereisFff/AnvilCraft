@@ -77,6 +77,11 @@ public record AnvilCollisionCraftRecipe(
         return ModRecipeTypes.ANVIL_COLLISION_CRAFT.get();
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(ItemStack source, List<ItemStack> items) implements RecipeInput, IItemsInput {
 
         @Override
