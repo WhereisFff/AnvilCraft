@@ -97,6 +97,11 @@ public class BlockSmearRecipe implements Recipe<BlockSmearRecipe.Input> {
         return ItemStack.EMPTY;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(List<Block> inputs) implements RecipeInput {
 
         @Override

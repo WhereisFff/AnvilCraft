@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
@@ -146,6 +145,11 @@ public class TimeWarpRecipe implements Recipe<TimeWarpRecipe.Input> {
         cacheInput = pInput;
         cacheMaxCraftTime = times < AnvilCraft.config.anvilEfficiency ? times : AnvilCraft.config.anvilEfficiency;
         return cacheMaxCraftTime;
+    }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 
     public record Input(List<ItemStack> items, BlockState cauldronState) implements RecipeInput, IItemsInput {
