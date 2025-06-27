@@ -4,6 +4,7 @@ import com.mojang.datafixers.util.Unit;
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
+import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.item.DiskItem;
@@ -56,11 +57,6 @@ public class ModComponents {
             .networkSynchronized(ByteBufCodecs.INT)
     );
 
-    public static final DataComponentType<Integer> TOTEM_COUNT = register(
-        "totem_count", b -> b.persistent(Codec.INT)
-            .networkSynchronized(ByteBufCodecs.INT)
-    );
-
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
     public static final DataComponentType<Multiphase> MULTIPHASE =
@@ -74,6 +70,10 @@ public class ModComponents {
     public static final DataComponentType<Integer> DEVOUR_RANGE = register(
         "devour_range", b -> b.persistent(Codec.INT)
             .networkSynchronized(ByteBufCodecs.INT));
+
+    public static final DataComponentType<BoxContents> BOX_CONTENTS = register(
+        "box_contents", b -> b.persistent(BoxContents.CODEC)
+            .networkSynchronized(BoxContents.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();

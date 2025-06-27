@@ -244,6 +244,11 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         return new TransformWithItemRecipeBuilder(type, item, specialResult, itemResult);
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(LivingEntity inputEntity) implements RecipeInput {
         @Override
         public @NotNull ItemStack getItem(int i) {

@@ -56,41 +56,27 @@ public class FormattingUtil {
 
     /**
      * <table>
-     *     <thead>
-     *         <tr>
-     *             <th>tick数</th>
-     *             <th>显示效果</th>
-     *         </tr>
-     *     </thead>
-     *     <tbody>
-     *         <tr>
-     *             <td>30gt</td>
-     *             <td>30gt</td>
-     *         </tr>
-     *         <tr>
-     *             <td>100gt</td>
-     *             <td>5"</td>
-     *         </tr>
-     *         <tr>
-     *             <td>150gt</td>
-     *             <td>7"50</td>
-     *         </tr>
-     *         <tr>
-     *             <td>1200gt</td>
-     *             <td>1'</td>
-     *         </tr>
-     *         <tr>
-     *             <td>1220gt</td>
-     *             <td>1'01</td>
-     *         </tr>
-     *         <tr>
-     *             <td>1635gt</td>
-     *             <td>1'21"75</td>
-     *         </tr>
-     *     </tbody>
+     *     <tr><th>tick数</th><th>阈值</th><th>显示效果</th></tr>
+     *     <tr><td>30gt</td><td>1</td><td>1"50</td></tr>
+     *     <tr><td>30gt</td><td>5</td><td>30gt</td></tr>
+     *     <tr><td>100gt</td><td>5</td><td>5"</td></tr>
+     *     <tr><td>150gt</td><td>5</td><td>7"50</td></tr>
+     *     <tr><td>1200gt</td><td>5</td><td>1'</td></tr>
+     *     <tr><td>1220gt</td><td>5</td><td>1'01</td></tr>
+     *     <tr><td>1635gt</td><td>5</td><td>1'21"75</td></tr>
      * </table>
+     *
+     * @param total 总tick数
+     * @param thresholdInSec 切换显示格式的阈值（秒），小于该值时显示gt格式，否则显示分秒格式
+     * @return 格式化后的时间字符串
      */
-    public static String toFormattedTime(int total) {
+    public static String toFormattedTime(int total, int thresholdInSec) {
+        int thresholdTicks = thresholdInSec * 20;
+
+        if (total < thresholdTicks) {
+            return total + "gt";
+        }
+
         int minutes = total / 20 / 60;
         int seconds = (total / 20) % 60;
         int ticks = total % 60 % 20;
@@ -108,13 +94,11 @@ public class FormattingUtil {
             if (ticks != 0) {
                 result.append('"');
             }
-        } else if (seconds >= 5) {
-            result.append(String.format("%d", seconds)).append('"');
+        } else {
+            result.append(seconds).append('"');
         }
 
-        if (result.isEmpty()) {
-            result.append(String.format("%dgt", ticks + seconds * 20));
-        } else if (ticks != 0) {
+        if (ticks != 0) {
             result.append(String.format("%02d", ticks * 5));
         }
 

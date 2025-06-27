@@ -2,13 +2,15 @@ package dev.dubhe.anvilcraft.client.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
 import dev.dubhe.anvilcraft.api.tooltip.TooltipRenderHelper;
-import dev.dubhe.anvilcraft.client.ModInspectionClient;
-import dev.dubhe.anvilcraft.client.PowerGridClient;
+import dev.dubhe.anvilcraft.client.support.InspectionSupport;
+import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.util.AabbUtil;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
@@ -33,6 +35,8 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 
+import java.util.Optional;
+
 @EventBusSubscriber(value = Dist.CLIENT)
 public class RenderEventListener {
 
@@ -43,7 +47,7 @@ public class RenderEventListener {
         PoseStack poseStack = event.getPoseStack();
         DeltaTracker deltaTracker = event.getPartialTick();
         LevelRenderer renderer = event.getLevelRenderer();
-        ModInspectionClient.INSTANCE.onRenderInspectionAction(
+        InspectionSupport.INSTANCE.onRenderInspectionAction(
             poseStack,
             renderer,
             camera,
@@ -65,7 +69,7 @@ public class RenderEventListener {
         double camX = vec3.x();
         double camY = vec3.y();
         double camZ = vec3.z();
-        PowerGridClient.renderTransmitterLine(pose, bufferSource, vec3);
+        PowerGridSupport.renderTransmitterLine(pose, bufferSource, vec3);
 
         if (!(entity instanceof LivingEntity livingEntity)) return;
         ItemStack mainHandItem = livingEntity.getItemInHand(InteractionHand.MAIN_HAND);
@@ -77,13 +81,11 @@ public class RenderEventListener {
         }
 
         if (!(entity instanceof Player player)) return;
+        Optional<BlockHitResult> hitResult = Util.castSafely(Minecraft.getInstance().hitResult, BlockHitResult.class);
+        hitResult.ifPresent(hit -> renderDragonRodOutline(pose, hit, vertexConsumer3, camX, camY, camZ, handItem));
         if (!AnvilHammerItem.isWearing(player)) return;
-        PowerGridClient.render(pose, bufferSource, vec3);
-        HitResult hit = Minecraft.getInstance().hitResult;
-        if (!(hit instanceof BlockHitResult hitResult)) return;
-        renderDragonRodOutline(pose, hitResult, vertexConsumer3, camX, camY, camZ, handItem);
-        if (!AnvilHammerItem.isWearing(player)) return;
-        renderAffectRange(pose, hitResult, vertexConsumer3, camX, camY, camZ);
+        PowerGridSupport.render(pose, bufferSource, vec3);
+        hitResult.ifPresent(hit -> renderAffectRange(pose, hit, vertexConsumer3, camX, camY, camZ));
     }
 
     private static void renderAffectRange(

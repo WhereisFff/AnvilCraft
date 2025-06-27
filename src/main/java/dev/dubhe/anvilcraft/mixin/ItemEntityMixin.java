@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.util.MergeCooldownItemEntity;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
@@ -45,7 +46,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.UUID;
 
 @Mixin(ItemEntity.class)
 abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity {
@@ -58,13 +58,6 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @Shadow
     public abstract void setItem(ItemStack stack);
-
-    @Shadow
-    @javax.annotation.Nullable
-    private UUID target;
-
-    @Shadow
-    protected abstract void setUnderwaterMovement();
 
     @Shadow
     protected abstract boolean isMergable();
@@ -181,12 +174,12 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     // 以下是中子锭运动相关mixin
 
-    @SuppressWarnings("DataFlowIssue")
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void anvilcraft$neutroniumTick(CallbackInfo ci) {
+        ItemEntity thiS = Util.cast(this);
         ItemStack item = this.getItem();
         if (!item.is(ModItems.NEUTRONIUM_INGOT)) return;
-        if (item.onEntityItemUpdate((ItemEntity) (Object) this)) {
+        if (item.onEntityItemUpdate(thiS)) {
             ci.cancel();
             return;
         }
@@ -251,7 +244,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         }
         item = this.getItem();
         if (!this.level().isClientSide && this.age >= this.lifespan) {
-            this.lifespan = Mth.clamp(this.lifespan + EventHooks.onItemExpire((ItemEntity) (Object) this), 0, 32766);
+            this.lifespan = Mth.clamp(this.lifespan + EventHooks.onItemExpire(thiS), 0, 32766);
             if (this.age >= this.lifespan) {
                 this.discard();
             }
@@ -269,7 +262,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         return super.getPistonPushReaction();
     }
 
-    @SuppressWarnings({"unused", "SameParameterValue", "SuspiciousNameCombination"})
+    @SuppressWarnings({"unused", "SameParameterValue", "SuspiciousNameCombination", "deprecation"})
     @Unique
     private void anvilCraft$neutroniumMove(MoverType moverType, Vec3 motion) {
 

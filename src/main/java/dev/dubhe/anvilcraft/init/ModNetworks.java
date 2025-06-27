@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
+import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
 import dev.dubhe.anvilcraft.network.InspectionStateChangedPacket;
 import dev.dubhe.anvilcraft.network.ItemDetectorChangeRangePacket;
@@ -23,6 +24,7 @@ import dev.dubhe.anvilcraft.network.RecipeCacheSyncPacket;
 import dev.dubhe.anvilcraft.network.RemoveMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.RemoveTeslaFilterPacket;
 import dev.dubhe.anvilcraft.network.RocketJumpPacket;
+import dev.dubhe.anvilcraft.network.SilencerSyncPacket;
 import dev.dubhe.anvilcraft.network.SliderInitPacket;
 import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
@@ -193,10 +195,20 @@ public class ModNetworks {
             DragonRodDevourPacket.STREAM_CODEC,
             DragonRodDevourPacket.HANDLER
         );
+        registrar.playBidirectional(
+            SilencerSyncPacket.TYPE,
+            SilencerSyncPacket.STREAM_CODEC,
+            SilencerSyncPacket.HANDLER
+        );
         registrar.playToServer(
             SwitchResonateModePacket.TYPE,
             SwitchResonateModePacket.STREAM_CODEC,
             SwitchResonateModePacket.HANDLER
+        );
+        registrar.playToClient(
+            HeatableSyncPacket.TYPE,
+            HeatableSyncPacket.STREAM_CODEC,
+            HeatableSyncPacket.HANDLER
         );
         registrar.playToClient(
             ChargerSyncPacket.TYPE,

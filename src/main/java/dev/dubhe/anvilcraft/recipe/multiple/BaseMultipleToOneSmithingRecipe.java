@@ -179,6 +179,11 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
         return false;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     private Data<T> toData() {
         return new Data<>(this.template, this.material, this.inputs, this.result, this.recipeId);
     }

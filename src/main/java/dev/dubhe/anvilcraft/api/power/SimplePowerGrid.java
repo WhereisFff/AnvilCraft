@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.api.power;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.client.PowerGridClient;
+import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
 import dev.dubhe.anvilcraft.client.renderer.Line;
 import dev.dubhe.anvilcraft.util.ColorUtil;
 import dev.dubhe.anvilcraft.util.ShapeUtil;
@@ -198,12 +198,7 @@ public class SimplePowerGrid {
 
     public boolean collideFast(AABB aabb) {
         for (PowerComponentInfo it : this.powerComponentInfoList) {
-            if (new AABB(
-                it.pos().offset(-it.range(), -it.range(), -it.range()).getCenter(),
-                it.pos().offset(it.range(), it.range(), it.range()).getCenter()
-            ).intersects(aabb)) {
-                return true;
-            }
+            if (new AABB(it.pos()).inflate(it.range()).intersects(aabb)) return true;
         }
         return false;
     }
@@ -291,7 +286,7 @@ public class SimplePowerGrid {
      * 寻找电网
      */
     public static Optional<SimplePowerGrid> findPowerGrid(BlockPos pos) {
-        for (SimplePowerGrid value : PowerGridClient.getGridMap().values()) {
+        for (SimplePowerGrid value : PowerGridSupport.getGridMap().values()) {
             for (BlockPos block : value.blocks) {
                 if (block.equals(pos)) {
                     return Optional.of(value);

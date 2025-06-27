@@ -173,6 +173,8 @@ public class ItemTagLoader {
         provider.addTag(ModItemTags.UNCHARGED_NEUTRONIUM_INGOTS)
             .add(ModItems.NEUTRONIUM_INGOT.getKey())
             .add(ModItems.STABLE_NEUTRONIUM_INGOT.getKey());
+        provider.addTag(ModItemTags.HEATABLE_BLOCKS)
+            .add(findResourceKey(Items.NETHERITE_BLOCK));
     }
 
     private static ResourceKey<Item> findResourceKey(Item item) {

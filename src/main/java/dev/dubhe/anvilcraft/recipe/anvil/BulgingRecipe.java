@@ -134,6 +134,11 @@ public class BulgingRecipe implements Recipe<BulgingRecipe.Input> {
         return cacheMaxCraftTime;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(List<ItemStack> items, BlockState cauldronState) implements RecipeInput, IItemsInput {
 
         @Override
