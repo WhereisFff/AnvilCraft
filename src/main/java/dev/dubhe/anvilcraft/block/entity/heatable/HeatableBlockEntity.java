@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.entity.heatable;
 
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
+import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -58,5 +59,9 @@ public abstract class HeatableBlockEntity extends BlockEntity {
 
     public static void tick(Level level, BlockPos pos) {
         HeaterManager.addHeatableBlock(pos, level);
+        if (level.getGameTime() % 10 != 0) return;
+        PacketDistributor.sendToAllPlayers(new HeatableSyncPacket(
+            pos, Util.castSafely(level.getBlockEntity(pos), HeatableBlockEntity.class).map(HeatableBlockEntity::getDuration).orElse(0)
+        ));
     }
 }
