@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.init.ModBlocks;
@@ -287,6 +288,7 @@ public class SlidingRailBlock extends Block implements IHammerChangeable, IHamme
     @Override
     public boolean canStickTo(BlockPos pos, BlockState state, BlockPos otherPos, BlockState other) {
         if (otherPos.equals(pos.above())) return false;
+        if (!AnvilCraft.config.slidingRailStickToEachOther) return other.isStickyBlock();
         if (!other.is(ModBlocks.SLIDING_RAIL) && !other.is(ModBlocks.SLIDING_RAIL_STOP)) return other.isStickyBlock();
         Axis axis = state.getValue(AXIS);
         if (!other.getValue(AXIS).equals(axis)) return false;

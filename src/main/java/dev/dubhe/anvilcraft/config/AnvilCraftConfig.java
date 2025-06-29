@@ -232,6 +232,10 @@ public class AnvilCraftConfig implements ConfigData {
     @Comment("Press shift and right click to take out all totem stored in the holding amulet box")
     public boolean amuletBoxTakeOutAllTotem = true;
 
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Pushing or pulling a sliding rail will chain to other rails")
+    public boolean slidingRailStickToEachOther = false;
+
     public enum GoggleMode implements ConfigData {
         ALWAYS_SHOW,
         WEARING_HAMMER,
