@@ -4,6 +4,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -35,6 +36,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.checkerframework.checker.units.qual.A;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -111,12 +113,9 @@ public class SlidingRailBlock extends Block implements IHammerChangeable, IHamme
         CollisionContext collisionContext
     ) {
         return switch (blockState.getValue(AXIS)) {
-            case X:
-                yield AABB_X;
-            case Z:
-                yield AABB_Z;
-            case Y:
-                yield AABB_Y;
+            case X -> AABB_X;
+            case Z -> AABB_Z;
+            case Y -> AABB_Y;
         };
     }
 
@@ -278,6 +277,20 @@ public class SlidingRailBlock extends Block implements IHammerChangeable, IHamme
         BlockState bs = level.getBlockState(blockPos);
         level.setBlockAndUpdate(blockPos, bs.cycle(AXIS));
         return true;
+    }
+
+    @Override
+    public boolean isStickyBlock(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public boolean canStickTo(BlockPos pos, BlockState state, BlockPos otherPos, BlockState other) {
+        if (otherPos.equals(pos.above())) return false;
+        if (!other.is(ModBlocks.SLIDING_RAIL) && !other.is(ModBlocks.SLIDING_RAIL_STOP)) return other.isStickyBlock();
+        Axis axis = state.getValue(AXIS);
+        if (!other.getValue(AXIS).equals(axis)) return false;
+        return pos.relative(axis, -1).equals(otherPos) || pos.relative(axis, 1).equals(otherPos);
     }
 
     @Override

@@ -1392,7 +1392,6 @@ public class ModBlocks {
         .properties(it -> it
             .mapColor(MapColor.COLOR_GRAY)
             .friction(1.0204082f)
-            .pushReaction(PushReaction.PUSH_ONLY)
         )
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, provider) -> {
