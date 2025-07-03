@@ -59,7 +59,8 @@ public class FireCauldronBlock extends Layered4LevelCauldronBlock implements IHa
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (level.getBlockState(pos.below()).is(ModBlocks.HEATER) && !PlasmaJetsBlock.trySpawn(pos.above(), level)) {
+        BlockState below = level.getBlockState(pos.below());
+        if (below.is(ModBlocks.HEATER) && !below.getValue(HeaterBlock.OVERLOAD) && !PlasmaJetsBlock.trySpawn(pos.above(), level)) {
             level.scheduleTick(pos, this, 10);
         }
     }
