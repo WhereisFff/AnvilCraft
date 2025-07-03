@@ -44,7 +44,7 @@ public class FireCauldronBlock extends Layered4LevelCauldronBlock implements IHa
     @Override
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean ignored) {
         if (level.getBlockState(pos.below()).is(ModBlocks.HEATER)) {
-            PlasmaJetsBlock.trySpawn(pos.above(), level);
+            level.scheduleTick(pos, this, 2);
         }
     }
 
@@ -53,7 +53,14 @@ public class FireCauldronBlock extends Layered4LevelCauldronBlock implements IHa
         BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston
     ) {
         if (level.getBlockState(pos.below()).is(ModBlocks.HEATER)) {
-            PlasmaJetsBlock.trySpawn(pos.above(), level);
+            level.scheduleTick(pos, this, 2);
+        }
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (level.getBlockState(pos.below()).is(ModBlocks.HEATER) && !PlasmaJetsBlock.trySpawn(pos.above(), level)) {
+            level.scheduleTick(pos, this, 10);
         }
     }
 }
