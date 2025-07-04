@@ -8,6 +8,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
@@ -16,7 +17,9 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
+import org.joml.Vector3f;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -153,6 +156,17 @@ public interface ISlidingRail extends net.neoforged.neoforge.common.extensions.I
     static void stopSlidingBlock(SlidingBlockEntity entity) {
         entity.stop();
         MOVING_PISTON_MAP.remove(entity.blockPosition());
+    }
+
+    static void absorbEntity(BlockPos pos, Entity entity) {
+        Vec3 blockPos = pos.getCenter();
+        Vec3 entityPos = entity.position();
+        Vector3f acceleration = blockPos.toVector3f()
+            .sub(entityPos.toVector3f())
+            .mul(0.45f)
+            .div(0.98f)
+            .mul(new Vector3f(1, 0, 1));
+        entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.5f, 0.5f, 0.5f).add(new Vec3(acceleration)));
     }
 
     class PistonPushInfo {

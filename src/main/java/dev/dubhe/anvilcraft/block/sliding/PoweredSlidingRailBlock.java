@@ -7,6 +7,10 @@ import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -21,6 +25,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -104,16 +109,8 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
-        if (!state.getValue(POWERED)) return;
-        super.onNeighborChange(state, level, pos, neighbor);
-    }
-
-    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        boolean isPowered = this.isPowered(level, pos);
-        level.setBlockAndUpdate(pos, state.setValue(POWERED, isPowered));
-        if (!isPowered) return;
+        level.setBlockAndUpdate(pos, state.setValue(POWERED, this.isPowered(level, pos)));
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
     }
 
@@ -122,6 +119,16 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
             if (level.getSignal(pos.relative(side), side) > 0) return true;
         }
         return false;
+    }
+
+    @Override
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (entity.getType() != EntityType.ITEM) return;
+        if (!state.getValue(POWERED)) {
+            ISlidingRail.absorbEntity(pos, entity);
+        } else {
+            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.5));
+        }
     }
 
     @Override

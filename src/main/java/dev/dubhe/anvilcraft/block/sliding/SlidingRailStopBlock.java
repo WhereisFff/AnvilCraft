@@ -2,22 +2,25 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
+import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.util.MathUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.joml.Vector3f;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
@@ -54,20 +57,20 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock implements IHamme
     }
 
     @Override
-    public void stepOn(
-        Level level,
-        BlockPos pos,
-        BlockState state,
-        Entity entity
-    ) {
-        Vec3 blockPos = pos.getCenter();
-        Vec3 entityPos = entity.position();
-        Vector3f acceleration = blockPos.toVector3f()
-            .sub(entityPos.toVector3f())
-            .mul(0.45f)
-            .div(0.98f)
-            .mul(new Vector3f(1, 0, 1));
-        entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.5f, 0.5f, 0.5f).add(new Vec3(acceleration)));
+    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        ISlidingRail.absorbEntity(pos, entity);
+        if (entity.getType() != EntityType.ITEM) return;
+        if (!MathUtil.isInRange(entity.getX() - Math.floor(entity.getX()), 0.374, 0.626)) return;
+        if (!MathUtil.isInRange(entity.getZ() - Math.floor(entity.getZ()), 0.374, 0.626)) return;
+        for (Direction side : Direction.values()) {
+            if (side.getAxis() == Direction.Axis.Y) continue;
+            BlockPos pos1 = pos.relative(side);
+            BlockState state1 = level.getBlockState(pos1);
+            if (!state1.is(ModBlocks.POWERED_SLIDING_RAIL)) continue;
+            if (!state1.getOptionalValue(BlockStateProperties.POWERED).orElse(false)) continue;
+            entity.setPos(pos1.getBottomCenter().add(0, 0.375, 0));
+            break;
+        }
     }
 
     @Override
@@ -80,9 +83,9 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock implements IHamme
         super.neighborChanged(state, level, pos, neighborBlock, fromPos, isMoving);
         Direction direction = null;
         for (Direction side : Direction.values()) {
-            if (side.getAxis() == Direction.Axis.Y) return;
+            if (side.getAxis() == Direction.Axis.Y) continue;
             Optional<Direction> dirOp = Util.castSafely(level.getBlockState(pos.relative(side)).getBlock(), ISlidingRail.class)
-                .flatMap(rail -> rail.getSlidingDirection(level, state));
+                .flatMap(rail -> rail.getSlidingDirection(level, level.getBlockState(pos.relative(side))));
             if (dirOp.isEmpty()) continue;
             direction = dirOp.get();
             break;

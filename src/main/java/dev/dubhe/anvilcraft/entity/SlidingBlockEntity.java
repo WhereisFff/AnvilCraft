@@ -138,15 +138,15 @@ public class SlidingBlockEntity extends Entity {
             if (entity instanceof SlidingBlockEntity) continue;
             Vec3 collide = this.section.findCollide(this.position(), entity.getBoundingBox());
             entity.setDeltaMovement(
-                entity.getDeltaMovement().x + collide.x() + 5.5,
+                entity.getDeltaMovement().x + collide.x() + DEFAULT_MOVEMENT * 2.8,
                 entity.getDeltaMovement().y < 0 ? 0 : entity.getDeltaMovement().y,
-                entity.getDeltaMovement().z + collide.z() + 5.5
+                entity.getDeltaMovement().z + collide.z() + DEFAULT_MOVEMENT * 2.8
             );
         }
     }
 
     protected boolean checkCanMove() {
-        if (!this.level().getBlockState(this.blockPosition().below()).is(ModBlockTags.SLIDING_RAILS)) return false;
+        if (!(this.level().getBlockState(this.blockPosition().below()).getBlock() instanceof ISlidingRail)) return false;
         for (Vec3i pos : this.section.getWallsOnSide(this.moveDirection)) {
             BlockPos checking = this.blockPosition().offset(pos);
             if (!this.level().getBlockState(checking).isAir()) return false;

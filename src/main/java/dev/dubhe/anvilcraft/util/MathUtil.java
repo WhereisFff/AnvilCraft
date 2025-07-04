@@ -61,6 +61,16 @@ public class MathUtil {
         return a / b;
     }
 
+    public static boolean isInRange(double value, double min, double max) {
+        if (min > max) {
+            double min1 = min;
+            min = max;
+            max = min1;
+        }
+
+        return value > min && value < max;
+    }
+
     public static boolean isInRange(double valueX, double valueY, double minX, double minY, double maxX, double maxY) {
         if (minX > maxX) {
             double minX1 = minX;
