@@ -98,10 +98,14 @@ public final class SlidingBlockSection {
     }
 
     private void calculateSide(Direction side) {
-        AABB bounds = new AABB(0, 0, 0, 0, 0, 0);
+        AABB bounds = null;
         Multimap<IntIntPair, Vec3i> cache = HashMultimap.create();
         for (SlidingBlockInfo info : this.blocks) {
             cache.put(info.getPos2D(side), info.offset());
+            if (bounds == null) {
+                bounds = AabbUtil.create(info.offset(), info.offset());
+                continue;
+            }
             bounds = AabbUtil.minmax(bounds, info.offset());
         }
         List<Vec3i> result = new ArrayList<>();

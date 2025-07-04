@@ -46,7 +46,6 @@ public class SlidingBlockEntity extends Entity {
     @Setter
     private SlidingBlockSection section;
     @Getter
-    @Setter
     private Direction moveDirection;
     public static final double DEFAULT_MOVEMENT = 0.75;
     protected static final EntityDataAccessor<BlockPos> DATA_START_POS = SynchedEntityData.defineId(
@@ -103,7 +102,7 @@ public class SlidingBlockEntity extends Entity {
             BlockPos pos = this.blockPosition();
             BlockPos belowPos = pos.below();
             BlockState belowState = this.level().getBlockState(belowPos);
-            if (belowState.getBlock() instanceof ISlidingRail slidingRail) {
+            if (belowState.getBlock() instanceof ISlidingRail slidingRail && !this.level().isClientSide) {
                 slidingRail.onSlidingAbove(this.level(), belowState, this);
             }
 
@@ -111,7 +110,7 @@ public class SlidingBlockEntity extends Entity {
                 this.section.setBlock(this.level(), this.blockPosition(), this);
             } else if (this.checkCanMove()) {
                 this.setDeltaMovement(Vec3.ZERO.relative(this.moveDirection, DEFAULT_MOVEMENT));
-            } else if (!this.level().isClientSide) {
+            } else if (!this.level().isClientSide && !this.isRemoved()) {
                 BlockState state = this.level().getBlockState(pos);
                 this.setDeltaMovement(Vec3.ZERO.multiply(Vec3.ZERO.relative(this.moveDirection, -0.5)));
                 if (!state.is(Blocks.MOVING_PISTON)) {
@@ -129,7 +128,9 @@ public class SlidingBlockEntity extends Entity {
         if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
         List<Entity> list = this.level().getEntities(
             this,
-            this.section.getBoundsOnSide(Direction.UP).expandTowards(0, 1, 0),
+            this.section.getBoundsOnSide(Direction.UP)
+                .expandTowards(0, 1, 0)
+                .move(this.blockPosition()),
             EntitySelector.pushableBy(this)
         );
         if (list.isEmpty()) return;
@@ -152,6 +153,14 @@ public class SlidingBlockEntity extends Entity {
             if (!this.level().getBlockState(checking.relative(this.moveDirection)).isAir()) return false;
         }
         return true;
+    }
+
+    public void setMoveDirection(Direction moveDirection) {
+        this.moveDirection = moveDirection;
+        if (this.level().isClientSide) return;
+        PacketDistributor.sendToPlayersTrackingChunk(
+            (ServerLevel) this.level(), new ChunkPos(this.blockPosition()),
+            new SlidingEntitySyncPacket(this.getId(), this.section.blocks(), moveDirection));
     }
 
     public void stop() {
@@ -190,20 +199,15 @@ public class SlidingBlockEntity extends Entity {
 
     @Override
     protected void addAdditionalSaveData(CompoundTag compound) {
-        CompoundTag section = new CompoundTag();
-        SlidingBlockSection.CODEC.encode(this.section, NbtOps.INSTANCE, section);
-        compound.put("SlidingBlocks", section);
+        SlidingBlockSection.CODEC.encode(this.section, NbtOps.INSTANCE, new CompoundTag())
+            .ifSuccess(tag -> compound.put("SlidingBlocks", tag));
         Direction.CODEC.encode(this.moveDirection, NbtOps.INSTANCE, EndTag.INSTANCE)
             .ifSuccess(tag -> compound.put("MovingDirection", tag));
     }
 
-    /**
-     * (abstract) Protected helper method to read subclass entity data from NBT.
-     */
     @Override
     protected void readAdditionalSaveData(CompoundTag compound) {
-        CompoundTag section = compound.getCompound("SlidingBlocks");
-        SlidingBlockSection.CODEC.decode(NbtOps.INSTANCE, section)
+        SlidingBlockSection.CODEC.decode(NbtOps.INSTANCE, compound.getCompound("SlidingBlocks"))
             .ifSuccess(data -> this.section = data.getFirst());
         Direction.CODEC.decode(NbtOps.INSTANCE, Objects.requireNonNull(compound.get("MovingDirection")))
             .ifSuccess(data -> this.moveDirection = data.getFirst());
@@ -222,6 +226,11 @@ public class SlidingBlockEntity extends Entity {
 
     @Override
     public boolean onlyOpCanSetNbt() {
+        return true;
+    }
+
+    @Override
+    public boolean canBeCollidedWith() {
         return true;
     }
 

@@ -9,6 +9,10 @@ import net.minecraft.world.phys.AABB;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AabbUtil {
+    public static AABB create(Vec3i start, Vec3i end) {
+        return new AABB(start.getX(), start.getY(), start.getZ(), end.getX(), end.getY(), end.getZ());
+    }
+
     public static AABB centerSectionTo3x3x3(BlockPos pos) {
         return centerSectionTo3x3x3(SectionPos.of(pos));
     }
