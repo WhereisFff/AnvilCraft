@@ -81,10 +81,6 @@ public class MathUtil {
     }
 
     public static Direction getDirection(BlockPos from, BlockPos to) {
-        return Direction.fromDelta(
-            from.getX() - to.getX(),
-            from.getY() - to.getY(),
-            from.getZ() - to.getZ()
-        );
+        return Direction.fromDelta(from.getX() - to.getX(), from.getY() - to.getY(), from.getZ() - to.getZ());
     }
 }

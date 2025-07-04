@@ -60,18 +60,19 @@ public class SlidingBlockEntity extends Entity {
     }
 
     public SlidingBlockEntity(
-        Level level, Vec3 pos, Direction moveDirection,
+        Level level, BlockPos pos, Direction moveDirection,
         Iterable<Triple<BlockPos, BlockState, Optional<CompoundTag>>> infos
     ) {
         this(ModEntities.SLIDING_BLOCK.get(), level);
         this.blocksBuilding = true;
-        this.setPos(pos);
-        this.section = SlidingBlockSection.create(this.blockPosition(), infos);
+        this.section = SlidingBlockSection.create(pos, infos);
+        Vec3 bottomCenter = pos.getBottomCenter();
+        this.setPos(bottomCenter);
         this.setDeltaMovement(Vec3.ZERO);
-        this.xo = pos.x;
-        this.yo = pos.y;
-        this.zo = pos.z;
-        this.setStartPos(this.blockPosition());
+        this.xo = bottomCenter.x;
+        this.yo = bottomCenter.y;
+        this.zo = bottomCenter.z;
+        this.setStartPos(pos);
         this.moveDirection = moveDirection;
     }
 
@@ -80,7 +81,7 @@ public class SlidingBlockEntity extends Entity {
         Level level, BlockPos pos, Direction moveDirection,
         Iterable<Triple<BlockPos, BlockState, Optional<CompoundTag>>> infos
     ) {
-        SlidingBlockEntity entity = new SlidingBlockEntity(level, pos.getBottomCenter(), moveDirection, infos);
+        SlidingBlockEntity entity = new SlidingBlockEntity(level, pos, moveDirection, infos);
         for (var entry : infos) {
             level.setBlock(pos, level.getFluidState(entry.getLeft()).createLegacyBlock(), 3);
         }
@@ -128,19 +129,18 @@ public class SlidingBlockEntity extends Entity {
         if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
         List<Entity> list = this.level().getEntities(
             this,
-            this.section.getBoundsOnSide(Direction.UP),
+            this.section.getBoundsOnSide(Direction.UP).expandTowards(0, 1, 0),
             EntitySelector.pushableBy(this)
         );
-        if (!list.isEmpty()) {
-            for (Entity entity : list) {
-                if (entity instanceof SlidingBlockEntity) continue;
-                Vec3 collide = this.section.findCollide(this.position(), entity.getBoundingBox());
-                entity.setDeltaMovement(
-                    entity.getDeltaMovement().x + collide.x() + 5.5,
-                    entity.getDeltaMovement().y < 0 ? 0 : entity.getDeltaMovement().y,
-                    entity.getDeltaMovement().z + collide.z() + 5.5
-                );
-            }
+        if (list.isEmpty()) return;
+        for (Entity entity : list) {
+            if (entity instanceof SlidingBlockEntity) continue;
+            Vec3 collide = this.section.findCollide(this.position(), entity.getBoundingBox());
+            entity.setDeltaMovement(
+                entity.getDeltaMovement().x + collide.x() + 5.5,
+                entity.getDeltaMovement().y < 0 ? 0 : entity.getDeltaMovement().y,
+                entity.getDeltaMovement().z + collide.z() + 5.5
+            );
         }
     }
 

@@ -184,14 +184,10 @@ public class SlidingRailBlock extends Block implements IHammerChangeable, IHamme
             BlockEntity destroyingEntity = destroyingState.hasBlockEntity() ? level.getBlockEntity(destroyingPos) : null;
             dropResources(destroyingState, level, destroyingPos, destroyingEntity);
             destroyingState.onDestroyedByPushReaction(level, destroyingPos, facing, level.getFluidState(destroyingPos));
-            if (!destroyingState.is(BlockTags.FIRE)) {
-                level.addDestroyBlockEffect(destroyingPos, destroyingState);
-            }
         }
 
-        BlockState prevState = Blocks.AIR.defaultBlockState();
         for (BlockPos toPushPos : toPushPoses) {
-            level.setBlock(toPushPos, prevState, 0b1010010);
+            level.setBlock(toPushPos, Blocks.AIR.defaultBlockState(), 0b1010010);
         }
 
         SlidingBlockEntity.slid(level, pos, facing, toPushes);

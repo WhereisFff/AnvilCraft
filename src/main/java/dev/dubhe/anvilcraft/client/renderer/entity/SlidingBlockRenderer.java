@@ -45,7 +45,9 @@ public class SlidingBlockRenderer extends EntityRenderer<SlidingBlockEntity> {
         if (state == level.getBlockState(center) || state.getRenderShape() == RenderShape.INVISIBLE) return;
         pose.pushPose();
         BlockPos pos = info.getPos(center);
+        startPos = info.getPos(startPos);
         pose.translate(-0.5, 0.0, -0.5);
+        pose.translate(info.x(), info.y(), info.z());
         var model = this.dispatcher.getBlockModel(state);
         for (var renderType : model.getRenderTypes(state, RandomSource.create(state.getSeed(startPos)), ModelData.EMPTY)) {
             this.dispatcher

@@ -36,7 +36,6 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public final class SlidingBlockSection {
@@ -61,11 +60,8 @@ public final class SlidingBlockSection {
             BlockPos otherPos = infoRaw.getLeft();
             BlockState other = infoRaw.getMiddle();
             Optional<CompoundTag> data = infoRaw.getRight();
-            Vec3i pos = MathUtil.dist(center, otherPos);
-            byte x = (byte) pos.getX();
-            byte y = (byte) pos.getY();
-            byte z = (byte) pos.getZ();
-            SlidingBlockInfo info = new SlidingBlockInfo(x, y, z, other, data.orElse(new CompoundTag()));
+            Vec3i pos = MathUtil.dist(otherPos, center);
+            SlidingBlockInfo info = new SlidingBlockInfo(pos, other, data.orElse(new CompoundTag()));
             builder.add(info);
         }
         return new SlidingBlockSection(builder.build());
@@ -102,17 +98,11 @@ public final class SlidingBlockSection {
     }
 
     private void calculateSide(Direction side) {
-        Function<SlidingBlockInfo, IntIntPair> pos2dCreator = switch (side.getAxis()) {
-            case X -> info -> IntIntPair.of(info.y(), info.z());
-            case Y -> info -> IntIntPair.of(info.x(), info.z());
-            case Z -> info -> IntIntPair.of(info.x(), info.y());
-        };
         AABB bounds = new AABB(0, 0, 0, 0, 0, 0);
         Multimap<IntIntPair, Vec3i> cache = HashMultimap.create();
         for (SlidingBlockInfo info : this.blocks) {
-            Vec3i vec3i = new Vec3i(info.x(), info.y(), info.z());
-            cache.put(pos2dCreator.apply(info), vec3i);
-            bounds = AabbUtil.minmax(bounds, vec3i);
+            cache.put(info.getPos2D(side), info.offset());
+            bounds = AabbUtil.minmax(bounds, info.offset());
         }
         List<Vec3i> result = new ArrayList<>();
         for (IntIntPair key : cache.keySet()) {
@@ -173,8 +163,7 @@ public final class SlidingBlockSection {
     @Override
     public boolean equals(Object obj) {
         if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (SlidingBlockSection) obj;
+        if (!(obj instanceof SlidingBlockSection that)) return false;
         return Objects.equals(this.blocks, that.blocks);
     }
 

@@ -9,7 +9,9 @@ import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
@@ -184,4 +186,17 @@ public class CodecUtil {
     public static <B, F, S> StreamCodec<B, Pair<F, S>> createPairStreamCodec(StreamCodec<? super B, F> first, StreamCodec<? super B, S> second) {
         return StreamCodec.composite(first, Pair::getFirst, second, Pair::getSecond, Pair::new);
     }
+
+    public static final StreamCodec<ByteBuf, Vec3i> VEC3I_STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public @NotNull Vec3i decode(ByteBuf buffer) {
+            long packedPos = buffer.readLong();
+            return new Vec3i(BlockPos.getX(packedPos), BlockPos.getY(packedPos), BlockPos.getZ(packedPos));
+        }
+
+        @Override
+        public void encode(ByteBuf buffer, Vec3i value) {
+            buffer.writeLong(BlockPos.asLong(value.getX(), value.getY(), value.getZ()));
+        }
+    };
 }
