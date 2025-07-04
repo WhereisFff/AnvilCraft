@@ -243,5 +243,9 @@ public class BlockTagLoader {
 
         provider.addTag(ModBlockTags.HEATABLE_BLOCKS)
             .add(findResourceKey(Blocks.NETHERITE_BLOCK));
+
+        provider.addTag(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)
+            .addTag(ModBlockTags.SLIDING_RAILS)
+            .add(ModBlocks.SLIDING_RAIL_STOP.getKey());
     }
 }

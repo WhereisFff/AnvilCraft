@@ -33,6 +33,8 @@ public class ModBlockTags {
     public static final TagKey<Block> CRAFTING_MATRIX_ELEMENT = bind("crafting_matrix_element");
     public static final TagKey<Block> SPECTRAL_CAN_THROUGH = bind("spectral_can_through");
     public static final TagKey<Block> HEATABLE_BLOCKS = bind("heatable_blocks");
+    public static final TagKey<Block> SLIDING_RAILS = bind("sliding_rails");
+    public static final TagKey<Block> STICKABLE_WITH_SLIDING_RAILS = bind("stickable_with_sliding_rails");
 
     // common tags
     public static final TagKey<Block> ORES_TUNGSTEN = bindC("ores/tungsten");
