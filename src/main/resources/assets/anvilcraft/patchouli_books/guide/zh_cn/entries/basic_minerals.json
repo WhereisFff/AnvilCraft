@@ -1,0 +1,66 @@
+{
+  "name": "基本矿石",
+  "category": "anvilcraft:basic_gameplay",
+  "icon": "anvilcraft:void_stone",
+  "sortnum": 1001,
+  "pages": [
+    "不同于大多数mod，正常情况下本模组的矿石不会自然生成，只能通过矿物泉涌得到。$(br)为了在前期获得本模组的金属，你需要使用类似于“无中生有”的方式——“$(l:basic_item_processing#item_sifting)物品过筛$()”。$(br)以此法获得的金属粒及其来源在后文列出。",
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "lead_nugget",
+      "item": "anvilcraft:lead_nugget",
+      "text": "$(item)铅粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "tin_nugget",
+      "item": "anvilcraft:tin_nugget",
+      "text": "$(item)锡粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "zinc_nugget",
+      "item": "anvilcraft:zinc_nugget",
+      "text": "$(item)锌粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "silver_nugget",
+      "item": "anvilcraft:silver_nugget",
+      "text": "$(item)银粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "tungsten_nugget",
+      "item": "anvilcraft:tungsten_nugget",
+      "text": "$(item)钨粒$()通过筛选$(item)下界尘$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "titanium_nugget",
+      "item": "anvilcraft:titanium_nugget",
+      "text": "$(item)钛粒$()通过筛选$(item)末地尘$()概率获得。"
+    },
+    "在获得一定量的金属后，你可以通过$(#ffa500)时移$()将金属块转化为粗矿，并用粗矿块配合$(item)矿脉涌泉$()再生矿物。",
+    {
+      "type": "patchouli:multiblock",
+      "name": "矿物涌泉结构",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:deepslate",
+          "B": "anvilcraft:deepslate_silver_ore",
+          "T": "anvilcraft:raw_silver_block",
+          "O": "anvilcraft:mineral_fountain",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["       ", "       ", "       "],
+          ["       ", " B   A ", "       "],
+          [" T   T ", "TOT0TOT", " T   T "]
+        ]
+      },
+      "text": "这种结构下的$(item)矿物涌泉$()可以生成矿石"
+    },
+    "$(item)矿物涌泉$()每秒检测四个面相邻方块，如果它们都是某一种粗矿块，则将$(item)深板岩$()转化为对应的深层矿。$(br)在主世界生成时，有1%概率生成$(item)地核碎片矿石$()，有1%的概率生成$(item)虚空石$()。$(br)在下界生成时，有20%概率生成$(item)地核碎片矿石$()。$(br)在末地生成时，有20%的概率生成$(item)虚空石$()。$(br)$(#aa2222)注意$()：宝石不能以这种方式再生，仅接受粗矿块。"
+  ]
+}
