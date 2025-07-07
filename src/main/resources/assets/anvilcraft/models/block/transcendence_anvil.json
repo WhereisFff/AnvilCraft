@@ -72,18 +72,7 @@
 		{
 			"from": [6, 5, 6],
 			"to": [10, 9, 10],
-			"faces": {
-				"north": {"uv": [1, 7, 5, 11], "rotation": 90, "texture": "#side"},
-				"east": {"uv": [1, 7, 5, 11], "texture": "#side"},
-				"south": {"uv": [1, 7, 5, 11], "rotation": 90, "texture": "#side"},
-				"west": {"uv": [1, 7, 5, 11], "texture": "#side"},
-				"up": {"uv": [1, 7, 5, 11], "texture": "#side"},
-				"down": {"uv": [1, 7, 5, 11], "texture": "#side"}
-			}
-		},
-		{
-			"from": [6, 5, 6],
-			"to": [10, 9, 10],
+			"shade": false,
 			"faces": {
 				"north": {"uv": [1, 7, 5, 11], "rotation": 90, "texture": "#side"},
 				"east": {"uv": [1, 7, 5, 11], "texture": "#side"},
@@ -97,6 +86,7 @@
 			"name": "cube_outline",
 			"from": [10.5, 9.5, 10.5],
 			"to": [5.5, 4.5, 5.5],
+			"shade": false,
 			"faces": {
 				"north": {"uv": [7, 8, 9, 10], "rotation": 180, "texture": "#side"},
 				"east": {"uv": [7, 8, 9, 10], "rotation": 180, "texture": "#side"},
@@ -110,6 +100,7 @@
 			"name": "cube_outline",
 			"from": [10.25, 9.25, 10.25],
 			"to": [5.75, 4.75, 5.75],
+			"shade": false,
 			"faces": {
 				"north": {"uv": [12, 8, 14, 10], "rotation": 180, "texture": "#side"},
 				"east": {"uv": [12, 8, 14, 10], "rotation": 180, "texture": "#side"},
@@ -123,6 +114,7 @@
 			"name": "cube_outline",
 			"from": [11, 10, 11],
 			"to": [5, 4, 5],
+			"shade": false,
 			"faces": {
 				"north": {"uv": [6, 6, 10, 10], "rotation": 180, "texture": "#outline"},
 				"east": {"uv": [6, 6, 10, 10], "rotation": 180, "texture": "#outline"},
