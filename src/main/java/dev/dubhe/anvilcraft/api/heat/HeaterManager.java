@@ -69,6 +69,7 @@ public class HeaterManager {
     public static void tickAll() {
         INSTANCES.forEach((level, manager) -> {
             if (level.getGameTime() % GRID_TICK != 0) return;
+            if (level.tickRateManager().isFrozen() && !level.tickRateManager().isSteppingForward()) return;
             manager.tick();
         });
     }
