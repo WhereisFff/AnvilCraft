@@ -27,6 +27,7 @@ import dev.dubhe.anvilcraft.network.RocketJumpPacket;
 import dev.dubhe.anvilcraft.network.SilencerSyncPacket;
 import dev.dubhe.anvilcraft.network.SliderInitPacket;
 import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
+import dev.dubhe.anvilcraft.network.SlidingEntitySyncPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
@@ -209,6 +210,11 @@ public class ModNetworks {
             HeatableSyncPacket.TYPE,
             HeatableSyncPacket.STREAM_CODEC,
             HeatableSyncPacket.HANDLER
+        );
+        registrar.playToClient(
+            SlidingEntitySyncPacket.TYPE,
+            SlidingEntitySyncPacket.STREAM_CODEC,
+            SlidingEntitySyncPacket.HANDLER
         );
         registrar.playToClient(
             ChargerSyncPacket.TYPE,

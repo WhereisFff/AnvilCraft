@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BatchCrafterBlock.class)
-public class BatchCrafterBlockMixin {
+public class AE2BatchCrafterBlockMixin {
     @WrapOperation(
         method = "onRemove",
         at = @At(

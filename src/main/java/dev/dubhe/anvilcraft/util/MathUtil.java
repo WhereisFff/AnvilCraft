@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.util;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import org.joml.Vector2f;
 
 import static java.lang.Math.atan2;
@@ -58,6 +61,16 @@ public class MathUtil {
         return a / b;
     }
 
+    public static boolean isInRange(double value, double min, double max) {
+        if (min > max) {
+            double min1 = min;
+            min = max;
+            max = min1;
+        }
+
+        return value > min && value < max;
+    }
+
     public static boolean isInRange(double valueX, double valueY, double minX, double minY, double maxX, double maxY) {
         if (minX > maxX) {
             double minX1 = minX;
@@ -71,5 +84,13 @@ public class MathUtil {
         }
 
         return valueX > minX && valueX < maxX && valueY > minY && valueY < maxY;
+    }
+
+    public static Vec3i dist(BlockPos a, BlockPos b) {
+        return new Vec3i(a.getX() - b.getX(), a.getY() - b.getY(), a.getZ() - b.getZ());
+    }
+
+    public static Direction getDirection(BlockPos from, BlockPos to) {
+        return Direction.fromDelta(from.getX() - to.getX(), from.getY() - to.getY(), from.getZ() - to.getZ());
     }
 }

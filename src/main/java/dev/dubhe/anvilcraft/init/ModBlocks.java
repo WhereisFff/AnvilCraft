@@ -97,8 +97,9 @@ import dev.dubhe.anvilcraft.block.RoyalSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.RubyLaserBlock;
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
-import dev.dubhe.anvilcraft.block.SlidingRailBlock;
-import dev.dubhe.anvilcraft.block.SlidingRailStopBlock;
+import dev.dubhe.anvilcraft.block.sliding.PoweredSlidingRailBlock;
+import dev.dubhe.anvilcraft.block.sliding.SlidingRailBlock;
+import dev.dubhe.anvilcraft.block.sliding.SlidingRailStopBlock;
 import dev.dubhe.anvilcraft.block.SpaceOvercompressorBlock;
 import dev.dubhe.anvilcraft.block.SpectralAnvilBlock;
 import dev.dubhe.anvilcraft.block.StampingPlatformBlock;
@@ -161,7 +162,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -1389,12 +1389,8 @@ public class ModBlocks {
     public static BlockEntry<SlidingRailBlock> SLIDING_RAIL = REGISTRATE
         .block("sliding_rail", SlidingRailBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
-        .properties(it -> it
-            .mapColor(MapColor.COLOR_GRAY)
-            .friction(1.0204082f)
-            .pushReaction(PushReaction.PUSH_ONLY)
-        )
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .properties(it -> it.mapColor(MapColor.COLOR_GRAY))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.SLIDING_RAILS)
         .blockstate((ctx, provider) -> {
             provider.getVariantBuilder(ctx.get()).forAllStates(blockState -> switch (blockState.getValue(
                 SlidingRailBlock.AXIS)) {
@@ -1420,6 +1416,26 @@ public class ModBlocks {
                 .define('A', Blocks.BLUE_ICE)
                 .define('B', Items.IRON_INGOT)
                 .unlockedBy(AnvilCraftDatagen.hasItem(Blocks.BLUE_ICE), AnvilCraftDatagen.has(Blocks.BLUE_ICE))
+                .save(provider);
+        })
+        .register();
+    public static BlockEntry<PoweredSlidingRailBlock> POWERED_SLIDING_RAIL = REGISTRATE
+        .block("powered_sliding_rail", PoweredSlidingRailBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(it -> it.mapColor(MapColor.COLOR_GRAY))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.SLIDING_RAILS)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .model((ctx, provider) -> provider.blockItem(ctx))
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 16)
+                .pattern("SSS")
+                .pattern("SRS")
+                .pattern("SSS")
+                .define('R', Blocks.REDSTONE_BLOCK)
+                .define('S', ModBlocks.SLIDING_RAIL)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.SLIDING_RAIL), AnvilCraftDatagen.has(ModBlocks.SLIDING_RAIL))
                 .save(provider);
         })
         .register();

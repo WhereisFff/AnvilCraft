@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Mixin(BatchCrafterBlockEntity.class)
-public abstract class BatchCrafterBlockEntityMixin
+public abstract class AE2BatchCrafterBlockEntityMixin
     extends BlockEntity
     implements ICraftingMachine, IMolecularAssemblerSupportedPattern.CraftingGridAccessor, DeferTaskSubmittable<BatchCrafterBlockEntity> {
 
@@ -53,7 +53,7 @@ public abstract class BatchCrafterBlockEntityMixin
     private final Deque<Consumer<BatchCrafterBlockEntity>> anvilcraft$deferredTasks = new ArrayDeque<>();
 
 
-    public BatchCrafterBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+    public AE2BatchCrafterBlockEntityMixin(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
