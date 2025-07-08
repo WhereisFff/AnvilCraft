@@ -893,5 +893,7 @@
   "tooltip.anvilcraft.redstone.output_power": "%d :ɹǝʍoԀ ʇndʇnO  ",
   "tooltip.anvilcraft.redstone.power": "%d :ɹǝʍoԀ  ",
   "tooltip.anvilcraft.redstone.title": ":sʇɐʇS ǝuoʇspǝᴚ",
-  "tooltip.anvilcraft.space_overcompressor.stored_mass": "%s :ssɐW pǝɹoʇS"
+  "tooltip.anvilcraft.space_overcompressor.stored_mass": "%s :ssɐW pǝɹoʇS",
+  "tooltip.anvilcraft.working_progress.progress": "%s%% %s  ",
+  "tooltip.anvilcraft.working_progress.title": ":ssǝɹboɹd buıʞɹoM"
 }
