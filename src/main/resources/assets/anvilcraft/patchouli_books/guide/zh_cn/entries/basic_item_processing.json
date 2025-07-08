@@ -78,7 +78,7 @@
     },
     {
       "type": "patchouli:multiblock",
-      "anchor": "item_sifting",
+      "anchor": "mesh",
       "name": "物品过筛",
       "multiblock": {
         "mapping": {

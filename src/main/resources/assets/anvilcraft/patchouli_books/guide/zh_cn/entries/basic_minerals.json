@@ -4,7 +4,7 @@
   "icon": "anvilcraft:earth_core_shard_ore",
   "sortnum": 1006,
   "pages": [
-    "不同于大多数mod，正常情况下本模组的矿石不会自然生成，只能通过矿物涌泉得到。$(br)为了在前期获得本模组的金属，你需要使用类似于“无中生有”的方式——“$(l:basic_item_processing#item_sifting)物品过筛$()”。$(br)以此法获得的金属粒及其来源在后文列出。",
+    "不同于大多数mod，正常情况下本模组的矿石不会自然生成，只能通过矿物涌泉得到。$(br)为了在前期获得本模组的金属，你需要使用类似于“无中生有”的方式——“$(l:basic_item_processing#mesh)物品过筛$()”。$(br)以此法获得的金属粒及其来源在后文列出。",
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:lead_nugget",
@@ -81,9 +81,9 @@
       "text": "$(item)虚空物质$()及其块状物、矿石防虚空，在$(thing)虚空$()中会上升"
     },
     {
-      "type": "patchouli:spotlight",
+      "type": "patchouli:crafting",
       "anchor": "void_matter_block",
-      "item": "anvilcraft:void_matter_block",
+      "recipe": "anvilcraft:void_matter_block",
       "text": "$(item)虚空物质块$()防虚空<br>可用于制作$(l:power_advanced_void_energy_collection#void_energy_collector)虚空能收集器$()<br>自身具有$(thing)虚空衰变$()的特性"
     },
     {
@@ -100,8 +100,7 @@
         "mapping": {
           "A": "anvilcraft:deepslate_silver_ore",
           "T": "anvilcraft:raw_silver_block",
-          "O": "anvilcraft:mineral_fountain",
-          "M": "anvilcraft:arrow",
+          "M": "anvilcraft:mineral_fountain",
           "F": "anvilcraft:ruby_prism",
           "W": "anvilcraft:ruby_laser[facing=west]",
           "E": "anvilcraft:ruby_laser[facing=east]",
