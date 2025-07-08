@@ -162,6 +162,7 @@
   "block.anvilcraft.power_converter_big": "Преобразователь мощности большой",
   "block.anvilcraft.power_converter_middle": "Преобразователь мощности середина",
   "block.anvilcraft.power_converter_small": "Преобразователь мощности маленький",
+  "block.anvilcraft.powered_sliding_rail": "Powered Sliding Rail",
   "block.anvilcraft.pulse_generator": "Pulse Generator",
   "block.anvilcraft.purple_cement": "Purple Cement",
   "block.anvilcraft.purple_cement_cauldron": "Purple Cement Cauldron",
@@ -312,6 +313,7 @@
   "entity.anvilcraft.floating_block": "Плавающий Блок",
   "entity.anvilcraft.ionocraft": "Ionocraft",
   "entity.anvilcraft.levitating_block": "Levitating Block",
+  "entity.anvilcraft.sliding_block": "Sliding Block",
   "entity.anvilcraft.standable_falling_block": "Standable Falling Block",
   "entity.anvilcraft.standable_levitating_block": "Standable Levitating Block",
   "entity.anvilcraft.thrown_ember_metal_heavy_halberd": "Thrown Ember Metal Heavy Halberd",
@@ -738,6 +740,8 @@
   "text.autoconfig.anvilcraft.option.renderPowerTransmitterLines.@Tooltip": "Render lines between power transmitters",
   "text.autoconfig.anvilcraft.option.royalAnvilBeyondMaxLevel": "Royal Anvil Beyond Max Level",
   "text.autoconfig.anvilcraft.option.royalAnvilBeyondMaxLevel.@Tooltip": "Combining items with Enchanted Books beyond max level in Royal Anvil",
+  "text.autoconfig.anvilcraft.option.slidingRailStickToEachOther": "Sliding Rail Stick To Each Other",
+  "text.autoconfig.anvilcraft.option.slidingRailStickToEachOther.@Tooltip": "Pushing or pulling a sliding rail will chain to other rails",
   "text.autoconfig.anvilcraft.option.transparentCraftingTableMaxMatrixSize": "Transparent Crafting Table Max Matrix Size",
   "text.autoconfig.anvilcraft.option.transparentCraftingTableMaxMatrixSize.@Tooltip": "Maximum size for connecting transparent crafting table to form matrix",
   "text.autoconfig.anvilcraft.title": "Конфигурация AnvilCraft",
@@ -889,5 +893,7 @@
   "tooltip.anvilcraft.redstone.output_power": "  Output Power: %d",
   "tooltip.anvilcraft.redstone.power": "  Power: %d",
   "tooltip.anvilcraft.redstone.title": "Redstone Stats:",
-  "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s"
+  "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s",
+  "tooltip.anvilcraft.working_progress.progress": "  %s %s%%",
+  "tooltip.anvilcraft.working_progress.title": "Working progress:"
 }
