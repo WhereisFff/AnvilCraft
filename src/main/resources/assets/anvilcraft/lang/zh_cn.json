@@ -307,6 +307,8 @@
   "enchantment.anvilcraft.felling.desc": "连锁采集原木及其变种，连锁数量上限随等级增加。",
   "enchantment.anvilcraft.harvest": "收割",
   "enchantment.anvilcraft.harvest.desc": "收割一定范围内的成熟作物并重新种植，范围随等级增加。",
+  "enchantment.anvilcraft.smelting": "熔炼",
+  "enchantment.anvilcraft.smelting.desc": "熔炼方块掉落物（精确采集和时运之后），高等级提供倍矿概率",
   "entity.anvilcraft.animate_ascending_block": "上升的铁砧",
   "entity.anvilcraft.falling_giant_anvil": "下落的巨型铁砧",
   "entity.anvilcraft.falling_spectral_block": "下落的幻灵方块",

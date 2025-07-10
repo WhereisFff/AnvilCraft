@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.data.provider.ModCuriosProvider;
 import dev.dubhe.anvilcraft.data.provider.ModDamageTypeProvider;
 import dev.dubhe.anvilcraft.data.provider.ModDamageTypeTagProvider;
 import dev.dubhe.anvilcraft.data.provider.ModFurnaceFuelProvider;
+import dev.dubhe.anvilcraft.data.provider.ModLootModifierProvider;
 import dev.dubhe.anvilcraft.data.provider.ModLootTableProvider;
 import dev.dubhe.anvilcraft.data.provider.ModParticleDescriptionProvider;
 import dev.dubhe.anvilcraft.data.provider.ModPoiTagProvider;
@@ -51,6 +52,7 @@ public class AnvilCraftDatagen {
         generator.addProvider(event.includeServer(), new ModDamageTypeProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new ModDamageTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
         generator.addProvider(event.includeServer(), new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));
+        generator.addProvider(event.includeServer(), new ModLootModifierProvider(packOutput, lookupProvider, AnvilCraft.MOD_ID));
         generator.addProvider(event.includeClient(), new ModParticleDescriptionProvider(packOutput, existingFileHelper));
     }
 
