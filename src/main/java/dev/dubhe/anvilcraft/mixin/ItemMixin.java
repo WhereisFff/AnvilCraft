@@ -77,21 +77,21 @@ public class ItemMixin {
             ItemEnchantments itemEnchantments = itemStack.get(DataComponents.ENCHANTMENTS);
             if (itemEnchantments != null && !itemEnchantments.isEmpty()) {
                 List<Holder<Enchantment>> enchantments = new ArrayList<>(itemEnchantments.keySet().stream().toList());
-                int count = 4;
-                if (count > enchantments.size()) {
-                    count = enchantments.size();
+                int count = enchantments.size();
+                if (enchantments.size() > 4) {
+                    count = 4;
                 }
                 for (int i = 0; i < count; i++) {
                     Holder<Enchantment> randomEnchantment = anvilcraft$getRandom(enchantments);
-                    boolean isSuccess = false;
+                    boolean selected = false;
                     for (ResourceKey<Enchantment> enchantmentResourceKey : anvilcraft$enchantmentMappings.keySet()) {
                         if (randomEnchantment.is(enchantmentResourceKey)) {
                             result.add(anvilcraft$enchantmentMappings.get(enchantmentResourceKey));
-                            isSuccess = true;
+                            selected = true;
                             break;
                         }
                     }
-                    if (!isSuccess) {
+                    if (!selected) {
                         result.add(anvilcraft$getRandom(anvilcraft$otherTemplate));
                     }
                 }
