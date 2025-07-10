@@ -61,6 +61,7 @@ import dev.dubhe.anvilcraft.item.SeedsPackItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
 import dev.dubhe.anvilcraft.item.SuperHeavyItem;
 import dev.dubhe.anvilcraft.item.TopazItem;
+import dev.dubhe.anvilcraft.item.TranscendiumUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.UtusanItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
@@ -706,6 +707,10 @@ public class ModItems {
         .register();
     public static final ItemEntry<EmberMetalUpgradeTemplateItem> EMBER_METAL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("ember_metal_upgrade_smithing_template", EmberMetalUpgradeTemplateItem::new)
+        .tag(ModItemTags.TEMPLATES)
+        .register();
+    public static final ItemEntry<TranscendiumUpgradeTemplateItem> TRANSCENDIUM_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
+        .item("transcendium_upgrade_smithing_template", TranscendiumUpgradeTemplateItem::new)
         .tag(ModItemTags.TEMPLATES)
         .register();
 

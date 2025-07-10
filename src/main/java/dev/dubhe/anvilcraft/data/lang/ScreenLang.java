@@ -49,6 +49,17 @@ public class ScreenLang {
                 + ".upgrade_ingredients",
             "Ember Metal Ingot or Ember Metal Block");
 
+        provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.upgrade_ingredients",
+            "Transcendium Ingot or Transcendium Block");
+        provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.applies_to",
+            "Ember Metal Anvil");
+        provider.add("screen.anvilcraft.transcendium_upgrade_smithing_template",
+            "Transcendium Upgrade");
+        provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.base_slot_description",
+            "Put upgradable item");
+        provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.additions_slot_description",
+            "Put the Transcendium Ingot or Transcendium Block");
+
         provider.add("screen.anvilcraft.item_collector.title", "Item Collector");
         provider.add("screen.anvilcraft.item_collector.range", "Range");
         provider.add("screen.anvilcraft.item_collector.cooldown", "Cooldown");
