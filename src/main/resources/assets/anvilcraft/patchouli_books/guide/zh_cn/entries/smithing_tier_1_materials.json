@@ -67,6 +67,7 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "cursed_gold_block",
       "recipe": "anvilcraft:cursed_gold_block",
       "recipe2": "anvilcraft:cursed_gold_nugget"
     },

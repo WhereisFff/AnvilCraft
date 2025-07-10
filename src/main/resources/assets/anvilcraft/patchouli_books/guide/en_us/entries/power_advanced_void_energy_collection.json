@@ -1,0 +1,9 @@
+{
+  "name": "Advanced Power Generation - Void Energy Collection",
+  "category": "anvilcraft:power_system",
+  "icon": "anvilcraft:void_energy_collector",
+  "sortnum": 2004,
+  "pages": [
+    "No English now"
+  ]
+}
