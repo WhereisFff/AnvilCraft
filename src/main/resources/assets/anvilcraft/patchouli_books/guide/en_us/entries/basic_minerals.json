@@ -35,27 +35,11 @@
       "item": "anvilcraft:titanium_nugget",
       "text": "$(item)钛粒$()通过筛选$(item)末地尘$()概率获得。"
     },
-    "在获得一定量的金属后，你可以通过$(l:smithing_corrupted_beacon#time_warp)时移$()将金属块转化为粗矿，并用粗矿块配合$(item)矿脉涌泉$()再生矿物。这要求你现阶段有能力制造$(item)腐化信标$()和$(item)冲击桩$()",
     {
-      "type": "patchouli:multiblock",
-      "name": "矿物涌泉产矿",
-      "multiblock": {
-        "mapping": {
-          "A": "minecraft:deepslate",
-          "B": "anvilcraft:deepslate_silver_ore",
-          "T": "anvilcraft:raw_silver_block",
-          "O": "anvilcraft:mineral_fountain",
-          "0": "anvilcraft:arrow"
-        },
-        "pattern": [
-          ["       ", "       ", "       "],
-          ["       ", " B   A ", "       "],
-          [" T   T ", "TOT0TOT", " T   T "]
-        ]
-      },
-      "text": "这种结构下的$(item)矿物涌泉$()可以生成矿石"
+      "type": "patchouli:text",
+      "title": "无限金属矿",
+      "text": "在获得一定量的金属后，你可以通过$(l:smithing_corrupted_beacon#time_warp)时移$()将金属块转化为粗矿，$(l:advanced_mineral_fountain#mineral_fountain)矿物涌泉$()再生矿物，$(thing)激光系统$()自动采矿。这要求你现阶段有能力制造$(l:smithing_corrupted_beacon)腐化信标$()、$(l:advanced_mineral_fountain#impact_pile)冲击桩$()、$(item)激光器$()、$(item)棱镜$()并有充足的电力以供$(item)激光器$()工作"
     },
-    "$(item)矿物涌泉$()每秒检测四个面相邻方块，如果它们都是某一种粗矿块，则将$(item)深板岩$()转化为对应的深层矿。$(br)在主世界生成时，有1%概率生成$(item)地核碎片矿石$()，有1%概率生成$(item)虚空石$()。$(br)在下界生成时，有20%概率生成$(item)地核碎片矿石$()。$(br)在末地生成时，有20%概率生成$(item)虚空石$()。$(br)$(#aa2222)注意$()：宝石不能以这种方式再生，仅接受粗矿块。$(br)$(#aa2222)注意$()：矿物涌泉仅在y=-54及以下位置工作",
     {
       "type": "patchouli:spotlight",
       "anchor": "earth_core_shard_ore",

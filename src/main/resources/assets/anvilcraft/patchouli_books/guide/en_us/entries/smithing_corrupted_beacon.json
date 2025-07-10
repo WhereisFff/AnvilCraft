@@ -8,6 +8,12 @@
       "type": "patchouli:text",
       "text": "Release the Wither's power that been sealed in the normal beacon. Will give entities in its beam $(thing)Wither$() effect. Some mobs will transform to another mob, and it can also go on with Anvils."
     },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "corrupted_beacon",
+      "item": "anvilcraft:corrupted_beacon",
+      "text": "When you fully using $(l:smithing_tier_1_materials#cursed_gold_block)Cursed Gold Block$() as the base of beacons and use $(l:smithing_tier_1_materials#cursed_gold_ingot)Cursed Gold Ingot$() to activate it, the beacon will have chance to convert into $(item)Corrupted Beacon$(). The more layers of the base, the higher the conversion probability. Use Cursed Gold Ingot to activate beacons will make weather set to Thunder."
+    },
     "Mob Transform: $(br)$(thing)Pig$()→$(thing)Hoglin$()$(br)$(thing)Cow$()→$(thing)Ravager$()$(br)$(thing)Guardian$()→$(thing)Elder Guardian$()$(br)$(thing)Piglin$()→$(thing)Piglin Brute$()$(br)$(thing)Villager$()→30%$(thing)Pillager$()、60%$(thing)Vindicator$()、10%$(thing)Evoker$()$(br)$(thing)Allay$()→$(thing)Vex$()$(br)$(thing)Bat$()→$(thing)Phantom$()$(br)$(thing)Horse$()→10%$(thing)Zombie Horse$()、90%$(thing)Skeleton Horse$()$(br)$(thing)Silverfish$()→$(thing)Endermite$()",
     {
       "type": "patchouli:multiblock",

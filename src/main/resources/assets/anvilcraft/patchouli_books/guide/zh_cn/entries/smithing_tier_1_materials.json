@@ -74,7 +74,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:corrupted_beacon",
-      "text": "完全使用$(item)诅咒金块$()作为信标底座，并使用$(item)诅咒金锭$()激活信标，则信标有概率转化为$(l:smithing_corrupted_beacon)腐化信标$(/l)。底座层数越多，转化概率越大。使用诅咒金锭激活信标时天气将转为雷雨天。"
+      "text": "完全使用$(item)诅咒金块$()作为信标底座，并使用$(item)诅咒金锭$()激活信标，则信标有概率转化为$(l:smithing_corrupted_beacon)腐化信标$(/l)。"
     }
   ]
 }
