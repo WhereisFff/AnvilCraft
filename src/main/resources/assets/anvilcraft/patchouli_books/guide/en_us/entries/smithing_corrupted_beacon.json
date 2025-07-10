@@ -11,6 +11,7 @@
     "Mob Transform: $(br)$(thing)Pig$()→$(thing)Hoglin$()$(br)$(thing)Cow$()→$(thing)Ravager$()$(br)$(thing)Guardian$()→$(thing)Elder Guardian$()$(br)$(thing)Piglin$()→$(thing)Piglin Brute$()$(br)$(thing)Villager$()→30%$(thing)Pillager$()、60%$(thing)Vindicator$()、10%$(thing)Evoker$()$(br)$(thing)Allay$()→$(thing)Vex$()$(br)$(thing)Bat$()→$(thing)Phantom$()$(br)$(thing)Horse$()→10%$(thing)Zombie Horse$()、90%$(thing)Skeleton Horse$()$(br)$(thing)Silverfish$()→$(thing)Endermite$()",
     {
       "type": "patchouli:multiblock",
+      "anchor": "time_warp",
       "name": "Time Warp",
       "multiblock": {
         "mapping": {
