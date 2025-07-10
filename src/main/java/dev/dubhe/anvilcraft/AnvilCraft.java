@@ -160,9 +160,14 @@ public class AnvilCraft {
                 AnvilCraftTopPlugin.init();
             }
             if (Util.isLoaded("apothic_enchanting")) {
-                LOGGER.info("Apothic Enchanting found. Set royalAnvilBeyondMaxLevel and emberAnvilBeyondMaxLevel to true.");
+                LOGGER.info(
+                    "Apothic Enchanting found. Set "
+                    + "royalAnvilBeyondMaxLevel, "
+                    + "emberAnvilBeyondMaxLevel and "
+                    + "transcendenceAnvilBeyondMaxLevel to true.");
                 config.royalAnvilBeyondMaxLevel = true;
                 config.emberAnvilBeyondMaxLevel = true;
+                config.transcendenceAnvilBeyondMaxLevel = true;
             }
         });
     }
