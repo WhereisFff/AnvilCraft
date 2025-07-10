@@ -1,14 +1,10 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
-import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
@@ -40,7 +36,7 @@ import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, IHammerRemovable {
+public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable {
     public static final List<Direction> SIGNAL_SOURCE_SIDES = List.of(
         Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
     public static final VoxelShape AABB_X = Stream.of(
@@ -106,6 +102,12 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     @Override
     protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
         return false;
+    }
+
+    @Override
+    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        if (!state.getValue(POWERED)) return;
+        super.onNeighborChange(state, level, pos, neighbor);
     }
 
     @Override

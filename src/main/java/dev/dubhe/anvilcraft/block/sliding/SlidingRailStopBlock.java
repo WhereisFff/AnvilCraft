@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
-import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -16,7 +15,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathComputationType;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -28,7 +26,7 @@ import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SlidingRailStopBlock extends BaseSlidingRailBlock implements IHammerRemovable {
+public class SlidingRailStopBlock extends BaseSlidingRailBlock {
     public static final VoxelShape SHAPE = Stream.of(
         Block.box(11, 6, 11, 16, 16, 16),
         Block.box(0, 0, 0, 16, 6, 16),
