@@ -44,8 +44,8 @@
     },
     {
       "type": "patchouli:text",
-      "title": "矿脉涌泉具有多种功能",
-      "text": "$(item)矿脉涌泉$()的功能由周围相邻的方块决定:$(br)1.如果四个侧面都是同种$(thing)粗矿块$()，则上面相邻的$(item)深板岩$()转化为对应的$(thing)深层矿$()$(br)2.如果四个侧面都是$(item)熔岩$()且上面是$(item)空气$()，则上面生成一个$(item)熔岩$()$(br)3.如果四个侧面都是$(item)熔岩$()且上面是$(l:power_advanced_heat_collection#heatable_block)可加热方块$()，则将其加热到$(thing)红热等级$()$(br)4.四个侧面不符合任何配方时，上方生成$(item)火山灰$()$(br)$(#aa2222)注意$()：矿物涌泉仅在$(thing)世界底部+8格$()及以下位置工作"
+      "title": "矿物涌泉具有多种功能",
+      "text": "$(item)矿物涌泉$()的功能由周围相邻的方块决定:$(br)1.如果四个侧面都是同种$(thing)粗矿块$()，则上面相邻的$(item)深板岩$()转化为对应的$(thing)深层矿$()$(br)2.如果四个侧面都是$(item)熔岩$()且上面是$(item)空气$()，则上面生成一个$(item)熔岩$()$(br)3.如果四个侧面都是$(item)熔岩$()且上面是$(l:power_advanced_heat_collection#heatable_block)可加热方块$()，则将其加热到$(thing)红热等级$()$(br)4.四个侧面不符合任何配方时，上方生成$(item)火山灰$()$(br)$(#aa2222)注意$()：矿物涌泉仅在$(thing)世界底部+8格$()及以下位置工作"
     },
     {
       "type": "patchouli:multiblock",
