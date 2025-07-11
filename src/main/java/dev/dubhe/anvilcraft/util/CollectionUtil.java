@@ -3,8 +3,6 @@ package dev.dubhe.anvilcraft.util;
 import com.google.common.collect.Multimap;
 
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -30,10 +28,5 @@ public class CollectionUtil {
             emptyMap.put(keyFactory.apply(value), value);
         }
         return emptyMap;
-    }
-
-    public static <E> E getRandom(List<E> collection) {
-        Collections.shuffle(collection);
-        return collection.getFirst();
     }
 }

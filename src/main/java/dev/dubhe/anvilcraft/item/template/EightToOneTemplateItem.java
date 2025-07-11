@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.item.template;
 
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.util.CollectionUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -87,13 +86,11 @@ public class EightToOneTemplateItem extends BaseMultipleToOneTemplateItem {
         if (itemStack.is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE)) {
             ItemEnchantments itemEnchantments = itemStack.get(DataComponents.ENCHANTMENTS);
             if (itemEnchantments != null && !itemEnchantments.isEmpty()) {
-                List<Holder<Enchantment>> enchantments = new ArrayList<>(itemEnchantments.keySet().stream().toList());
-                int count = enchantments.size();
-                if (enchantments.size() > 4) {
-                    count = 4;
-                }
+                List<Holder<Enchantment>> enchantments = itemEnchantments.keySet().stream().toList();
+                int count = Math.min(4, enchantments.size());
                 for (int i = 0; i < count; i++) {
-                    Holder<Enchantment> randomEnchantment = CollectionUtil.getRandom(enchantments);
+                    int randomIndex = level.random.nextIntBetweenInclusive(0, enchantments.size() - 1);
+                    Holder<Enchantment> randomEnchantment = enchantments.get(randomIndex);
                     boolean selected = false;
                     for (ResourceKey<Enchantment> enchantmentResourceKey : enchantmentMappings.keySet()) {
                         if (randomEnchantment.is(enchantmentResourceKey)) {
@@ -103,7 +100,8 @@ public class EightToOneTemplateItem extends BaseMultipleToOneTemplateItem {
                         }
                     }
                     if (!selected) {
-                        result.add(CollectionUtil.getRandom(otherTemplate));
+                        randomIndex = level.random.nextIntBetweenInclusive(0, otherTemplate.size() - 1);
+                        result.add(otherTemplate.get(randomIndex));
                     }
                 }
 
