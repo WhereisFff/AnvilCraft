@@ -95,7 +95,7 @@ public class EightToOneTemplateItem extends BaseMultipleToOneTemplateItem {
                 for (int i = 0; i < count; i++) {
                     Holder<Enchantment> randomEnchantment = CollectionUtil.getRandom(enchantments);
                     boolean selected = false;
-                    for (ResourceKey<Enchantment> enchantmentResourceKey :enchantmentMappings.keySet()) {
+                    for (ResourceKey<Enchantment> enchantmentResourceKey : enchantmentMappings.keySet()) {
                         if (randomEnchantment.is(enchantmentResourceKey)) {
                             result.add(enchantmentMappings.get(enchantmentResourceKey));
                             selected = true;
