@@ -250,16 +250,13 @@ public class AnvilEventListener {
                 .withParameter(LootContextParams.ATTACKING_ENTITY, player)
                 .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player);
         }
+        if (eventEntity.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
+            builder.withParameter(LootContextParams.TOOL, AnvilCraftFakePlayers.anvilCraftKiller.getDummyLooting5Weapon(serverLevel));
+        }
         LootParams lootParams = builder.create(LootContextParamSets.ENTITY);
         LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(entity.getLootTable());
         dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
-        if (rate < 0.6) return;
-        if (eventEntity.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
-            lootParams = builder
-                .withParameter(LootContextParams.TOOL, AnvilCraftFakePlayers.anvilCraftKiller.getDummyLooting5Weapon(serverLevel))
-                .create(LootContextParamSets.ENTITY);
-        }
-        dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
+        if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
     }
 }
