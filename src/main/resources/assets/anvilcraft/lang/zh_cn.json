@@ -162,7 +162,7 @@
   "block.anvilcraft.power_converter_big": "能量转换器（大）",
   "block.anvilcraft.power_converter_middle": "能量转换器（中）",
   "block.anvilcraft.power_converter_small": "能量转换器（小）",
-  "block.anvilcraft.powered_sliding_rail": "Powered Sliding Rail",
+  "block.anvilcraft.powered_sliding_rail": "动力滑轨",
   "block.anvilcraft.pulse_generator": "脉冲发生器",
   "block.anvilcraft.purple_cement": "紫色水泥",
   "block.anvilcraft.purple_cement_cauldron": "装有紫色水泥的炼药锅",
@@ -313,7 +313,7 @@
   "entity.anvilcraft.floating_block": "漂浮方块",
   "entity.anvilcraft.ionocraft": "飘升机",
   "entity.anvilcraft.levitating_block": "飘浮方块",
-  "entity.anvilcraft.sliding_block": "Sliding Block",
+  "entity.anvilcraft.sliding_block": "滑动方块",
   "entity.anvilcraft.standable_falling_block": "可站立下落方块",
   "entity.anvilcraft.standable_levitating_block": "可站立漂浮方块",
   "entity.anvilcraft.thrown_ember_metal_heavy_halberd": "掷出的余烬金属重戟",
@@ -740,8 +740,8 @@
   "text.autoconfig.anvilcraft.option.renderPowerTransmitterLines.@Tooltip": "在输电杆之间渲染电力传输的线段",
   "text.autoconfig.anvilcraft.option.royalAnvilBeyondMaxLevel": "皇家铁砧附魔可超过最大等级",
   "text.autoconfig.anvilcraft.option.royalAnvilBeyondMaxLevel.@Tooltip": "在皇家铁砧中可将物品与超过最大附魔等级的附魔书合并",
-  "text.autoconfig.anvilcraft.option.slidingRailStickToEachOther": "Sliding Rail Stick To Each Other",
-  "text.autoconfig.anvilcraft.option.slidingRailStickToEachOther.@Tooltip": "Pushing or pulling a sliding rail will chain to other rails",
+  "text.autoconfig.anvilcraft.option.slidingRailStickToEachOther": "滑轨互相粘连",
+  "text.autoconfig.anvilcraft.option.slidingRailStickToEachOther.@Tooltip": "推动或拉动一个滑轨会粘住其它滑轨一并运动",
   "text.autoconfig.anvilcraft.option.transparentCraftingTableMaxMatrixSize": "通透工作台最大矩阵规模",
   "text.autoconfig.anvilcraft.option.transparentCraftingTableMaxMatrixSize.@Tooltip": "相连的通透工作台可形成矩阵的最大规模",
   "text.autoconfig.anvilcraft.title": "铁砧工艺 - 配置",
@@ -895,5 +895,5 @@
   "tooltip.anvilcraft.redstone.title": "红石状态：",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "已储存质量： %s",
   "tooltip.anvilcraft.working_progress.progress": "  %s %s%%",
-  "tooltip.anvilcraft.working_progress.title": "Working progress:"
+  "tooltip.anvilcraft.working_progress.title": "工作进度："
 }
