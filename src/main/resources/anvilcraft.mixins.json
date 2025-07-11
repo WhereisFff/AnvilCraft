@@ -24,7 +24,6 @@
     "HopperBlockMixin",
     "InventoryMixin",
     "ItemEntityMixin",
-    "ItemMixin",
     "LivingEntityMixin",
     "PhantomGoalMixin",
     "PistonBaseBlockMixin",
