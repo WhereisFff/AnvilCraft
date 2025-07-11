@@ -16,6 +16,7 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "anvil_hammer",
       "recipe": "anvilcraft:anvil_hammer",
       "text": ""
     },

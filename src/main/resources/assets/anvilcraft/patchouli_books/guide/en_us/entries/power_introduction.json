@@ -16,6 +16,7 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "anvil_hammer",
       "recipe": "anvilcraft:anvil_hammer",
       "text": "The $(item)Anvil Hammer$() is the wrench in this mod. You can debug the direction of some blocks with it, and dismantle some blocks with it when holding shift. At the same time, it is an anvil. Left-clicking on a block with it is same as the block being hit by a anvil."
     },

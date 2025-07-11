@@ -10,8 +10,9 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "heater",
       "recipe": "anvilcraft:heater",
-      "text": "$(item)加热器$()耗电功率为8KW，加热上方方块，允许铁砧执行熔炼操作。"
+      "text": "$(item)加热器$()耗电功率为16KW，加热上方方块，允许铁砧执行熔炼操作。"
     },
     {
       "type": "patchouli:crafting",

@@ -10,6 +10,7 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "transmission_pole",
       "recipe": "anvilcraft:transmission_pole",
       "text": "$(item)输电杆$()供电距离8，范围以头部为中心17x17x17。"
     },

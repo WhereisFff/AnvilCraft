@@ -10,6 +10,7 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "transmission_pole",
       "recipe": "anvilcraft:transmission_pole",
       "text": "The $(item)Transmission Pole$()'s power supply distance is 8. The range is centered on the head 17 x 17 x 17."
     },
