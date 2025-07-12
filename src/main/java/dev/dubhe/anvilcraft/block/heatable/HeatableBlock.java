@@ -28,6 +28,7 @@ public abstract class HeatableBlock extends Block implements IMoveableEntityBloc
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+        if (level.isClientSide) return null;
         if (this.hasBlockEntity()) {
             return (level1, pos, state1, blockEntity) -> HeatableBlockEntity.tick(level1, pos);
         }
