@@ -10,6 +10,7 @@
     "BeaconMenuMixin",
     "BlockItemInvoker",
     "BlockMixin",
+    "BlockStateMixin",
     "ComparatorBlockEntityMixin",
     "CraftingMenuMixin",
     "DamageSourcesMixin",

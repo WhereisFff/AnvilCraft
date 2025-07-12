@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
-import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -30,7 +29,7 @@ import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, IHammerRemovable {
+public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable {
     public static final VoxelShape AABB_X = Stream.of(
         Block.box(0, 6, 11, 16, 12, 14),
         Block.box(0, 0, 0, 16, 6, 16),

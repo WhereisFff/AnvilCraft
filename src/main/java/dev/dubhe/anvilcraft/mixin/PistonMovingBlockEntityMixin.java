@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.block.sliding.ISlidingRail;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
@@ -37,7 +37,7 @@ abstract class PistonMovingBlockEntityMixin {
             case DOWN:
                 return;
         }
-        if (!level.getBlockState(pos.below()).is(ModBlocks.SLIDING_RAIL)) return;
+        if (!level.getBlockState(pos.below()).is(ModBlockTags.SLIDING_RAILS)) return;
         MinecraftServer server = level.getServer();
         if (server == null) return;
         BlockPos p0 = pos.below();

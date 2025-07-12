@@ -30,7 +30,7 @@ import java.util.Optional;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
-public interface ISlidingRail extends net.neoforged.neoforge.common.extensions.IBlockExtension, IBlockExtension {
+public interface ISlidingRail extends IBlockExtension {
     Map<BlockPos, PistonPushInfo> MOVING_PISTON_MAP = new HashMap<>();
 
     /**
@@ -46,42 +46,15 @@ public interface ISlidingRail extends net.neoforged.neoforge.common.extensions.I
 
     /**
      * 当滑轨站尝试滑动顶部方块时调用该方法。<br>
-     * 将在{@link Block#neighborChanged(BlockState, Level, BlockPos, Block, BlockPos, boolean)}调用。
+     * 将在{@link Block#neighborChanged(BlockState, Level, BlockPos, Block, BlockPos, boolean) neighbourChanged()}调用。
      *
      * @param level 滑轨所处的世界
      * @param state 滑轨方块状态
      * @return 将要滑动的方向。若为空，则不滑动。
      */
+    @SuppressWarnings("JavadocReference")
     default Optional<Direction> getSlidingDirection(LevelReader level, BlockState state) {
         return Optional.empty();
-    }
-
-    @Override
-    default void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
-        whenOnNeighborChange(level, pos, neighbor);
-    }
-
-    @Override
-    default boolean canStickTo(BlockPos pos, BlockState state, BlockPos otherPos, BlockState other) {
-        if (otherPos.equals(pos.above())) return false;
-        if (!AnvilCraft.config.slidingRailStickToEachOther) return other.isStickyBlock();
-        if (!other.is(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)) return other.isStickyBlock();
-        Direction.Axis axis = state.getOptionalValue(BlockStateProperties.AXIS)
-            .or(() -> state.getOptionalValue(BlockStateProperties.FACING).map(Direction::getAxis))
-            .orElse(null);
-        Direction.Axis otherAxis = other.getOptionalValue(BlockStateProperties.AXIS)
-            .or(() -> state.getOptionalValue(BlockStateProperties.FACING).map(Direction::getAxis))
-            .orElse(null);
-        if (!Objects.equals(otherAxis, axis)) return false;
-        if (axis == null) {
-            return pos.relative(Direction.Axis.X, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.X, 1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Y, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Y, 1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Z, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
-        }
-        return pos.relative(axis, -1).equals(otherPos) || pos.relative(axis, 1).equals(otherPos);
     }
 
     static void whenOnNeighborChange(LevelReader level, BlockPos pos, BlockPos neighbor) {
