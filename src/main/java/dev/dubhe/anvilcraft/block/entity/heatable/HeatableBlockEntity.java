@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.block.entity.heatable;
 
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
+import dev.dubhe.anvilcraft.block.heatable.HeatableBlock;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
@@ -12,6 +13,8 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
+
+import java.util.Optional;
 
 public abstract class HeatableBlockEntity extends BlockEntity {
     protected static final int MAX_DURATION = 1200 * 20;
@@ -63,5 +66,11 @@ public abstract class HeatableBlockEntity extends BlockEntity {
         PacketDistributor.sendToAllPlayers(new HeatableSyncPacket(
             pos, Util.castSafely(level.getBlockEntity(pos), HeatableBlockEntity.class).map(HeatableBlockEntity::getDuration).orElse(0)
         ));
+    }
+
+    public Optional<BlockState> getPrevTier(Level level, BlockPos pos) {
+        BlockState state = this.getBlockState();
+        if (!(state.getBlock() instanceof HeatableBlock heatable)) return Optional.empty();
+        return heatable.getPrevTier(level, pos, state);
     }
 }

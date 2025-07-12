@@ -7,9 +7,8 @@ import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.CodecUtil;
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
-import lombok.Setter;
-import lombok.experimental.Accessors;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -23,6 +22,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -30,10 +30,9 @@ import java.util.Optional;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
-    private final HeatTier tier;
-    private final int duration;
+    private final List<HeatingInfo> infos;
 
-    public HeatProduceTimeWarpRecipe(TimeWarpRecipe recipe, HeatTier tier, int duration) {
+    public HeatProduceTimeWarpRecipe(TimeWarpRecipe recipe, List<HeatingInfo> infos) {
         super(
             recipe.getIngredients(),
             Optional.of(recipe.getExactIngredients()),
@@ -43,10 +42,10 @@ public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
             recipe.isConsumeFluid(),
             recipe.getRequiredFluidLevel()
         );
-        this.tier = tier;
-        this.duration = duration;
+        this.infos = infos;
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public HeatProduceTimeWarpRecipe(
         List<Ingredient> ingredients,
         Optional<List<Ingredient>> exactIngredients,
@@ -55,12 +54,10 @@ public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
         boolean produceFluid,
         boolean consumeFluid,
         int requiredFluidLevel,
-        HeatTier tier,
-        int duration
+        List<HeatingInfo> infos
     ) {
         super(NonNullList.copyOf(ingredients), exactIngredients, cauldron, results, produceFluid, consumeFluid, requiredFluidLevel);
-        this.tier = tier;
-        this.duration = duration;
+        this.infos = infos;
     }
 
     @Contract(" -> new")
@@ -88,14 +85,12 @@ public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
             Codec.BOOL.fieldOf("produce_fluid").forGetter(HeatProduceTimeWarpRecipe::isProduceFluid),
             Codec.BOOL.fieldOf("consume_fluid").forGetter(HeatProduceTimeWarpRecipe::isConsumeFluid),
             Codec.INT.optionalFieldOf("requiredFluidLevel", 0).forGetter(HeatProduceTimeWarpRecipe::getRequiredFluidLevel),
-            HeatTier.LOWER_NAME_CODEC.fieldOf("tier").forGetter(HeatProduceTimeWarpRecipe::getTier),
-            Codec.INT.fieldOf("duration").forGetter(HeatProduceTimeWarpRecipe::getDuration)
+            HeatingInfo.CODEC.listOf().fieldOf("heating").forGetter(HeatProduceTimeWarpRecipe::getInfos)
         ).apply(ins, HeatProduceTimeWarpRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, HeatProduceTimeWarpRecipe> STREAM_CODEC = StreamCodec.composite(
             TimeWarpRecipe.Serializer.STREAM_CODEC, recipe -> recipe,
-            HeatTier.STREAM_CODEC, HeatProduceTimeWarpRecipe::getTier,
-            ByteBufCodecs.VAR_INT, HeatProduceTimeWarpRecipe::getDuration,
+            HeatingInfo.STREAM_CODEC.apply(ByteBufCodecs.list()), HeatProduceTimeWarpRecipe::getInfos,
             HeatProduceTimeWarpRecipe::new
         );
 
@@ -110,11 +105,13 @@ public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
         }
     }
 
-    @Setter
-    @Accessors(fluent = true, chain = true)
     public static class Builder extends TimeWarpRecipe.Builder {
-        private HeatTier tier;
-        private int duration = 0;
+        private final List<HeatingInfo> infos = new ArrayList<>();
+
+        public Builder heating(HeatTier tier, int duration) {
+            this.infos.add(new HeatingInfo(tier, duration));
+            return this;
+        }
 
         @Override
         public HeatProduceTimeWarpRecipe buildRecipe() {
@@ -129,22 +126,23 @@ public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
                 produceFluid,
                 consumeFluid,
                 requiredFluidLevel,
-                tier,
-                duration
+                infos
             );
         }
 
         @Override
         public void validate(ResourceLocation pId) {
             super.validate(pId);
-            if (tier == null) {
-                throw new IllegalArgumentException("Recipe produced heat tier must not be null, RecipeId: " + pId);
-            }
-            if (duration < -24000) {
-                throw new IllegalArgumentException("Recipe produced duration must not be lesser than -24000, RecipeId: " + pId);
-            }
-            if (duration > 24000) {
-                throw new IllegalArgumentException("Recipe produced duration must not be bigger than 24000, RecipeId: " + pId);
+            for (HeatingInfo info : this.infos) {
+                if (info.tier == null) {
+                    throw new IllegalArgumentException("Recipe produced heat tier must not be null, RecipeId: " + pId);
+                }
+                if (info.duration < -24000) {
+                    throw new IllegalArgumentException("Recipe produced duration must not be lesser than -24000, RecipeId: " + pId);
+                }
+                if (info.duration > 24000) {
+                    throw new IllegalArgumentException("Recipe produced duration must not be bigger than 24000, RecipeId: " + pId);
+                }
             }
         }
 
@@ -152,5 +150,17 @@ public class HeatProduceTimeWarpRecipe extends TimeWarpRecipe {
         public String getType() {
             return "heat_produce_time_warp";
         }
+    }
+
+    public record HeatingInfo(HeatTier tier, int duration) {
+        public static final Codec<HeatingInfo> CODEC = RecordCodecBuilder.create(ins -> ins.group(
+            HeatTier.LOWER_NAME_CODEC.fieldOf("tier").forGetter(HeatingInfo::tier),
+            Codec.INT.fieldOf("duration").forGetter(HeatingInfo::duration)
+        ).apply(ins, HeatingInfo::new));
+        public static final StreamCodec<ByteBuf, HeatingInfo> STREAM_CODEC = StreamCodec.composite(
+            HeatTier.STREAM_CODEC, HeatingInfo::tier,
+            ByteBufCodecs.VAR_INT, HeatingInfo::duration,
+            HeatingInfo::new
+        );
     }
 }

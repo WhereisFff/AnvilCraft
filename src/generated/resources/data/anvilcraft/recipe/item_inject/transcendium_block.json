@@ -1,0 +1,21 @@
+{
+  "type": "anvilcraft:item_inject",
+  "ingredients": [
+    {
+      "item": "anvilcraft:charged_neutronium_ingot"
+    }
+  ],
+  "input_block": "anvilcraft:overheated_ember_metal_block",
+  "result_block": "anvilcraft:transcendium_block",
+  "result_item": {
+    "amount": {
+      "type": "minecraft:binomial",
+      "n": 1.0,
+      "p": 0.5
+    },
+    "stack": {
+      "count": 1,
+      "id": "anvilcraft:neutronium_ingot"
+    }
+  }
+}

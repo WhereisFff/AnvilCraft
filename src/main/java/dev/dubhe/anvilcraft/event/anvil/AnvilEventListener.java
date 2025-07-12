@@ -10,12 +10,14 @@ import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
+import dev.dubhe.anvilcraft.util.RecipeUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -156,6 +158,14 @@ public class AnvilEventListener {
                             break;
                         }
                     }
+                }
+                ChanceItemStack stack = recipe.value().resultItem;
+                if (!stack.equals(ChanceItemStack.EMPTY) && !level.isClientSide && level instanceof ServerLevel serverLevel) {
+                    int amount = stack.getStack().getCount() * stack.getAmount().getInt(RecipeUtil.emptyLootContext(serverLevel));
+                    Vec3 posV = pos.getCenter();
+                    level.addFreshEntity(new ItemEntity(
+                        level, posV.x, posV.y, posV.z,
+                        recipe.value().resultItem.getStack().copyWithCount(amount)));
                 }
                 level.setBlockAndUpdate(pos, recipe.value().resultBlock.defaultBlockState());
                 items.forEach((k, v) -> {

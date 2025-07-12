@@ -37,14 +37,11 @@ public class HeatCollectorManager {
     private static final List<HeatSourceEntry> SOURCE_ENTRIES = new ArrayList<>();
 
     static {
-        registerEntry(HeatSourceEntry.forever(4, ModBlocks.HEATED_NETHERITE.get()));
-        registerEntry(HeatSourceEntry.forever(4, ModBlocks.HEATED_TUNGSTEN.get()));
-        registerEntry(HeatSourceEntry.forever(16, ModBlocks.REDHOT_NETHERITE.get()));
-        registerEntry(HeatSourceEntry.forever(16, ModBlocks.REDHOT_TUNGSTEN.get()));
-        registerEntry(HeatSourceEntry.forever(64, ModBlocks.GLOWING_NETHERITE.get()));
-        registerEntry(HeatSourceEntry.forever(64, ModBlocks.GLOWING_TUNGSTEN.get()));
-        registerEntry(HeatSourceEntry.forever(256, ModBlocks.INCANDESCENT_NETHERITE.get()));
-        registerEntry(HeatSourceEntry.forever(256, ModBlocks.INCANDESCENT_TUNGSTEN.get()));
+        registerEntry(HeatSourceEntry.predicateAlways(4, state -> state.is(ModBlockTags.HEATED_BLOCKS)));
+        registerEntry(HeatSourceEntry.predicateAlways(16, state -> state.is(ModBlockTags.REDHOT_BLOCKS)));
+        registerEntry(HeatSourceEntry.predicateAlways(64, state -> state.is(ModBlockTags.GLOWING_BLOCKS)));
+        registerEntry(HeatSourceEntry.predicateAlways(256, state -> state.is(ModBlockTags.INCANDESCENT_BLOCKS)));
+        registerEntry(HeatSourceEntry.predicateAlways(1024, state -> state.is(ModBlockTags.OVERHEATED_BLOCKS)));
 
         registerEntry(HeatSourceEntry.simple(2, Blocks.MAGMA_BLOCK, Blocks.NETHERRACK));
         registerEntry(HeatSourceEntry.predicate(

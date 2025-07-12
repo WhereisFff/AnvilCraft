@@ -155,12 +155,12 @@ public class HeaterManager {
         }
 
         if (heatable.getDuration() <= 0) {
-            Optional<Block> prevTierOp = HeatRecorder.getPrevTierHeatableBlock(this.level, pos, heatable.getBlockState());
+            Optional<BlockState> prevTierOp = heatable.getPrevTier(this.level, pos);
             if (prevTierOp.isEmpty()) return;
-            Block prevBlock = prevTierOp.get();
-            this.level.setBlockAndUpdate(pos, prevBlock.defaultBlockState());
-            if (!(prevBlock instanceof EntityBlock prevEntityBlock)) return;
-            BlockEntity tierEntity = prevEntityBlock.newBlockEntity(pos, prevBlock.defaultBlockState());
+            BlockState prevState = prevTierOp.get();
+            this.level.setBlockAndUpdate(pos, prevState);
+            if (!(prevState.getBlock() instanceof EntityBlock)) return;
+            BlockEntity tierEntity = this.level.getBlockEntity(pos);
             if (!(tierEntity instanceof HeatableBlockEntity heatableEntity)) return;
             heatableEntity.addDuration(10);
             this.level.setBlockEntity(heatableEntity);

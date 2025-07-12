@@ -87,6 +87,7 @@ import dev.dubhe.anvilcraft.block.PowerConverterMiddleBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterSmallBlock;
 import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.block.heatable.NormalBlock;
+import dev.dubhe.anvilcraft.block.heatable.OverheatedEmberMetalBlock;
 import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
 import dev.dubhe.anvilcraft.block.ReinforcedConcreteBlock;
 import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
@@ -1808,7 +1809,8 @@ public class ModBlocks {
             BlockTags.NEEDS_DIAMOND_TOOL,
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE,
-            Tags.Blocks.STORAGE_BLOCKS)
+            Tags.Blocks.STORAGE_BLOCKS,
+            ModBlockTags.HEATABLE_BLOCKS)
         .properties(properties -> properties.lightLevel(state -> 9)
             .noOcclusion()
             .emissiveRendering(ModBlocks::always))
@@ -1817,7 +1819,7 @@ public class ModBlocks {
             DangerUtil.genConfiguredModel("block/ember_metal_block").get()))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(Tags.Items.STORAGE_BLOCKS)
+        .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.HEATABLE_BLOCKS)
         .build()
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3311,7 +3313,7 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, Blocks.NETHERITE_BLOCK))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.HEATED_BLOCKS)
         .register();
 
     public static final BlockEntry<HeatedBlock> HEATED_TUNGSTEN = REGISTRATE
@@ -3322,7 +3324,7 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.TUNGSTEN_BLOCK))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.HEATED_BLOCKS)
         .register();
 
     public static final BlockEntry<RedhotBlock> REDHOT_NETHERITE = REGISTRATE
@@ -3334,7 +3336,7 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_NETHERITE))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.REDHOT_BLOCKS)
         .register();
 
     public static final BlockEntry<RedhotBlock> REDHOT_TUNGSTEN = REGISTRATE
@@ -3346,7 +3348,7 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_TUNGSTEN))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.REDHOT_BLOCKS)
         .register();
 
     public static final BlockEntry<GlowingBlock> GLOWING_NETHERITE = REGISTRATE
@@ -3358,7 +3360,7 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_NETHERITE))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.GLOWING_BLOCKS)
         .register();
 
     public static final BlockEntry<GlowingBlock> GLOWING_TUNGSTEN = REGISTRATE
@@ -3370,7 +3372,7 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_TUNGSTEN))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.GLOWING_BLOCKS)
         .register();
 
     public static final BlockEntry<IncandescentBlock> INCANDESCENT_NETHERITE = REGISTRATE
@@ -3382,7 +3384,7 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_NETHERITE))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.INCANDESCENT_BLOCKS)
         .register();
 
     public static final BlockEntry<IncandescentBlock> INCANDESCENT_TUNGSTEN = REGISTRATE
@@ -3394,7 +3396,26 @@ public class ModBlocks {
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_NETHERITE))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.INCANDESCENT_BLOCKS)
+        .register();
+
+    public static final BlockEntry<OverheatedEmberMetalBlock> OVERHEATED_EMBER_METAL = REGISTRATE
+        .block("overheated_ember_metal_block", OverheatedEmberMetalBlock::new)
+        .initialProperties(ModBlocks.EMBER_METAL_BLOCK)
+        .blockstate((context, provider) -> provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/overheated_ember_metal_block").get()))
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.HEATABLE_BLOCKS)
+        .build()
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.EMBER_METAL_BLOCK))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+             BlockTags.NEEDS_DIAMOND_TOOL,
+             BlockTags.WITHER_IMMUNE,
+             BlockTags.DRAGON_IMMUNE,
+             ModBlockTags.HEATABLE_BLOCKS,
+             ModBlockTags.OVERHEATED_BLOCKS)
         .register();
 
     // raw blocks

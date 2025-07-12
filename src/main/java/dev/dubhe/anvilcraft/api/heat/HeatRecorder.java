@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.heatable.HeatedBlock;
 import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
+import dev.dubhe.anvilcraft.block.heatable.OverheatedBlock;
 import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
@@ -131,6 +132,24 @@ public class HeatRecorder {
             return this.customTier(HeatTier.INCANDESCENT, incandescent.get(), predicate);
         }
 
+        public RegisterHelper overheated(OverheatedBlock incandescent) {
+            return this.customTier(HeatTier.OVERHEATED, incandescent);
+        }
+
+        public RegisterHelper overheated(Supplier<? extends OverheatedBlock> incandescent) {
+            return this.customTier(HeatTier.OVERHEATED, incandescent.get());
+        }
+
+        public RegisterHelper overheated(OverheatedBlock incandescent, TriPredicate<Level, BlockPos, BlockState> predicate) {
+            return this.customTier(HeatTier.OVERHEATED, incandescent, predicate);
+        }
+
+        public RegisterHelper overheated(
+            Supplier<? extends OverheatedBlock> incandescent, TriPredicate<Level, BlockPos, BlockState> predicate
+        ) {
+            return this.customTier(HeatTier.OVERHEATED, incandescent.get(), predicate);
+        }
+
         public RegisterHelper customTier(HeatTier tier, Block heatable) {
             HeatableBlockEntry entry = HeatableBlockEntry.simple(tier, heatable);
             ENTRY_TO_ID.put(entry, this.id);
@@ -149,7 +168,10 @@ public class HeatRecorder {
     }
 
     public static Optional<HeatableBlockEntry> getEntry(ResourceLocation id, HeatTier tier) {
-        return Optional.ofNullable(ENTRIES.get(id).get(tier.ordinal()));
+        for (HeatableBlockEntry entry : ENTRIES.get(id)) {
+            if (entry.getTier().equals(tier)) return Optional.of(entry);
+        }
+        return Optional.empty();
     }
 
     public static Optional<HeatableBlockEntry> getEntry(ResourceLocation id, Level level, BlockPos pos, BlockState state) {
@@ -221,7 +243,8 @@ public class HeatRecorder {
         Optional<ResourceLocation> idOp = pair.getFirst();
         Optional<HeatableBlockEntry> entryOp = pair.getSecond();
         if (idOp.isEmpty() || entryOp.isEmpty()) return Optional.empty();
-        return ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() - 1);
+        List<HeatableBlockEntry> entries = ENTRIES.get(idOp.get());
+        return ListUtil.safelyGet(entries, entries.indexOf(entryOp.get()) - 1);
     }
 
     public static Optional<HeatTier> getPrevTier(Level level, BlockPos pos, BlockState state) {
@@ -237,7 +260,8 @@ public class HeatRecorder {
         Optional<ResourceLocation> idOp = pair.getFirst();
         Optional<HeatableBlockEntry> entryOp = pair.getSecond();
         if (idOp.isEmpty() || entryOp.isEmpty()) return Optional.empty();
-        return ListUtil.safelyGet(ENTRIES.get(idOp.get()), entryOp.get().getTier().ordinal() + 1);
+        List<HeatableBlockEntry> entries = ENTRIES.get(idOp.get());
+        return ListUtil.safelyGet(entries, entries.indexOf(entryOp.get()) + 1);
     }
 
     public static Optional<HeatTier> getNextTier(Level level, BlockPos pos, BlockState state) {
@@ -261,5 +285,8 @@ public class HeatRecorder {
             .redhot(ModBlocks.REDHOT_TUNGSTEN)
             .glowing(ModBlocks.GLOWING_TUNGSTEN)
             .incandescent(ModBlocks.INCANDESCENT_TUNGSTEN);
+        registerHeatables(AnvilCraft.of("ember_metal"))
+            .normal(ModBlocks.EMBER_METAL_BLOCK)
+            .overheated(ModBlocks.OVERHEATED_EMBER_METAL);
     }
 }
