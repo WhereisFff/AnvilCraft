@@ -18,6 +18,7 @@ import dev.dubhe.anvilcraft.client.gui.screen.RoyalSmithingScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.SliderScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.StructureToolScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.TeslaTowerScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.TranscendenceAnvilScreen;
 import dev.dubhe.anvilcraft.inventory.ActiveSilencerMenu;
 import dev.dubhe.anvilcraft.inventory.BatchCrafterMenu;
 import dev.dubhe.anvilcraft.inventory.ChuteMenu;
@@ -35,6 +36,7 @@ import dev.dubhe.anvilcraft.inventory.RoyalSmithingMenu;
 import dev.dubhe.anvilcraft.inventory.SliderMenu;
 import dev.dubhe.anvilcraft.inventory.StructureToolMenu;
 import dev.dubhe.anvilcraft.inventory.TeslaTowerMenu;
+import dev.dubhe.anvilcraft.inventory.TranscendenceAnvilMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
@@ -117,6 +119,10 @@ public class ModMenuTypes {
 
     public static final MenuEntry<PulseGeneratorMenu> PULSE_GENERATOR = REGISTRATE
         .menu("pulse_generator", PulseGeneratorMenu::new, () -> PulseGeneratorScreen::new)
+        .register();
+
+    public static final MenuEntry<TranscendenceAnvilMenu> TRANSCENDENCE_ANVIL = REGISTRATE
+        .menu("transcendence_anvil", (type, id, inv) -> new TranscendenceAnvilMenu(id, inv), () -> TranscendenceAnvilScreen::new)
         .register();
 
     public static void register() {

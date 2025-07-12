@@ -183,6 +183,10 @@ public class AnvilCraftConfig implements ConfigData {
     @Comment("Combining items with Enchanted Books beyond max level in Ember Anvil")
     public boolean emberAnvilBeyondMaxLevel = false;
 
+    @ConfigEntry.Gui.Tooltip
+    @Comment("Combining items with Enchanted Books beyond max level in Transcendence Anvil")
+    public boolean transcendenceAnvilBeyondMaxLevel = true;
+
     public static class PowerConverter implements ConfigData {
         @Comment("The working interval of power converters")
         @ConfigEntry.Gui.Tooltip

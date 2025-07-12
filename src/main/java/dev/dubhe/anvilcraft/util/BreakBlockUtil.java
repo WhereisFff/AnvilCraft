@@ -27,6 +27,7 @@ import java.util.stream.Collectors;
 public class BreakBlockUtil {
 
     private static ItemStack DUMMY_SILK_TOUCH_TOOL = null;
+    private static ItemStack DUMMY_FORTUNE_5_TOOL = null;
     private static final ItemStack SHEARS_INSTANCE = Items.SHEARS.getDefaultInstance();
 
     public static ItemStack getDummySilkTouchTool(ServerLevel level) {
@@ -78,6 +79,22 @@ public class BreakBlockUtil {
                     .orElse(it);
             })
             .collect(Collectors.toList());
+    }
+
+    public static ItemStack getDummyFortune5Tool(ServerLevel level) {
+        if (DUMMY_FORTUNE_5_TOOL == null) {
+            ItemStack tool = Items.NETHERITE_PICKAXE.getDefaultInstance();
+            tool.set(DataComponents.CUSTOM_NAME, Component.literal("Dummy Fortune 5 Tool"));
+            level.holderLookup(Registries.ENCHANTMENT)
+                .get(Enchantments.FORTUNE)
+                .ifPresent(e -> tool.enchant(e, 5));
+            DUMMY_FORTUNE_5_TOOL = tool;
+        }
+        return DUMMY_FORTUNE_5_TOOL;
+    }
+
+    public static List<ItemStack> dropFortune5(ServerLevel level, BlockPos pos) {
+        return dropWithTool(level, pos, getDummyFortune5Tool(level));
     }
 
     public static List<ItemStack> dropSilkTouchOrShears(ServerLevel level, BlockPos pos) {

@@ -44,6 +44,7 @@ import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
+import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendiumBlock;
 import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
@@ -497,6 +498,35 @@ public class ModBlocks {
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
+        .build()
+        .register();
+
+    public static final BlockEntry<TranscendenceAnvilBlock> TRANSCENDENCE_ANVIL = REGISTRATE
+        .block("transcendence_anvil", TranscendenceAnvilBlock::new)
+        .recipe((ctx, provider) -> {/*
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.TRANSCENDENCE_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModBlocks.EMBER_ANVIL),
+                    Ingredient.of(ModBlocks.TRANSCENDIUM_BLOCK),  等超限合金模板合并
+                    RecipeCategory.MISC,
+                    ctx.get().asItem())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.TRANSCENDIUM_BLOCK))
+                .save(provider, AnvilCraft.of("smithing/transcendence_anvil"));*/
+        })
+        .initialProperties(() -> Blocks.ANVIL)
+        .tag(BlockTags.WITHER_IMMUNE,
+             BlockTags.DRAGON_IMMUNE,
+             BlockTags.ANVIL,
+             ModBlockTags.CANT_BROKEN_ANVIL,
+             BlockTags.MINEABLE_WITH_PICKAXE,
+             BlockTags.NEEDS_DIAMOND_TOOL)
+        .properties(properties -> properties.lightLevel(state -> 9)
+            .noOcclusion()
+            .strength(50.0f, 1200f))
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ItemTags.ANVIL)
         .build()
         .register();
 

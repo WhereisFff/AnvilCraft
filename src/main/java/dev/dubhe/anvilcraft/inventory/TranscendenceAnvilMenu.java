@@ -8,7 +8,10 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
@@ -20,40 +23,40 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.NotNull;
 
-public class EmberAnvilMenu extends AnvilMenu {
+public class TranscendenceAnvilMenu extends AnvilMenu {
 
-    public EmberAnvilMenu(int containerId, Inventory playerInventory) {
+    public TranscendenceAnvilMenu(int containerId, Inventory playerInventory) {
         super(containerId, playerInventory);
     }
 
-    public EmberAnvilMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
+    public TranscendenceAnvilMenu(int containerId, Inventory playerInventory, ContainerLevelAccess access) {
         super(containerId, playerInventory, access);
     }
 
     @Override
     public @NotNull MenuType<?> getType() {
-        return ModMenuTypes.EMBER_ANVIL.get();
+        return ModMenuTypes.TRANSCENDENCE_ANVIL.get();
     }
 
     @Override
     public void createResult() {
-        ItemStack inputItemLeft = this.inputSlots.getItem(0);
+        ItemStack inputLeft = this.inputSlots.getItem(0);
         this.cost.set(1);
         int totalCost = 0;
         long repairCost = 0L;
         int repairCostT = 0;
-        if (!inputItemLeft.isEmpty() && EnchantmentHelper.canStoreEnchantments(inputItemLeft)) {
-            ItemStack inputItemLeftCopy = inputItemLeft.copy();
-            ItemStack inputItemRight = this.inputSlots.getItem(1);
+        if (!inputLeft.isEmpty() && EnchantmentHelper.canStoreEnchantments(inputLeft)) {
+            ItemStack inputLeftCopy = inputLeft.copy();
+            ItemStack inputRight = this.inputSlots.getItem(1);
             ItemEnchantments.Mutable enchantmentsOnLeft =
-                new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(inputItemLeftCopy));
-            repairCost += (long) inputItemLeft.getOrDefault(DataComponents.REPAIR_COST, 0)
-                + (long) inputItemRight.getOrDefault(DataComponents.REPAIR_COST, 0);
+                new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(inputLeftCopy));
+            repairCost += (long) inputLeft.getOrDefault(DataComponents.REPAIR_COST, 0)
+                + (long) inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
             this.repairItemCountCost = 0;
             boolean hasStoredEnchantmentsOnInput2 = false;
             //noinspection DataFlowIssue
             if (!CommonHooks.onAnvilChange(
-                this, inputItemLeft, inputItemRight, this.resultSlots, this.itemName, repairCost, this.player)) {
+                this, inputLeft, inputRight, this.resultSlots, this.itemName, repairCost, this.player)) {
                 return;
             }
 
@@ -61,13 +64,13 @@ public class EmberAnvilMenu extends AnvilMenu {
             int repairItemCountCost;
 
             ChatFormatting extraFormat = null;
-            if (inputItemRight.is(Items.NAME_TAG) && !inputItemLeft.isEmpty()) {
-                if (!inputItemRight.has(DataComponents.CUSTOM_NAME)) {
+            if (inputRight.is(Items.NAME_TAG) && !inputLeft.isEmpty()) {
+                if (!inputRight.has(DataComponents.CUSTOM_NAME)) {
                     this.resultSlots.setItem(0, ItemStack.EMPTY);
                     this.cost.set(0);
                     return;
                 }
-                Component formattingText = inputItemRight.get(DataComponents.CUSTOM_NAME);
+                Component formattingText = inputRight.get(DataComponents.CUSTOM_NAME);
                 if (formattingText == null) {
                     this.resultSlots.setItem(0, ItemStack.EMPTY);
                     this.cost.set(0);
@@ -82,12 +85,12 @@ public class EmberAnvilMenu extends AnvilMenu {
                     this.cost.set(0);
                     return;
                 }
-            } else if (!inputItemRight.isEmpty()) {
-                hasStoredEnchantmentsOnInput2 = inputItemRight.has(DataComponents.STORED_ENCHANTMENTS);
+            } else if (!inputRight.isEmpty()) {
+                hasStoredEnchantmentsOnInput2 = inputRight.has(DataComponents.STORED_ENCHANTMENTS);
                 int damageValue;
-                if ((inputItemLeftCopy.isDamageableItem()
-                    && inputItemLeftCopy.getItem().isValidRepairItem(inputItemLeft, inputItemRight))) {
-                    damage = Math.min(inputItemLeftCopy.getDamageValue(), inputItemLeftCopy.getMaxDamage() / 4);
+                if ((inputLeftCopy.isDamageableItem()
+                    && inputLeftCopy.getItem().isValidRepairItem(inputLeft, inputRight))) {
+                    damage = Math.min(inputLeftCopy.getDamageValue(), inputLeftCopy.getMaxDamage() / 4);
                     if (damage <= 0) {
                         this.resultSlots.setItem(0, ItemStack.EMPTY);
                         this.cost.set(0);
@@ -95,41 +98,41 @@ public class EmberAnvilMenu extends AnvilMenu {
                     }
 
                     for (repairItemCountCost = 0;
-                         damage > 0 && repairItemCountCost < inputItemRight.getCount();
+                         damage > 0 && repairItemCountCost < inputRight.getCount();
                          ++repairItemCountCost) {
-                        damageValue = inputItemLeftCopy.getDamageValue() - damage;
-                        inputItemLeftCopy.setDamageValue(damageValue);
+                        damageValue = inputLeftCopy.getDamageValue() - damage;
+                        inputLeftCopy.setDamageValue(damageValue);
                         ++totalCost;
-                        damage = Math.min(inputItemLeftCopy.getDamageValue(), inputItemLeftCopy.getMaxDamage() / 4);
+                        damage = Math.min(inputLeftCopy.getDamageValue(), inputLeftCopy.getMaxDamage() / 4);
                     }
 
                     this.repairItemCountCost = repairItemCountCost;
                 } else {
                     if (!hasStoredEnchantmentsOnInput2
-                        && (!inputItemLeftCopy.is(inputItemRight.getItem())
-                        || !inputItemLeftCopy.isDamageableItem())) {
+                        && (!inputLeftCopy.is(inputRight.getItem())
+                        || !inputLeftCopy.isDamageableItem())) {
                         this.resultSlots.setItem(0, ItemStack.EMPTY);
                         this.cost.set(0);
                         return;
                     }
 
-                    if (inputItemLeftCopy.isDamageableItem() && !hasStoredEnchantmentsOnInput2) {
-                        damage = inputItemLeft.getMaxDamage() - inputItemLeft.getDamageValue();
-                        repairItemCountCost = inputItemRight.getMaxDamage() - inputItemRight.getDamageValue();
-                        damageValue = repairItemCountCost + inputItemLeftCopy.getMaxDamage() * 12 / 100;
+                    if (inputLeftCopy.isDamageableItem() && !hasStoredEnchantmentsOnInput2) {
+                        damage = inputLeft.getMaxDamage() - inputLeft.getDamageValue();
+                        repairItemCountCost = inputRight.getMaxDamage() - inputRight.getDamageValue();
+                        damageValue = repairItemCountCost + inputLeftCopy.getMaxDamage() * 12 / 100;
                         int k1 = damage + damageValue;
-                        int l1 = inputItemLeftCopy.getMaxDamage() - k1;
+                        int l1 = inputLeftCopy.getMaxDamage() - k1;
                         if (l1 < 0) {
                             l1 = 0;
                         }
 
-                        if (l1 < inputItemLeftCopy.getDamageValue()) {
-                            inputItemLeftCopy.setDamageValue(l1);
+                        if (l1 < inputLeftCopy.getDamageValue()) {
+                            inputLeftCopy.setDamageValue(l1);
                             totalCost += 2;
                         }
                     }
 
-                    ItemEnchantments enchantmentsOnRight = EnchantmentHelper.getEnchantmentsForCrafting(inputItemRight);
+                    ItemEnchantments enchantmentsOnRight = EnchantmentHelper.getEnchantmentsForCrafting(inputRight);
                     for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchantmentsOnRight.entrySet()) {
                         Holder<Enchantment> holder = entry.getKey();
                         int enchantmentsOnLeftLevel = enchantmentsOnLeft.getLevel(holder);
@@ -140,7 +143,7 @@ public class EmberAnvilMenu extends AnvilMenu {
                             ? enchantmentsOnRightLevel + 1
                             : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
 
-                        if (!AnvilCraft.config.emberAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
+                        if (!AnvilCraft.config.transcendenceAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
                             enchantmentsOnRightLevel = enchantment.getMaxLevel();
                         }
 
@@ -152,7 +155,7 @@ public class EmberAnvilMenu extends AnvilMenu {
 
                         long t = anvilCost
                             * enchantmentsOnRightLevel
-                            * inputItemLeft.getCount()
+                            * inputLeft.getCount()
                             * (repairCost == 0 ? 1 : repairCost);
                         totalCost += Math.clamp(t, 0, Integer.MAX_VALUE);
                     }
@@ -161,70 +164,83 @@ public class EmberAnvilMenu extends AnvilMenu {
 
             if (extraFormat != null) {
                 repairCostT = 1;
-                Integer baseRepairCost = inputItemLeft.get(DataComponents.REPAIR_COST);
+                Integer baseRepairCost = inputLeft.getOrDefault(DataComponents.REPAIR_COST, 0);
                 totalCost += repairCostT
-                    * inputItemLeft.getCount()
-                    * inputItemRight.getCount()
-                    * (baseRepairCost == null || baseRepairCost == 0 ? 1 : baseRepairCost);
-                Component currentName = inputItemLeft.getHoverName();
+                    * inputLeft.getCount()
+                    * inputRight.getCount()
+                    * (baseRepairCost == 0 ? 1 : baseRepairCost);
+                Component currentName = inputLeft.getHoverName();
                 if (!this.itemName.equals(currentName.getString())
                     && this.itemName != null
                     && !this.itemName.isBlank()) {
                     currentName = Component.literal(this.itemName);
                 }
-                inputItemLeftCopy.set(DataComponents.CUSTOM_NAME, currentName.copy().withStyle(extraFormat));
+                inputLeftCopy.set(DataComponents.CUSTOM_NAME, currentName.copy().withStyle(extraFormat));
             } else {
                 if (this.itemName != null && !StringUtil.isBlank(this.itemName)) {
                     boolean nameChanged =
-                        !this.itemName.equals(inputItemLeft.getHoverName().getString());
+                        !this.itemName.equals(inputLeft.getHoverName().getString());
                     if (nameChanged) {
                         repairCostT = 1;
                         totalCost += repairCostT;
                         Component name = Component.literal(this.itemName);
-                        inputItemLeftCopy.set(DataComponents.CUSTOM_NAME, name);
+                        inputLeftCopy.set(DataComponents.CUSTOM_NAME, name);
                     }
                 } else {
-                    if (inputItemLeft.has(DataComponents.CUSTOM_NAME)) {
+                    if (inputLeft.has(DataComponents.CUSTOM_NAME)) {
                         repairCostT = 1;
                         totalCost += repairCostT;
-                        inputItemLeftCopy.remove(DataComponents.CUSTOM_NAME);
+                        inputLeftCopy.remove(DataComponents.CUSTOM_NAME);
                     }
                 }
             }
 
-            if (hasStoredEnchantmentsOnInput2 && !inputItemLeftCopy.isBookEnchantable(inputItemRight)) {
-                inputItemLeftCopy = ItemStack.EMPTY;
+            if (hasStoredEnchantmentsOnInput2 && !inputLeftCopy.isBookEnchantable(inputRight)) {
+                inputLeftCopy = ItemStack.EMPTY;
             }
 
             damage = Math.clamp(repairCost + (long) totalCost, 0, Integer.MAX_VALUE);
             this.cost.set(damage);
             if (totalCost <= 0) {
-                inputItemLeftCopy = ItemStack.EMPTY;
+                inputLeftCopy = ItemStack.EMPTY;
             }
 
             if (repairCostT == totalCost && repairCostT > 0 && this.cost.get() >= 40) {
                 this.cost.set(39);
             }
 
-            if (!inputItemLeftCopy.isEmpty()) {
-                repairItemCountCost = inputItemLeftCopy.getOrDefault(DataComponents.REPAIR_COST, 0);
-                if (repairItemCountCost < inputItemRight.getOrDefault(DataComponents.REPAIR_COST, 0)) {
-                    repairItemCountCost = inputItemRight.getOrDefault(DataComponents.REPAIR_COST, 0);
+            if (!inputLeftCopy.isEmpty()) {
+                repairItemCountCost = inputLeftCopy.getOrDefault(DataComponents.REPAIR_COST, 0);
+                if (repairItemCountCost < inputRight.getOrDefault(DataComponents.REPAIR_COST, 0)) {
+                    repairItemCountCost = inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
                 }
 
                 if (repairCostT != totalCost || repairCostT == 0) {
                     repairItemCountCost = calculateIncreasedRepairCost(repairItemCountCost);
                 }
 
-                inputItemLeftCopy.set(DataComponents.REPAIR_COST, repairItemCountCost);
-                EnchantmentHelper.setEnchantments(inputItemLeftCopy, enchantmentsOnLeft.toImmutable());
+                inputLeftCopy.set(DataComponents.REPAIR_COST, repairItemCountCost);
+                EnchantmentHelper.setEnchantments(inputLeftCopy, enchantmentsOnLeft.toImmutable());
             }
 
-            this.resultSlots.setItem(0, inputItemLeftCopy);
+            this.resultSlots.setItem(0, inputLeftCopy);
             this.broadcastChanges();
         } else {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
             this.cost.set(0);
+        }
+    }
+
+    @Override
+    protected void onTake(Player player, ItemStack stack) {
+        int costCache = this.cost.get();
+        super.onTake(player, stack);
+        if (costCache >= 5 && costCache < 15) {
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 6000, 1));
+            player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 6000, 1));
+        } else if (costCache >= 15) {
+            player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 12000, 2));
+            player.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 12000, 2));
         }
     }
 }
