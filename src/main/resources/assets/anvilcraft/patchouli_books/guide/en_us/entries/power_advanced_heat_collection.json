@@ -35,9 +35,10 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "laser",
       "title": "Laser",
       "item": "anvilcraft:ruby_laser,anvilcraft:ruby_prism",
-      "text": "When $(thing)Laser$() irradiates to heatable blocks can heat it. When block has been irradiated by laser, determine Heat Tier based on the level of laser. See the curve of association of laser level and Heat Tier on the next page. If the Heat Tier of the block is lower than provided Heat Tier, raise the Tier to the provided Tier and add 4 seconds to duration every seconds. If the Heat Tier of the block is higher than the provided Tier, then do nothing."
+      "text": "When $(l:power_advanced_laser_system)Laser$() irradiates to heatable blocks can heat it. When block has been irradiated by laser, determine Heat Tier based on the level of laser. See the curve of association of laser level and Heat Tier on the next page. If the Heat Tier of the block is lower than provided Heat Tier, raise the Tier to the provided Tier and add 4 seconds to duration every seconds. If the Heat Tier of the block is higher than the provided Tier, then do nothing."
     },
     "Level 1: to Heated Tier and add 1 seconds to duration.$(br)Level 2: to Heated Tier and add 3 seconds to duration.$(br)Level 3-4: to Redhot Tier and add 1 seconds to duration.$(br)Level 5-8: to Redhot Tier and add 3 seconds to duration.$(br)Level 9-16: to Glowing Tier and add 1 seconds to duration.$(br)Level 17-32: to Glowing Tier and add 3 seconds to duration.$(br)Level 33-64: to Incandescent Tier and add 1 seconds to duration.$(br)Level 65+: to Incandescent Tier and add 3 seconds to duration.",
     {
