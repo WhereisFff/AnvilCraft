@@ -67,13 +67,14 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "cursed_gold_block",
       "recipe": "anvilcraft:cursed_gold_block",
       "recipe2": "anvilcraft:cursed_gold_nugget"
     },
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:corrupted_beacon",
-      "text": "When you fully using $(item)Cursed Gold Block$() as the base of beacons and use $(item)Cursed Gold Ingot$() to activate it, the beacon will have chance to convert into $(l:smithing_corrupted_beacon)Corrupted Beacon$(/l). The more layers of the base, the higher the conversion probability. Use Cursed Gold Ingot to activate beacons will make weather set to Thunder."
+      "text": "When you fully using $(item)Cursed Gold Block$() as the base of beacons and use $(item)Cursed Gold Ingot$() to activate it, the beacon will have chance to convert into $(l:smithing_corrupted_beacon)Corrupted Beacon$(/l). "
     }
   ]
 }

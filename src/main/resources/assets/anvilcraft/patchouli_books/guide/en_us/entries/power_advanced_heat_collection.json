@@ -13,6 +13,7 @@
     "Some heat-collectable block will cooldown and change itself after heat-collecting. Here are these blocks: $(li)$(item)Magma Block$()->$(item)Netherrack$()$(li)$(item)Lit Campfire$()->$(item)Unlit Campfire$()$(li)$(item)Lava (Cauldron)$()->$(item)Obsidian (Cauldron)$()$(br)Some heat-collectable blocks will not change after heat-collecting. Here are these blocks: $(li)$(item)Any Heated Block$() (Will cooldown by itself. Not affected by the collector.)$(li)$(item)Any Uranium Block$()$(li)$(item)Ember Metal Block$()$(li)$(item)Any Plutonium Block$()$()",
     {
       "type": "patchouli:text",
+      "anchor": "heatable_block",
       "title": "Heatable Block",
       "text": "$(thing)Heatable Block$() is a collective term for a series of blocks. Every type of blocks has 5 tiers normally, they are $(thing)Normal$()、$(thing)Heated$()、$(thing)Redhot$()、$(thing)Glowing$() and $(thing)Incandescent$(). For now, there are only $(thing)Netherite$() and $(thing)Tungsten$() series support heating. Heatable blocks have a duration. When the duration becomes 0, the heat tier will -1. After that, if the block is still heated, set the duration to 10 seconds. Mining the block will not keep the duration and let heat tier -1. If the tool has $(thing)Silk Touch$() or uses Auto Smelting to collect, the heat tier will be maintained."
     },
@@ -23,8 +24,9 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "mineral_fountain",
       "item": "anvilcraft:mineral_fountain",
-      "text": "When the corners of $(item)Mineral Fountain$() is full of lava, it can be used to heat heatable blocks. It can heat block on top to Redhot Tier and add 1 second every seconds. If the Heat Tier of the block on top is higher than Redhot Tier, then do nothing."
+      "text": "When the corners of $(l:advanced_mineral_fountain#mineral_fountain)Mineral Fountain$() is full of lava, it can be used to heat heatable blocks. It can heat block on top to Redhot Tier and add 1 second every seconds. If the Heat Tier of the block on top is higher than Redhot Tier, then do nothing."
     },
     {
       "type": "patchouli:spotlight",

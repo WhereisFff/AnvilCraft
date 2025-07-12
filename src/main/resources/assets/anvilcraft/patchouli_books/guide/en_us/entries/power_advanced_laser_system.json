@@ -1,0 +1,21 @@
+{
+  "name": "Advanced Electrical Appliances-Laser System",
+  "category": "anvilcraft:power_system",
+  "icon": "anvilcraft:ruby_laser",
+  "sortnum": 2007,
+  "pages": [
+    "要建立本模组的$(thing)激光系统$()，需要提前准备好足够的$(item)红宝石$()，可以参考这款$(thing)宝石转化机$()(未完成)。$(br)",
+    {
+      "type": "patchouli:crafting",
+      "anchor": "laser",
+      "recipe": "anvilcraft:ruby_laser",
+      "recipe2": "anvilcraft:ruby_prism",
+      "text": ""
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:ruby_laser",
+      "text": ""
+    }
+  ]
+}

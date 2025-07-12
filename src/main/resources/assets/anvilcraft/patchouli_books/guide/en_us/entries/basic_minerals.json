@@ -1,9 +1,112 @@
 {
   "name": "Basic Minerals",
   "category": "anvilcraft:basic_gameplay",
-  "icon": "anvilcraft:void_stone",
+  "icon": "anvilcraft:earth_core_shard_ore",
   "sortnum": 1006,
   "pages": [
-    "No English now"
-    ]
+    "不同于大多数mod，正常情况下本模组的矿石不会自然生成，只能通过矿物涌泉得到。$(br)为了在前期获得本模组的金属，你需要使用类似于“无中生有”的方式——“$(l:basic_item_processing#mesh)物品过筛$()”。$(br)以此法获得的金属粒及其来源在后文列出。",
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:lead_nugget",
+      "text": "$(item)铅粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:tin_nugget",
+      "text": "$(item)锡粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:zinc_nugget",
+      "text": "$(item)锌粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:silver_nugget",
+      "text": "$(item)银粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:tungsten_nugget",
+      "text": "$(item)钨粒$()通过筛选$(item)下界尘$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:titanium_nugget",
+      "text": "$(item)钛粒$()通过筛选$(item)末地尘$()概率获得。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "无限金属矿",
+      "text": "在获得一定量的金属后，你可以通过$(l:smithing_corrupted_beacon#time_warp)时移$()将金属块转化为粗矿，$(l:advanced_mineral_fountain#mineral_fountain)矿物涌泉$()再生矿物，$(thing)激光系统$()自动采矿。这要求你现阶段有能力制造$(l:smithing_corrupted_beacon)腐化信标$()、$(l:advanced_mineral_fountain#impact_pile)冲击桩$()、$(item)激光器$()、$(item)棱镜$()并有充足的电力以供$(item)激光器$()工作"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "earth_core_shard_ore",
+      "item": "anvilcraft:earth_core_shard_ore",
+      "text": "$(item)地核碎片矿石$()只能通过$(thing)矿物涌泉产矿$()伴生$(br)受到$(thing)时运$()与$(thing)精准采集$()影响$(br)需要钻石镐及以上等级镐挖掘$(br)挖掘获得$(item)地核碎片$()"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "earth_core_shard",
+      "item": "anvilcraft:earth_core_shard",
+      "text": "$(item)地核碎片$()及其块状物、矿石防火，不受$(item)熔岩$()和$(item)火焰$()损害$(br)可参与$(l:smithing_tier_2_materials#ember_metal)余烬金属锭$()的制作"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "void_stone",
+      "item": "anvilcraft:void_stone",
+      "text": "$(item)虚空石$()只能通过$(thing)矿物涌泉产矿$()伴生$(br)受到$(thing)时运$()与$(thing)精准采集$()影响$(br)需要钻石镐及以上等级镐挖掘$(br)挖掘获得$(item)虚空物质$()"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "void_matter",
+      "item": "anvilcraft:void_matter",
+      "text": "$(item)虚空物质$()及其块状物、矿石防虚空，在$(thing)虚空$()中会上升"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "void_matter_block",
+      "recipe": "anvilcraft:void_matter_block",
+      "text": "$(item)虚空物质块$()防虚空<br>可用于制作$(l:power_advanced_void_energy_collection#void_energy_collector)虚空能收集器$()<br>自身具有$(thing)虚空衰变$()的特性"
+    },
+    {
+      "type": "patchouli:text",
+      "anchor": "void_decay",
+      "title": "虚空衰变",
+      "text": "$(item)虚空物质块$()周围6个面有至少5个面接触到$(item)虚空物质块$()时可以发生$(thing)虚空衰变$()：接收到$(thing)随机刻$()时，自身随机转化为以下方块：<br>石头、深板岩、安山岩、花岗岩、闪长岩、下界岩、黑石、末地石、冰、粗铁块、氧化的铜块、铁矿石、深层铁矿石、铜矿石、深层铜矿石、金矿石、深层金矿石、虚空石、末地尘、$(l:smithing_tier_1_materials#cursed_gold_block)诅咒金块$()、深层锡矿石、深层锌矿石、深层铅矿石、深层铀矿石"
+    },
+    "人工挖掘矿物并替换深板岩低效且劳累$(br)使用$(thing)激光采矿系统$()可以自动采集。",
+    {
+      "type": "patchouli:multiblock",
+      "name": "激光采矿系统",
+      "multiblock": {
+        "mapping": {
+          "A": "anvilcraft:deepslate_silver_ore",
+          "T": "anvilcraft:raw_silver_block",
+          "M": "anvilcraft:mineral_fountain",
+          "F": "anvilcraft:ruby_prism",
+          "W": "anvilcraft:ruby_laser[facing=west]",
+          "E": "anvilcraft:ruby_laser[facing=east]",
+          "N": "anvilcraft:ruby_laser[facing=north]",
+          "S": "anvilcraft:ruby_laser[facing=south]",
+          "C": "minecraft:barrel"
+        },
+        "pattern": [
+          ["   ", " C ", "   "],
+          [" E ", "SFN", " W "],
+          ["   ", "   ", "   "],
+          ["   ", "   ", "   "],
+          ["   ", " 0 ", "   "],
+          ["   ", "   ", "   "],
+          ["   ", " A ", "   "],
+          [" T ", "TMT", " T "]
+        ]
+      },
+      "text": "这种结构可以自动提取粗矿并存放至上方容器内,更多结构可以参考$(thing)5.5激光采矿机$()"
+    },
+    "$(item)棱镜$()和$(thing)矿石$()的高度差不能超过128$(br)提取到的物品会从$(item)棱镜$()上方弹出，或存入$(item)棱镜$()上方相邻的$(thing)容器$()$(br)提取效率=$(thing)激光等级$()/4(向下取整),$(thing)提取效率$()与$(thing)提取时间$()的关系如下：$(br)效率=1：24s/次$(br)效率=2：6s/次$(br)效率=3：2s/次$(br)效率=4：1s/次"
+  ]
 }
+
+

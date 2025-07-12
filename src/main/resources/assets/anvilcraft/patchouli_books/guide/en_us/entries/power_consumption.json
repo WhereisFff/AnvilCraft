@@ -10,8 +10,9 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "heater",
       "recipe": "anvilcraft:heater",
-      "text": "The $(item)Heater$()'s power consumption is 8KW. It heats the block above and allows the anvil to perform smelting operations."
+      "text": "The $(item)Heater$()'s power consumption is 16KW. It heats the block above and allows the anvil to perform smelting operations."
     },
     {
       "type": "patchouli:crafting",
