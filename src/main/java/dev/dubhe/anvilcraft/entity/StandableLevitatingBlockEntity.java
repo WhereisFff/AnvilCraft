@@ -17,7 +17,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.Fallable;
-import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
@@ -72,7 +71,7 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
 
             if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
-            } else if (FallingBlock.isFree(this.level().getBlockState(blockPos.above()))) {
+            } else if (StandableFallingBlockEntity.isFree(this.level(), blockPos.above())) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04, 0.0));
             } else {
                 if (!this.level().isClientSide) {

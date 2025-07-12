@@ -24,6 +24,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.Shapes;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -77,9 +78,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
 
             if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
-            } else if (FallingBlock.isFree(
-                this.level().getBlockState(new BlockPos(this.getBlockX(), (int) (this.getY() - 0.01), this.getBlockZ()))
-            )) {
+            } else if (isFree(this.level(), new BlockPos(this.getBlockX(), (int) (this.getY() - 0.01), this.getBlockZ()))) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
             } else {
                 if (!this.level().isClientSide) {
@@ -136,7 +135,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
         if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
         List<Entity> list = this.level().getEntities(
             this,
-            this.getBoundingBox().expandTowards(0, 1F, 0),
+            this.getBoundingBox().move(0, 0.99F, 0),
             EntitySelector.pushableBy(this)
         );
         if (!list.isEmpty()) {
@@ -159,5 +158,10 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
     @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
         return EntityDimensions.scalable(0.98f, 0.98f);
+    }
+
+    static boolean isFree(Level level, BlockPos pos) {
+        return FallingBlock.isFree(level.getBlockState(pos))
+               || level.getBlockState(pos).getCollisionShape(level, pos).equals(Shapes.empty());
     }
 }
