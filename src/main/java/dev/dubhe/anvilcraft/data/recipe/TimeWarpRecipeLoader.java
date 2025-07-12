@@ -149,15 +149,15 @@ public class TimeWarpRecipeLoader {
             .save(provider);
 
         HeatProduceTimeWarpRecipe.builder()
-            .tier(HeatTier.INCANDESCENT)
-            .duration(24000)
+            .heating(HeatTier.INCANDESCENT, 24000)
+            .heating(HeatTier.OVERHEATED, 200)
             .requires(ModBlocks.URANIUM_BLOCK)
             .result(ModItems.RAW_URANIUM.asStack(2))
             .result(ModItems.RAW_LEAD.asStack())
             .save(provider, AnvilCraft.of("heat_produce_time_warp/raw_uranium_from_uranium_block"));
         HeatProduceTimeWarpRecipe.builder()
-            .tier(HeatTier.INCANDESCENT)
-            .duration(24000)
+            .heating(HeatTier.INCANDESCENT, 24000)
+            .heating(HeatTier.OVERHEATED, 200)
             .requires(ModBlocks.PLUTONIUM_BLOCK)
             .result(ModItems.RAW_URANIUM.asStack(3))
             .result(ModItems.RAW_LEAD.asStack())

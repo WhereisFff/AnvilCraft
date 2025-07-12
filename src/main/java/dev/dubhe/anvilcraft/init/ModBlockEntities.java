@@ -38,6 +38,7 @@ import dev.dubhe.anvilcraft.block.entity.VoidEnergyCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.GlowingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatedBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.IncandescentBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.heatable.OverheatedBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.RedhotBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.plate.TimeCountedPressurePlateBlockEntity;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.BatchCrafterRenderer;
@@ -258,6 +259,10 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<IncandescentBlockEntity> INCANDESCENT_BLOCK = REGISTRATE
         .blockEntity("incandescent_block", IncandescentBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.INCANDESCENT_NETHERITE, ModBlocks.INCANDESCENT_TUNGSTEN)
+        .register();
+    public static final BlockEntityEntry<OverheatedBlockEntity> OVERHEATED_BLOCK = REGISTRATE
+        .blockEntity("overheated_block", OverheatedBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.OVERHEATED_EMBER_METAL)
         .register();
 
     public static final BlockEntityEntry<PlasmaJetsBlockEntity> PLASMA_JETS = REGISTRATE

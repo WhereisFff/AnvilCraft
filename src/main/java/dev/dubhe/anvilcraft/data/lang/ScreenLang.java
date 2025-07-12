@@ -91,6 +91,7 @@ public class ScreenLang {
         provider.add("tooltip.anvilcraft.heat.tier.redhot", "RedHot");
         provider.add("tooltip.anvilcraft.heat.tier.glowing", "Glowing");
         provider.add("tooltip.anvilcraft.heat.tier.incandescent", "Incandescent");
+        provider.add("tooltip.anvilcraft.heat.tier.overheated", "Overheated");
         provider.add("tooltip.anvilcraft.heat.duration", "Duration: %s");
 
         provider.add("block.anvilcraft.heat_collector.placement_too_close_to_another", "Too close to another heat collector");

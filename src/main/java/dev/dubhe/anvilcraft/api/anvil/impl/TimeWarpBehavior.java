@@ -164,24 +164,27 @@ public class TimeWarpBehavior implements IAnvilBehavior {
                 if (idOp.isEmpty()) continue;
                 HeatTier currentTier = HeatRecorder.getTier(level, pos, state)
                     .orElseThrow(() -> new IllegalStateException("Unexpected non tier heatable block!"));
-                HeatTier tier = heatRecipe.getTier();
-                int durationDelta = heatRecipe.getDuration();
-                if (tier.compareTo(currentTier) > 0) {
-                    Block deltaBlock = HeatRecorder.getHeatableBlock(idOp.get(), tier)
-                        .orElseThrow(() -> new IllegalStateException("Unexpected non heatable block tier!"));
-                    level.setBlockAndUpdate(pos, deltaBlock.defaultBlockState());
-                    if (!(deltaBlock instanceof EntityBlock deltaEntityBlock)) continue;
-                    BlockEntity deltaBlockEntity = deltaEntityBlock.newBlockEntity(pos, deltaBlock.defaultBlockState());
-                    if (!(deltaBlockEntity instanceof HeatableBlockEntity heatableEntity)) continue;
-                    level.setBlockEntity(heatableEntity);
-                    heatable = heatableEntity;
-                } else if (tier.compareTo(currentTier) < 0) {
-                    durationDelta = 0;
-                }
-                if (heatable == null) continue;
+                for (var info : heatRecipe.getInfos()) {
+                    HeatTier tier = info.tier();
+                    int durationDelta = info.duration();
+                    if (tier.compareTo(currentTier) > 0) {
+                        Block deltaBlock = HeatRecorder.getHeatableBlock(idOp.get(), tier).orElse(null);
+                        if (deltaBlock == null) continue;
+                        level.setBlockAndUpdate(pos, deltaBlock.defaultBlockState());
+                        if (!(deltaBlock instanceof EntityBlock)) continue;
+                        BlockEntity deltaBlockEntity = level.getBlockEntity(pos);
+                        if (!(deltaBlockEntity instanceof HeatableBlockEntity heatableEntity)) continue;
+                        level.setBlockEntity(heatableEntity);
+                        heatable = heatableEntity;
+                    } else if (tier.compareTo(currentTier) < 0) {
+                        durationDelta = 0;
+                    }
+                    if (heatable == null) continue;
 
-                if (durationDelta > 0) {
-                    heatable.addDurationInTick(durationDelta);
+                    if (durationDelta > 0) {
+                        heatable.addDurationInTick(durationDelta);
+                    }
+                    heatable = null;
                 }
             }
         }
