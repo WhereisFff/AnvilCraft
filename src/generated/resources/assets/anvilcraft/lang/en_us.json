@@ -774,6 +774,7 @@
   "tooltip.anvilcraft.heat.tier.heated": "Heated",
   "tooltip.anvilcraft.heat.tier.incandescent": "Incandescent",
   "tooltip.anvilcraft.heat.tier.normal": "Normal",
+  "tooltip.anvilcraft.heat.tier.overheated": "Overheated",
   "tooltip.anvilcraft.heat.tier.redhot": "RedHot",
   "tooltip.anvilcraft.heat.title": "Heat Stats:",
   "tooltip.anvilcraft.heat_collector.not_work": "Heat Collector is not working",
