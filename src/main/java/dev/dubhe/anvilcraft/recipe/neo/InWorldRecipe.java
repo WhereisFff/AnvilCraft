@@ -77,7 +77,7 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
             predicate.accept(context);
         }
         for (IRecipeOutcome<?> outcome : this.outcomes) {
-            outcome.accept(context);
+            outcome.acceptWithChance(context);
         }
         return this.icon.copy();
     }
