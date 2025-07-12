@@ -30,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvider {
-    protected byte startMode = 0;
+    protected Mode startMode = Mode.RISING_EDGE;
     protected boolean outputInvert = false;
     protected int waitingTime = 2;
     protected int signalDuration = 2;
@@ -39,7 +39,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     protected boolean isDeadlock = false;
 
     @Setter(AccessLevel.NONE)
-    private Mode mode = Mode.DEFAULT;
+    private State state = State.DEFAULT;
     @Setter(AccessLevel.NONE)
     private int waitingTimeRemaining;
     @Setter(AccessLevel.NONE)
@@ -73,14 +73,14 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         this.readDataNbt(data);
         this.waitingTimeRemaining = data.getInt("RemainingWaitingTime");
         this.signalDurationRemaining = data.getInt("RemainingSignalDuration");
-        if (this.waitingTimeRemaining != 0) this.mode = Mode.WAITING;
-        else if (this.signalDurationRemaining != 0) this.mode = Mode.OUTPUTTING;
-        else this.mode = Mode.DEFAULT;
+        if (this.waitingTimeRemaining != 0) this.state = State.WAITING;
+        else if (this.signalDurationRemaining != 0) this.state = State.OUTPUTTING;
+        else this.state = State.DEFAULT;
     }
 
     public CompoundTag constructDataNbt() {
         CompoundTag data = new CompoundTag();
-        data.putByte("StartMode", this.startMode);
+        data.putByte("StartMode", this.startMode.index());
         data.putBoolean("OutputMode", this.outputInvert);
         data.putInt("WaitingTime", this.waitingTime);
         data.putInt("SignalDuration", this.signalDuration);
@@ -88,7 +88,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     public PulseGeneratorBlockEntity readDataNbt(CompoundTag data) {
-        this.startMode = data.getByte("StartMode");
+        this.startMode = Mode.fromIndex(data.getByte("StartMode"));
         this.outputInvert = data.getBoolean("OutputMode");
         this.waitingTime = data.getInt("WaitingTime");
         this.signalDuration = data.getInt("SignalDuration");
@@ -96,7 +96,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     protected void tickTime(Level level, BlockPos pos, BlockState state) {
-        switch (this.mode) {
+        switch (this.state) {
             case WAITING -> {
                 if (this.waitingTimeRemaining > 0 && !this.isDeadlock) {
                     this.waitingTimeRemaining--;
@@ -122,23 +122,22 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     protected void checkIsDeadlock(Level level, BlockPos pos, BlockState state) {
         this.isDeadlock = switch (this.startMode) {
-            case 0, 1 -> false;
-            case 2 -> {
-                if (this.isInputtingSignal && !this.isDeadlock) {
-                    this.mode = Mode.DEFAULT;
-                    this.signalDurationRemaining = 0;
-                    this.setChanged();
-                    yield true;
-                } else if (this.isDeadlock && !this.isInputtingSignal) {
+            case RISING_EDGE, FALLING_EDGE -> false;
+            case LOOP -> {
+                if (this.isDeadlock && !this.isInputtingSignal) {
                     this.startWaiting(level, pos, state);
                     this.setChanged();
                     yield false;
                 } else {
-                    yield false;
+                    yield this.isInputtingSignal;
                 }
             }
-            default -> throw new IllegalStateException("Unexpected value: " + this.startMode);
         };
+        if (this.isDeadlock) {
+            this.state = State.DEFAULT;
+            this.signalDurationRemaining = 0;
+            this.setChanged();
+        }
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, PulseGeneratorBlockEntity generatorEntity) {
@@ -155,12 +154,12 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
             BlockPos neighbourPos = pos.relative(direction);
             level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, generatorEntity.isOutputting()));
             level.neighborChanged(neighbourPos, state.getBlock(), pos);
-            level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction);
+            level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
         }
     }
 
     protected void startWaiting(Level level, BlockPos pos, BlockState state) {
-        this.mode = Mode.WAITING;
+        this.state = State.WAITING;
         if (this.waitingTime != 0) {
             this.waitingTimeRemaining = this.waitingTime;
         } else {
@@ -169,16 +168,16 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     protected void startOutputting(Level level, BlockPos pos, BlockState state) {
-        this.mode = Mode.OUTPUTTING;
+        this.state = State.OUTPUTTING;
         this.signalDurationRemaining = this.signalDuration;
         this.updateBlockAndNeighbours(level, pos, state);
     }
 
     protected void checkOnSignalEnd(Level level, BlockPos pos, BlockState state) {
-        this.mode = Mode.DEFAULT;
+        this.state = State.DEFAULT;
         this.updateBlockAndNeighbours(level, pos, state);
 
-        if (this.startMode == 2) {
+        if (this.startMode == Mode.LOOP) {
             this.startWaiting(level, pos, state);
         }
     }
@@ -190,7 +189,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     public void setStartMode(int mode) {
-        this.startMode = (byte) Math.clamp(mode, 0, 2);
+        this.startMode = Mode.fromIndex(mode % 3);
         this.setChanged();
     }
 
@@ -205,11 +204,12 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     public boolean isProcessing() {
-        return this.mode != Mode.DEFAULT;
+        return this.state != State.DEFAULT;
     }
 
     public boolean isOutputting() {
-        return this.mode == Mode.OUTPUTTING ^ this.outputInvert;
+        if (this.isDeadlock) return this.outputInvert;
+        return this.state == State.OUTPUTTING != this.outputInvert;
     }
 
     @Override
@@ -227,12 +227,24 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     public static boolean canStart(@Nullable BlockEntity blockEntity, boolean nowInputting) {
         return blockEntity instanceof PulseGeneratorBlockEntity repeater
-            && ((repeater.getStartMode() == 0 && !repeater.isInputtingSignal() && nowInputting)
-            || (repeater.getStartMode() == 1 && repeater.isInputtingSignal() && !nowInputting)
-            || (repeater.getStartMode() == 2 && (repeater.isDeadlock || repeater.mode == Mode.DEFAULT)));
+            && ((repeater.getStartMode() == Mode.RISING_EDGE && !repeater.isInputtingSignal() && nowInputting)
+            || (repeater.getStartMode() == Mode.FALLING_EDGE && repeater.isInputtingSignal() && !nowInputting)
+            || (repeater.getStartMode() == Mode.LOOP && (repeater.isDeadlock || repeater.state == State.DEFAULT)));
+    }
+
+    public enum State {
+        DEFAULT, WAITING, OUTPUTTING
     }
 
     public enum Mode {
-        DEFAULT, WAITING, OUTPUTTING
+        RISING_EDGE, FALLING_EDGE, LOOP;
+
+        public byte index() {
+            return (byte) this.ordinal();
+        }
+
+        public static Mode fromIndex(int index) {
+            return values()[index];
+        }
     }
 }
