@@ -503,15 +503,15 @@ public class ModBlocks {
 
     public static final BlockEntry<TranscendenceAnvilBlock> TRANSCENDENCE_ANVIL = REGISTRATE
         .block("transcendence_anvil", TranscendenceAnvilBlock::new)
-        .recipe((ctx, provider) -> {/*
+        .recipe((ctx, provider) -> {
             SmithingTransformRecipeBuilder.smithing(
-                    Ingredient.of(ModItems.TRANSCENDENCE_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModItems.TRANSCENDIUM_UPGRADE_SMITHING_TEMPLATE),
                     Ingredient.of(ModBlocks.EMBER_ANVIL),
-                    Ingredient.of(ModBlocks.TRANSCENDIUM_BLOCK),  等超限合金模板合并
+                    Ingredient.of(ModBlocks.TRANSCENDIUM_BLOCK),
                     RecipeCategory.MISC,
                     ctx.get().asItem())
                 .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.TRANSCENDIUM_BLOCK))
-                .save(provider, AnvilCraft.of("smithing/transcendence_anvil"));*/
+                .save(provider, AnvilCraft.of("smithing/transcendence_anvil"));
         })
         .initialProperties(() -> Blocks.ANVIL)
         .tag(BlockTags.WITHER_IMMUNE,
