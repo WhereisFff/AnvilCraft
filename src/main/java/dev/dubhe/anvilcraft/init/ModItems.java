@@ -50,6 +50,7 @@ import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
+import dev.dubhe.anvilcraft.item.RecoveryPearl;
 import dev.dubhe.anvilcraft.item.ResonatorCoreItem;
 import dev.dubhe.anvilcraft.item.RoyalAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.RoyalAxeItem;
@@ -944,6 +945,21 @@ public class ModItems {
     public static final ItemEntry<CannedFoodItem> CANNED_FOOD = REGISTRATE
         .item("canned_food", p -> new CannedFoodItem(p, TIN_CAN))
         .tag(Tags.Items.FOODS)
+        .register();
+
+    public static final ItemEntry<RecoveryPearl> RECOVERY_PEARL = REGISTRATE
+        .item("recovery_pearl", RecoveryPearl::new)
+        .properties((properties) -> properties.stacksTo(16))
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
+                .pattern(" B ")
+                .pattern("BAB")
+                .pattern(" B ")
+                .define('A', Items.ENDER_PEARL)
+                .define('B', Items.ECHO_SHARD)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.ENDER_PEARL))
+                .save(provider);
+        })
         .register();
 
     public static final ItemEntry<SeedsPackItem> SEEDS_PACK =
