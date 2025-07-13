@@ -100,7 +100,6 @@ public class CreateIntegration {
                 return COGWHEEL.getDelegate();
             }
         })
-        .tag(ModItemTags.AMULET)
         .properties(properties -> properties.stacksTo(1))
         .removeTab(ModItemGroups.ANVILCRAFT_INGREDIENTS.getKey())
         .recipe((ctx, provider) -> JewelCraftingRecipe.builder()
