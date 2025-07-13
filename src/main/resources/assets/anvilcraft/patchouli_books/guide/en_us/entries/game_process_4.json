@@ -27,7 +27,7 @@
           ["  A  ","     ","  0  ","     ","  C  "]
         ]
       },
-      "text": "在$(item)加热器$()工作时，使用铁砧可以对$(item)炼药锅$()中的物品执行$(thing)高温熔炼$()配方"
+      "text": "在$(item)加热器$()工作时，使用铁砧可以对$(item)炼药锅$()中的物品执行$(thing)高温熔炼$()配方，既可以$(#aa2222)双倍$()烧矿，又能生产(l:smithing_tier_1_materials#royal_steel_ingot)皇家钢$()。"
     },
     {
       "type": "patchouli:spotlight",
