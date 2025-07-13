@@ -5,6 +5,7 @@ import net.minecraft.core.GlobalPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
@@ -20,41 +21,51 @@ public class RecoveryPearl extends Item {
         super(properties);
     }
 
+    @SuppressWarnings({"DataFlowIssue"})
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        ItemStack itemInHand = player.getItemInHand(usedHand);
-        Optional<GlobalPos> lastDeathLocation = player.getLastDeathLocation();
-        ResourceKey<Level> currentDimension = level.dimension();
-        BlockPos currentPlayerPos = player.getOnPos();
-        BlockPos spawnPos = player.getSleepingPos().isPresent() ? player.getSleepingPos().get() : level.getSharedSpawnPos();
+        ItemStack itemStack = player.getItemInHand(usedHand);
 
         if (!level.isClientSide) {
+            MinecraftServer server = level.getServer();
+            ServerPlayer serverPlayer = server.getPlayerList().getPlayer(player.getUUID());
+
+            Optional<GlobalPos> lastDeathLocation = player.getLastDeathLocation();
+            ResourceKey<Level> respawnDimension = serverPlayer.getRespawnDimension();
+            BlockPos respawnPos = serverPlayer.getRespawnPosition() == null ? level.getSharedSpawnPos() : serverPlayer.getRespawnPosition();
+            ResourceKey<Level> currentDimension = level.dimension();
+            BlockPos currentPos = player.getOnPos();
+
             if (lastDeathLocation.isPresent()) {
-                BlockPos lastDeathPos = lastDeathLocation.get().pos();
-                ResourceKey<Level> lastDeathDimension = lastDeathLocation.get().dimension();
-                if (currentDimension == lastDeathDimension) {
-                    if (getDistance(currentPlayerPos, lastDeathPos) < 12) {
-                        player.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+                GlobalPos globalPos = lastDeathLocation.get();
+                ResourceKey<Level> lastDeathDimension = globalPos.dimension();
+                BlockPos lastDeathPos = globalPos.pos();
+                if (getDistance(currentPos, lastDeathLocation.get().pos()) < 12) {
+                    if (respawnDimension == currentDimension) {
+                        player.teleportTo(respawnPos.getX(), respawnPos.getY(), respawnPos.getZ());
                     } else {
-                        player.teleportTo(lastDeathPos.getX(), lastDeathPos.getY(), lastDeathPos.getZ());
+                        crossDimensionTeleportTo(respawnDimension, player, respawnPos);
                     }
                 } else {
-                    crossDimensionTeleportTo(lastDeathDimension, player, lastDeathPos);
+                    if (lastDeathDimension == currentDimension) {
+                        player.teleportTo(lastDeathPos.getX(), lastDeathPos.getY(), lastDeathPos.getZ());
+                    } else {
+                        crossDimensionTeleportTo(lastDeathDimension, player, lastDeathPos);
+                    }
                 }
             } else {
-                if (currentDimension == Level.OVERWORLD) {
-                    player.teleportTo(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+                if (respawnDimension == currentDimension) {
+                    player.teleportTo(respawnPos.getX(), respawnPos.getY(), respawnPos.getZ());
                 } else {
-                    crossDimensionTeleportTo(Level.OVERWORLD, player, spawnPos);
+                    crossDimensionTeleportTo(respawnDimension, player, respawnPos);
                 }
             }
-
             player.hurt(level.damageSources().fall(), 4);
         }
 
-        itemInHand.consume(1, player);
         player.getCooldowns().addCooldown(this, 20);
-        return InteractionResultHolder.sidedSuccess(itemInHand, level.isClientSide());
+        itemStack.consume(1, player);
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
     private double getDistance(BlockPos pos1, BlockPos pos2) {
