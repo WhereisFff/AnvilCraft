@@ -177,7 +177,7 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.NETHERITE_BLOCK));
     }
 
-    private static ResourceKey<Item> findResourceKey(Item item) {
+    private static @NotNull ResourceKey<Item> findResourceKey(Item item) {
         return ResourceKey.create(Registries.ITEM, BuiltInRegistries.ITEM.getKey(item));
     }
 }
