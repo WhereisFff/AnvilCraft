@@ -3,6 +3,7 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:heat_collector",
   "sortnum": 2005,
+  "entry_color": "004400",
   "pages": [
     "使用集热器来收集$(thing)可集热方块$()的热能。可集热方块是$(thing)高温方块$()和一些特殊的方块，如$(item)铀块$()、$(item)钚块$()。",
     {

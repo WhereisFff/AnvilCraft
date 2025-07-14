@@ -3,6 +3,7 @@
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:royal_steel_ingot",
   "sortnum": 3002,
+  "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:royal_steel_upgrade_smithing_template": 4
   },

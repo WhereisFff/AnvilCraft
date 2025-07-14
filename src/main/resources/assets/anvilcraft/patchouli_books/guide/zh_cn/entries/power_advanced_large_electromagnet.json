@@ -3,6 +3,7 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:acceleration_ring",
   "sortnum": 2006,
+  "entry_color": "004400",
   "pages": [
     {
       "type": "patchouli:multiblock",

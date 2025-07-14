@@ -3,6 +3,7 @@
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:frost_metal_ingot",
   "sortnum": 3004,
+  "entry_color": "661100",
   "pages": [
     "本页面展示了目前所有可用的$(thing)二阶材料$()。",
     {
