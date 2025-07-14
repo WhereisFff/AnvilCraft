@@ -3,6 +3,9 @@
   "category": "anvilcraft:process",
   "icon": "anvilcraft:geode",
   "sortnum": 1,
+  "extra_recipe_mappings": {
+    "anvilcraft:geode": 1
+  },
   "pages": [
     {
       "type": "patchouli:text",

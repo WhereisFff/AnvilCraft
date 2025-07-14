@@ -3,6 +3,9 @@
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:corrupted_beacon",
   "sortnum": 3003,
+  "extra_recipe_mappings": {
+    "anvilcraft:corrupted_beacon": 1
+  },
   "pages": [
     {
       "type": "patchouli:text",

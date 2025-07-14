@@ -3,6 +3,28 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:iron_ingot",
   "sortnum": 1002,
+  "extra_recipe_mappings": {
+    "anvilcraft:copper_pressure_plate": 2,
+    "anvilcraft:tungsten_pressure_plate": 2,
+    "anvilcraft:titanium_pressure_plate": 2,
+    "anvilcraft:zinc_pressure_plate": 2,
+    "anvilcraft:tin_pressure_plate": 2,
+    "anvilcraft:lead_pressure_plate": 2,
+    "anvilcraft:silver_pressure_plate": 2,
+    "anvilcraft:uranium_pressure_plate": 2,
+    "anvilcraft:bronze_pressure_plate": 2,
+    "anvilcraft:brass_pressure_plate": 2,
+    "anvilcraft:cream": 2,
+    "anvilcraft:cocoa_butter": 2,
+    "anvilcraft:cocoa_powder": 2,
+    "anvilcraft:wood_fiber": 4,
+    "anvilcraft:resin": 4,
+    "anvilcraft:flour": 4,
+    "minecraft:wet_sponge": 12,
+    "minecraft:sponge": 12,
+    "anvilcraft:dough": 12,
+    "anvilcraft:hardend_resin": 12
+  },
   "pages": [
     "Let $(item)Anvil$() fall on the specific blocks to process the items inside or on. Different specific blocks have different processing. The flowing pages of this entry will introduce relevant content in sequence. This mod adds a block that prevents hit items from flying around due to hitbox squeezing: $(item)Stamping Platform$().",
     {
@@ -145,7 +167,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Remove rust from copper products$(br)Dirt→Clay$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)Spider Eye→ Fermented Spider Eye$(br)Coral→Corresponding Coral Block$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)面粉$()→$(item)面团$()$(br)$(item)海绵芽球$()→海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
+      "text": "Remove rust from copper products$(br)Dirt→Clay$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)Spider Eye→ Fermented Spider Eye$(br)Coral→Corresponding Coral Block$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)面粉$()→$(item)面团$()$(br)$(item)海绵芽球$()→湿海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
     },
     {
       "type": "patchouli:multiblock",

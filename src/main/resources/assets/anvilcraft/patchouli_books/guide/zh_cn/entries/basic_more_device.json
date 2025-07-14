@@ -3,6 +3,9 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "anvilcraft:block_placer",
   "sortnum": 1005,
+  "extra_recipe_mappings": {
+    "anvilcraft:crab_claw": 2
+  },
   "pages": [
     {
       "type": "patchouli:text",
