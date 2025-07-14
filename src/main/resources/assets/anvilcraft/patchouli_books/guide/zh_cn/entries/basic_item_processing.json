@@ -8,10 +8,12 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:stamping_platform",
-      "text": "铁压力板可以替换成任意模组的铁板。"
+      "recipe2": "anvilcraft:shaped_crushing_table_recipe",
+      "text": ""
     },
     {
       "type": "patchouli:multiblock",
+      "anchor": "stamping",
       "name": "物品冲压",
       "multiblock": {
         "mapping": {
@@ -30,7 +32,30 @@
     },
     {
       "type": "patchouli:text",
-      "text": "可以将物品砸成对应的薄片，例如铁锭→铁压力板；金锭→金压力板；雪球→雪片；樱花树叶→粉色花瓣。$(br)还可以分离一些物品的不同组分，例如甘蔗→纸+糖；小麦→面粉+小麦种子；原木→木质纤维+树脂。$(br)还可以回收一些装备，锁链、金质、铁质和钻石工具武器盔甲可以分解出原料，远远多于熔炼得到的。"
+      "text": "可以将物品砸成对应的薄片，例如铁锭→铁压力板；金锭→金压力板；雪球→雪片；樱花树叶→粉色花瓣。$(br)还可以分离一些物品的不同组分，例如甘蔗→纸+糖；可可豆→可可脂+可可粉；奶桶→奶油+铁桶；木质纤维→纸。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "anchor": "item_crush",
+      "name": "物品粉碎",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "C": "anvilcraft:crushing_table",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "C0C", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "下方是粉碎台时执行物品粉碎操作，原料放在平台上，产物从下方掉出，具体描述见右侧。"
+    },
+    {
+      "type": "patchouli:text",
+      "text": "可以回收工具、武器和盔甲并分解出原料，远多于熔炼得到的。还能完成这些配方：小麦→$(item)面粉$()，原木→$(item)木质纤维$()+$(l:basic_more_device#resin_block)树脂$()；骷髅头颅→64骨粉；苦力怕的头→64火药。"
     },
     {
       "type": "patchouli:multiblock",
@@ -97,7 +122,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "过筛额外产出约一半原料，可循环利用。转化表如下（存在概率）：$(br)砂砾→燧石+铁粒$(br)沙子→黏土+金粒$(br)红沙→荧石粉+铜粒$(br)火山灰→青金石+锌粒$(br)石英砂→石英+锡粒$(br)深板岩碎→石灰粉+铅粒$(br)下界尘→红石粉+钨粒$(br)黑沙→火药+银粒$(br)末地尘→紫颂花+钛粒$(br)灵魂沙→下界疣$(br)树叶→对应的树苗"
+      "text": "过筛额外产出约一半原料，可循环利用。转化表如下（存在概率）：$(br)砂砾→燧石+铁粒$(br)沙子→黏土+金粒$(br)红沙→荧石粉+铜粒$(br)$(item)火山灰$()→青金石+$(item)铅/锡/锌/银粒$()+火药$(br)$(item)石英砂$()→石英$(br)$(item)下界尘$()→红石粉+$(item)钨粒$()$(br)$(item)末地尘$()→紫颂花+$(item)钛粒$()+$(item)飘浮粉$()$(br)灵魂沙→下界疣$(br)树叶→对应的树苗"
     },
     {
       "type": "patchouli:multiblock",
@@ -120,7 +145,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "泥土→黏土$(br)绯红菌→下界疣块$(br)诡异菌→诡异疣块$(br)蜘蛛眼→发酵蜘蛛眼$(br)珊瑚→对应珊瑚块。"
+      "text": "为铜制品除锈$(br)泥土→黏土$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)蜘蛛眼→发酵蜘蛛眼$(br)珊瑚→对应珊瑚块$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)面粉$()→$(item)面团$()$(br)$(item)海绵芽球$()→海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
     },
     {
       "type": "patchouli:multiblock",
@@ -144,7 +169,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "自动兼容所有烟熏炉配方和营火配方，不需要水。$(br)有水时，可以发生如下转化：树脂→粘液球。"
+      "text": "自动兼容所有烟熏炉配方和营火配方，不需要水。$(br)还可执行特殊配方：$(br)$(item)面团$()+鸡蛋+糖→$(item)蛋糕胚块$()$(br)$(item)树脂$()→$(item)硬化树脂$()$(br)蜘蛛眼+河豚+毒马铃薯+铃兰+凋灵玫瑰→$(item)五毒散$()$(br)有水时可发生如下转化：$(br)树脂→粘液球$(br)生牛肉+红色蘑菇+棕色蘑菇+碗→$(item)牛肉炖蘑菇$()"
     }
   ]
 }

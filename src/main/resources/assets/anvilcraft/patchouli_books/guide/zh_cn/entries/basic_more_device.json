@@ -85,7 +85,7 @@
       "type": "patchouli:crafting",
       "anchor": "resin_block",
       "recipe": "anvilcraft:resin_block",
-      "text": "$(item)树脂块$()可以抓捕$(thing)碰撞箱$()的长宽小于1.5,高小于2的生物，但对于敌对和中立生物，额外要求其拥有虚弱状态。$(br)举个例子，村民可以直接抓取，僵尸需要对其施加虚弱效果才能抓取。$(br)右键地面释放生物。"
+      "text": "$(item)树脂块$()可以抓捕$(thing)碰撞箱$()的长宽小于1.5,高小于2的生物，但对于敌对和中立生物，额外要求其拥有虚弱状态。之后可以右键地面释放生物。$(br)举个例子，村民可以直接抓取，僵尸需要对其施加虚弱效果才能抓取。$(br)$(item)树脂$()通过$(l:basic_item_processing#item_crush)粉碎$()$(item)原木$()获得。"
     }
   ]
 }
