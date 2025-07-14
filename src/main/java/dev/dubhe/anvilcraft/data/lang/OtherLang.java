@@ -58,5 +58,8 @@ public class OtherLang {
         provider.add("key.anvilcraft.switch_phase", "Switch Phase");
         provider.add("key.anvilcraft.toggle_goggle", "Toggle Goggle Mode");
         provider.add("key.anvilcraft.switch_resonate_mode", "Switch Resonate Mode");
+
+        provider.add("effect.anvilcraft.rage", "Rage");
+        provider.add("effect.anvilcraft.invulnerable", "Invulnerable");
     }
 }

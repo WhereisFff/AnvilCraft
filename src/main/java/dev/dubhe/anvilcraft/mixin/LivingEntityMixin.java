@@ -7,11 +7,16 @@ import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
+import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.advancements.critereon.UsedTotemTrigger;
+import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,13 +26,20 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.LootTable;
+import net.neoforged.neoforge.common.EffectCure;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.Set;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+    @Shadow public abstract boolean hasEffect(Holder<MobEffect> effect);
+
     private LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
     }
@@ -77,7 +89,6 @@ public abstract class LivingEntityMixin extends Entity {
         original.call(instance, player, item);
     }
 
-
     @WrapOperation(
         method = "checkTotemDeathProtection",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V")
@@ -92,5 +103,43 @@ public abstract class LivingEntityMixin extends Entity {
             return;
         }
         original.call(instance, decrement);
+    }
+
+    @Inject(
+        method = "addEffect(Lnet/minecraft/world/effect/MobEffectInstance;Lnet/minecraft/world/entity/Entity;)Z",
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/util/Map;get(Ljava/lang/Object;)Ljava/lang/Object;"
+        ),
+        cancellable = true
+    )
+    private void preventAddEffect(MobEffectInstance effectInstance, Entity entity, CallbackInfoReturnable<Boolean> cir) {
+        if (this.hasEffect(ModMobEffects.RAGE)) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @WrapOperation(
+        method = "removeEffectsCuredBy",
+        at = @At(
+            value = "INVOKE",
+            target = "Ljava/util/Set;contains(Ljava/lang/Object;)Z"
+        )
+    )
+    private boolean preventRemovalRageEffect(Set<EffectCure> instance, Object o, Operation<Boolean> original, @Local MobEffectInstance effect) {
+        return original.call(instance, o) && !effect.is(ModMobEffects.RAGE);
+    }
+
+    @Inject(
+        method = "hurt",
+        at = @At(value = "HEAD"),
+        cancellable = true
+    )
+    private void invulnerableEffect(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (this.hasEffect(ModMobEffects.INVULNERABLE)) {
+            if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+                cir.setReturnValue(false);
+            }
+        }
     }
 }
