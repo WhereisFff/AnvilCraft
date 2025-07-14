@@ -3,6 +3,7 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:void_energy_collector",
   "sortnum": 2004,
+  "entry_color": "004400",
   "pages": [
     "使用$(item)虚空能收集器$()来收集$(thing)非物质方块$()的虚空能。$(thing)非物质方块$()包括$(item)空气方块$()、$(item)虚空$()、$(l:advanced_mineral_fountain#void_matter_block)虚空物质块$()、$(item)虚空能收集器$()和$(item)负物质块$()",
     {

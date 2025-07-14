@@ -28,6 +28,11 @@
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:item_collector",
       "text": "$(item)物品收集器$()耗电功率随着手动设置的范围和冷却改变，可以收集大范围的掉落物，可以设置过滤。"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "anvilcraft:induction_light",
+      "text": "照明，耗电功率为1kW$(br)使用$(item)红石粉$()右键该方块将其改为催熟模式$(br)使用$(item)荧石粉$()右键该方块将其改为防刷怪模式$(br)使用$(l:advanced_mineral_fountain#void_matter)虚空物质$()右键该方块将其改为防刷动物模式$(br)以上三种模式耗电功率变为16kW"
     }
   ]
 }

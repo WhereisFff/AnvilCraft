@@ -3,6 +3,7 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:heat_collector",
   "sortnum": 2005,
+  "entry_color": "004400",
   "pages": [
     "Use heat collector to collect heat power from $(thing)heat-collectable blocks$(). Heat-collectable block is heated blocks and some special blocks. For example, $(item)Uranium Block$()、$(item)Plutonium Block$().",
     {
