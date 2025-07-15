@@ -26,6 +26,7 @@ public class AmuletBoxHandler implements TotemHandler {
         return false;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public void shrink(ItemStack totemItem) {
         BoxContents boxContents = totemItem.get(ModComponents.BOX_CONTENTS);
