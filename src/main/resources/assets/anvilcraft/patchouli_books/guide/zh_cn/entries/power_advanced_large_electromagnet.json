@@ -22,7 +22,7 @@
           ["ABA","B0B","ABA"]
         ]
       },
-      "text": "通过$(thing)多方块合成$()获得$(item)加速环$()"
+      "text": "通过$(l:advanced_multiblock#conversion)多方块转化$()获得$(item)加速环$()"
     },
     {
       "type": "patchouli:spotlight",
@@ -45,7 +45,7 @@
           ["ABA","B0B","ABA"]
         ]
       },
-      "text": "通过$(thing)多方块合成$()获得$(item)偏转环$()"
+      "text": "通过$(l:advanced_multiblock#conversion)多方块转化$()获得$(item)偏转环$()"
     },
     {
       "type": "patchouli:spotlight",
