@@ -6,6 +6,7 @@ import com.tterrag.registrate.Registrate;
 import dev.dubhe.anvilcraft.api.integration.IntegrationManager;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
+import dev.dubhe.anvilcraft.api.totem.handler.TotemManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.ModAmuletTypes;
@@ -34,6 +35,7 @@ import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.init.ModVillagers;
 import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
+import dev.dubhe.anvilcraft.util.Lazy;
 import dev.dubhe.anvilcraft.util.ModInteractionMap;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
@@ -71,6 +73,8 @@ public class AnvilCraft {
     public static IEventBus MOD_BUS = null;
     public static AnvilCraftConfig config = AutoConfig.register(AnvilCraftConfig.class, JanksonConfigSerializer::new)
         .getConfig();
+
+    public static final Lazy<TotemManager> totemManager = new Lazy<>(TotemManager::new);
 
     @Getter
     private static final IntegrationManager integrationManager = new IntegrationManager();
