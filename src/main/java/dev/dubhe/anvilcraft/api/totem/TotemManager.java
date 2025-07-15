@@ -11,6 +11,9 @@ import net.minecraft.world.item.Items;
 
 import java.util.Map;
 
+/**
+ * 用于管理图腾
+ */
 public class TotemManager {
     public static final TotemManager INSTANCE = new TotemManager();
 
