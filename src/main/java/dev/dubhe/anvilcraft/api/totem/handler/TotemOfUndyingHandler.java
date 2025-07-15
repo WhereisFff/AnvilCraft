@@ -1,6 +1,5 @@
-package dev.dubhe.anvilcraft.api.totem;
+package dev.dubhe.anvilcraft.api.totem.handler;
 
-import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;

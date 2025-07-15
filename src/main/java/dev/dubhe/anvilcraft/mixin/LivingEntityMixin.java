@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
 import dev.dubhe.anvilcraft.init.ModLootTables;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
@@ -70,7 +71,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Overwrite
     private boolean checkTotemDeathProtection(DamageSource damageSource) {
         LivingEntity self = (LivingEntity) (Object) this;
-        Map<Item, TotemHandler> totemMap = AnvilCraft.totemManager.get().getTotemMap();
+        Map<Item, TotemHandler> totemMap = TotemManager.INSTANCE.getTotemMap();
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.getItemInHand(hand);
             for (Item item : totemMap.keySet()) {
