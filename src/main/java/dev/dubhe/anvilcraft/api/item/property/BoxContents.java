@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.api.item.property;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import lombok.Getter;
@@ -124,7 +125,7 @@ public final class BoxContents implements TooltipComponent {
                 usage += item.getWeight();
                 amulets.add(itemStack.copy());
                 return true;
-            } else if (itemStack.is(Items.TOTEM_OF_UNDYING)) {
+            } else if (itemStack.is(ModItemTags.TOTEM)) {
                 if (usage + 1 > AmuletBoxItem.CAPACITY) return false;
                 usage++;
                 totems.add(itemStack.copy());
@@ -143,7 +144,7 @@ public final class BoxContents implements TooltipComponent {
                 }
             } else if (totems.size() > this.selection - amulets.size()) {
                 stack = totems.remove(this.selection - amulets.size());
-                if (stack.is(Items.TOTEM_OF_UNDYING)) {
+                if (stack.is(ModItemTags.TOTEM)) {
                     usage--;
                 }
             }
@@ -163,7 +164,7 @@ public final class BoxContents implements TooltipComponent {
         public ItemStack popTotem() {
             if (totems.isEmpty()) return ItemStack.EMPTY;
             ItemStack first = totems.removeFirst();
-            if (first.is(Items.TOTEM_OF_UNDYING)) {
+            if (first.is(ModItemTags.TOTEM)) {
                 usage--;
             }
             usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);

@@ -61,8 +61,7 @@ public class RecoveryPearl extends Item {
         return Math.sqrt(pos1.distToLowCornerSqr(pos2.getX(), pos2.getY(), pos2.getZ()));
     }
 
-    @SuppressWarnings("resource")
-    private void crossDimensionTeleportTo(ResourceKey<Level> dimension, Player player, BlockPos pos) {
+    public static void crossDimensionTeleportTo(ResourceKey<Level> dimension, Player player, BlockPos pos) {
         Level level = player.level();
         MinecraftServer server = level.getServer();
         if (server != null) {

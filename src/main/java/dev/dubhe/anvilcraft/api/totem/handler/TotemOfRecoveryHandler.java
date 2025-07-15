@@ -1,26 +1,38 @@
 package dev.dubhe.anvilcraft.api.totem.handler;
 
+import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.item.RecoveryPearl;
 import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.neoforge.common.EffectCures;
 
-public class TotemOfUndyingHandler implements TotemHandler {
+import java.util.Optional;
+
+public class TotemOfRecoveryHandler implements TotemHandler {
     @Override
     public boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
-        if (!damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
+        if (!damageSource.is(DamageTypes.GENERIC_KILL)) {
             if (entity instanceof ServerPlayer player) {
-                player.awardStat(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING), 1);
-                CriteriaTriggers.USED_TOTEM.trigger(player, Items.TOTEM_OF_UNDYING.getDefaultInstance());
+                player.awardStat(Stats.ITEM_USED.get(ModItems.TOTEM_OF_RECOVERY.get()), 1);
+                CriteriaTriggers.USED_TOTEM.trigger(player, ModItems.TOTEM_OF_RECOVERY.asStack());
                 entity.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
+                player.getInventory().add(ModItems.RECOVERY_PEARL.asStack());
+                player.setLastDeathLocation(Optional.of(GlobalPos.of(player.level().dimension(), player.getOnPos())));
+                ResourceKey<Level> respawnDimension = player.getRespawnDimension();
+                BlockPos respawnPos = player.getRespawnPosition() == null ? player.level().getSharedSpawnPos() : player.getRespawnPosition();
+                RecoveryPearl.crossDimensionTeleportTo(respawnDimension, player, respawnPos);
             }
             entity.setHealth(1.0f);
             entity.removeEffectsCuredBy(EffectCures.PROTECTED_BY_TOTEM);

@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.api.totem;
 
 import dev.dubhe.anvilcraft.api.totem.handler.AmuletBoxHandler;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
+import dev.dubhe.anvilcraft.api.totem.handler.TotemOfRecoveryHandler;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemOfUndyingHandler;
 import dev.dubhe.anvilcraft.init.ModItems;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -23,6 +24,7 @@ public class TotemManager {
     private TotemManager() {
         registerTotem(ModItems.AMULET_BOX.asItem(), new AmuletBoxHandler());
         registerTotem(Items.TOTEM_OF_UNDYING, new TotemOfUndyingHandler());
+        registerTotem(ModItems.TOTEM_OF_RECOVERY.get(), new TotemOfRecoveryHandler());
     }
 
     public void registerTotem(Item item, TotemHandler handler) {

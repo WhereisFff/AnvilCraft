@@ -159,6 +159,8 @@ public class ModItemTags {
     public static final TagKey<Item> CURIOS_IONOCRAFT_BACKPACK = bindCurios("ionocraft_backpack");
     public static final TagKey<Item> CURIOS_NECKLACE = bindCurios("necklace");
 
+    public static final TagKey<Item> TOTEM = bind("totem");
+
     public static final Object2ObjectMap<Color, TagKey<Item>> DYED_COLORS = initDyedTags();
 
     public static @NotNull TagKey<Item> bindC(String id) {

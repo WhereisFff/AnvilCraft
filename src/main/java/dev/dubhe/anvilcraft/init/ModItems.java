@@ -95,6 +95,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -760,6 +761,24 @@ public class ModItems {
     public static final ItemEntry<AmuletBoxItem> AMULET_BOX = REGISTRATE
         .item("amulet_box", AmuletBoxItem::new)
         .properties((properties) -> properties.stacksTo(1))
+        .register();
+
+    public static final ItemEntry<Item> TOTEM_OF_RECOVERY = REGISTRATE
+        .item("totem_of_recovery", Item::new)
+        .properties((properties) -> properties.stacksTo(1).rarity(Rarity.UNCOMMON))
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("CCC")
+                .pattern("BAB")
+                .pattern("CCC")
+                .define('A', Items.TOTEM_OF_UNDYING)
+                .define('B', ModItems.RECOVERY_PEARL)
+                .define('C', Items.ECHO_SHARD)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.TOTEM_OF_UNDYING))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.RECOVERY_PEARL))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.ECHO_SHARD))
+                .save(provider);
+        })
         .register();
 
     private static @NotNull ItemEntry<? extends AmuletItem> createAmuletItem(
