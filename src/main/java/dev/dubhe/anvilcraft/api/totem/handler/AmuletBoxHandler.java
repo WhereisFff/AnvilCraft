@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.api.totem.handler;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.init.ModComponents;

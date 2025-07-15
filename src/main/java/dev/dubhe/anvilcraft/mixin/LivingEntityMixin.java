@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
 import dev.dubhe.anvilcraft.init.ModLootTables;
