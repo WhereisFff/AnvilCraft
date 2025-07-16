@@ -2,12 +2,12 @@ package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.init.ModParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.Connection;
 import net.minecraft.network.TickablePacketListener;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -38,14 +38,14 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
     public void handleEntityEvent(ClientboundEntityEventPacket packet, CallbackInfo ci, @Local Entity entity) {
         switch (packet.getEventId()) {
             case 36:
-                this.minecraft.particleEngine.createTrackingEmitter(entity, ModParticles.TOTEM_OF_RECOVERY.get(), 30);
+                this.minecraft.particleEngine.createTrackingEmitter(entity, ParticleTypes.TOTEM_OF_UNDYING, 30);
                 this.level.playLocalSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.TOTEM_USE, entity.getSoundSource(), 1.0F, 1.0F, false);
                 if (entity == this.minecraft.player) {
                     this.minecraft.gameRenderer.displayItemActivation(ModItems.TOTEM_OF_RECOVERY.asStack());
                 }
                 break;
             case 37:
-                this.minecraft.particleEngine.createTrackingEmitter(entity, ModParticles.TOTEM_OF_RAGE.get(), 30);
+                this.minecraft.particleEngine.createTrackingEmitter(entity, ParticleTypes.TOTEM_OF_UNDYING, 30);
                 this.level.playLocalSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.TOTEM_USE, entity.getSoundSource(), 1.0F, 1.0F, false);
                 if (entity == this.minecraft.player) {
                     this.minecraft.gameRenderer.displayItemActivation(ModItems.TOTEM_OF_RAGE.asStack());

@@ -69,8 +69,6 @@ public class AnvilCraftClient {
 
     public static void registerParticleProviders(RegisterParticleProvidersEvent e) {
         e.registerSpriteSet(ModParticles.PLASMA_JETS.get(), PlasmaJetsParticle.Provider::new);
-        e.registerSpriteSet(ModParticles.TOTEM_OF_RECOVERY.get(), TotemParticle.Provider::new);
-        e.registerSpriteSet(ModParticles.TOTEM_OF_RAGE.get(), TotemParticle.Provider::new);
     }
 
     @ParametersAreNonnullByDefault

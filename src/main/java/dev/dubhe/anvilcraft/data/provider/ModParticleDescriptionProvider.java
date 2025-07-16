@@ -14,7 +14,5 @@ public class ModParticleDescriptionProvider extends ParticleDescriptionProvider 
     @Override
     protected void addDescriptions() {
         spriteSet(ModParticles.PLASMA_JETS.get(), ResourceLocation.withDefaultNamespace("generic"), 8, true);
-        spriteSet(ModParticles.TOTEM_OF_RECOVERY.get(), ResourceLocation.withDefaultNamespace("glitter"), 8, true);
-        spriteSet(ModParticles.TOTEM_OF_RAGE.get(), ResourceLocation.withDefaultNamespace("glitter"), 8, true);
     }
 }
