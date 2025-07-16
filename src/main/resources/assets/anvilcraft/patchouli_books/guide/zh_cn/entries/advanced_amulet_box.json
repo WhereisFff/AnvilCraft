@@ -16,7 +16,7 @@
         },
         {
             "type":"image",
-            "images":["anvilcraft:patchouli_images/advanced_4.6_1.png"],
+            "images":["anvilcraft:patchouli_images/4.6_1.png"],
             "text":"每个$(item)不死图腾$()占用护符盒的 1 个槽位，每个$(item)护符$()占用2*3即 6 个槽位。在物品栏中将光标指向$(item)护符盒$()可以查看其占用情况。"
         },
         {
