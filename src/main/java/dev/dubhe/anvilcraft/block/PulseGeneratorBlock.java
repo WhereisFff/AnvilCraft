@@ -17,6 +17,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.EntityBlock;
@@ -118,18 +119,17 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
     }
 
     protected void update(Level level, BlockPos pos, BlockState state) {
-        if (!level.isClientSide) {
-            boolean nowInputting = this.getInputSignal(level, pos, state) > 0;
+        if (level.isClientSide) return;
 
-            BlockEntity blockentity = level.getBlockEntity(pos);
-            if (blockentity instanceof PulseGeneratorBlockEntity generator) {
-                if (PulseGeneratorBlockEntity.canStart(generator, nowInputting)) {
-                    generator.start(level, pos, state);
-                }
+        BlockEntity blockentity = level.getBlockEntity(pos);
+        if (!(blockentity instanceof PulseGeneratorBlockEntity generator)) return;
+        boolean nowInputting = getInputSignal(level, pos, state) > 0;
 
-                generator.setInputtingSignal(nowInputting);
-            }
+        if (PulseGeneratorBlockEntity.canStart(generator, nowInputting)) {
+            generator.start(level, pos, state);
         }
+
+        generator.setInputtingSignal(nowInputting);
     }
 
     @Override
@@ -157,7 +157,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
             PulseGeneratorBlockEntity.tick(level1, pos, state1, (PulseGeneratorBlockEntity) blockEntity);
     }
 
-    protected int getInputSignal(Level level, BlockPos pos, BlockState state) {
+    public static int getInputSignal(Level level, BlockPos pos, BlockState state) {
         Direction direction = state.getValue(FACING);
         BlockPos blockpos = pos.relative(direction);
         int i = level.getSignal(blockpos, direction);
@@ -167,17 +167,6 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
             BlockState blockstate = level.getBlockState(blockpos);
             return Math.max(i, blockstate.is(Blocks.REDSTONE_WIRE) ? blockstate.getValue(RedStoneWireBlock.POWER) : 0);
         }
-    }
-
-    public static void updateNeighborsInFront(Level level, BlockPos pos, BlockState state) {
-        Direction direction = state.getValue(FACING);
-        BlockPos blockpos = pos.relative(direction.getOpposite());
-        if (net.neoforged.neoforge.event.EventHooks.onNeighborNotify(
-            level, pos, level.getBlockState(pos), java.util.EnumSet.of(direction.getOpposite()), false).isCanceled())
-            return;
-        level.neighborChanged(blockpos, state.getBlock(), pos);
-        level.blockEvent(blockpos, level.getBlockState(blockpos).getBlock(), 0, direction.get3DDataValue());
-        level.updateNeighborsAtExceptFromFacing(blockpos, state.getBlock(), direction);
     }
 
     @Override
