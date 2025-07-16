@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -39,7 +40,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements EntityBlock {
+public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements EntityBlock, IHammerRemovable {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     protected static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 4.0, 16.0);
     public static final MapCodec<PulseGeneratorBlock> CODEC = simpleCodec(PulseGeneratorBlock::new);
