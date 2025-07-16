@@ -10,6 +10,7 @@ import net.minecraft.world.item.ItemStack;
 public interface TotemHandler {
     /**
      * 图腾触发时执行
+     *
      * @param damageSource 伤害来源
      * @param entity 持有图腾的实体
      * @param totemItem 图腾物品
@@ -19,9 +20,15 @@ public interface TotemHandler {
 
     /**
      * 减少图腾物品数量
+     *
      * @param totemItem 图腾物品
      */
     TotemHandler shrink(ItemStack totemItem);
 
+    /**
+     * 获取执行结果
+     *
+     * @return 结果
+     */
     boolean getResult();
 }

@@ -53,7 +53,7 @@ public class TotemOfRecoveryHandler implements TotemHandler {
             entity.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
-            entity.level().broadcastEntityEvent(entity, (byte)35);
+            entity.level().broadcastEntityEvent(entity, (byte) 35);
             result = true;
         } else {
             result = false;

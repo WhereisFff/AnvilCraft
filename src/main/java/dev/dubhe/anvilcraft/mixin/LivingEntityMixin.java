@@ -86,7 +86,7 @@ public abstract class LivingEntityMixin extends Entity {
         Map<Item, TotemHandler> totemMap = TotemManager.INSTANCE.getTotemMap();
         ItemStack totemItem = null;
         TotemHandler handler = null;
-        for(InteractionHand hand : InteractionHand.values()) {
+        for (InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.getItemInHand(hand);
             for (Item item : totemMap.keySet()) {
                 if (itemStack.is(item) && CommonHooks.onLivingUseTotem(self, damageSource, itemStack, hand)) {
