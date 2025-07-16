@@ -16,7 +16,6 @@ import dev.dubhe.anvilcraft.init.ModParticles;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.client.particle.TotemParticle;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
