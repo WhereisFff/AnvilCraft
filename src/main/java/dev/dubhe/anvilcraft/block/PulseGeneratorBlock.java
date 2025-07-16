@@ -128,8 +128,6 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
         if (PulseGeneratorBlockEntity.canStart(generator, nowInputting)) {
             generator.start(level, pos, state);
         }
-
-        generator.setInputtingSignal(nowInputting);
     }
 
     @Override
