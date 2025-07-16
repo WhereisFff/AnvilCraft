@@ -11,7 +11,6 @@ import dev.dubhe.anvilcraft.init.ModLootTables;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.Holder;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -20,6 +19,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -119,7 +119,13 @@ public abstract class LivingEntityMixin extends Entity {
     private void dieOfRage(CallbackInfo ci) {
         if (this.anvilcraft$raged) {
             if (this.anvilcraft$rageTick >= 1200) {
-                this.kill();
+                if ((LivingEntity) (Object) this instanceof Player player) {
+                    if (!player.isCreative() || !player.isSpectator()) {
+                        player.kill();
+                    }
+                } else {
+                    this.kill();
+                }
                 this.anvilcraft$raged = false;
                 this.anvilcraft$rageTick = 0;
             } else {
