@@ -194,6 +194,9 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     public void setStartMode(int mode) {
         this.startMode = Mode.fromIndex(mode % 3);
+        if (this.startMode.equals(Mode.LOOP) && !this.isInputtingSignal && this.level != null) {
+            this.startWaiting(this.level, this.getBlockPos(), this.getBlockState());
+        }
         this.setChanged();
     }
 
