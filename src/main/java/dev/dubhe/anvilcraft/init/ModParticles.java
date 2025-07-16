@@ -16,6 +16,14 @@ public class ModParticles {
         "plasma_jets", () -> new SimpleParticleType(false)
     );
 
+    public static final Supplier<SimpleParticleType> TOTEM_OF_RECOVERY = REGISTER.register(
+        "totem_of_recovery", () -> new SimpleParticleType(false)
+    );
+
+    public static final Supplier<SimpleParticleType> TOTEM_OF_RAGE = REGISTER.register(
+        "totem_of_rage", () -> new SimpleParticleType(false)
+    );
+
     public static void register(IEventBus modBus) {
         REGISTER.register(modBus);
     }

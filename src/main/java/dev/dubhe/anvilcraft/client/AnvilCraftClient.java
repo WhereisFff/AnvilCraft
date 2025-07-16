@@ -16,6 +16,7 @@ import dev.dubhe.anvilcraft.init.ModParticles;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.particle.TotemParticle;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -68,6 +69,8 @@ public class AnvilCraftClient {
 
     public static void registerParticleProviders(RegisterParticleProvidersEvent e) {
         e.registerSpriteSet(ModParticles.PLASMA_JETS.get(), PlasmaJetsParticle.Provider::new);
+        e.registerSpriteSet(ModParticles.TOTEM_OF_RECOVERY.get(), TotemParticle.Provider::new);
+        e.registerSpriteSet(ModParticles.TOTEM_OF_RAGE.get(), TotemParticle.Provider::new);
     }
 
     @ParametersAreNonnullByDefault
