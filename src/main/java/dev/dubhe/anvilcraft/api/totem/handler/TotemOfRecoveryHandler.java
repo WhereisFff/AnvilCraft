@@ -21,15 +21,29 @@ import net.neoforged.neoforge.common.EffectCures;
 import java.util.Optional;
 
 public class TotemOfRecoveryHandler implements TotemHandler {
+    private boolean result = false;
+
     @Override
-    public boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
+    public TotemHandler execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
         if (!damageSource.is(DamageTypes.GENERIC_KILL)) {
             if (entity instanceof ServerPlayer player) {
+                player.fallDistance = 0;
                 player.awardStat(Stats.ITEM_USED.get(ModItems.TOTEM_OF_RECOVERY.get()), 1);
                 CriteriaTriggers.USED_TOTEM.trigger(player, ModItems.TOTEM_OF_RECOVERY.asStack());
                 entity.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
                 player.getInventory().add(ModItems.RECOVERY_PEARL.asStack());
-                player.setLastDeathLocation(Optional.of(GlobalPos.of(player.level().dimension(), player.getOnPos())));
+                ResourceKey<Level> deathDimension = player.level().dimension();
+                BlockPos deathPos = player.getOnPos();
+                if (deathDimension == Level.OVERWORLD) {
+                    if (deathPos.getY() < -64) {
+                        deathPos = new BlockPos(deathPos.getX(), -64, deathPos.getZ());
+                    }
+                } else {
+                    if (deathPos.getY() < 0) {
+                        deathPos = new BlockPos(deathPos.getX(), 0, deathPos.getZ());
+                    }
+                }
+                player.setLastDeathLocation(Optional.of(GlobalPos.of(deathDimension, deathPos)));
                 ResourceKey<Level> respawnDimension = player.getRespawnDimension();
                 BlockPos respawnPos = player.getRespawnPosition() == null ? player.level().getSharedSpawnPos() : player.getRespawnPosition();
                 RecoveryPearl.crossDimensionTeleportTo(respawnDimension, player, respawnPos);
@@ -40,13 +54,21 @@ public class TotemOfRecoveryHandler implements TotemHandler {
             entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
             entity.level().broadcastEntityEvent(entity, (byte)35);
-            return true;
+            result = true;
+        } else {
+            result = false;
         }
-        return false;
+        return this;
     }
 
     @Override
-    public void shrink(ItemStack totemItem) {
+    public TotemHandler shrink(ItemStack totemItem) {
         totemItem.shrink(1);
+        return this;
+    }
+
+    @Override
+    public boolean getResult() {
+        return result;
     }
 }

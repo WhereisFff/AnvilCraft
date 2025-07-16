@@ -3,12 +3,15 @@ package dev.dubhe.anvilcraft.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
+import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -25,8 +28,8 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.EffectCure;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Overwrite;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -37,9 +40,17 @@ import java.util.Set;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
+    @Unique
+    private boolean anvilcraft$raged = false;
+
+    @Unique
+    private int anvilcraft$rageTick = 0;
+
     @Shadow public abstract boolean hasEffect(Holder<MobEffect> effect);
 
     @Shadow public abstract ItemStack getItemInHand(InteractionHand hand);
+
+    @Shadow public abstract void kill();
 
     private LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -63,26 +74,58 @@ public abstract class LivingEntityMixin extends Entity {
         beheadingLoot.getRandomItems(lootParams, thiz.getLootTableSeed(), thiz::spawnAtLocation);
     }
 
-    /**
-     * @author burin
-     * @reason 添加其他图腾
-     */
-    @Overwrite
-    private boolean checkTotemDeathProtection(DamageSource damageSource) {
+    @Inject(
+        method = "checkTotemDeathProtection",
+        at = @At(
+            value = "HEAD"
+        ),
+        cancellable = true
+    )
+    private void checkTotemDeathProtection(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
         LivingEntity self = (LivingEntity) (Object) this;
         Map<Item, TotemHandler> totemMap = TotemManager.INSTANCE.getTotemMap();
+        ItemStack totemItem = null;
+        TotemHandler handler = null;
         for(InteractionHand hand : InteractionHand.values()) {
             ItemStack itemStack = this.getItemInHand(hand);
             for (Item item : totemMap.keySet()) {
                 if (itemStack.is(item) && CommonHooks.onLivingUseTotem(self, damageSource, itemStack, hand)) {
-                    TotemHandler handler = totemMap.get(item);
-                    boolean result = handler.execute(damageSource, self, itemStack);
-                    handler.shrink(itemStack);
-                    return result;
+                    totemItem = itemStack;
+                    handler = totemMap.get(item);
+                    break;
                 }
             }
         }
-        return false;
+
+        if (totemItem != null) {
+            ItemStack itemStack = totemItem.copy();
+            boolean result = handler.execute(damageSource, self, totemItem).shrink(totemItem).getResult();
+            if (result && itemStack.is(ModItems.TOTEM_OF_RAGE)) {
+                AnvilCraft.LOGGER.info("rage");
+                this.anvilcraft$raged = true;
+            }
+            cir.setReturnValue(result);
+        }
+
+        cir.setReturnValue(totemItem != null);
+    }
+
+    @Inject(
+        method = "baseTick",
+        at = @At(
+            value = "HEAD"
+        )
+    )
+    private void dieOfRage(CallbackInfo ci) {
+        if (this.anvilcraft$raged) {
+            if (this.anvilcraft$rageTick >= 1200) {
+                this.kill();
+                this.anvilcraft$raged = false;
+                this.anvilcraft$rageTick = 0;
+            } else {
+                this.anvilcraft$rageTick++;
+            }
+        }
     }
 
     @Inject(

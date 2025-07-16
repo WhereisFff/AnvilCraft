@@ -13,26 +13,35 @@ import java.util.Map;
 
 
 public class AmuletBoxHandler implements TotemHandler {
+    private boolean result = false;
+
     @Override
-    public boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
+    public TotemHandler execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
         Map<Item, TotemHandler> totemMap = TotemManager.INSTANCE.getTotemMap();
         List<ItemStack> totems = totemItem.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotems();
         if (!totems.isEmpty()) {
             for (Item item : totemMap.keySet()) {
                 if (totems.getFirst().is(item)) {
-                    return totemMap.get(item).execute(damageSource, entity, totems.getFirst());
+                    result = totemMap.get(item).execute(damageSource, entity, totems.getFirst()).getResult();
                 }
             }
         }
-        return false;
+        result = false;
+        return this;
     }
 
     @SuppressWarnings("DataFlowIssue")
     @Override
-    public void shrink(ItemStack totemItem) {
+    public TotemHandler shrink(ItemStack totemItem) {
         BoxContents boxContents = totemItem.get(ModComponents.BOX_CONTENTS);
         BoxContents.Mutable mutable = boxContents.mutable();
         mutable.popTotem();
         totemItem.set(ModComponents.BOX_CONTENTS, mutable.immutable());
+        return this;
+    }
+
+    @Override
+    public boolean getResult() {
+        return result;
     }
 }

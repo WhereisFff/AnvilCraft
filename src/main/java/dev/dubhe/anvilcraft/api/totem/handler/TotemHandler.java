@@ -15,11 +15,13 @@ public interface TotemHandler {
      * @param totemItem 图腾物品
      * @return 是否执行成功
      */
-    boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem);
+    TotemHandler execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem);
 
     /**
      * 减少图腾物品数量
      * @param totemItem 图腾物品
      */
-    void shrink(ItemStack totemItem);
+    TotemHandler shrink(ItemStack totemItem);
+
+    boolean getResult();
 }
