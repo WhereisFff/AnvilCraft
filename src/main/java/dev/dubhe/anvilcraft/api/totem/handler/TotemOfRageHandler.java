@@ -12,10 +12,8 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 
 public class TotemOfRageHandler implements TotemHandler {
-    private boolean result = false;
-
     @Override
-    public TotemHandler execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
+    public boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
         if (!damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             if (entity instanceof ServerPlayer player) {
                 player.getFoodData().setFoodLevel(20);
@@ -29,21 +27,13 @@ public class TotemOfRageHandler implements TotemHandler {
             entity.addEffect(new MobEffectInstance(ModMobEffects.INVULNERABLE, 1200, 0));
             entity.addEffect(new MobEffectInstance(ModMobEffects.RAGE, 1200, 0));
             entity.level().broadcastEntityEvent(entity, (byte) 35);
-            result = true;
-        } else {
-            result = false;
+            return true;
         }
-        return this;
+        return false;
     }
 
     @Override
-    public TotemHandler shrink(ItemStack totemItem) {
+    public void shrink(ItemStack totemItem) {
         totemItem.shrink(1);
-        return this;
-    }
-
-    @Override
-    public boolean getResult() {
-        return result;
     }
 }

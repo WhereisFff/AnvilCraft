@@ -14,10 +14,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import net.neoforged.neoforge.common.EffectCures;
 
 public class TotemOfUndyingHandler implements TotemHandler {
-    private boolean result = false;
-
     @Override
-    public TotemHandler execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
+    public boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
         if (!damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
             if (entity instanceof ServerPlayer player) {
                 player.awardStat(Stats.ITEM_USED.get(Items.TOTEM_OF_UNDYING), 1);
@@ -30,21 +28,13 @@ public class TotemOfUndyingHandler implements TotemHandler {
             entity.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
             entity.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
             entity.level().broadcastEntityEvent(entity, (byte) 35);
-            result = true;
-        } else {
-            result = false;
+            return true;
         }
-        return this;
+        return false;
     }
 
     @Override
-    public TotemHandler shrink(ItemStack totemItem) {
+    public void shrink(ItemStack totemItem) {
         totemItem.shrink(1);
-        return this;
-    }
-
-    @Override
-    public boolean getResult() {
-        return result;
     }
 }

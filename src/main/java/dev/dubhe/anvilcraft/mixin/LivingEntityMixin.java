@@ -4,8 +4,10 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
@@ -35,6 +37,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -99,10 +102,18 @@ public abstract class LivingEntityMixin extends Entity {
 
         if (totemItem != null) {
             ItemStack itemStack = totemItem.copy();
-            boolean result = handler.execute(damageSource, self, totemItem).shrink(totemItem).getResult();
+            boolean result = handler.execute(damageSource, self, totemItem);
+            handler.shrink(totemItem);
             if (result && itemStack.is(ModItems.TOTEM_OF_RAGE)) {
-                AnvilCraft.LOGGER.info("rage");
                 this.anvilcraft$raged = true;
+            } else if (result && itemStack.is(ModItems.AMULET_BOX)) {
+                AnvilCraft.LOGGER.info("is amulet box");
+                List<ItemStack> totems = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotems();
+                if (!totems.isEmpty()) {
+                    if (totems.getFirst().is(ModItems.TOTEM_OF_RAGE)) {
+                        this.anvilcraft$raged = true;
+                    }
+                }
             }
             cir.setReturnValue(result);
         }
