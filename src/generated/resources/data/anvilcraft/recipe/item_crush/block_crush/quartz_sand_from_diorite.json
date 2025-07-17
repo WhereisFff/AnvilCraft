@@ -1,0 +1,21 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "item": "minecraft:diorite"
+    }
+  ],
+  "results": [
+    {
+      "amount": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.8
+      },
+      "stack": {
+        "count": 1,
+        "id": "anvilcraft:quartz_sand"
+      }
+    }
+  ]
+}
