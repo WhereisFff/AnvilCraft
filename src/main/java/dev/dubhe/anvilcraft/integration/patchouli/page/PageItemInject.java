@@ -15,7 +15,9 @@ import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 import java.util.List;
 
 public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
-    public PageItemInject() {super(ModRecipeTypes.ITEM_INJECT_TYPE.get());}
+    public PageItemInject() {
+        super(ModRecipeTypes.ITEM_INJECT_TYPE.get());
+    }
 
     @Override
     protected void drawRecipe(
@@ -28,16 +30,16 @@ public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
 
         PatchouliRenderHelper.renderArray(graphics, recipeX + 25, recipeY + 20);
 
-        PatchouliRenderHelper.renderAnvilWithAnimation(parent,graphics,recipeX + 50, recipeY + 15);
+        PatchouliRenderHelper.renderAnvilWithAnimation(parent, graphics, recipeX + 50, recipeY + 15);
 
-        RenderHelper.renderBlock(graphics,recipe.inputBlock.defaultBlockState(),
+        RenderHelper.renderBlock(graphics, recipe.inputBlock.defaultBlockState(),
                 recipeX + 50, recipeY + 31, 0,
                 12,
                 RenderHelper.SINGLE_BLOCK);
 
         PatchouliRenderHelper.renderArray(graphics, recipeX + 66, recipeY + 20);
 
-        RenderHelper.renderBlock(graphics,recipe.resultBlock.defaultBlockState(),
+        RenderHelper.renderBlock(graphics, recipe.resultBlock.defaultBlockState(),
                 recipeX + 90, recipeY + 31, 0,
                 12,
                 RenderHelper.SINGLE_BLOCK);
@@ -48,9 +50,10 @@ public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
                 book.headerColor
         );
     }
+
     @Override
     protected ItemStack getRecipeOutput(Level level, ItemInjectRecipe recipe) {
-         return recipe.getResultItem(level.registryAccess());
+        return recipe.getResultItem(level.registryAccess());
     }
 
     @Override
