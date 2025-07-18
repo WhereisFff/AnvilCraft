@@ -1,16 +1,16 @@
 {
-    "parent": "anvilcraft:anvilcraft/root",
-    "criteria": {
-        "get_any_amulet":{
-            "conditions":{
-                "items":"#anvilcraft:amulet"
-            },
-            "trigger":"minecraft:inventory_changed"
-        }
-    },
-    "requirements":[
-        [
-            "get_any_amulet"
-        ]
+  "parent": "anvilcraft:anvilcraft/root",
+  "criteria": {
+    "get_any_amulet": {
+      "conditions": {
+        "items": "#anvilcraft:amulet"
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "get_any_amulet"
     ]
+  ]
 }
