@@ -34,13 +34,14 @@ public class TotemOfRecoveryHandler implements TotemHandler {
                 BlockPos deathPos = player.getOnPos();
                 if (deathDimension == Level.OVERWORLD) {
                     if (deathPos.getY() < -64) {
-                        deathPos = new BlockPos(deathPos.getX(), -64, deathPos.getZ());
+                        deathPos = deathPos.atY(-63);
                     }
                 } else {
                     if (deathPos.getY() < 0) {
-                        deathPos = new BlockPos(deathPos.getX(), 0, deathPos.getZ());
+                        deathPos = deathPos.atY(1);
                     }
                 }
+                deathPos = deathPos.atY(deathPos.getY() + 1);
                 player.setLastDeathLocation(Optional.of(GlobalPos.of(deathDimension, deathPos)));
                 ResourceKey<Level> respawnDimension = player.getRespawnDimension();
                 BlockPos respawnPos = player.getRespawnPosition() == null ? player.level().getSharedSpawnPos() : player.getRespawnPosition();
