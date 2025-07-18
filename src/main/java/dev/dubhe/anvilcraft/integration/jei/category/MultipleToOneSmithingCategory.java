@@ -46,13 +46,13 @@ public class MultipleToOneSmithingCategory implements
     private final IDrawable disabledSlotIcon;
     private final Component title;
 
-    private static final int CENTER_INPUT_X = 79;
+    private static final int CENTER_INPUT_X = 80;
     private static final int CENTER_INPUT_Y = 23;
     private static final int OUTPUT_X = 151;
     private static final int OUTPUT_Y = 35;
-    private static final int TEMPLATE_X = 7;
+    private static final int TEMPLATE_X = 8;
     private static final int TEMPLATE_Y = 35;
-    private static final int[] INPUT_X = {79, 79, 61, 97, 61, 97, 61, 97};
+    private static final int[] INPUT_X = {80, 80, 62, 98, 62, 98, 62, 98};
     private static final int[] INPUT_Y = {5, 41, 23, 23, 5, 5, 41, 41};
 
     public MultipleToOneSmithingCategory(IGuiHelper helper) {

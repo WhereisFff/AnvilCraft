@@ -3,6 +3,7 @@
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:frost_metal_ingot",
   "sortnum": 3004,
+  "entry_color": "661100",
   "pages": [
     "This page shows all available $(thing)tier 2 materials$().",
     {

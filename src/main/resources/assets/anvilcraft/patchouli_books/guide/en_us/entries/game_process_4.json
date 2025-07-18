@@ -4,7 +4,7 @@
   "icon": "anvilcraft:magnetoelectric_core",
   "sortnum": 4,
   "pages": [
-    "$(l:power_basic_generation#charge_collector)集电器$()、$(l:power_transmission#transmission_pole)输电杆$()、$(l:power_consumption#heater)加热器$()是构建前期电网和合成材料的必备物品。$(br)首先，需要使用$(item)集电器$()使用本模组的特殊方法发电。然后使用$(item)输电杆$()传输电力，它的存在可以使以其头部为中心的17x17x17范围内所有电力设施连接在一起！最后放上$(item)加热器$()，这样你才能获得本模组下一阶段的核心材料——$(l:smithing_tier_1_materials#royal_steel_ingot)皇家钢$()$(br)$(#aa2222)Tps:$()点击本书中深蓝色的文本。可以跳转至详细介绍它的页面！",
+    "$(l:power_basic_generation#charge_collector)集电器$()、$(l:power_transmission#transmission_pole)输电杆$()、$(l:power_consumption#heater)加热器$()是构建前期电网和合成材料的必备物品。$(br)首先，需要使用$(item)集电器$()使用本模组的特殊方法发电。然后使用$(item)输电杆$()传输电力，它的存在可以使附近内所有电力设施连接在一起！最后放上$(item)加热器$()，准备制造本模组下一阶段的核心材料——$(l:smithing_tier_1_materials#royal_steel_ingot)皇家钢$()$(br)$(#aa2222)Tps:$()点击本书中深蓝色的文本。可以跳转至详细介绍它的页面！",
     {
       "type": "patchouli:multiblock",
       "name": "也许是你的第一个电网",
@@ -27,7 +27,7 @@
           ["  A  ","     ","  0  ","     ","  C  "]
         ]
       },
-      "text": "在$(item)加热器$()工作时，使用铁砧可以对$(item)炼药锅$()中的物品执行$(thing)高温熔炼$()配方"
+      "text": "在$(item)加热器$()工作时，使用铁砧可以对$(item)炼药锅$()中的物品执行$(thing)高温熔炼$()配方，既可以$(#aa2222)双倍$()烧矿，又能生产$(l:smithing_tier_1_materials#royal_steel_ingot)皇家钢$()。"
     },
     {
       "type": "patchouli:spotlight",
