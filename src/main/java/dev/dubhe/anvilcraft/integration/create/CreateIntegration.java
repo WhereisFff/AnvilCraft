@@ -16,7 +16,6 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModDamageTypeTags;
 import dev.dubhe.anvilcraft.init.ModEntityTypeTags;
 import dev.dubhe.anvilcraft.init.ModItemGroups;
-import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
@@ -29,6 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.conditions.ModLoadedCondition;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -100,10 +100,10 @@ public class CreateIntegration {
                 return COGWHEEL.getDelegate();
             }
         })
-        .tag(ModItemTags.AMULET)
         .properties(properties -> properties.stacksTo(1))
         .removeTab(ModItemGroups.ANVILCRAFT_INGREDIENTS.getKey())
         .recipe((ctx, provider) -> JewelCraftingRecipe.builder()
+            .withCondition(new ModLoadedCondition("create"))
             .requires(ModItems.SILVER_INGOT, 1)
             .requires(AllItems.PRECISION_MECHANISM, 16)
             .result(new ItemStack(ctx.get()))

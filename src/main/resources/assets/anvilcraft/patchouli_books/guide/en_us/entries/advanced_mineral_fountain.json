@@ -3,6 +3,7 @@
   "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:mineral_fountain",
   "sortnum": 4005,
+  "entry_color": "004400",
   "pages": [
     {
       "type": "patchouli:spotlight",

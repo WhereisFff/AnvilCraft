@@ -102,7 +102,10 @@ import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
@@ -759,7 +762,7 @@ public class ModItems {
         .properties((properties) -> properties.stacksTo(1))
         .register();
 
-    private static ItemEntry<? extends AmuletItem> createAmuletItem(
+    private static @NotNull ItemEntry<? extends AmuletItem> createAmuletItem(
         String type, Supplier<DeferredHolder<AmuletType, ?>> typeGetter,
         NonNullConsumer<JewelCraftingRecipe.Builder> builderConsumer
     ) {
@@ -2116,17 +2119,17 @@ public class ModItems {
         .properties(Item.Properties::fireResistant)
         .tag(ModItemTags.EXPLOSION_PROOF)
         .recipe((ctx, provider) ->
-             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
-                 .pattern("AEA")
-                 .pattern("EME")
-                 .pattern("AEA")
-                 .define('A', Items.AMETHYST_SHARD)
-                 .define('E', Items.ECHO_SHARD)
-                 .define('M', ModItems.MULTIPHASE_MATTER)
-                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.AMETHYST_SHARD), AnvilCraftDatagen.has(Items.AMETHYST_SHARD))
-                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.ECHO_SHARD), AnvilCraftDatagen.has(Items.ECHO_SHARD))
-                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
-                 .save(provider))
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AEA")
+                .pattern("EME")
+                .pattern("AEA")
+                .define('A', Items.AMETHYST_SHARD)
+                .define('E', Items.ECHO_SHARD)
+                .define('M', ModItems.MULTIPHASE_MATTER)
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.AMETHYST_SHARD), AnvilCraftDatagen.has(Items.AMETHYST_SHARD))
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.ECHO_SHARD), AnvilCraftDatagen.has(Items.ECHO_SHARD))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
+                .save(provider))
         .register();
 
     public static final ItemEntry<Item> NEGATIVE_MATTER = REGISTRATE
