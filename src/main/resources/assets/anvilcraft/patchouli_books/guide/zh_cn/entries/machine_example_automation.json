@@ -114,6 +114,7 @@
 		},
 		{
             "type": "patchouli:multiblock",
+			"anchor": "gem_machine",
             "name": "宝石转化机 1",
 			"multiblock": {
 				"mapping": {

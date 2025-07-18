@@ -5,7 +5,7 @@
   "sortnum": 2007,
   "entry_color": "004400",
   "pages": [
-    "要建立本模组的$(thing)激光系统$()，需要提前准备好足够的$(item)红宝石$()，可以参考这款$(thing)宝石转化机$()(未完成)。$(br)",
+    "要建立本模组的$(thing)激光系统$()，需要提前准备好足够的$(item)红宝石$()，可以参考这款$(l:machine_example_automation#gem_machine)宝石转化机$()。$(br)",
     {
       "type": "patchouli:crafting",
       "anchor": "ruby_laser",
