@@ -1,0 +1,60 @@
+{
+  "name": "Basic Minerals",
+  "category": "anvilcraft:basic_gameplay",
+  "icon": "anvilcraft:lead_nugget",
+  "sortnum": 1006,
+  "extra_recipe_mappings": {
+    "anvilcraft:silver_nugget": 0,
+    "anvilcraft:silver_ingot": 0,
+    "anvilcraft:lead_nugget": 0,
+    "anvilcraft:lead_ingot": 0,
+    "anvilcraft:tungsten_nugget": 0,
+    "anvilcraft:tungsten_ingot": 0,
+    "anvilcraft:titanium_nugget": 0,
+    "anvilcraft:titanium_ingot": 0,
+    "anvilcraft:zinc_nugget": 0,
+    "anvilcraft:zinc_ingot": 0,
+    "anvilcraft:tin_nugget": 0,
+    "anvilcraft:tin_ingot": 0
+  },
+  "pages": [
+    "不同于大多数mod，正常情况下本模组的矿石不会自然生成，只能通过矿物涌泉得到。$(br)为了在前期获得本模组的金属，你需要使用类似于“无中生有”的方式——“$(l:basic/item_processing#mesh)物品过筛$()”。$(br)以此法获得的金属粒及其来源在后文列出。",
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:lead_nugget",
+      "text": "$(item)铅粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:tin_nugget",
+      "text": "$(item)锡粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:zinc_nugget",
+      "text": "$(item)锌粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:silver_nugget",
+      "text": "$(item)银粒$()通过筛选$(item)火山灰$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:tungsten_nugget",
+      "text": "$(item)钨粒$()通过筛选$(item)下界尘$()概率获得。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:titanium_nugget",
+      "text": "$(item)钛粒$()通过筛选$(item)末地尘$()概率获得。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "高级采矿",
+      "text": "在有了一定的资源后，你可以通过$(l:advanced/mineral_fountain#mineral_fountain)矿物涌泉$()获得无限的矿石。"
+    }
+  ]
+}
+
+
