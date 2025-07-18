@@ -1407,10 +1407,10 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<SpaceOvercompressorBlock> SPACE_OVERCOMPRESSOR = REGISTRATE
         .block("space_overcompressor", SpaceOvercompressorBlock::new)
-        // .initialProperties(() -> Blocks.SHULKER_BOX)
+        .initialProperties(() -> Blocks.SHULKER_BOX)
         .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate(DataGenUtil::noExtraModelOrState)
-        // .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
         .properties(properties -> properties.stacksTo(16))
         .model((ctx, provider) -> provider.blockItem(ctx))
