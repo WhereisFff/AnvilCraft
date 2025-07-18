@@ -28,6 +28,11 @@
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:item_collector",
       "text": "$(item)物品收集器$()耗电功率随着手动设置的范围和冷却改变，可以收集大范围的掉落物，可以设置过滤。"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "anvilcraft:induction_light",
+      "text": "Lighting, with a power consumption of 1 kW$(br)Right click on this with $(item)Redstone$() to change it to ripening mode$(br)Right click on this with $(item)Glowstone Dust$() to change it to anti-monster spawning mode$(br)Right click on this with $(l:advanced_mineral_fountain#void_matter)Void Matter$() to change it to anti-animal spawning mode$(br)The power consumption of the above three modes will become 16 kW"
     }
   ]
 }
