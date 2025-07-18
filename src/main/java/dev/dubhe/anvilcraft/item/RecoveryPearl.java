@@ -29,10 +29,9 @@ public class RecoveryPearl extends Item {
         if (!level.isClientSide) {
             MinecraftServer server = level.getServer();
             ServerPlayer serverPlayer = server.getPlayerList().getPlayer(player.getUUID());
+            DimensionTransition dimensionTransition = serverPlayer.findRespawnPositionAndUseSpawnBlock(false, DimensionTransition.DO_NOTHING);
 
             Optional<GlobalPos> lastDeathLocation = player.getLastDeathLocation();
-            ResourceKey<Level> respawnDimension = serverPlayer.getRespawnDimension();
-            BlockPos respawnPos = serverPlayer.getRespawnPosition() == null ? level.getSharedSpawnPos() : serverPlayer.getRespawnPosition();
             ResourceKey<Level> currentDimension = level.dimension();
             BlockPos currentPos = player.getOnPos();
 
@@ -40,25 +39,17 @@ public class RecoveryPearl extends Item {
                 GlobalPos globalPos = lastDeathLocation.get();
                 ResourceKey<Level> lastDeathDimension = globalPos.dimension();
                 BlockPos lastDeathPos = globalPos.pos();
-                if (getDistance(currentPos, lastDeathLocation.get().pos()) < 12) {
-                    if (respawnDimension == currentDimension) {
-                        player.teleportTo(respawnPos.getX(), respawnPos.getY(), respawnPos.getZ());
+                if (currentDimension == lastDeathDimension) {
+                    if (getDistance(currentPos, lastDeathPos) < 12) {
+                        player.changeDimension(dimensionTransition);
                     } else {
-                        crossDimensionTeleportTo(respawnDimension, player, respawnPos);
+                        player.teleportTo(lastDeathPos.getX(), lastDeathPos.getY(), lastDeathPos.getZ());
                     }
                 } else {
-                    if (lastDeathDimension == currentDimension) {
-                        player.teleportTo(lastDeathPos.getX(), lastDeathPos.getY(), lastDeathPos.getZ());
-                    } else {
-                        crossDimensionTeleportTo(lastDeathDimension, player, lastDeathPos);
-                    }
+                    crossDimensionTeleportTo(lastDeathDimension, player, lastDeathPos);
                 }
             } else {
-                if (respawnDimension == currentDimension) {
-                    player.teleportTo(respawnPos.getX(), respawnPos.getY(), respawnPos.getZ());
-                } else {
-                    crossDimensionTeleportTo(respawnDimension, player, respawnPos);
-                }
+                player.changeDimension(dimensionTransition);
             }
             player.hurt(level.damageSources().fall(), 4);
         }
@@ -72,14 +63,13 @@ public class RecoveryPearl extends Item {
         return Math.sqrt(pos1.distToLowCornerSqr(pos2.getX(), pos2.getY(), pos2.getZ()));
     }
 
-    @SuppressWarnings("resource")
-    private void crossDimensionTeleportTo(ResourceKey<Level> dimension, Player player, BlockPos pos) {
+    public static void crossDimensionTeleportTo(ResourceKey<Level> dimension, Player player, BlockPos pos) {
         Level level = player.level();
         MinecraftServer server = level.getServer();
         if (server != null) {
             ServerLevel serverLevel = server.getLevel(dimension);
             if (serverLevel != null) {
-                player.changeDimension(new DimensionTransition(serverLevel, player, DimensionTransition.PLACE_PORTAL_TICKET));
+                player.changeDimension(new DimensionTransition(serverLevel, player, DimensionTransition.DO_NOTHING));
                 player.teleportTo(pos.getX(), pos.getY(), pos.getZ());
             }
         }
