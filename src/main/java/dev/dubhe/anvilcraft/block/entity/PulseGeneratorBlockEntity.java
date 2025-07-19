@@ -120,6 +120,10 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         }
     }
 
+    private void updateInputtingSignal(Level level, BlockPos pos, BlockState state) {
+        this.isInputtingSignal = PulseGeneratorBlock.getInputSignal(level, pos, state) > 0;
+    }
+
     protected void checkIsDeadlock(Level level, BlockPos pos, BlockState state) {
         this.isDeadlock = switch (this.startMode) {
             case RISING_EDGE, FALLING_EDGE -> false;
@@ -143,19 +147,19 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     public static void tick(Level level, BlockPos pos, BlockState state, PulseGeneratorBlockEntity generatorEntity) {
         if (level.isClientSide) return;
         generatorEntity.tickTime(level, pos, state);
+        generatorEntity.updateInputtingSignal(level, pos, state);
         generatorEntity.checkIsDeadlock(level, pos, state);
 
         generatorEntity.updateBlockAndNeighbours(level, pos, state);
     }
 
     protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state) {
-        if (level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity generatorEntity) {
-            Direction direction = state.getValue(PulseGeneratorBlock.FACING).getOpposite();
-            BlockPos neighbourPos = pos.relative(direction);
-            level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, generatorEntity.isOutputting()));
-            level.neighborChanged(neighbourPos, state.getBlock(), pos);
-            level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
-        }
+        if (!(level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity generatorEntity)) return;
+        Direction direction = state.getValue(PulseGeneratorBlock.FACING).getOpposite();
+        BlockPos neighbourPos = pos.relative(direction);
+        level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, generatorEntity.isOutputting()));
+        level.neighborChanged(neighbourPos, state.getBlock(), pos);
+        level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
     }
 
     protected void startWaiting(Level level, BlockPos pos, BlockState state) {
@@ -190,6 +194,9 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     public void setStartMode(int mode) {
         this.startMode = Mode.fromIndex(mode % 3);
+        if (this.startMode.equals(Mode.LOOP) && !this.isInputtingSignal && this.level != null) {
+            this.startWaiting(this.level, this.getBlockPos(), this.getBlockState());
+        }
         this.setChanged();
     }
 
@@ -210,6 +217,13 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     public boolean isOutputting() {
         if (this.isDeadlock) return this.outputInvert;
         return this.state == State.OUTPUTTING != this.outputInvert;
+    }
+
+    @Override
+    public void onLoad() {
+        super.onLoad();
+        if (this.level == null) return;
+        updateInputtingSignal(this.level, this.getBlockPos(), this.getBlockState());
     }
 
     @Override
