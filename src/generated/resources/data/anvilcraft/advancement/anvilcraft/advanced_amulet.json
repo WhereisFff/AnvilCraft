@@ -3,7 +3,11 @@
   "criteria": {
     "get_any_amulet": {
       "conditions": {
-        "items": "#anvilcraft:amulet"
+        "items": [
+          {
+            "items": "#anvilcraft:amulet"
+          }
+        ]
       },
       "trigger": "minecraft:inventory_changed"
     }
