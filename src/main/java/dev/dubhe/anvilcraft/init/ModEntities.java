@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.client.renderer.entity.SlidingBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SpectralBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.ThrownHeavyHalberdRenderer;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
+import dev.dubhe.anvilcraft.entity.EternalItemEntity;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.entity.FallingSpectralBlockEntity;
 import dev.dubhe.anvilcraft.entity.FloatingBlockEntity;
@@ -18,7 +19,10 @@ import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.ThrownEmberMetalHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownFrostMetalHeavyHalberdEntity;
+import dev.dubhe.anvilcraft.entity.ThrownTranscendenceHeavyHalberdEntity;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.world.entity.MobCategory;
 
 public class ModEntities {
@@ -84,9 +88,24 @@ public class ModEntities {
         .renderer(() -> ThrownHeavyHalberdRenderer::new)
         .register();
 
+    public static final EntityEntry<? extends ThrownTranscendenceHeavyHalberdEntity> THROWN_TRANSCENDENCE_HEAVY_HALBERD = AnvilCraft.REGISTRATE
+        .<ThrownTranscendenceHeavyHalberdEntity>entity(
+            "thrown_transcendence_heavy_halberd", ThrownTranscendenceHeavyHalberdEntity::new, MobCategory.MISC)
+        .properties(it -> it.sized(0.5F, 0.5F)
+            .eyeHeight(0.13F)
+            .clientTrackingRange(4)
+            .updateInterval(20))
+        .renderer(() -> ThrownHeavyHalberdRenderer::new)
+        .register();
+
     public static final EntityEntry<? extends SlidingBlockEntity> SLIDING_BLOCK = AnvilCraft.REGISTRATE
         .<SlidingBlockEntity>entity("sliding_block", SlidingBlockEntity::new, MobCategory.MISC)
         .renderer(() -> SlidingBlockRenderer::new)
+        .register();
+
+    public static final EntityEntry<? extends EternalItemEntity> ETERNAL_ITEM = AnvilCraft.REGISTRATE
+        .<EternalItemEntity>entity("eternal_item", EternalItemEntity::new, MobCategory.MISC)
+        .renderer(() -> ItemEntityRenderer::new)
         .register();
 
     public static void register() {

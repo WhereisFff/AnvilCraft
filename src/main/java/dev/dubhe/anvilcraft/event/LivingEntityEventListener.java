@@ -2,8 +2,10 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.entity.ai.goal.GenericZombieAttackGoal;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -34,11 +36,13 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 import static dev.dubhe.anvilcraft.init.ModDataAttachments.SCARE_ENTITIES;
 
@@ -124,9 +128,18 @@ public class LivingEntityEventListener {
                     break;
                 }
             }
-
         }
-
     }
 
+    @SubscribeEvent
+    public static void onEntityHurt(LivingIncomingDamageEvent event) {
+        if (Optional.ofNullable(event.getSource().getWeaponItem())
+            .filter(stack -> stack.has(ModComponents.PROVIDENCE))
+            .isPresent()) return;
+        RandomSource random = event.getEntity().level().random;
+        if (random.nextFloat() >= 0.25f) return;
+        event.setAmount(event.getAmount() * 2f);
+        if (random.nextFloat() >= 0.05f) return;
+        event.setAmount(event.getAmount() * 1.5f);
+    }
 }

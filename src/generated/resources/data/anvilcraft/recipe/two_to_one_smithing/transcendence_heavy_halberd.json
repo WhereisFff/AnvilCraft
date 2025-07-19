@@ -1,0 +1,19 @@
+{
+  "type": "anvilcraft:two_to_one_smithing",
+  "inputs": [
+    {
+      "item": "anvilcraft:ember_metal_heavy_halberd"
+    },
+    {
+      "item": "anvilcraft:ember_metal_heavy_halberd"
+    }
+  ],
+  "material": {
+    "item": "anvilcraft:multiphase_transcendium"
+  },
+  "recipeId": 0,
+  "result": "anvilcraft:transcendence_heavy_halberd",
+  "template": {
+    "item": "anvilcraft:two_to_one_smithing_template"
+  }
+}

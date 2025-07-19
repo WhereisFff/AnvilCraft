@@ -135,6 +135,8 @@ public class BlockTagLoader {
         provider.addTag(ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL)
             .addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 
+        provider.addTag(ModBlockTags.INCORRECT_FOR_TRANSCENDIUM_TOOL);
+
         provider.addTag(ModBlockTags.END_PORTAL_UNABLE_CHANGE).add(findResourceKey(Blocks.DRAGON_EGG));
 
         provider.addTag(ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)

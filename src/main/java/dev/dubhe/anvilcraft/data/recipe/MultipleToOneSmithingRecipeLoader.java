@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.multiple.FourToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.TwoToOneSmithingRecipe;
@@ -43,6 +44,17 @@ public class MultipleToOneSmithingRecipeLoader {
             .input(Items.TRIDENT)
             .input(Tags.Items.TOOLS_MACE)
             .save(provider);
+        TwoToOneSmithingRecipe.builder(ModItems.TRANSCENDENCE_HEAVY_HALBERD, 0)
+            .material(ModItems.MULTIPHASE_TRANSCENDIUM)
+            .input(2, ModItems.EMBER_METAL_HEAVY_HALBERD)
+            .save(provider);
+        FourToOneSmithingRecipe.builder(ModItems.TRANSCENDENCE_HEAVY_HALBERD, 1)
+            .material(ModItems.MULTIPHASE_TRANSCENDIUM)
+            .input(ModItems.MULTIPHASE_MATTER_SWORD)
+            .input(ModItems.MULTIPHASE_MATTER_AXE)
+            .input(Items.TRIDENT)
+            .input(Tags.Items.TOOLS_MACE)
+            .save(provider);
         FourToOneSmithingRecipe.builder(ModItems.FROST_METAL_RESONATOR, 0)
             .material(ModItems.RESONATOR_CORE)
             .input(ModItems.FROST_METAL_AXE)
@@ -56,6 +68,17 @@ public class MultipleToOneSmithingRecipeLoader {
             .input(ModItems.EMBER_METAL_SHOVEL)
             .input(ModItems.EMBER_METAL_HOE)
             .input(ModItems.EMBER_METAL_PICKAXE)
+            .save(provider);
+        TwoToOneSmithingRecipe.builder(ModItems.TRANSCENDENCE_RESONATOR, 0)
+            .material(ModItems.MULTIPHASE_TRANSCENDIUM)
+            .input(2, ModItems.EMBER_METAL_RESONATOR)
+            .save(provider);
+        FourToOneSmithingRecipe.builder(ModItems.TRANSCENDENCE_RESONATOR, 1)
+            .material(ModItems.MULTIPHASE_TRANSCENDIUM)
+            .input(ModItems.MULTIPHASE_MATTER_AXE)
+            .input(ModItems.MULTIPHASE_MATTER_SHOVEL)
+            .input(ModItems.MULTIPHASE_MATTER_HOE)
+            .input(ModItems.MULTIPHASE_MATTER_PICKAXE)
             .save(provider);
     }
 }

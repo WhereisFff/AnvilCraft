@@ -157,6 +157,10 @@ public record Multiphase(Phase alpha, Phase beta) {
         return new Multiphase(this.alpha, this.beta);
     }
 
+    public boolean isEmpty() {
+        return this.equals(EMPTY);
+    }
+
     public record Phase(
         @Nullable Component customName, @Nullable Component itemName,
         int repairCost, @NotNull ItemEnchantments enchantments
