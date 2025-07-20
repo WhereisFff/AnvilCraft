@@ -2921,6 +2921,7 @@ public class ModBlocks {
     public static final BlockEntry<ControllableSandBlock> CONTROLLABLE_SAND = REGISTRATE
         .block("controllable_sand", ControllableSandBlock::new)
         .initialProperties(() -> Blocks.SAND)
+        .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate((ctx, provider) -> provider
             .getVariantBuilder(ctx.get()).partialState()
             .addModels(new ConfiguredModel(provider.models().getExistingFile(ctx.getId().withPrefix("block/")))))
