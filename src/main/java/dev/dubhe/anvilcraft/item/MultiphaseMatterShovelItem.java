@@ -38,12 +38,12 @@ public class MultiphaseMatterShovelItem extends ShovelItem implements IMultipleR
     public ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
         if (id == 0) {
             Multiphase.PhaseData first = Multiphase.PhaseData.of(
-                input.getInputItem(0).get(DataComponents.CUSTOM_NAME), input.getInputItem(0).get(DataComponents.ITEM_NAME),
+                input.getInputItem(0).get(DataComponents.CUSTOM_NAME), null,
                 input.getInputItem(0).getOrDefault(DataComponents.REPAIR_COST, 0),
                 input.getInputItem(0).get(EnchantmentHelper.getComponentType(input.getInputItem(0)))
             );
             Multiphase.PhaseData second = Multiphase.PhaseData.of(
-                input.getInputItem(1).get(DataComponents.CUSTOM_NAME), input.getInputItem(1).get(DataComponents.ITEM_NAME),
+                input.getInputItem(1).get(DataComponents.CUSTOM_NAME), null,
                 input.getInputItem(1).getOrDefault(DataComponents.REPAIR_COST, 0),
                 input.getInputItem(1).get(EnchantmentHelper.getComponentType(input.getInputItem(1)))
             );

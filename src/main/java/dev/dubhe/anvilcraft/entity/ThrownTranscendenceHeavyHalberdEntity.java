@@ -1,8 +1,10 @@
 package dev.dubhe.anvilcraft.entity;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModEntities;
 import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +26,12 @@ public class ThrownTranscendenceHeavyHalberdEntity extends ThrownHeavyHalberdEnt
     }
 
     @Override
+    public ResourceLocation getTextureBase() {
+        return AnvilCraft.of("transcendence");
+    }
+
+    @Override
     protected ItemStack getDefaultPickupItem() {
-        return ModItems.EMBER_METAL_HEAVY_HALBERD.asStack();
+        return ModItems.TRANSCENDENCE_HEAVY_HALBERD.asStack();
     }
 }

@@ -14,10 +14,12 @@ import dev.dubhe.anvilcraft.util.IDiscardableItemEntity;
 import dev.dubhe.anvilcraft.util.MergeCooldownItemEntity;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -170,11 +172,31 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         }
     }
 
+    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
+    private void eternalProof(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (this.getItem().has(ModComponents.ETERNAL)
+            && (source.is(DamageTypeTags.IS_EXPLOSION)
+                || source.is(DamageTypeTags.IS_FIRE)
+                || source.is(DamageTypes.CACTUS)
+                || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
+            cir.setReturnValue(false);
+        }
+    }
+
     @Inject(method = "getBlockPosBelowThatAffectsMyMovement", at = @At("HEAD"), cancellable = true)
     private void slidingRailProgress(CallbackInfoReturnable<BlockPos> cir) {
         BlockState blockState = this.level().getBlockState(this.getOnPos(0.1f));
         if (blockState.is(ModBlocks.SLIDING_RAIL) || blockState.is(ModBlocks.SLIDING_RAIL_STOP)) {
             cir.setReturnValue(this.getOnPos(0.1f));
+        }
+    }
+
+    @Inject(
+        method = "tick",
+        at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/entity/item/ItemEntity;applyGravity()V"))
+    private void eternalTick(CallbackInfo ci) {
+        if (this.getItem().has(ModComponents.ETERNAL) && this.getY() < this.level().getMinBuildHeight() + 5) {
+            this.setDeltaMovement(this.getDeltaMovement().with(Direction.Axis.Y, 0.1F));
         }
     }
 

@@ -26,8 +26,8 @@
     "HopperBlockMixin",
     "InventoryMixin",
     "ItemEntityMixin",
+    "ItemStackMixin",
     "LivingEntityMixin",
-    "LootTableMixin",
     "PhantomGoalMixin",
     "PistonBaseBlockMixin",
     "PistonMovingBlockEntityMixin",
@@ -58,7 +58,9 @@
     "piglin.AbstractPiglinMixin",
     "piglin.PiglinMixin",
     "piston.PistonBaseBlockMixin",
-    "piston.PistonMovingBlockEntityMixin"
+    "piston.PistonMovingBlockEntityMixin",
+    "providence.ApplyBonusCountMixin",
+    "providence.EnchantedCountIncreaseFunctionMixin"
   ],
   "client": [
     "ClientLevelMixin",

@@ -53,6 +53,13 @@ public class OtherLang {
         provider.add("tooltip.anvilcraft.property.merciless.shifting", "Merciless: disable all enchantments except specific (%s) "
                                                                        + "and convert them into attack damage and mining efficiency");
         provider.add("tooltip.anvilcraft.property.merciless.curse", "All curses");
+        provider.add(
+            "tooltip.anvilcraft.property.eternal",
+            "Eternal: unbreakable, immune fire, explode, cactus, even the time and the void");
+        provider.add("tooltip.anvilcraft.property.providence", "Providence: has chance to trigger [Hold %s] enchantments multiple times");
+        provider.add(
+            "tooltip.anvilcraft.property.providence.shifting",
+            "Providence: has chance to trigger (%s) enchantments multiple times");
 
         provider.add("key.categories.anvilcraft", "AnvilCraft");
         provider.add("key.anvilcraft.switch_phase", "Switch Phase");

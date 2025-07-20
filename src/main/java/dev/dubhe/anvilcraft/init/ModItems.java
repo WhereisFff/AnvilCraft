@@ -7,6 +7,7 @@ import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletType;
 import dev.dubhe.anvilcraft.api.item.property.Eternal;
+import dev.dubhe.anvilcraft.api.item.property.Providence;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.item.AmethystAxeItem;
@@ -102,6 +103,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
@@ -631,7 +633,9 @@ public class ModItems {
         .properties(properties -> properties
             .durability(3156)
             .fireResistant()
-            .component(ModComponents.ETERNAL, Eternal.INSTANCE))
+            .component(ModComponents.ETERNAL, Eternal.INSTANCE)
+            .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
+            .component(ModComponents.PROVIDENCE, Providence.INSTANCE))
         .tag(ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE, ModItemTags.DRAGON_ROD)
         .model(DataGenUtil::noExtraModelOrState)
         .recipe((ctx, provider) -> {
@@ -2144,6 +2148,7 @@ public class ModItems {
                 .save(provider);
         })
         .register();
+
     public static final ItemEntry<MultiphaseMatterItem> MULTIPHASE_MATTER = REGISTRATE
         .item("multiphase_matter", MultiphaseMatterItem::new)
         .properties(Item.Properties::fireResistant)
@@ -2157,12 +2162,6 @@ public class ModItems {
                 .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_block"));
         })
         .register();
-    public static final ItemEntry<MultiphaseTranscendiumItem> MULTIPHASE_TRANSCENDIUM = REGISTRATE
-        .item("multiphase_transcendium", MultiphaseTranscendiumItem::new)
-        .properties(Item.Properties::fireResistant)
-        .tag(ModItemTags.EXPLOSION_PROOF)
-        .register();
-
     public static final ItemEntry<HeavyHalberdCoreItem> HEAVY_HALBERD_CORE = REGISTRATE
         .item("heavy_halberd_core", HeavyHalberdCoreItem::new)
         .properties(Item.Properties::fireResistant)
@@ -2194,6 +2193,12 @@ public class ModItems {
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.ECHO_SHARD), AnvilCraftDatagen.has(Items.ECHO_SHARD))
                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MULTIPHASE_MATTER), AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
                 .save(provider))
+        .register();
+
+    public static final ItemEntry<MultiphaseTranscendiumItem> MULTIPHASE_TRANSCENDIUM = REGISTRATE
+        .item("multiphase_transcendium", MultiphaseTranscendiumItem::new)
+        .properties(Item.Properties::fireResistant)
+        .tag(ModItemTags.EXPLOSION_PROOF)
         .register();
 
     public static final ItemEntry<Item> NEGATIVE_MATTER = REGISTRATE

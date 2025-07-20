@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.entity.ai.goal.GenericZombieAttackGoal;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
@@ -136,10 +135,10 @@ public class LivingEntityEventListener {
         if (Optional.ofNullable(event.getSource().getWeaponItem())
             .filter(stack -> stack.has(ModComponents.PROVIDENCE))
             .isPresent()) return;
-        RandomSource random = event.getEntity().level().random;
-        if (random.nextFloat() >= 0.25f) return;
+        float random = event.getEntity().level().random.nextFloat();
+        if (random >= 0.25f) return;
         event.setAmount(event.getAmount() * 2f);
-        if (random.nextFloat() >= 0.05f) return;
+        if (random >= 0.05f) return;
         event.setAmount(event.getAmount() * 1.5f);
     }
 }

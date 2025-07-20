@@ -179,6 +179,23 @@ public class ItemTooltipManager {
                     ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
             }
         }
+        if (stack.has(ModComponents.ETERNAL)) {
+            propertyTooltip("eternal", tooltip);
+        }
+        if (stack.has(ModComponents.PROVIDENCE)) {
+            if (!Screen.hasShiftDown()) {
+                propertyTooltip("providence", tooltip, Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
+            } else {
+                propertyTooltip("providence.shifting", tooltip, ComponentUtils.formatList(
+                    List.of(
+                        Component.translatable("enchantment.minecraft.fortune"),
+                        Component.translatable("enchantment.minecraft.looting"),
+                        Component.translatable("enchantment.anvilcraft.beheading"),
+                        Component.translatable("enchantment.minecraft.thorns"),
+                        Component.translatable("enchantment.minecraft.luck_of_the_sea")
+                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+            }
+        }
         if (NEED_TOOLTIP_ITEM.containsKey(item)) {
             tooltip.add(1, getItemTooltip(item));
         }

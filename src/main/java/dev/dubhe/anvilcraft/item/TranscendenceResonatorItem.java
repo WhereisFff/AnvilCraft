@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.property.Eternal;
-import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
+import dev.dubhe.anvilcraft.api.item.property.Providence;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -11,6 +11,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
@@ -29,6 +30,8 @@ public class TranscendenceResonatorItem extends ResonatorItem {
                 .attributes(ResonatorItem.createAttributes(ModTiers.TRANSCENDIUM, 17, -3f))
                 .component(ModComponents.MULTIPHASE, Multiphase.EMPTY)
                 .component(ModComponents.ETERNAL, Eternal.INSTANCE)
+                .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
+                .component(ModComponents.PROVIDENCE, Providence.INSTANCE)
                 .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().alpha().itemName()))
         );
     }
@@ -40,19 +43,36 @@ public class TranscendenceResonatorItem extends ResonatorItem {
 
     @Override
     public ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
-        if (id == 1) {
+        if (id == 0) {
+            ItemStack firstStack = input.getInputItem(0);
+            ItemStack secondStack = input.getInputItem(1);
+            Multiphase.PhaseData first = Multiphase.PhaseData.of(
+                firstStack.get(DataComponents.CUSTOM_NAME), firstStack.get(DataComponents.ITEM_NAME),
+                firstStack.getOrDefault(DataComponents.REPAIR_COST, 0),
+                firstStack.getOrDefault(EnchantmentHelper.getComponentType(firstStack), ItemEnchantments.EMPTY));
+            Multiphase.PhaseData second = Multiphase.PhaseData.of(
+                secondStack.get(DataComponents.CUSTOM_NAME), secondStack.get(DataComponents.ITEM_NAME),
+                secondStack.getOrDefault(DataComponents.REPAIR_COST, 0),
+                secondStack.getOrDefault(EnchantmentHelper.getComponentType(secondStack), ItemEnchantments.EMPTY));
+
+            Multiphase multiphase = Multiphase.make(this, first, second);
+            ItemStack result = this.getDefaultInstance();
+            result.set(ModComponents.MULTIPHASE, multiphase);
+            multiphase.applyToStack(result);
+
+            return result;
+        } else if (id == 1) {
             Multiphase multiphase = input.getInputItem(0).getOrDefault(ModComponents.MULTIPHASE, Multiphase.EMPTY);
-            Component customName, itemName;
+            Component customName;
             if (!multiphase.isEmpty()) {
                 customName = multiphase.alpha().customName();
-                itemName = multiphase.alpha().itemName();
             } else {
                 customName = input.getInputItem(0).get(DataComponents.CUSTOM_NAME);
-                itemName = input.getInputItem(0).get(DataComponents.ITEM_NAME);
             }
             int repairCost = 0;
             ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
             for (int i = 0; i < 4; i++) {
+                multiphase = input.getInputItem(i).getOrDefault(ModComponents.MULTIPHASE, Multiphase.EMPTY);
                 if (!multiphase.isEmpty()) {
                     repairCost += multiphase.alpha().repairCost();
                 } else {
@@ -69,31 +89,28 @@ public class TranscendenceResonatorItem extends ResonatorItem {
                     enchantments.set(entry.getKey(), Math.max(enchantments.getLevel(entry.getKey()), entry.getIntValue()));
                 }
             }
-            Multiphase.PhaseData first = Multiphase.PhaseData.of(customName, itemName, repairCost, enchantments.toImmutable());
+            Multiphase.PhaseData first = Multiphase.PhaseData.of(customName, null, repairCost, enchantments.toImmutable());
+
+            multiphase = input.getInputItem(0).getOrDefault(ModComponents.MULTIPHASE, Multiphase.EMPTY);
             if (!multiphase.isEmpty()) {
                 customName = multiphase.beta().customName();
-                itemName = multiphase.beta().itemName();
             }
             repairCost = 0;
             enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);
             for (int i = 0; i < 4; i++) {
+                multiphase = input.getInputItem(i).getOrDefault(ModComponents.MULTIPHASE, Multiphase.EMPTY);
                 if (!multiphase.isEmpty()) {
-                    repairCost += multiphase.alpha().repairCost();
-                } else {
-                    repairCost += input.getInputItem(i).getOrDefault(DataComponents.REPAIR_COST, 0);
+                    repairCost += multiphase.beta().repairCost();
                 }
-                ItemEnchantments enchantmentsSub;
+                ItemEnchantments enchantmentsSub = ItemEnchantments.EMPTY;
                 if (!multiphase.isEmpty()) {
-                    enchantmentsSub = multiphase.alpha().enchantments();
-                } else {
-                    enchantmentsSub = input.getInputItem(i).getOrDefault(
-                        EnchantmentHelper.getComponentType(input.getInputItem(i)), ItemEnchantments.EMPTY);
+                    enchantmentsSub = multiphase.beta().enchantments();
                 }
                 for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchantmentsSub.entrySet()) {
                     enchantments.set(entry.getKey(), Math.max(enchantments.getLevel(entry.getKey()), entry.getIntValue()));
                 }
             }
-            Multiphase.PhaseData second = Multiphase.PhaseData.of(customName, itemName, repairCost, enchantments.toImmutable());
+            Multiphase.PhaseData second = Multiphase.PhaseData.of(customName, null, repairCost, enchantments.toImmutable());
 
             multiphase = Multiphase.make(this, first, second);
             ItemStack result = this.getDefaultInstance();
@@ -102,6 +119,6 @@ public class TranscendenceResonatorItem extends ResonatorItem {
 
             return result;
         }
-        return super.assemble(id, input, registries);
+        return ItemStack.EMPTY;
     }
 }
