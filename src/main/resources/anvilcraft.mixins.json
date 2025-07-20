@@ -64,6 +64,7 @@
   ],
   "client": [
     "ClientLevelMixin",
+    "ClientPacketListenerMixin",
     "GameRendererMixin",
     "GuiGraphicsMixin",
     "ItemInHandRendererMixin",
