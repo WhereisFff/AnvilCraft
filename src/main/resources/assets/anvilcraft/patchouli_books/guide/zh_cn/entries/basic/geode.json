@@ -1,0 +1,32 @@
+{
+  "name": "晶洞与宝石",
+  "category": "anvilcraft:basic_gameplay",
+  "icon": "anvilcraft:geode",
+  "sortnum": 1007,
+  "pages": [
+    "铁砧工艺添加了晶洞和三种宝石，包括$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()，它们都有各自独特的用处。",
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:geode",
+      "text": "获得$(item)晶洞$()有三种方法：$(br)挖掘$(item)紫水晶母岩$()掉落。$(br)若开局开启奖励箱，可在其中获取。$(br)与$(thing)珠宝商$()村民交易"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:geode",
+      "text": "$(item)晶洞$()有三种用途：$(br)手持右键定位附近的$(thing)紫水晶洞穴$()$(br)在冲压平台上被铁砧砸碎，获得$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()三种宝石之一和大量$(item)紫水晶$()。$(br2)科技水平达到一定程度后，可以将其变为$(item)紫水晶母岩$()。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": ["minecraft:emerald","anvilcraft:ruby","anvilcraft:sapphire","anvilcraft:topaz"],
+      "text": "宝石：包括$(item)绿宝石$()、$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()$(br2)$(#888888)晦涩来说，就是携带#anvilcraft:gems标签的物品$()"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:smithing/corrupted_beacon",
+        "anvilcraft:smithing/jewelcrafting_table"
+      ],
+      "text": ""
+    }
+    ]
+}
