@@ -30,7 +30,7 @@ public class PageBlockCompress extends PageDoubleRecipeRegistry<BlockCompressRec
         List<Either<TagKey<Block>, Block>> inputs = recipe.inputs;
         for (int i = 0; i < Math.min(inputs.size(), 2); i++) {
             RenderHelper.renderBlock(graphics, recipe.inputs.get(i).right().get().defaultBlockState(),
-                    recipeX + 20, recipeY + 26 + i * 11, 0,
+                    recipeX + 20, recipeY + 26 + i * 10, -i * 10,
                     12,
                     RenderHelper.SINGLE_BLOCK);
         }

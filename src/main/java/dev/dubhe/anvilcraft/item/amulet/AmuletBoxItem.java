@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.item.amulet;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -104,7 +105,7 @@ public class AmuletBoxItem extends Item {
             if (!player.isShiftKeyDown()) {
                 List<ItemStack> items = InventoryUtil.getItems(inventory);
                 for (ItemStack stack : items) {
-                    if (stack.isEmpty() || !stack.is(Items.TOTEM_OF_UNDYING)) continue;
+                    if (stack.isEmpty() || !stack.is(ModItemTags.TOTEM)) continue;
                     if (mutable.tryInsert(stack.copy())) {
                         inventory.removeItem(stack);
                     }
