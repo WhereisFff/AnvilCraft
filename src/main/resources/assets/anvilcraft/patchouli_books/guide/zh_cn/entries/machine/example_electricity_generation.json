@@ -2,6 +2,7 @@
     "name": "发电",
     "category": "anvilcraft:machine_example",
     "icon": "anvilcraft:charge_collector",
+	"sortnum": 5003,
     "pages": [
         {
             "type": "patchouli:text",

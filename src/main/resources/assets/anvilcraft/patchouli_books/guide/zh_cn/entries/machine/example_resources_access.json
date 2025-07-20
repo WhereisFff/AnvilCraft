@@ -2,6 +2,7 @@
     "name": "资源获取",
     "category": "anvilcraft:machine_example",
     "icon": "minecraft:grass_block",
+	"sortnum": 5001,
     "pages": [
         {
 			"type": "patchouli:text",
