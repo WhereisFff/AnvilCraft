@@ -1,0 +1,194 @@
+{
+  "name": "Basic Item Processing",
+  "category": "anvilcraft:basic_gameplay",
+  "icon": "minecraft:iron_ingot",
+  "sortnum": 1002,
+  "extra_recipe_mappings": {
+    "anvilcraft:copper_pressure_plate": 2,
+    "anvilcraft:tungsten_pressure_plate": 2,
+    "anvilcraft:titanium_pressure_plate": 2,
+    "anvilcraft:zinc_pressure_plate": 2,
+    "anvilcraft:tin_pressure_plate": 2,
+    "anvilcraft:lead_pressure_plate": 2,
+    "anvilcraft:silver_pressure_plate": 2,
+    "anvilcraft:uranium_pressure_plate": 2,
+    "anvilcraft:bronze_pressure_plate": 2,
+    "anvilcraft:brass_pressure_plate": 2,
+    "anvilcraft:cream": 2,
+    "anvilcraft:cocoa_butter": 2,
+    "anvilcraft:cocoa_powder": 2,
+    "anvilcraft:wood_fiber": 4,
+    "anvilcraft:resin": 4,
+    "anvilcraft:flour": 4,
+    "minecraft:wet_sponge": 12,
+    "minecraft:sponge": 12,
+    "anvilcraft:dough": 12,
+    "anvilcraft:hardend_resin": 12
+  },
+  "pages": [
+    "Let $(item)Anvil$() fall on the specific blocks to process the items inside or on. Different specific blocks have different processing. The flowing pages of this entry will introduce relevant content in sequence. This mod adds a block that prevents hit items from flying around due to hitbox squeezing: $(item)Stamping Platform$().",
+    {
+      "type": "patchouli:crafting",
+      "recipe": "anvilcraft:stamping_platform",
+      "recipe2": "anvilcraft:shaped_crushing_table_recipe",
+      "text": ""
+    },
+    {
+      "type": "patchouli:multiblock",
+      "anchor": "stamping",
+      "name": "Item Stamping",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "S": "anvilcraft:stamping_platform",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "S0S", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "When the stamping platform is below, the item stamping is performed, and both materials and products are on the stamping platform. Detailed instructions on the right."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Items can be stamped into slices, such as Iron Ingot→Iron Pressure Plate; Gold Ingot→Gold Pressure Plate; Snowball→Snow; Cherry Leaves→Pink Petals.It is also possible to separate the different components of some items, such as Sugar Cane→Paper+Sugar;Cocoa beans→cocoa butter+cocoa powder; Milk bucket→cream+iron bucket; Wood fiber→paper."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "anchor": "item_crush",
+      "name": "Item Crush",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "C": "anvilcraft:crushing_table",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "C0C", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "Below is the operation of crushing items on the crushing table. The raw materials are placed on the platform, and the products fall out from below. For specific descriptions, please refer to the right side."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Some equipment can be recycled by it. Chains, gold, iron and diamond tools, weapons and armors can be broken down into much more materials than they are smelted.It can also complete these recipes:Wheat→$(item)Wheat Flour$()，Log→$(item)Wood Fiber$()+$(l:basic/more_device#resin_block)Resin$();Skeleton Skull→64*Bone Meal;Creeper Head→64*Gunpowder。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Item Compression",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "C": "minecraft:cauldron",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "C0C", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "When the cauldron is below, the item compression is performed, and both materials and products are in the cauldron. Detailed instructions on the right."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "If the item as a 2 x 2 or 3 x 3 crafting recipe, it will be executed, e.g. 9 Iron Nuggets→1 Iron Ingot; 9 Iron Ingots→1 Iron Block; 4 Strings→1 White Wool. If an item can be crafted both 2 x 2 and 3 x 3, 3 x 3 crafting will be performed.$(br)In addition to the vanilla recipes: 3 Bones→1 Bone block."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Item Decomposition",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "T": "minecraft:iron_trapdoor[half=top]",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "T0T", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "When the iron trapdoor is below, the item decomposition is performed. The materials are on the iron trapdoor and products are under theiron trapdoor. Detailed instructions on the right."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "If the item has a 1→n crafting recipe, it will be executed, e.g. 1 Iron Ingot→9 Iron Nuggets.$(br)In addition, the vanilla decomposition by breaking blocks can also be performed here, and the amount is the largest. For example, 1 Melon→9 Melon Slices; 1 Snow Block→4 Snowballs; 1 Glowstone→ 4 Glowstone Dust, Clay→4 Clay Balls.$(br)Some building blocks that vanilla cannot disassemble can also be broken down in this way. For example, 1 Quartz Block→4 Quartzs; 1 Amethyst Block→4 Amethyst Sharts; 1 Dripstone Block→4 Pointed Dripstone; 1 Honeycomb Block→4 Honeycomb; 1 Prismarine→4 Prismarine Shards; 1 Prismarine Bricks→9 Prismarine Shards."
+    },
+    {
+      "type": "patchouli:multiblock",
+      "anchor": "mesh",
+      "name": "Items Sifting",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "S": "minecraft:scaffolding",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "S0S", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "When the scaffolding is below, the items sifting is performed. The materials are on the scaffolding and products are under the scaffolding. Detailed instructions on the right."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "About half of the additional material is produced through sifting, which can be recycled. The conversion table is as follows (probability of existence):$(br)Gravel → Flint + Iron Nugget$(br)Sand→Clay+Gold Nugget$(br)Red Sand→Glowstone Dust+Copper Nugget$(br)$(item)Cinerite$()→Lapis Lazuli+$(item)Lead/Tin/Zinc/Silver Nugget$() + Gun Powder$(br)$(item)Quartz Sand$() → Quartz$(br)$(item)Nether Dust$() → Redstone Dust + $(item)Tungsten Nugget$()$(br)$(item)End Dust$() → Chorus Flowers + $(item)Titanium Nugget$() + $(item)Levitation Powder$()$(br)Soul Sand → Nether Wart$(br)Leaves → Corresponding Sapling"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Item Bulging",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "W": "minecraft:water_cauldron[level=3]",
+          "C": "minecraft:water_cauldron[level=2]",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "C0W", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "When the water cauldron is below, the item bulging is performed, and both materials and products are in the cauldron. Detailed instructions on the right."
+    },
+    {
+      "type": "patchouli:text",
+      "text": "Remove rust from copper products$(br)Dirt→Clay$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)Spider Eye→ Fermented Spider Eye$(br)Coral→Corresponding Coral Block$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)面粉$()→$(item)面团$()$(br)$(item)海绵芽球$()→湿海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "Cooking",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "C": "minecraft:cauldron",
+          "F": "minecraft:campfire",
+          "0": "anvilcraft:arrow"
+        },
+        "pattern": [
+          ["   ", "  A", "   "],
+          ["   ", "A  ", "   "],
+          ["   ", "C0C", "   "],
+          ["   ", "F F", "   "]
+        ]
+      },
+      "enable_visualize": "false",
+      "text": "When the cauldron and the campfire is below, the cooking is performed, and both materials and products are in the cauldron. A few recipes require water and consume a layer of water. Detailed instructions on the right."
+    },
+    "Auto-compatible with all smoker recipes and campfire recipes, no water required.$(br)can also execute special formulas: $(br)$(item)Dough$() + Sugar + Eggs→$(item)Cake Base Block$()$(br)$(item)Resin$()→$(item)Hardening Resin$()$(br)Spider Eyes + Pufferfish + Poisonous potato + Lily of the valley + Withered rose →$(item)Five Poisons Powder$()$(br)In the presence of water, the following transformations can occur:$(br)Resin→Slime Ball$(br)Raw beef + Red mushrooms + Brown mushrooms + Bowl→$(item)Beef and Mushroom stew$()"
+  ]
+}
