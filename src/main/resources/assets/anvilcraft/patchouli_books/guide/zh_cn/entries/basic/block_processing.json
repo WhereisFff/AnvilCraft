@@ -30,6 +30,7 @@
     },
     {
       "type": "patchouli:multiblock",
+      "anchor": "crush",
       "name": "单方块处理：粉碎",
       "multiblock": {
         "mapping": {
@@ -47,7 +48,7 @@
       "enable_visualize": "false",
       "text": "右侧列表给出了更多可以发生此种转化的例子，有些可连续发生转化。"
     },
-    "$(item)圆石$()→$(item)沙砾$()→$(item)沙子$()$(br)$(item)磨制花岗岩$()→$(item)花岗岩$()→$(item)红沙$()$(br)$(item)磨制安山岩$()→$(item)安山岩$()→$(item)火山灰$()$(br)$(item)磨制闪长岩$()→$(item)闪长岩$()→$(item)石英砂$()$(br)$(thing)有裂纹变种的方块$()→$(thing)对应的裂纹变种$()$(br)$(item)下界岩$()→$(item)下界尘$()$(br)$(item)末地石$()→$(item)末地尘$()$(br)$(item)灵魂土$()→$(item)灵魂沙$()$(br)$(item)深板岩$()→$(item)深板岩碎$()$(br)$(item)黑石$()→$(item)黑沙$()",
+    "$(item)圆石$()→$(item)沙砾$()→$(item)沙子$()$(br)$(item)磨制花岗岩$()→$(item)花岗岩$()→$(item)红沙$()$(br)$(item)磨制安山岩$()→$(item)安山岩$()→$(item)火山灰$()$(br)$(item)磨制闪长岩$()→$(item)闪长岩$()→$(item)石英砂$()$(br)$(thing)有裂纹变种的方块$()→$(thing)对应的裂纹变种$()$(br)$(item)下界岩$()→$(item)下界尘$()$(br)$(item)末地石$()→$(item)末地尘$()$(br)$(item)灵魂土$()→$(item)灵魂沙$()",
     {
       "type": "patchouli:multiblock",
       "name": "双方块处理：压合",
