@@ -51,7 +51,7 @@
       "type": "patchouli:spotlight",
       "anchor": "ember_metal",
       "item": "anvilcraft:ember_metal_ingot",
-      "text": "$(item)Ember Metal$() is a very hot metal. $(br)Use time warp with any $(thing)heated Netherite Blocks$() to craft this. You can add 1-3 $(item)Earth Core Shard$() to increase result."
+      "text": "$(item)Ember Metal$() is a very hot metal. $(br)Use time warp with any $(thing)heated Netherite Blocks$() to craft this. You can add 1-3 $(item)Earth Core Shard$() to increase result. $(br)$(l:advanced/oil)Click here$() to see how to get the Fire Cauldron"
     },
     {
       "type": "anvilcraft:time_warp",
