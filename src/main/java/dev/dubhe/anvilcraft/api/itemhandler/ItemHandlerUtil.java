@@ -36,24 +36,27 @@ public class ItemHandlerUtil {
         boolean success = false;
         Item filterItem = null;
         for (int srcIndex = 0; srcIndex < source.getSlots(); srcIndex++) {
-            ItemStack sourceStack = source.extractItem(srcIndex, Integer.MAX_VALUE, true);
-            if (sourceStack.isEmpty() || !predicate.test(sourceStack)) {
-                continue;
-            }
-            if (filterItem == null) {
-                filterItem = sourceStack.getItem();
-                maxAmount = maxAmount / 64 * sourceStack.getMaxStackSize(); //根据最大堆叠设置maxAmount 默认情况完全等于最大堆叠
-            }
-            if (sourceStack.getItem() != filterItem) continue;
+            while (maxAmount > 0) {
+                ItemStack sourceStack = source.extractItem(srcIndex, Integer.MAX_VALUE, true);
+                if (sourceStack.isEmpty() || !predicate.test(sourceStack)) {
+                    break;
+                }
+                if (filterItem == null) {
+                    filterItem = sourceStack.getItem();
+                    maxAmount = maxAmount / 64 * sourceStack.getMaxStackSize(); //根据最大堆叠设置maxAmount 默认情况完全等于最大堆叠
+                }
+                if (sourceStack.getItem() != filterItem) break;
 
-            ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
-            int amountToInsert = sourceStack.getCount() - remainder.getCount();
-            if (amountToInsert > 0) {
-                sourceStack = source.extractItem(srcIndex, Math.min(maxAmount, amountToInsert), false);
-                ItemHandlerHelper.insertItem(target, sourceStack, false);
-                success = true;
-                maxAmount -= amountToInsert;
-                if (maxAmount <= 0) break;
+                ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
+                int amountToInsert = sourceStack.getCount() - remainder.getCount();
+                if (amountToInsert > 0) {
+                    sourceStack = source.extractItem(srcIndex, Math.min(maxAmount, amountToInsert), false);
+                    ItemHandlerHelper.insertItem(target, sourceStack, false);
+                    success = true;
+                    maxAmount -= amountToInsert;
+                } else {
+                    break;
+                }
             }
         }
         return success;
