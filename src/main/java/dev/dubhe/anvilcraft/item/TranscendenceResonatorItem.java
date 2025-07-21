@@ -28,11 +28,11 @@ public class TranscendenceResonatorItem extends ResonatorItem {
             ModTiers.TRANSCENDIUM,
             properties
                 .attributes(ResonatorItem.createAttributes(ModTiers.TRANSCENDIUM, 17, -3f))
-                .component(ModComponents.MULTIPHASE, Multiphase.EMPTY)
+                .component(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE.copy())
                 .component(ModComponents.ETERNAL, Eternal.INSTANCE)
                 .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
                 .component(ModComponents.PROVIDENCE, Providence.INSTANCE)
-                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().alpha().itemName()))
+                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.alpha().getItemName()))
         );
     }
 
@@ -63,10 +63,11 @@ public class TranscendenceResonatorItem extends ResonatorItem {
             return result;
         } else if (id == 1) {
             Multiphase multiphase = input.getInputItem(0).getOrDefault(ModComponents.MULTIPHASE, Multiphase.EMPTY);
-            Component customName;
+            Component customName = null;
             if (!multiphase.isEmpty()) {
-                customName = multiphase.alpha().customName();
-            } else {
+                customName = multiphase.alpha().getCustomName();
+            }
+            if (customName == null) {
                 customName = input.getInputItem(0).get(DataComponents.CUSTOM_NAME);
             }
             int repairCost = 0;
@@ -92,8 +93,9 @@ public class TranscendenceResonatorItem extends ResonatorItem {
             Multiphase.PhaseData first = Multiphase.PhaseData.of(customName, null, repairCost, enchantments.toImmutable());
 
             multiphase = input.getInputItem(0).getOrDefault(ModComponents.MULTIPHASE, Multiphase.EMPTY);
+            customName = null;
             if (!multiphase.isEmpty()) {
-                customName = multiphase.beta().customName();
+                customName = multiphase.beta().getCustomName();
             }
             repairCost = 0;
             enchantments = new ItemEnchantments.Mutable(ItemEnchantments.EMPTY);

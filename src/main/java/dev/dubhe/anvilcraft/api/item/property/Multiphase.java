@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * 多相
@@ -120,38 +121,42 @@ public record Multiphase(Phase alpha, Phase beta) {
     }
 
     public void cyclePhases(ItemStack stack) {
-        Component customName;
-        if (this.beta.customName == null) {
-            customName = stack.get(DataComponents.CUSTOM_NAME);
-            stack.remove(DataComponents.CUSTOM_NAME);
-        } else {
-            customName = stack.set(DataComponents.CUSTOM_NAME, this.beta.customName);
-        }
+        final Phase[] storing = {this.alpha};
 
-        Component itemName;
-        if (this.beta.itemName == null) {
-            itemName = stack.get(DataComponents.ITEM_NAME);
-            stack.remove(DataComponents.ITEM_NAME);
-        } else {
-            itemName = stack.set(DataComponents.ITEM_NAME, this.beta.itemName);
-        }
+        Optional.ofNullable(
+            this.beta.customName.map(presentValue -> stack.set(DataComponents.CUSTOM_NAME, presentValue))
+                .orElseGet(() -> {
+                    Component c = stack.get(DataComponents.CUSTOM_NAME);
+                    stack.remove(DataComponents.CUSTOM_NAME);
+                    return c;
+                })
+        ).ifPresentOrElse(
+            name -> storing[0] = storing[0].withCustomName(name),
+            () -> storing[0] = storing[0].clearCustomName());
+        Optional.ofNullable(
+            this.beta.itemName.map(presentValue -> stack.set(DataComponents.ITEM_NAME, presentValue))
+                .orElseGet(() -> {
+                    Component c = stack.get(DataComponents.ITEM_NAME);
+                    stack.remove(DataComponents.ITEM_NAME);
+                    return c;
+                })
+        ).ifPresentOrElse(
+            name -> storing[0] = storing[0].withItemName(name),
+            () -> storing[0] = storing[0].clearItemName());
 
         Integer repairCost = stack.set(DataComponents.REPAIR_COST, this.beta.repairCost);
         if (repairCost == null || repairCost < 0) repairCost = 0;
+        storing[0] = storing[0].withRepairCost(repairCost);
 
         ItemEnchantments enchantments = stack.set(EnchantmentHelper.getComponentType(stack), this.beta.enchantments);
         if (enchantments == null) enchantments = ItemEnchantments.EMPTY;
+        storing[0] = storing[0].withEnchantments(enchantments);
 
-        Phase newAlpha = this.alpha
-            .withCustomName(customName)
-            .withItemName(itemName)
-            .withRepairCost(repairCost)
-            .withEnchantments(enchantments);
-        stack.set(ModComponents.MULTIPHASE, new Multiphase(this.beta, newAlpha));
+        stack.set(ModComponents.MULTIPHASE, new Multiphase(this.beta, storing[0]));
     }
 
     public Multiphase copy() {
-        return new Multiphase(this.alpha, this.beta);
+        return new Multiphase(this.alpha.copy(), this.beta.copy());
     }
 
     public Multiphase withAlpha(Phase alpha) {
@@ -167,24 +172,24 @@ public record Multiphase(Phase alpha, Phase beta) {
     }
 
     public record Phase(
-        @Nullable Component customName, @Nullable Component itemName,
+        Optional<Component> customName, Optional<Component> itemName,
         int repairCost, @NotNull ItemEnchantments enchantments
     ) {
         public static final Phase EMPTY = new Phase(
-            null, null, 0, ItemEnchantments.EMPTY
+            Optional.empty(), Optional.empty(), 0, ItemEnchantments.EMPTY
         );
 
         public static final Codec<Phase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName", Component.empty())
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName")
                 .forGetter(Phase::customName),
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName", Component.empty())
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName")
                 .forGetter(Phase::itemName),
             Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
             ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
         ).apply(inst, Phase::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = StreamCodec.composite(
-            ComponentSerialization.STREAM_CODEC, Phase::customName,
-            ComponentSerialization.STREAM_CODEC, Phase::itemName,
+            ComponentSerialization.OPTIONAL_STREAM_CODEC, Phase::customName,
+            ComponentSerialization.OPTIONAL_STREAM_CODEC, Phase::itemName,
             ByteBufCodecs.INT, Phase::repairCost,
             ItemEnchantments.STREAM_CODEC, Phase::enchantments,
             Phase::new
@@ -199,20 +204,19 @@ public record Multiphase(Phase alpha, Phase beta) {
         }
 
         public Phase(@Nullable Component customName, @Nullable Component itemName, int repairCost, @NotNull ItemEnchantments enchantments) {
-            this.customName = Objects.equals(customName, Component.empty()) ? null : customName;
-            this.itemName = Objects.equals(itemName, Component.empty()) ? null : itemName;
-            this.repairCost = repairCost;
-            this.enchantments = enchantments;
+            this(
+                Objects.equals(customName, Component.empty()) ? Optional.empty() : Optional.ofNullable(customName),
+                Objects.equals(itemName, Component.empty()) ? Optional.empty() : Optional.ofNullable(itemName),
+                repairCost, enchantments
+            );
         }
 
-        @Override
-        public Component customName() {
-            return customName == null ? Component.empty() : customName;
+        public @Nullable Component getCustomName() {
+            return this.customName.map(Component::copy).orElse(null);
         }
 
-        @Override
-        public Component itemName() {
-            return itemName == null ? Component.empty() : itemName;
+        public @Nullable Component getItemName() {
+            return this.itemName.map(Component::copy).orElse(null);
         }
 
         public static Phase make(Component name, @Nullable ItemEnchantments enchantments) {
@@ -221,12 +225,20 @@ public record Multiphase(Phase alpha, Phase beta) {
                 .withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
         }
 
-        public Phase withCustomName(@Nullable Component customName) {
-            return new Phase(customName, this.itemName, this.repairCost, this.enchantments);
+        public Phase withCustomName(Component customName) {
+            return new Phase(Optional.of(customName), this.itemName, this.repairCost, this.enchantments);
         }
 
-        public Phase withItemName(@Nullable Component itemName) {
-            return new Phase(this.customName, itemName, this.repairCost, this.enchantments);
+        public Phase withItemName(Component itemName) {
+            return new Phase(this.customName, Optional.of(itemName), this.repairCost, this.enchantments);
+        }
+
+        public Phase clearCustomName() {
+            return new Phase(Optional.empty(), this.itemName, this.repairCost, this.enchantments);
+        }
+
+        public Phase clearItemName() {
+            return new Phase(this.customName, Optional.empty(), this.repairCost, this.enchantments);
         }
 
         public Phase withRepairCost(int repairCost) {
@@ -253,18 +265,25 @@ public record Multiphase(Phase alpha, Phase beta) {
         }
 
         public void applyToStack(ItemStack stack) {
-            if (this.customName == null) {
+            if (this.customName.isEmpty()) {
                 stack.remove(DataComponents.CUSTOM_NAME);
             } else {
-                stack.set(DataComponents.CUSTOM_NAME, this.customName);
+                stack.set(DataComponents.CUSTOM_NAME, this.customName.get());
             }
-            if (this.itemName == null) {
+            if (this.itemName.isEmpty()) {
                 stack.remove(DataComponents.ITEM_NAME);
             } else {
-                stack.set(DataComponents.ITEM_NAME, this.itemName);
+                stack.set(DataComponents.ITEM_NAME, this.itemName.get());
             }
             stack.set(DataComponents.REPAIR_COST, this.repairCost());
             stack.set(DataComponents.ENCHANTMENTS, this.enchantments());
+        }
+
+        public Phase copy() {
+            return new Phase(
+                this.customName.map(Component::copy),
+                this.itemName.map(Component::copy),
+                this.repairCost, this.enchantments);
         }
 
         @Override

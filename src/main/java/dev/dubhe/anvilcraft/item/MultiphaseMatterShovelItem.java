@@ -30,7 +30,7 @@ public class MultiphaseMatterShovelItem extends ShovelItem implements IMultipleR
                 .attributes(ShovelItem.createAttributes(ModTiers.MULTIPHASE, 6.5f, -3f))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
                 .component(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE.copy())
-                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().alpha().itemName()))
+                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.alpha().getItemName()))
         );
     }
 
