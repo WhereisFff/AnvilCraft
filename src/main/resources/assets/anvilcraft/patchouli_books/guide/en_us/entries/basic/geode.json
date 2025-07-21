@@ -3,6 +3,11 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "anvilcraft:geode",
   "sortnum": 1007,
+  "extra_recipe_mappings": {
+    "anvilcraft:ruby": 2,
+    "anvilcraft:sapphire": 2,
+    "anvilcraft:topaz": 2
+  },
   "pages": [
     "铁砧工艺添加了晶洞和三种宝石，包括$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()，它们都有各自独特的用处。",
     {
