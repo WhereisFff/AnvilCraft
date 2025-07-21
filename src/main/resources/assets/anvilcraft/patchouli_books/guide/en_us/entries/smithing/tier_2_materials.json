@@ -66,7 +66,7 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:ember_metal_block",
-      "recipe2": "anvilcraft:ember_metal_nugget"
+      "recipe2": "anvilcraft:ember_metal_nugget_from_ingot"
     },
     {
       "type": "patchouli:spotlight",

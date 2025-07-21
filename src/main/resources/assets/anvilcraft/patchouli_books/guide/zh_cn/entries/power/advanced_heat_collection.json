@@ -20,6 +20,7 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "heater",
       "item": "anvilcraft:heater",
       "text": "$(item)加热器$()可用于加热可加热方块。它能将顶部方块加热至高温，并每秒增加1秒持续时间。若顶部方块温度等级高于高温，则不操作。"
     },
@@ -31,6 +32,7 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "heliostats",
       "item": "anvilcraft:heliostats",
       "text": "$(item)定日镜$()照射至可加热方块时可加热它。方块被定日镜照射时，根据定日镜数量决定温度等级。数量与温度等级的关联曲线为4、12、32、80。当方块的温度等级低于或等于提供的温度等级时，提升至提供的等级并每秒增加4秒持续时间。若方块温度等级高于提供的等级，则不操作。"
     },

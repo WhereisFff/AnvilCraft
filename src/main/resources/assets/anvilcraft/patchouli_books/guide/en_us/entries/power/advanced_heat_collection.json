@@ -20,6 +20,7 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "heater",
       "item": "anvilcraft:heater",
       "text": "$(item)Heater$() can be used to heat heatable blocks. It can heat block on top to Heated Tier and add 1 second every seconds. If the Heat Tier of the block on top is higher than Heated Tier, then do nothing."
     },
@@ -31,6 +32,7 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "heliostats",
       "item": "anvilcraft:heliostats",
       "text": "When $(item)Heliostats$() irradiates to heatable blocks can heat it. When block has been irradiated by heliostats, determine Heat Tier based on the number of heliostats. The curve of association of count and Heat Tier is 4, 12, 32, 80. If the Heat Tier of the block is lower or equal than provided Heat Tier, raise the Tier to the provided Tier and add 4 seconds to duration every seconds. If the Heat Tier of the block is higher than the provided Tier, then do nothing."
     },
