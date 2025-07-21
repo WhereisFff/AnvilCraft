@@ -319,6 +319,7 @@
   "entity.anvilcraft.floating_block": "Floating Block",
   "entity.anvilcraft.ionocraft": "Ionocraft",
   "entity.anvilcraft.levitating_block": "Levitating Block",
+  "entity.anvilcraft.magnetized_node": "Magnetized Node",
   "entity.anvilcraft.sliding_block": "Sliding Block",
   "entity.anvilcraft.standable_falling_block": "Standable Falling Block",
   "entity.anvilcraft.standable_levitating_block": "Standable Levitating Block",
