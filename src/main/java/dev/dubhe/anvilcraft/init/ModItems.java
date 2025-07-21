@@ -121,6 +121,20 @@ public class ModItems {
         .tag(ItemTags.BOOKSHELF_BOOKS)
         .model(DataGenUtil::noExtraModelOrState)
         .lang("AnvilCraft Guide Book")
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, ctx.get())
+                .requires(Ingredient.of(
+                    Items.ANVIL,
+                    Items.CHIPPED_ANVIL,
+                    Items.DAMAGED_ANVIL
+                ))
+                .requires(Items.BOOK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.ANVIL))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.CHIPPED_ANVIL))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.DAMAGED_ANVIL))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.BOOK))
+                .save(provider);
+        })
         .register();
     // 工具
     public static final ItemEntry<MagnetItem> MAGNET = REGISTRATE
