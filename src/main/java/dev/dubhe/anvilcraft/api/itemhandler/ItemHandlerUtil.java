@@ -49,12 +49,14 @@ public class ItemHandlerUtil {
 
                 ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
                 int amountToInsert = sourceStack.getCount() - remainder.getCount();
+
                 if (amountToInsert > 0) {
                     sourceStack = source.extractItem(srcIndex, Math.min(maxAmount, amountToInsert), false);
                     ItemHandlerHelper.insertItem(target, sourceStack, false);
                     success = true;
                     maxAmount -= amountToInsert;
                 } else {
+                    filterItem = null;
                     break;
                 }
             }
