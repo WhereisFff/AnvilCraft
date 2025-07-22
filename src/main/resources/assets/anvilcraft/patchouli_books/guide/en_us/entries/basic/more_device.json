@@ -24,7 +24,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:crab_claw",
-      "text": "When held in the hand or off-hand, the reach distance is increased by 3 blocks. It is produced from $(item)Crab Trab$()."
+      "text": "When held in the hand or off-hand, the reach distance is increased by 3 blocks. Right-click with it can force the $(item)Shulker$() open. It is produced from $(item)Crab Trab$()."
     },
     {
       "type": "patchouli:crafting",
@@ -60,6 +60,11 @@
       },
       "enable_visualize": "false",
       "text": "When chute are chained, the pointed chute will become a simple chute and no longer draw items from the world. It can not be set filtration, too."
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "anvilcraft:magnetic_chute",
+      "text": "$(item)磁性溜槽$()是一种特殊的溜槽。相较于只能吸取上方物品的溜槽，可以吸取侧方甚至下方的物品。"
     },
     {
       "type": "patchouli:crafting",
