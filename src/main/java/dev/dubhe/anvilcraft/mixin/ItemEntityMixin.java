@@ -14,7 +14,6 @@ import dev.dubhe.anvilcraft.util.IDiscardableItemEntity;
 import dev.dubhe.anvilcraft.util.MergeCooldownItemEntity;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
@@ -101,10 +100,10 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     private @NotNull Vec3 slowDown(ItemEntity instance) {
         Vec3 vec3 = instance.getDeltaMovement();
         double dy = 1;
-        if (this.getItem().is(ModItems.LEVITATION_POWDER.get())) dy *= -0.005;
-        if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())) dy *= 0.2;
-        if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET.get())
-            || this.getItem().is(ModItems.NEGATIVE_MATTER.get())
+        if (this.getItem().is(ModItems.LEVITATION_POWDER)) dy *= -0.005;
+        if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK)) dy *= 0.2;
+        if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)
+            || this.getItem().is(ModItems.NEGATIVE_MATTER)
             || this.getItem().is(ModBlocks.NEGATIVE_MATTER_BLOCK.asItem())) {
             if (this.position().y <= this.level().getMaxBuildHeight())
                 if (vec3.y < 0) dy *= -1;
@@ -133,9 +132,9 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
     private void voidResistant(CallbackInfo ci) {
-        if (!this.getItem().is(ModItemTags.VOID_RESISTANT)) return;
-        if (this.getY() < this.level().getMinBuildHeight() + 1) {
-            double dy = (this.level().getMinBuildHeight() - this.getY()) * 0.01;
+        if (!this.getItem().is(ModItemTags.VOID_RESISTANT) && !this.getItem().has(ModComponents.ETERNAL)) return;
+        if (this.getY() < this.level().getMinBuildHeight() + 5) {
+            double dy = (this.level().getMinBuildHeight() + 4 - this.getY()) * 0.01;
             dy += this.getDeltaMovement().y * -0.1;
             this.addDeltaMovement(new Vec3(0, 0.04 + dy, 0));
         }
@@ -188,15 +187,6 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         BlockState blockState = this.level().getBlockState(this.getOnPos(0.1f));
         if (blockState.is(ModBlocks.SLIDING_RAIL) || blockState.is(ModBlocks.SLIDING_RAIL_STOP)) {
             cir.setReturnValue(this.getOnPos(0.1f));
-        }
-    }
-
-    @Inject(
-        method = "tick",
-        at = @At(value = "INVOKE", shift = At.Shift.AFTER, target = "Lnet/minecraft/world/entity/item/ItemEntity;applyGravity()V"))
-    private void eternalTick(CallbackInfo ci) {
-        if (this.getItem().has(ModComponents.ETERNAL) && this.getY() < this.level().getMinBuildHeight() + 5) {
-            this.setDeltaMovement(this.getDeltaMovement().with(Direction.Axis.Y, 0.1F));
         }
     }
 
