@@ -73,7 +73,7 @@ public class ItemTooltipManager {
         map.put(ModBlocks.CUT_ROYAL_STEEL_STAIRS.asItem(), "Explosion proof");
         map.put(ModBlocks.CUT_ROYAL_STEEL_SLAB.asItem(), "Explosion proof");
         map.put(ModBlocks.TEMPERING_GLASS.asItem(), "Explosion proof, No tools required on collect");
-        map.put(ModBlocks.REMOTE_TRANSMISSION_POLE.asItem(), "Build a power grid with a transmission length of 8");
+        map.put(ModBlocks.REMOTE_TRANSMISSION_POLE.asItem(), "Build a power grid with a transmission length of 16");
         map.put(ModBlocks.HEAVY_IRON_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.POLISHED_HEAVY_IRON_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.POLISHED_HEAVY_IRON_SLAB.asItem(), "Explosion proof");
