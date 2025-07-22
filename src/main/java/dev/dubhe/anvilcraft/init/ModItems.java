@@ -128,6 +128,20 @@ public class ModItems {
         .tag(ItemTags.BOOKSHELF_BOOKS)
         .model(DataGenUtil::noExtraModelOrState)
         .lang("AnvilCraft Guide Book")
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.TOOLS, ctx.get())
+                .requires(Ingredient.of(
+                    Items.ANVIL,
+                    Items.CHIPPED_ANVIL,
+                    Items.DAMAGED_ANVIL
+                ))
+                .requires(Items.BOOK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.ANVIL))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.CHIPPED_ANVIL))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.DAMAGED_ANVIL))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.BOOK))
+                .save(provider);
+        })
         .register();
     // 工具
     public static final ItemEntry<MagnetItem> MAGNET = REGISTRATE
@@ -828,6 +842,7 @@ public class ModItems {
 
     public static final ItemEntry<Item> TOTEM_OF_RECOVERY = REGISTRATE
         .item("totem_of_recovery", Item::new)
+        .lang("Totem of Recovery")
         .properties((properties) -> properties.stacksTo(1).rarity(Rarity.UNCOMMON))
         .tag(ModItemTags.TOTEM)
         .recipe((ctx, provider) -> {
@@ -847,6 +862,7 @@ public class ModItems {
 
     public static final ItemEntry<Item> TOTEM_OF_RAGE = REGISTRATE
         .item("totem_of_rage", Item::new)
+        .lang("Totem of Rage")
         .properties((properties) -> properties.stacksTo(1).rarity(Rarity.UNCOMMON))
         .tag(ModItemTags.TOTEM)
         .recipe((ctx, provider) -> {
