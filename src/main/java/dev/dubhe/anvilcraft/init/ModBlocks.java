@@ -213,6 +213,7 @@ public class ModBlocks {
 
     public static final BlockEntry<? extends Block> MAGNET_BLOCK = REGISTRATE
         .block("magnet_block", MagnetBlock::new)
+        .lang("Block of Magnet")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item()
@@ -236,6 +237,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> HOLLOW_MAGNET_BLOCK = REGISTRATE
         .block("hollow_magnet_block", HollowMagnetBlock::new)
+        .lang("Hollowed Block of Magnet")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .simpleItem()
@@ -254,6 +256,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> FERRITE_CORE_MAGNET_BLOCK = REGISTRATE
         .block("ferrite_core_magnet_block", FerriteCoreMagnetBlock::new)
+        .lang("Ferrite-Cored Block of Magnet")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .properties(BlockBehaviour.Properties::randomTicks)
         .blockstate(DataGenUtil::noExtraModelOrState)
@@ -1597,6 +1600,7 @@ public class ModBlocks {
 
     public static final BlockEntry<? extends Block> ROYAL_STEEL_BLOCK = REGISTRATE
         .block("royal_steel_block", Block::new)
+        .lang("Block of Royal Steel")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .properties(p -> p.strength(5.0f, 1200f))
         .item()
@@ -1777,6 +1781,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<Block> FROST_METAL_BLOCK = REGISTRATE
         .block("frost_metal_block", Block::new)
+        .lang("Block of Frost Metal")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_IRON_TOOL,
@@ -1803,6 +1808,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<EmberMetalBlock> EMBER_METAL_BLOCK = REGISTRATE
         .block("ember_metal_block", properties -> new EmberMetalBlock(properties, 0.5d))
+        .lang("Block of Ember Metal")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .tag(BlockTags.BEACON_BASE_BLOCKS,
             BlockTags.MINEABLE_WITH_PICKAXE,
@@ -1996,6 +2002,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<TranscendiumBlock> TRANSCENDIUM_BLOCK = REGISTRATE
         .block("transcendium_block", TranscendiumBlock::new)
+        .lang("Block of Transcendium")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(properties -> properties.lightLevel(state -> 7)
             .noOcclusion()
@@ -2456,6 +2463,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> CURSED_GOLD_BLOCK = REGISTRATE
         .block("cursed_gold_block", Block::new)
+        .lang("Block of Cursed Gold")
         .initialProperties(() -> Blocks.GOLD_BLOCK)
         .item(CursedBlockItem::new)
         .tag(ItemTags.PIGLIN_LOVED,
@@ -2478,6 +2486,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> ZINC_BLOCK = REGISTRATE
         .block("zinc_block", Block::new)
+        .lang("Block of Zinc")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2501,6 +2510,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> TIN_BLOCK = REGISTRATE
         .block("tin_block", Block::new)
+        .lang("Block of Tin")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2524,6 +2534,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> TITANIUM_BLOCK = REGISTRATE
         .block("titanium_block", Block::new)
+        .lang("Block of Titanium")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2547,6 +2558,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<NormalBlock> TUNGSTEN_BLOCK = REGISTRATE
         .block("tungsten_block", NormalBlock::new)
+        .lang("Block of Tungsten")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -2573,6 +2585,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> LEAD_BLOCK = REGISTRATE
         .block("lead_block", Block::new)
+        .lang("Block of Lead")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2596,6 +2609,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> SILVER_BLOCK = REGISTRATE
         .block("silver_block", Block::new)
+        .lang("Block of Silver")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2619,6 +2633,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> URANIUM_BLOCK = REGISTRATE
         .block("uranium_block", Block::new)
+        .lang("Block of Uranium")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2642,6 +2657,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> PLUTONIUM_BLOCK = REGISTRATE
         .block("plutonium_block", Block::new)
+        .lang("Block of Plutonium")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
              BlockTags.BEACON_BASE_BLOCKS,
@@ -2664,6 +2680,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> BRONZE_BLOCK = REGISTRATE
         .block("bronze_block", Block::new)
+        .lang("Block of Bronze")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2687,6 +2704,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> BRASS_BLOCK = REGISTRATE
         .block("brass_block", Block::new)
+        .lang("Block of Brass")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
@@ -2711,6 +2729,7 @@ public class ModBlocks {
 
     public static final BlockEntry<? extends Block> TOPAZ_BLOCK = REGISTRATE
         .block("topaz_block", Block::new)
+        .lang("Block of Topaz")
         .initialProperties(() -> Blocks.EMERALD_BLOCK)
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS,
@@ -2733,6 +2752,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> RUBY_BLOCK = REGISTRATE
         .block("ruby_block", Block::new)
+        .lang("Block of Ruby")
         .initialProperties(() -> Blocks.EMERALD_BLOCK)
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS,
@@ -2755,6 +2775,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> SAPPHIRE_BLOCK = REGISTRATE
         .block("sapphire_block", Block::new)
+        .lang("Block of Sapphire")
         .initialProperties(() -> Blocks.EMERALD_BLOCK)
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS,
@@ -2777,6 +2798,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<? extends Block> RESIN_BLOCK = REGISTRATE
         .block("resin_block", ResinBlock::new)
+        .lang("Block of Resin")
         .initialProperties(() -> Blocks.SLIME_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .properties(properties -> properties.sound(SoundType.HONEY_BLOCK))
@@ -2799,6 +2821,7 @@ public class ModBlocks {
 
     public static final BlockEntry<? extends Block> AMBER_BLOCK = REGISTRATE
         .block("amber_block", AmberBlock::new)
+        .lang("Block of Amber")
         .initialProperties(() -> Blocks.EMERALD_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .properties(properties -> properties
@@ -2825,6 +2848,7 @@ public class ModBlocks {
 
     public static final BlockEntry<MobAmberBlock> MOB_AMBER_BLOCK = REGISTRATE
         .block("mob_amber_block", MobAmberBlock::new)
+        .lang("Block of Amber with Mob")
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item(HasMobBlockItem::new)
         .recipe((ctx, provider) -> {
@@ -2845,6 +2869,7 @@ public class ModBlocks {
 
     public static final BlockEntry<ResentfulAmberBlock> RESENTFUL_AMBER_BLOCK = REGISTRATE
         .block("resentful_amber_block", ResentfulAmberBlock::new)
+        .lang("Resentful Block of Amber")
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item(HasMobBlockItem::new)
         .build()
@@ -2940,6 +2965,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<LevitationPowderBlock> LEVITATION_POWDER_BLOCK = REGISTRATE
         .block("levitation_powder_block", LevitationPowderBlock::new)
+        .lang("Block of Levitation Powder")
         .initialProperties(() -> Blocks.SAND)
         .item(LevitationPowderBlockItem::new)
         .recipe((ctx, provider) ->
@@ -3070,6 +3096,7 @@ public class ModBlocks {
 
     public static final BlockEntry<StepEffectBlock> CHOCOLATE_BLOCK = REGISTRATE
         .block("chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnChocolateBlock))
+        .lang("Block of Chocolate")
         .initialProperties(() -> Blocks.STONE)
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -3085,6 +3112,7 @@ public class ModBlocks {
 
     public static final BlockEntry<StepEffectBlock> BLACK_CHOCOLATE_BLOCK = REGISTRATE
         .block("black_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnBlackChocolateBlock))
+        .lang("Block of Black Chocolate")
         .initialProperties(() -> Blocks.STONE)
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -3100,6 +3128,7 @@ public class ModBlocks {
 
     public static final BlockEntry<StepEffectBlock> WHITE_CHOCOLATE_BLOCK = REGISTRATE
         .block("white_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnWhiteChocolateBlock))
+        .lang("Block of White Chocolate")
         .initialProperties(() -> Blocks.STONE)
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
@@ -3307,6 +3336,7 @@ public class ModBlocks {
 
     public static final BlockEntry<HeatedBlock> HEATED_NETHERITE = REGISTRATE
         .block("heated_netherite_block", HeatedBlock::new)
+        .lang("Heated Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -3318,6 +3348,7 @@ public class ModBlocks {
 
     public static final BlockEntry<HeatedBlock> HEATED_TUNGSTEN = REGISTRATE
         .block("heated_tungsten_block", HeatedBlock::new)
+        .lang("Heated Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -3329,6 +3360,7 @@ public class ModBlocks {
 
     public static final BlockEntry<RedhotBlock> REDHOT_NETHERITE = REGISTRATE
         .block("redhot_netherite_block", RedhotBlock::new)
+        .lang("Redhot Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 3))
         .item()
@@ -3341,6 +3373,7 @@ public class ModBlocks {
 
     public static final BlockEntry<RedhotBlock> REDHOT_TUNGSTEN = REGISTRATE
         .block("redhot_tungsten_block", RedhotBlock::new)
+        .lang("Redhot Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 3))
         .item()
@@ -3353,6 +3386,7 @@ public class ModBlocks {
 
     public static final BlockEntry<GlowingBlock> GLOWING_NETHERITE = REGISTRATE
         .block("glowing_netherite_block", GlowingBlock::new)
+        .lang("Glowing Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 7))
         .item()
@@ -3365,6 +3399,7 @@ public class ModBlocks {
 
     public static final BlockEntry<GlowingBlock> GLOWING_TUNGSTEN = REGISTRATE
         .block("glowing_tungsten_block", GlowingBlock::new)
+        .lang("Glowing Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 7))
         .item()
@@ -3377,6 +3412,7 @@ public class ModBlocks {
 
     public static final BlockEntry<IncandescentBlock> INCANDESCENT_NETHERITE = REGISTRATE
         .block("incandescent_netherite_block", IncandescentBlock::new)
+        .lang("Incandescent Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 15))
         .item()
@@ -3389,6 +3425,7 @@ public class ModBlocks {
 
     public static final BlockEntry<IncandescentBlock> INCANDESCENT_TUNGSTEN = REGISTRATE
         .block("incandescent_tungsten_block", IncandescentBlock::new)
+        .lang("Incandescent Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 15))
         .item()
@@ -3401,6 +3438,7 @@ public class ModBlocks {
 
     public static final BlockEntry<OverheatedEmberMetalBlock> OVERHEATED_EMBER_METAL = REGISTRATE
         .block("overheated_ember_metal_block", OverheatedEmberMetalBlock::new)
+        .lang("Overheated Block of Ember Metal")
         .initialProperties(ModBlocks.EMBER_METAL_BLOCK)
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
@@ -3421,6 +3459,7 @@ public class ModBlocks {
     // raw blocks
     public static final BlockEntry<Block> RAW_ZINC = REGISTRATE
         .block("raw_zinc_block", Block::new)
+        .lang("Block of Raw Zinc")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3441,6 +3480,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<Block> RAW_TIN = REGISTRATE
         .block("raw_tin_block", Block::new)
+        .lang("Block of Raw Tin")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3458,6 +3498,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<Block> RAW_TITANIUM = REGISTRATE
         .block("raw_titanium_block", Block::new)
+        .lang("Block of Raw Titanium")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3477,6 +3518,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<Block> RAW_TUNGSTEN = REGISTRATE
         .block("raw_tungsten_block", Block::new)
+        .lang("Block of Raw Tungsten")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3497,6 +3539,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<Block> RAW_LEAD = REGISTRATE
         .block("raw_lead_block", Block::new)
+        .lang("Block of Raw Lead")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3514,6 +3557,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<Block> RAW_SILVER = REGISTRATE
         .block("raw_silver_block", Block::new)
+        .lang("Block of Raw Silver")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3532,6 +3576,7 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<Block> RAW_URANIUM = REGISTRATE
         .block("raw_uranium_block", Block::new)
+        .lang("Block of Raw Uranium")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3690,6 +3735,7 @@ public class ModBlocks {
 
     public static final BlockEntry<VoidMatterBlock> VOID_MATTER_BLOCK = REGISTRATE
         .block("void_matter_block", VoidMatterBlock::new)
+        .lang("Block of Void Matter")
         .initialProperties(() -> Blocks.DIAMOND_BLOCK)
         .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate((context, provider) -> provider.simpleBlock(
@@ -3718,6 +3764,7 @@ public class ModBlocks {
 
     public static final BlockEntry<Block> EARTH_CORE_SHARD_BLOCK = REGISTRATE
         .block("earth_core_shard_block", Block::new)
+        .lang("Block of Earth Core Shard")
         .initialProperties(() -> Blocks.DIAMOND_BLOCK)
         .properties(properties -> properties.explosionResistance(1200))
         .recipe((ctx, provider) ->
@@ -3745,6 +3792,7 @@ public class ModBlocks {
 
     public static final BlockEntry<? extends Block> MULTIPHASE_MATTER_BLOCK = REGISTRATE
         .block("multiphase_matter_block", Block::new)
+        .lang("Block of Multiphase Matter")
         .initialProperties(() -> Blocks.DIAMOND_BLOCK)
         .blockstate((ctx, provider) -> provider.simpleBlock(
             ctx.get(),
@@ -3768,6 +3816,7 @@ public class ModBlocks {
 
     public static final BlockEntry<NegativeMatterBlock> NEGATIVE_MATTER_BLOCK = REGISTRATE
         .block("negative_matter_block", NegativeMatterBlock::new)
+        .lang("Block of Negative Matter")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_DIAMOND_TOOL,
