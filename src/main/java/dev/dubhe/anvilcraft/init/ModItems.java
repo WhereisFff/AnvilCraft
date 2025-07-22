@@ -763,6 +763,7 @@ public class ModItems {
 
     public static final ItemEntry<Item> TOTEM_OF_RECOVERY = REGISTRATE
         .item("totem_of_recovery", Item::new)
+        .lang("Totem of Recovery")
         .properties((properties) -> properties.stacksTo(1).rarity(Rarity.UNCOMMON))
         .tag(ModItemTags.TOTEM)
         .recipe((ctx, provider) -> {
@@ -782,6 +783,7 @@ public class ModItems {
 
     public static final ItemEntry<Item> TOTEM_OF_RAGE = REGISTRATE
         .item("totem_of_rage", Item::new)
+        .lang("Totem of Rage")
         .properties((properties) -> properties.stacksTo(1).rarity(Rarity.UNCOMMON))
         .tag(ModItemTags.TOTEM)
         .recipe((ctx, provider) -> {
