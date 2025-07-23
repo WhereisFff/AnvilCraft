@@ -702,31 +702,38 @@ public class ModItems {
     // 升级锻造模板
     public static final ItemEntry<RoyalUpgradeTemplateItem> ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("royal_steel_upgrade_smithing_template", RoyalUpgradeTemplateItem::new)
+        .lang("Smithing Template")
         .tag(ModItemTags.TEMPLATES)
         .register();
     public static final ItemEntry<FrostMetalUpgradeTemplateItem> FROST_METAL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("frost_metal_upgrade_smithing_template", FrostMetalUpgradeTemplateItem::new)
+        .lang("Smithing Template")
         .tag(ModItemTags.TEMPLATES)
         .register();
     public static final ItemEntry<EmberMetalUpgradeTemplateItem> EMBER_METAL_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("ember_metal_upgrade_smithing_template", EmberMetalUpgradeTemplateItem::new)
+        .lang("Smithing Template")
         .tag(ModItemTags.TEMPLATES)
         .register();
     public static final ItemEntry<TranscendiumUpgradeTemplateItem> TRANSCENDIUM_UPGRADE_SMITHING_TEMPLATE = REGISTRATE
         .item("transcendium_upgrade_smithing_template", TranscendiumUpgradeTemplateItem::new)
+        .lang("Smithing Template")
         .tag(ModItemTags.TEMPLATES)
         .register();
 
     public static final ItemEntry<TwoToOneTemplateItem> TWO_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
         .item("two_to_one_smithing_template", TwoToOneTemplateItem::new)
+        .lang("Two to One Smithing Template")
         .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
         .register();
     public static final ItemEntry<FourToOneTemplateItem> FOUR_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
         .item("four_to_one_smithing_template", FourToOneTemplateItem::new)
+        .lang("Four to One Smithing Template")
         .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
         .register();
     public static final ItemEntry<EightToOneTemplateItem> EIGHT_TO_ONE_SMITHING_TEMPLATE = REGISTRATE
         .item("eight_to_one_smithing_template", EightToOneTemplateItem::new)
+        .lang("Eight to One Smithing Template")
         .tag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
         .register();
 
