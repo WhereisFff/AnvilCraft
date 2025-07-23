@@ -47,6 +47,7 @@ public class ItemHandlerUtil {
             while (true) {
                 ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
                 int amountToInsert = sourceStack.getCount() - remainder.getCount();
+                sourceStack = remainder;
                 if (amountToInsert > 0) {
                     ItemStack stack = source.extractItem(srcIndex, Math.min(maxAmount, amountToInsert), false);
                     ItemHandlerHelper.insertItem(target, stack, false);
