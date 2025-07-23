@@ -3,22 +3,18 @@ package dev.dubhe.anvilcraft.util.predicate;
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModItemTags;
 import net.minecraft.advancements.critereon.EntityTypePredicate;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
-import net.minecraft.world.phys.Vec3;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -31,12 +27,12 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
     ).apply(ins, DamageSourcePredicate::new));
 
     public boolean matches(ServerPlayer player, DamageSource source) {
-        return this.matches(player.serverLevel(), player.position(), source);
+        return this.matches(player.serverLevel(), player, source);
     }
 
-    public boolean matches(ServerLevel level, Vec3 position, DamageSource source) {
+    public boolean matches(ServerLevel level, Entity victim, DamageSource source) {
         for (DamageSourceSubPredicate subPredicate : this.subPredicates) {
-            if (subPredicate.matches(level, position, source) == this.isOr) {
+            if (subPredicate.matches(level, victim, source) == this.isOr) {
                 return this.isOr;
             }
         }
@@ -61,16 +57,16 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
         ).apply(ins, DamageSourceSubPredicate::new));
 
         public boolean matches(ServerPlayer player, DamageSource source) {
-            return this.matches(player.serverLevel(), player.position(), source);
+            return this.matches(player.serverLevel(), player, source);
         }
 
-        public boolean matches(ServerLevel level, Vec3 position, DamageSource source) {
+        public boolean matches(ServerLevel level, Entity entity, DamageSource source) {
             if (this.typePredicate.isPresent() && this.typePredicate.get().test(source.typeHolder()) == this.isOr) {
                 return this.isOr == !this.isInverted;
             }
 
             if (this.isSameTeam.isPresent() && this.murderPredicate.isPresent() && this.victimPredicate.isPresent()
-                && source.getEntity() instanceof Player murder && source.getDirectEntity() instanceof Player victim
+                && source.getEntity() instanceof Player murder && entity instanceof Player victim
             ) {
                 boolean isSameTeam = Optional.ofNullable(victim.getTeam())
                     .map(team -> team.getPlayers().contains(murder.getScoreboardName()))
@@ -79,11 +75,11 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
                     return this.isOr == !this.isInverted;
                 }
             } else if (this.victimPredicate.isPresent()
-                && this.victimPredicate.get().matches(level, position, source.getDirectEntity()) == this.isOr
+                && this.victimPredicate.get().matches(level, entity.position(), entity) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.murderPredicate.isPresent()
-                       && this.murderPredicate.get().matches(level, position, source.getEntity()) == this.isOr
+                       && this.murderPredicate.get().matches(level, source.getEntity().position(), source.getEntity()) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.weaponPredicate.isPresent()
