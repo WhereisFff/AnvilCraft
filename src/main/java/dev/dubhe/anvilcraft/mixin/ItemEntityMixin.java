@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.util.AdsorbableItemEntity;
 import dev.dubhe.anvilcraft.util.IDiscardableItemEntity;
 import dev.dubhe.anvilcraft.util.MergeCooldownItemEntity;
 import dev.dubhe.anvilcraft.util.Util;
@@ -54,7 +55,7 @@ import java.util.Objects;
 import static dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity.PoachingCollectorMap;
 
 @Mixin(ItemEntity.class)
-abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity, IDiscardableItemEntity {
+abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity, IDiscardableItemEntity, AdsorbableItemEntity {
     @Shadow
     public abstract ItemStack getItem();
 
@@ -82,6 +83,9 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @Unique
     public int anvilCraft$mergeCooldown = 0;
+
+    @Unique
+    public boolean anvilCraft$isAdsorbable = true;
 
     public ItemEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -403,5 +407,15 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     @Override
     public boolean anvilcraft$getDiscarded() {
         return anvilcraft$discarded;
+    }
+
+    @Override
+    public void setIsAdsorbable(boolean value) {
+        this.anvilCraft$isAdsorbable = value;
+    }
+
+    @Override
+    public boolean isAdsorbable() {
+        return this.anvilCraft$isAdsorbable;
     }
 }
