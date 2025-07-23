@@ -35,6 +35,7 @@ public class ItemHandlerUtil {
     ) {
         boolean success = false;
         Item filterItem = null;
+        boolean lockFilterItem = false;
         outerLoop:
         for (int srcIndex = 0; srcIndex < source.getSlots(); srcIndex++) {
             ItemStack sourceStack = source.extractItem(srcIndex, Integer.MAX_VALUE, true);
@@ -43,7 +44,6 @@ public class ItemHandlerUtil {
                 filterItem = sourceStack.getItem();
                 maxAmount = (int) (maxAmount / 64f * sourceStack.getMaxStackSize());
             } else if (sourceStack.getItem() != filterItem) continue;
-            boolean lockFilterItem = false;
             while (true) {
                 ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
                 int amountToInsert = sourceStack.getCount() - remainder.getCount();
