@@ -19,6 +19,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -103,10 +104,10 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     private @NotNull Vec3 slowDown(ItemEntity instance) {
         Vec3 vec3 = instance.getDeltaMovement();
         double dy = 1;
-        if (this.getItem().is(ModItems.LEVITATION_POWDER.get())) dy *= -0.005;
-        if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())) dy *= 0.2;
-        if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET.get())
-            || this.getItem().is(ModItems.NEGATIVE_MATTER.get())
+        if (this.getItem().is(ModItems.LEVITATION_POWDER)) dy *= -0.005;
+        if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK)) dy *= 0.2;
+        if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)
+            || this.getItem().is(ModItems.NEGATIVE_MATTER)
             || this.getItem().is(ModBlocks.NEGATIVE_MATTER_BLOCK.asItem())) {
             if (this.position().y <= this.level().getMaxBuildHeight())
                 if (vec3.y < 0) dy *= -1;
@@ -135,9 +136,9 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
     private void voidResistant(CallbackInfo ci) {
-        if (!this.getItem().is(ModItemTags.VOID_RESISTANT)) return;
-        if (this.getY() < this.level().getMinBuildHeight() + 1) {
-            double dy = (this.level().getMinBuildHeight() - this.getY()) * 0.01;
+        if (!this.getItem().is(ModItemTags.VOID_RESISTANT) && !this.getItem().has(ModComponents.ETERNAL)) return;
+        if (this.getY() < this.level().getMinBuildHeight() + 5) {
+            double dy = (this.level().getMinBuildHeight() + 4 - this.getY()) * 0.01;
             dy += this.getDeltaMovement().y * -0.1;
             this.addDeltaMovement(new Vec3(0, 0.04 + dy, 0));
         }
@@ -170,6 +171,17 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         if (!this.getItem().isEmpty()
             && this.getItem().is(ModItemTags.EXPLOSION_PROOF)
             && source.is(DamageTypeTags.IS_EXPLOSION)) {
+            cir.setReturnValue(false);
+        }
+    }
+
+    @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
+    private void eternalProof(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
+        if (this.getItem().has(ModComponents.ETERNAL)
+            && (source.is(DamageTypeTags.IS_EXPLOSION)
+                || source.is(DamageTypeTags.IS_FIRE)
+                || source.is(DamageTypes.CACTUS)
+                || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
             cir.setReturnValue(false);
         }
     }

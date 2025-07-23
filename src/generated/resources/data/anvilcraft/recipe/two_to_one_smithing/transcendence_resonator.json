@@ -1,0 +1,19 @@
+{
+  "type": "anvilcraft:two_to_one_smithing",
+  "inputs": [
+    {
+      "item": "anvilcraft:ember_metal_resonator"
+    },
+    {
+      "item": "anvilcraft:ember_metal_resonator"
+    }
+  ],
+  "material": {
+    "item": "anvilcraft:multiphase_transcendium"
+  },
+  "recipeId": 0,
+  "result": "anvilcraft:transcendence_resonator",
+  "template": {
+    "item": "anvilcraft:two_to_one_smithing_template"
+  }
+}
