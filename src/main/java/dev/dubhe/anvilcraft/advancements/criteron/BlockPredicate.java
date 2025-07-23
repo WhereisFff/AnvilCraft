@@ -2,6 +2,8 @@ package dev.dubhe.anvilcraft.advancements.criteron;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,10 +23,9 @@ public record BlockPredicate(HolderSet<Block> blocks) implements Predicate<Block
         return block.defaultBlockState().is(this.blocks.get(0).value());
     }
 
+    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Builder {
         private HolderSet<Block> blocks = HolderSet.empty();
-
-        private Builder() {}
 
         public static Builder block() {
             return new Builder();
