@@ -11,7 +11,7 @@ public class ListUtil {
     }
 
     public static <T> List<T> cycle(List<T> original, int times) {
-        if (times == 0) return new ArrayList<>(original);
+        if (times == 0 || original.isEmpty()) return new ArrayList<>(original);
         times %= original.size();
         if (times == 0) return new ArrayList<>(original);
         List<T> cycled = new ArrayList<>();

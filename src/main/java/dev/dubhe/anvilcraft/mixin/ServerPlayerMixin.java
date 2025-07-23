@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.DynamicPowerComponent;
 import dev.dubhe.anvilcraft.api.power.IDynamicPowerComponentHolder;
-import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;

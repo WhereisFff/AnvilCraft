@@ -117,6 +117,7 @@ public class AnvilCraft {
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
         AnvilCraftDfu.constructAndOptimize();
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
+        LOGGER.info("let's 0721");
     }
 
     private static void registerEvents(@NotNull IEventBus eventBus) {

@@ -74,6 +74,7 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
                 this.discard();
             } else if (
                 this.level().getBlockState(blockPos.above()).isAir()
+                || this.level().getBlockState(blockPos.above()).liquid()
                 || this.level().getBlockState(blockPos.above()).getCollisionShape(this.level(), blockPos.above()).equals(Shapes.empty())
                 || (this.level().getBlockState(blockPos).getBlock() instanceof Fallable
                     || this.level().getBlockState(blockPos.above()).getBlock() instanceof Fallable
