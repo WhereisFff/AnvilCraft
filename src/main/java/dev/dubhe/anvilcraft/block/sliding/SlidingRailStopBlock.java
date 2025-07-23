@@ -14,7 +14,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -50,11 +49,6 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-        return false;
-    }
-
-    @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         ISlidingRail.absorbEntity(pos, entity);
         if (entity.getType() != EntityType.ITEM) return;
@@ -72,7 +66,7 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
     }
 
     @Override
-    public void onSlidingAbove(Level level, BlockState state, SlidingBlockEntity entity) {
+    public void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity) {
         ISlidingRail.stopSlidingBlock(entity);
     }
 

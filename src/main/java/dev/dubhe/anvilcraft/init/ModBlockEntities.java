@@ -12,6 +12,7 @@ import dev.dubhe.anvilcraft.block.entity.CorruptedBeaconBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CrabTrapBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CreativeGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeatCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeaterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
@@ -269,6 +270,11 @@ public class ModBlockEntities {
         .blockEntity("plasma_jets", PlasmaJetsBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.PLASMA_JETS)
         .renderer(() -> PlasmaJetsRenderer::new)
+        .register();
+
+    public static final BlockEntityEntry<DetectorSlidingRailBlockEntity> DETECTOR_SLIDING_RAIL = REGISTRATE
+        .blockEntity("detector_sliding_rail", DetectorSlidingRailBlockEntity::new)
+        .validBlocks(ModBlocks.DETECTOR_SLIDING_RAIL)
         .register();
 
     public static void register() {

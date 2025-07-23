@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.api.sliding.SlidingBlockSection;
 import dev.dubhe.anvilcraft.block.sliding.ISlidingRail;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModEntities;
 import dev.dubhe.anvilcraft.network.SlidingEntitySyncPacket;
 import dev.dubhe.anvilcraft.util.Util;
@@ -103,7 +102,7 @@ public class SlidingBlockEntity extends Entity {
             BlockPos belowPos = pos.below();
             BlockState belowState = this.level().getBlockState(belowPos);
             if (belowState.getBlock() instanceof ISlidingRail slidingRail && !this.level().isClientSide) {
-                slidingRail.onSlidingAbove(this.level(), belowState, this);
+                slidingRail.onSlidingAbove(this.level(), belowPos, belowState, this);
             }
 
             if (this.level().isOutsideBuildHeight(pos)) {
@@ -153,6 +152,10 @@ public class SlidingBlockEntity extends Entity {
             if (!this.level().getBlockState(checking.relative(this.moveDirection)).isAir()) return false;
         }
         return true;
+    }
+
+    public int getBlockCount() {
+        return this.section.size();
     }
 
     public void setMoveDirection(Direction moveDirection) {

@@ -1,29 +1,29 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
+import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -32,15 +32,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable {
-    public static final List<Direction> SIGNAL_SOURCE_SIDES = List.of(
-        Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, EntityBlock {
     public static final VoxelShape AABB_X = Stream.of(
         Block.box(0, 0, 0, 16, 6, 16),
         Block.box(0, 6, 11, 16, 16, 16),
@@ -55,7 +51,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
-    public PoweredSlidingRailBlock(Properties properties) {
+    public DetectorSlidingRailBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.getStateDefinition().any().setValue(FACING, Direction.NORTH).setValue(POWERED, false));
     }
@@ -69,7 +65,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         }
         return this.defaultBlockState()
             .setValue(FACING, facing)
-            .setValue(POWERED, this.isPowered(context.getLevel(), context.getClickedPos()));
+            .setValue(POWERED, false);
     }
 
     @Override
@@ -102,55 +98,26 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
-        if (!state.getValue(POWERED)) return;
-        super.onNeighborChange(state, level, pos, neighbor);
+    protected boolean isSignalSource(BlockState state) {
+        return true;
     }
 
     @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        boolean powered = state.getValue(POWERED);
-        boolean shouldPower = this.isPowered(level, pos);
-        if (powered != shouldPower) {
-            level.setBlockAndUpdate(pos, state.setValue(POWERED, shouldPower));
-        }
-        if (!powered && shouldPower) {
-            fromPos = pos.above();
-            if (level.isEmptyBlock(fromPos)) {
-                BlockPos stop = pos.relative(state.getValue(FACING).getOpposite());
-                if (!level.getBlockState(stop).is(ModBlocks.SLIDING_RAIL_STOP) || level.isEmptyBlock(stop.above())) return;
-                BlockState above = level.getBlockState(stop.above());
-                level.setBlock(stop.above(), Blocks.AIR.defaultBlockState(), 0b1000011);
-                level.setBlock(fromPos, above, 0b1000011);
-            }
-            PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
-            if (MOVING_PISTON_MAP.containsKey(pos)) {
-                MOVING_PISTON_MAP.get(pos).fromPos = fromPos;
-            } else MOVING_PISTON_MAP.put(pos, ppi);
-            return;
-        }
-        if (level.isClientSide) return;
-        BlockState blockState = level.getBlockState(MOVING_PISTON_MAP.get(pos) instanceof PistonPushInfo info ? info.fromPos : fromPos);
-        if (!MOVING_PISTON_MAP.containsKey(pos)) return;
-        if (blockState.is(Blocks.MOVING_PISTON) || blockState.isAir()) return;
-        level.scheduleTick(pos, block, 2);
-    }
-
-    private boolean isPowered(SignalGetter level, BlockPos pos) {
-        for (Direction side : SIGNAL_SOURCE_SIDES) {
-            if (level.getSignal(pos.relative(side), side) > 0) return true;
-        }
-        return false;
+    protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction side) {
+        if (!state.getValue(POWERED)) return 0;
+        return side == Direction.DOWN ? 0 : 15;
     }
 
     @Override
-    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (entity.getType() != EntityType.ITEM) return;
-        if (!state.getValue(POWERED)) {
-            ISlidingRail.absorbEntity(pos, entity);
-        } else {
-            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.5));
-        }
+    protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return this.getSignal(state, level, pos, direction);
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get())
+            .map(DetectorSlidingRailBlockEntity::getPower)
+            .orElse(0);
     }
 
     @Override
@@ -172,16 +139,14 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
 
     @Override
     public void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity) {
-        if (!state.getValue(POWERED)) {
-            ISlidingRail.stopSlidingBlock(entity);
-            return;
-        }
-        entity.setMoveDirection(state.getValue(FACING));
+        level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get())
+            .ifPresent(detector -> detector.updatePower(entity.getBlockCount()));
+        level.setBlocksDirty(pos, state, state.setValue(POWERED, true));
+        level.updateNeighbourForOutputSignal(pos, this);
     }
 
     @Override
-    public Optional<Direction> getSlidingDirection(LevelReader level, BlockState state) {
-        if (!state.getValue(POWERED)) return Optional.empty();
-        return state.getOptionalValue(FACING);
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModBlockEntities.DETECTOR_SLIDING_RAIL.create(pos, state);
     }
 }

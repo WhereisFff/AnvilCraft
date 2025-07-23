@@ -2,8 +2,8 @@
   "type": "minecraft:crafting_shaped",
   "category": "redstone",
   "key": {
-    "P": {
-      "item": "minecraft:piston"
+    "R": {
+      "item": "minecraft:redstone_block"
     },
     "S": {
       "item": "anvilcraft:sliding_rail"
@@ -11,11 +11,11 @@
   },
   "pattern": [
     "SSS",
-    "SPS",
+    "SRS",
     "SSS"
   ],
   "result": {
     "count": 8,
-    "id": "anvilcraft:powered_sliding_rail"
+    "id": "anvilcraft:activator_sliding_rail"
   }
 }
