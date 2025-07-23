@@ -189,6 +189,9 @@ public class ItemTagLoader {
         provider.addTag(ModItemTags.CURIOS_IONOCRAFT_BACKPACK)
             .replace(false)
             .add(ModItems.IONOCRAFT_BACKPACK.getKey());
+
+        provider.addTag(ModItemTags.TOTEM)
+            .add(findResourceKey(Items.TOTEM_OF_UNDYING));
     }
 
     private static @NotNull ResourceKey<Item> findResourceKey(Item item) {

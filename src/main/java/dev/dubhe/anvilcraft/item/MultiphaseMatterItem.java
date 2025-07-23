@@ -35,12 +35,12 @@ public class MultiphaseMatterItem extends Item implements IMultipleMaterial {
     }
 
     @Override
-    public Component getInputTooltip() {
+    public Component getInputTooltip(ItemStack template, List<ItemStack> inputs) {
         return MISSING_TOOLS_TOOLTIP;
     }
 
     @Override
-    public List<ResourceLocation> getEmptySlotTextures(int id, List<ItemStack> inputs) {
+    public List<ResourceLocation> getEmptySlotTextures(ItemStack template, int id, List<ItemStack> inputs) {
         for (ItemStack input : inputs) {
             if (input.is(ItemTags.AXES)) {
                 return List.of(EMPTY_SLOT_AXE);

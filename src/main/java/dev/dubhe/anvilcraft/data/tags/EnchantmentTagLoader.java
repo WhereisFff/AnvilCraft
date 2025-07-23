@@ -28,5 +28,12 @@ public class EnchantmentTagLoader {
 
         provider.addTag(ModEnchantmentTags.DISABLED_PASSED)
             .add(Enchantments.MENDING);
+
+        provider.addTag(ModEnchantmentTags.PROVIDENCE_BONUS)
+            .add(Enchantments.FORTUNE)
+            .add(Enchantments.LOOTING)
+            .addOptional(ModEnchantments.BEHEADING_KEY.location())
+            .add(Enchantments.THORNS)
+            .add(Enchantments.LUCK_OF_THE_SEA);
     }
 }

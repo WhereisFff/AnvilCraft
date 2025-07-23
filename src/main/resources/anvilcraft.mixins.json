@@ -18,6 +18,7 @@
     "DispenseItemEmptyBottleBehaviorMixin",
     "DispenseItemEmptyBucketBehaviorMixin",
     "DispenseItemWaterBottleBehaviorMixin",
+    "EnchantmentPredicateMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
     "ExplosionMixin",
@@ -25,6 +26,7 @@
     "HopperBlockMixin",
     "InventoryMixin",
     "ItemEntityMixin",
+    "ItemStackMixin",
     "LivingEntityMixin",
     "PhantomGoalMixin",
     "PistonBaseBlockMixin",
@@ -56,10 +58,13 @@
     "piglin.AbstractPiglinMixin",
     "piglin.PiglinMixin",
     "piston.PistonBaseBlockMixin",
-    "piston.PistonMovingBlockEntityMixin"
+    "piston.PistonMovingBlockEntityMixin",
+    "providence.ApplyBonusCountMixin",
+    "providence.EnchantedCountIncreaseFunctionMixin"
   ],
   "client": [
     "ClientLevelMixin",
+    "ClientPacketListenerMixin",
     "GameRendererMixin",
     "GuiGraphicsMixin",
     "ItemInHandRendererMixin",

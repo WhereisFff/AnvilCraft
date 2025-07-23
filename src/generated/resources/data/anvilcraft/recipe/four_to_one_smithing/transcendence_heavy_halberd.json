@@ -1,0 +1,25 @@
+{
+  "type": "anvilcraft:four_to_one_smithing",
+  "inputs": [
+    {
+      "item": "anvilcraft:multiphase_matter_sword"
+    },
+    {
+      "item": "anvilcraft:multiphase_matter_axe"
+    },
+    {
+      "item": "minecraft:trident"
+    },
+    {
+      "tag": "c:tools/mace"
+    }
+  ],
+  "material": {
+    "item": "anvilcraft:multiphase_transcendium"
+  },
+  "recipeId": 1,
+  "result": "anvilcraft:transcendence_heavy_halberd",
+  "template": {
+    "item": "anvilcraft:four_to_one_smithing_template"
+  }
+}
