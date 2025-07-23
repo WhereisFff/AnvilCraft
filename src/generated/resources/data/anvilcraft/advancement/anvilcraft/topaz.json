@@ -1,0 +1,32 @@
+{
+  "parent": "anvilcraft:anvilcraft/amethyst_pickaxe",
+  "criteria": {
+    "topaz": {
+      "conditions": {
+        "item": {
+          "items": "anvilcraft:topaz"
+        }
+      },
+      "trigger": "anvilcraft:use_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.topaz.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:topaz"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.topaz.title"
+    }
+  },
+  "requirements": [
+    [
+      "topaz"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

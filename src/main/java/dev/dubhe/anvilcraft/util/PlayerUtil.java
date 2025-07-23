@@ -44,9 +44,8 @@ public class PlayerUtil {
         }
     }
 
-    public static Player getPlayerWithPos(Level level, BlockPos pos) {
+    public static Player getPlayerWithPos(Level level, BlockPos pos, int radius) {
         if (!level.isClientSide) {
-            int radius = 3;
             BlockPos offset;
             for (int x = -radius; x <= radius; x++) {
                 for (int y = -radius; y <= radius; y++) {

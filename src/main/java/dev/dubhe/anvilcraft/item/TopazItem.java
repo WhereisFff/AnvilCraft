@@ -1,8 +1,11 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ItemParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EntityType;
@@ -33,6 +36,9 @@ public class TopazItem extends Item {
             Player player = context.getPlayer();
             lightningBolt.setPos(clickedPos.getCenter());
             level.addFreshEntity(lightningBolt);
+            if (level instanceof ServerLevel) {
+                ModCriterionTriggers.USE_ITEM.get().trigger((ServerPlayer) player, this.getDefaultInstance());
+            }
             if (player != null && player.getAbilities().instabuild) return InteractionResult.SUCCESS;
             if (player != null) this.breakItem(player, itemInHand);
             itemInHand.shrink(1);

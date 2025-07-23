@@ -308,7 +308,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
         level.destroyBlock(devourBlockPos, false);
         if (level instanceof ServerLevel) {
-            Player player = PlayerUtil.getPlayerWithPos(level, devourBlockPos);
+            Player player = PlayerUtil.getPlayerWithPos(level, devourBlockPos, 3);
             if (player != null) {
                 ModCriterionTriggers.DEVOURER_DEVOUR_BLOCK.get().trigger((ServerPlayer) player, devourBlockState.getBlock());
             }

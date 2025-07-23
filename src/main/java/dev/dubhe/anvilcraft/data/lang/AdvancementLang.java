@@ -25,5 +25,11 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.amethyst_pickaxe.title", "Lucky pickaxe");
         provider.add("advancements.anvilcraft.amethyst_pickaxe.description", "Craft a amethyst pickaxe");
+
+        provider.add("advancements.anvilcraft.topaz.title", "The power of lightning");
+        provider.add("advancements.anvilcraft.topaz.description", "Summon lightning on the lightning rod with topaz");
+
+        provider.add("advancements.anvilcraft.lifting_anvil.title", "Enjoyment from top to bottom");
+        provider.add("advancements.anvilcraft.lifting_anvil.description", "Use a magnet block to lift and lower the anvil");
     }
 }

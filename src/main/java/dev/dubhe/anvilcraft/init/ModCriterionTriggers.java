@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnLandTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
 import net.minecraft.advancements.CriterionTrigger;
@@ -22,6 +24,12 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, DevourerDevourBlockTrigger> DEVOURER_DEVOUR_BLOCK =
         CT.register("devourer_devour_block", DevourerDevourBlockTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, MagnetLiftingAnvilTrigger> MAGNET_LIFTING_ANVIL =
+        CT.register("magnet_lifting_anvil", MagnetLiftingAnvilTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilOnLandTrigger> ANVIL_ON_LAND =
+        CT.register("anvil_on_land", AnvilOnLandTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);

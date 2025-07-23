@@ -4,10 +4,14 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.MagnetBlock;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Block;
@@ -92,6 +96,12 @@ abstract class AnvilBlockMixin extends FallingBlock {
             level.setBlockAndUpdate(magnet.below(), state);
             level.setBlockAndUpdate(anvil, Blocks.AIR.defaultBlockState());
             AnimateAscendingBlockEntity.animate(level, anvil, state, magnet.below());
+            if (level instanceof ServerLevel) {
+                Player player = PlayerUtil.getPlayerWithPos(level, anvil, 5);
+                if (player != null) {
+                    ModCriterionTriggers.MAGNET_LIFTING_ANVIL.get().trigger((ServerPlayer) player);
+                }
+            }
             return;
         }
     }
