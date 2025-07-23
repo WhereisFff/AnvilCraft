@@ -31,5 +31,14 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.lifting_anvil.title", "Enjoyment from top to bottom");
         provider.add("advancements.anvilcraft.lifting_anvil.description", "Use a magnet block to lift and lower the anvil");
+
+        provider.add("advancements.anvilcraft.dang.title", "Dang!");
+        provider.add("advancements.anvilcraft.dang.description", "Execute any anvil crafting");
+
+        provider.add("advancements.anvilcraft.stone_crusher.title", "Stone crusher");
+        provider.add("advancements.anvilcraft.stone_crusher.description", "Use an anvil to smash cobblestone and create gravel, then to smash gravel and create sand");
+
+        provider.add("advancements.anvilcraft.fossick.title", "Fossick");
+        provider.add("advancements.anvilcraft.fossick.description", "Sift the sand on the scaffolding with an anvil to obtain gold nugget");
     }
 }

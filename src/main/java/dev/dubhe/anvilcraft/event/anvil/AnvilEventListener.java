@@ -95,6 +95,12 @@ public class AnvilEventListener {
 
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
+                if (level instanceof ServerLevel) {
+                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+                    if (player != null) {
+                        ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
+                    }
+                }
                 return;
             }
         }
@@ -112,8 +118,22 @@ public class AnvilEventListener {
         level.getRecipeManager()
             .getRecipeFor(
                 ModRecipeTypes.BLOCK_CRUSH_TYPE.get(), new BlockCrushRecipe.Input(state.getBlock()), level)
-            .ifPresent(recipe ->
-                level.setBlockAndUpdate(pos, recipe.value().result.defaultBlockState()));
+            .ifPresent(recipe -> {
+                Block result = recipe.value().result;
+                level.setBlockAndUpdate(pos, result.defaultBlockState());
+                if (level instanceof ServerLevel) {
+                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+                    if (player != null) {
+                        ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().trigger((ServerPlayer) player, result);
+                    }
+                }
+            });
+        if (level instanceof ServerLevel) {
+            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+            if (player != null) {
+                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
+            }
+        }
     }
 
     private static void handleBlockCompressRecipe(Level level, final BlockPos pos) {
@@ -131,6 +151,12 @@ public class AnvilEventListener {
                     pos.below(recipe.value().inputs.size() - 1),
                     recipe.value().result.defaultBlockState());
             });
+        if (level instanceof ServerLevel) {
+            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+            if (player != null) {
+                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
+            }
+        }
     }
 
     private static void handleBlockSmearRecipe(Level level, final BlockPos pos) {
@@ -148,6 +174,12 @@ public class AnvilEventListener {
                     pos.below(recipe.value().inputs.size() - 1),
                     recipe.value().result.defaultBlockState());
             });
+        if (level instanceof ServerLevel) {
+            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+            if (player != null) {
+                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
+            }
+        }
     }
 
     private static void handleItemInjectRecipe(Level level, final BlockPos pos, BlockState state) {
@@ -185,6 +217,12 @@ public class AnvilEventListener {
                     k.setItem(v.copy());
                 });
             });
+        if (level instanceof ServerLevel) {
+            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+            if (player != null) {
+                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
+            }
+        }
     }
 
     private static void handleSqueezingRecipe(Level level, final BlockPos pos, BlockState state) {
@@ -199,6 +237,12 @@ public class AnvilEventListener {
                 CauldronUtil.fill(level, belowPos, recipe.getCauldron(), 1, false);
                 level.setBlockAndUpdate(pos, recipe.resultBlock.defaultBlockState());
             });
+        if (level instanceof ServerLevel) {
+            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+            if (player != null) {
+                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
+            }
+        }
     }
 
     private static void brokeBlock(@NotNull Level level, BlockPos pos, AnvilFallOnLandEvent event) {

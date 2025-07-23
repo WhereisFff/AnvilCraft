@@ -2,6 +2,9 @@ package dev.dubhe.anvilcraft.data.advancement;
 
 import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilCraftingTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHandleBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHandleItemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnLandTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
@@ -18,6 +21,8 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.advancementOf;
 import static dev.dubhe.anvilcraft.AnvilCraft.of;
@@ -46,7 +51,7 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.TASK,
                 true, true, false
             )
-            .addCriterion("crab_claw", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CRAB_CLAW))
+            .addCriterion("get_crab_claw", InventoryChangeTrigger.TriggerInstance.hasItems(ModItems.CRAB_CLAW))
             .build(advancementOf("crab_claw"));
 
         AdvancementHolder placer = Advancement.Builder.advancement()
@@ -58,7 +63,7 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.TASK,
                 true, true, false
             )
-            .addCriterion("placer", PlacerPlaceBlockTrigger.TriggerInstance.placeBlock(ModBlocks.BLOCK_PLACER.get()))
+            .addCriterion("place_block", PlacerPlaceBlockTrigger.TriggerInstance.placeBlock(ModBlocks.BLOCK_PLACER.get()))
             .build(advancementOf("placer"));
 
         AdvancementHolder devourer = Advancement.Builder.advancement()
@@ -70,7 +75,7 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.CHALLENGE,
                 true, true, false
             )
-            .addCriterion("devourer", DevourerDevourBlockTrigger.TriggerInstance.devourBlock(ModBlocks.BLOCK_DEVOURER.get()))
+            .addCriterion("devour_block", DevourerDevourBlockTrigger.TriggerInstance.devourBlock(ModBlocks.BLOCK_DEVOURER.get()))
             .build(advancementOf("devourer"));
 
         AdvancementHolder geode = Advancement.Builder.advancement()
@@ -82,7 +87,7 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.TASK,
                 true, true, false
             )
-            .addCriterion("geode", UseItemTrigger.TriggerInstance.useItem(ModItems.GEODE.asStack()))
+            .addCriterion("use_geode", UseItemTrigger.TriggerInstance.useItem(ModItems.GEODE.asStack()))
             .build(advancementOf("geode"));
 
         AdvancementHolder amethystPickaxe = Advancement.Builder.advancement()
@@ -94,7 +99,7 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.TASK,
                 true, true, false
             )
-            .addCriterion("amethyst_pickaxe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("amethyst_pickaxe")))
+            .addCriterion("craft_amethyst_pickaxe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("amethyst_pickaxe")))
             .build(advancementOf("amethyst_pickaxe"));
 
         AdvancementHolder topaz = Advancement.Builder.advancement()
@@ -106,7 +111,7 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.GOAL,
                 true, true, false
             )
-            .addCriterion("topaz", UseItemTrigger.TriggerInstance.useItem(ModItems.TOPAZ.asStack()))
+            .addCriterion("use_topaz", UseItemTrigger.TriggerInstance.useItem(ModItems.TOPAZ.asStack()))
             .build(advancementOf("topaz"));
 
         AdvancementHolder liftingAnvil = Advancement.Builder.advancement()
@@ -122,6 +127,43 @@ public class AnvilCraftAdvancement {
             .addCriterion("anvil_on_land", AnvilOnLandTrigger.TriggerInstance.anvilOnLand())
             .build(advancementOf("lifting_anvil"));
 
+        AdvancementHolder dang = Advancement.Builder.advancement()
+            .parent(root)
+            .display(
+                Items.ANVIL,
+                Component.translatable("advancements.anvilcraft.dang.title"),
+                Component.translatable("advancements.anvilcraft.dang.description"),
+                null, AdvancementType.GOAL,
+                true, true, false
+            )
+            .addCriterion("anvil_crafting", AnvilCraftingTrigger.TriggerInstance.anvilCrafting())
+            .build(advancementOf("dang"));
+
+        AdvancementHolder stoneCrusher = Advancement.Builder.advancement()
+            .parent(dang)
+            .display(
+                Items.SAND,
+                Component.translatable("advancements.anvilcraft.stone_crusher.title"),
+                Component.translatable("advancements.anvilcraft.stone_crusher.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("crushing_cobblestone", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.GRAVEL))
+            .addCriterion("crushing_gravel", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.SAND))
+            .build(advancementOf("stone_crusher"));
+
+        AdvancementHolder fossick = Advancement.Builder.advancement()
+            .parent(stoneCrusher)
+            .display(
+                Items.GOLD_NUGGET,
+                Component.translatable("advancements.anvilcraft.fossick.title"),
+                Component.translatable("advancements.anvilcraft.fossick.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("get_gold_nugget", AnvilHandleItemTrigger.TriggerInstance.handleItem(Items.GOLD_NUGGET.getDefaultInstance()))
+            .build(advancementOf("fossick"));
+
         provider.accept(root);
         provider.accept(crabClaw);
         provider.accept(placer);
@@ -130,5 +172,8 @@ public class AnvilCraftAdvancement {
         provider.accept(amethystPickaxe);
         provider.accept(topaz);
         provider.accept(liftingAnvil);
+        provider.accept(dang);
+        provider.accept(stoneCrusher);
+        provider.accept(fossick);
     }
 }

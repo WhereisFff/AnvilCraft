@@ -1,0 +1,31 @@
+{
+  "parent": "anvilcraft:anvilcraft/stone_crusher",
+  "criteria": {
+    "get_gold_nugget": {
+      "conditions": {
+        "item": {
+          "items": "minecraft:gold_nugget"
+        }
+      },
+      "trigger": "anvilcraft:anvil_handle_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.fossick.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:gold_nugget"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.fossick.title"
+    }
+  },
+  "requirements": [
+    [
+      "get_gold_nugget"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

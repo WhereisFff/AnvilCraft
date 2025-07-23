@@ -1,7 +1,7 @@
 {
   "parent": "anvilcraft:anvilcraft/root",
   "criteria": {
-    "geode": {
+    "use_geode": {
       "conditions": {
         "item": {
           "items": "anvilcraft:geode"
@@ -24,7 +24,7 @@
   },
   "requirements": [
     [
-      "geode"
+      "use_geode"
     ]
   ],
   "sends_telemetry_event": true

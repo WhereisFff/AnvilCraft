@@ -1,7 +1,7 @@
 {
   "parent": "anvilcraft:anvilcraft/placer",
   "criteria": {
-    "devourer": {
+    "devour_block": {
       "conditions": {
         "block": {
           "blocks": "anvilcraft:block_devourer"
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "devourer"
+      "devour_block"
     ]
   ],
   "sends_telemetry_event": true

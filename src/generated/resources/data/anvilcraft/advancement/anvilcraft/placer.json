@@ -1,7 +1,7 @@
 {
   "parent": "anvilcraft:anvilcraft/crab_claw",
   "criteria": {
-    "placer": {
+    "place_block": {
       "conditions": {
         "block": {
           "blocks": "anvilcraft:block_placer"
@@ -24,7 +24,7 @@
   },
   "requirements": [
     [
-      "placer"
+      "place_block"
     ]
   ],
   "sends_telemetry_event": true

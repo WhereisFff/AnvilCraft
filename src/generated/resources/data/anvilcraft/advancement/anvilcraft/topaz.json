@@ -1,7 +1,7 @@
 {
   "parent": "anvilcraft:anvilcraft/amethyst_pickaxe",
   "criteria": {
-    "topaz": {
+    "use_topaz": {
       "conditions": {
         "item": {
           "items": "anvilcraft:topaz"
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "topaz"
+      "use_topaz"
     ]
   ],
   "sends_telemetry_event": true

@@ -1,6 +1,9 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilCraftingTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHandleBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHandleItemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnLandTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
@@ -30,6 +33,15 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, AnvilOnLandTrigger> ANVIL_ON_LAND =
         CT.register("anvil_on_land", AnvilOnLandTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilCraftingTrigger> ANVIL_CRAFTING =
+        CT.register("anvil_crafting", AnvilCraftingTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHandleBlockTrigger> ANVIL_HANDLE_BLOCK =
+        CT.register("anvil_handle_block", AnvilHandleBlockTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHandleItemTrigger> ANVIL_HANDLE_ITEM =
+        CT.register("anvil_handle_item", AnvilHandleItemTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);
