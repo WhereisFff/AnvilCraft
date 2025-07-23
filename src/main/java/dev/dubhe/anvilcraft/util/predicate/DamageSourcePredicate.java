@@ -78,7 +78,7 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
                 && this.victimPredicate.get().matches(level, entity.position(), entity) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
-            } else if (this.murderPredicate.isPresent()
+            } else if (this.murderPredicate.isPresent() && source.getEntity() != null
                        && this.murderPredicate.get().matches(level, source.getEntity().position(), source.getEntity()) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
