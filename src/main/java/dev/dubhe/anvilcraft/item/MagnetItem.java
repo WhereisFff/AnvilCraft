@@ -63,11 +63,12 @@ public class MagnetItem extends Item implements IChargerChargeable {
         BlockPos pos = context.getClickedPos();
         BlockState blockState = level.getBlockState(pos);
         if (blockState.isAir()) return InteractionResult.PASS;
-        if (!blockState.getBlock().properties().hasCollision) return InteractionResult.PASS;
+        double maxY = blockState.getCollisionShape(level, pos).max(Direction.Axis.Y, 0.5, 0.5);
+        if (!blockState.getBlock().properties().hasCollision && maxY == 0) return InteractionResult.PASS;
         for (MagnetizedNodeEntity entity : level.getEntities(ModEntities.MAGNETIZED_NODE.get(), new AABB(pos).setMaxY(pos.getY() + 1.1), EntitySelector.NO_SPECTATORS)) {
             if (entity.blockPos.equals(pos)) return InteractionResult.PASS;
         }
-        Vec3 nodePos = pos.getBottomCenter().add(0, blockState.getCollisionShape(level, pos).max(Direction.Axis.Y, 0.5, 0.5), 0);
+        Vec3 nodePos = pos.getBottomCenter().add(0, maxY, 0);
         MagnetizedNodeEntity magnetizedNodeEntity = new MagnetizedNodeEntity(level, nodePos, pos);
         level.addFreshEntity(magnetizedNodeEntity);
         return InteractionResult.sidedSuccess(level.isClientSide());

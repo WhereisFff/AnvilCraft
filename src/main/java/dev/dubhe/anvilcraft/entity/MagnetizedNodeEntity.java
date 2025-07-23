@@ -40,11 +40,14 @@ public class MagnetizedNodeEntity extends Entity {
 
     public MagnetizedNodeEntity(Level level, Vec3 pos, BlockPos blockPos) {
         super(ModEntities.MAGNETIZED_NODE.get(), level);
+        this.setPos(pos);
+        this.xo = pos.x;
+        this.yo = pos.y;
+        this.zo = pos.z;
         this.noPhysics = true;
         this.setInvulnerable(true);
         this.blockPos = blockPos;
         this.blockState = level.getBlockState(blockPos);
-        setPos(pos.x, pos.y, pos.z);
     }
 
     @Override
@@ -53,7 +56,7 @@ public class MagnetizedNodeEntity extends Entity {
             rotatingState.startIfStopped(this.tickCount);
         }
         super.tick();
-        if (!this.level().getBlockState(this.blockPos).is(this.blockState.getBlock())) {
+        if (!this.level().isClientSide && !this.level().getBlockState(this.blockPos).is(this.blockState.getBlock())) {
             this.kill();
         }
         AABB aabb = new AABB(blockPos.getX() - 0.01,
@@ -65,7 +68,10 @@ public class MagnetizedNodeEntity extends Entity {
         );
         level()
                 .getEntities(EntityType.ITEM, aabb, it -> ((AdsorbableItemEntity) it).isAdsorbable())
-                .forEach(entity -> entity.teleportTo(position().x, position().y, position().z));
+                .forEach(entity -> {
+                    entity.teleportTo(position().x, position().y, position().z);
+                    entity.setDeltaMovement(Vec3.ZERO);
+                });
     }
 
     @Override
