@@ -2,13 +2,16 @@ package dev.dubhe.anvilcraft.api.entity.player;
 
 import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.block.state.Orientation;
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.mixin.BlockItemInvoker;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -73,6 +76,12 @@ public interface IAnvilCraftBlockPlacer {
             (soundType.getVolume() + 1.0f) / 2.0f,
             soundType.getPitch() * 0.8f
         );
+        if (level instanceof ServerLevel) {
+            Player player = PlayerUtil.getPlayerWithPos(level, pos);
+            if (player != null) {
+                ModCriterionTriggers.PLACER_PLACE_BLOCK.get().trigger((ServerPlayer) player, level.getBlockState(pos).getBlock());
+            }
+        }
         return InteractionResult.SUCCESS;
     }
 

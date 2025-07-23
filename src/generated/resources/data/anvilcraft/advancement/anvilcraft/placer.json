@@ -1,0 +1,31 @@
+{
+  "parent": "anvilcraft:anvilcraft/crab_claw",
+  "criteria": {
+    "placer": {
+      "conditions": {
+        "block": {
+          "blocks": "anvilcraft:block_placer"
+        }
+      },
+      "trigger": "anvilcraft:placer_place_block"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.placer.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:block_placer"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.placer.title"
+    }
+  },
+  "requirements": [
+    [
+      "placer"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
