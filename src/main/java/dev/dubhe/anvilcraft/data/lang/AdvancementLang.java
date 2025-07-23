@@ -19,5 +19,11 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.devourer.title", "Too many tongue twisters");
         provider.add("advancements.anvilcraft.devourer.description", "Use the block devourer to devour the block devourer");
+
+        provider.add("advancements.anvilcraft.geode.title", "Too many tongue twisters");
+        provider.add("advancements.anvilcraft.geode.description", "Obtain geode, exploring amethyst geode with geode");
+
+        provider.add("advancements.anvilcraft.amethyst_pickaxe.title", "Lucky pickaxe");
+        provider.add("advancements.anvilcraft.amethyst_pickaxe.description", "Craft a amethyst pickaxe");
     }
 }

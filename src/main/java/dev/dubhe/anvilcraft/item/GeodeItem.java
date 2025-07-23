@@ -29,6 +29,7 @@ public class GeodeItem extends Item {
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(
         @NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
+        super.use(level, player, usedHand);
         ItemStack itemStack = player.getItemInHand(usedHand);
         BlockPos pos = player.getOnPos().below();
         player.getCooldowns().addCooldown(itemStack.getItem(), AnvilCraft.config.geodeCooldown * 20);

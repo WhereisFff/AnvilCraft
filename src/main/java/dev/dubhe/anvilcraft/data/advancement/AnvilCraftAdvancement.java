@@ -4,6 +4,7 @@ import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
@@ -13,9 +14,11 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
+import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
 import net.minecraft.network.chat.Component;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.advancementOf;
+import static dev.dubhe.anvilcraft.AnvilCraft.of;
 
 public class AnvilCraftAdvancement {
     public static void init(RegistrateAdvancementProvider provider) {
@@ -68,9 +71,35 @@ public class AnvilCraftAdvancement {
             .addCriterion("devourer", DevourerDevourBlockTrigger.TriggerInstance.devourBlock(ModBlocks.BLOCK_DEVOURER.get()))
             .build(advancementOf("devourer"));
 
+        AdvancementHolder geode = Advancement.Builder.advancement()
+            .parent(root)
+            .display(
+                ModItems.GEODE,
+                Component.translatable("advancements.anvilcraft.geode.title"),
+                Component.translatable("advancements.anvilcraft.geode.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("geode", UseItemTrigger.TriggerInstance.useItem(ModItems.GEODE.asStack()))
+            .build(advancementOf("geode"));
+
+        AdvancementHolder amethystPickaxe = Advancement.Builder.advancement()
+            .parent(geode)
+            .display(
+                ModItems.AMETHYST_PICKAXE,
+                Component.translatable("advancements.anvilcraft.amethyst_pickaxe.title"),
+                Component.translatable("advancements.anvilcraft.amethyst_pickaxe.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("amethyst_pickaxe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("amethyst_pickaxe")))
+            .build(advancementOf("amethyst_pickaxe"));
+
         provider.accept(root);
         provider.accept(crabClaw);
         provider.accept(placer);
         provider.accept(devourer);
+        provider.accept(geode);
+        provider.accept(amethystPickaxe);
     }
 }

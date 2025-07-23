@@ -1,0 +1,31 @@
+{
+  "parent": "anvilcraft:anvilcraft/root",
+  "criteria": {
+    "geode": {
+      "conditions": {
+        "item": {
+          "items": "anvilcraft:geode"
+        }
+      },
+      "trigger": "anvilcraft:use_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.geode.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:geode"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.geode.title"
+    }
+  },
+  "requirements": [
+    [
+      "geode"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
