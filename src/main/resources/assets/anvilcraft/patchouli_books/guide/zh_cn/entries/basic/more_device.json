@@ -28,6 +28,7 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "block_placer",
       "recipe": "anvilcraft:block_placer",
       "text": "$(item)方块放置器$()有红石信号或被铁砧砸时放置方块，方块物品从其背后的容器方块、实体库存、掉落物中取。红石信号使其放置在面前，铁砧根据下落高度n使其间隔n格放置。可以被活塞推拉。"
     },

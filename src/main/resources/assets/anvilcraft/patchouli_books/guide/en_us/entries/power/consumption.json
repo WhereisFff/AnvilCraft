@@ -26,6 +26,7 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "item_collector",
       "recipe": "anvilcraft:item_collector",
       "text": "$(item)物品收集器$()耗电功率随着手动设置的范围和冷却改变，可以收集大范围的掉落物，可以设置过滤。"
     },
