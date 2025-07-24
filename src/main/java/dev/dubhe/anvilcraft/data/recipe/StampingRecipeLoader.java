@@ -24,6 +24,7 @@ public class StampingRecipeLoader {
         stamping(provider, ModItemTags.LEAD_INGOTS, ModBlocks.LEAD_PRESSURE_PLATE);
         stamping(provider, ModItemTags.SILVER_INGOTS, ModBlocks.SILVER_PRESSURE_PLATE);
         stamping(provider, ModItemTags.URANIUM_INGOTS, ModBlocks.URANIUM_PRESSURE_PLATE);
+        stamping(provider, ModItemTags.PLUTONIUM_INGOTS, ModBlocks.PLUTONIUM_PRESSURE_PLATE);
         stamping(provider, ModItemTags.BRONZE_INGOTS, ModBlocks.BRONZE_PRESSURE_PLATE);
         stamping(provider, ModItemTags.BRASS_INGOTS, ModBlocks.BRASS_PRESSURE_PLATE);
         stamping(provider, Items.SNOWBALL, Items.SNOW);

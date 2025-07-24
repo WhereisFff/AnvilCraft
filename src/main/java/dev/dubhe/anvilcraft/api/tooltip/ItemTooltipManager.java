@@ -145,6 +145,7 @@ public class ItemTooltipManager {
         map.put(ModBlocks.TUNGSTEN_PRESSURE_PLATE.asItem(), "Output redstone signal based on the number of fire-resistant entities above, also a tungsten plate");
         map.put(ModBlocks.TITANIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the highest durability of the items above, also a titanium plate");
         map.put(ModBlocks.URANIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the lowest durability of the items above, also a uranium plate");
+        map.put(ModBlocks.PLUTONIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the player in hand item durability, also a plutonium plate");
         map.put(ModBlocks.BRONZE_PRESSURE_PLATE.asItem(), "Output a redstone signal based on player satiety above, also a bronze plate");
         map.put(ModBlocks.BRASS_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the inventory's filling degree of player above, also a brass plate");
     }

@@ -99,6 +99,7 @@ import dev.dubhe.anvilcraft.block.RoyalSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.RubyLaserBlock;
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
+import dev.dubhe.anvilcraft.block.plate.PlayerInHandItemDurabilityPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.sliding.PoweredSlidingRailBlock;
 import dev.dubhe.anvilcraft.block.sliding.SlidingRailBlock;
 import dev.dubhe.anvilcraft.block.sliding.SlidingRailStopBlock;
@@ -4510,6 +4511,12 @@ public class ModBlocks {
             "uranium", URANIUM_BLOCK,
             properties -> new ItemDurabilityPressurePlateBlock(properties, true),
             ModItemTags.URANIUM_INGOTS
+        );
+    public static final BlockEntry<? extends PowerLevelPressurePlateBlock> PLUTONIUM_PRESSURE_PLATE =
+        registerPressurePlate(
+            "plutonium", PLUTONIUM_BLOCK,
+            PlayerInHandItemDurabilityPressurePlateBlock::new,
+            ModItemTags.PLUTONIUM_INGOTS
         );
     public static final BlockEntry<? extends PowerLevelPressurePlateBlock> BRONZE_PRESSURE_PLATE =
         registerPressurePlate(
