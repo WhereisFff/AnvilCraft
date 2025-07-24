@@ -4,7 +4,7 @@
   "icon": "anvilcraft:block_placer",
   "sortnum": 1005,
   "extra_recipe_mappings": {
-    "anvilcraft:crab_claw": 2
+    "anvilcraft:crab_claw": 3
   },
   "pages": [
     {
@@ -14,7 +14,13 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:magnet",
-      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。"
+      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。$(br2)shift+右键，在方块上表面生成$(item)磁化节点$()。"
+    },
+    {
+      "type": "patchouli:entity",
+      "anchor": "trader",
+      "entity": "anvilcraft:magnetized_node",
+      "text": "吸引所有接触到其$(thing)附着方块$()的物品，且不会再次吸引加工后的产物，方便进行$(l:basic/item_processing)物品处理$()"
     },
     {
       "type": "patchouli:crafting",
@@ -35,7 +41,12 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:block_devourer",
-      "text": "$(item)方块吞噬器$()有红石信号或被铁砧砸时破坏前方方块，红石激活范围3x3，铁砧激活根据高度1和2分别为5x5和7x7，掉落物会尝试进入吞噬器后方的方块、实体内，无法进入则原地掉落。世界基质方块如石头、下界岩等只有极少概率掉落。"
+      "text": "$(item)方块吞噬器$()在有红石信号或被铁砧砸时破坏前方方块。$(br2)红石激活时，破坏范围3x3，铁砧激活根据高度1-3分别为5x5，7x7到9x9。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:block_devourer",
+      "text": "掉落物会尝试进入吞噬器后方的方块、实体内，无法进入则原地掉落。$(br2)世界基质方块如石头、下界岩等只有极少概率掉落。$(br2)更廉价的方块破坏器可以使用$(l:basic/block_processing#break)铁砧+切石机$()"
     },
     {
       "type": "patchouli:crafting",

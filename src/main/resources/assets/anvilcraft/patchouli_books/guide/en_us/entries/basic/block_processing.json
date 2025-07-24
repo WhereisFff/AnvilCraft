@@ -118,6 +118,7 @@
     "$(item)Wet Sponge$() → $(item)Sponge$() + $(item)Water$();$(br)$(item)Moss blocks$() → $(item)Moss Carpet$() + $(item)Water$();$(br)$(item)Magma Block$() → $(item)Netherrack$() + $(item)Lava$();$(br)$(item)Snow Block$() → $(item)Ice$() + $(item)Powder Snow$();$(br)$(item)Full Bee Nest$() → $(item)Empty Bee Nest$() + $(item)Honey$()(Specially, when there are three layers of $(item)Honey$() below, if you continue to squeeze the $(item)Full Bee Nest$(), it will be crushed into a $(item)Honey Block$(). The above $(item)Bee Nest$() can be replaced with $(item)Beehive$())",
     {
       "type": "patchouli:multiblock",
+      "anchor": "break",
       "name": "break",
       "multiblock": {
         "mapping": {
