@@ -11,6 +11,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -28,10 +30,14 @@ public class ApplyBonusCountMixin {
                      + "calculateNewCount(Lnet/minecraft/util/RandomSource;II)I"))
     private int calculateMultipleForProvidence(
         ApplyBonusCount.Formula instance, RandomSource random1, int count, int level, Operation<Integer> original,
-        @Local(ordinal = 0, argsOnly = true) ItemStack stack
+        @Local(ordinal = 0, argsOnly = true) LootContext context
     ) {
         int result = original.call(instance, random1, count, level);
-        if (level == 0 || !stack.has(ModComponents.PROVIDENCE) || !this.enchantment.is(ModEnchantmentTags.PROVIDENCE_BONUS)) return result;
+        if (level == 0
+            || !(context.getParamOrNull(LootContextParams.TOOL) instanceof ItemStack stack)
+            || !stack.has(ModComponents.PROVIDENCE)
+            || !this.enchantment.is(ModEnchantmentTags.PROVIDENCE_BONUS)
+        ) return result;
         float random = random1.nextFloat();
         if (random >= 0.25f) return result;
         result += original.call(instance, random1, count, level);
