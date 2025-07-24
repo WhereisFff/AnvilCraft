@@ -142,6 +142,7 @@ public class SlidingBlockEntity extends Entity {
 
     protected boolean checkCanMove() {
         if (!(this.level().getBlockState(this.blockPosition().below()).getBlock() instanceof ISlidingRail)) return false;
+        if (this.getDeltaMovement().equals(Vec3.ZERO)) return false;
         for (Vec3i pos : this.section.getWallsOnSide(this.moveDirection)) {
             BlockPos checking = this.blockPosition().offset(pos);
             if (!this.level().getBlockState(checking).isAir()) return false;
