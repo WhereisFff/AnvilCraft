@@ -28,6 +28,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -305,6 +306,8 @@ public class AnvilEventListener {
      */
     @SubscribeEvent
     public static void onAnvilHurtEntity(@NotNull AnvilHurtEntityEvent event) {
+        Level level = event.getLevel();
+        BlockPos pos1 = event.getPos();
         Entity hurtedEntity = event.getHurtedEntity();
         if (!(hurtedEntity instanceof LivingEntity entity)) return;
         if (!(hurtedEntity.level() instanceof ServerLevel serverLevel)) return;
@@ -335,5 +338,20 @@ public class AnvilEventListener {
         dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
+        if (!level.isClientSide) {
+            Player player = PlayerUtil.getPlayerWithPos(level, pos1, 5);
+            if (player != null) {
+                ModCriterionTriggers.ANVIL_LOOTING.get().trigger((ServerPlayer) player);
+            }
+
+            if (entity instanceof IronGolem) {
+                if (event.getEntity().fallDistance > 20) {
+                    Player player1 = PlayerUtil.getPlayerWithPos(level, pos1, 5);
+                    if (player != null) {
+                        ModCriterionTriggers.ANVIL_HURT_IRON_GOLEM.get().trigger((ServerPlayer) player1);
+                    }
+                }
+            }
+        }
     }
 }

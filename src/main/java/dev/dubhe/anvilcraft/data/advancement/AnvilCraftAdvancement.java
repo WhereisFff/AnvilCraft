@@ -5,10 +5,14 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilCraftingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHandleBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHandleItemTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHurtIronGolemTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnLandTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.RedstoneMilkerTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.RepairIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
@@ -189,6 +193,45 @@ public class AnvilCraftAdvancement {
             .addCriterion("blue_ice", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.BLUE_ICE))
             .build(advancementOf("four281"));
 
+
+
+        AdvancementHolder redstoneMilker = Advancement.Builder.advancement()
+            .parent(root)
+            .display(
+                Items.DISPENSER,
+                Component.translatable("advancements.anvilcraft.redstone_milker.title"),
+                Component.translatable("advancements.anvilcraft.redstone_milker.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("milk", RedstoneMilkerTrigger.TriggerInstance.milk())
+            .build(advancementOf("redstone_milker"));
+
+        AdvancementHolder realLooting = Advancement.Builder.advancement()
+            .parent(redstoneMilker)
+            .display(
+                Items.DISPENSER,
+                Component.translatable("advancements.anvilcraft.real_looting.title"),
+                Component.translatable("advancements.anvilcraft.real_looting.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("anvil_looting", AnvilLootingTrigger.TriggerInstance.looting())
+            .build(advancementOf("real_looting"));
+
+        AdvancementHolder ironMeterReversal = Advancement.Builder.advancement()
+            .parent(realLooting)
+            .display(
+                Items.IRON_BLOCK,
+                Component.translatable("advancements.anvilcraft.iron_meter_reversal.title"),
+                Component.translatable("advancements.anvilcraft.iron_meter_reversal.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("anvil_hurt_iron_golem", AnvilHurtIronGolemTrigger.TriggerInstance.hurt())
+            .addCriterion("repair_iron_golem", RepairIronGolemTrigger.TriggerInstance.repair())
+            .build(advancementOf("iron_meter_reversal"));
+
         provider.accept(root);
         provider.accept(crabClaw);
         provider.accept(placer);
@@ -202,5 +245,9 @@ public class AnvilCraftAdvancement {
         provider.accept(fossick);
         provider.accept(iceMaker);
         provider.accept(four281);
+
+        provider.accept(redstoneMilker);
+        provider.accept(realLooting);
+        provider.accept(ironMeterReversal);
     }
 }

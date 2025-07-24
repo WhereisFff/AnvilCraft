@@ -1,0 +1,26 @@
+{
+  "parent": "anvilcraft:anvilcraft/root",
+  "criteria": {
+    "milk": {
+      "trigger": "anvilcraft:redstone_milker"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.redstone_milker.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:dispenser"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.redstone_milker.title"
+    }
+  },
+  "requirements": [
+    [
+      "milk"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

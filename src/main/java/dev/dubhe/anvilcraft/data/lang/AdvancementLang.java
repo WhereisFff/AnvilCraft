@@ -46,5 +46,15 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.four281.title", "4 to 81");
         provider.add("advancements.anvilcraft.four281.description", "Use an anvil to smash two pieces of ice together to create packed ice, and then smash the two pieces of packed ice together to create blue ice");
+
+
+        provider.add("advancements.anvilcraft.redstone_milker.title", "Redstone milker");
+        provider.add("advancements.anvilcraft.redstone_milker.description", "Milk cows with a dispenser");
+
+        provider.add("advancements.anvilcraft.real_looting.title", "The real looting");
+        provider.add("advancements.anvilcraft.real_looting.description", "Use an anvil to smash mob and obtain more drop item");
+
+        provider.add("advancements.anvilcraft.iron_meter_reversal.title", "Iron meter reversal");
+        provider.add("advancements.anvilcraft.iron_meter_reversal.description", "Use an anvil to smash the iron golem from a height of 20 or above, and repair the iron golem with an iron ingot");
     }
 }
