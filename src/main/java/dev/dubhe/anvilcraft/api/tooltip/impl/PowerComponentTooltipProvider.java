@@ -6,8 +6,11 @@ import dev.dubhe.anvilcraft.api.power.PowerComponentInfo;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
+import dev.dubhe.anvilcraft.util.UnitUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -28,6 +31,11 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
 
     @Override
     public List<Component> tooltip(BlockEntity e) {
+        boolean original = false;
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null && player.isShiftKeyDown()) {
+            original = true;
+        }
         if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
         boolean overloaded = false;
         BlockPos pos;
@@ -65,7 +73,7 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
             lines.add(
                 Component.translatable(
                     "tooltip.anvilcraft.grid_information.output_power",
-                    componentInfo.produces()
+                    UnitUtil.electricityUnit(componentInfo.produces(), original)
                 ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY))
             );
         } else if (type == PowerComponentType.CONSUMER) {
@@ -76,17 +84,19 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
             lines.add(
                 Component.translatable(
                     "tooltip.anvilcraft.grid_information.input_power",
-                    componentInfo.consumes()
+                    UnitUtil.electricityUnit(componentInfo.consumes(), original)
                 ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         }
 
         List<Component> tooltipLines = List.of(
             Component.translatable("tooltip.anvilcraft.grid_information.title")
                 .setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE)),
-            Component.translatable("tooltip.anvilcraft.grid_information.total_consumed", grid.getConsume())
-                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)),
-            Component.translatable("tooltip.anvilcraft.grid_information.total_generated", grid.getGenerate())
-                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+            Component.translatable("tooltip.anvilcraft.grid_information.total_consumed",
+                UnitUtil.electricityUnit(grid.getConsume(), original)
+            ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)),
+            Component.translatable("tooltip.anvilcraft.grid_information.total_generated",
+                    UnitUtil.electricityUnit(grid.getGenerate(), original)
+            ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         lines.addAll(tooltipLines);
         return lines;
     }
