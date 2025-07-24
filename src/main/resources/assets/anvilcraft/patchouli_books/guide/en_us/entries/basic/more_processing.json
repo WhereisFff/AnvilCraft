@@ -6,14 +6,16 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Let $(item)Anvil$() fall on the mob's feet, on the spawner or on the redstone block causes the change. The following pages of this entry are introduced in sequence."
+      "text": "Let $(item)Anvil$() fall on the mob's feet, on the spawner or on the redstone block causes the change. The following pages of this entry are introduced in sequence.$(br)-$(l:basic/more_processing#loot)Get more mob loot$()$(br)-$(l:basic/more_processing#spawner)Spawner: Forced Spawn$()$(br)-$(l:basic/more_processing#EMP)Redstone Block: Redstone EMP$()$(br)-$(l:basic/more_processing#trader)游商转化$()$(br)-$(l:basic/more_processing#villager)村民重置$()$(br)-$(l:basic/more_processing#vault)宝库重置$()"
     },
     {
       "type": "patchouli:text",
-      "text": "Get more mob loot:$(br)When mobs are hit and damaged by an anvil, they will drop items according to the mob loot table. The mobs must be taken enough damage at once: 40% HP→1x drops; 60% HP→2x drops; 80% HP→3x drops.$(br)This method only yields normal mob drops, and does not produce drops such as blaze rod that require the player to manually kill.$(br)There are mobs that can regenerate health on their own or with the help of external forces, which you can use to create drop farms that don't kill mobs."
+      "anchor": "loot",
+      "text": "Get more mob loot:$(br)When mobs are hit and damaged by an anvil, they will drop items according to the mob loot table. The mobs must be taken enough damage at once: 40% HP→1x drops; 60% HP→2x drops; 80% HP→3x drops.$(br)Using the $(item)Embers Anvil$() can produce drops such as flame sticks that require manual killing by players.$(br)There are mobs that can regenerate health on their own or with the help of external forces, which you can use to create drop farms that don't kill mobs."
     },
     {
       "type": "patchouli:multiblock",
+      "anchor": "spawner",
       "name": "Spawner: Forced Spawn",
       "multiblock": {
         "mapping": {
@@ -36,6 +38,7 @@
     },
     {
       "type": "patchouli:multiblock",
+      "anchor": "EMP",
       "name": "Redstone Block: Redstone EMP",
       "multiblock": {
         "mapping": {
@@ -55,6 +58,39 @@
     {
       "type": "patchouli:text",
       "text": "When an anvil hits a redstone block, the redstone block torches within a distance of r on the same layer as the redstone block will be extinguished by 1gt. An iron trapdoor clinging to redstone block can prevent EMP from spreading in this direction.$(br)R is calculated: the distance is proportional to the drop height, the drop height of 1 block spreads 6 blocks, and the limit distance is 24 blocks."
+    },
+    {
+      "type": "patchouli:entity",
+      "anchor": "trader",
+      "entity": "minecraft:wandering_trader",
+      "title": "转化流浪商人",
+      "text": "流浪商人被铁砧砸击后(不可砸死)会被转化成村民。$(br)有$(thing)15%$()的概率变为傻子。$(br)另有$(thing)10%$()的概率保留之前的交易(职业变为大师-农民)"
+    },
+    {
+      "type": "patchouli:entity",
+      "anchor": "villager",
+      "entity": "minecraft:villager",
+      "title": "重置村民",
+      "text": "村民被铁砧砸击后(不可砸死)会被重置。$(br)但是有$(thing)20%$()的概率变为傻子。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "anchor": "vault",
+      "name": "重置宝库",
+      "multiblock": {
+        "mapping": {
+          "A": "minecraft:anvil",
+          "L": "anvilcraft:lead_block",
+          "0": "minecraft:vault"
+        },
+        "pattern": [
+          ["A"],
+          [" "],
+          ["L"],
+          ["0"]
+        ]
+      },
+      "text": "使用$(item)铅块$()让宝库忘记自己曾被打开$(br)可配合$(l:smithing/jewelcrafting_table)钥匙再生$()项目"
     }
   ]
 }
