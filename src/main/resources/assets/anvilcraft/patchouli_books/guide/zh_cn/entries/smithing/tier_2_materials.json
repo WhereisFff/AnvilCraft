@@ -50,7 +50,7 @@
       "type": "patchouli:spotlight",
       "anchor": "ember_metal",
       "item": "anvilcraft:ember_metal_ingot",
-      "text": "$(item)余烬金属$()是一种炽热无比的金属。$(br)使用任意$(thing)高温的下界合金块$()进行时移来制作。加入1-3个$(item)地核碎片$()可以增加对应量的产出。"
+      "text": "$(item)余烬金属$()是一种炽热无比的金属。$(br)使用任意$(thing)高温的下界合金块$()进行时移来制作。加入1-3个$(item)地核碎片$()可以增加对应量的产出。$(br)$(l:advanced/oil)点我$()查看如何获得$(item)燃烧的炼药锅$()"
     },
     {
       "type": "anvilcraft:time_warp",
@@ -65,7 +65,7 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:ember_metal_block",
-      "recipe2": "anvilcraft:ember_metal_nugget"
+      "recipe2": "anvilcraft:ember_metal_nugget_from_ingot"
     },
     {
       "type": "patchouli:spotlight",

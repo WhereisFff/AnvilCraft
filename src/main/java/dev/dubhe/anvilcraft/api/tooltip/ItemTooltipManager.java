@@ -32,6 +32,8 @@ public class ItemTooltipManager {
         map.put(ModItems.GEODE.get(), "Find the surrounding Amethyst Geode when using it");
         map.put(ModItems.ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
         map.put(ModItems.ROYAL_ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
+        map.put(ModItems.EMBER_ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
+        map.put(ModItems.TRANSCENDENCE_ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
         map.put(ModBlocks.CURSED_GOLD_BLOCK.asItem(), "Carriers will be cursed");
         map.put(ModItems.CURSED_GOLD_INGOT.get(), "Carriers will be cursed");
         map.put(ModItems.CURSED_GOLD_NUGGET.get(), "Carriers will be cursed");
@@ -71,7 +73,7 @@ public class ItemTooltipManager {
         map.put(ModBlocks.CUT_ROYAL_STEEL_STAIRS.asItem(), "Explosion proof");
         map.put(ModBlocks.CUT_ROYAL_STEEL_SLAB.asItem(), "Explosion proof");
         map.put(ModBlocks.TEMPERING_GLASS.asItem(), "Explosion proof, No tools required on collect");
-        map.put(ModBlocks.REMOTE_TRANSMISSION_POLE.asItem(), "Build a power grid with a transmission length of 8");
+        map.put(ModBlocks.REMOTE_TRANSMISSION_POLE.asItem(), "Build a power grid with a transmission length of 16");
         map.put(ModBlocks.HEAVY_IRON_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.POLISHED_HEAVY_IRON_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.POLISHED_HEAVY_IRON_SLAB.asItem(), "Explosion proof");
@@ -177,6 +179,23 @@ public class ItemTooltipManager {
                         Component.translatable("enchantment.minecraft.loyalty"),
                         Component.translatable("enchantment.minecraft.riptide"),
                         Component.translatable("tooltip.anvilcraft.property.merciless.curse")
+                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+            }
+        }
+        if (stack.has(ModComponents.ETERNAL)) {
+            propertyTooltip("eternal", tooltip);
+        }
+        if (stack.has(ModComponents.PROVIDENCE)) {
+            if (!Screen.hasShiftDown()) {
+                propertyTooltip("providence", tooltip, Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
+            } else {
+                propertyTooltip("providence.shifting", tooltip, ComponentUtils.formatList(
+                    List.of(
+                        Component.translatable("enchantment.minecraft.fortune"),
+                        Component.translatable("enchantment.minecraft.looting"),
+                        Component.translatable("enchantment.anvilcraft.beheading"),
+                        Component.translatable("enchantment.minecraft.thorns"),
+                        Component.translatable("enchantment.minecraft.luck_of_the_sea")
                     ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
             }
         }

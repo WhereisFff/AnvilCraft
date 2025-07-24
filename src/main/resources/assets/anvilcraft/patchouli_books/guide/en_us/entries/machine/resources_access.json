@@ -2,6 +2,7 @@
     "name": "资源获取",
     "category": "anvilcraft:machine_example",
     "icon": "minecraft:grass_block",
+	"sortnum": 5001,
     "pages": [
         {
 			"type": "patchouli:text",
@@ -214,7 +215,7 @@
         },
 		{
             "type": "patchouli:text",
-            "text": "激光可以用来挖矿？这真的很神奇。想要了解如何使用$(thing)激光挖矿$()，前面的章节有详细的解释。想要用$(thing)激光挖矿$()，你需要先搭建一台$(n)$(thing)激光挖矿机$()。$(br2)考虑到这台机器$(5)较高的电力消耗$()和$(5)大量的红宝石$()需求，在建造之前，你至少需要先完成$(l:machine/example_automation)自动化$()章节中$(l:machine/example_automation#自动宝石转化 1)宝石转化机$()和$(l:machine/example_electricity_generation)发电$()章节中$(l:machine/example_electricity_generation#发电量升级 2)幻灵堆叠发电机$()的搭建。$(br2)不过不用担心，这台机器相比起那两个可谓是十分简单。",
+            "text": "激光可以用来挖矿？这真的很神奇。想要了解如何使用$(thing)激光挖矿$()，前面的章节有详细的解释。想要用$(thing)激光挖矿$()，你需要先搭建一台$(n)$(thing)激光挖矿机$()。$(br2)考虑到这台机器$(5)较高的电力消耗$()和$(5)大量的红宝石$()需求，在建造之前，你至少需要先完成$(l:machine/automation)自动化$()章节中$(l:machine/automation#自动宝石转化 1)宝石转化机$()和$(l:machine/electricity_generation)发电$()章节中$(l:machine/electricity_generation#发电量升级 2)幻灵堆叠发电机$()的搭建。$(br2)不过不用担心，这台机器相比起那两个可谓是十分简单。",
 			"title": "激光挖矿"
         },
 		{
@@ -259,7 +260,7 @@
         },
 		{
             "type": "patchouli:text",
-            "text": "$(br2)想要取之不尽用之不竭的木材吗？如果你已经看过$(l:machine/example_automation)自动化$()章节最后的$(l:machine/example_automation#原木钻石机)原木钻石机$()，你一定知道了在铁砧工艺中木材可以加工成钻石。$(br2)建造这样一台$(thing)巨型铁砧树场$()，每小时可以产出超过30万块云杉原木，加工成钻石有上千个。",
+            "text": "$(br2)想要取之不尽用之不竭的木材吗？如果你已经看过$(l:machine/automation)自动化$()章节最后的$(l:machine/automation#原木钻石机)原木钻石机$()，你一定知道了在铁砧工艺中木材可以加工成钻石。$(br2)建造这样一台$(thing)巨型铁砧树场$()，每小时可以产出超过30万块云杉原木，加工成钻石有上千个。",
 			"title": "获得木材"
         },
 		{	

@@ -30,6 +30,7 @@
     },
     {
       "type": "patchouli:multiblock",
+      "anchor": "crush",
       "name": "Crush",
       "multiblock": {
         "mapping": {
@@ -47,7 +48,7 @@
       "enable_visualize": "false",
       "text": "The list on the right gives more examples of where such transformation can occur, some of which can occur consecutively."
     },
-    "$(item)Cobblestone$() → $(item)Gravel$() → $(item)Sand$();$(br)$(item)Polished Granite$() → $(item)Granite$() → $(item)Red Sand$();$(br)$(item)Polished Andesite$() → $(item)Andesite$() → $(item)Cinerite$();$(br)$(item)Polished Diorite$() → $(item)Diorite$() → $(item)Quartz Sand$();$(br)$(thing)Blocks with cracked variants$() → $(thing)Their cracked variants$();$(br)$(item)Netherrack$() → $(item)Nether Dust$();$(br)$(item)End Stone$() → $(item)End Dust$();$(br)$(item)Soul Soil$() → $(item)Soul Sand$();$(br)$(item)Deepslate$() → $(item)Deepslate Chips$();$(br)$(item)Blackstone$() → $(item)Black Sand$()",
+    "$(item)Cobblestone$() → $(item)Gravel$() → $(item)Sand$();$(br)$(item)Polished Granite$() → $(item)Granite$() → $(item)Red Sand$();$(br)$(item)Polished Andesite$() → $(item)Andesite$() → $(item)Cinerite$();$(br)$(item)Polished Diorite$() → $(item)Diorite$() → $(item)Quartz Sand$();$(br)$(thing)Blocks with cracked variants$() → $(thing)Their cracked variants$();$(br)$(item)Netherrack$() → $(item)Nether Dust$();$(br)$(item)End Stone$() → $(item)End Dust$();$(br)$(item)Soul Soil$() → $(item)Soul Sand$();",
     {
       "type": "patchouli:multiblock",
       "name": "Press",

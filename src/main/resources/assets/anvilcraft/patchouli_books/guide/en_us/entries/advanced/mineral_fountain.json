@@ -4,6 +4,15 @@
   "icon": "anvilcraft:mineral_fountain",
   "sortnum": 4005,
   "entry_color": "004400",
+  "extra_recipe_mappings": {
+    "anvilcraft:mineral_fountain": 0,
+    "anvilcraft:earth_core_shard_ore": 8,
+    "anvilcraft:earth_core_shard": 9,
+    "anvilcraft:earth_core_shard_block": 9,
+    "anvilcraft:void_stone": 10,
+    "anvilcraft:void_matter": 11,
+    "anvilcraft:void_block": 12
+  },
   "pages": [
     {
       "type": "patchouli:spotlight",
@@ -87,7 +96,7 @@
     {
       "type": "patchouli:spotlight",
       "anchor": "earth_core_shard",
-      "item": "anvilcraft:earth_core_shard",
+      "item": ["anvilcraft:earth_core_shard","anvilcraft:earth_core_shard_block"],
       "text": "$(item)地核碎片$()及其块状物、矿石防火，不受$(item)熔岩$()和$(item)火焰$()损害$(br)可参与$(l:smithing/tier_2_materials#ember_metal)余烬金属锭$()的制作"
     },
     {
