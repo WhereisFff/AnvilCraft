@@ -1,9 +1,10 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.event.PistonMoveBlockListener;
+import dev.dubhe.anvilcraft.api.sliding.SlidingBlockStructureResolver;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
@@ -30,6 +31,8 @@ abstract class PistonStructureResolverMixin {
     @Final
     private Level level;
 
+    @Shadow @Final private Direction pushDirection;
+
     @Inject(method = "resolve", at = @At("RETURN"))
     private void onPistonResolve(CallbackInfoReturnable<Boolean> cir) {
         if (level.isClientSide()) {
@@ -42,7 +45,7 @@ abstract class PistonStructureResolverMixin {
 
     @ModifyConstant(method = "addBlockLine", constant = @Constant(intValue = 12, ordinal = 0))
     private int updateMaxPushDepth(int constant) {
-        DetectorSlidingRailBlockEntity.MAX_PUSH_DEPTH = constant;
+        SlidingBlockStructureResolver.MAX_PUSH_DEPTH = constant;
         return constant;
     }
 
@@ -53,8 +56,9 @@ abstract class PistonStructureResolverMixin {
             target = "Lnet/minecraft/world/level/block/state/BlockState;canStickTo(Lnet/minecraft/world/level/block/state/BlockState;)Z",
             ordinal = 0))
     private boolean useEnhancedCheck00(
-        BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos pos, @Local(ordinal = 1) BlockPos otherPos
+        BlockState instance, BlockState state, @Local(ordinal = 1) BlockPos otherPos
     ) {
+        BlockPos pos = otherPos.relative(this.pushDirection);
         return instance.canStickTo(pos, otherPos, state);
     }
 
@@ -65,8 +69,9 @@ abstract class PistonStructureResolverMixin {
             target = "Lnet/minecraft/world/level/block/state/BlockState;canStickTo(Lnet/minecraft/world/level/block/state/BlockState;)Z",
             ordinal = 1))
     private boolean useEnhancedCheck01(
-        BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos otherPos, @Local(ordinal = 1) BlockPos pos
+        BlockState instance, BlockState state, @Local(ordinal = 1) BlockPos pos
     ) {
+        BlockPos otherPos = pos.relative(this.pushDirection);
         return instance.canStickTo(pos, otherPos, state);
     }
 

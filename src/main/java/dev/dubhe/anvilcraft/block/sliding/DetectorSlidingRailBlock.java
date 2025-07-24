@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -36,7 +36,7 @@ import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, EntityBlock {
+public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, IMoveableEntityBlock {
     public static final VoxelShape AABB_X = Stream.of(
         Block.box(0, 0, 0, 16, 6, 16),
         Block.box(0, 6, 11, 16, 16, 16),
@@ -98,8 +98,17 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     }
 
     @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        if (state.getValue(POWERED) && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above())).isEmpty()) {
+            level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_CLIENTS);
+            level.updateNeighbourForOutputSignal(pos, this);
+        }
+        super.tick(state, level, pos, random);
+    }
+
+    @Override
     protected boolean isSignalSource(BlockState state) {
-        return true;
+        return state.getValue(POWERED);
     }
 
     @Override
@@ -111,6 +120,11 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     @Override
     protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         return this.getSignal(state, level, pos, direction);
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return state.getValue(POWERED);
     }
 
     @Override
@@ -141,8 +155,9 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     public void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity) {
         level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get())
             .ifPresent(detector -> detector.updatePower(entity.getBlockCount()));
-        level.setBlocksDirty(pos, state, state.setValue(POWERED, true));
+        level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_CLIENTS);
         level.updateNeighbourForOutputSignal(pos, this);
+        level.scheduleTick(pos, this, 3);
     }
 
     @Override

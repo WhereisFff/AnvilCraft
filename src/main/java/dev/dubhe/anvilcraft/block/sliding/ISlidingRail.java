@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.injection.block.IBlockExtension;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
+import dev.dubhe.anvilcraft.api.sliding.SlidingBlockStructureResolver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,7 +13,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
@@ -94,7 +94,7 @@ public interface ISlidingRail extends IBlockExtension {
     }
 
     static boolean moveBlocks(Level level, BlockPos pos, Direction facing) {
-        PistonStructureResolver resolver = new PistonStructureResolver(level, pos.relative(facing.getOpposite()), facing, true);
+        SlidingBlockStructureResolver resolver = new SlidingBlockStructureResolver(level, pos, facing, true);
         if (!resolver.resolve()) return false;
         List<Triple<BlockPos, BlockState, Optional<CompoundTag>>> toPushes = new ArrayList<>();
         List<BlockPos> toPushPoses = resolver.getToPush();

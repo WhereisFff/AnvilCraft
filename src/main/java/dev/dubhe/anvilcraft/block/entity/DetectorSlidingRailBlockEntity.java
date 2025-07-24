@@ -1,14 +1,14 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 
+import static dev.dubhe.anvilcraft.api.sliding.SlidingBlockStructureResolver.MAX_PUSH_DEPTH;
+
 public class DetectorSlidingRailBlockEntity extends BlockEntity {
-    public static int MAX_PUSH_DEPTH = 12;
     @Getter
     private int power = 0;
 

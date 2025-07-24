@@ -115,6 +115,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         BlockPos fromPos = pos.above();
         if (level.isEmptyBlock(fromPos)) return;
         PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
+        ppi.extending = true;
         if (!MOVING_PISTON_MAP.containsKey(pos)) {
             MOVING_PISTON_MAP.put(pos, ppi);
         }
@@ -140,16 +141,6 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     }
 
     @Override
-    public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
-        if (entity.getType() != EntityType.ITEM) return;
-        if (!state.getValue(POWERED)) {
-            ISlidingRail.absorbEntity(pos, entity);
-        } else {
-            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.5));
-        }
-    }
-
-    @Override
     public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
         BlockState bs = level.getBlockState(blockPos);
         level.setBlockAndUpdate(blockPos, bs.cycle(FACING));
@@ -170,7 +161,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     public void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity) {
         if (entity.getStartPos().equals(pos.above())) return;
         if (!state.getValue(POWERED)) return;
-        level.setBlocksDirty(pos, state, state.setValue(FACING, entity.getMoveDirection()));
+        level.setBlockAndUpdate(pos, state.setValue(FACING, entity.getMoveDirection()));
         ISlidingRail.stopSlidingBlock(entity);
         level.scheduleTick(pos, this, 4);
         BlockPos blockpos = pos.above();
