@@ -12,6 +12,7 @@
     "description": {
       "translate": "advancements.anvilcraft.iron_meter_reversal.description"
     },
+    "frame": "goal",
     "icon": {
       "count": 1,
       "id": "minecraft:iron_block"

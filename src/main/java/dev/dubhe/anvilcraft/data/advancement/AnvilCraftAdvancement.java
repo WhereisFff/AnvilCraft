@@ -225,7 +225,7 @@ public class AnvilCraftAdvancement {
                 Items.IRON_BLOCK,
                 Component.translatable("advancements.anvilcraft.iron_meter_reversal.title"),
                 Component.translatable("advancements.anvilcraft.iron_meter_reversal.description"),
-                null, AdvancementType.TASK,
+                null, AdvancementType.GOAL,
                 true, true, false
             )
             .addCriterion("anvil_hurt_iron_golem", AnvilHurtIronGolemTrigger.TriggerInstance.hurt())
