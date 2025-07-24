@@ -14,6 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joml.Vector3f;
@@ -100,6 +101,9 @@ public interface ISlidingRail extends IBlockExtension {
 
         for (BlockPos toPushPos : toPushPoses) {
             BlockState toPushState = level.getBlockState(toPushPos);
+            if (toPushState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                toPushState = toPushState.setValue(BlockStateProperties.WATERLOGGED, false);
+            }
             Optional<CompoundTag> toPushEntityData = Optional.ofNullable(level.getBlockEntity(toPushPos))
                 .map(entity -> entity.saveCustomOnly(level.registryAccess()));
             toPushes.add(Triple.of(toPushPos, toPushState, toPushEntityData));
@@ -107,16 +111,26 @@ public interface ISlidingRail extends IBlockExtension {
 
         List<BlockPos> toDestroys = resolver.getToDestroy();
 
-        for (int j = toDestroys.size() - 1; j >= 0; j--) {
-            BlockPos destroyingPos = toDestroys.get(j);
+        for (int i = toDestroys.size() - 1; i >= 0; i--) {
+            BlockPos destroyingPos = toDestroys.get(i);
             BlockState destroyingState = level.getBlockState(destroyingPos);
             BlockEntity destroyingEntity = destroyingState.hasBlockEntity() ? level.getBlockEntity(destroyingPos) : null;
             Block.dropResources(destroyingState, level, destroyingPos, destroyingEntity);
             destroyingState.onDestroyedByPushReaction(level, destroyingPos, facing, level.getFluidState(destroyingPos));
         }
 
+        BlockState air = Blocks.AIR.defaultBlockState();
+
         for (BlockPos toPushPos : toPushPoses) {
-            level.setBlock(toPushPos, Blocks.AIR.defaultBlockState(), 0b1010010);
+            level.setBlock(toPushPos, air, 0b1010010);
+        }
+
+        for (var toPushEntry : toPushes) {
+            BlockPos toPushPos = toPushEntry.getLeft();
+            BlockState toPushState = toPushEntry.getMiddle();
+            toPushState.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
+            air.updateNeighbourShapes(level, toPushPos, 0b0000010);
+            air.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
         }
 
         SlidingBlockEntity.slid(level, pos, facing, toPushes);

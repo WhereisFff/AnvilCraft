@@ -106,16 +106,12 @@ public class SlidingBlockEntity extends Entity {
             }
 
             if (this.level().isOutsideBuildHeight(pos)) {
-                this.section.setBlock(this.level(), this.blockPosition(), this);
+                this.stop();
             } else if (this.checkCanMove()) {
                 this.setDeltaMovement(Vec3.ZERO.relative(this.moveDirection, DEFAULT_MOVEMENT));
             } else if (!this.level().isClientSide && !this.isRemoved()) {
-                BlockState state = this.level().getBlockState(pos);
-                this.setDeltaMovement(Vec3.ZERO.multiply(Vec3.ZERO.relative(this.moveDirection, -0.5)));
-                if (!state.is(Blocks.MOVING_PISTON)) {
-                    this.section.setBlock(this.level(), this.blockPosition(), this);
-                }
-                this.discard();
+                this.setDeltaMovement(Vec3.ZERO);
+                this.stop();
             }
             this.move(MoverType.SELF, this.getDeltaMovement());
         }
