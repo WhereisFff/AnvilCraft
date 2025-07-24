@@ -56,11 +56,10 @@ public class SlidingBlockStructureResolver {
         } else if (!this.addBlockLine(this.startPos, this.pushDirection)) {
             return false;
         } else {
-            List<BlockPos> push = this.toPush;
             // 若替换为增强的for循环，则会报ConcurrentModificationException错误
             //noinspection ForLoopReplaceableByForEach
-            for (int i = 0, pushSize = push.size(); i < pushSize; i++) {
-                BlockPos blockpos = push.get(i);
+            for (int i = 0; i < this.toPush.size(); i++) {
+                BlockPos blockpos = this.toPush.get(i);
                 if (this.level.getBlockState(blockpos).isStickyBlock() && !this.addBranchingBlocks(blockpos)) return false;
             }
             return true;
