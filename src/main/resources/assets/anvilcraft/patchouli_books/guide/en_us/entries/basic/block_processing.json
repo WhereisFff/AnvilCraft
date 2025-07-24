@@ -4,7 +4,7 @@
   "icon": "minecraft:stone",
   "sortnum": 1001,
   "pages": [
-    "Let $(item)anvil$() fall on the block to process the block. A single block, multiple blocks, a block and a cauldron, a block and a stonecutter will all trigger different effects. The flowing pages of this entry will introduce relevant content in sequence. $(br)Before that, understanding how magnets help anvil machining will make it easier for you to get started.",
+    "Let $(item)anvil$() fall on the block to process the block. The flowing pages of this entry will introduce relevant content in sequence: $(br)$(l:basic/block_processing#crush)Crush$()$(br)$(l:basic/block_processing#press)Press$()$(br)$(l:basic/block_processing#daub)Daub$()$(br)$(l:basic/block_processing#squeeze)Squeeze$()$(br)$(l:basic/block_processing#break)Break$()$(br)Before that, understanding how magnets help anvil machining will make it easier for you to get started.",
     {
       "type": "patchouli:multiblock",
       "name": "Magnets Control Anvils",
@@ -51,6 +51,7 @@
     "$(item)Cobblestone$() → $(item)Gravel$() → $(item)Sand$();$(br)$(item)Polished Granite$() → $(item)Granite$() → $(item)Red Sand$();$(br)$(item)Polished Andesite$() → $(item)Andesite$() → $(item)Cinerite$();$(br)$(item)Polished Diorite$() → $(item)Diorite$() → $(item)Quartz Sand$();$(br)$(thing)Blocks with cracked variants$() → $(thing)Their cracked variants$();$(br)$(item)Netherrack$() → $(item)Nether Dust$();$(br)$(item)End Stone$() → $(item)End Dust$();$(br)$(item)Soul Soil$() → $(item)Soul Sand$();",
     {
       "type": "patchouli:multiblock",
+      "anchor": "press",
       "name": "Press",
       "multiblock": {
         "mapping": {
@@ -73,6 +74,7 @@
     "$(item)Moss Block$() + $(item)Dirt$() → $(item)Grass Block$();$(br)$(thing)Any Leaves$() + $(item)Dirt$() → $(item)Podzol$();$(br)$(thing)Any Mushroom Block$() + $(item)Dirt$() → $(item)Mycelium$();$(br)$(item)Nether Wart Block$() + $(item)Netherrack$() → $(item)Crimson Nylium$();$(br)$(item)Warped Wart Block$() + $(item)Netherrack$() → $(item)Warped Nylium$();$(br)$(item)Stone$() + $(item)Stone$() → $(item)Deepslate$();$(br)$(item)Ice$() + $(item)Ice$() → $(item)Packed Ice$();$(br)$(item)Packed Ice$() + $(item)Packed Ice$() → $(item)Blue Ice$();$(br)$(item)Basalt$() + $(item)Basalt$() → $(item)Blackstone$()",
     {
       "type": "patchouli:multiblock",
+      "anchor": "daub",
       "name": "Daub",
       "multiblock": {
         "mapping": {
@@ -95,6 +97,7 @@
     "$(item)Moss Block$() + $(item)Cobblestone$() → $(item)Mossy Stone$();$(br)$(item)Moss Block$() + $(item)Stone Bricks$() → $(item)Moss Stone Bricks$();$(br)$(item)Honeycomb Block$() + $(thing)Any Copper Block$() → $(thing)Their Waxed variants$()",
     {
       "type": "patchouli:multiblock",
+      "anchor": "squeeze",
       "name": "Squeeze",
       "multiblock": {
         "mapping": {
@@ -137,6 +140,6 @@
       "enable_visualize": "false",
       "text": "Block becomes dropped item. Detailed instructions on the right."
     },
-    "When use normal $(item)Anvil$() to trigger this, the block destruction will follows the drop table of TNT destruction, i.e. it has no $(thing)Fortune$() or $(thing)Silk Touch$() enchantment. Use $(item)Royal Anvil$() will contain fortune affection, and $(item)Ember Anvil$() will contain silk touch affection. If the block can not be break by normal TNT explosion, such as obsidian, it can still be broken, but the anvil will be damaged by one durability level. In order to prevent the anvil from falling on the stonecutter and becoming the drop after the block is broken, you need to control the timing of the redstone circuit."
+    "使用不同的铁砧，具有不同的破坏效果：$(br)普通铁砧：常规挖掘；$(br)$(#004400)皇家铁砧$()：精准采集；$(br)$(#661100)余烬铁砧$()：熔炼；$(br)$(#660066)超限铁砧$()：时运V；$(br2)If the block can not be break by normal TNT explosion, such as obsidian, it can still be broken, but the anvil will be damaged by one durability level. $(br)In order to prevent the anvil from falling on the stonecutter and becoming the drop after the block is broken, you need to control the timing of the redstone circuit."
   ]
 }
