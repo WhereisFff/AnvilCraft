@@ -3432,7 +3432,7 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_NETHERITE))
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_TUNGSTEN))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.INCANDESCENT_BLOCKS)
         .register();
 
