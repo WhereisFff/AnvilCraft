@@ -99,7 +99,7 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.TASK,
                 true, true, false
             )
-            .addCriterion("craft_amethyst_pickaxe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("amethyst_pickaxe")))
+            .addCriterion("amethyst_pickaxe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("amethyst_pickaxe")))
             .build(advancementOf("amethyst_pickaxe"));
 
         AdvancementHolder topaz = Advancement.Builder.advancement()
@@ -148,8 +148,8 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.TASK,
                 true, true, false
             )
-            .addCriterion("crushing_cobblestone", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.GRAVEL))
-            .addCriterion("crushing_gravel", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.SAND))
+            .addCriterion("cobblestone", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.GRAVEL))
+            .addCriterion("gravel", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.SAND))
             .build(advancementOf("stone_crusher"));
 
         AdvancementHolder fossick = Advancement.Builder.advancement()
@@ -161,8 +161,33 @@ public class AnvilCraftAdvancement {
                 null, AdvancementType.TASK,
                 true, true, false
             )
-            .addCriterion("get_gold_nugget", AnvilHandleItemTrigger.TriggerInstance.handleItem(Items.GOLD_NUGGET.getDefaultInstance()))
+            .addCriterion("gold_nugget", AnvilHandleItemTrigger.TriggerInstance.handleItem(Items.GOLD_NUGGET.getDefaultInstance()))
             .build(advancementOf("fossick"));
+
+        AdvancementHolder iceMaker = Advancement.Builder.advancement()
+            .parent(dang)
+            .display(
+                Items.ICE,
+                Component.translatable("advancements.anvilcraft.ice_maker.title"),
+                Component.translatable("advancements.anvilcraft.ice_maker.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("ice", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.ICE))
+            .build(advancementOf("ice_maker"));
+
+        AdvancementHolder four281 = Advancement.Builder.advancement()
+            .parent(iceMaker)
+            .display(
+                Items.BLUE_ICE,
+                Component.translatable("advancements.anvilcraft.four281.title"),
+                Component.translatable("advancements.anvilcraft.four281.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .addCriterion("packed_ice", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.PACKED_ICE))
+            .addCriterion("blue_ice", AnvilHandleBlockTrigger.TriggerInstance.handleBlock(Blocks.BLUE_ICE))
+            .build(advancementOf("four281"));
 
         provider.accept(root);
         provider.accept(crabClaw);
@@ -175,5 +200,7 @@ public class AnvilCraftAdvancement {
         provider.accept(dang);
         provider.accept(stoneCrusher);
         provider.accept(fossick);
+        provider.accept(iceMaker);
+        provider.accept(four281);
     }
 }

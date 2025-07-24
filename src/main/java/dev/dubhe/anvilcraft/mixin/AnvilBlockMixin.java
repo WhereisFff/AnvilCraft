@@ -96,7 +96,7 @@ abstract class AnvilBlockMixin extends FallingBlock {
             level.setBlockAndUpdate(magnet.below(), state);
             level.setBlockAndUpdate(anvil, Blocks.AIR.defaultBlockState());
             AnimateAscendingBlockEntity.animate(level, anvil, state, magnet.below());
-            if (level instanceof ServerLevel) {
+            if (!level.isClientSide) {
                 Player player = PlayerUtil.getPlayerWithPos(level, anvil, 5);
                 if (player != null) {
                     ModCriterionTriggers.MAGNET_LIFTING_ANVIL.get().trigger((ServerPlayer) player);

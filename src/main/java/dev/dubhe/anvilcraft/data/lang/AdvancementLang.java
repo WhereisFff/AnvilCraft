@@ -40,5 +40,11 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.fossick.title", "Fossick");
         provider.add("advancements.anvilcraft.fossick.description", "Sift the sand on the scaffolding with an anvil to obtain gold nugget");
+
+        provider.add("advancements.anvilcraft.ice_maker.title", "Ice maker");
+        provider.add("advancements.anvilcraft.ice_maker.description", "Use an anvil to crush snow block on a medicine pot to make ice");
+
+        provider.add("advancements.anvilcraft.four281.title", "4 to 81");
+        provider.add("advancements.anvilcraft.four281.description", "Use an anvil to smash two pieces of ice together to create packed ice, and then smash the two pieces of packed ice together to create blue ice");
     }
 }

@@ -95,7 +95,7 @@ public class AnvilEventListener {
 
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
-                if (level instanceof ServerLevel) {
+                if (!level.isClientSide) {
                     Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
                     if (player != null) {
                         ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
@@ -105,7 +105,7 @@ public class AnvilEventListener {
             }
         }
 
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide) {
             Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
             if (player != null) {
                 ModCriterionTriggers.ANVIL_ON_LAND.get().trigger((ServerPlayer) player);
@@ -121,14 +121,14 @@ public class AnvilEventListener {
             .ifPresent(recipe -> {
                 Block result = recipe.value().result;
                 level.setBlockAndUpdate(pos, result.defaultBlockState());
-                if (level instanceof ServerLevel) {
+                if (!level.isClientSide) {
                     Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
                     if (player != null) {
                         ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().trigger((ServerPlayer) player, result);
                     }
                 }
             });
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide) {
             Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
             if (player != null) {
                 ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
@@ -147,11 +147,18 @@ public class AnvilEventListener {
                 for (int i = 0; i < recipe.value().inputs.size(); i++) {
                     level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
                 }
+                Block result = recipe.value().result;
                 level.setBlockAndUpdate(
                     pos.below(recipe.value().inputs.size() - 1),
-                    recipe.value().result.defaultBlockState());
+                    result.defaultBlockState());
+                if (!level.isClientSide) {
+                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+                    if (player != null) {
+                        ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().trigger((ServerPlayer) player, result);
+                    }
+                }
             });
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide) {
             Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
             if (player != null) {
                 ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
@@ -174,7 +181,7 @@ public class AnvilEventListener {
                     pos.below(recipe.value().inputs.size() - 1),
                     recipe.value().result.defaultBlockState());
             });
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide) {
             Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
             if (player != null) {
                 ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
@@ -217,7 +224,7 @@ public class AnvilEventListener {
                     k.setItem(v.copy());
                 });
             });
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide) {
             Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
             if (player != null) {
                 ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
@@ -234,10 +241,17 @@ public class AnvilEventListener {
             .getRecipeFor(ModRecipeTypes.SQUEEZING_TYPE.get(), input, level)
             .map(RecipeHolder::value)
             .ifPresent(recipe -> {
+                Block resultBlock = recipe.resultBlock;
                 CauldronUtil.fill(level, belowPos, recipe.getCauldron(), 1, false);
-                level.setBlockAndUpdate(pos, recipe.resultBlock.defaultBlockState());
+                level.setBlockAndUpdate(pos, resultBlock.defaultBlockState());
+                if (!level.isClientSide) {
+                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
+                    if (player != null) {
+                        ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().trigger((ServerPlayer) player, resultBlock);
+                    }
+                }
             });
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide) {
             Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
             if (player != null) {
                 ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);

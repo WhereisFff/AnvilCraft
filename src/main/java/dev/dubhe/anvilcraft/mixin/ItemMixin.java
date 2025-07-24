@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -23,7 +22,7 @@ public class ItemMixin {
         )
     )
     private void use(Level level, Player player, InteractionHand usedHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir) {
-        if (level instanceof ServerLevel) {
+        if (!level.isClientSide) {
             ModCriterionTriggers.USE_ITEM.get().trigger((ServerPlayer) player, player.getItemInHand(usedHand));
         }
     }

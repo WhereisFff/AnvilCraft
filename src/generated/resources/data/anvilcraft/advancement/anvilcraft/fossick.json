@@ -1,7 +1,7 @@
 {
   "parent": "anvilcraft:anvilcraft/stone_crusher",
   "criteria": {
-    "get_gold_nugget": {
+    "gold_nugget": {
       "conditions": {
         "item": {
           "items": "minecraft:gold_nugget"
@@ -24,7 +24,7 @@
   },
   "requirements": [
     [
-      "get_gold_nugget"
+      "gold_nugget"
     ]
   ],
   "sends_telemetry_event": true

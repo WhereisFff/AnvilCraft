@@ -1,7 +1,7 @@
 {
   "parent": "anvilcraft:anvilcraft/geode",
   "criteria": {
-    "craft_amethyst_pickaxe": {
+    "amethyst_pickaxe": {
       "conditions": {
         "recipe_id": "anvilcraft:amethyst_pickaxe"
       },
@@ -22,7 +22,7 @@
   },
   "requirements": [
     [
-      "craft_amethyst_pickaxe"
+      "amethyst_pickaxe"
     ]
   ],
   "sends_telemetry_event": true
