@@ -1,8 +1,8 @@
 {
   "name": "原油与燃烧",
-  "category": "anvilcraft:advanced_features",
+  "category": "anvilcraft:technology_application",
   "icon": "anvilcraft:oil_bucket",
-  "sortnum": 4011,
+  "sortnum": 6004,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:oil": 1,

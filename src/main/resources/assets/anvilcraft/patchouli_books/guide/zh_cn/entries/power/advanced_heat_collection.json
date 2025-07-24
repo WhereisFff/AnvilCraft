@@ -28,7 +28,7 @@
       "type": "patchouli:spotlight",
       "anchor": "mineral_fountain",
       "item": "anvilcraft:mineral_fountain",
-      "text": "当$(l:advanced/mineral_fountain#mineral_fountain)矿物涌泉$()四角为$(item)熔岩$()时可用于加热可加热方块。它能将顶部方块加热至红热，并每秒增加1秒持续时间。若顶部方块温度等级高于红热，则不操作。"
+      "text": "当$(l:struct/mineral_fountain#mineral_fountain)矿物涌泉$()四角为$(item)熔岩$()时可用于加热可加热方块。它能将顶部方块加热至红热，并每秒增加1秒持续时间。若顶部方块温度等级高于红热，则不操作。"
     },
     {
       "type": "patchouli:spotlight",
@@ -48,7 +48,7 @@
       "type": "patchouli:text",
       "anchor": "plasma_jets",
       "title": "等离子喷流",
-      "text": "当$(l:advanced/oil)燃烧的炼药锅$()底部有工作中的$(item)加热器$()、正上方宽度1x1，高度8格以内都没有方块时，生成一个$(item)等离子喷流$()。该方块水平相邻四面都有方块时（被当做管壁），自身抬升一格，最高抬升四次。"
+      "text": "当$(l:apply/oil)燃烧的炼药锅$()底部有工作中的$(item)加热器$()、正上方宽度1x1，高度8格以内都没有方块时，生成一个$(item)等离子喷流$()。该方块水平相邻四面都有方块时（被当做管壁），自身抬升一格，最高抬升四次。"
     },
     {
       "type": "patchouli:multiblock",

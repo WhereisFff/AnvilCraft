@@ -1,8 +1,8 @@
 {
-  "name": "Produce Spawner",
-  "category": "anvilcraft:advanced_features",
+  "name": "制造刷怪笼",
+  "category": "anvilcraft:technology_application",
   "icon": "minecraft:spawner",
-  "sortnum": 4009,
+  "sortnum": 6003,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "minecraft:spawner": 0,
@@ -35,7 +35,7 @@
           ["ACA","B0B","ACA"]
         ]
       },
-      "text": "通过$(l:advanced/multiblock)多方块转化$()生成刷怪笼$(br)$(#aa0000)注意$()：不接受$(l:advanced/multiblock#craft)多方块合成$()!"
+      "text": "通过$(l:struct/multiblock)多方块转化$()生成刷怪笼$(br)$(#aa0000)注意$()：不接受$(l:struct/multiblock#craft)多方块合成$()!"
     },
     {
       "type": "patchouli:multiblock",
@@ -60,7 +60,7 @@
       "entries": [
         "anvilcraft:smithing/corrupted_beacon",
         "anvilcraft:basic/more_device",
-        "anvilcraft:advanced/multiblock"
+        "anvilcraft:struct/multiblock"
       ],
       "text": ""
     }

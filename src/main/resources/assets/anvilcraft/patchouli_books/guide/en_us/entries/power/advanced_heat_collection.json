@@ -28,7 +28,7 @@
       "type": "patchouli:spotlight",
       "anchor": "mineral_fountain",
       "item": "anvilcraft:mineral_fountain",
-      "text": "When the corners of $(l:advanced/mineral_fountain#mineral_fountain)Mineral Fountain$() is full of lava, it can be used to heat heatable blocks. It can heat block on top to Redhot Tier and add 1 second every seconds. If the Heat Tier of the block on top is higher than Redhot Tier, then do nothing."
+      "text": "When the corners of $(l:struct/mineral_fountain#mineral_fountain)Mineral Fountain$() is full of lava, it can be used to heat heatable blocks. It can heat block on top to Redhot Tier and add 1 second every seconds. If the Heat Tier of the block on top is higher than Redhot Tier, then do nothing."
     },
     {
       "type": "patchouli:spotlight",
@@ -48,7 +48,7 @@
       "type": "patchouli:text",
       "anchor": "plasma_jets",
       "title": "Plasma Jets",
-      "text": "When the bottom of $(l:advanced/oil)Fire Cauldron$() is working $(item)Heater$() and width 1x1 height 8 above is air, create a $(item)Plasma Jets$(). If the horizontal sides of this block all have a block (as tube wall,) raise itself 1 block. The highest raising is four times."
+      "text": "When the bottom of $(l:apply/oil)Fire Cauldron$() is working $(item)Heater$() and width 1x1 height 8 above is air, create a $(item)Plasma Jets$(). If the horizontal sides of this block all have a block (as tube wall,) raise itself 1 block. The highest raising is four times."
     },
     {
       "type": "patchouli:multiblock",

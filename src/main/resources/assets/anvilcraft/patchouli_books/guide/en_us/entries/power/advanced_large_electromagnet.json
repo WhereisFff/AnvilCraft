@@ -22,7 +22,7 @@
           ["ABA","B0B","ABA"]
         ]
       },
-      "text": "通过$(l:advanced/multiblock#conversion)多方块转化$()获得$(item)加速环$()"
+      "text": "通过$(l:struct/multiblock#conversion)多方块转化$()获得$(item)加速环$()"
     },
     {
       "type": "patchouli:spotlight",
@@ -45,7 +45,7 @@
           ["ABA","B0B","ABA"]
         ]
       },
-      "text": "通过$(l:advanced/multiblock#conversion)多方块转化$()获得$(item)偏转环$()"
+      "text": "通过$(l:struct/multiblock#conversion)多方块转化$()获得$(item)偏转环$()"
     },
     {
       "type": "patchouli:spotlight",
@@ -82,8 +82,8 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:advanced/multiblock",
-        "anvilcraft:advanced/high_speed_impact"
+        "anvilcraft:struct/multiblock",
+        "anvilcraft:struct/high_speed_impact"
       ],
       "text": ""
     }

@@ -1,8 +1,8 @@
 {
   "name": "铁砧加速撞击合成",
-  "category": "anvilcraft:advanced_features",
+  "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:acceleration_ring",
-  "sortnum": 4004,
+  "sortnum": 5004,
   "entry_color": "004400",
   "pages": [
     "铁砧被$(thing)加速装置$()加速撞击一些特定的物品时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(item)加速环$()和$(item)偏转环$()，并要提供至少2048kW的能量。",

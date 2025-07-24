@@ -5,7 +5,7 @@
   "sortnum": 3007,
   "entry_color": "004400",
   "pages": [
-    "$(item)空间超压器$()具有扭曲空间的力量。可以用来制作$(item)中子锭$()或去辅助进行$(l:advanced/multiblock#craft)多方块合成$()。",
+    "$(item)空间超压器$()具有扭曲空间的力量。可以用来制作$(item)中子锭$()或去辅助进行$(l:struct/multiblock#craft)多方块合成$()。",
     {
       "type": "anvilcraft:item_inject",
       "recipe": "anvilcraft:item_inject/nesting_shulker_box",

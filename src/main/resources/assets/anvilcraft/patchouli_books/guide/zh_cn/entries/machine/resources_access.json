@@ -256,7 +256,7 @@
 				]
 			},
 			"enable_visualize":"true",
-			"text": "机器要建造在你的主电网外，但离开的距离在8格内，向下的棱镜要对准地底的$(l:advanced/mineral_fountain)矿物涌泉$()。"
+			"text": "机器要建造在你的主电网外，但离开的距离在8格内，向下的棱镜要对准地底的$(l:struct/mineral_fountain)矿物涌泉$()。"
         },
 		{
             "type": "patchouli:text",
