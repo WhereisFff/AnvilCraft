@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.init.ModEntities;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -78,7 +79,10 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
 
             if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
-            } else if (isFree(this.level(), new BlockPos(this.getBlockX(), (int) (this.getY() - 0.01), this.getBlockZ()))) {
+            } else if (
+                (this.time <= 1 || !this.getDeltaMovement().equals(Vec3.ZERO))
+                && isFree(this.level(), new BlockPos(this.getBlockX(), (int) (this.getY() - 0.01), this.getBlockZ()))
+            ) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
             } else {
                 if (!this.level().isClientSide) {
@@ -132,7 +136,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
     @Override
     public void move(MoverType type, Vec3 motion) {
         super.move(type, motion);
-        if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
+        if (motion.equals(Vec3.ZERO)) return;
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().move(0, 0.99F, 0),
@@ -141,6 +145,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
         if (!list.isEmpty()) {
             for (Entity entity : list) {
                 if (entity instanceof StandableFallingBlockEntity) continue;
+                if (entity instanceof StandableLevitatingBlockEntity) continue;
                 entity.setDeltaMovement(
                     entity.getDeltaMovement().x,
                     entity.getDeltaMovement().y < 0 ? motion.y : entity.getDeltaMovement().y + motion.y * 2.8,
@@ -156,11 +161,17 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
     }
 
     @Override
+    public boolean canCollideWith(Entity entity) {
+        return super.canCollideWith(entity)
+               && !Util.instanceOfAny(entity, StandableFallingBlockEntity.class, StandableLevitatingBlockEntity.class);
+    }
+
+    @Override
     public @NotNull EntityDimensions getDimensions(@NotNull Pose pose) {
         return EntityDimensions.scalable(0.98f, 0.98f);
     }
 
-    static boolean isFree(Level level, BlockPos pos) {
+    public static boolean isFree(Level level, BlockPos pos) {
         return FallingBlock.isFree(level.getBlockState(pos))
                || level.getBlockState(pos).getCollisionShape(level, pos).equals(Shapes.empty());
     }

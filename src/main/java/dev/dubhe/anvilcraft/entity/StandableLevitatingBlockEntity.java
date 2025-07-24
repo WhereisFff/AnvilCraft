@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.init.ModEntities;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -71,7 +72,10 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
 
             if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
-            } else if (StandableFallingBlockEntity.isFree(this.level(), blockPos.above())) {
+            } else if (
+                (this.time <= 1 || !this.getDeltaMovement().equals(Vec3.ZERO))
+                && StandableFallingBlockEntity.isFree(this.level(), blockPos.above())
+            ) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04, 0.0));
             } else {
                 if (!this.level().isClientSide) {
@@ -125,7 +129,7 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
     @Override
     public void move(MoverType type, Vec3 motion) {
         super.move(type, motion);
-        if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
+        if (motion.equals(Vec3.ZERO)) return;
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().expandTowards(0, 0.5F, 0),
@@ -133,6 +137,7 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
         );
         if (!list.isEmpty()) {
             for (Entity entity : list) {
+                if (entity instanceof StandableFallingBlockEntity) continue;
                 if (entity instanceof StandableLevitatingBlockEntity) continue;
                 entity.setDeltaMovement(
                     entity.getDeltaMovement().x,
@@ -146,5 +151,11 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
     @Override
     public boolean canBeCollidedWith() {
         return true;
+    }
+
+    @Override
+    public boolean canCollideWith(Entity entity) {
+        return super.canCollideWith(entity)
+               && !Util.instanceOfAny(entity, StandableFallingBlockEntity.class, StandableLevitatingBlockEntity.class);
     }
 }

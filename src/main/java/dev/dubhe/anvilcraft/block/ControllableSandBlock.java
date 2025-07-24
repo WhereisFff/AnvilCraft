@@ -6,7 +6,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -20,10 +19,8 @@ public class ControllableSandBlock extends Block {
     @SuppressWarnings("ConstantValue")
     protected void move(BlockState state, Level level, BlockPos pos, RandomSource random) {
         if (level.getBestNeighborSignal(pos) <= 0) return;
-        BlockState above = level.getBlockState(pos.above());
-        BlockState below = level.getBlockState(pos.below());
-        boolean aboveIsFree = FallingBlock.isFree(above);
-        boolean belowIsFree = FallingBlock.isFree(below);
+        boolean aboveIsFree = StandableFallingBlockEntity.isFree(level, pos.above());
+        boolean belowIsFree = StandableFallingBlockEntity.isFree(level, pos.below());
         if (!aboveIsFree && !belowIsFree) return;
         if (aboveIsFree && belowIsFree) {
             if (random.nextFloat() > 0.5f) aboveIsFree = false;
