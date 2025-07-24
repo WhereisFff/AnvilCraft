@@ -20,7 +20,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
@@ -73,18 +72,22 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, neighborBlock, fromPos, isMoving);
-        Direction direction = null;
+        if (level.isEmptyBlock(pos.above())) return;
+        BlockState topBlock = level.getBlockState(pos.above());
+        BlockPos moveToPos = null;
         for (Direction side : Direction.values()) {
             if (side.getAxis() == Direction.Axis.Y) continue;
-            Optional<Direction> dirOp = Util.castSafely(level.getBlockState(pos.relative(side)).getBlock(), ISlidingRail.class)
-                .flatMap(rail -> rail.getSlidingDirection(level, level.getBlockState(pos.relative(side))));
-            if (dirOp.isEmpty()) continue;
-            direction = dirOp.get();
+            BlockPos railPos = pos.relative(side);
+            BlockState railState = level.getBlockState(railPos);
+            boolean canMove = Util.castSafely(railState.getBlock(), ISlidingRail.class)
+                .map(rail -> rail.canMoveBlockToTop(level, railPos, railState, topBlock))
+                .orElse(false);
+            if (!canMove) continue;
+            moveToPos = railPos.above();
             break;
         }
-        if (direction == null) return;
-        Direction finalDirection = direction;
-        Optional.ofNullable(ISlidingRail.MOVING_PISTON_MAP.get(pos))
-            .ifPresent(info -> info.direction = finalDirection);
+        if (moveToPos == null) return;
+        level.removeBlock(pos.above(), true);
+        level.setBlockAndUpdate(moveToPos, topBlock);
     }
 }

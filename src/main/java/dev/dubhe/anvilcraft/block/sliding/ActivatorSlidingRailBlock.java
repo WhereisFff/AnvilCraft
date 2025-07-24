@@ -174,10 +174,4 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         if (!blockstate.getWeakChanges(level, blockpos)) return;
         level.neighborChanged(blockstate, blockpos, this, pos, false);
     }
-
-    @Override
-    public Optional<Direction> getSlidingDirection(LevelReader level, BlockState state) {
-        if (!state.getValue(POWERED)) return Optional.empty();
-        return state.getOptionalValue(FACING);
-    }
 }

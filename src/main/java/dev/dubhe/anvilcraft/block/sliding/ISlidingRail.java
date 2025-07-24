@@ -43,16 +43,18 @@ public interface ISlidingRail extends IBlockExtension {
     Block self();
 
     /**
-     * 当滑轨站尝试滑动顶部方块时调用该方法。<br>
+     * 当滑轨站尝试移动顶部方块到该滑轨顶部时调用该方法。<br>
      * 将在{@link Block#neighborChanged(BlockState, Level, BlockPos, Block, BlockPos, boolean) neighbourChanged()}调用。
      *
-     * @param level 滑轨所处的世界
+     * @param level 滑轨站所处的世界
+     * @param pos   滑轨方块位置
      * @param state 滑轨方块状态
+     * @param top   滑轨站顶部的方块状态
      * @return 将要滑动的方向。若为空，则不滑动。
      */
     @SuppressWarnings("JavadocReference")
-    default Optional<Direction> getSlidingDirection(LevelReader level, BlockState state) {
-        return Optional.empty();
+    default boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top) {
+        return false;
     }
 
     static void whenOnNeighborChange(LevelReader level, BlockPos pos, BlockPos neighbor) {

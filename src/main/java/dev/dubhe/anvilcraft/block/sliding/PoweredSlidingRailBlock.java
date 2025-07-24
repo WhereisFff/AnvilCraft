@@ -112,9 +112,10 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         boolean powered = state.getValue(POWERED);
         boolean shouldPower = this.isPowered(level, pos);
         if (powered != shouldPower) {
+            powered = shouldPower;
             level.setBlockAndUpdate(pos, state.setValue(POWERED, shouldPower));
         }
-        if (!powered && shouldPower) {
+        if (powered) {
             fromPos = pos.above();
             if (level.isEmptyBlock(fromPos)) {
                 BlockPos stop = pos.relative(state.getValue(FACING).getOpposite());
@@ -124,16 +125,16 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
                 level.setBlock(fromPos, above, 0b1000011);
             }
             PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
+            ppi.extending = true;
             if (MOVING_PISTON_MAP.containsKey(pos)) {
                 MOVING_PISTON_MAP.get(pos).fromPos = fromPos;
             } else MOVING_PISTON_MAP.put(pos, ppi);
-            return;
         }
         if (level.isClientSide) return;
         BlockState blockState = level.getBlockState(MOVING_PISTON_MAP.get(pos) instanceof PistonPushInfo info ? info.fromPos : fromPos);
         if (!MOVING_PISTON_MAP.containsKey(pos)) return;
         if (blockState.is(Blocks.MOVING_PISTON) || blockState.isAir()) return;
-        level.scheduleTick(pos, block, 2);
+        level.scheduleTick(pos, this, 2);
     }
 
     private boolean isPowered(SignalGetter level, BlockPos pos) {
@@ -180,8 +181,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    public Optional<Direction> getSlidingDirection(LevelReader level, BlockState state) {
-        if (!state.getValue(POWERED)) return Optional.empty();
-        return state.getOptionalValue(FACING);
+    public boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top) {
+        return state.getValue(POWERED);
     }
 }
