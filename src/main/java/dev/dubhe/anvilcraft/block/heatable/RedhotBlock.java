@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.block.heatable;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModFluidTags;
+import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -70,7 +71,7 @@ public class RedhotBlock extends HeatableBlock {
 
     private boolean removeWaterBreadthFirstSearch(Level level, BlockPos pos) {
         return BlockPos.breadthFirstTraversal(
-            pos, this.breadthDepth, this.breadthDepth * 11 - 1,
+            pos, this.breadthDepth, this.breadthDepth * 6 + (this.breadthDepth - 1) * this.breadthDepth - 1,
             (posx, consumer) -> {
                 for (Direction direction : Direction.values()) {
                     consumer.accept(posx.relative(direction));
