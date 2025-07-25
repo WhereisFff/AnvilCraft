@@ -24,7 +24,7 @@ public class ModHeaterInfos {
             .addPoint(4, HeatTier.NORMAL)
             .addPoint(12, HeatTier.HEATED, 4)
             .addPoint(32, HeatTier.REDHOT, 4)
-            .addPoint(80, HeatTier.GLOWING, 4)
+            .addPoint(64, HeatTier.GLOWING, 4)
             .addPoint(HeatTier.INCANDESCENT, 4)
             .build())
     );
