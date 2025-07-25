@@ -48,7 +48,7 @@ public class PlayerInHandItemDurabilityPressurePlateBlock extends PowerLevelPres
             Integer damage = itemStack.get(DataComponents.DAMAGE);
             if (maxDamage != null) {
                 if (damage == null) {
-                    damage = maxDamage;
+                    damage = 0;
                 }
                 int remainDamage = maxDamage - damage;
                 result = (float) remainDamage / maxDamage;
