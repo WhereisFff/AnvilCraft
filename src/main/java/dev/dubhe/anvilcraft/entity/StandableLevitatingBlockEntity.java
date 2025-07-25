@@ -155,6 +155,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
     @Override
     public boolean canCollideWith(Entity entity) {
         return super.canCollideWith(entity)
-               && !(entity instanceof FallingBlockEntity);
+               && !Util.instanceOfAny(entity, FallingBlockEntity.class, IonocraftEntity.class);
     }
 }
