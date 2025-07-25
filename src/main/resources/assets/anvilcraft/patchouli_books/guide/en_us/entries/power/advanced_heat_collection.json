@@ -13,10 +13,77 @@
     },
     "Some heat-collectable block will cooldown and change itself after heat-collecting. Here are these blocks:$(li)$(item)Magma Block$()→$(item)Netherrack$()+2kW$(li)$(item)Lit Campfire$()→$(item)Unlit Campfire$()+4kW$(li)$(item)Lava$()→$(item)Obsidian$()+4kW",
     "Some heat-collectable blocks will not change after heat-collecting. Here are these blocks:$(li)$(item)Uranium Block$():2kW$(li)$(item)Ember Metal Block$():4kW$(li)$(item)Plutonium Block$():8kW$()$(li)$(l:advanced/heated_block)Any Heated Block$() (Will cooldown by itself. Not affected by the collector.)$(br)The effects of heating blocks of different grades are as follows:$(li)Heated:4kW $(li)Redhot:16kW $(li)Glowing:64kW $(li)Incandescent:256kW",
+    "虽然加热方法众多，但前中期可用于发电的仅有以下两种：$(li)太阳能发电 $(li)油离子发电",
+    {
+      "type": "patchouli:crafting",
+      "anchor": "heliostats",
+      "title": "太阳能发电",
+      "recipe": "anvilcraft:heliostats_electrical",
+      "recipe2": "anvilcraft:heliostats_biological",
+      "text": ""
+    },
+    {
+      "type": "patchouli:text",
+      "title": "太阳能发电",
+      "text": "通过大量$(item)定日镜$()可以将太阳能收集到可加热方块上作为热能再被集热器吸收。$(br2)优点是耗材简单，且无须后续投入，但是占地较大，且光路上不可有方块阻挡。$(br2)$(l:advanced/heated_block#heliostats)点我$()查看具体数值。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "太阳能发电站",
+      "multiblock": {
+        "mapping": {
+          "A": "anvilcraft:heliostats",
+          "B": "anvilcraft:smooth_royal_steel_block",
+          "0": "anvilcraft:smooth_royal_steel_block",
+          "C": "anvilcraft:glowing_tungsten_block",
+          "D": "anvilcraft:heat_collector"
+        },
+        "pattern": [
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      D      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      C      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      B      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      B      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["     A A     ", "             ", "  A A A A A  ", "             ", "  A A A A A  ", "A           A", "  A A 0 A A  ", "A           A", "  A A A A A  ", "             ", "  A A A A A  ", "             ", "     A A     "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "]
+        ]
+      },
+      "text": ""
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:oil_bucket",
+      "text": "燃烧原油发热需要大量的肉，但是发电量绝对够本。$(br2)优点是占地面积小，效率高，但是需要持续消耗肉类，需要配套的牧场/刷怪塔/刷怪笼。$(br2)$(l:advanced/heated_block#plasma_jets)点我$()查看具体数值。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "油电",
+      "multiblock": {
+        "mapping": {
+          "0": "anvilcraft:heater[overload=false]",
+          "B": "anvilcraft:fire_cauldron",
+          "C": "anvilcraft:charge_collector",
+          "D": "anvilcraft:magnet_block[lit=false]",
+          "E": "anvilcraft:glowing_tungsten_block",
+          "F": "anvilcraft:heat_collector",
+          "G": "anvilcraft:plasma_jets"
+        },
+        "pattern": [
+          ["     ", "     ", "     ", "     ", "     "],
+          ["     ", " CEC ", " D D ", " CEC ", "     "],
+          ["     ", " CEC ", " D D ", " CEC ", "     "],
+          ["     ", " CEC ", " D DF", " CEC ", "     "],
+          ["     ", " CEC ", " D D ", " CEC ", "     "],
+          ["     ", "     ", "  B  ", "     ", "     "],
+          ["     ", "     ", "  0  ", "     ", "     "]
+        ]
+      },
+      "text": ""
+    },
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:advanced/heated_block"
+        "anvilcraft:advanced/heated_block",
+        "anvilcraft:apply/oil"
       ],
       "text": ""
     }
