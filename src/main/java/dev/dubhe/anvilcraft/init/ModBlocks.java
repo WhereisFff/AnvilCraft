@@ -2918,27 +2918,6 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_SHOVEL)
         .register();
 
-    public static final BlockEntry<ControllableSandBlock> CONTROLLABLE_SAND = REGISTRATE
-        .block("controllable_sand", ControllableSandBlock::new)
-        .initialProperties(() -> Blocks.SAND)
-        .properties(BlockBehaviour.Properties::noOcclusion)
-        .blockstate((ctx, provider) -> provider
-            .getVariantBuilder(ctx.get()).partialState()
-            .addModels(new ConfiguredModel(provider.models().getExistingFile(ctx.getId().withPrefix("block/")))))
-        .simpleItem()
-        .recipe((ctx, provider) ->
-            ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
-                .pattern("LRL")
-                .pattern("RSR")
-                .pattern("LRL")
-                .define('L', ModItems.LEVITATION_POWDER)
-                .define('R', Items.REDSTONE)
-                .define('S', ItemTags.SAND)
-                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
-                .save(provider)
-        )
-        .tag(BlockTags.MINEABLE_WITH_SHOVEL)
-        .register();
     public static final BlockEntry<LevitationPowderBlock> LEVITATION_POWDER_BLOCK = REGISTRATE
         .block("levitation_powder_block", LevitationPowderBlock::new)
         .initialProperties(() -> Blocks.SAND)
@@ -2951,7 +2930,28 @@ public class ModBlocks {
                 .save(provider, ctx.getId().withSuffix("_from_powders"))
         )
         .build()
-        .tag(BlockTags.MINEABLE_WITH_SHOVEL)
+        .tag(BlockTags.MINEABLE_WITH_SHOVEL, ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)
+        .register();
+    public static final BlockEntry<ControllableSandBlock> CONTROLLABLE_SAND = REGISTRATE
+        .block("controllable_sand", ControllableSandBlock::new)
+        .initialProperties(() -> Blocks.SAND)
+        .properties(BlockBehaviour.Properties::noOcclusion)
+        .blockstate((ctx, provider) -> provider
+            .getVariantBuilder(ctx.get()).partialState()
+            .addModels(new ConfiguredModel(provider.models().getExistingFile(ctx.getId().withPrefix("block/")))))
+        .simpleItem()
+        .recipe((ctx, provider) ->
+                    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
+                        .pattern("LRL")
+                        .pattern("RSR")
+                        .pattern("LRL")
+                        .define('L', ModItems.LEVITATION_POWDER)
+                        .define('R', Items.REDSTONE)
+                        .define('S', ItemTags.SAND)
+                        .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
+                        .save(provider)
+        )
+        .tag(BlockTags.MINEABLE_WITH_SHOVEL, ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)
         .register();
     public static final BlockEntry<ColoredFallingBlock> NETHER_DUST = REGISTRATE
         .block("nether_dust", (b) -> new ColoredFallingBlock(new ColorRGBA(0x8B0000), b))
