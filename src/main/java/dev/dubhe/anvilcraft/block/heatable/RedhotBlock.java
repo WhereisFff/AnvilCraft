@@ -71,7 +71,7 @@ public class RedhotBlock extends HeatableBlock {
 
     private boolean removeWaterBreadthFirstSearch(Level level, BlockPos pos) {
         return BlockPos.breadthFirstTraversal(
-            pos, this.breadthDepth, this.breadthDepth * 6 + (this.breadthDepth - 1) * this.breadthDepth - 1,
+            pos, this.breadthDepth, (int) Math.pow(2, this.breadthDepth) + 1,
             (posx, consumer) -> {
                 for (Direction direction : Direction.values()) {
                     consumer.accept(posx.relative(direction));
