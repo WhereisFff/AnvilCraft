@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.phys.AABB;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 import java.util.Set;
 
 @MethodsReturnNonnullByDefault
@@ -29,34 +30,35 @@ public class PlayerInHandItemDurabilityPressurePlateBlock extends PowerLevelPres
 
     @Override
     protected int getSignalStrength(Level level, AABB box, Set<Class<? extends Entity>> entityClasses) {
-        return (int) Math.clamp(getRemainDurability(level, box) * 15, 0, 15);
-    }
+        List<Player> players = level.getEntitiesOfClass(Player.class,
+            box, EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers()));
+        if (players.isEmpty()) {
+            return 0;
+        }
+        Player player = players.getFirst();
 
-    protected static float getRemainDurability(Level level, AABB box) {
-        float result = Float.MIN_VALUE;
-
-        for (Player player : level.getEntitiesOfClass(
-            Player.class, box,
-            EntitySelector.NO_SPECTATORS.and(entity -> !entity.isIgnoringBlockTriggers())
-        )) {
-            ItemStack itemStack = player.getItemInHand(InteractionHand.MAIN_HAND);
-            if (itemStack.isEmpty()) {
-                result = 0;
-                continue;
-            }
-            Integer maxDamage = itemStack.get(DataComponents.MAX_DAMAGE);
-            Integer damage = itemStack.get(DataComponents.DAMAGE);
-            if (maxDamage != null) {
-                if (damage == null) {
-                    damage = 0;
-                }
-                int remainDamage = maxDamage - damage;
-                result = (float) remainDamage / maxDamage;
-            } else {
-                result = Float.MAX_VALUE;
-            }
+        int result;
+        ItemStack item = player.getItemInHand(InteractionHand.MAIN_HAND);
+        if (item.isEmpty()) {
+            return 0;
         }
 
-        return result;
+        Integer maxDamage = item.get(DataComponents.MAX_DAMAGE);
+        Integer damage = item.get(DataComponents.DAMAGE);
+        if (maxDamage != null)  {
+            if (damage == null) {
+                damage = 0;
+            }
+            int remain = maxDamage - damage;
+            int percent = (remain * 15 / maxDamage);
+            if (percent == 0) {
+                percent = 1;
+            }
+            result = percent;
+        } else {
+            result = Integer.MAX_VALUE;
+        }
+
+        return Math.clamp(result, 0, 15);
     }
 }
