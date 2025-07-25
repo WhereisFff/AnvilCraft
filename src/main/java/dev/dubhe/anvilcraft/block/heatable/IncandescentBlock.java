@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class IncandescentBlock extends RedhotBlock {
     public IncandescentBlock(Properties properties) {
-        super(properties, 4);
+        super(properties, 4, 8);
     }
 
     @Override
