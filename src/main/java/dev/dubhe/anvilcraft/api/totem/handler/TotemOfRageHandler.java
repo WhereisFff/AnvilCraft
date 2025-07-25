@@ -23,9 +23,9 @@ public class TotemOfRageHandler implements TotemHandler {
             }
             entity.setHealth(entity.getMaxHealth());
             entity.removeAllEffects();
-            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, 9));
+            entity.addEffect(new MobEffectInstance(MobEffects.DAMAGE_BOOST, 1200, 4));
             entity.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1200, 2));
-            entity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 1200, 4));
+            entity.addEffect(new MobEffectInstance(MobEffects.DIG_SPEED, 1200, 2));
             entity.addEffect(new MobEffectInstance(ModMobEffects.INVULNERABLE, 1200, 0));
             entity.addEffect(new MobEffectInstance(ModMobEffects.RAGE, 1200, 0));
             entity.level().broadcastEntityEvent(entity, (byte) 37);

@@ -875,12 +875,14 @@ public class ModItems {
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("BBB")
-                .pattern("BAB")
+                .pattern("CAC")
                 .pattern("BBB")
                 .define('A', Items.TOTEM_OF_UNDYING)
-                .define('B', ModItems.CURSED_GOLD_INGOT)
+                .define('B', ModBlocks.CURSED_GOLD_BLOCK)
+                .define('C', ModItems.EMBER_METAL_NUGGET)
                 .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.TOTEM_OF_UNDYING))
-                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.CURSED_GOLD_INGOT))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModBlocks.CURSED_GOLD_BLOCK))
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.EMBER_METAL_NUGGET))
                 .save(provider);
         })
         .register();
