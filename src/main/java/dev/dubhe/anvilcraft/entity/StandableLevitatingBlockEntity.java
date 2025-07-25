@@ -137,8 +137,7 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
         );
         if (!list.isEmpty()) {
             for (Entity entity : list) {
-                if (entity instanceof StandableFallingBlockEntity) continue;
-                if (entity instanceof StandableLevitatingBlockEntity) continue;
+                if (entity instanceof FallingBlockEntity) continue;
                 entity.setDeltaMovement(
                     entity.getDeltaMovement().x,
                     entity.getDeltaMovement().y > 0 ? motion.y * 1.08 : entity.getDeltaMovement().y + motion.y * 2.8,
@@ -156,6 +155,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
     @Override
     public boolean canCollideWith(Entity entity) {
         return super.canCollideWith(entity)
-               && !Util.instanceOfAny(entity, StandableFallingBlockEntity.class, StandableLevitatingBlockEntity.class);
+               && !(entity instanceof FallingBlockEntity);
     }
 }

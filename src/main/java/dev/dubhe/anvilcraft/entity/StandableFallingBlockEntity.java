@@ -81,7 +81,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
                 this.discard();
             } else if (
                 (this.time <= 1 || !this.getDeltaMovement().equals(Vec3.ZERO))
-                && isFree(this.level(), new BlockPos(this.getBlockX(), (int) (this.getY() - 0.01), this.getBlockZ()))
+                && isFree(this.level(), new BlockPos(this.getBlockX(), (int) Math.floor(this.getBlockY() - 0.04), this.getBlockZ()))
             ) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
             } else {
@@ -144,8 +144,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
         );
         if (!list.isEmpty()) {
             for (Entity entity : list) {
-                if (entity instanceof StandableFallingBlockEntity) continue;
-                if (entity instanceof StandableLevitatingBlockEntity) continue;
+                if (entity instanceof FallingBlockEntity) continue;
                 entity.setDeltaMovement(
                     entity.getDeltaMovement().x,
                     entity.getDeltaMovement().y < 0 ? motion.y : entity.getDeltaMovement().y + motion.y * 2.8,
@@ -163,7 +162,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
     @Override
     public boolean canCollideWith(Entity entity) {
         return super.canCollideWith(entity)
-               && !Util.instanceOfAny(entity, StandableFallingBlockEntity.class, StandableLevitatingBlockEntity.class);
+               && !(entity instanceof FallingBlockEntity);
     }
 
     @Override
