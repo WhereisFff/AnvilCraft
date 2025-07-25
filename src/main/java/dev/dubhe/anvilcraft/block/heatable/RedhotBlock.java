@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.block.heatable;
 
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModFluidTags;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -20,7 +21,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
 
-public class RedhotBlock extends HeatableBlock {
+public class RedhotBlock extends HeatableBlock implements IMoveableEntityBlock {
     private final float steppingDamage;
     private final int breadthDepth;
 

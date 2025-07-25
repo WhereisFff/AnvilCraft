@@ -138,11 +138,12 @@ public class HeaterManager {
             Optional<Block> deltaBlockOp = HeatRecorder.getHeatableBlock(idOp.get(), tierDelta);
             if (deltaBlockOp.isEmpty()) return;
             Block deltaBlock = deltaBlockOp.get();
-            this.level.setBlockAndUpdate(pos, deltaBlock.defaultBlockState());
+            this.level.setBlock(pos, deltaBlock.defaultBlockState(), Block.UPDATE_CLIENTS);
             if (!(deltaBlock instanceof EntityBlock deltaEntityBlock)) return;
             BlockEntity deltaBlockEntity = deltaEntityBlock.newBlockEntity(pos, deltaBlock.defaultBlockState());
             if (!(deltaBlockEntity instanceof HeatableBlockEntity heatableEntity)) return;
             this.level.setBlockEntity(heatableEntity);
+            this.level.updateNeighbourForOutputSignal(pos, deltaBlock);
             heatable = heatableEntity;
         } else if (tierDelta.compareTo(tier) < 0) {
             durationDelta = 0;
@@ -159,12 +160,13 @@ public class HeaterManager {
             Optional<BlockState> prevTierOp = heatable.getPrevTier(this.level, pos);
             if (prevTierOp.isEmpty()) return;
             BlockState prevState = prevTierOp.get();
-            this.level.setBlockAndUpdate(pos, prevState);
+            this.level.setBlock(pos, prevState, Block.UPDATE_CLIENTS);
             if (!(prevState.getBlock() instanceof EntityBlock)) return;
             BlockEntity tierEntity = this.level.getBlockEntity(pos);
             if (!(tierEntity instanceof HeatableBlockEntity heatableEntity)) return;
             heatableEntity.addDuration(10);
             this.level.setBlockEntity(heatableEntity);
+            this.level.updateNeighbourForOutputSignal(pos, prevState.getBlock());
         }
     }
 
