@@ -398,7 +398,8 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         for (ItemCollectorBlockEntity collector : list) {
             if (collector.isGridWorking()
                 && !collector.getBlockState().getValue(ItemCollectorBlock.POWERED)
-                && collector.shape().contains(this.position())) {
+                && collector.shape().contains(this.position())
+                && !collector.isRemoved()) {
                 int slotIndex = 0;
                 while (!itemStack.isEmpty() && slotIndex < 9) {
                     itemStack = collector.getItemHandler().insertItem(slotIndex++, itemStack, false);
