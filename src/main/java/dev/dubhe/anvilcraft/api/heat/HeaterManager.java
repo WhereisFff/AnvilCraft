@@ -135,8 +135,9 @@ public class HeaterManager {
         HeatTier tierDelta = Optional.ofNullable(point).map(HeatTierLine.Point::tier).orElse(tier);
         int durationDelta = Optional.ofNullable(point).map(HeatTierLine.Point::duration).orElse(0);
         if (tierDelta.compareTo(tier) > 0) {
-            Block deltaBlock = HeatRecorder.getHeatableBlock(idOp.get(), tierDelta)
-                .orElseThrow(() -> new IllegalStateException("Unexpected non heatable block tier!"));
+            Optional<Block> deltaBlockOp = HeatRecorder.getHeatableBlock(idOp.get(), tierDelta);
+            if (deltaBlockOp.isEmpty()) return;
+            Block deltaBlock = deltaBlockOp.get();
             this.level.setBlockAndUpdate(pos, deltaBlock.defaultBlockState());
             if (!(deltaBlock instanceof EntityBlock deltaEntityBlock)) return;
             BlockEntity deltaBlockEntity = deltaEntityBlock.newBlockEntity(pos, deltaBlock.defaultBlockState());
