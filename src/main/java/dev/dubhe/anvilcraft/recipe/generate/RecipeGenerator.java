@@ -100,6 +100,8 @@ public class RecipeGenerator {
             CraftingRecipe recipe = (CraftingRecipe) recipeHolder.value();
             if (recipe instanceof ShapedRecipe shapedRecipe) {
                 ShapedRecipePattern pattern = shapedRecipe.pattern;
+                //noinspection ConstantValue
+                if (pattern == null) return Optional.empty();
                 if (pattern.height() == pattern.width()
                     && pattern.height() != 1
                     && RecipeUtil.allIngredientEquals(pattern.ingredients())
