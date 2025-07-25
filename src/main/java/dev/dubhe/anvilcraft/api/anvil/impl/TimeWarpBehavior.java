@@ -4,8 +4,8 @@ import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
-import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
+import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModDamageTypes;
@@ -61,8 +61,10 @@ public class TimeWarpBehavior implements IAnvilBehavior {
         float fallDistance,
         AnvilFallOnLandEvent event
     ) {
-        BlockState belowState = level.getBlockState(hitBlockPos.below());
-        if (!belowState.is(ModBlocks.CORRUPTED_BEACON) || !belowState.getValue(CorruptedBeaconBlock.LIT)) return false;
+        if (!level.getBlockEntity(hitBlockPos.below(), ModBlockEntities.CORRUPTED_BEACON.get())
+            .map(beacon -> beacon.getLevels() > 0 && !beacon.getBeamSections().isEmpty())
+            .orElse(false)
+        ) return false;
 
         List<LivingEntity> damagedEntities = level.getEntitiesOfClass(
             LivingEntity.class,
