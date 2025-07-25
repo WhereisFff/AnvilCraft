@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.neoforged.neoforge.common.Tags;
 import org.jetbrains.annotations.NotNull;
 
 public class DamageTypeTagLoader {
@@ -30,6 +29,8 @@ public class DamageTypeTagLoader {
             .addOptionalTag(ModDamageTypeTags.SILENCE_AMULET_VALID)
             .addOptionalTag(ModDamageTypeTags.COGWHEEL_AMULET_VALID);
 
+        provider.addTag(ModDamageTypeTags.EMERALD_AMULET_VALID);
+
         provider.addTag(ModDamageTypeTags.TOPAZ_AMULET_VALID)
             .addTag(DamageTypeTags.IS_LIGHTNING)
             .addOptional(ResourceLocation.fromNamespaceAndPath("immersiveengineering", "wire_shock"));
@@ -45,7 +46,17 @@ public class DamageTypeTagLoader {
         provider.addTag(ModDamageTypeTags.ANVIL_AMULET_VALID)
             .add(DamageTypes.FALLING_ANVIL);
 
+        provider.addTag(ModDamageTypeTags.COMRADE_AMULET_VALID);
+
         provider.addTag(ModDamageTypeTags.FEATHER_AMULET_VALID)
             .addTag(DamageTypeTags.IS_FALL);
+
+        provider.addTag(ModDamageTypeTags.CAT_AMULET_VALID);
+
+        provider.addTag(ModDamageTypeTags.DOG_AMULET_VALID);
+
+        provider.addTag(ModDamageTypeTags.SILENCE_AMULET_VALID);
+
+        provider.addTag(ModDamageTypeTags.COGWHEEL_AMULET_VALID);
     }
 }

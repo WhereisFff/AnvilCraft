@@ -105,7 +105,7 @@ public class AmuletManager {
 
         if (raffleProbability > random.nextIntBetweenInclusive(0, 100)) {
             Optional<AmuletType> type = this.getTypeMatchedDamage(player, source, player.registryAccess()).map(Holder::value);
-            type.ifPresent(amuletType -> player.getInventory().placeItemBackInInventory(amuletType.amulet()));
+            type.ifPresent(amuletType -> player.getInventory().placeItemBackInInventory(amuletType.amulet().copy()));
 
             this.setRaffleProbability(player, source, value -> 20);
         } else {

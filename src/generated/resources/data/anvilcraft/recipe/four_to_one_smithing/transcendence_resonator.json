@@ -1,0 +1,25 @@
+{
+  "type": "anvilcraft:four_to_one_smithing",
+  "inputs": [
+    {
+      "item": "anvilcraft:multiphase_matter_axe"
+    },
+    {
+      "item": "anvilcraft:multiphase_matter_shovel"
+    },
+    {
+      "item": "anvilcraft:multiphase_matter_hoe"
+    },
+    {
+      "item": "anvilcraft:multiphase_matter_pickaxe"
+    }
+  ],
+  "material": {
+    "item": "anvilcraft:multiphase_transcendium"
+  },
+  "recipeId": 1,
+  "result": "anvilcraft:transcendence_resonator",
+  "template": {
+    "item": "anvilcraft:four_to_one_smithing_template"
+  }
+}

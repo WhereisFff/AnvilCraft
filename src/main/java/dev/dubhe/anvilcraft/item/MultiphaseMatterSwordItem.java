@@ -31,7 +31,7 @@ public class MultiphaseMatterSwordItem extends SwordItem implements IMultipleRes
                 .attributes(AxeItem.createAttributes(ModTiers.MULTIPHASE, 8, -2.4f))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
                 .component(ModComponents.MULTIPHASE, DEFAULT_MULTIPHASE.copy())
-                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.copy().alpha().itemName()))
+                .component(DataComponents.ITEM_NAME, Objects.requireNonNull(DEFAULT_MULTIPHASE.alpha().getItemName()))
         );
     }
 
@@ -39,12 +39,12 @@ public class MultiphaseMatterSwordItem extends SwordItem implements IMultipleRes
     public ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
         if (id == 0) {
             Multiphase.PhaseData first = Multiphase.PhaseData.of(
-                input.getInputItem(0).get(DataComponents.CUSTOM_NAME), input.getInputItem(0).get(DataComponents.ITEM_NAME),
+                input.getInputItem(0).get(DataComponents.CUSTOM_NAME), null,
                 input.getInputItem(0).getOrDefault(DataComponents.REPAIR_COST, 0),
                 input.getInputItem(0).get(EnchantmentHelper.getComponentType(input.getInputItem(0)))
             );
             Multiphase.PhaseData second = Multiphase.PhaseData.of(
-                input.getInputItem(1).get(DataComponents.CUSTOM_NAME), input.getInputItem(1).get(DataComponents.ITEM_NAME),
+                input.getInputItem(1).get(DataComponents.CUSTOM_NAME), null,
                 input.getInputItem(1).getOrDefault(DataComponents.REPAIR_COST, 0),
                 input.getInputItem(1).get(EnchantmentHelper.getComponentType(input.getInputItem(1)))
             );

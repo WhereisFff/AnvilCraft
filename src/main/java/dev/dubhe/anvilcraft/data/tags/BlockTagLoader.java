@@ -78,11 +78,21 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.REPEATER))
             .add(findResourceKey(Blocks.COMPARATOR))
             .add(findResourceKey(Blocks.TARGET))
+            .add(findResourceKey(Blocks.COPPER_BULB))
+            .add(findResourceKey(Blocks.EXPOSED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WEATHERED_COPPER_BULB))
+            .add(findResourceKey(Blocks.OXIDIZED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_EXPOSED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_WEATHERED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_OXIDIZED_COPPER_BULB))
             .add(findResourceKey(Blocks.CAULDRON))
             .add(findResourceKey(Blocks.LAVA_CAULDRON))
             .add(findResourceKey(Blocks.WATER_CAULDRON))
             .add(findResourceKey(Blocks.POWDER_SNOW_CAULDRON))
             .add(findResourceKey(Blocks.CAMPFIRE))
+            .add(findResourceKey(Blocks.STONECUTTER))
+            .add(findResourceKey(Blocks.SCAFFOLDING))
             .add(findResourceKey(Blocks.ANVIL))
             .add(findResourceKey(Blocks.CHIPPED_ANVIL))
             .add(findResourceKey(Blocks.DAMAGED_ANVIL))
@@ -134,6 +144,8 @@ public class BlockTagLoader {
 
         provider.addTag(ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL)
             .addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
+
+        provider.addTag(ModBlockTags.INCORRECT_FOR_TRANSCENDIUM_TOOL);
 
         provider.addTag(ModBlockTags.END_PORTAL_UNABLE_CHANGE).add(findResourceKey(Blocks.DRAGON_EGG));
 

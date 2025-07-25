@@ -126,6 +126,7 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
     private boolean checkCanMove(Level level, BlockPos pos) {
         if (this.time > 1 && this.getDeltaMovement().equals(Vec3.ZERO)) return false;
         if (level.getBlockState(pos.above()).isAir()) return true;
+        if (level.getBlockState(pos.above()).liquid()) return true;
         if (level.getBlockState(pos.above()).getCollisionShape(this.level(), pos.above()).equals(Shapes.empty())) return true;
         if (level.getBlockState(pos).getBlock() instanceof Fallable) return true;
         if (level.getBlockState(pos.above()).getBlock() instanceof Fallable) return true;

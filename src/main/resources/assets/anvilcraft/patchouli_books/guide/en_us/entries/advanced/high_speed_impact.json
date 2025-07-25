@@ -1,0 +1,75 @@
+{
+  "name": "铁砧加速撞击合成",
+  "category": "anvilcraft:advanced_features",
+  "icon": "anvilcraft:acceleration_ring",
+  "sortnum": 4004,
+  "entry_color": "004400",
+  "pages": [
+    "铁砧被$(thing)加速装置$()加速撞击一些特定的物品时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(item)加速环$()和$(item)偏转环$()，并要提供至少2048kW的能量。",
+    {
+      "type": "patchouli:multiblock",
+      "name": "建立环形加速器",
+      "multiblock": {
+        "mapping": {
+          "u": "anvilcraft:deflection_ring[half=mid_center,facing=down,overload=false,switch=on]",
+          "E": "anvilcraft:acceleration_ring[half=mid_center,facing=east,overload=false,switch=on]",
+          "S": "anvilcraft:acceleration_ring[half=mid_center,facing=south,overload=false,switch=on]",
+          "N": "anvilcraft:acceleration_ring[half=mid_center,facing=north,overload=false,switch=on]",
+          "W": "anvilcraft:acceleration_ring[half=mid_center,facing=west,overload=false,switch=on]",
+          "B": "minecraft:iron_block"
+        },
+        "pattern": [
+          ["             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             "],
+          ["             "," u      N  u ","             ","             "," E           ","             ","             ","             ","           W ","             ","             "," u  S      u ","             "],
+          ["             "," 0           ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             "],
+          ["BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB"]
+        ]
+      },
+      "enable_visualize": false,
+      "text": "结构越大，加速越稳定也越快。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "撞击室",
+      "multiblock": {
+        "mapping": {
+          "0": "anvilcraft:cut_heavy_iron_block",
+          "A": "anvilcraft:cut_heavy_iron_block",
+          "B": "anvilcraft:cut_heavy_iron_slab[waterlogged=false,type=bottom]",
+          "C": "anvilcraft:royal_anvil[facing=south]",
+          "D": "anvilcraft:arrow[facing=south]",
+          "E": "anvilcraft:tempering_glass",
+          "F": "minecraft:redstone_block"
+        },
+        "pattern": [
+          ["    AAAA ", "   AEEEEA", "   AEEEEA", "   AEEEEA", "    AAAA "],
+          ["    AEEA ", "   AA   A", " CD   FAA", "   AA   A", "    AEEA "],
+          ["    AAAA ", "   AAAAAA", "   AABBA0", "   AAAAAA", "    AAAA "]
+        ]
+      },
+      "text": "撞击会产生一场大爆炸。一个由防爆方块组成的撞击室是必需的"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:block_placer",
+      "text": "加速一段时间后，对一个拐角的$(item)偏转环$()施加红石信号使其失效，铁砧就可以从此处飞出加速装置，进入撞击室。$(br2)通过铁砧砸击$(l:basic/more_device#block_placer)方块放置器$()使其可以隔着墙壁放置被撞击方块；使用$(l:power/consumption#item_collector)物品收集器$()隔墙收集。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "minecraft:anvil",
+      "title": "撞击合成配方",
+      "text": "部分撞击配方需要一定等级及以上的铁砧，部分撞击不消耗铁砧，具体如下：$(br)红石块+皇家铁砧(不消耗)→$(item)铀粒$()$(br)飘浮粉块+皇家铁砧(不消耗)→$(item)负物质粒$()$(br)$(item)铀块$()+皇家铁砧(不消耗)→$(item)钚粒$()"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "撞击合成配方",
+      "text": "$(item)浮霜金属块$()+余烬铁砧→$(item)多相物质$()$(br)$(item)负物质块$()+铁砧→$(item)虚空物质$()$(br2)更多配方会在介绍新材料的合成方式时提及。"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:power/advanced_large_electromagnet"
+      ],
+      "text": ""
+    }
+  ]}

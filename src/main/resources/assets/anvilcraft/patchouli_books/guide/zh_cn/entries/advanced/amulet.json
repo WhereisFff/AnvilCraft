@@ -58,12 +58,6 @@
             "type":"spotlight",
             "item":"anvilcraft:silence_amulet",
             "text":"受到音波尖啸攻击致命概率获得。$(br)生效时，你不会再产生振动。"
-        },
-        {
-            "type":"spotlight",
-            "title":"【机械动力联动】齿轮护符",
-            "item":"anvilcraft:cogwheel_amulet",
-            "text":"$(#aa2222)（仅同时安装模组机械动力时可用）$()$(br)受到来自机械动力机构的致命伤害概率获得。$(br)生效时，免疫来自机械动力机构的伤害。"
         }
         
     ]
