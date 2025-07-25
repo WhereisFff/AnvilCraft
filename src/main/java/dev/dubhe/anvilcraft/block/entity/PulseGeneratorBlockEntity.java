@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
@@ -29,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @Setter
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvider {
+public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvider, IDiskCloneable {
     protected Mode startMode = Mode.RISING_EDGE;
     protected boolean outputInvert = false;
     protected int waitingTime = 2;
@@ -93,6 +94,16 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         this.waitingTime = data.getInt("WaitingTime");
         this.signalDuration = data.getInt("SignalDuration");
         return this;
+    }
+
+    @Override
+    public void storeDiskData(CompoundTag tag) {
+        tag.put("Data", this.constructDataNbt());
+    }
+
+    @Override
+    public void applyDiskData(CompoundTag data) {
+        this.readDataNbt(data.getCompound("Data"));
     }
 
     protected void tickTime(Level level, BlockPos pos, BlockState state) {
