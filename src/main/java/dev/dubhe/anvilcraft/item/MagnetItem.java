@@ -51,6 +51,7 @@ public class MagnetItem extends Item implements IChargerChargeable {
         level.getEntities(EntityTypeTest.forClass(ItemEntity.class), aabb, Entity::isAlive)
             .forEach(e -> e.moveTo(player.position()));
         item.hurtAndBreak(1, player, LivingEntity.getSlotForHand(usedHand));
+        player.getCooldowns().addCooldown(this, 5);
         return InteractionResultHolder.sidedSuccess(item, level.isClientSide());
     }
 
@@ -71,6 +72,7 @@ public class MagnetItem extends Item implements IChargerChargeable {
         Vec3 nodePos = pos.getBottomCenter().add(0, maxY, 0);
         MagnetizedNodeEntity magnetizedNodeEntity = new MagnetizedNodeEntity(level, nodePos, pos);
         level.addFreshEntity(magnetizedNodeEntity);
+        player.getCooldowns().addCooldown(this, 5);
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
