@@ -1,8 +1,8 @@
 {
   "name": "宝石转化",
-  "category": "anvilcraft:advanced_features",
+  "category": "anvilcraft:technology_application",
   "icon": "anvilcraft:melt_gem_bucket",
-  "sortnum": 4010,
+  "sortnum": 6001,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:melt_gem_bucket": 1,

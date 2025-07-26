@@ -52,7 +52,7 @@
     {
       "type": "patchouli:text",
       "title": "高级采矿",
-      "text": "在有了一定的资源后，你可以通过$(l:advanced/mineral_fountain#mineral_fountain)矿物涌泉$()获得无限的矿石。"
+      "text": "在有了一定的资源后，你可以通过$(l:struct/mineral_fountain#mineral_fountain)矿物涌泉$()获得无限的矿石。"
     }
     ]
 }

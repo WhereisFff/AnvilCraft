@@ -1,9 +1,9 @@
 {
     "name": "护符",
-    "category": "anvilcraft:advanced_features",
+    "category": "anvilcraft:special_props",
     "icon": "anvilcraft:anvil_amulet",
     "advancement":"anvilcraft:patchouli_books/advanced_amulet",
-    "sortnum":4007,
+    "sortnum":4003,
     "pages":[
         {
             "type":"text",

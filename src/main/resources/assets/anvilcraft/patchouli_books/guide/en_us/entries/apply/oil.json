@@ -1,8 +1,8 @@
 {
   "name": "原油与燃烧",
-  "category": "anvilcraft:advanced_features",
+  "category": "anvilcraft:technology_application",
   "icon": "anvilcraft:oil_bucket",
-  "sortnum": 4011,
+  "sortnum": 6004,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:oil": 1,
@@ -31,7 +31,7 @@
       "type": "patchouli:spotlight",
       "title": "热能发电",
       "item": ["anvilcraft:redhot_tungsten_block", "anvilcraft:incandescent_tungsten_block"],
-      "text": "燃烧锅在一定条件下还会产生$(thing)等离子喷流$()，用于加热方块参与$(l:power/advanced_heat_collection#plasma_jets)热能发电$()"
+      "text": "燃烧锅在一定条件下还会产生$(thing)等离子喷流$()，用于加热方块参与$(l:advanced/heated_block#plasma_jets)热能发电$()"
     },
     {
       "type": "patchouli:relations",

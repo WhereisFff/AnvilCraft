@@ -5,11 +5,11 @@
   "sortnum": 11,
   "entry_color": "661100",
   "pages": [
-    "建造牧场/刷怪塔/渔场或$(l:advanced/spawner)制作刷怪笼$()，获得足够的肉用以$(l:advanced/oil)炼制原油$()。$(br2)通过$(l:power/advanced_heat_collection#heliostats)太阳能$()、$(l:power/advanced_heat_collection#laser)激光$()或$(l:power/advanced_heat_collection#mineral_fountain)矿物涌泉$()加热下界合金块达到至少$(l:power/advanced_heat_collection#heatable_block)红热$()等级，挖掘下来后可得到至少为$(thing)高温$()的下界合金块。$(br2)若工具携带精准采集附魔，则挖掘方块不会损失热量，还可使用$(l:power/advanced_heat_collection#heater)加热器$()将方块加热至$(thing)高温$()即可。",
+    "建造牧场/刷怪塔/渔场或$(l:apply/spawner)制作刷怪笼$()，获得足够的肉用以$(l:apply/oil)炼制原油$()。$(br2)通过$(l:power/advanced_heat_collection#heliostats)太阳能$()、$(l:power/advanced_heat_collection#laser)激光$()或$(l:power/advanced_heat_collection#mineral_fountain)矿物涌泉$()加热下界合金块达到至少$(l:power/advanced_heat_collection#heatable_block)红热$()等级，挖掘下来后可得到至少为$(thing)高温$()的下界合金块。$(br2)若工具携带精准采集附魔，则挖掘方块不会损失热量，还可使用$(l:power/advanced_heat_collection#heater)加热器$()将方块加热至$(thing)高温$()即可。",
     {
       "type": "anvilcraft:time_warp",
       "recipe": "anvilcraft:time_warp/ember_metal_ingot_3",
-      "text": "将高温的下界合金块丢入燃烧锅中，可加入若干$(l:advanced/mineral_fountain#earth_core_shard)地核碎片$()，进行$(l:smithing/corrupted_beacon#time_warp)时移$()便可获得$(item)余烬金属$()。$(br)$(l:smithing/tier_2_materials#ember_metal)点我$()查看更多合成。"
+      "text": "将高温的下界合金块丢入燃烧锅中，可加入若干$(l:struct/mineral_fountain#earth_core_shard)地核碎片$()，进行$(l:smithing/corrupted_beacon#time_warp)时移$()便可获得$(item)余烬金属$()。$(br)$(l:smithing/tier_2_materials#ember_metal)点我$()查看更多合成。"
     },
     {
       "type": "patchouli:text",
@@ -20,8 +20,8 @@
       "type": "patchouli:relations",
       "entries": [
         "anvilcraft:smithing/tier_2_materials",
-        "anvilcraft:advanced/oil",
-        "anvilcraft:advanced/spawner",
+        "anvilcraft:apply/oil",
+        "anvilcraft:apply/spawner",
         "anvilcraft:power/advanced_heat_collection"
       ],
       "text": ""

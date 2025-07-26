@@ -1,8 +1,8 @@
 {
     "name": "护符盒",
-    "category": "anvilcraft:advanced_features",
+    "category": "anvilcraft:special_props",
     "icon": "anvilcraft:amulet_box",
-    "sortnum":4006,
+    "sortnum":4002,
     "pages":[
         {
             "type": "text",
@@ -23,7 +23,7 @@
             "type":"relations",
             "entries":[
                 "anvilcraft:smithing/jewelcrafting_table",
-                "anvilcraft:advanced/amulet"
+                "anvilcraft:prop/amulet"
             ]
         }        
     ]

@@ -1,8 +1,8 @@
 {
   "name": "监督者：区块加载",
-  "category": "anvilcraft:advanced_features",
+  "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:overseer",
-  "sortnum": 4012,
+  "sortnum": 5005,
   "entry_color": "004400",
   "pages": [
     {
