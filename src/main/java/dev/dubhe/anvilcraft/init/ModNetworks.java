@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
 import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
+import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
@@ -220,6 +221,11 @@ public class ModNetworks {
             ChargerSyncPacket.TYPE,
             ChargerSyncPacket.STREAM_CODEC,
             ChargerSyncPacket.HANDLER
+        );
+        registrar.playToClient(
+            ComparatorSyncPacket.TYPE,
+            ComparatorSyncPacket.STREAM_CODEC,
+            ComparatorSyncPacket.HANDLER
         );
     }
 }

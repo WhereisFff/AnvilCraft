@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
+import it.unimi.dsi.fastutil.ints.Int2DoubleMap;
+import it.unimi.dsi.fastutil.ints.Int2DoubleOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -92,5 +94,18 @@ public class MathUtil {
 
     public static Direction getDirection(BlockPos from, BlockPos to) {
         return Direction.fromDelta(from.getX() - to.getX(), from.getY() - to.getY(), from.getZ() - to.getZ());
+    }
+
+    private static final Int2DoubleMap FACTORIAL_CACHE = new Int2DoubleOpenHashMap();
+
+    public static double factorial(int value) {
+        if (value < 1) return 1;
+        if (FACTORIAL_CACHE.containsKey(value)) return FACTORIAL_CACHE.get(value);
+        double result = 1;
+        for (int i = 2; i <= value; i++) {
+            result *= i;
+        }
+        FACTORIAL_CACHE.put(value, result);
+        return result;
     }
 }
