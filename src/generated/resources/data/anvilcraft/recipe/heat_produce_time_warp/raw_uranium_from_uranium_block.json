@@ -4,7 +4,7 @@
   "consume_fluid": false,
   "heating": [
     {
-      "duration": 24000,
+      "duration": 6000,
       "tier": "incandescent"
     },
     {

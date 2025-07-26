@@ -172,7 +172,7 @@ public class RoyalAnvilMenu extends AnvilMenu {
 
                             totalCost += l3 * j2;
                             if (inputItemLeft.getCount() > 1) {
-                                totalCost = 40;
+                                totalCost = 99999999;
                             }
                         }
                     }

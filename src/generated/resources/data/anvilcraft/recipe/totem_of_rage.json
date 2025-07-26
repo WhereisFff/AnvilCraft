@@ -6,12 +6,15 @@
       "item": "minecraft:totem_of_undying"
     },
     "B": {
-      "item": "anvilcraft:cursed_gold_ingot"
+      "item": "anvilcraft:cursed_gold_block"
+    },
+    "C": {
+      "item": "anvilcraft:ember_metal_nugget"
     }
   },
   "pattern": [
     "BBB",
-    "BAB",
+    "CAC",
     "BBB"
   ],
   "result": {

@@ -11,68 +11,81 @@
       "recipe": "anvilcraft:heat_collector",
       "text": "$(item)Heat Collector$() is the core component of the power generation facility, with a power upper limit of 4096KW. The scope of work is 5x5x5 centered on itself. The heat-collectable blocks in scope decided the power generation of the heat collector. Different heat-collectable block can produce different count of heat power. The cycle is 1 seconds by default."
     },
-    "Some heat-collectable block will cooldown and change itself after heat-collecting. Here are these blocks: $(li)$(item)Magma Block$()->$(item)Netherrack$()$(li)$(item)Lit Campfire$()->$(item)Unlit Campfire$()$(li)$(item)Lava (Cauldron)$()->$(item)Obsidian (Cauldron)$()$(br)Some heat-collectable blocks will not change after heat-collecting. Here are these blocks: $(li)$(item)Any Heated Block$() (Will cooldown by itself. Not affected by the collector.)$(li)$(item)Any Uranium Block$()$(li)$(item)Ember Metal Block$()$(li)$(item)Any Plutonium Block$()$()",
+    "Some heat-collectable block will cooldown and change itself after heat-collecting. Here are these blocks:$(li)$(item)Magma Block$()→$(item)Netherrack$()+2kW$(li)$(item)Lit Campfire$()→$(item)Unlit Campfire$()+4kW$(li)$(item)Lava$()→$(item)Obsidian$()+4kW",
+    "Some heat-collectable blocks will not change after heat-collecting. Here are these blocks:$(li)$(item)Uranium Block$():2kW$(li)$(item)Ember Metal Block$():4kW$(li)$(item)Plutonium Block$():8kW$()$(li)$(l:advanced/heated_block)Any Heated Block$() (Will cooldown by itself. Not affected by the collector.)$(br)The effects of heating blocks of different grades are as follows:$(li)Heated:4kW $(li)Redhot:16kW $(li)Glowing:64kW $(li)Incandescent:256kW",
+    "虽然加热方法众多，但前中期可用于发电的仅有以下两种：$(li)太阳能发电 $(li)油离子发电",
+    {
+      "type": "patchouli:crafting",
+      "anchor": "heliostats",
+      "title": "太阳能发电",
+      "recipe": "anvilcraft:heliostats_electrical",
+      "recipe2": "anvilcraft:heliostats_biological",
+      "text": ""
+    },
     {
       "type": "patchouli:text",
-      "anchor": "heatable_block",
-      "title": "Heatable Block",
-      "text": "$(thing)Heatable Block$() is a collective term for a series of blocks. Every type of blocks has 5 tiers normally, they are $(thing)Normal$()、$(thing)Heated$()、$(thing)Redhot$()、$(thing)Glowing$() and $(thing)Incandescent$(). For now, there are only $(thing)Netherite$() and $(thing)Tungsten$() series support heating. Heatable blocks have a duration. When the duration becomes 0, the heat tier will -1. After that, if the block is still heated, set the duration to 10 seconds. Mining the block will not keep the duration and let heat tier -1. If the tool has $(thing)Silk Touch$() or uses Auto Smelting to collect, the heat tier will be maintained."
-    },
-    {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:heater",
-      "text": "$(item)Heater$() can be used to heat heatable blocks. It can heat block on top to Heated Tier and add 1 second every seconds. If the Heat Tier of the block on top is higher than Heated Tier, then do nothing."
-    },
-    {
-      "type": "patchouli:spotlight",
-      "anchor": "mineral_fountain",
-      "item": "anvilcraft:mineral_fountain",
-      "text": "When the corners of $(l:advanced/mineral_fountain#mineral_fountain)Mineral Fountain$() is full of lava, it can be used to heat heatable blocks. It can heat block on top to Redhot Tier and add 1 second every seconds. If the Heat Tier of the block on top is higher than Redhot Tier, then do nothing."
-    },
-    {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:heliostats",
-      "text": "When $(item)Heliostats$() irradiates to heatable blocks can heat it. When block has been irradiated by heliostats, determine Heat Tier based on the number of heliostats. The curve of association of count and Heat Tier is 4, 12, 32, 80. If the Heat Tier of the block is lower or equal than provided Heat Tier, raise the Tier to the provided Tier and add 4 seconds to duration every seconds. If the Heat Tier of the block is higher than the provided Tier, then do nothing."
-    },
-    {
-      "type": "patchouli:spotlight",
-      "anchor": "laser",
-      "title": "Laser",
-      "item": "anvilcraft:ruby_laser,anvilcraft:ruby_prism",
-      "text": "When $(l:power/advanced_laser_system)Laser$() irradiates to heatable blocks can heat it. When block has been irradiated by laser, determine Heat Tier based on the level of laser. See the curve of association of laser level and Heat Tier on the next page. If the Heat Tier of the block is lower than provided Heat Tier, raise the Tier to the provided Tier and add 4 seconds to duration every seconds. If the Heat Tier of the block is higher than the provided Tier, then do nothing."
-    },
-    "Level 1: to Heated Tier and add 1 seconds to duration.$(br)Level 2: to Heated Tier and add 3 seconds to duration.$(br)Level 3-4: to Redhot Tier and add 1 seconds to duration.$(br)Level 5-8: to Redhot Tier and add 3 seconds to duration.$(br)Level 9-16: to Glowing Tier and add 1 seconds to duration.$(br)Level 17-32: to Glowing Tier and add 3 seconds to duration.$(br)Level 33-64: to Incandescent Tier and add 1 seconds to duration.$(br)Level 65+: to Incandescent Tier and add 3 seconds to duration.",
-    {
-      "type": "patchouli:text",
-      "title": "Plasma Jets",
-      "text": "When the bottom of $(thing)Fire Cauldron$() is working $(item)Heater$() and width 1x1 height 8 above is air, create a $(item)Plasma Jets$(). If the horizontal sides of this block all have a block (as tube wall,) raise itself 1 block. The highest raising is four times."
+      "title": "太阳能发电",
+      "text": "通过大量$(item)定日镜$()可以将太阳能收集到可加热方块上作为热能再被集热器吸收。$(br2)优点是耗材简单，且无须后续投入，但是占地较大，且光路上不可有方块阻挡。$(br2)$(l:advanced/heated_block#heliostats)点我$()查看具体数值。"
     },
     {
       "type": "patchouli:multiblock",
-      "title": "Example Structure",
+      "name": "太阳能发电站",
       "multiblock": {
         "mapping": {
-          "F": "anvilcraft:fire_cauldron[level=4]",
-          "H": "anvilcraft:heater",
-          "M": "anvilcraft:magnet_block",
-          "N": "anvilcraft:glowing_netherite_block",
-          "O": "anvilcraft:incandescent_netherite_block",
-          "S": "minecraft:stone",
-          "T": "anvilcraft:glowing_tungsten_block",
-          "U": "anvilcraft:incandescent_tungsten_block"
+          "A": "anvilcraft:heliostats",
+          "B": "anvilcraft:smooth_royal_steel_block",
+          "0": "anvilcraft:smooth_royal_steel_block",
+          "C": "anvilcraft:glowing_tungsten_block",
+          "D": "anvilcraft:heat_collector"
         },
         "pattern": [
-          [" M ", "U O", " M "],
-          [" S ", "S S", " T "],
-          [" O ", "M0M", " U "],
-          [" T ", "S N", " S "],
-          ["   ", " F ", "   "],
-          ["   ", " H ", "   "]
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      D      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      C      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      B      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "      B      ", "             ", "             ", "             ", "             ", "             ", "             "],
+          ["     A A     ", "             ", "  A A A A A  ", "             ", "  A A A A A  ", "A           A", "  A A 0 A A  ", "A           A", "  A A A A A  ", "             ", "  A A A A A  ", "             ", "     A A     "],
+          ["             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             ", "             "]
         ]
       },
-      "text": "This diagram is a valid structure."
+      "text": ""
     },
-    "It will try these every gird tick: $(li)Heat $(item)Netherite Blocks$() and $(item)Tungsten Blocks$() to Glowing Tier and add 1 seconds to duration. $()$(li)If any layer of tube wall accord with two sides in a same axis is $(item)Magnet Block$() and two sides in another axis is $(item)Netherite Blocks$() or $(item)Tungsten Blocks$(), heat the $(item)Netherite Blocks$() or $(item)Tungsten Blocks$() in this layer to Incandescent Tier and add 1 seconds to duration. At the same time, produce 512 charges on the $(item)Netherite Blocks$() or $(item)Tungsten Blocks$(). $()",
-    "Plasma Jets need to consume the oil in the fire cauldron to maintain. It will add 5 minutes to duration time every level consumed. The maximum duration time is 10 minutes. If the consuming will let duration time over than the maximum, it will be skip. The entities in the jets or in the middle of the jets and the cauldron will get fire damage as 4 times that of lava."
-  ]
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:oil_bucket",
+      "text": "燃烧原油发热需要大量的肉，但是发电量绝对够本。$(br2)优点是占地面积小，效率高，但是需要持续消耗肉类，需要配套的牧场/刷怪塔/刷怪笼。$(br2)$(l:advanced/heated_block#plasma_jets)点我$()查看具体数值。"
+    },
+    {
+      "type": "patchouli:multiblock",
+      "name": "油电",
+      "multiblock": {
+        "mapping": {
+          "0": "anvilcraft:heater[overload=false]",
+          "B": "anvilcraft:fire_cauldron",
+          "C": "anvilcraft:charge_collector",
+          "D": "anvilcraft:magnet_block[lit=false]",
+          "E": "anvilcraft:glowing_tungsten_block",
+          "F": "anvilcraft:heat_collector",
+          "G": "anvilcraft:plasma_jets"
+        },
+        "pattern": [
+          ["     ", "     ", "     ", "     ", "     "],
+          ["     ", " CEC ", " D D ", " CEC ", "     "],
+          ["     ", " CEC ", " D D ", " CEC ", "     "],
+          ["     ", " CEC ", " D DF", " CEC ", "     "],
+          ["     ", " CEC ", " D D ", " CEC ", "     "],
+          ["     ", "     ", "  B  ", "     ", "     "],
+          ["     ", "     ", "  0  ", "     ", "     "]
+        ]
+      },
+      "text": ""
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:advanced/heated_block",
+        "anvilcraft:apply/oil"
+      ],
+      "text": ""
+    }
+    ]
 }

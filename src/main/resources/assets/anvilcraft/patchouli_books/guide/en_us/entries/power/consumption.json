@@ -12,7 +12,7 @@
       "type": "patchouli:crafting",
       "anchor": "heater",
       "recipe": "anvilcraft:heater",
-      "text": "The $(item)Heater$()'s power consumption is 16KW. It heats the block above and allows the anvil to perform smelting operations."
+      "text": "The $(item)Heater$()'s power consumption is 16KW. It heats the block above and allows the anvil to perform smelting operations——Smelting minerals by this method can yield double the output."
     },
     {
       "type": "patchouli:crafting",
@@ -26,13 +26,14 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "item_collector",
       "recipe": "anvilcraft:item_collector",
       "text": "$(item)物品收集器$()耗电功率随着手动设置的范围和冷却改变，可以收集大范围的掉落物，可以设置过滤。"
     },
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:induction_light",
-      "text": "Lighting, with a power consumption of 1 kW$(br)Right click on this with $(item)Redstone$() to change it to ripening mode$(br)Right click on this with $(item)Glowstone Dust$() to change it to anti-monster spawning mode$(br)Right click on this with $(l:advanced/mineral_fountain#void_matter)Void Matter$() to change it to anti-animal spawning mode$(br)The power consumption of the above three modes will become 16 kW"
+      "text": "Lighting, with a power consumption of 1 kW$(br)Right click on this with $(item)Redstone$() to change it to ripening mode$(br)Right click on this with $(item)Glowstone Dust$() to change it to anti-monster spawning mode$(br)Right click on this with $(l:struct/mineral_fountain#void_matter)Void Matter$() to change it to anti-animal spawning mode$(br)The power consumption of the above three modes will become 16 kW"
     }
   ]
 }

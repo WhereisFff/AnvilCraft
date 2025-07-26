@@ -40,8 +40,6 @@ import java.util.HashSet;
 import java.util.Set;
 import java.util.function.BiConsumer;
 
-import static dev.dubhe.anvilcraft.api.power.PowerGrid.GRID_TICK;
-
 public class PlasmaJetsBlockEntity extends BlockEntity {
     private static final int MAX_DURATION = 10 * 60 * 20;
     private final Set<TubeWallLayer> tubeWalls = new HashSet<>();
@@ -197,7 +195,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
     }
 
     protected void provideCharge(Level level) {
-        if (level.getGameTime() % GRID_TICK != 0) return;
+        if (level.getGameTime() % (ChargeCollectorBlockEntity.COOLDOWN * 20) != 0) return;
         for (TubeWallLayer layer : this.tubeWalls) {
             Pair<BlockPos, BlockPos> posPair = switch (layer.isMagnet(level)) {
                 case TRUE -> layer.first;
@@ -206,7 +204,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
             };
             if (posPair == null) continue;
             BlockPos pos = posPair.getFirst();
-            double uncharged = 256; // makes sense
+            double uncharged = 256;
             for (ChargeCollectorManager.Entry entry : ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos)) {
                 ChargeCollectorBlockEntity entity = entry.getBlockEntity();
                 if (ChargeCollectorManager.getInstance(level).canCollect(entity, pos)) {
@@ -217,7 +215,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 }
             }
             pos = posPair.getSecond();
-            uncharged = 256; // makes sense
+            uncharged = 256;
             for (ChargeCollectorManager.Entry entry : ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos)) {
                 ChargeCollectorBlockEntity entity = entry.getBlockEntity();
                 if (ChargeCollectorManager.getInstance(level).canCollect(entity, pos)) {
