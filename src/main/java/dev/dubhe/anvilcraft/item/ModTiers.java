@@ -21,6 +21,14 @@ public enum ModTiers implements Tier {
         () -> Ingredient.of(Items.AMETHYST_SHARD),
         ModBlockTags.INCORRECT_FOR_AMETHYST_TOOL
     ),
+    ROYAL(
+        1561,
+        8.0f,
+        1.0f,
+        14,
+        () -> Ingredient.of(ModItems.ROYAL_STEEL_INGOT),
+        ModBlockTags.INCORRECT_FOR_ROYAL_TOOL
+    ),
     EMBER_METAL(
         2031,
         10.0f,
