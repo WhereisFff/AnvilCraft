@@ -139,9 +139,6 @@ public class BlockTagLoader {
 
         provider.addTag(ModBlockTags.INCORRECT_FOR_EMBER_TOOL);
 
-        provider.addTag(ModBlockTags.INCORRECT_FOR_MULTIPHASE_TOOL)
-            .addTag(ModBlockTags.INCORRECT_FOR_EMBER_TOOL);
-
         provider.addTag(ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL)
             .addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 

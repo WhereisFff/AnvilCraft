@@ -83,7 +83,6 @@ public class ModBlockTags {
 
     public static final TagKey<Block> INCORRECT_FOR_AMETHYST_TOOL = bind("incorrect_for_amethyst_tool");
     public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
-    public static final TagKey<Block> INCORRECT_FOR_MULTIPHASE_TOOL = bind("incorrect_for_multiphase_tool");
     public static final TagKey<Block> INCORRECT_FOR_FROST_METAL_TOOL = bind("incorrect_for_frost_metal_tool");
     public static final TagKey<Block> INCORRECT_FOR_TRANSCENDIUM_TOOL = bind("incorrect_for_transcendium_tool");
 
