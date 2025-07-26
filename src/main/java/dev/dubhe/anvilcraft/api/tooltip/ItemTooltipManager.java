@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
+import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -162,13 +163,14 @@ public class ItemTooltipManager {
      */
     public static void addTooltip(ItemStack stack, List<Component> tooltip) {
         Item item = stack.getItem();
+        if (stack.has(ModComponents.MULTIPHASE)) {
+            propertyTooltip(
+                "multiphase", tooltip, 0xDD91FA,
+                ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
+        }
         if (stack.has(ModComponents.PROVIDENCE)) {
-            if (!Screen.hasShiftDown()) {
-                propertyTooltip(
-                    "providence", tooltip, 0xFFBE3B,
-                    Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
-            } else {
-                propertyTooltip("providence.shifting", tooltip, 0xFFBE3B, ComponentUtils.formatList(
+            if (Screen.hasShiftDown()) {
+                propertyTooltip("providence.shifting", tooltip, 0xFFCB62, ComponentUtils.formatList(
                     List.of(
                         Component.translatable("enchantment.minecraft.fortune"),
                         Component.translatable("enchantment.minecraft.looting"),
@@ -176,15 +178,14 @@ public class ItemTooltipManager {
                         Component.translatable("enchantment.minecraft.thorns"),
                         Component.translatable("enchantment.minecraft.luck_of_the_sea")
                     ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+            } else {
+                propertyTooltip(
+                    "providence", tooltip, 0xFFCB62,
+                    Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
             }
         }
         if (stack.has(ModComponents.ETERNAL)) {
-            propertyTooltip("eternal", tooltip, 0xE4DAFD);
-        }
-        if (stack.has(ModComponents.MULTIPHASE)) {
-            propertyTooltip(
-                "multiphase", tooltip, 0xD16CF8,
-                ModKeyMappings.SWITCH_PHASE.get().getKey().getDisplayName());
+            propertyTooltip("eternal", tooltip, 0xD3C5F6);
         }
         if (stack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
             if (!Screen.hasShiftDown()) {
@@ -230,7 +231,7 @@ public class ItemTooltipManager {
     private static void propertyTooltip(String propertyName, List<Component> tooltip, ChatFormatting color) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment")
+            if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
                     .map(Objects::toString)
                     .filter(key -> key.contains("enchantment"))
@@ -249,7 +250,7 @@ public class ItemTooltipManager {
     private static void propertyTooltip(String propertyName, List<Component> tooltip, int color) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment")
+            if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
                     .map(Objects::toString)
                     .filter(key -> key.contains("enchantment"))
@@ -265,29 +266,10 @@ public class ItemTooltipManager {
         );
     }
 
-    private static void propertyTooltip(String propertyName, List<Component> tooltip, ChatFormatting color, Object... args) {
-        int i = 0;
-        for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment")
-                && ListUtil.safelyGet(tooltip, j + 1)
-                    .map(Objects::toString)
-                    .filter(key -> !key.contains("enchantment"))
-                    .isPresent()
-            ) {
-                i = j;
-                break;
-            }
-        }
-        tooltip.add(
-            1 + i,
-            Component.translatable("tooltip.anvilcraft.property.%s".formatted(propertyName), args).withStyle(color)
-        );
-    }
-
     private static void propertyTooltip(String propertyName, List<Component> tooltip, int color, Object... args) {
         int i = 0;
         for (int j = 0; j < tooltip.size(); j++) {
-            if (tooltip.get(j).toString().contains("enchantment")
+            if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
                     .map(Objects::toString)
                     .filter(key -> !key.contains("enchantment"))
