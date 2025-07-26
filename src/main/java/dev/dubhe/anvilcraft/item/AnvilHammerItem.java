@@ -93,6 +93,16 @@ public class AnvilHammerItem extends Item implements Equipable {
     }
 
     @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 14;
+    }
+
+    @Override
     public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
         return repairCandidate.is(Items.IRON_INGOT);
     }

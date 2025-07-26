@@ -26,6 +26,11 @@ public class EmberAnvilHammerItem extends AnvilHammerItem {
     }
 
     @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 22;
+    }
+
+    @Override
     public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
         return repairCandidate.is(ModItems.EMBER_METAL_INGOT);
     }

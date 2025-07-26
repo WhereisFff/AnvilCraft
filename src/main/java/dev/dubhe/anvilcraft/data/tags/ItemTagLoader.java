@@ -201,6 +201,9 @@ public class ItemTagLoader {
             .addTag(ModItemTags.RESONATOR);
         provider.addTag(ItemTags.PICKAXES)
             .addTag(ModItemTags.RESONATOR);
+
+        provider.addTag(ItemTags.DURABILITY_ENCHANTABLE)
+            .add(findResourceKey(ModItems.MAGNET.get()));
     }
 
     private static @NotNull ResourceKey<Item> findResourceKey(Item item) {

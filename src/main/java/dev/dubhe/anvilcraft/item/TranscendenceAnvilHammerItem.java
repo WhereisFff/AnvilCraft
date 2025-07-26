@@ -30,6 +30,11 @@ public class TranscendenceAnvilHammerItem extends AnvilHammerItem {
     }
 
     @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 28;
+    }
+
+    @Override
     public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
         return repairCandidate.is(ModItems.TRANSCENDIUM_INGOT);
     }
