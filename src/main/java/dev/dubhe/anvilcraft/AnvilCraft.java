@@ -8,6 +8,9 @@ import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.dfu.AnvilCraftDfu;
+import dev.dubhe.anvilcraft.init.ModAmuletTypes;
+import dev.dubhe.anvilcraft.init.ModAttatchments;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModCommands;
@@ -24,8 +27,11 @@ import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootContextParamSets;
 import dev.dubhe.anvilcraft.init.ModLootItemConditions;
 import dev.dubhe.anvilcraft.init.ModLootItemFunctions;
+import dev.dubhe.anvilcraft.init.ModLootModifiers;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.init.ModNetworks;
+import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.init.ModVillagers;
 import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
@@ -75,6 +81,7 @@ public class AnvilCraft {
 
     public AnvilCraft(IEventBus modEventBus) {
         MOD_BUS = modEventBus;
+        ModAttatchments.register(modEventBus);
         ModItemGroups.register(modEventBus);
         ModBlocks.register();
         ModFluids.register(modEventBus);
@@ -82,11 +89,12 @@ public class AnvilCraft {
         ModItems.register();
         ModBlockEntities.register();
         ModMenuTypes.register();
-        ModDispenserBehavior.register();
         ModComponents.register(modEventBus);
         ModVillagers.register(modEventBus);
         ModRecipeTypes.register(modEventBus);
         ModDataAttachments.register(modEventBus);
+        ModParticles.register(modEventBus);
+        ModMobEffects.register(modEventBus);
         ModInspections.initialize();
 
         ModLootContextParamSets.registerAll();
@@ -94,7 +102,9 @@ public class AnvilCraft {
         ModEnchantmentEffects.register(modEventBus);
         ModLootItemFunctions.LOOT_FUNCTION_TYPES.register(modEventBus);
         ModLootItemConditions.LOOT_CONDITION_TYPES.register(modEventBus);
+        ModLootModifiers.register(modEventBus);
         TeslaFilter.init();
+        ModAmuletTypes.register(modEventBus);
         // datagen
         AnvilCraftDatagen.init();
 
@@ -103,7 +113,9 @@ public class AnvilCraft {
         integrationManager.compileContent();
         integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
+        AnvilCraftDfu.constructAndOptimize();
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
+        LOGGER.info("let's 0721");
     }
 
     private static void registerEvents(@NotNull IEventBus eventBus) {
@@ -150,10 +162,21 @@ public class AnvilCraft {
 
     public static void loadComplete(@NotNull FMLLoadCompleteEvent event) {
         event.enqueueWork(() -> {
+            ModDispenserBehavior.register();
             ModInteractionMap.initInteractionMap();
             if (Util.isLoaded("theoneprobe")) {
                 LOGGER.info("TheOneProbe found. Loading AnvilCraft TheOneProbe plugin...");
                 AnvilCraftTopPlugin.init();
+            }
+            if (Util.isLoaded("apothic_enchanting")) {
+                LOGGER.info(
+                    "Apothic Enchanting found. Set "
+                    + "royalAnvilBeyondMaxLevel, "
+                    + "emberAnvilBeyondMaxLevel and "
+                    + "transcendenceAnvilBeyondMaxLevel to true.");
+                config.royalAnvilBeyondMaxLevel = true;
+                config.emberAnvilBeyondMaxLevel = true;
+                config.transcendenceAnvilBeyondMaxLevel = true;
             }
         });
     }

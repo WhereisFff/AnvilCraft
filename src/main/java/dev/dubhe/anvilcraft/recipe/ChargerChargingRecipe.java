@@ -4,9 +4,9 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
-import dev.dubhe.anvilcraft.util.CodecUtil;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -17,14 +17,17 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.Contract;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -32,13 +35,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @Getter
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input> {
-    public final Item ingredient;
-    public final Item result;
+public class ChargerChargingRecipe implements Recipe<SingleRecipeInput> {
+    public final Ingredient ingredient;
+    public final ItemStack result;
     public final int power; //units: kW, positive for discharge and negative for charge
     public final int time; //units: tick
 
-    public ChargerChargingRecipe(Item input, Item result, int power, int time) {
+    public ChargerChargingRecipe(Ingredient input, ItemStack result, int power, int time) {
         this.ingredient = input;
         this.result = result;
         this.power = power;
@@ -67,37 +70,33 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return result.getDefaultInstance();
+        return result;
     }
 
     @Override
-    public ItemStack assemble(ChargerChargingRecipe.Input input, HolderLookup.Provider registries) {
-        return result.getDefaultInstance().copy();
+    public ItemStack assemble(SingleRecipeInput input, HolderLookup.Provider registries) {
+        return result.copy();
     }
 
     @Override
-    public boolean matches(ChargerChargingRecipe.Input input, Level level) {
-        return input.item.is(ingredient);
+    public boolean matches(SingleRecipeInput input, Level level) {
+        return ingredient.test(input.getItem(0));
     }
 
-    public record Input(ItemStack item) implements RecipeInput {
+    public Block getProcessingBlock() {
+        return (this.power < 0 ? ModBlocks.CHARGER : ModBlocks.DISCHARGER).get();
+    }
 
-        @Override
-        public ItemStack getItem(int i) {
-            return item;
-        }
-
-        @Override
-        public int size() {
-            return 1;
-        }
+    @Override
+    public boolean isSpecial() {
+        return true;
     }
 
     public static class Serializer implements RecipeSerializer<ChargerChargingRecipe> {
 
         private static final MapCodec<ChargerChargingRecipe> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
-            CodecUtil.ITEM_CODEC.fieldOf("ingredient").forGetter(ChargerChargingRecipe::getIngredient),
-            CodecUtil.ITEM_CODEC.fieldOf("result").forGetter(ChargerChargingRecipe::getResult),
+            Ingredient.CODEC_NONEMPTY.fieldOf("ingredient").forGetter(ChargerChargingRecipe::getIngredient),
+            ItemStack.CODEC.fieldOf("result").forGetter(ChargerChargingRecipe::getResult),
             Codec.INT.fieldOf("power").forGetter(ChargerChargingRecipe::getPower),
             Codec.INT.fieldOf("time").forGetter(ChargerChargingRecipe::getTime)
         ).apply(ins, ChargerChargingRecipe::new));
@@ -117,15 +116,15 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
         }
 
         private static void encode(RegistryFriendlyByteBuf buf, ChargerChargingRecipe recipe) {
-            CodecUtil.ITEM_STREAM_CODEC.encode(buf, recipe.ingredient);
-            CodecUtil.ITEM_STREAM_CODEC.encode(buf, recipe.result);
+            Ingredient.CONTENTS_STREAM_CODEC.encode(buf, recipe.ingredient);
+            ItemStack.STREAM_CODEC.encode(buf, recipe.result);
             buf.writeVarInt(recipe.power);
             buf.writeVarInt(recipe.time);
         }
 
         private static ChargerChargingRecipe decode(RegistryFriendlyByteBuf buf) {
-            Item ingredient = CodecUtil.ITEM_STREAM_CODEC.decode(buf);
-            Item result = CodecUtil.ITEM_STREAM_CODEC.decode(buf);
+            Ingredient ingredient = Ingredient.CONTENTS_STREAM_CODEC.decode(buf);
+            ItemStack result = ItemStack.STREAM_CODEC.decode(buf);
             int power = buf.readVarInt();
             int time = buf.readVarInt();
             return new ChargerChargingRecipe(ingredient, result, power, time);
@@ -135,18 +134,23 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
     @Setter
     @Accessors(fluent = true, chain = true)
     public static class Builder extends AbstractRecipeBuilder<ChargerChargingRecipe> {
-        private Item ingredient = null;
-        private Item result = null;
+        private Ingredient ingredient = null;
+        private ItemStack result = null;
         private int power = 0;
         private int time = 0;
 
         public ChargerChargingRecipe.Builder requires(ItemLike pItem) {
-            ingredient = pItem.asItem();
+            ingredient = Ingredient.of(pItem);
+            return this;
+        }
+
+        public ChargerChargingRecipe.Builder requires(TagKey<Item> tag) {
+            ingredient = Ingredient.of(tag);
             return this;
         }
 
         public ChargerChargingRecipe.Builder result(ItemLike pItem) {
-            result = pItem.asItem();
+            result = pItem.asItem().getDefaultInstance();
             return this;
         }
 
@@ -184,7 +188,7 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
 
         @Override
         public Item getResult() {
-            return result;
+            return result.getItem();
         }
 
         @Override
@@ -193,7 +197,6 @@ public class ChargerChargingRecipe implements Recipe<ChargerChargingRecipe.Input
                 recipeOutput,
                 AnvilCraft.of(BuiltInRegistries.ITEM.getKey(getResult()).getPath())
                     .withPrefix(getType() + "/")
-                    .withSuffix("_from_" + BuiltInRegistries.ITEM.getKey(ingredient).getPath())
             );
         }
     }

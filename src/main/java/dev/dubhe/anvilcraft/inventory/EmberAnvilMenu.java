@@ -1,17 +1,14 @@
 package dev.dubhe.anvilcraft.inventory;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
-import dev.dubhe.anvilcraft.item.ICursed;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
@@ -20,7 +17,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.CommonHooks;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,6 +51,7 @@ public class EmberAnvilMenu extends AnvilMenu {
                 + (long) inputItemRight.getOrDefault(DataComponents.REPAIR_COST, 0);
             this.repairItemCountCost = 0;
             boolean hasStoredEnchantmentsOnInput2 = false;
+            //noinspection DataFlowIssue
             if (!CommonHooks.onAnvilChange(
                 this, inputItemLeft, inputItemRight, this.resultSlots, this.itemName, repairCost, this.player)) {
                 return;
@@ -137,16 +134,13 @@ public class EmberAnvilMenu extends AnvilMenu {
                         Holder<Enchantment> holder = entry.getKey();
                         int enchantmentsOnLeftLevel = enchantmentsOnLeft.getLevel(holder);
                         int enchantmentsOnRightLevel = entry.getIntValue();
-                        enchantmentsOnRightLevel = Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
                         Enchantment enchantment = holder.value();
+                        enchantmentsOnRightLevel =
+                            enchantmentsOnLeftLevel == enchantmentsOnRightLevel
+                            ? enchantmentsOnRightLevel + 1
+                            : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
 
-                        for (Holder<Enchantment> holder1 : enchantmentsOnLeft.keySet()) {
-                            if (!holder1.equals(holder) && !Enchantment.areCompatible(holder, holder1)) {
-                                ++totalCost;
-                            }
-                        }
-                        enchantmentsOnRightLevel = Math.clamp(enchantmentsOnRightLevel, 0, enchantment.getMaxLevel());
-                        if (enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
+                        if (!AnvilCraft.config.emberAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
                             enchantmentsOnRightLevel = enchantment.getMaxLevel();
                         }
 
@@ -156,11 +150,12 @@ public class EmberAnvilMenu extends AnvilMenu {
                             anvilCost = Math.max(1, anvilCost / 2);
                         }
 
-                        long t = anvilCost
-                            * enchantmentsOnRightLevel
-                            * inputItemLeft.getCount()
-                            * (repairCost == 0 ? 1 : repairCost);
-                        totalCost += Math.clamp(t, 0, Integer.MAX_VALUE);
+                        totalCost += Math.clamp(
+                            anvilCost * enchantmentsOnRightLevel * (repairCost == 0 ? 1 : repairCost),
+                            0, Integer.MAX_VALUE);
+                        if (inputItemLeft.getCount() > 1) {
+                            totalCost = 99999999;
+                        }
                     }
                 }
             }
@@ -171,7 +166,7 @@ public class EmberAnvilMenu extends AnvilMenu {
                 totalCost += repairCostT
                     * inputItemLeft.getCount()
                     * inputItemRight.getCount()
-                    * (baseRepairCost == null ? 1 : baseRepairCost);
+                    * (baseRepairCost == null || baseRepairCost == 0 ? 1 : baseRepairCost);
                 Component currentName = inputItemLeft.getHoverName();
                 if (!this.itemName.equals(currentName.getString())
                     && this.itemName != null
@@ -232,17 +227,5 @@ public class EmberAnvilMenu extends AnvilMenu {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
             this.cost.set(0);
         }
-    }
-
-    @Override
-    protected void onTake(@NotNull Player player, @NotNull ItemStack stack) {
-        super.onTake(player, stack);
-        Level level = player.level();
-        if (level.isClientSide()) return;
-        int curedNumber = ICursed.hasCursedNumber(player);
-        if (curedNumber <= 0) return;
-        LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
-        bolt.setPos(player.getX(), player.getY(), player.getZ());
-        level.addFreshEntity(bolt);
     }
 }

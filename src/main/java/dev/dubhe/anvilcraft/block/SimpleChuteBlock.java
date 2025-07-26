@@ -198,13 +198,10 @@ public class SimpleChuteBlock
 
 
     @Override
-    public VoxelShape getShape(
-        BlockState blockState,
-        BlockGetter blockGetter,
-        BlockPos blockPos,
-        CollisionContext collisionContext) {
-        if (!blockState.getValue(TALL)) {
-            return switch (blockState.getValue(FACING)) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        Direction facing = state.getValue(FACING);
+        if (!state.getValue(TALL)) {
+            return switch (facing) {
                 case NORTH -> AABB_N;
                 case EAST -> AABB_E;
                 case SOUTH -> AABB_S;
@@ -212,7 +209,7 @@ public class SimpleChuteBlock
                 default -> AABB;
             };
         } else {
-            return switch (blockState.getValue(FACING)) {
+            return switch (facing) {
                 case NORTH -> AABB_TALL_N;
                 case EAST -> AABB_TALL_E;
                 case SOUTH -> AABB_TALL_S;

@@ -58,6 +58,10 @@ public class AnvilUtil {
                 for (Ingredient ingredient : recipe.value().getIngredients()) {
                     for (ItemStack stack : items.values()) {
                         if (ingredient.test(stack)) {
+                            if (stack.hasCraftingRemainingItem()) {
+                                ItemStack remain = stack.getCraftingRemainingItem();
+                                results.mergeInt(remain.getItem(), remain.getCount(), Integer::sum);
+                            }
                             stack.shrink(1);
                             break;
                         }
@@ -87,6 +91,7 @@ public class AnvilUtil {
         return false;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static void dropItems(@NotNull List<ItemStack> items, Level level, Vec3 pos) {
         for (ItemStack item : items) {
             if (item.isEmpty()) continue;
@@ -116,6 +121,7 @@ public class AnvilUtil {
                 0.0d,
                 0.0d
             );
+            ((AdsorbableItemEntity) entity).setIsAdsorbable(false);
             level.addFreshEntity(entity);
         }
     }

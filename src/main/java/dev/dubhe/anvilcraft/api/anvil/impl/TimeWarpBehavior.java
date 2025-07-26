@@ -2,20 +2,28 @@ package dev.dubhe.anvilcraft.api.anvil.impl;
 
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
-import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
+import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
+import dev.dubhe.anvilcraft.api.heat.HeatTier;
+import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
+import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModDamageTypes;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.anvil.HeatProduceTimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
+import dev.dubhe.anvilcraft.util.Util;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,6 +35,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.phys.AABB;
@@ -48,24 +59,30 @@ public class TimeWarpBehavior implements IAnvilBehavior {
         BlockPos hitBlockPos,
         BlockState hitBlockState,
         float fallDistance,
-        AnvilFallOnLandEvent event) {
-        BlockState belowState = level.getBlockState(hitBlockPos.below());
-        if (!belowState.is(ModBlocks.CORRUPTED_BEACON) || !belowState.getValue(CorruptedBeaconBlock.LIT)) return false;
+        AnvilFallOnLandEvent event
+    ) {
+        if (!level.getBlockEntity(hitBlockPos.below(), ModBlockEntities.CORRUPTED_BEACON.get())
+            .map(beacon -> beacon.getLevels() > 0 && !beacon.getBeamSections().isEmpty())
+            .orElse(false)
+        ) return false;
 
         List<LivingEntity> damagedEntities = level.getEntitiesOfClass(
             LivingEntity.class,
             new AABB(hitBlockPos),
-            LivingEntity::isAlive);
+            LivingEntity::isAlive
+        );
         if (!damagedEntities.isEmpty()) {
             damagedEntities.forEach(it -> it.hurt(ModDamageTypes.lostInTime(level), Float.MAX_VALUE));
             if (level instanceof ServerLevel serverLevel && damagedEntities.stream().anyMatch(LivingEntity::isDeadOrDying)) {
                 Vec3 particleCenter = hitBlockPos.above().getCenter();
-                serverLevel.sendParticles(ParticleTypes.SOUL,
+                serverLevel.sendParticles(
+                    ParticleTypes.SOUL,
                     particleCenter.x,
                     particleCenter.y,
                     particleCenter.z,
                     SOUL_PARTICLE_COUNT,
-                    0.4, 0.4, 0.4, 0.01);
+                    0.4, 0.4, 0.4, 0.01
+                );
             }
         }
 
@@ -84,8 +101,8 @@ public class TimeWarpBehavior implements IAnvilBehavior {
                         return Map.entry(it.getKey(), itemStack.transmuteCopy(ModBlocks.AMBER_BLOCK));
                     }
                     ItemLike amberBlock = entity.getType().getCategory() == MobCategory.MONSTER
-                        && level.getRandom().nextFloat() <= 0.05 ? ModBlocks.RESENTFUL_AMBER_BLOCK
-                        : ModBlocks.MOB_AMBER_BLOCK;
+                                          && level.getRandom().nextFloat() <= 0.05 ? ModBlocks.RESENTFUL_AMBER_BLOCK
+                                                                                   : ModBlocks.MOB_AMBER_BLOCK;
                     return Map.entry(it.getKey(), itemStack.transmuteCopy(amberBlock));
                 })
                 .forEach(it -> {
@@ -137,6 +154,41 @@ public class TimeWarpBehavior implements IAnvilBehavior {
         }
         if (recipe.isProduceFluid()) {
             CauldronUtil.fill(level, hitBlockPos, recipe.getCauldron(), 1, false);
+        }
+        if (recipe instanceof HeatProduceTimeWarpRecipe heatRecipe) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
+                BlockPos pos = hitBlockPos.relative(direction);
+                BlockState state = serverLevel.getBlockState(pos);
+                if (!state.is(ModBlockTags.HEATABLE_BLOCKS)) continue;
+
+                HeatableBlockEntity heatable = Util.castSafely(level.getBlockEntity(pos), HeatableBlockEntity.class).orElse(null);
+                Optional<ResourceLocation> idOp = HeatRecorder.getId(level, pos, state);
+                if (idOp.isEmpty()) continue;
+                HeatTier currentTier = HeatRecorder.getTier(level, pos, state)
+                    .orElseThrow(() -> new IllegalStateException("Unexpected non tier heatable block!"));
+                for (var info : heatRecipe.getInfos()) {
+                    HeatTier tier = info.tier();
+                    int durationDelta = info.duration();
+                    if (tier.compareTo(currentTier) > 0) {
+                        Block deltaBlock = HeatRecorder.getHeatableBlock(idOp.get(), tier).orElse(null);
+                        if (deltaBlock == null) continue;
+                        level.setBlockAndUpdate(pos, deltaBlock.defaultBlockState());
+                        if (!(deltaBlock instanceof EntityBlock)) continue;
+                        BlockEntity deltaBlockEntity = level.getBlockEntity(pos);
+                        if (!(deltaBlockEntity instanceof HeatableBlockEntity heatableEntity)) continue;
+                        level.setBlockEntity(heatableEntity);
+                        heatable = heatableEntity;
+                    } else if (tier.compareTo(currentTier) < 0) {
+                        durationDelta = 0;
+                    }
+                    if (heatable == null) continue;
+
+                    if (durationDelta > 0) {
+                        heatable.addDurationInTick(durationDelta);
+                    }
+                    heatable = null;
+                }
+            }
         }
         items.forEach((k, v) -> {
             if (v.isEmpty()) {

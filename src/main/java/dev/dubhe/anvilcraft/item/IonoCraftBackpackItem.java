@@ -36,6 +36,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
@@ -92,7 +93,8 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
     }
 
     @Override
-    public @Nullable ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
+    public @Nullable ResourceLocation getArmorTexture(
+        ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         if (getFlightTime(stack) > 0) {
             return TEXTURE;
         }
@@ -112,8 +114,15 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
         return stack.getOrDefault(ModComponents.FLIGHT_TIME, 0);
     }
 
-    public static void setFlightTime(ItemStack stack, int time) {
-        stack.set(ModComponents.FLIGHT_TIME, Math.clamp(time, 0, AnvilCraft.config.ionoCraftBackpackMaxFlightTime));
+    public static void addFlightTime(ItemStack stack, int time) {
+        stack.set(ModComponents.FLIGHT_TIME, Math.clamp(getFlightTime(stack) + time, 0, AnvilCraft.config.ionoCraftBackpackMaxFlightTime));
+    }
+
+    public static boolean canModify(ItemStack stack, DynamicPowerComponent component) {
+        return stack.is(ModItems.IONOCRAFT_BACKPACK)
+               && component.getPowerGrid() != null
+               && component.getPowerGrid().isWorking()
+               && component.getPowerConsumptions().contains(CONSUMPTION);
     }
 
     public static void addStackProvider(Function<Player, ItemStack> provider) {
@@ -130,65 +139,85 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
         return ItemStack.EMPTY;
     }
 
-    public static void giveFlight(ServerPlayer player) {
-        if (player instanceof IDynamicPowerComponentHolder holder) {
-            DynamicPowerComponent powerComponent = holder.anvilCraft$getPowerComponent();
-            ItemStack equipped = getByPlayer(player);
-            if (!equipped.isEmpty()) {
-                if (powerComponent.getPowerGrid() != null) {
-                    powerComponent.getPowerConsumptions().add(CONSUMPTION);
-                } else {
-                    powerComponent.getPowerConsumptions().remove(CONSUMPTION);
-                }
-                int flightTime = getFlightTime(equipped);
-                AttributeInstance instance = player.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
-                if (flightTime > 0) {
-                    if (!instance.hasModifier(CREATIVE_FLIGHT_ID)) {
-                        instance.addTransientModifier(CREATIVE_FLIGHT);
-                    }
-                } else {
-                    if (instance.hasModifier(CREATIVE_FLIGHT_ID)) {
-                        instance.removeModifier(CREATIVE_FLIGHT);
-                    }
-                }
-            } else {
-                powerComponent.getPowerConsumptions().remove(CONSUMPTION);
-                AttributeInstance instance = player.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
-                if (instance.hasModifier(CREATIVE_FLIGHT_ID)) {
-                    instance.removeModifier(CREATIVE_FLIGHT);
-                }
+    public static void refreshPower(ServerPlayer player) {
+        IDynamicPowerComponentHolder holder = IDynamicPowerComponentHolder.of(player);
+
+        AttributeInstance instance = player.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
+        if (instance == null) return;
+
+        DynamicPowerComponent powerComponent = holder.anvilCraft$getPowerComponent();
+        ItemStack equipped = getByPlayer(player);
+        if (equipped.isEmpty()) {
+            powerComponent.getPowerConsumptions().remove(CONSUMPTION);
+            if (instance.hasModifier(CREATIVE_FLIGHT_ID)) {
+                instance.removeModifier(CREATIVE_FLIGHT);
+            }
+            return;
+        } else if (getFlightTime(equipped) >= AnvilCraft.config.ionoCraftBackpackMaxFlightTime) {
+            powerComponent.getPowerConsumptions().remove(CONSUMPTION);
+            return;
+        }
+
+        if (powerComponent.getPowerGrid() == null) return;
+        if (powerComponent.getPowerGrid().getRemaining() >= 64) {
+            powerComponent.getPowerConsumptions().add(CONSUMPTION);
+        } else if (powerComponent.getPowerConsumptions().contains(CONSUMPTION) && !powerComponent.getPowerGrid().isWorking()) {
+            powerComponent.getPowerConsumptions().remove(CONSUMPTION);
+        }
+    }
+
+    public static void refreshFlight(ServerPlayer player) {
+        ItemStack equipped = getByPlayer(player);
+        AttributeInstance instance = player.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
+        if (instance == null) return;
+        int flightTime = getFlightTime(equipped);
+        if (flightTime > 0) {
+            if (!instance.hasModifier(CREATIVE_FLIGHT_ID)) {
+                instance.addTransientModifier(CREATIVE_FLIGHT);
+            }
+        } else {
+            if (instance.hasModifier(CREATIVE_FLIGHT_ID)) {
+                instance.removeModifier(CREATIVE_FLIGHT);
             }
         }
     }
 
-    public static void flightTick(ServerPlayer player) {
-        if (player.isCreative()) return;
-        if (player instanceof IDynamicPowerComponentHolder holder && player.getAbilities().flying) {
-            ItemStack itemStack = getByPlayer(player);
-            if (itemStack.is(ModItems.IONOCRAFT_BACKPACK)) {
-                int flightTime = IonoCraftBackpackItem.getFlightTime(itemStack);
-                flightTime--;
-                if (!(holder.anvilCraft$getPowerComponent().getPowerGrid() != null && holder.anvilCraft$getPowerComponent().getPowerGrid().isWorking())) {
-                    if (flightTime <= AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2) {
-                        Inventory inventory = player.getInventory();
-                        int slot = inventory.findSlotMatchingItem(ModItems.CAPACITOR.asStack());
-                        if (slot != -1) {
-                            inventory.removeItem(slot, 1);
-                            inventory.placeItemBackInInventory(ModItems.CAPACITOR_EMPTY.asStack());
-                            flightTime = flightTime + AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2;
-                        }
-                    }
-                }
-                IonoCraftBackpackItem.setFlightTime(itemStack, flightTime);
-            }
+    public static void playerTick(ServerPlayer player) {
+        IDynamicPowerComponentHolder holder = IDynamicPowerComponentHolder.of(player);
+
+        refreshPower(player);
+        refreshFlight(player);
+
+        ItemStack backpack = getByPlayer(player);
+        if (backpack.isEmpty()) return;
+
+        AtomicInteger flightTime = new AtomicInteger();
+
+        if (player.getAbilities().flying) {
+            flightTime.decrementAndGet();
         }
-        giveFlight(player);
+        capacitorTick(holder, backpack, flightTime);
+
+        addFlightTime(backpack, flightTime.get());
+    }
+
+    private static void capacitorTick(IDynamicPowerComponentHolder holder, ItemStack backpack, AtomicInteger flightTime) {
+        if (getFlightTime(backpack) > AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2) return;
+
+        if (!(holder instanceof ServerPlayer player)) return;
+        Inventory inventory = player.getInventory();
+        int slot = inventory.findSlotMatchingItem(ModItems.CAPACITOR.asStack());
+        if (slot < 0) return;
+
+        inventory.removeItem(slot, 1);
+        inventory.placeItemBackInInventory(ModItems.CAPACITOR_EMPTY.asStack());
+        flightTime.addAndGet(AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2);
     }
 
     @Override
     public void onCarriedUpdate(ItemStack itemStack, ServerPlayer serverPlayer) {
         AttributeInstance instance = serverPlayer.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
-        if (instance.hasModifier(CREATIVE_FLIGHT_ID)) {
+        if (instance != null && instance.hasModifier(CREATIVE_FLIGHT_ID)) {
             instance.removeModifier(CREATIVE_FLIGHT);
         }
     }

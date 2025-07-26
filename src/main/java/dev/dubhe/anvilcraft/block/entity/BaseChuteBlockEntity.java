@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.itemhandler.IItemHandlerHolder;
 import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -32,7 +33,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Objects;
 
-import static dev.dubhe.anvilcraft.util.ItemHandlerUtil.getTargetItemHandler;
+import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getSourceItemHandler;
+import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
 
 @Getter
 @MethodsReturnNonnullByDefault
@@ -41,7 +43,6 @@ public abstract class BaseChuteBlockEntity
     extends BaseMachineBlockEntity
     implements IFilterBlockEntity, IDiskCloneable, IItemHandlerHolder {
 
-    private int cooldown = 0;
     private final FilteredItemStackHandler itemHandler = new FilteredItemStackHandler(9) {
         @Override
         public void onContentsChanged(int slot) {
@@ -50,6 +51,9 @@ public abstract class BaseChuteBlockEntity
             setChanged();
         }
     };
+    @Setter
+    private int cooldown = 0;
+    private long tickedGameTime;
 
     protected BaseChuteBlockEntity(BlockEntityType<? extends BlockEntity> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -63,6 +67,17 @@ public abstract class BaseChuteBlockEntity
         return Direction.UP;
     }
 
+    @Override
+    public void setDirection(Direction direction) {
+        if (shouldSkipDirection(direction)) return;
+        BlockPos pos = this.getBlockPos();
+        Level level = this.getLevel();
+        if (null == level) return;
+        BlockState state = level.getBlockState(pos);
+        if (!validateBlockState(state)) return;
+        level.setBlockAndUpdate(pos, state.setValue(getFacingProperty(), direction));
+    }
+
     protected abstract boolean shouldSkipDirection(Direction direction);
 
     protected abstract boolean validateBlockState(BlockState state);
@@ -74,17 +89,6 @@ public abstract class BaseChuteBlockEntity
     protected abstract Direction getInputDirection();
 
     protected abstract boolean isEnabled();
-
-    @Override
-    public void setDirection(Direction direction) {
-        if (shouldSkipDirection(direction)) return;
-        BlockPos pos = this.getBlockPos();
-        Level level = this.getLevel();
-        if (null == level) return;
-        BlockState state = level.getBlockState(pos);
-        if (!validateBlockState(state)) return;
-        level.setBlockAndUpdate(pos, state.setValue(getFacingProperty(), direction));
-    }
 
     @Override
     public FilteredItemStackHandler getFilteredItemDepository() {
@@ -116,53 +120,40 @@ public abstract class BaseChuteBlockEntity
      * 溜槽 tick
      */
     public void tick() {
-        boolean resetCD = false;
+        if (level == null) return;
         if (cooldown > 0) cooldown--;
+        tickedGameTime = level.getGameTime();
+        boolean resetCD = false;
         if (cooldown <= 0) {
             if (isEnabled()) {
-                // 尝试从上方容器输入
-                IItemHandler source = getTargetItemHandler(
-                    getBlockPos().relative(getInputDirection()),
-                    getInputDirection().getOpposite(),
-                    level
-                );
-                if (source != null) {
-                    resetCD = ItemHandlerUtil.importFromTarget(getItemHandler(), 64, stack -> true, source);
-                } else {
-                    List<ItemEntity> itemEntities = Objects.requireNonNull(getLevel())
-                        .getEntitiesOfClass(
-                            ItemEntity.class,
-                            new AABB(getBlockPos().relative(getInputDirection())),
-                            itemEntity -> !itemEntity.getItem().isEmpty());
-                    int prevSize = itemEntities.size();
-                    for (ItemEntity itemEntity : itemEntities) {
-                        ItemStack remaining =
-                            ItemHandlerHelper.insertItem(this.itemHandler, itemEntity.getItem(), true);
-                        if (!remaining.isEmpty()) continue;
-                        ItemHandlerHelper.insertItem(this.itemHandler, itemEntity.getItem(), false);
-                        itemEntity.discard();
-                        break;
-                    }
-                    resetCD = prevSize > itemEntities.size();
-                }
+                BlockPos targetPos = getBlockPos().relative(getOutputDirection());
                 // 尝试向朝向容器输出
-                IItemHandler target = getTargetItemHandler(
-                    getBlockPos().relative(getOutputDirection()),
+                List<IItemHandler> targetList = getTargetItemHandlerList(
+                    targetPos,
                     getOutputDirection().getOpposite(),
                     level
                 );
-
-                if (target != null) {
-                    resetCD |= ItemHandlerUtil.exportToTarget(getItemHandler(), 64, stack -> true, target);
+                if (targetList != null && !targetList.isEmpty()) {
+                    for (IItemHandler target : targetList) {
+                        BlockEntity targetBE = level.getBlockEntity(targetPos);
+                        boolean setChuteCD = targetBE != null && isTargetEmpty(targetBE);
+                        boolean success = ItemHandlerUtil.exportToTarget(getItemHandler(), 64, stack -> true, target);
+                        if (success) {
+                            //特判溜槽cd7gt
+                            if (setChuteCD) setChuteCD(targetBE);
+                            resetCD = true;
+                            break;
+                        }
+                    }
                 } else {
                     Vec3 center = getBlockPos().relative(getOutputDirection()).getCenter();
-                    List<ItemEntity> itemEntities = Objects.requireNonNull(getLevel())
-                        .getEntitiesOfClass(
-                            ItemEntity.class,
-                            new AABB(getBlockPos().relative(getOutputDirection())),
-                            itemEntity -> !itemEntity.getItem().isEmpty());
                     AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
-                    if (getLevel().noCollision(aabb)) {
+                    if (Objects.requireNonNull(getLevel()).noCollision(aabb)) {
+                        List<ItemEntity> itemEntities = getLevel()
+                            .getEntitiesOfClass(
+                                ItemEntity.class,
+                                new AABB(getBlockPos().relative(getOutputDirection())),
+                                itemEntity -> !itemEntity.getItem().isEmpty());
                         for (int i = 0; i < this.itemHandler.getSlots(); i++) {
                             ItemStack stack = this.itemHandler.getStackInSlot(i);
                             if (!stack.isEmpty()) {
@@ -193,20 +184,69 @@ public abstract class BaseChuteBlockEntity
                                     itemEntity.setDefaultPickUpDelay();
                                     getLevel().addFreshEntity(itemEntity);
                                     this.itemHandler.setStackInSlot(i, stack);
-                                    cooldown = AnvilCraft.config.chuteMaxCooldown;
+                                    resetCD = true;
                                     break;
                                 }
                             }
                         }
                     }
+
                 }
+                // 尝试从上方容器输入
+                if (!this.inventoryFull()) {
+                    IItemHandler source = getSourceItemHandler(
+                        getBlockPos().relative(getInputDirection()),
+                        getInputDirection().getOpposite(),
+                        level
+                    );
+                    if (source != null) {
+                        resetCD |= ItemHandlerUtil.importFromTarget(getItemHandler(), 64, stack -> true, source);
+                    } else {
+                        List<ItemEntity> itemEntities = Objects.requireNonNull(getLevel())
+                            .getEntitiesOfClass(
+                                ItemEntity.class,
+                                new AABB(getBlockPos().relative(getInputDirection())),
+                                itemEntity -> !itemEntity.getItem().isEmpty());
+                        for (ItemEntity itemEntity : itemEntities) {
+                            ItemStack itemStack = itemEntity.getItem();
+                            ItemStack remaining =
+                                ItemHandlerHelper.insertItem(this.itemHandler, itemStack, true);
+                            if (remaining.getCount() == itemStack.getCount()) continue;
+                            ItemHandlerHelper.insertItem(this.itemHandler, itemEntity.getItem(), false);
+                            itemEntity.setItem(remaining);
+                            resetCD = true;
+                        }
+                    }
+                }
+
             }
-            if (level != null) {
-                level.updateNeighbourForOutputSignal(
-                    getBlockPos(), getBlockState().getBlock());
-            }
+
         }
+        level.updateNeighbourForOutputSignal(getBlockPos(), getBlockState().getBlock());
         if (resetCD) cooldown = AnvilCraft.config.chuteMaxCooldown;
+    }
+
+    private boolean isTargetEmpty(BlockEntity blockEntity) {
+        if (blockEntity instanceof SimpleChuteBlockEntity chute) {
+            return chute.isEmpty();
+        }
+        if (blockEntity instanceof BaseChuteBlockEntity chute) {
+            return chute.isEmpty();
+        }
+        return false;
+    }
+
+    private void setChuteCD(BlockEntity targetBE) {
+        if (targetBE instanceof BaseChuteBlockEntity chute) {
+            int k = 0;
+            if (chute.getTickedGameTime() >= this.tickedGameTime) k++;
+            chute.setCooldown(AnvilCraft.config.chuteMaxCooldown - k);
+        }
+        if (targetBE instanceof SimpleChuteBlockEntity chute) {
+            int k = 0;
+            if (chute.getTickedGameTime() >= this.tickedGameTime) k++;
+            chute.setCooldown(AnvilCraft.config.chuteMaxCooldown - k);
+        }
     }
 
     /**
@@ -244,5 +284,21 @@ public abstract class BaseChuteBlockEntity
     @Override
     public void applyDiskData(CompoundTag data) {
         itemHandler.deserializeFiltering(data.getCompound("Filtering"));
+    }
+
+    public boolean isEmpty() {
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            if (!itemHandler.getStackInSlot(i).isEmpty()) return false;
+        }
+        return true;
+    }
+
+    private boolean inventoryFull() {
+        for (int i = 0; i < itemHandler.getSlots(); i++) {
+            ItemStack itemstack = itemHandler.getStackInSlot(i);
+            if (itemstack.isEmpty() || itemstack.getCount() != itemstack.getMaxStackSize())
+                return false;
+        }
+        return true;
     }
 }

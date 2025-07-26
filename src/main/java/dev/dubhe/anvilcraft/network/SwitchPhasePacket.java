@@ -17,7 +17,7 @@ import java.util.Optional;
 
 @MethodsReturnNonnullByDefault
 public record SwitchPhasePacket() implements CustomPacketPayload {
-    public static final Type<SwitchPhasePacket> TYPE = new Type<>(AnvilCraft.of("change_enchantment_space"));
+    public static final Type<SwitchPhasePacket> TYPE = new Type<>(AnvilCraft.of("switch_phase"));
     public static final StreamCodec<RegistryFriendlyByteBuf, SwitchPhasePacket> STREAM_CODEC =
         CustomPacketPayload.codec(SwitchPhasePacket::encode, SwitchPhasePacket::decode);
     public static final IPayloadHandler<SwitchPhasePacket> HANDLER = SwitchPhasePacket::serverHandler;

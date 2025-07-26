@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.recipe.anvil;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
@@ -22,6 +23,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -42,12 +44,14 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
     public final NonNullList<Ingredient> ingredients;
     public final List<Object2IntMap.Entry<Ingredient>> mergedIngredients;
     public final Block inputBlock;
+    public final ChanceItemStack resultItem;
     public final Block resultBlock;
 
-    public ItemInjectRecipe(NonNullList<Ingredient> ingredients, Block inputBlock, Block resultBlock) {
+    public ItemInjectRecipe(NonNullList<Ingredient> ingredients, Block inputBlock, ChanceItemStack resultItem, Block resultBlock) {
         this.ingredients = ingredients;
         this.mergedIngredients = RecipeUtil.mergeIngredient(ingredients);
         this.inputBlock = inputBlock;
+        this.resultItem = resultItem;
         this.resultBlock = resultBlock;
     }
 
@@ -73,6 +77,7 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
+        if (!this.resultItem.equals(ChanceItemStack.EMPTY) && this.resultItem.getStack().getItem() != Items.AIR) return this.resultItem.getStack();
         return resultBlock.asItem().getDefaultInstance();
     }
 
@@ -113,6 +118,11 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
         return contents.values().intStream().allMatch(count -> count >= 0);
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(List<ItemStack> items, Block inputBlock) implements RecipeInput {
 
         @Override
@@ -131,6 +141,7 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
                 CodecUtil.createIngredientListCodec("ingredients", 9, "item_inject")
                     .forGetter(ItemInjectRecipe::getIngredients),
                 CodecUtil.BLOCK_CODEC.fieldOf("input_block").forGetter(ItemInjectRecipe::getInputBlock),
+                ChanceItemStack.CODEC.optionalFieldOf("result_item", ChanceItemStack.EMPTY).forGetter(ItemInjectRecipe::getResultItem),
                 CodecUtil.BLOCK_CODEC.fieldOf("result_block").forGetter(ItemInjectRecipe::getResultBlock))
             .apply(ins, ItemInjectRecipe::new));
 
@@ -153,6 +164,7 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
                 Ingredient.CONTENTS_STREAM_CODEC.encode(buf, ingredient);
             }
             CodecUtil.BLOCK_STREAM_CODEC.encode(buf, recipe.inputBlock);
+            ChanceItemStack.STREAM_CODEC.encode(buf, recipe.resultItem);
             CodecUtil.BLOCK_STREAM_CODEC.encode(buf, recipe.resultBlock);
         }
 
@@ -161,8 +173,9 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
             NonNullList<Ingredient> ingredients = NonNullList.withSize(size, Ingredient.EMPTY);
             ingredients.replaceAll(i -> Ingredient.CONTENTS_STREAM_CODEC.decode(buf));
             Block inputBlock = CodecUtil.BLOCK_STREAM_CODEC.decode(buf);
+            ChanceItemStack resultItem = ChanceItemStack.STREAM_CODEC.decode(buf);
             Block resultBlock = CodecUtil.BLOCK_STREAM_CODEC.decode(buf);
-            return new ItemInjectRecipe(ingredients, inputBlock, resultBlock);
+            return new ItemInjectRecipe(ingredients, inputBlock, resultItem, resultBlock);
         }
     }
 
@@ -171,6 +184,7 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
     public static class Builder extends AbstractRecipeBuilder<ItemInjectRecipe> {
         private NonNullList<Ingredient> ingredients = NonNullList.create();
         private Block inputBlock;
+        private ChanceItemStack resultItem = ChanceItemStack.EMPTY;
         private Block resultBlock;
 
         public Builder requires(Ingredient ingredient, int count) {
@@ -202,7 +216,7 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
 
         @Override
         public ItemInjectRecipe buildRecipe() {
-            return new ItemInjectRecipe(ingredients, inputBlock, resultBlock);
+            return new ItemInjectRecipe(ingredients, inputBlock, resultItem, resultBlock);
         }
 
         @Override

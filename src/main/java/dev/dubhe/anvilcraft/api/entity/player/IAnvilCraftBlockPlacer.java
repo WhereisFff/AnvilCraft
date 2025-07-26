@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.api.entity.player;
 
+import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.block.state.Orientation;
 import dev.dubhe.anvilcraft.mixin.BlockItemInvoker;
-import net.minecraft.commands.arguments.EntityAnchorArgument.Anchor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -35,15 +35,13 @@ public interface IAnvilCraftBlockPlacer {
      */
     default InteractionResult placeBlock(
         Level level, BlockPos pos, Orientation orientation, BlockItem blockItem, ItemStack itemStack) {
-        if (AnvilCraftBlockPlacer.BLOCK_PLACER_BLACKLIST.contains(
+        if (AnvilCraftFakePlayers.BLOCK_PLACER_BLACKLIST.contains(
             BuiltInRegistries.BLOCK.getKey(blockItem.getBlock()).toString())) return InteractionResult.FAIL;
         if (level instanceof ServerLevel serverLevel) getPlayer().setServerLevel(serverLevel);
-        getPlayer().moveTo(
-            pos.relative(orientation.getDirection().getOpposite()).getX(),
-            pos.relative(orientation.getDirection().getOpposite()).getY() - 1,
-            pos.relative(orientation.getDirection().getOpposite()).getZ()
-        );
-        getPlayer().lookAt(Anchor.EYES, new Vec3(pos.getX(), pos.getY(), pos.getZ()));
+        //获取fakePlayer的方向 与放置器的方向不太一样
+        Orientation fakePlayerOrientation = orientation.flipHorizontalIfVertical();
+        getPlayer().setYRot(fakePlayerOrientation.getYRotation());
+        getPlayer().setXRot(fakePlayerOrientation.getXRotation());
         Vec3 clickClickLocation = getPosFromOrientation(orientation);
         double x = clickClickLocation.x;
         double y = clickClickLocation.y;

@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.DynamicPowerComponent;
 import dev.dubhe.anvilcraft.api.power.IDynamicPowerComponentHolder;
-import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -56,14 +55,9 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
 
     @Override
     public void anvilCraft$gridTick() {
-        ItemStack itemStack = IonoCraftBackpackItem.getByPlayer(this);
-        if (itemStack.is(ModItems.IONOCRAFT_BACKPACK)
-            && anvilCraft$component.getPowerGrid() != null
-            && anvilCraft$component.getPowerGrid().isWorking()
-        ) {
-            int flightTime = IonoCraftBackpackItem.getFlightTime(itemStack);
-            flightTime = flightTime + AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 120;
-            IonoCraftBackpackItem.setFlightTime(itemStack, flightTime);
+        ItemStack stack = IonoCraftBackpackItem.getByPlayer(this);
+        if (IonoCraftBackpackItem.canModify(stack, this.anvilCraft$component)) {
+            IonoCraftBackpackItem.addFlightTime(stack, AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 120);
         }
     }
 

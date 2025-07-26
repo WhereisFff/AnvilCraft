@@ -1,0 +1,37 @@
+{
+  "type": "anvilcraft:heat_produce_time_warp",
+  "cauldron": "minecraft:cauldron",
+  "consume_fluid": false,
+  "heating": [
+    {
+      "duration": 6000,
+      "tier": "incandescent"
+    },
+    {
+      "duration": 200,
+      "tier": "overheated"
+    }
+  ],
+  "ingredients": [
+    {
+      "item": "anvilcraft:uranium_block"
+    }
+  ],
+  "produce_fluid": false,
+  "results": [
+    {
+      "amount": 1.0,
+      "stack": {
+        "count": 2,
+        "id": "anvilcraft:raw_uranium"
+      }
+    },
+    {
+      "amount": 1.0,
+      "stack": {
+        "count": 1,
+        "id": "anvilcraft:raw_lead"
+      }
+    }
+  ]
+}

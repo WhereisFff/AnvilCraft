@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Contract;
 
 @Getter
 public class ChanceItemStack {
+    public static final ChanceItemStack EMPTY = ChanceItemStack.of(ItemStack.EMPTY);
     public static final Codec<ChanceItemStack> CODEC = Codec.lazyInitialized(
         () -> RecordCodecBuilder.create(ins -> ins.group(
             ItemStack.OPTIONAL_CODEC.fieldOf("stack").forGetter(ChanceItemStack::getStack),
@@ -43,6 +44,11 @@ public class ChanceItemStack {
 
     public ChanceItemStack withChance(float chance) {
         setAmount(BinomialDistributionGenerator.binomial(1, chance));
+        return this;
+    }
+
+    public ChanceItemStack withAmount(NumberProvider amount) {
+        setAmount(amount);
         return this;
     }
 

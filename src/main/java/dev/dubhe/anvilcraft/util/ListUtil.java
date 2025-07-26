@@ -1,12 +1,33 @@
 package dev.dubhe.anvilcraft.util;
 
-import org.jetbrains.annotations.Nullable;
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class ListUtil {
-    public static <T> @Nullable T safelyGet(List<T> list, int index) {
-        if (index < 0 || list.isEmpty() || index >= list.size()) return null;
-        return list.get(index);
+    public static <T> Optional<T> safelyGet(List<T> list, int index) {
+        if (index < 0 || list.isEmpty() || index >= list.size()) return Optional.empty();
+        return Optional.ofNullable(list.get(index));
+    }
+
+    public static <T> List<T> cycle(List<T> original, int times) {
+        if (times == 0 || original.isEmpty()) return new ArrayList<>(original);
+        times %= original.size();
+        if (times == 0) return new ArrayList<>(original);
+        List<T> cycled = new ArrayList<>();
+        for (int i = 0; i < original.size(); i++) {
+            cycled.add(original.get((i + times) % original.size()));
+        }
+        return cycled;
+    }
+
+    public static <T, R extends T> List<R> subList(List<T> original, Class<R> clazz) {
+        ArrayList<R> results = new ArrayList<>();
+        for (T t : original) {
+            if (clazz.isInstance(t)) {
+                results.add(clazz.cast(t));
+            }
+        }
+        return results;
     }
 }

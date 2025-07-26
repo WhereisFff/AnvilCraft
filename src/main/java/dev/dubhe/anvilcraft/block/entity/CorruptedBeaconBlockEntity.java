@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformInput;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
+import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
@@ -49,6 +50,7 @@ import java.util.Optional;
 public class CorruptedBeaconBlockEntity extends BlockEntity {
     List<BeaconBeamSection> beamSections = Lists.newArrayList();
     private List<BeaconBeamSection> checkingBeamSections = Lists.newArrayList();
+    @Getter
     int levels;
     private int lastCheckY;
 
@@ -192,9 +194,20 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         MobTransformInput input = MobTransformInput.of(livingEntity);
         Optional<RecipeHolder<MobTransformRecipe>> optionalRecipeHolder =
             manager.getRecipeFor(ModRecipeTypes.MOB_TRANSFORM_TYPE.get(), input, level);
-        if (optionalRecipeHolder.isEmpty()) return;
-        MobTransformRecipe recipe = optionalRecipeHolder.get().value();
-        Entity result = recipe.apply(level.random, livingEntity, level);
+        MobTransformWithItemRecipe.Input input2 = MobTransformWithItemRecipe.Input.of(livingEntity);
+        Optional<RecipeHolder<MobTransformWithItemRecipe>> optionalRecipeHolder2 =
+            manager.getRecipeFor(ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_TYPE.get(), input2, level);
+        Entity result = null;
+        boolean noItemFlag = true;
+        if (optionalRecipeHolder2.isPresent()) {
+            MobTransformWithItemRecipe recipe = optionalRecipeHolder2.get().value();
+            result = recipe.apply(level.random, livingEntity, level);
+            if (result != null) noItemFlag = false;
+        }
+        if (noItemFlag && optionalRecipeHolder.isPresent()) {
+            MobTransformRecipe recipe = optionalRecipeHolder.get().value();
+            result = recipe.apply(level.random, livingEntity, level);
+        }
         if (result == null) return;
         livingEntity.discard();
         if (result instanceof ZombieHorse || result instanceof SkeletonHorse) {

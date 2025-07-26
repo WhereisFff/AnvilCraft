@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
+
 public enum TransformOptions implements StringRepresentable {
     KEEP_INVENTORY("keepInventory", 900) {
         @Override
@@ -26,6 +27,12 @@ public enum TransformOptions implements StringRepresentable {
                     n.setItemInHand(value, o.getItemInHand(value));
                 }
             }
+            if (newEntity instanceof Mob nm && oldEntity instanceof Mob om) {
+                for (EquipmentSlot value : EquipmentSlot.values()) {
+                    nm.setDropChance(value, om.getEquipmentDropChance(value));
+                }
+            }
+
         }
     },
     REPLACE_ANVIL("replaceAnvil", 1000) {

@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import net.minecraft.world.item.Items;
@@ -40,13 +41,7 @@ public class ChargerChargingRecipeLoader {
             .save(provider);
         * */
         ChargerChargingRecipe.builder()
-            .requires(ModItems.NEUTRONIUM_INGOT)
-            .result(ModItems.CHARGED_NEUTRONIUM_INGOT)
-            .power(-4000)
-            .time(20 * 300)
-            .save(provider);
-        ChargerChargingRecipe.builder()
-            .requires(ModItems.STABLE_NEUTRONIUM_INGOT)
+            .requires(ModItemTags.UNCHARGED_NEUTRONIUM_INGOTS)
             .result(ModItems.CHARGED_NEUTRONIUM_INGOT)
             .power(-4000)
             .time(20 * 300)

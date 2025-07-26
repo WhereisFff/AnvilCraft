@@ -1,14 +1,18 @@
 package dev.dubhe.anvilcraft.recipe.anvil.collision;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.recipe.elements.InputBlock;
 import dev.dubhe.anvilcraft.recipe.elements.OutputBlock;
 import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.Optional;
 
 public record BlockTransform(
     InputBlock inputBlock,
@@ -45,10 +49,12 @@ public record BlockTransform(
     }
 
     public Boolean progress(Level level, BlockPos pos) {
-        BlockState output;
+        Pair<BlockState, CompoundTag> output;
         if (inputBlock.is(level.getBlockState(pos)) && (output = outputBlock.getResult(level.random)) != null) {
             if (chance < level.random.nextFloat()) return false;
-            level.setBlockAndUpdate(pos, output);
+            level.setBlockAndUpdate(pos, output.getFirst());
+            Optional.ofNullable(level.getBlockEntity(pos))
+                .ifPresent(be -> be.loadCustomOnly(output.getSecond(), level.registryAccess()));
             return true;
         }
         return false;

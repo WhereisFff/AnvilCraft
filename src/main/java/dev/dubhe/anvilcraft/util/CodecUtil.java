@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.util;
 
+import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
@@ -8,11 +9,14 @@ import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
@@ -25,6 +29,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Locale;
 import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -163,4 +168,35 @@ public class CodecUtil {
             (buf, blockState) -> buf.writeInt(Block.getId(blockState)),
             (buf) -> Block.stateById(buf.readInt())
         );
+
+    public static <T extends Enum<T>> Codec<T> enumCodecInInt(Class<T> clazz) {
+        return Codec.INT.xmap(index -> clazz.getEnumConstants()[index], Enum::ordinal);
+    }
+
+    public static <T extends Enum<T>> Codec<T> enumCodecInLowerName(Class<T> clazz) {
+        return Codec.STRING.xmap(
+            name -> Enum.valueOf(clazz, name.toUpperCase(Locale.ROOT)),
+            value -> value.name().toLowerCase(Locale.ROOT));
+    }
+
+    public static <B extends ByteBuf, T extends Enum<T>> StreamCodec<B, T> enumStreamCodec(Class<T> clazz) {
+        return ByteBufCodecs.VAR_INT.<B>cast().map(index -> clazz.getEnumConstants()[index], Enum::ordinal);
+    }
+
+    public static <B, F, S> StreamCodec<B, Pair<F, S>> createPairStreamCodec(StreamCodec<? super B, F> first, StreamCodec<? super B, S> second) {
+        return StreamCodec.composite(first, Pair::getFirst, second, Pair::getSecond, Pair::new);
+    }
+
+    public static final StreamCodec<ByteBuf, Vec3i> VEC3I_STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public @NotNull Vec3i decode(ByteBuf buffer) {
+            long packedPos = buffer.readLong();
+            return new Vec3i(BlockPos.getX(packedPos), BlockPos.getY(packedPos), BlockPos.getZ(packedPos));
+        }
+
+        @Override
+        public void encode(ByteBuf buffer, Vec3i value) {
+            buffer.writeLong(BlockPos.asLong(value.getX(), value.getY(), value.getZ()));
+        }
+    };
 }

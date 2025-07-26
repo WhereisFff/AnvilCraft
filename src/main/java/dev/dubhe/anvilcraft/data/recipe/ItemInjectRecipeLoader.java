@@ -2,6 +2,8 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -96,6 +98,13 @@ public class ItemInjectRecipeLoader {
             .requires(ModBlocks.OVER_NESTING_SHULKER_BOX)
             .inputBlock(Blocks.SHULKER_BOX)
             .resultBlock(ModBlocks.SUPERCRITICAL_NESTING_SHULKER_BOX.get())
+            .save(provider);
+
+        ItemInjectRecipe.builder()
+            .requires(ModItems.CHARGED_NEUTRONIUM_INGOT)
+            .inputBlock(ModBlocks.OVERHEATED_EMBER_METAL.get())
+            .resultItem(ChanceItemStack.of(ModItems.NEUTRONIUM_INGOT.asStack()).withChance(0.5f))
+            .resultBlock(ModBlocks.TRANSCENDIUM_BLOCK.get())
             .save(provider);
     }
 }

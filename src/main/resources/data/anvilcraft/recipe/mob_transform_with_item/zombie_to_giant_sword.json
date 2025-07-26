@@ -1,0 +1,22 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "twilightforest"
+    }
+  ],
+  "type": "anvilcraft:mob_transform_with_item",
+  "chancePercentPerItem": 50,
+  "input": "minecraft:zombie",
+  "itemInput": {
+    "item": "minecraft:stone_sword"
+  },
+  "itemResult": {
+    "count": 1,
+    "id": "twilightforest:giant_sword"
+  },
+  "specialResult": {
+    "probability": 1.0,
+    "resultEntityType": "minecraft:giant"
+  }
+}

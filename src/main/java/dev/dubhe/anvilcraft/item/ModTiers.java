@@ -45,6 +45,14 @@ public enum ModTiers implements Tier {
         () -> Ingredient.of(ModItems.FROST_METAL_INGOT),
         ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL
     ),
+    TRANSCENDIUM(
+        3156,
+        14.0f,
+        1.0f,
+        28,
+        () -> Ingredient.of(ModItems.TRANSCENDIUM_INGOT),
+        ModBlockTags.INCORRECT_FOR_TRANSCENDIUM_TOOL
+    ),
     ;
 
     private final int uses;

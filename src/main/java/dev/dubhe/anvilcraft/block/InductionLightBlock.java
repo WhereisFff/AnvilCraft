@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -166,6 +167,7 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         Player player,
         InteractionHand hand,
         BlockHitResult hit) {
+        if (level instanceof ClientLevel) return InteractionResult.SUCCESS;
         ItemStack itemInHand = player.getItemInHand(hand);
         if (itemInHand.is(ModBlocks.INDUCTION_LIGHT.asItem())) {
             return BlockPlaceAssist.tryPlace(
@@ -218,9 +220,9 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         Block neighborBlock,
         BlockPos neighborPos,
         boolean movedByPiston) {
-        if (level.isClientSide) {
-            return;
-        }
+        if (level.isClientSide) return;
+        if (state.getValue(WATERLOGGED)) level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
+        if (state.getValue(OVERLOAD)) return;
         level.setBlock(pos, state.setValue(POWERED, level.hasNeighborSignal(pos)), 2);
     }
 

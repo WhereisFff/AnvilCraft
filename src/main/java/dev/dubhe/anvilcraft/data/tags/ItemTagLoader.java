@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
@@ -102,6 +103,12 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.DEAD_BUBBLE_CORAL_FAN))
             .add(findResourceKey(Items.DEAD_FIRE_CORAL_FAN))
             .add(findResourceKey(Items.DEAD_HORN_CORAL_FAN));
+        provider.addTag(ModItemTags.DEAD_CORAL_BLOCKS)
+            .add(findResourceKey(Items.DEAD_BRAIN_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_BUBBLE_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_FIRE_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_HORN_CORAL_BLOCK))
+            .add(findResourceKey(Items.DEAD_TUBE_CORAL_BLOCK));
         provider.addTag(ModItemTags.SEEDS_PACK_CONTENT)
             .addOptionalTag(ModItemTags.SEEDS)
             .addOptionalTag(ModItemTags.BERRIES)
@@ -162,10 +169,41 @@ public class ItemTagLoader {
             .add(ModItems.CHARGED_NEUTRONIUM_INGOT.getKey());
         provider.addTag(ModItemTags.TEMPLATES)
             .addTag(ItemTags.TRIM_TEMPLATES)
+            .addTag(ModItemTags.MULTIPLE_TO_ONE_SMITHING_TEMPLATES)
             .add(findResourceKey(Items.NETHERITE_UPGRADE_SMITHING_TEMPLATE));
+        provider.addTag(ModItemTags.UNCHARGED_NEUTRONIUM_INGOTS)
+            .add(ModItems.NEUTRONIUM_INGOT.getKey())
+            .add(ModItems.STABLE_NEUTRONIUM_INGOT.getKey());
+        provider.addTag(ModItemTags.HEATABLE_BLOCKS)
+            .add(findResourceKey(Items.NETHERITE_BLOCK));
+
+        provider.addTag(ModItemTags.AMULET)
+            .addOptional(AnvilCraft.of("cogwheel_amulet"));
+
+        provider.addTag(ModItemTags.CURIOS_HEAD)
+            .replace(false)
+            .addTag(ModItemTags.ANVIL_HAMMER);
+        provider.addTag(ModItemTags.CURIOS_NECKLACE)
+            .replace(false)
+            .addTag(ModItemTags.AMULET);
+        provider.addTag(ModItemTags.CURIOS_IONOCRAFT_BACKPACK)
+            .replace(false)
+            .add(ModItems.IONOCRAFT_BACKPACK.getKey());
+
+        provider.addTag(ModItemTags.TOTEM)
+            .add(findResourceKey(Items.TOTEM_OF_UNDYING));
+
+        provider.addTag(ItemTags.AXES)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.SHOVELS)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.HOES)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.PICKAXES)
+            .addTag(ModItemTags.RESONATOR);
     }
 
-    private static ResourceKey<Item> findResourceKey(Item item) {
+    private static @NotNull ResourceKey<Item> findResourceKey(Item item) {
         return ResourceKey.create(Registries.ITEM, BuiltInRegistries.ITEM.getKey(item));
     }
 }

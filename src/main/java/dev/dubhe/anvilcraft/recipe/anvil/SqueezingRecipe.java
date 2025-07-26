@@ -78,6 +78,11 @@ public class SqueezingRecipe implements Recipe<SqueezingRecipe.Input> {
         return ItemStack.EMPTY;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public record Input(Block inputBlock, BlockState cauldronState) implements RecipeInput {
         @Override
         public ItemStack getItem(int i) {

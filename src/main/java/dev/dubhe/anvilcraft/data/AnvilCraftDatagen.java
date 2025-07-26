@@ -9,7 +9,9 @@ import dev.dubhe.anvilcraft.data.provider.ModCuriosProvider;
 import dev.dubhe.anvilcraft.data.provider.ModDamageTypeProvider;
 import dev.dubhe.anvilcraft.data.provider.ModDamageTypeTagProvider;
 import dev.dubhe.anvilcraft.data.provider.ModFurnaceFuelProvider;
+import dev.dubhe.anvilcraft.data.provider.ModLootModifierProvider;
 import dev.dubhe.anvilcraft.data.provider.ModLootTableProvider;
+import dev.dubhe.anvilcraft.data.provider.ModParticleDescriptionProvider;
 import dev.dubhe.anvilcraft.data.provider.ModPoiTagProvider;
 import dev.dubhe.anvilcraft.data.provider.ModRegistryProvider;
 import dev.dubhe.anvilcraft.data.recipe.RecipeHandler;
@@ -18,6 +20,7 @@ import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
@@ -49,6 +52,8 @@ public class AnvilCraftDatagen {
         generator.addProvider(event.includeServer(), new ModDamageTypeProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new ModDamageTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
         generator.addProvider(event.includeServer(), new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));
+        generator.addProvider(event.includeServer(), new ModLootModifierProvider(packOutput, lookupProvider, AnvilCraft.MOD_ID));
+        generator.addProvider(event.includeClient(), new ModParticleDescriptionProvider(packOutput, existingFileHelper));
     }
 
     /**
@@ -59,6 +64,10 @@ public class AnvilCraftDatagen {
         REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, TagsHandler::initBlock);
         REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, TagsHandler::initFluid);
         REGISTRATE.addDataGenerator(ProviderType.ENCHANTMENT_TAGS, TagsHandler::initEnchantment);
+        REGISTRATE.addDataGenerator(
+            ProviderType.registerDynamicTag("tags/damage_type", "damage_type", Registries.DAMAGE_TYPE),
+            TagsHandler::initDamageType);
+        REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, TagsHandler::initEntityType);
         REGISTRATE.addDataGenerator(ProviderType.LANG, LangHandler::init);
         REGISTRATE.addDataGenerator(ProviderType.RECIPE, RecipeHandler::init);
         REGISTRATE.addDataGenerator(ProviderType.ADVANCEMENT, AdvancementHandler::init);

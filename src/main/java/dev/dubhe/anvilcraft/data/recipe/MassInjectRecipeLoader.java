@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
@@ -53,6 +54,10 @@ public class MassInjectRecipeLoader {
             .put(ModItemTags.STORAGE_BLOCKS_TUNGSTEN, 1900)
             .put(Tags.Items.STORAGE_BLOCKS_GOLD, 1900)
             .put(Tags.Items.STORAGE_BLOCKS_NETHERITE, 15000)
+
+            .put(ModItemTags.PLUTONIUM_NUGGETS, 19)
+            .put(ModItemTags.PLUTONIUM_INGOTS, 190)
+            .put(ModItemTags.STORAGE_BLOCKS_PLUTONIUM, 1900)
             .build();
         tagRecipes.forEach((tag, mass) -> addTag(provider, tag, mass));
 

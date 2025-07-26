@@ -38,12 +38,16 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.HOPPER))
             .add(findResourceKey(Blocks.DROPPER))
             .add(findResourceKey(Blocks.DISPENSER))
+            .add(findResourceKey(Blocks.CRAFTER))
             .add(findResourceKey(Blocks.LIGHTNING_ROD));
 
         provider.addTag(ModBlockTags.HAMMER_REMOVABLE)
+            .addTag(BlockTags.TRAPDOORS)
+            .addTag(BlockTags.DOORS)
+            .addTag(BlockTags.BUTTONS)
+            .addTag(BlockTags.PRESSURE_PLATES)
             .add(findResourceKey(Blocks.BELL))
             .add(findResourceKey(Blocks.REDSTONE_LAMP))
-            .add(findResourceKey(Blocks.IRON_DOOR))
             .add(findResourceKey(Blocks.RAIL))
             .add(findResourceKey(Blocks.ACTIVATOR_RAIL))
             .add(findResourceKey(Blocks.DETECTOR_RAIL))
@@ -53,21 +57,18 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.HOPPER))
             .add(findResourceKey(Blocks.DROPPER))
             .add(findResourceKey(Blocks.DISPENSER))
+            .add(findResourceKey(Blocks.CRAFTER))
             .add(findResourceKey(Blocks.HONEY_BLOCK))
             .add(findResourceKey(Blocks.SLIME_BLOCK))
             .add(findResourceKey(Blocks.PISTON))
             .add(findResourceKey(Blocks.STICKY_PISTON))
+            .add(findResourceKey(Blocks.PISTON_HEAD))
             .add(findResourceKey(Blocks.LIGHTNING_ROD))
             .add(findResourceKey(Blocks.DAYLIGHT_DETECTOR))
             .add(findResourceKey(Blocks.LECTERN))
             .add(findResourceKey(Blocks.TRIPWIRE_HOOK))
             .add(findResourceKey(Blocks.SCULK_SHRIEKER))
             .add(findResourceKey(Blocks.LEVER))
-            .add(findResourceKey(Blocks.STONE_BUTTON))
-            .add(findResourceKey(Blocks.OAK_PRESSURE_PLATE))
-            .add(findResourceKey(Blocks.STONE_PRESSURE_PLATE))
-            .add(findResourceKey(Blocks.LIGHT_WEIGHTED_PRESSURE_PLATE))
-            .add(findResourceKey(Blocks.HEAVY_WEIGHTED_PRESSURE_PLATE))
             .add(findResourceKey(Blocks.SCULK_SENSOR))
             .add(findResourceKey(Blocks.CALIBRATED_SCULK_SENSOR))
             .add(findResourceKey(Blocks.REDSTONE_WIRE))
@@ -77,12 +78,21 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.REPEATER))
             .add(findResourceKey(Blocks.COMPARATOR))
             .add(findResourceKey(Blocks.TARGET))
-            .add(findResourceKey(Blocks.IRON_TRAPDOOR))
+            .add(findResourceKey(Blocks.COPPER_BULB))
+            .add(findResourceKey(Blocks.EXPOSED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WEATHERED_COPPER_BULB))
+            .add(findResourceKey(Blocks.OXIDIZED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_EXPOSED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_WEATHERED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_OXIDIZED_COPPER_BULB))
             .add(findResourceKey(Blocks.CAULDRON))
             .add(findResourceKey(Blocks.LAVA_CAULDRON))
             .add(findResourceKey(Blocks.WATER_CAULDRON))
             .add(findResourceKey(Blocks.POWDER_SNOW_CAULDRON))
             .add(findResourceKey(Blocks.CAMPFIRE))
+            .add(findResourceKey(Blocks.STONECUTTER))
+            .add(findResourceKey(Blocks.SCAFFOLDING))
             .add(findResourceKey(Blocks.ANVIL))
             .add(findResourceKey(Blocks.CHIPPED_ANVIL))
             .add(findResourceKey(Blocks.DAMAGED_ANVIL))
@@ -135,6 +145,8 @@ public class BlockTagLoader {
         provider.addTag(ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL)
             .addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 
+        provider.addTag(ModBlockTags.INCORRECT_FOR_TRANSCENDIUM_TOOL);
+
         provider.addTag(ModBlockTags.END_PORTAL_UNABLE_CHANGE).add(findResourceKey(Blocks.DRAGON_EGG));
 
         provider.addTag(ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)
@@ -168,6 +180,10 @@ public class BlockTagLoader {
             .add(ModBlocks.DEEPSLATE_ZINC_ORE.getKey())
             .add(ModBlocks.DEEPSLATE_LEAD_ORE.getKey())
             .add(ModBlocks.DEEPSLATE_URANIUM_ORE.getKey());
+
+        provider.addTag(ModBlockTags.CRAFTING_MATRIX_ELEMENT)
+                .add(ModBlocks.SPACE_OVERCOMPRESSOR.getKey())
+                .addTag(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
 
         //mekanism integration
         provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
@@ -236,5 +252,12 @@ public class BlockTagLoader {
             .addTag(Tags.Blocks.GLASS_BLOCKS)
             .addTag(Tags.Blocks.GLASS_PANES)
             .addTag(BlockTags.LEAVES);
+
+        provider.addTag(ModBlockTags.HEATABLE_BLOCKS)
+            .add(findResourceKey(Blocks.NETHERITE_BLOCK));
+
+        provider.addTag(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)
+            .addTag(ModBlockTags.SLIDING_RAILS)
+            .add(ModBlocks.SLIDING_RAIL_STOP.getKey());
     }
 }

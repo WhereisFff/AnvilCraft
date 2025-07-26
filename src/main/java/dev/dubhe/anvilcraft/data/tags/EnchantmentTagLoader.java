@@ -16,25 +16,24 @@ public class EnchantmentTagLoader {
      * @param provider 提供器
      */
     public static void init(@NotNull RegistrateTagsProvider<Enchantment> provider) {
-        provider.addTag(ModEnchantmentTags.MERCILESS_DAMAGE_PASSED)
-            .add(Enchantments.SWEEPING_EDGE);
-
         provider.addTag(ModEnchantmentTags.MERCILESS_PASSED)
-            .addTag(ModEnchantmentTags.MERCILESS_DAMAGE_PASSED)
             .addTag(EnchantmentTags.CURSE)
             .add(Enchantments.UNBREAKING)
             .add(Enchantments.MENDING)
-            .add(Enchantments.EFFICIENCY);
+            .add(Enchantments.LOYALTY)
+            .add(Enchantments.RIPTIDE);
 
         provider.addTag(Tags.Enchantments.INCREASE_BLOCK_DROPS)
             .addOptional(ModEnchantments.HARVEST_KEY.location());
 
-        provider.addTag(ModEnchantmentTags.MODIFY_BLOCK_DROPS)
-            .addTag(Tags.Enchantments.INCREASE_BLOCK_DROPS)
-            .add(Enchantments.SILK_TOUCH);
+        provider.addTag(ModEnchantmentTags.DISABLED_PASSED)
+            .add(Enchantments.MENDING);
 
-        provider.addTag(ModEnchantmentTags.MODIFY_ENTITY_DROPS)
-            .addTag(Tags.Enchantments.INCREASE_ENTITY_DROPS)
-            .addOptional(ModEnchantments.BEHEADING_KEY.location());
+        provider.addTag(ModEnchantmentTags.PROVIDENCE_BONUS)
+            .add(Enchantments.FORTUNE)
+            .add(Enchantments.LOOTING)
+            .addOptional(ModEnchantments.BEHEADING_KEY.location())
+            .add(Enchantments.THORNS)
+            .add(Enchantments.LUCK_OF_THE_SEA);
     }
 }
