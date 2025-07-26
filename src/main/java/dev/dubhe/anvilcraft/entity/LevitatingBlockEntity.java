@@ -72,17 +72,7 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
 
             if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
-            } else if (
-                this.level().getBlockState(blockPos.above()).isAir()
-                || this.level().getBlockState(blockPos.above()).liquid()
-                || this.level().getBlockState(blockPos.above()).getCollisionShape(this.level(), blockPos.above()).equals(Shapes.empty())
-                || (this.level().getBlockState(blockPos).getBlock() instanceof Fallable
-                    || this.level().getBlockState(blockPos.above()).getBlock() instanceof Fallable
-                    || !this.level().getEntitiesOfClass(
-                    FallingBlockEntity.class,
-                    new AABB(this.position(), this.position()).expandTowards(-0.2, 0, -0.2).expandTowards(0.2, 1.7, 0.2),
-                    entity -> !entity.equals(this) && entity.getBlockState().getBlock() instanceof Fallable).isEmpty())
-            ) {
+            } else if (this.checkCanMove(this.level(), blockPos)) {
                 this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04, 0.0));
             } else {
                 if (!this.level().isClientSide) {
@@ -131,6 +121,20 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
             this.move(MoverType.SELF, this.getDeltaMovement());
             this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
         }
+    }
+
+    private boolean checkCanMove(Level level, BlockPos pos) {
+        if (this.time > 1 && this.getDeltaMovement().equals(Vec3.ZERO)) return false;
+        if (level.getBlockState(pos.above()).isAir()) return true;
+        if (level.getBlockState(pos.above()).liquid()) return true;
+        if (level.getBlockState(pos.above()).getCollisionShape(this.level(), pos.above()).equals(Shapes.empty())) return true;
+        if (level.getBlockState(pos).getBlock() instanceof Fallable) return true;
+        if (level.getBlockState(pos.above()).getBlock() instanceof Fallable) return true;
+        return !this.level().getEntitiesOfClass(
+            FallingBlockEntity.class,
+            new AABB(this.position(), this.position()).expandTowards(-0.2, 0, -0.2).expandTowards(0.2, 1.7, 0.2),
+            entity -> !entity.equals(this) && entity.getBlockState().getBlock() instanceof Fallable
+        ).isEmpty();
     }
 
     @Override
