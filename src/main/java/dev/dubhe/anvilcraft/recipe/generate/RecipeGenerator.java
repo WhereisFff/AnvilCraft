@@ -98,7 +98,8 @@ public class RecipeGenerator {
                     }
                 }
                 yield Optional.empty();
-            }/*
+            }
+            /*
             case RecipeType<?> type1 when type1 == RecipeType.SMELTING -> {
                 SmeltingRecipe recipe = (SmeltingRecipe) recipeHolder.value();
                 SuperHeatingRecipe newRecipe = SuperHeatingRecipe.builder()
@@ -117,7 +118,8 @@ public class RecipeGenerator {
                     .generated(true)
                     .buildRecipe();
                 yield Optional.of(new RecipeHolder<>(generateRecipeId(type, recipeHolder), newRecipe));
-            }/*
+            }
+            /*
             case RecipeType<?> type1 when type1 == RecipeType.BLASTING -> {
                 BlastingRecipe recipe = (BlastingRecipe) recipeHolder.value();
                 SuperHeatingRecipe newRecipe = SuperHeatingRecipe.builder()
