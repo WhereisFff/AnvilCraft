@@ -1,7 +1,8 @@
 package dev.dubhe.anvilcraft.recipe.generate;
 
 import com.google.common.collect.HashBasedTable;
-import com.google.common.collect.HashMultimap;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.google.common.collect.Table;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
@@ -32,16 +33,15 @@ import java.util.Optional;
 public class MeshRecipeGeneratingCache extends BaseGeneratingCache<MeshRecipe> {
     private static final Logger logger = logger();
 
-    private final HashMultimap<Item, Item> leavesAndSaplings = HashMultimap.create();
+    private final Multimap<Item, Item> leavesAndSaplings = MultimapBuilder.hashKeys().hashSetValues().build();
 
     public MeshRecipeGeneratingCache(HolderLookup.Provider registries) {
         super(registries, "mesh", "mesh recipe");
-        Table<String, Item, List<Item>> treeIdAndLeavesAndSaplings = HashBasedTable.create();
+        Table<ResourceLocation, Item, List<Item>> treeIdAndLeavesAndSaplings = HashBasedTable.create();
         for (Holder<Item> holder : registries.lookupOrThrow(Registries.ITEM).listElements().toList()) {
             if (holder.value() instanceof BlockItem blockItem && blockItem.getBlock() instanceof LeavesBlock block) {
                 ResourceLocation leavesId = BuiltInRegistries.ITEM.getKey(blockItem);
-                logger.debug(
-                    "Add a leaves block {} for generating mesh recipes", leavesId);
+                logger.debug("Add a leaves block {} for generating mesh recipes", leavesId);
                 treeIdAndLeavesAndSaplings.put(getTreeId(block, leavesId), blockItem, new ArrayList<>());
             }
         }
@@ -52,7 +52,7 @@ public class MeshRecipeGeneratingCache extends BaseGeneratingCache<MeshRecipe> {
                 ResourceLocation saplingId = BuiltInRegistries.ITEM.getKey(blockItem);
                 logger.debug(
                     "Add a sapling {} for generating mesh recipes", saplingId);
-                String treeId = getTreeId(blockItem.getBlock(), saplingId);
+                ResourceLocation treeId = getTreeId(blockItem.getBlock(), saplingId);
                 if (treeIdAndLeavesAndSaplings.containsRow(treeId)) {
                     treeIdAndLeavesAndSaplings.row(treeId).values().forEach(list -> list.add(blockItem));
                 }
@@ -99,9 +99,9 @@ public class MeshRecipeGeneratingCache extends BaseGeneratingCache<MeshRecipe> {
         return Optional.of(recipeHolders);
     }
 
-    private static String getTreeId(Block source, ResourceLocation idFull) {
+    private static ResourceLocation getTreeId(Block source, ResourceLocation idFull) {
         int lastUnderscore = idFull.getPath().trim().lastIndexOf('_');
-        if (lastUnderscore == -1 || (source instanceof BushBlock && !idFull.getPath().contains("sapling"))) return idFull.getPath();
-        return idFull.getPath().trim().substring(0, lastUnderscore);
+        if (lastUnderscore == -1 || (source instanceof BushBlock && !idFull.getPath().contains("sapling"))) return idFull;
+        return idFull.withPath(idFull.getPath().trim().substring(0, lastUnderscore));
     }
 }

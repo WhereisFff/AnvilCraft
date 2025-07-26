@@ -50,7 +50,10 @@ public abstract class BaseGeneratingCache<T extends Recipe<?>> {
         ResourceLocation resultId = BuiltInRegistries.ITEM.getKey(recipeResult);
         logger().debug("Generating {} for {}", this.recipeName, resultId);
         ResourceLocation newId = AnvilCraft.of("%s/%s_from_%s_for_%s".formatted(
-            this.recipeId, resultId.toString().replace(':', '_'), inputId.toString().replace(':', '_'), type));
+            this.recipeId,
+            resultId.toString().replace(':', '_').replace("minecraft_", ""),
+            inputId.toString().replace(':', '_').replace("minecraft_", ""),
+            type));
         logger().debug("The generated recipe id is {}", newId);
         return newId;
     }
