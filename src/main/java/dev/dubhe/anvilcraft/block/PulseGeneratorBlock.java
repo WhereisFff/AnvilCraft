@@ -34,9 +34,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.EnumSet;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -117,6 +119,13 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
         if (!isMoving && !state.is(newState.getBlock())) {
             super.onRemove(state, level, pos, newState, false);
         }
+        Direction facing = state.getValue(FACING);
+        BlockPos front = pos.relative(facing.getOpposite());
+        if (EventHooks.onNeighborNotify(level, pos, level.getBlockState(pos), EnumSet.of(facing.getOpposite()), false)
+            .isCanceled()
+        ) return;
+        level.neighborChanged(front, this, pos);
+        level.updateNeighborsAtExceptFromFacing(front, this, facing);
     }
 
     protected void update(Level level, BlockPos pos, BlockState state) {

@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
@@ -29,7 +30,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @Setter
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvider {
+public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvider, IDiskCloneable {
     protected Mode startMode = Mode.RISING_EDGE;
     protected boolean outputInvert = false;
     protected int waitingTime = 2;
@@ -95,6 +96,16 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         return this;
     }
 
+    @Override
+    public void storeDiskData(CompoundTag tag) {
+        tag.put("Data", this.constructDataNbt());
+    }
+
+    @Override
+    public void applyDiskData(CompoundTag data) {
+        this.readDataNbt(data.getCompound("Data"));
+    }
+
     protected void tickTime(Level level, BlockPos pos, BlockState state) {
         switch (this.state) {
             case WAITING -> {
@@ -157,7 +168,10 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         if (!(level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity generatorEntity)) return;
         Direction direction = state.getValue(PulseGeneratorBlock.FACING).getOpposite();
         BlockPos neighbourPos = pos.relative(direction);
-        level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, generatorEntity.isOutputting()));
+        boolean powered = state.getValue(PulseGeneratorBlock.POWERED);
+        boolean shouldPower = generatorEntity.isOutputting();
+        if (powered == shouldPower) return;
+        level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, shouldPower));
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
     }
