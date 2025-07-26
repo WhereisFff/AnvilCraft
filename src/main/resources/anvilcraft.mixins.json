@@ -24,6 +24,7 @@
     "EntityMixin",
     "ExplosionMixin",
     "FlyingHitEntityMixin",
+    "HolderReferenceMixin",
     "HopperBlockMixin",
     "InventoryMixin",
     "ItemEntityMixin",
