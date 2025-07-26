@@ -68,6 +68,11 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
     }
 
     @Override
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+        return repair.is(ModItems.TITANIUM_INGOT);
+    }
+
+    @Override
     @SuppressWarnings({"removal"})
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         ItemProperties.register(

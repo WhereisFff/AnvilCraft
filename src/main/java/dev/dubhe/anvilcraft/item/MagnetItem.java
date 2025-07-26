@@ -75,6 +75,11 @@ public class MagnetItem extends Item implements IChargerChargeable {
     }
 
     @Override
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
+        return repairCandidate.is(ModItems.MAGNET_INGOT);
+    }
+
+    @Override
     public ItemStack charge(ItemStack input) {
         return ModItems.MAGNET.asStack(1);
     }

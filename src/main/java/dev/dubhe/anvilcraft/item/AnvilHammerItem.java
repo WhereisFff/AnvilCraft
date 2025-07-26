@@ -92,6 +92,11 @@ public class AnvilHammerItem extends Item implements Equipable {
             ).build();
     }
 
+    @Override
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
+        return repairCandidate.is(Items.IRON_INGOT);
+    }
+
     protected float getAttackDamageModifierAmount() {
         return 5;
     }
