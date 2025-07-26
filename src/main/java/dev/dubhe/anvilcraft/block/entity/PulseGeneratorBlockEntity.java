@@ -168,7 +168,10 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         if (!(level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity generatorEntity)) return;
         Direction direction = state.getValue(PulseGeneratorBlock.FACING).getOpposite();
         BlockPos neighbourPos = pos.relative(direction);
-        level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, generatorEntity.isOutputting()));
+        boolean powered = state.getValue(PulseGeneratorBlock.POWERED);
+        boolean shouldPower = generatorEntity.isOutputting();
+        if (powered == shouldPower) return;
+        level.setBlockAndUpdate(pos, state.setValue(PulseGeneratorBlock.POWERED, shouldPower));
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
     }
