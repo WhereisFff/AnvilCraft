@@ -21,6 +21,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.List;
+import java.util.Objects;
 
 public record Merciless(boolean enabled) {
     public static final Merciless DEFAULT = new Merciless(true);
@@ -37,6 +38,10 @@ public record Merciless(boolean enabled) {
             player.getInventory(), stack -> stack.has(ModComponents.MERCILESS));
 
         for (ItemStack stack : mercilessItems) {
+            boolean isEnabled = Objects.requireNonNull(
+                stack.get(ModComponents.MERCILESS),
+                "InventoryUtil.getItems(Inventory, Predicate<ItemStack>) method has some problem. The predicate didn't work."
+            ).enabled();
             float attackDamage = 0;
             float miningEfficiency = 0;
 
@@ -44,20 +49,29 @@ public record Merciless(boolean enabled) {
                 stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
             ItemEnchantments.Mutable storedEnchantmentsMutable = new ItemEnchantments.Mutable(
                 stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY));
-            for (Holder<Enchantment> enchantment : enchantmentsMutable.keySet()) {
-                if (!enchantment.is(ModEnchantmentTags.MERCILESS_PASSED)) {
-                    storedEnchantmentsMutable.set(enchantment, enchantmentsMutable.getLevel(enchantment));
-                    enchantmentsMutable.removeIf(enchantment1 -> enchantment1.equals(enchantment));
+            if (isEnabled) {
+                for (Holder<Enchantment> enchantment : enchantmentsMutable.keySet()) {
+                    if (!enchantment.is(ModEnchantmentTags.MERCILESS_PASSED)) {
+                        storedEnchantmentsMutable.set(enchantment, enchantmentsMutable.getLevel(enchantment));
+                        enchantmentsMutable.removeIf(enchantment1 -> enchantment1.equals(enchantment));
+                    }
                 }
             }
             for (Holder<Enchantment> enchantment : storedEnchantmentsMutable.keySet()) {
-                attackDamage += storedEnchantmentsMutable.getLevel(enchantment);
-                miningEfficiency += storedEnchantmentsMutable.getLevel(enchantment);
+                if (isEnabled) {
+                    int level = storedEnchantmentsMutable.getLevel(enchantment);
+                    attackDamage += level;
+                    miningEfficiency += level;
+                } else {
+                    enchantmentsMutable.set(enchantment, storedEnchantmentsMutable.getLevel(enchantment));
+                    storedEnchantmentsMutable.removeIf(enchantment1 -> enchantment1.equals(enchantment));
+                }
             }
             stack.set(DataComponents.ENCHANTMENTS, enchantmentsMutable.toImmutable());
             stack.set(DataComponents.STORED_ENCHANTMENTS, storedEnchantmentsMutable.toImmutable());
 
-            if ((attackDamage != 0 || miningEfficiency != 0) && stack.getOrDefault(ModComponents.MERCILESS, Merciless.DEFAULT).enabled()) {
+            //noinspection ConstantValue
+            if ((attackDamage != 0 || miningEfficiency != 0) && isEnabled) {
                 ItemAttributeModifiers attributeModifiers = stack.getAttributeModifiers()
                     .withModifierAdded(
                         Attributes.ATTACK_DAMAGE,

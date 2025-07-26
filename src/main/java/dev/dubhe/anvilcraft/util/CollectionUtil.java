@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.util;
 import com.google.common.collect.Multimap;
 
 import java.util.Collection;
+import java.util.LinkedList;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -28,5 +29,9 @@ public class CollectionUtil {
             emptyMap.put(keyFactory.apply(value), value);
         }
         return emptyMap;
+    }
+
+    public static <T> LinkedList<T> newLinkedList(int ignored) {
+        return new LinkedList<>();
     }
 }
