@@ -25,7 +25,7 @@
       "type": "patchouli:crafting",
       "anchor": "recovery_pearl",
       "recipe": "anvilcraft:recovery_pearl",
-      "text": "使用后，将使用者传送至之前的传送地点。"
+      "text": "消耗品，右键使用将玩家传送到上个死亡点。$(br2)如果已经在死亡点附近将玩家传送回重生点。$(br2)会对使用者造成4点摔落伤害。"
     },
     {
       "type": "patchouli:relations",
