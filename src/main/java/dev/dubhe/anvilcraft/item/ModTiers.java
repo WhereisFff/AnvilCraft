@@ -4,7 +4,6 @@ import com.google.common.base.Suppliers;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModItems;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Items;
@@ -13,7 +12,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.UUID;
 import java.util.function.Supplier;
 
 public enum ModTiers implements Tier {
@@ -49,24 +47,21 @@ public enum ModTiers implements Tier {
         () -> Ingredient.of(ModItems.FROST_METAL_INGOT),
         BlockTags.INCORRECT_FOR_NETHERITE_TOOL
     ),
-    // 因为这两个材料对应的工具没有不适宜挖掘的方块
-    // 所以就随机在运行时生成一个标签
-    // 保证了没有任何办法能够给工具添加不适宜挖掘方块
     EMBER_METAL(
         2031,
         10.0f,
-        1.0f,
+        5.0f,
         22,
         () -> Ingredient.of(ModItems.EMBER_METAL_INGOT),
-        TagKey.create(Registries.BLOCK, AnvilCraft.of(UUID.randomUUID().toString()))
+        ModBlockTags.INCORRECT_FOR_EMBER_TOOL
     ),
     TRANSCENDIUM(
         3156,
         14.0f,
-        1.0f,
+        7.0f,
         28,
         () -> Ingredient.of(ModItems.TRANSCENDIUM_INGOT),
-        TagKey.create(Registries.BLOCK, AnvilCraft.of(UUID.randomUUID().toString()))
+        ModBlockTags.INCORRECT_FOR_TRANSCENDIUM_TOOL
     ),
     ;
 
@@ -90,6 +85,7 @@ public enum ModTiers implements Tier {
         this.enchantmentValue = enchantmentValue;
         this.repairIngredient = Suppliers.memoize(supplier::get);
         this.incorrectBlockTags = incorrectBlockTags;
+        AnvilCraft.LOGGER.info("tag: {}", incorrectBlockTags);
     }
 
     @Override

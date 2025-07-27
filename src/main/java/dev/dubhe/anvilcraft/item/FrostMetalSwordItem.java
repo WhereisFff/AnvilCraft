@@ -14,7 +14,7 @@ public class FrostMetalSwordItem extends SwordItem {
         super(
             ModTiers.FROST_METAL,
             properties.fireResistant()
-                .attributes(SwordItem.createAttributes(ModTiers.FROST_METAL, 10, -2.4f))
+                .attributes(SwordItem.createAttributes(ModTiers.FROST_METAL, 7, -2.4f))
                 .component(ModComponents.MERCILESS, Merciless.DEFAULT)
         );
     }

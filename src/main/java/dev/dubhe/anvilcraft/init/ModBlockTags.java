@@ -82,6 +82,8 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_RESIN = bindC("storage_blocks/resin");
 
     public static final TagKey<Block> INCORRECT_FOR_MULTIPHASE_TOOL = bind("incorrect_for_multiphase_tool");
+    public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
+    public static final TagKey<Block> INCORRECT_FOR_TRANSCENDIUM_TOOL = bind("incorrect_for_transcendium_tool");
 
     public static final TagKey<Block> ANVIL_HAMMER_BLACKLIST = bind("anvil_hammer_blacklist");
 

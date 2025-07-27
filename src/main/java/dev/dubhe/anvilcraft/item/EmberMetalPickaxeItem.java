@@ -14,7 +14,7 @@ public class EmberMetalPickaxeItem extends PickaxeItem {
         super(
             ModTiers.EMBER_METAL,
             properties.fireResistant()
-                .attributes(PickaxeItem.createAttributes(ModTiers.EMBER_METAL, 6, -2.8f))
+                .attributes(PickaxeItem.createAttributes(ModTiers.EMBER_METAL, 2, -2.8f))
                 .component(ModComponents.FIRE_REFORGING, Unit.INSTANCE)
         );
     }
