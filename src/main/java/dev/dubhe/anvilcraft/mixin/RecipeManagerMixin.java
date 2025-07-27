@@ -70,9 +70,8 @@ abstract class RecipeManagerMixin {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
-        at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;")
-    )
+                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+        at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;"))
     private void beforeBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
         @Share("caches") LocalRef<List<BaseGeneratingCache<?>>> caches
@@ -82,10 +81,10 @@ abstract class RecipeManagerMixin {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
-        at = @At(value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
-            + "Lcom/google/common/collect/ImmutableMap;")
-    )
+                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+        at = @At(
+            value = "INVOKE_ASSIGN",
+            target = "Lcom/google/common/collect/ImmutableMap$Builder;build()Lcom/google/common/collect/ImmutableMap;"))
     private void afterBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
         @Local ImmutableMultimap.Builder<RecipeType<?>, RecipeHolder<?>> byTypeBuilder,
