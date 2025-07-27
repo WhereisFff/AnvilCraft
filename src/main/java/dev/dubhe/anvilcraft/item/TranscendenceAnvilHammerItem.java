@@ -4,8 +4,10 @@ import dev.dubhe.anvilcraft.api.item.property.Eternal;
 import dev.dubhe.anvilcraft.api.item.property.Providence;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.level.block.Block;
 
@@ -25,6 +27,16 @@ public class TranscendenceAnvilHammerItem extends AnvilHammerItem {
                 .component(ModComponents.ETERNAL, Eternal.INSTANCE)
                 .component(DataComponents.UNBREAKABLE, new Unbreakable(true))
                 .component(ModComponents.PROVIDENCE, Providence.INSTANCE));
+    }
+
+    @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 28;
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
+        return repairCandidate.is(ModItems.TRANSCENDIUM_INGOT);
     }
 
     @Override
