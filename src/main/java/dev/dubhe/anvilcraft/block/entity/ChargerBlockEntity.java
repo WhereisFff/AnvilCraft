@@ -22,7 +22,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,7 +43,6 @@ public class ChargerBlockEntity extends BlockEntity
     @Setter
     private int timeTotalCache = 0;
     private int powerValue = 0;
-    private boolean powered = false;
     private int signalCache = 0;
 
     @Getter
@@ -112,7 +110,7 @@ public class ChargerBlockEntity extends BlockEntity
         return null;
     }
 
-    private boolean checkRecipeItemNotValid(@Nullable ChargerChargingRecipe recipe, ItemStack stack) {
+    private boolean checkRecipeItemNotValid(@Nullable ChargerChargingRecipe recipe, @SuppressWarnings("unused") ItemStack stack) {
         if (recipe != null) {
             if (recipe.power == 0) return true;
             return isCharger != recipe.power < 0;
@@ -136,7 +134,7 @@ public class ChargerBlockEntity extends BlockEntity
         timeLeft = recipe.time + 1; //since there is a "timeLeft--" after this, here +1 to negate
         timeTotalCache = recipe.time; //make a total time cache for client display
         powerValue = recipe.power;
-        if (!(this.getCurrentLevel() instanceof ServerLevel serverLevel)) return;
+        if (this.getCurrentLevel() == null || !(this.getCurrentLevel() instanceof ServerLevel serverLevel)) return;
         PacketDistributor.sendToPlayersTrackingChunk(
             serverLevel, serverLevel.getChunk(this.getBlockPos()).getPos(),
             new ChargerSyncPacket(this.getPos(), this.timeLeft, this.timeTotalCache));
@@ -167,7 +165,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    public Level getCurrentLevel() {
+    public @Nullable Level getCurrentLevel() {
         return getLevel();
     }
 
@@ -266,7 +264,7 @@ public class ChargerBlockEntity extends BlockEntity
     public void tick(Level level1, BlockPos blockPos) {
         this.flushState(level1, blockPos);
         BlockState state = level1.getBlockState(blockPos);
-        powered = state.getValue(ChargerBlock.POWERED);
+        boolean powered = state.getValue(ChargerBlock.POWERED);
         if (grid == null) return;
         if (powered) return;
         if (timeLeft == 0) {
