@@ -51,7 +51,12 @@ public class InWorldRecipeContext implements RecipeInput {
     @SuppressWarnings("unchecked")
     public <T> T get(@NotNull InWorldRecipeData<T> key) {
         T value = (T) this.data.get(key.location());
-        return value != null ? value : key.defaultValue();
+        return value != null ? value : key.supplier().apply(this, key);
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T> T computeIfAbsent(@NotNull InWorldRecipeData<T> key) {
+        return (T) this.data.computeIfAbsent(key.location(), k -> key.supplier().apply(this, key));
     }
 
     @Override

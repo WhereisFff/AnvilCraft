@@ -1,7 +1,10 @@
 package dev.dubhe.anvilcraft.recipe.neo.util;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlockEntityTags;
 import dev.dubhe.anvilcraft.init.ModEntityTags;
+import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
+import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeData;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -31,6 +34,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
@@ -38,6 +42,8 @@ import java.util.function.Predicate;
  * 缓存物品，用于物品匹配/输出
  */
 public class ItemCache {
+    public static final InWorldRecipeData<ItemCache> ITEM_CACHE = InWorldRecipeData.of(AnvilCraft.of("item_cache"), ItemCache::of);
+    public static final Consumer<InWorldRecipeContext> DEFAULT_ACCEPTOR = (ctx) -> ctx.get(ItemCache.ITEM_CACHE).endCache();
     @Getter
     private final Level level;
     private final Set<ICacheElement> inputs = new HashSet<>();
@@ -51,6 +57,10 @@ public class ItemCache {
         this.level = level;
     }
 
+    private static @NotNull ItemCache of(@NotNull InWorldRecipeContext level, InWorldRecipeData<ItemCache> key) {
+        return new ItemCache(level.getLevel());
+    }
+
     public boolean inRange(@NotNull Vec3 pos, @NotNull Vec3 range) {
         return this.range.contains(pos, range);
     }
@@ -58,7 +68,7 @@ public class ItemCache {
 
     private static void toElement(
         ItemCache itemCache,
-        IItemHandlerCache cache,
+        @NotNull IItemHandlerCache cache,
         Set<ICacheElement> input,
         Set<ICacheElement> output,
         Vec3 elementPos,
@@ -91,7 +101,7 @@ public class ItemCache {
 
     private static void toElement(
         ItemCache itemCache,
-        IItemHandler handler,
+        @NotNull IItemHandler handler,
         Set<ICacheElement> input,
         Set<ICacheElement> output,
         Vec3 elementPos,
@@ -420,7 +430,7 @@ public class ItemCache {
         }
 
         public static @NotNull ItemEntityCacheElement create(@NotNull ItemCache cache, ItemStack stack, @NotNull Vec3 pos) {
-            ItemEntity itemEntity = new ItemEntity(cache.level, pos.x, pos.y, pos.z, stack,0.0d,0.0d,0.0d);
+            ItemEntity itemEntity = new ItemEntity(cache.level, pos.x, pos.y, pos.z, stack, 0.0d, 0.0d, 0.0d);
             ItemEntityCacheElement element = new ItemEntityCacheElement(cache, itemEntity);
             element.isInLevel = false;
             element.simulate.setCount(0);

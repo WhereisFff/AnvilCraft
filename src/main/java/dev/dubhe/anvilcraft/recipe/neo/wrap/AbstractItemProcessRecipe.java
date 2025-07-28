@@ -110,7 +110,7 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
     @Override
     public abstract @NotNull RecipeType<T> getType();
 
-    public static abstract class AbstractSerializer<T extends AbstractItemProcessRecipe<T>> implements RecipeSerializer<T> {
+    public abstract static class AbstractSerializer<T extends AbstractItemProcessRecipe<T>> implements RecipeSerializer<T> {
         protected MapCodec<T> codec = null;
         protected StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = null;
 
@@ -169,7 +169,7 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
         }
     }
 
-    public static abstract class AbstractBuilder<T extends AbstractItemProcessRecipe<T>, B extends AbstractBuilder<T, B>> extends AbstractRecipeBuilder<T> {
+    public abstract static class AbstractBuilder<T extends AbstractItemProcessRecipe<T>, B extends AbstractBuilder<T, B>> extends AbstractRecipeBuilder<T> {
 
         private final List<ItemIngredientPredicate> itemIngredients = new ArrayList<>();
         private final List<ChanceItemStack> results = new ArrayList<>();

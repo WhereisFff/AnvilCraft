@@ -18,7 +18,6 @@ import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class SpawnItem implements IRecipeOutcome<SpawnItem> {
-    protected static final InWorldRecipeData<ItemCache> ITEM_CACHE = InWorldRecipeData.of(AnvilCraft.of("item_cache"));
     private final ItemStack item;
     private final Vec3 offset;
     private final double chance;
@@ -36,13 +35,10 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
 
     @Override
     public void accept(@NotNull InWorldRecipeContext context) {
-        ItemCache cache = context.get(ITEM_CACHE);
+        ItemCache cache = context.computeIfAbsent(ItemCache.ITEM_CACHE);
         ItemCache.ICacheOutput output = cache.getOutput(this.item, context.getPos().add(this.offset));
         output.grow(this.item, true);
-        context.putAcceptor(SpawnItem.ITEM_CACHE.location(), ctx -> {
-            ItemCache itemCache = ctx.get(ITEM_CACHE);
-            if (itemCache != null) itemCache.endCache();
-        });
+        context.putAcceptor(ItemCache.ITEM_CACHE.location(), ItemCache.DEFAULT_ACCEPTOR);
     }
 
     public static class Type implements IRecipeOutcome.Type<SpawnItem> {
