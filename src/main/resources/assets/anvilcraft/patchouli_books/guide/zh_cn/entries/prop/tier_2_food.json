@@ -5,14 +5,13 @@
   "sortnum": 4006,
   "entry_color": "004400",
   "extra_recipe_mappings": {
-    "anvilcraft:tin_can": 1,
     "anvilcraft:canned_food": 2
   },
   "pages": [
     "通过工业化生产，可以获得更加便携的罐头食品。$(br2)$(#666666)并非科技与狠活$()",
     {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:tin_can",
+      "type": "anvilcraft:stamping",
+      "recipe": "anvilcraft:stamping/tin_can_from_plate",
       "text": "将$(item)锡压力板$()与$(item)皇家钢$()(不消耗)$(l:basic/item_processing#stamping)冲压$()得到锡罐"
     },
     {
