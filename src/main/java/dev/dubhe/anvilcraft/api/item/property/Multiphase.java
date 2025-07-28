@@ -85,6 +85,7 @@ public record Multiphase(LinkedList<Phase> phases) {
      * @param name 原始名称，不含后缀
      * @return 一个全新的多相
      */
+    @SuppressWarnings("SameParameterValue")
     private static Multiphase make(Component name, int phaseCount) {
         LinkedList<Phase> phases = new LinkedList<>();
         for (int i = 0; i < phaseCount; i++) {
@@ -111,6 +112,7 @@ public record Multiphase(LinkedList<Phase> phases) {
      * @param enchantments 初始附魔，用于α相
      * @return 一个全新的多相
      */
+    @SuppressWarnings("SameParameterValue")
     private static Multiphase make(Component name, @Nullable ItemEnchantments enchantments, int phaseCount) {
         LinkedList<Phase> phases = new LinkedList<>();
         for (int i = 0; i < phaseCount; i++) {
@@ -173,20 +175,20 @@ public record Multiphase(LinkedList<Phase> phases) {
 
         Optional<Phase> beta = Optional.ofNullable(phases.peek());
         beta.map(phase -> phase.customName.map(presentValue -> stack.set(DataComponents.CUSTOM_NAME, presentValue))
-                .orElseGet(() -> {
-                    Component c = stack.get(DataComponents.CUSTOM_NAME);
-                    stack.remove(DataComponents.CUSTOM_NAME);
-                    return c;
-                })
+            .orElseGet(() -> {
+                Component c = stack.get(DataComponents.CUSTOM_NAME);
+                stack.remove(DataComponents.CUSTOM_NAME);
+                return c;
+            })
         ).ifPresentOrElse(
             name -> storing[0] = storing[0].withCustomName(name),
             () -> storing[0] = storing[0].clearCustomName());
         beta.map(phase -> phase.itemName.map(presentValue -> stack.set(DataComponents.ITEM_NAME, presentValue))
-                .orElseGet(() -> {
-                    Component c = stack.get(DataComponents.ITEM_NAME);
-                    stack.remove(DataComponents.ITEM_NAME);
-                    return c;
-                })
+            .orElseGet(() -> {
+                Component c = stack.get(DataComponents.ITEM_NAME);
+                stack.remove(DataComponents.ITEM_NAME);
+                return c;
+            })
         ).ifPresentOrElse(
             name -> storing[0] = storing[0].withItemName(name),
             () -> storing[0] = storing[0].clearItemName());
@@ -213,7 +215,8 @@ public record Multiphase(LinkedList<Phase> phases) {
     }
 
     public Multiphase withAlpha(Phase alpha) {
-        LinkedList<Phase> phases = this.phases;
+        @SuppressWarnings("unchecked")
+        LinkedList<Phase> phases = (LinkedList<Phase>) this.phases.clone();
         phases.pollFirst();
         phases.offerFirst(alpha);
         return new Multiphase(phases);
