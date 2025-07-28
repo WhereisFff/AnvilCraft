@@ -32,6 +32,8 @@ public class ItemTooltipManager {
         map.put(ModItems.GEODE.get(), "Find the surrounding Amethyst Geode when using it");
         map.put(ModItems.ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
         map.put(ModItems.ROYAL_ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
+        map.put(ModItems.EMBER_ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
+        map.put(ModItems.TRANSCENDENCE_ANVIL_HAMMER.get(), "It's a hammer, an anvil, a wrench, goggles, and a mace");
         map.put(ModBlocks.CURSED_GOLD_BLOCK.asItem(), "Carriers will be cursed");
         map.put(ModItems.CURSED_GOLD_INGOT.get(), "Carriers will be cursed");
         map.put(ModItems.CURSED_GOLD_NUGGET.get(), "Carriers will be cursed");
@@ -71,7 +73,7 @@ public class ItemTooltipManager {
         map.put(ModBlocks.CUT_ROYAL_STEEL_STAIRS.asItem(), "Explosion proof");
         map.put(ModBlocks.CUT_ROYAL_STEEL_SLAB.asItem(), "Explosion proof");
         map.put(ModBlocks.TEMPERING_GLASS.asItem(), "Explosion proof, No tools required on collect");
-        map.put(ModBlocks.REMOTE_TRANSMISSION_POLE.asItem(), "Build a power grid with a transmission length of 8");
+        map.put(ModBlocks.REMOTE_TRANSMISSION_POLE.asItem(), "Build a power grid with a transmission length of 16");
         map.put(ModBlocks.HEAVY_IRON_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.POLISHED_HEAVY_IRON_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.POLISHED_HEAVY_IRON_SLAB.asItem(), "Explosion proof");
@@ -145,6 +147,7 @@ public class ItemTooltipManager {
         map.put(ModBlocks.TUNGSTEN_PRESSURE_PLATE.asItem(), "Output redstone signal based on the number of fire-resistant entities above, also a tungsten plate");
         map.put(ModBlocks.TITANIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the highest durability of the items above, also a titanium plate");
         map.put(ModBlocks.URANIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the lowest durability of the items above, also a uranium plate");
+        map.put(ModBlocks.PLUTONIUM_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the player in hand item durability, also a plutonium plate");
         map.put(ModBlocks.BRONZE_PRESSURE_PLATE.asItem(), "Output a redstone signal based on player satiety above, also a bronze plate");
         map.put(ModBlocks.BRASS_PRESSURE_PLATE.asItem(), "Output a redstone signal based on the inventory's filling degree of player above, also a brass plate");
     }
@@ -176,6 +179,23 @@ public class ItemTooltipManager {
                         Component.translatable("enchantment.minecraft.loyalty"),
                         Component.translatable("enchantment.minecraft.riptide"),
                         Component.translatable("tooltip.anvilcraft.property.merciless.curse")
+                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
+            }
+        }
+        if (stack.has(ModComponents.ETERNAL)) {
+            propertyTooltip("eternal", tooltip);
+        }
+        if (stack.has(ModComponents.PROVIDENCE)) {
+            if (!Screen.hasShiftDown()) {
+                propertyTooltip("providence", tooltip, Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
+            } else {
+                propertyTooltip("providence.shifting", tooltip, ComponentUtils.formatList(
+                    List.of(
+                        Component.translatable("enchantment.minecraft.fortune"),
+                        Component.translatable("enchantment.minecraft.looting"),
+                        Component.translatable("enchantment.anvilcraft.beheading"),
+                        Component.translatable("enchantment.minecraft.thorns"),
+                        Component.translatable("enchantment.minecraft.luck_of_the_sea")
                     ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
             }
         }

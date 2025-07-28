@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockSmearRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BulgingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ConcreteRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.HeatProduceTimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
@@ -42,7 +43,6 @@ import net.minecraft.world.item.crafting.SimpleCraftingRecipeSerializer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
-
 
 public class ModRecipeTypes {
     private static final DeferredRegister<RecipeType<?>> RECIPE_TYPES =
@@ -130,6 +130,9 @@ public class ModRecipeTypes {
         registerType("time_warp");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<TimeWarpRecipe>> TIME_WARP_SERIALIZER =
         RECIPE_SERIALIZERS.register("time_warp", TimeWarpRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<HeatProduceTimeWarpRecipe>>
+        HEAT_PRODUCING_TIME_WARP_SERIALIZER =
+        RECIPE_SERIALIZERS.register("heat_produce_time_warp", HeatProduceTimeWarpRecipe.Serializer::new);
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<MeshRecipe>> MESH_TYPE = registerType("mesh");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<MeshRecipe>> MESH_SERIALIZER =

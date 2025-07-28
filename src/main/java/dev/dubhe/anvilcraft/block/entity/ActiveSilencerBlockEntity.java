@@ -8,7 +8,10 @@ import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.ActiveSilencerMenu;
+import dev.dubhe.anvilcraft.network.MutedSoundSyncPacket;
+import dev.dubhe.anvilcraft.network.SilencerSyncPacket;
 import dev.dubhe.anvilcraft.util.DistExecutor;
+import dev.dubhe.anvilcraft.util.NetworkUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -20,6 +23,8 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -31,6 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -135,6 +141,13 @@ public class ActiveSilencerBlockEntity
     public void sync(List<ResourceLocation> sounds) {
         this.mutedSound.clear();
         this.mutedSound.addAll(sounds);
+    }
+
+    public void sync(Player player, List<ResourceLocation> sounds) {
+        this.sync(sounds);
+        if (!(this.getLevel() instanceof ServerLevel serverLevel) || !(player instanceof ServerPlayer serverPlayer)) return;
+        NetworkUtil.sendToAllPlayersExcluded(
+            serverLevel, serverPlayer, new SilencerSyncPacket(this.getBlockPos(), List.copyOf(this.mutedSound)));
     }
 
     @Override

@@ -78,11 +78,21 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.REPEATER))
             .add(findResourceKey(Blocks.COMPARATOR))
             .add(findResourceKey(Blocks.TARGET))
+            .add(findResourceKey(Blocks.COPPER_BULB))
+            .add(findResourceKey(Blocks.EXPOSED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WEATHERED_COPPER_BULB))
+            .add(findResourceKey(Blocks.OXIDIZED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_EXPOSED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_WEATHERED_COPPER_BULB))
+            .add(findResourceKey(Blocks.WAXED_OXIDIZED_COPPER_BULB))
             .add(findResourceKey(Blocks.CAULDRON))
             .add(findResourceKey(Blocks.LAVA_CAULDRON))
             .add(findResourceKey(Blocks.WATER_CAULDRON))
             .add(findResourceKey(Blocks.POWDER_SNOW_CAULDRON))
             .add(findResourceKey(Blocks.CAMPFIRE))
+            .add(findResourceKey(Blocks.STONECUTTER))
+            .add(findResourceKey(Blocks.SCAFFOLDING))
             .add(findResourceKey(Blocks.ANVIL))
             .add(findResourceKey(Blocks.CHIPPED_ANVIL))
             .add(findResourceKey(Blocks.DAMAGED_ANVIL))
@@ -123,17 +133,6 @@ public class BlockTagLoader {
             .addTag(Tags.Blocks.GLASS_BLOCKS)
             .addTag(Tags.Blocks.GLASS_PANES)
             .addTag(BlockTags.REPLACEABLE);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_AMETHYST_TOOL)
-            .addTag(BlockTags.INCORRECT_FOR_STONE_TOOL);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_EMBER_TOOL);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_MULTIPHASE_TOOL)
-            .addTag(ModBlockTags.INCORRECT_FOR_EMBER_TOOL);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL)
-            .addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
 
         provider.addTag(ModBlockTags.END_PORTAL_UNABLE_CHANGE).add(findResourceKey(Blocks.DRAGON_EGG));
 
@@ -240,5 +239,12 @@ public class BlockTagLoader {
             .addTag(Tags.Blocks.GLASS_BLOCKS)
             .addTag(Tags.Blocks.GLASS_PANES)
             .addTag(BlockTags.LEAVES);
+
+        provider.addTag(ModBlockTags.HEATABLE_BLOCKS)
+            .add(findResourceKey(Blocks.NETHERITE_BLOCK));
+
+        provider.addTag(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)
+            .addTag(ModBlockTags.SLIDING_RAILS)
+            .add(ModBlocks.SLIDING_RAIL_STOP.getKey());
     }
 }

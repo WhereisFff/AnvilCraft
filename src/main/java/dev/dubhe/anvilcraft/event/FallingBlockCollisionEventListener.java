@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.FallingBlockCollisionEvent;
+import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
@@ -27,6 +28,7 @@ import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -48,7 +50,7 @@ public class FallingBlockCollisionEventListener {
         for (RecipeHolder<AnvilCollisionCraftRecipe> recipe : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
             if (!recipe.value().anvil().is(event.getFallingBlockEntity().blockState)) continue;
             if (!recipe.value().hitBlock().is(level.getBlockState(pos))) continue;
-            level.removeBlock(pos, false);
+            removeBlock(level, pos);
             if (recipe.value().consume())
                 event.getFallingBlockEntity().kill();
 
@@ -139,7 +141,7 @@ public class FallingBlockCollisionEventListener {
         }
         if (event.getFallingBlockEntity().getBlockState().is(BlockTags.ANVIL)) {
             if (level.getBlockState(pos).getDestroySpeed(level, pos) > 0) {
-                level.removeBlock(pos, false);
+                removeBlock(level, pos);
             }
             level.explode(
                 null,
@@ -163,5 +165,14 @@ public class FallingBlockCollisionEventListener {
             }
             return super.shouldDamageEntity(explosion, entity);
         }
+    }
+
+    @SuppressWarnings("rawtypes")
+    private static void removeBlock(Level level, BlockPos pos) {
+        BlockState blockState = level.getBlockState(pos);
+        if (blockState.getBlock() instanceof AbstractMultiPartBlock multiPartBlock) {
+            multiPartBlock.removePartsAndUpdate(level, pos);
+        } else level.removeBlock(pos, false);
+
     }
 }

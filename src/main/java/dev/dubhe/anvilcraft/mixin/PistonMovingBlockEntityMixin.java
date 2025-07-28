@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.block.SlidingRailBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.block.sliding.ISlidingRail;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
@@ -17,26 +17,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PistonMovingBlockEntity.class)
 abstract class PistonMovingBlockEntityMixin {
-
-    @Shadow
-    private Direction direction;
-
-    @Shadow
-    private int deathTicks;
-
     @Shadow
     public abstract Direction getDirection();
-
-    @Shadow
-    private boolean extending;
 
     @Inject(
         method = "tick",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/Level;"
-                + "neighborChanged(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;"
-                + "Lnet/minecraft/core/BlockPos;)V",
+                     + "neighborChanged(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;"
+                     + "Lnet/minecraft/core/BlockPos;)V",
             shift = At.Shift.AFTER
         )
     )
@@ -47,17 +37,15 @@ abstract class PistonMovingBlockEntityMixin {
             case DOWN:
                 return;
         }
-        if (level.getBlockState(pos.below()).is(ModBlocks.SLIDING_RAIL)) {
-            MinecraftServer server = level.getServer();
-            if (server == null) return;
-            BlockPos p0 = pos.below();
-            SlidingRailBlock.PistonPushInfo p = new SlidingRailBlock.PistonPushInfo(pos, blockEntity.getDirection());
-            p.extending = blockEntity.isExtending();
-            if (SlidingRailBlock.MOVING_PISTON_MAP.containsKey(p0)) {
-                SlidingRailBlock.MOVING_PISTON_MAP.get(p0).extending = p.extending;
-            } else SlidingRailBlock.MOVING_PISTON_MAP.put(p0, p);
-            SlidingRailBlock.MOVING_PISTON_MAP.get(p0).isSourcePiston = blockEntity.isSourcePiston();
-        }
-
+        if (!level.getBlockState(pos.below()).is(ModBlockTags.SLIDING_RAILS)) return;
+        MinecraftServer server = level.getServer();
+        if (server == null) return;
+        BlockPos p0 = pos.below();
+        ISlidingRail.PistonPushInfo p = new ISlidingRail.PistonPushInfo(pos, blockEntity.getDirection());
+        p.extending = blockEntity.isExtending();
+        if (ISlidingRail.MOVING_PISTON_MAP.containsKey(p0)) {
+            ISlidingRail.MOVING_PISTON_MAP.get(p0).extending = p.extending;
+        } else ISlidingRail.MOVING_PISTON_MAP.put(p0, p);
+        ISlidingRail.MOVING_PISTON_MAP.get(p0).isSourcePiston = blockEntity.isSourcePiston();
     }
 }

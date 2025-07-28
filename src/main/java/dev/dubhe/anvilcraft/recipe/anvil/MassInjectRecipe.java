@@ -96,6 +96,11 @@ public class MassInjectRecipe extends SingleItemRecipe {
         return ItemStack.EMPTY;
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public static class Serializer implements RecipeSerializer<MassInjectRecipe> {
         public static final MapCodec<MassInjectRecipe> CODEC =
             RecordCodecBuilder.mapCodec(

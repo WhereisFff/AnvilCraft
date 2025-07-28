@@ -1,0 +1,64 @@
+{
+    "name": "护符",
+    "category": "anvilcraft:special_props",
+    "icon": "anvilcraft:anvil_amulet",
+    "advancement":"anvilcraft:patchouli_books/advanced_amulet",
+    "sortnum":4003,
+    "pages":[
+        {
+            "type":"text",
+            "text":"$(item)护符$()是一系列有特殊作用的物品，需要手持生效。$(br)想要获取$(item)护符$()，需要手持含有$(item)不死图腾$()的$(item)护符盒$()受到特定类型的致命伤害。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:emerald_amulet",
+            "text":"受到来自灾厄村民的致命伤害概率获得。$(br)生效时，减少村民交易的消耗。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:topaz_amulet",
+            "text":"受到来自雷击的致命伤害概率获得。$(br)生效时，免疫雷击伤害。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:ruby_amulet",
+            "text":"受到火焰属性致命伤害概率获得。$(br)生效时，逐渐增加抗火状态效果的时长，上限 3 分钟，受到火焰伤害或不再手持时持续时间减少。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:sapphire_amulet",
+            "text":"受到来自溺水的致命伤害概率获得。$(br)生效时，逐渐增加潮涌核心状态的时长，上限 3 分钟，进入水中或不再手持时持续时间减少。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:anvil_amulet",
+            "text":"受到下落铁砧的致命伤害概率获得。$(br)生效时，免疫铁砧的下落伤害。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:comrade_amulet",
+            "text":"多人模式下，受到来自玩家的致命伤害概率获得。玩家可以右键为其签名。$(br)生效时，免疫来自签名玩家的伤害。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:feather_amulet",
+            "text":"受到摔落伤害致命概率获得。$(br)生效时，免疫摔落伤害。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:cat_amulet",
+            "text":"受到苦力怕爆炸致命概率获得。$(br)生效时，免疫苦力怕的爆炸伤害且幻翼不会攻击你。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:dog_amulet",
+            "text":"受到骷髅攻击致命概率获得。$(br)生效时，任意类型的骷髅会主动远离你。"
+        },
+        {
+            "type":"spotlight",
+            "item":"anvilcraft:silence_amulet",
+            "text":"受到音波尖啸攻击致命概率获得。$(br)生效时，你不会再产生振动。"
+        }
+        
+    ]
+}

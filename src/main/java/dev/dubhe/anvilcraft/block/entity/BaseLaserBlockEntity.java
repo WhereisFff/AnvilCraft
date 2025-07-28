@@ -1,9 +1,11 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.api.rendering.CacheableBERenderingPipeline;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModDamageTypes;
+import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.network.LaserEmitPacket;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -30,6 +32,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -73,7 +76,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         return blockState.getCollisionShape(level, blockPos).toAabbs().stream().noneMatch(laseBoundingBox::intersects);
     }
 
-    public void updateIrradiateBlockPos(BlockPos newPos) {
+    public void updateIrradiateBlockPos(@Nullable BlockPos newPos) {
         if (irradiateBlockPos == null) {
             if (newPos != null)
                 markChanged();
@@ -121,13 +124,20 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
 
     public void tick(@NotNull Level level) {
         if (changed) {
-            if (level instanceof ServerLevel) {
+            if (level instanceof ServerLevel serverLevel) {
                 PacketDistributor.sendToPlayersTrackingChunk(
-                    (ServerLevel) level,
+                    serverLevel,
                     level.getChunkAt(getBlockPos()).getPos(),
                     new LaserEmitPacket(laserLevel, getBlockPos(), irradiateBlockPos)
                 );
             }
+        }
+        //noinspection ConstantValue
+        if (level instanceof ServerLevel serverLevel
+            && getIrradiateBlockPos() != null
+            && serverLevel.getBlockState(getIrradiateBlockPos()).is(ModBlockTags.HEATABLE_BLOCKS)
+        ) {
+            HeaterManager.addProducer(getBlockPos(), getLevel(), ModHeaterInfos.LASER_EMITTER);
         }
         tickCount++;
     }
@@ -185,6 +195,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
                     level.getBlockEntity(irradiateBlockPos)
                 );
                 Vec3 blockPos = getBlockPos().relative(direction.getOpposite()).getCenter();
+                if (getLevel() == null) return;
                 IItemHandler cap = getLevel()
                     .getCapability(
                         Capabilities.ItemHandler.BLOCK,
@@ -268,6 +279,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         super.setRemoved();
         if (level == null) return;
         if (irradiateBlockPos == null) return;
+        if (!level.isLoaded(irradiateBlockPos)) return;
         if (!(level.getBlockEntity(irradiateBlockPos) instanceof BaseLaserBlockEntity irradiateBlockEntity)) return;
         irradiateBlockEntity.onCancelingIrradiation(this);
         if (level.isClientSide()) {

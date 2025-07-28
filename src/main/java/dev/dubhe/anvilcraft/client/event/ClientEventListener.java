@@ -5,12 +5,15 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.client.gui.screen.ResonatorScreen;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
+import dev.dubhe.anvilcraft.client.support.AmuletSelectorSupport;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
@@ -22,6 +25,8 @@ import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
 import net.neoforged.neoforge.client.event.InputEvent.Key;
 import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
+import net.neoforged.neoforge.client.event.ScreenEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.GAME)
@@ -80,6 +85,31 @@ public class ClientEventListener {
             } else if (event.getAction() == InputConstants.RELEASE && Minecraft.getInstance().screen instanceof ResonatorScreen screen) {
                 screen.wheel.onClosing();
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onMouseScrolled(ScreenEvent.MouseScrolled.Pre event) {
+        if (AmuletSelectorSupport.hasHoveringItem()) {
+            int amount = (int) event.getScrollDeltaY();
+            AmuletSelectorSupport.mouseScrolled(-amount);
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRenderTooltip(RenderTooltipEvent.Pre event) {
+        GuiGraphics guiGraphics = event.getGraphics();
+        int x = event.getX();
+        int y = event.getY();
+
+        ItemStack itemStack = event.getItemStack();
+        if (itemStack.is(ModItems.AMULET_BOX)) {
+            event.setY(y + 13);
+            AmuletSelectorSupport.setCurrentHoveringItemStack(itemStack);
+            AmuletSelectorSupport.render(guiGraphics, x, y);
+        } else {
+            AmuletSelectorSupport.setCurrentHoveringItemStack(ItemStack.EMPTY);
         }
     }
 }

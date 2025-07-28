@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.amulet.AmuletType;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeTrigger;
@@ -14,6 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ModRegistries {
+    public static final ResourceKey<Registry<AmuletType>> AMULET_TYPE_KEY = ResourceKey.createRegistryKey(AnvilCraft.of("amulet_type"));
+    public static final Registry<AmuletType> AMULET_TYPE_REGISTRY = new RegistryBuilder<>(AMULET_TYPE_KEY)
+        .maxId(512)
+        .create();
+
     public static final ResourceKey<Registry<IRecipeTrigger>> TRIGGER_KEY = ResourceKey.createRegistryKey(
         AnvilCraft.of("trigger")
     );
@@ -40,6 +46,7 @@ public class ModRegistries {
 
     @SubscribeEvent
     public static void registerRegistries(@NotNull NewRegistryEvent event) {
+        event.register(AMULET_TYPE_REGISTRY);
         event.register(TRIGGER_REGISTRY);
         event.register(OUTCOME_TYPE_REGISTRY);
         event.register(PREDICATE_TYPE_REGISTRY);

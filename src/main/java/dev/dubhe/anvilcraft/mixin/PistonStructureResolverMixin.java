@@ -1,14 +1,17 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.event.PistonMoveBlockListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
@@ -32,5 +35,53 @@ abstract class PistonStructureResolverMixin {
         if (!cir.getReturnValue()) return;
         List<BlockPos> toPushBlocks = new ArrayList<>(toPush);
         PistonMoveBlockListener.onPistonMoveBlocks(level, toPushBlocks);
+    }
+
+    @Redirect(
+        method = "addBlockLine",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/block/state/BlockState;canStickTo(Lnet/minecraft/world/level/block/state/BlockState;)Z",
+            ordinal = 0))
+    private boolean useEnhancedCheck00(
+        BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos pos, @Local(ordinal = 1) BlockPos otherPos
+    ) {
+        return instance.canStickTo(pos, otherPos, state);
+    }
+
+    @Redirect(
+        method = "addBlockLine",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/block/state/BlockState;canStickTo(Lnet/minecraft/world/level/block/state/BlockState;)Z",
+            ordinal = 1))
+    private boolean useEnhancedCheck01(
+        BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos otherPos, @Local(ordinal = 1) BlockPos pos
+    ) {
+        return instance.canStickTo(pos, otherPos, state);
+    }
+
+    @Redirect(
+        method = "addBranchingBlocks",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/block/state/BlockState;canStickTo(Lnet/minecraft/world/level/block/state/BlockState;)Z",
+            ordinal = 0))
+    private boolean useEnhancedCheck10(
+        BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos otherPos, @Local(ordinal = 1) BlockPos pos
+    ) {
+        return instance.canStickTo(pos, otherPos, state);
+    }
+
+    @Redirect(
+        method = "addBranchingBlocks",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/block/state/BlockState;canStickTo(Lnet/minecraft/world/level/block/state/BlockState;)Z",
+            ordinal = 1))
+    private boolean useEnhancedCheck11(
+        BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos pos, @Local(ordinal = 1) BlockPos otherPos
+    ) {
+        return instance.canStickTo(pos, otherPos, state);
     }
 }

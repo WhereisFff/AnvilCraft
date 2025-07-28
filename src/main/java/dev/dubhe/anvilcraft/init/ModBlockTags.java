@@ -32,6 +32,14 @@ public class ModBlockTags {
     public static final TagKey<Block> VOID_DECAY_PRODUCTS = bind("void_decay_products");
     public static final TagKey<Block> CRAFTING_MATRIX_ELEMENT = bind("crafting_matrix_element");
     public static final TagKey<Block> SPECTRAL_CAN_THROUGH = bind("spectral_can_through");
+    public static final TagKey<Block> HEATABLE_BLOCKS = bind("heatable_blocks");
+    public static final TagKey<Block> HEATED_BLOCKS = bind("heated_blocks");
+    public static final TagKey<Block> REDHOT_BLOCKS = bind("redhot_blocks");
+    public static final TagKey<Block> GLOWING_BLOCKS = bind("glowing_blocks");
+    public static final TagKey<Block> INCANDESCENT_BLOCKS = bind("incandescent_blocks");
+    public static final TagKey<Block> OVERHEATED_BLOCKS = bind("overheated_blocks");
+    public static final TagKey<Block> SLIDING_RAILS = bind("sliding_rails");
+    public static final TagKey<Block> STICKABLE_WITH_SLIDING_RAILS = bind("stickable_with_sliding_rails");
 
     // common tags
     public static final TagKey<Block> ORES_TUNGSTEN = bindC("ores/tungsten");
@@ -63,6 +71,7 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_LEAD = bindC("storage_blocks/lead");
     public static final TagKey<Block> STORAGE_BLOCKS_SILVER = bindC("storage_blocks/silver");
     public static final TagKey<Block> STORAGE_BLOCKS_URANIUM = bindC("storage_blocks/uranium");
+    public static final TagKey<Block> STORAGE_BLOCKS_PLUTONIUM = bindC("storage_blocks/plutonium");
     public static final TagKey<Block> STORAGE_BLOCKS_BRONZE = bindC("storage_blocks/bronze");
     public static final TagKey<Block> STORAGE_BLOCKS_BRASS = bindC("storage_blocks/brass");
     public static final TagKey<Block> STORAGE_BLOCKS_MAGNET = bindC("storage_blocks/magnet");
@@ -72,10 +81,9 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_AMBER = bindC("storage_blocks/amber");
     public static final TagKey<Block> STORAGE_BLOCKS_RESIN = bindC("storage_blocks/resin");
 
-    public static final TagKey<Block> INCORRECT_FOR_AMETHYST_TOOL = bind("incorrect_for_amethyst_tool");
-    public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
     public static final TagKey<Block> INCORRECT_FOR_MULTIPHASE_TOOL = bind("incorrect_for_multiphase_tool");
-    public static final TagKey<Block> INCORRECT_FOR_FROST_METAL_TOOL = bind("incorrect_for_frost_metal_tool");
+    public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
+    public static final TagKey<Block> INCORRECT_FOR_TRANSCENDIUM_TOOL = bind("incorrect_for_transcendium_tool");
 
     public static final TagKey<Block> ANVIL_HAMMER_BLACKLIST = bind("anvil_hammer_blacklist");
 

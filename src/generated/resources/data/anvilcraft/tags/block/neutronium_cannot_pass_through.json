@@ -1,5 +1,7 @@
 {
   "values": [
+    "anvilcraft:levitation_powder_block",
+    "anvilcraft:controllable_sand",
     "minecraft:end_stone",
     "minecraft:bedrock",
     "anvilcraft:end_dust",

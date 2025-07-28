@@ -9,6 +9,10 @@
     "anvilcraft:feather_amulet",
     "anvilcraft:cat_amulet",
     "anvilcraft:dog_amulet",
-    "anvilcraft:silence_amulet"
+    "anvilcraft:silence_amulet",
+    {
+      "id": "anvilcraft:cogwheel_amulet",
+      "required": false
+    }
   ]
 }

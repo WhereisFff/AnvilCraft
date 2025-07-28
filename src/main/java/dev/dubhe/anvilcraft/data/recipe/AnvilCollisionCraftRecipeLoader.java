@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.elements.InputBlock;
 import dev.dubhe.anvilcraft.recipe.elements.OutputBlock;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Blocks;
 
@@ -67,6 +68,20 @@ public class AnvilCollisionCraftRecipeLoader {
             .hitBlock(ModBlocks.LEVITATION_POWDER_BLOCK.get())
             .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2)
             .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.25f)
+            .save(provider);
+        CompoundTag heatableData = new CompoundTag();
+        heatableData.putInt("duration", 200);
+        AnvilCollisionCraftRecipe.builder()
+            .anvil(BlockTags.ANVIL)
+            .consume(false)
+            .hitBlock(ModBlocks.URANIUM_BLOCK.get())
+            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL, heatableData), 16)
+            .save(provider);
+        AnvilCollisionCraftRecipe.builder()
+            .anvil(BlockTags.ANVIL)
+            .consume(false)
+            .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
+            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL, heatableData), 16)
             .save(provider);
     }
 }

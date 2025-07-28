@@ -16,6 +16,7 @@ import org.jetbrains.annotations.Contract;
 
 @Getter
 public class ChanceItemStack {
+    public static final ChanceItemStack EMPTY = ChanceItemStack.of(ItemStack.EMPTY);
     public static final Codec<ChanceItemStack> CODEC = Codec.lazyInitialized(
         () -> RecordCodecBuilder.create(ins -> ins.group(
             ItemStack.OPTIONAL_CODEC.fieldOf("stack").forGetter(ChanceItemStack::getStack),

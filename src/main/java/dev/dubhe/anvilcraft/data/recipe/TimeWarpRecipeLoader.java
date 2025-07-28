@@ -2,10 +2,12 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.anvil.HeatProduceTimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -39,7 +41,6 @@ public class TimeWarpRecipeLoader {
         timeWarp(provider, ModBlocks.TUNGSTEN_BLOCK, 1, ModItems.RAW_TUNGSTEN, 3);
         timeWarp(provider, ModBlocks.LEAD_BLOCK, 1, ModItems.RAW_LEAD, 3);
         timeWarp(provider, ModBlocks.SILVER_BLOCK, 1, ModItems.RAW_SILVER, 3);
-        timeWarp(provider, ModBlocks.URANIUM_BLOCK, 1, ModItems.RAW_URANIUM, 3);
         timeWarp(provider, ModItems.SEA_HEART_SHELL_SHARD, 1, ModItems.SEA_HEART_SHELL, 1);
 
         TimeWarpRecipe.builder()
@@ -146,6 +147,21 @@ public class TimeWarpRecipeLoader {
             .requires(ItemTags.FLOWERS)
             .result(Items.WITHER_ROSE.getDefaultInstance(), 0.2f)
             .save(provider);
+
+        HeatProduceTimeWarpRecipe.builder()
+            .heating(HeatTier.INCANDESCENT, 6000)
+            .heating(HeatTier.OVERHEATED, 200)
+            .requires(ModBlocks.URANIUM_BLOCK)
+            .result(ModItems.RAW_URANIUM.asStack(2))
+            .result(ModItems.RAW_LEAD.asStack())
+            .save(provider, AnvilCraft.of("heat_produce_time_warp/raw_uranium_from_uranium_block"));
+        HeatProduceTimeWarpRecipe.builder()
+            .heating(HeatTier.INCANDESCENT, 12000)
+            .heating(HeatTier.OVERHEATED, 200)
+            .requires(ModBlocks.PLUTONIUM_BLOCK)
+            .result(ModItems.RAW_URANIUM.asStack(3))
+            .result(ModItems.RAW_LEAD.asStack())
+            .save(provider, AnvilCraft.of("heat_produce_time_warp/raw_uranium_from_plutonium_block"));
     }
 
     private static void timeWarp(

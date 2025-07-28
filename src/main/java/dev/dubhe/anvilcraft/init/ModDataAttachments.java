@@ -15,12 +15,6 @@ public class ModDataAttachments {
     private static final DeferredRegister<AttachmentType<?>> ATTACHMENT_TYPES =
         DeferredRegister.create(NeoForgeRegistries.ATTACHMENT_TYPES, MOD_ID);
 
-    public static final Supplier<AttachmentType<Integer>> AMULET_COUNT = ATTACHMENT_TYPES.register(
-        "amulet_count", () -> AttachmentType.builder(() -> 0).build());
-
-    public static final Supplier<AttachmentType<Integer>> AMULET_MAX = ATTACHMENT_TYPES.register(
-        "amulet_max", () -> AttachmentType.builder(() -> 1).build());
-
     public static final Supplier<AttachmentType<Float>> DISCOUNT_RATE = ATTACHMENT_TYPES.register(
         "discount_rate", () -> AttachmentType.builder(() -> 0f).build());
 

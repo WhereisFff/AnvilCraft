@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.better.BetterBaseEntityBlock;
 import dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -15,7 +16,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
-public class SpaceOvercompressorBlock extends BetterBaseEntityBlock {
+public class SpaceOvercompressorBlock extends BetterBaseEntityBlock implements IHammerRemovable {
 
     public SpaceOvercompressorBlock(Properties properties) {
         super(properties);

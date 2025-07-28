@@ -24,9 +24,8 @@ abstract class GameRendererMixin {
         )
     )
     void loadBloomEffect(ResourceProvider resourceProvider, CallbackInfo ci) throws IOException {
-        if (!RenderState.hasIncompatibleMods()) {
-            ModShaders.loadBloomEffect(resourceProvider);
-        }
+        ModShaders.loadBloomEffect(resourceProvider);
+
     }
 
     @Inject(
@@ -37,11 +36,9 @@ abstract class GameRendererMixin {
         )
     )
     void resize(int width, int height, CallbackInfo ci) {
-        if (!RenderState.hasIncompatibleMods()) {
-            ModShaders.resize(width, height);
-            if (ModRenderTargets.getTempTarget() != null) {
-                ModRenderTargets.getTempTarget().resize(width, height, Minecraft.ON_OSX);
-            }
+        ModShaders.resize(width, height);
+        if (ModRenderTargets.getTempTarget() != null) {
+            ModRenderTargets.getTempTarget().resize(width, height, Minecraft.ON_OSX);
         }
     }
 }

@@ -13,11 +13,16 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderOwner;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
@@ -395,5 +400,33 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
             case PICKAXE_MODE -> ItemAbilities.DEFAULT_PICKAXE_ACTIONS.contains(itemAbility);
             default -> false;
         };
+    }
+
+    public static class ResonatorHolder extends Holder.Reference<Item> {
+        public ResonatorHolder(Holder.Reference.Type type, HolderOwner<Item> owner, ResourceKey<Item> key, Item value) {
+            super(type, owner, key, value);
+        }
+
+        public boolean is(int mode, TagKey<Item> tagKey) {
+            if (mode == AUTO_MODE) return super.is(tagKey);
+            return switch (tagKey) {
+                case TagKey<Item> tag when tag.equals(ItemTags.AXES)     -> super.is(tag) && mode == AXE_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.SHOVELS)  -> super.is(tag) && mode == SHOVEL_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.HOES)     -> super.is(tag) && mode == HOE_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.PICKAXES) -> super.is(tag) && mode == PICKAXE_MODE;
+                default -> super.is(tagKey);
+            };
+        }
+
+        public boolean is(int mode, HolderSet<Item> holders) {
+            if (mode == AUTO_MODE) return holders.contains(this);
+            return switch (holders) {
+                case HolderSet.Named<Item> h when h.key().equals(ItemTags.AXES)     -> h.contains(this) && mode == AXE_MODE;
+                case HolderSet.Named<Item> h when h.key().equals(ItemTags.SHOVELS)  -> h.contains(this) && mode == SHOVEL_MODE;
+                case HolderSet.Named<Item> h when h.key().equals(ItemTags.HOES)     -> h.contains(this) && mode == HOE_MODE;
+                case HolderSet.Named<Item> h when h.key().equals(ItemTags.PICKAXES) -> h.contains(this) && mode == PICKAXE_MODE;
+                default -> holders.contains(this);
+            };
+        }
     }
 }

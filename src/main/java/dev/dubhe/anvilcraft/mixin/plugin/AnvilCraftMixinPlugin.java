@@ -38,12 +38,8 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
         if (mixinClassName.endsWith("PistonStructureResolverMixin")) return !hasZetaPiston;
         if (mixinClassName.endsWith("DefaultDisplayViewingScreenMixin")) return hasReiScreen;
-        if (mixinClassName.contains("Create")) {
-            return hasCreate;
-        }
-        if (mixinClassName.contains("BatchCrafterBlockMixin") || mixinClassName.contains("BatchCrafterBlockEntityMixin")) {
-            return hasAE2;
-        }
+        if (mixinClassName.contains("Create")) return hasCreate;
+        if (mixinClassName.contains("AE2")) return hasAE2;
         if (mixinClassName.contains("Cerbon")) return hasCerbonBetterBeacons;
         return true;
     }

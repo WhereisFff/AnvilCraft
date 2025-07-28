@@ -1,0 +1,53 @@
+{
+  "name": "进阶原版物品再生",
+  "category": "anvilcraft:technology_application",
+  "icon": "minecraft:ancient_debris",
+  "sortnum": 6002,
+  "entry_color": "004400",
+  "extra_recipe_mappings": {
+    "minecraft:netherite_scrap": 1,
+    "anvilcraft:sea_heart_shell_shard": 4
+  },
+  "pages": [
+    "在获得$(item)腐化信标$()可以进行$(l:smithing/corrupted_beacon#time_warp)时移$()操作后，便有了再生原版珍惜资源的能力。包括以下物品：$(br)$(l:apply/item_regeneration#ancient_debris)远古残骸$()$(br)$(l:apply/item_regeneration#heart_of_the_sea)海洋之心$()",
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "ancient_debris",
+      "item": "anvilcraft:heater",
+      "title": "再生远古残骸",
+      "text": "使用$(l:power/consumption#heater)高温熔炼$()处理$(item)远古残骸$()获得双份$(item)下界合金碎片$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "netherite_crystal_nucleus",
+      "recipe": "anvilcraft:netherite_crystal_nucleus",
+      "title": "再生远古残骸",
+      "text": "将通过$(l:struct/mineral_fountain#mineral_fountain)矿物涌泉$()得到的大量$(item)钨锭$()$(l:basic/item_processing#stamping)冲压$()为$(item)钨压力板$()，与$(item)下界合金碎片$()合成为$(item)下界合金晶核$()"
+    },
+    {
+      "type": "anvilcraft:time_warp",
+      "recipe": "anvilcraft:time_warp/ancient_debris",
+      "title": "再生远古残骸",
+      "text": "将$(item)下界合金晶核$()$(l:smithing/corrupted_beacon#time_warp)时移$()为$(item)远古残骸$()。$(br)综上，$(item)远古残骸$()+2*$(item)钨锭$()→2*$(item)远古残骸$()"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "heart_of_the_sea",
+      "item": "anvilcraft:stamping_platform",
+      "title": "再生海洋之心",
+      "text": "将$(item)海洋之心$()$(l:basic/item_processing#stamping)冲压$()为平均4个$(item)海心壳碎片$()和1个$(item)蓝宝石$()"
+    },
+    {
+      "type": "anvilcraft:time_warp",
+      "recipe": "anvilcraft:time_warp/sea_heart_shell",
+      "title": "再生海洋之心",
+      "text": "将$(item)海心壳碎片$()$(l:smithing/corrupted_beacon#time_warp)时移$()为$(item)海心壳$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "minecraft:heart_of_the_sea",
+      "title": "再生海洋之心",
+      "text": "通过$(l:basic/geode)晶洞$()或$(l:apply/gem_transformation)宝石转化$()获取到更多$(item)蓝宝石$()后，与$(item)海心壳$()合成得到更多$(item)海洋之心$()。在此循环下，可以消耗蓝宝石再生海洋之心"
+    }
+  ]
+}

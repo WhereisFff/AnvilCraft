@@ -89,6 +89,11 @@ public class BlockCrushRecipe implements Recipe<BlockCrushRecipe.Input> {
         }
     }
 
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
+
     public static class Serializer implements RecipeSerializer<BlockCrushRecipe> {
         private static final MapCodec<BlockCrushRecipe> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
                 CodecUtil.BLOCK_CODEC.fieldOf("input").forGetter(BlockCrushRecipe::getInput),

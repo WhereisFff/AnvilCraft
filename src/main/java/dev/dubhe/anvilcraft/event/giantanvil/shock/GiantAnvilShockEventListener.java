@@ -48,15 +48,19 @@ public class GiantAnvilShockEventListener {
                 TreeNode.multiple(
                     TreeNode.<ShockContext>predicatedExecutable(it ->
                         (it.unwrap().testBorder(AnvilBlock.class) || it.unwrap().testBorder(ModBlocks.SPECTRAL_ANVIL))
-                            && !it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
-                            && !it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
+                        && !it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
+                        && !it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
+                        && !it.unwrap().testBorder(ModBlocks.TRANSCENDENCE_ANVIL)
                     ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.NORMAL)),
-                    TreeNode.<ShockContext>predicatedExecutable(it ->
-                        it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
+                    TreeNode.<ShockContext>predicatedExecutable(
+                        it -> it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
                     ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.SILK_TOUCH)),
-                    TreeNode.<ShockContext>predicatedExecutable(it ->
-                        it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
-                    ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.AUTO_SMELTING))
+                    TreeNode.<ShockContext>predicatedExecutable(
+                        it -> it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
+                    ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.AUTO_SMELTING)),
+                    TreeNode.<ShockContext>predicatedExecutable(
+                        it -> it.unwrap().testBorder(ModBlocks.TRANSCENDENCE_ANVIL)
+                    ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.FORTUNE))
                 )
             ).then(
                 //test block type
