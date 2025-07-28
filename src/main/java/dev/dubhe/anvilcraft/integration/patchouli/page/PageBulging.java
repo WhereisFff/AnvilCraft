@@ -2,8 +2,10 @@ package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.BulgingRecipe;
+import dev.dubhe.anvilcraft.util.CauldronUtil;
+import dev.dubhe.anvilcraft.util.RenderHelper;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
 
 public class PageBulging extends PageAnvilItemProcess<BulgingRecipe> {
@@ -12,8 +14,24 @@ public class PageBulging extends PageAnvilItemProcess<BulgingRecipe> {
                 ModRecipeTypes.BULGING_TYPE,
                 BulgingRecipe::getMergedIngredients,
                 BulgingRecipe::getResults,
-                recipe -> Blocks.WATER_CAULDRON.defaultBlockState().setValue(BlockStateProperties.LEVEL_CAULDRON, 3),
+                recipe -> CauldronUtil.fullState(Blocks.WATER_CAULDRON),
                 null
         );
+    }
+
+    @Override
+    protected void drawExtra(
+            GuiGraphics graphics, BulgingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY,
+            boolean second
+    ) {
+        if (recipe.getResults().isEmpty() && recipe.getCauldron() != null) {
+            RenderHelper.renderBlock(
+                    graphics,
+                    CauldronUtil.fullState(recipe.getCauldron()),
+                    recipeX + 90, recipeY + 29, 10,
+                    12,
+                    RenderHelper.SINGLE_BLOCK
+            );
+        }
     }
 }
