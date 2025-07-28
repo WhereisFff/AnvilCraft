@@ -3,6 +3,9 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:heater",
   "sortnum": 2003,
+  "extra_recipe_mappings": {
+    "anvilcraft:capacitor": 6
+  },
   "pages": [
     {
       "type": "patchouli:text",
@@ -34,6 +37,24 @@
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:induction_light",
       "text": "Lighting, with a power consumption of 1 kW$(br)Right click on this with $(item)Redstone$() to change it to ripening mode$(br)Right click on this with $(item)Glowstone Dust$() to change it to anti-monster spawning mode$(br)Right click on this with $(l:struct/mineral_fountain#void_matter)Void Matter$() to change it to anti-animal spawning mode$(br)The power consumption of the above three modes will become 16 kW"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "charger",
+      "recipe": "anvilcraft:charger",
+      "text": "对于不同配方消耗不同能量：$(li)铁锭→磁铁锭$(li)电容器（空）→电容器"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "capacitor_empty",
+      "recipe": "anvilcraft:capacitor_empty",
+      "text": "$(#666666)“5号电池”$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "discharger",
+      "recipe": "anvilcraft:discharger_from_charger",
+      "text": "可以释放电容器中的能量，但是会损失一小部分"
     }
   ]
 }
