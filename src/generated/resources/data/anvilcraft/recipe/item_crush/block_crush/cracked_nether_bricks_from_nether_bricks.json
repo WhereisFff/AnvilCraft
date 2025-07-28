@@ -2,20 +2,13 @@
   "type": "anvilcraft:item_crush",
   "ingredients": [
     {
-      "item": "minecraft:nether_bricks"
+      "items": "minecraft:nether_bricks"
     }
   ],
   "results": [
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.8
-      },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:cracked_nether_bricks"
-      }
+      "chance": 0.8,
+      "id": "minecraft:cracked_nether_bricks"
     }
   ]
 }
