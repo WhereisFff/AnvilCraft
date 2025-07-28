@@ -1,22 +1,17 @@
 {
   "type": "anvilcraft:item_crush",
-  "chances": [
-    0.5,
-    0.5
-  ],
   "ingredients": [
     {
-      "count": 1,
       "items": "minecraft:chainmail_helmet"
     }
   ],
   "results": [
     {
-      "count": 1,
+      "chance": 0.5,
       "id": "minecraft:chain"
     },
     {
-      "count": 1,
+      "chance": 0.5,
       "id": "minecraft:chain"
     }
   ]

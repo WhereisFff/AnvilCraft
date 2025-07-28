@@ -1,17 +1,13 @@
 {
   "type": "anvilcraft:item_crush",
-  "chances": [
-    0.5
-  ],
   "ingredients": [
     {
-      "count": 1,
       "items": "minecraft:golden_pickaxe"
     }
   ],
   "results": [
     {
-      "count": 1,
+      "chance": 0.5,
       "id": "minecraft:gold_ingot"
     }
   ]

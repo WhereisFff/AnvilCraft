@@ -1,22 +1,16 @@
 {
   "type": "anvilcraft:item_crush",
-  "chances": [
-    1.0,
-    0.5
-  ],
   "ingredients": [
     {
-      "count": 1,
       "items": "#c:crops/wheat"
     }
   ],
   "results": [
     {
-      "count": 1,
       "id": "anvilcraft:flour"
     },
     {
-      "count": 1,
+      "chance": 0.5,
       "id": "anvilcraft:flour"
     }
   ]

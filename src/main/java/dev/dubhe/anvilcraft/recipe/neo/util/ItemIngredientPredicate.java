@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.recipe.neo.util;
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.recipe.neo.predicate.item.HasItemIngredient;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -13,6 +14,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -31,7 +33,7 @@ public record ItemIngredientPredicate(
                 .optionalFieldOf("items")
                 .forGetter(ItemIngredientPredicate::items),
             Codec.INT
-                .fieldOf("count")
+                .optionalFieldOf("count", 1)
                 .forGetter(ItemIngredientPredicate::count),
             DataComponentPredicate.CODEC
                 .optionalFieldOf("components", DataComponentPredicate.EMPTY)
@@ -49,6 +51,10 @@ public record ItemIngredientPredicate(
     @Override
     public boolean testCount(int count) {
         return this.count <= count;
+    }
+
+    public @NotNull HasItemIngredient toHasItemIngredient(Vec3 offset, Vec3 range) {
+        return new HasItemIngredient(offset, range, this);
     }
 
     @SuppressWarnings("UnusedReturnValue")

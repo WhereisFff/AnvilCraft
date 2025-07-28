@@ -1,17 +1,13 @@
 {
   "type": "anvilcraft:item_crush",
-  "chances": [
-    64.0
-  ],
   "ingredients": [
     {
-      "count": 1,
       "items": "minecraft:skeleton_skull"
     }
   ],
   "results": [
     {
-      "count": 1,
+      "chance": 64.0,
       "id": "minecraft:bone_meal"
     }
   ]

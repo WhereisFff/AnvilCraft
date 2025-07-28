@@ -1,22 +1,15 @@
 {
   "type": "anvilcraft:item_crush",
-  "chances": [
-    1.0,
-    1.0
-  ],
   "ingredients": [
     {
-      "count": 1,
       "items": "#minecraft:logs"
     }
   ],
   "results": [
     {
-      "count": 1,
       "id": "anvilcraft:wood_fiber"
     },
     {
-      "count": 1,
       "id": "anvilcraft:resin"
     }
   ]

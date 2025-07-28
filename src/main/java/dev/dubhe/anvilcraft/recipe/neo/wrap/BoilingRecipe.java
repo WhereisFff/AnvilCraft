@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.recipe.neo.wrap;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
@@ -8,15 +7,17 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @Getter
-public class ItemCrushRecipe extends AbstractItemProcessRecipe<ItemCrushRecipe> {
+public class BoilingRecipe extends AbstractItemProcessRecipe<BoilingRecipe> {
 
-    public ItemCrushRecipe(
+    public BoilingRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results
     ) {
@@ -25,43 +26,47 @@ public class ItemCrushRecipe extends AbstractItemProcessRecipe<ItemCrushRecipe> 
             itemIngredients,
             new Vec3(0.0, -1.5, 0.0),
             results,
-            new Vec3(0.0, -0.6, 0.0),
+            new Vec3(0.0, -1.0, 0.0),
             BlockStatePredicate.Builder
-                .of(ModBlocks.CRUSHING_TABLE.get())
+                .of(Blocks.WATER_CAULDRON)
+                .build(),
+            BlockStatePredicate.Builder
+                .of(Blocks.CAMPFIRE)
+                .with(CampfireBlock.LIT, true)
                 .build()
         );
     }
 
     @Override
-    public @NotNull RecipeSerializer<ItemCrushRecipe> getSerializer() {
-        return ModRecipeTypes.ITEM_CRUSH_SERIALIZERS.get();
+    public @NotNull RecipeSerializer<BoilingRecipe> getSerializer() {
+        return ModRecipeTypes.BOILING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<ItemCrushRecipe> getType() {
-        return ModRecipeTypes.ITEM_CRUSH_TYPE.get();
+    public @NotNull RecipeType<BoilingRecipe> getType() {
+        return ModRecipeTypes.BOILING_TYPE.get();
     }
 
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
-    public static class Serializer extends AbstractSerializer<ItemCrushRecipe> {
+    public static class Serializer extends AbstractSerializer<BoilingRecipe> {
         @Override
-        protected ItemCrushRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
-            return new ItemCrushRecipe(itemIngredients, results);
+        protected BoilingRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
+            return new BoilingRecipe(itemIngredients, results);
         }
     }
 
-    public static class Builder extends AbstractBuilder<ItemCrushRecipe, Builder> {
+    public static class Builder extends AbstractBuilder<BoilingRecipe, Builder> {
         @Override
         public @NotNull String getType() {
-            return "item_crush";
+            return "boiling";
         }
 
         @Override
-        protected ItemCrushRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
-            return new ItemCrushRecipe(itemIngredients, results);
+        protected BoilingRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
+            return new BoilingRecipe(itemIngredients, results);
         }
 
         @Override

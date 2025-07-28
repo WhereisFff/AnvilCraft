@@ -19,15 +19,15 @@ public class BoilingBehavior implements IAnvilBehavior {
         float fallDistance,
         AnvilFallOnLandEvent event
     ) {
-        BlockState belowState = level.getBlockState(hitBlockPos.below());
-        if (belowState.is(Blocks.CAMPFIRE) && belowState.getValue(CampfireBlock.LIT)) {
-            return AnvilUtil.itemProcess(
-                ModRecipeTypes.BOILING_TYPE.get(),
-                level,
-                hitBlockPos,
-                hitBlockPos.getCenter()
-            );
-        }
+//        BlockState belowState = level.getBlockState(hitBlockPos.below());
+//        if (belowState.is(Blocks.CAMPFIRE) && belowState.getValue(CampfireBlock.LIT)) {
+//            return AnvilUtil.itemProcess(
+//                ModRecipeTypes.BOILING_TYPE.get(),
+//                level,
+//                hitBlockPos,
+//                hitBlockPos.getCenter()
+//            );
+//        }
         return false;
     }
 }
