@@ -23,7 +23,12 @@
     },
     {
       "type": "patchouli:spotlight",
-      "item": ["minecraft:emerald","anvilcraft:ruby","anvilcraft:sapphire","anvilcraft:topaz"],
+      "item": [
+        "minecraft:emerald",
+        "anvilcraft:ruby",
+        "anvilcraft:sapphire",
+        "anvilcraft:topaz"
+      ],
       "text": "宝石：包括$(item)绿宝石$()、$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()$(br2)$(#888888)晦涩来说，就是携带#anvilcraft:gems标签的物品$()"
     },
     {
@@ -42,15 +47,22 @@
       "type": "patchouli:crafting",
       "anchor": "circuit_board",
       "recipe": "anvilcraft:circuit_board",
-      "text": ""
+      "text": "简单的电子原件，用于合成"
+    },
+    {
+      "type": "anvilcraft:super_heating",
+      "anchor": "lime_powder",
+      "recipe": "anvilcraft:super_heating/lime_powder_from_crab_claw",
+      "text": "除了$(item)蟹钳$()，还可以熔炼以下物品得到：$(li)失活的珊瑚扇：1$(li)滴水石锥：1$(li)鹦鹉螺壳：1$(li)失活的珊瑚块：4$(li)滴水石块：4$(li)方解石：4"
     },
     {
       "type": "patchouli:relations",
       "entries": [
         "anvilcraft:smithing/corrupted_beacon",
-        "anvilcraft:smithing/jewelcrafting_table"
+        "anvilcraft:smithing/jewelcrafting_table",
+        "anvilcraft:basic/item_processing"
       ],
       "text": ""
     }
-    ]
+  ]
 }
