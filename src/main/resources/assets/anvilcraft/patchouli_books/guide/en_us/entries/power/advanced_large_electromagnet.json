@@ -22,7 +22,7 @@
           ["ABA","B0B","ABA"]
         ]
       },
-      "text": "通过$(l:advanced/multiblock#conversion)多方块转化$()获得$(item)加速环$()"
+      "text": "通过$(l:struct/multiblock#conversion)多方块转化$()获得$(item)加速环$()"
     },
     {
       "type": "patchouli:spotlight",
@@ -45,7 +45,7 @@
           ["ABA","B0B","ABA"]
         ]
       },
-      "text": "通过$(l:advanced/multiblock#conversion)多方块转化$()获得$(item)偏转环$()"
+      "text": "通过$(l:struct/multiblock#conversion)多方块转化$()获得$(item)偏转环$()"
     },
     {
       "type": "patchouli:spotlight",
@@ -78,6 +78,14 @@
       },
       "enable_visualize": false,
       "text": "你可以建的更大！$(br)这个结构可以不断加速实体，使其可以进行$(thing)铁砧加速撞击合成$()——本模组的特色加工方式。"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:struct/multiblock",
+        "anvilcraft:struct/high_speed_impact"
+      ],
+      "text": ""
     }
   ]
 }

@@ -104,7 +104,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     private @NotNull Vec3 slowDown(ItemEntity instance) {
         Vec3 vec3 = instance.getDeltaMovement();
         double dy = 1;
-        if (this.getItem().is(ModItems.LEVITATION_POWDER)) dy *= -0.005;
+        if (this.getItem().is(ModItemTags.LEVITATIONALS)) dy *= -0.005;
         if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK)) dy *= 0.2;
         if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)
             || this.getItem().is(ModItems.NEGATIVE_MATTER)
@@ -398,7 +398,8 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         for (ItemCollectorBlockEntity collector : list) {
             if (collector.isGridWorking()
                 && !collector.getBlockState().getValue(ItemCollectorBlock.POWERED)
-                && collector.shape().contains(this.position())) {
+                && collector.shape().contains(this.position())
+                && !collector.isRemoved()) {
                 int slotIndex = 0;
                 while (!itemStack.isEmpty() && slotIndex < 9) {
                     itemStack = collector.getItemHandler().insertItem(slotIndex++, itemStack, false);

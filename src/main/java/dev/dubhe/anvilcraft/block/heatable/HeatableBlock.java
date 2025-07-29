@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.block.heatable;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
-import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public abstract class HeatableBlock extends Block implements IMoveableEntityBlock {
+public abstract class HeatableBlock extends Block {
     protected HeatableBlock(Properties properties) {
         super(properties);
     }
@@ -28,17 +28,27 @@ public abstract class HeatableBlock extends Block implements IMoveableEntityBloc
 
     protected abstract boolean hasBlockEntity();
 
-    @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState ignored, BlockEntityType<T> ignored1) {
         if (level.isClientSide) return null;
-        if (this.hasBlockEntity()) {
-            return (level1, pos, state1, blockEntity) -> HeatableBlockEntity.tick(level1, pos);
-        }
-        return null;
+        if (!this.hasBlockEntity()) return null;
+        return (level1, pos, it, it1) -> HeatableBlockEntity.tick(level1, pos);
     }
 
     public Optional<BlockState> getPrevTier(Level level, BlockPos pos, BlockState state) {
         return HeatRecorder.getPrevTierHeatableBlock(level, pos, state)
             .map(Block::defaultBlockState);
+    }
+
+    @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return this.hasBlockEntity();
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        if (!this.hasBlockEntity()) return 0;
+        return Util.castSafely(level.getBlockEntity(pos), HeatableBlockEntity.class)
+            .map(HeatableBlockEntity::getSignal)
+            .orElse(0);
     }
 }

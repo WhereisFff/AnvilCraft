@@ -5,7 +5,7 @@
   "sortnum": 2007,
   "entry_color": "004400",
   "pages": [
-    "要建立本模组的$(thing)激光系统$()，需要提前准备好足够的$(item)红宝石$()，可以参考这款$(l:machine/example_automation#gem_machine)宝石转化机$()。$(br)",
+    "要建立本模组的$(thing)激光系统$()，需要提前准备好足够的$(item)红宝石$()，可以参考这款$(l:machine/automation#gem_machine)宝石转化机$()。$(br)",
     {
       "type": "patchouli:crafting",
       "anchor": "ruby_laser",
@@ -22,7 +22,7 @@
       "type": "patchouli:text",
       "anchor": "laser",
       "title": "激光",
-      "text": "$(thing)激光$()是可由$(item)棱镜$()或$(item)激光器$()射出的，会被$(thing)方块$()阻挡的，笔直的光束。具有以下功能：$(br)1.提取矿石$(br)2.造成伤害$(br)3.加热$(l:power/advanced_heat_collection#heatable_block)可加热方块$()"
+      "text": "$(thing)激光$()是可由$(item)棱镜$()或$(item)激光器$()射出的，会被$(thing)方块$()阻挡的，笔直的光束。具有以下功能：$(br)1.提取矿石$(br)2.造成伤害$(br)3.加热$(l:advanced/heated_block)可加热方块$()"
     },
     {
       "type": "patchouli:text",
@@ -67,7 +67,7 @@
     {
       "type": "patchouli:text",
       "title": "加热方块",
-      "text": "$(thing)激光$()可以加热$(l:power/advanced_heat_collection#heatable_block)可加热方块$()，方块被激光照射时，根据$(thing)激光等级$()决定$(thing)温度等级$()，详情请看$(l:power/advanced_heat_collection#laser)热能收集：激光$()。"
+      "text": "$(thing)激光$()可以加热$(l:advanced/heated_block)可加热方块$()，方块被激光照射时，根据$(thing)激光等级$()决定$(thing)温度等级$()，详情请看$(l:advanced/heated_block#laser)激光加热$()。"
     }
   ]
 }

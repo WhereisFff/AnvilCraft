@@ -7,7 +7,7 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class OverheatedBlock extends RedhotBlock {
     public OverheatedBlock(Properties properties) {
-        super(properties, 8);
+        super(properties, 8, 10);
     }
 
     @Override

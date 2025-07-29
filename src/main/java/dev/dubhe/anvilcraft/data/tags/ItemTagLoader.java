@@ -192,6 +192,18 @@ public class ItemTagLoader {
 
         provider.addTag(ModItemTags.TOTEM)
             .add(findResourceKey(Items.TOTEM_OF_UNDYING));
+
+        provider.addTag(ItemTags.AXES)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.SHOVELS)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.HOES)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.PICKAXES)
+            .addTag(ModItemTags.RESONATOR);
+
+        provider.addTag(ItemTags.DURABILITY_ENCHANTABLE)
+            .add(findResourceKey(ModItems.MAGNET.get()));
     }
 
     private static @NotNull ResourceKey<Item> findResourceKey(Item item) {

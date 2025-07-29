@@ -31,7 +31,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -324,14 +323,15 @@ public class AnvilEventListener {
             .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, eventEntity)
             .withParameter(LootContextParams.THIS_ENTITY, entity)
             .withParameter(LootContextParams.ORIGIN, pos);
-        if (Util.instanceOfAny(eventEntity.getBlockState().getBlock(), EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
-            ServerPlayer player = AnvilCraftFakePlayers.anvilCraftKiller.getPlayer();
+        Block anvil = eventEntity.getBlockState().getBlock();
+        if (Util.instanceOfAny(anvil, EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
+            ServerPlayer player = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
             builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(player))
                 .withParameter(LootContextParams.ATTACKING_ENTITY, player)
                 .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player);
-        }
-        if (eventEntity.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
-            builder.withParameter(LootContextParams.TOOL, AnvilCraftFakePlayers.anvilCraftKiller.getDummyLooting5Weapon(serverLevel));
+            if (anvil instanceof TranscendenceAnvilBlock) {
+                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, player);
+            }
         }
         LootParams lootParams = builder.create(LootContextParamSets.ENTITY);
         LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(entity.getLootTable());

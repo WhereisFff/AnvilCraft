@@ -18,11 +18,13 @@
     "DispenseItemEmptyBottleBehaviorMixin",
     "DispenseItemEmptyBucketBehaviorMixin",
     "DispenseItemWaterBottleBehaviorMixin",
+    "EnchantmentHelperMixin",
     "EnchantmentPredicateMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
     "ExplosionMixin",
     "FlyingHitEntityMixin",
+    "HolderReferenceMixin",
     "HopperBlockMixin",
     "InventoryMixin",
     "ItemEntityMixin",
@@ -61,6 +63,7 @@
     "piston.PistonBaseBlockMixin",
     "piston.PistonMovingBlockEntityMixin",
     "providence.ApplyBonusCountMixin",
+    "providence.DamageEntityMixin",
     "providence.EnchantedCountIncreaseFunctionMixin"
   ],
   "client": [

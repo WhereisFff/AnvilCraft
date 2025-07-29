@@ -35,7 +35,7 @@
                   "condition": "minecraft:survives_explosion"
                 }
               ],
-              "name": "anvilcraft:glowing_netherite_block"
+              "name": "anvilcraft:glowing_tungsten_block"
             }
           ]
         }
