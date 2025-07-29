@@ -172,15 +172,16 @@ public class ModFluids {
         FLUIDS.register(eventBus);
     }
 
+    public static final Block[] FLOWING_MELT_GEM_CONVERTIBLE = {Blocks.DIORITE, Blocks.GRANITE, Blocks.ANDESITE};
+
     public static void registerFluidInteractions(FMLCommonSetupEvent event) {
         FluidInteractionRegistry.addInteraction(MELT_GEM.get().getFluidType(),
         new InteractionInformation((level, currentPos, relativePos, currentState) ->
             level.getFluidState(relativePos).getFluidType() == Fluids.WATER.getFluidType(),
             (level, currentPos, relativePos, currentState) -> {
                 Block block;
-                Block[] FLOWING_MELT_GEM_CONVERTABLE = {Blocks.DIORITE, Blocks.GRANITE, Blocks.ANDESITE};
                 if (level.getFluidState(currentPos).isSource()) block = Blocks.TERRACOTTA;
-                else block = FLOWING_MELT_GEM_CONVERTABLE[level.getRandom().nextInt(3)];
+                else block = FLOWING_MELT_GEM_CONVERTIBLE[level.getRandom().nextInt(3)];
                 level.setBlockAndUpdate(currentPos, EventHooks.fireFluidPlaceBlockEvent(level, currentPos, currentPos, block.defaultBlockState()));
                 level.levelEvent(1501, currentPos, 0);
             }
