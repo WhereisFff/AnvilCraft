@@ -1,15 +1,16 @@
 {
-  "name": "晶洞与宝石",
+  "name": "简单材料",
   "category": "anvilcraft:basic_gameplay",
   "icon": "anvilcraft:geode",
   "sortnum": 1007,
   "extra_recipe_mappings": {
     "anvilcraft:ruby": 2,
     "anvilcraft:sapphire": 2,
-    "anvilcraft:topaz": 2
+    "anvilcraft:topaz": 2,
+    "anvilcraft:resin": 4
   },
   "pages": [
-    "铁砧工艺添加了晶洞和三种宝石，包括$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()，它们都有各自独特的用处。",
+    "铁砧工艺在前期添加了若干材料",
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:geode",
@@ -24,6 +25,24 @@
       "type": "patchouli:spotlight",
       "item": ["minecraft:emerald","anvilcraft:ruby","anvilcraft:sapphire","anvilcraft:topaz"],
       "text": "宝石：包括$(item)绿宝石$()、$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()$(br2)$(#888888)晦涩来说，就是携带#anvilcraft:gems标签的物品$()"
+    },
+    {
+      "type": "anvilcraft:item_crush",
+      "anchor": "resin",
+      "recipe": "anvilcraft:item_crush/wood_fiber",
+      "text": "树脂可用于制作$(l:basic/more_device#resin_block)树脂块$()"
+    },
+    {
+      "type": "anvilcraft:cooking",
+      "anchor": "hardend_resin",
+      "recipe": "anvilcraft:cooking/hardend_resin",
+      "text": ""
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "circuit_board",
+      "recipe": "anvilcraft:circuit_board",
+      "text": ""
     },
     {
       "type": "patchouli:relations",
