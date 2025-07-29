@@ -13,6 +13,7 @@ import dev.dubhe.anvilcraft.integration.patchouli.page.PageStamping;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageBulging;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageBlockCompress;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageCooking;
+import dev.dubhe.anvilcraft.integration.patchouli.page.PageUnpack;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
 @SuppressWarnings("unused")
@@ -33,5 +34,6 @@ public class PatchouliIntegration {
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("stamping"), PageStamping.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("bulging"), PageBulging.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("cooking"), PageCooking.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("unpack"), PageUnpack.class);
     }
 }
