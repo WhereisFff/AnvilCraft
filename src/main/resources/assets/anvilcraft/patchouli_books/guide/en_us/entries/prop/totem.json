@@ -13,7 +13,7 @@
       "type": "patchouli:crafting",
       "anchor": "totem_of_rage",
       "recipe": "anvilcraft:totem_of_rage",
-      "text": "具有$(item)不死图腾$()的效果，生效后让所有者获得buff：迅捷III，急迫V，$(thing)狂暴$()，$(thing)无敌$()，力量X。但是一分钟后，所有者会直接暴毙。$(br)狂暴：不会获得任何效果 $(br)无敌：字面意思"
+      "text": "具有$(item)不死图腾$()的效果，生效后让所有者获得buff：迅捷III，急迫III，$(thing)狂暴$()，$(thing)无敌$()，力量V。但是一分钟后，所有者会直接暴毙。$(br)狂暴：不会获得任何效果 $(br)无敌：字面意思"
     },
     {
       "type": "patchouli:crafting",
