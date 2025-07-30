@@ -18,8 +18,6 @@ public class EnchantmentTagLoader {
     public static void init(@NotNull RegistrateTagsProvider<Enchantment> provider) {
         provider.addTag(ModEnchantmentTags.MERCILESS_PASSED)
             .addTag(EnchantmentTags.CURSE)
-            .add(Enchantments.UNBREAKING)
-            .add(Enchantments.MENDING)
             .add(Enchantments.LOYALTY)
             .add(Enchantments.RIPTIDE);
 
