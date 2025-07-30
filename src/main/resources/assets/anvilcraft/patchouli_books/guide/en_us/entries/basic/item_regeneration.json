@@ -4,10 +4,11 @@
   "icon": "minecraft:quartz",
   "sortnum": 1009,
   "extra_recipe_mappings": {
-    "minecraft:echo_shard": 8
+    "minecraft:echo_shard": 8,
+    "minecraft:lava_bucket": 9
   },
   "pages": [
-    "模组可以再生原版资源：$(li)$(l:basic/item_regeneration#guide)铁砧工艺指南$()$(li)$(l:basic/item_regeneration#quartz)石英/黏土/荧石/青金石$()$(li)$(l:basic/item_regeneration#sponge)湿海绵$()$(li)$(l:basic/item_regeneration#echo_shard)回响碎片$()",
+    "模组可以再生资源：$(li)$(l:basic/item_regeneration#guide)铁砧工艺指南$()$(li)$(l:basic/item_regeneration#quartz)石英/黏土/荧石/青金石$()$(li)$(l:basic/item_regeneration#sponge)湿海绵$()$(li)$(l:basic/item_regeneration#echo_shard)回响碎片$()$(li)$(l:basic/item_regeneration#lava)熔岩$()",
     {
       "type": "patchouli:crafting",
       "anchor": "guide",
@@ -52,6 +53,14 @@
       "anchor": "echo_shard",
       "item": "minecraft:echo_shard",
       "text": "$(item)坚守者$()使用$(thing)声波攻击$()杀死任意生物，会生成1个$(item)回响碎片$()"
+    },
+    {
+      "type": "anvilcraft:super_heating",
+      "anchor": "lava",
+      "recipe": "anvilcraft:super_heating/lava_from_cobblestone",
+      "recipe2": "anvilcraft:super_heating/lava_from_stone",
+      "title": "再生熔岩",
+      "text": ""
     }
   ]
 }
