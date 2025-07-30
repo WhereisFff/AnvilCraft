@@ -40,7 +40,7 @@ public abstract class HeatableBlockEntity extends BlockEntity {
         this.duration = duration;
         this.setChanged();
         if (this.level == null || this.level.getGameTime() % 10 != 0) return;
-        PacketDistributor.sendToAllPlayers(new HeatableSyncPacket(this.getBlockPos(), duration));
+        if (!this.level.isClientSide()) PacketDistributor.sendToAllPlayers(new HeatableSyncPacket(this.getBlockPos(), duration));
     }
 
     public int getSignal() {
