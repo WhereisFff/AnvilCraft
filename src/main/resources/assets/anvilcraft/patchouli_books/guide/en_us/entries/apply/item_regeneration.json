@@ -9,7 +9,7 @@
     "anvilcraft:sea_heart_shell_shard": 4
   },
   "pages": [
-    "在获得$(item)腐化信标$()可以进行$(l:smithing/corrupted_beacon#time_warp)时移$()操作后，便有了再生原版珍惜资源的能力。包括以下物品：$(br)$(l:apply/item_regeneration#ancient_debris)远古残骸$()$(br)$(l:apply/item_regeneration#heart_of_the_sea)海洋之心$()",
+    "在获得$(item)腐化信标$()可以进行$(l:smithing/corrupted_beacon#time_warp)时移$()操作后，便有了再生原版珍惜资源的能力。包括以下物品：$(li)$(l:apply/item_regeneration#ancient_debris)远古残骸$()$(li)$(l:apply/item_regeneration#heart_of_the_sea)海洋之心$()$(li)$(l:apply/item_regeneration#diamond)钻石$()",
     {
       "type": "patchouli:spotlight",
       "anchor": "ancient_debris",
@@ -48,6 +48,21 @@
       "recipe": "minecraft:heart_of_the_sea",
       "title": "再生海洋之心",
       "text": "通过$(l:basic/material)晶洞$()或$(l:apply/gem_transformation)宝石转化$()获取到更多$(item)蓝宝石$()后，与$(item)海心壳$()合成得到更多$(item)海洋之心$()。在此循环下，可以消耗蓝宝石再生海洋之心"
+    },
+    {
+      "type": "anvilcraft:time_warp",
+      "anchor": "diamond",
+      "recipe": "anvilcraft:time_warp/coal",
+      "recipe2": "anvilcraft:time_warp/coal_from_logs",
+      "title": "再生钻石",
+      "text": ""
+    },
+    {
+      "type": "anvilcraft:super_heating",
+      "recipe": "anvilcraft:super_heating/charcoal",
+      "recipe2": "anvilcraft:super_heating/diamond",
+      "title": "再生钻石",
+      "text": ""
     }
   ]
 }
