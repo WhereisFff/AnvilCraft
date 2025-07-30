@@ -47,7 +47,7 @@
       "type": "patchouli:crafting",
       "recipe": "minecraft:heart_of_the_sea",
       "title": "再生海洋之心",
-      "text": "通过$(l:basic/geode)晶洞$()或$(l:apply/gem_transformation)宝石转化$()获取到更多$(item)蓝宝石$()后，与$(item)海心壳$()合成得到更多$(item)海洋之心$()。在此循环下，可以消耗蓝宝石再生海洋之心"
+      "text": "通过$(l:basic/material)晶洞$()或$(l:apply/gem_transformation)宝石转化$()获取到更多$(item)蓝宝石$()后，与$(item)海心壳$()合成得到更多$(item)海洋之心$()。在此循环下，可以消耗蓝宝石再生海洋之心"
     }
   ]
 }
