@@ -9,7 +9,7 @@
     "anvilcraft:multiphase_matter": 5
   },
   "pages": [
-    "铁砧以高速撞击一些特定的方块时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(item)加速环$()和$(item)偏转环$()，并要提供至少2048kW的能量。$(br2)$(#888888)通过原版的堆叠TNT加速，水流防爆等机制，可以制作不需要电的对撞机，但较有挑战性。$()",
+    "铁砧以高速撞击一些特定的方块时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(l:power/advanced_large_electromagnet#acceleration_ring)加速环$()和$(l:power/advanced_large_electromagnet#deflection_ring)偏转环$()，并要提供至少3072kW的能量。$(br2)$(#888888)通过原版的堆叠TNT加速，水流防爆等机制，可以制作不需要电的对撞机，但较有挑战性。$()",
     {
       "type": "patchouli:multiblock",
       "name": "建立环形加速器",
@@ -20,17 +20,17 @@
           "S": "anvilcraft:acceleration_ring[half=mid_center,facing=south,overload=false,switch=on]",
           "N": "anvilcraft:acceleration_ring[half=mid_center,facing=north,overload=false,switch=on]",
           "W": "anvilcraft:acceleration_ring[half=mid_center,facing=west,overload=false,switch=on]",
-          "B": "minecraft:iron_block"
+          "B": "minecraft:smooth_stone",
+          "0": "minecraft:smooth_stone"
         },
         "pattern": [
-          ["             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             "],
-          ["             "," u      N  u ","             ","             "," E           ","             ","             ","             ","           W ","             ","             "," u  S      u ","             "],
-          ["             "," 0           ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             "],
-          ["BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB"]
+          ["                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       "],
+          ["                       "," u  N             N  u ","                       ","                       "," E                   W ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       "," E                  W  ","                       ","                       "," u  S             S  u ","                       "],
+          ["                       ","      BBBBBBBBBBB      ","                       ","                       ","                       ","                       "," B                   B "," B                   B "," B                   B "," B                   B "," B                   B "," 0                   B "," B                   B "," B                   B "," B                   B "," B                   B "," B                   B ","                       ","                       ","                       ","                       ","     BBBBBBBBBBBBB     ","                       "],
+          ["                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       "]
         ]
       },
-      "enable_visualize": false,
-      "text": "结构越大，加速越稳定也越快。"
+      "text": "结构越大，加速越稳定也越快。而过小的结构则无法加速到可撞击速度。"
     },
     {
       "type": "patchouli:multiblock",
