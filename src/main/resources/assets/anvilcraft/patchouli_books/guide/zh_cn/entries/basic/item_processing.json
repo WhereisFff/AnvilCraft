@@ -14,11 +14,8 @@
     "anvilcraft:uranium_pressure_plate": 2,
     "anvilcraft:bronze_pressure_plate": 2,
     "anvilcraft:brass_pressure_plate": 2,
-    "anvilcraft:wood_fiber": 4,
-    "anvilcraft:resin": 4,
     "minecraft:wet_sponge": 12,
-    "minecraft:sponge": 12,
-    "anvilcraft:hardend_resin": 14
+    "minecraft:sponge": 12
   },
   "pages": [
     "让$(item)铁砧$()落在特定方块上就可以加工该方块顶部或内部的物品，不同的特定方块有不同的处理，本条目的后续页面依次介绍。本模组增加了一种方块可以让直接被砸的物品不因碰撞箱挤压而乱飞：$(item)冲压平台$()。",
@@ -72,7 +69,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "$(li)可以回收工具、武器和盔甲并分解出原料，远多于熔炼得到的。$(li)完成这些配方：原木→$(item)木质纤维$()+$(l:basic/more_device#resin_block)树脂$()；骷髅头颅→64骨粉；苦力怕的头→64火药。$(li)批量处理$(l:basic/block_processing#crush)方块粉碎$()操作，但是存在$(thing)20%$()的损耗。"
+      "text": "$(li)可以回收工具、武器和盔甲并分解出原料，远多于熔炼得到的。$(li)完成这些配方：骷髅头颅→64骨粉；苦力怕的头→64火药。$(li)批量处理$(l:basic/block_processing#crush)方块粉碎$()操作，但是存在$(thing)20%$()的损耗。"
     },
     {
       "type": "patchouli:multiblock",
@@ -187,7 +184,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "自动兼容所有烟熏炉配方和营火配方，不需要水。$(br)还可执行特殊配方：$(br)$(item)面团$()+鸡蛋+糖→$(item)蛋糕胚块$()$(br)$(item)树脂$()→$(item)硬化树脂$()$(br)蜘蛛眼+河豚+毒马铃薯+铃兰+凋灵玫瑰→$(item)五毒散$()$(br)有水时可发生如下转化：$(br)树脂→粘液球"
+      "text": "自动兼容所有烟熏炉配方和营火配方，不需要水。$(br)还可执行特殊配方：$(br)$(item)面团$()+鸡蛋+糖→$(item)蛋糕胚块$()$(br)蜘蛛眼+河豚+毒马铃薯+铃兰+凋灵玫瑰→$(item)五毒散$()$(br)有水时可发生如下转化：$(br)树脂→粘液球"
     }
   ]
 }

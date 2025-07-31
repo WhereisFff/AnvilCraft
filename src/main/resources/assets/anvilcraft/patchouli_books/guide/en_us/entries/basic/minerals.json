@@ -54,7 +54,7 @@
       "type": "patchouli:crafting",
       "anchor": "levitation_powder_block",
       "recipe": "anvilcraft:levitation_powder_block_from_powders",
-      "text": "$(item)漂浮粉$()通过筛选$(item)末地尘$()概率获得。"
+      "text": "$(item)飘浮粉$()通过筛选$(item)末地尘$()概率获得。$(br2)$(item)飘浮粉块$()会向上飞。"
     },
     {
       "type": "patchouli:text",

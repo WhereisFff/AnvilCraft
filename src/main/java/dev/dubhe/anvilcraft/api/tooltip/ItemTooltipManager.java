@@ -174,8 +174,6 @@ public class ItemTooltipManager {
             } else {
                 propertyTooltip("merciless.shifting", tooltip, ComponentUtils.formatList(
                     List.of(
-                        Component.translatable("enchantment.minecraft.unbreaking"),
-                        Component.translatable("enchantment.minecraft.mending"),
                         Component.translatable("enchantment.minecraft.loyalty"),
                         Component.translatable("enchantment.minecraft.riptide"),
                         Component.translatable("tooltip.anvilcraft.property.merciless.curse")

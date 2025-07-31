@@ -37,7 +37,8 @@ public record Merciless(boolean enabled) {
             player.getInventory(), stack -> stack.has(ModComponents.MERCILESS));
 
         for (ItemStack stack : mercilessItems) {
-            float attackDamage = 0;
+            int levelSum = 0;
+            float attackDamage;
             float miningEfficiency = 0;
 
             ItemEnchantments.Mutable enchantmentsMutable = new ItemEnchantments.Mutable(
@@ -51,9 +52,10 @@ public record Merciless(boolean enabled) {
                 }
             }
             for (Holder<Enchantment> enchantment : storedEnchantmentsMutable.keySet()) {
-                attackDamage += storedEnchantmentsMutable.getLevel(enchantment);
+                levelSum += storedEnchantmentsMutable.getLevel(enchantment);
                 miningEfficiency += storedEnchantmentsMutable.getLevel(enchantment);
             }
+            attackDamage = Math.round(Math.sqrt(levelSum) * 2 + (double) levelSum / 3);
             stack.set(DataComponents.ENCHANTMENTS, enchantmentsMutable.toImmutable());
             stack.set(DataComponents.STORED_ENCHANTMENTS, storedEnchantmentsMutable.toImmutable());
 

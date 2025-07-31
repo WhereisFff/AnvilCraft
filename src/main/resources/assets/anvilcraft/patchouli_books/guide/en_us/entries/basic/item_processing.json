@@ -14,11 +14,8 @@
     "anvilcraft:uranium_pressure_plate": 2,
     "anvilcraft:bronze_pressure_plate": 2,
     "anvilcraft:brass_pressure_plate": 2,
-    "anvilcraft:wood_fiber": 4,
-    "anvilcraft:resin": 4,
     "minecraft:wet_sponge": 12,
-    "minecraft:sponge": 12,
-    "anvilcraft:hardend_resin": 14
+    "minecraft:sponge": 12
   },
   "pages": [
     "Let $(item)Anvil$() fall on the specific blocks to process the items inside or on. Different specific blocks have different processing. The flowing pages of this entry will introduce relevant content in sequence. This mod adds a block that prevents hit items from flying around due to hitbox squeezing: $(item)Stamping Platform$().",
@@ -72,7 +69,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Some equipment can be recycled by it. Chains, gold, iron and diamond tools, weapons and armors can be broken down into much more materials than they are smelted.It can also complete these recipes:Log→$(item)Wood Fiber$()+$(l:basic/more_device#resin_block)Resin$();Skeleton Skull→64*Bone Meal;Creeper Head→64*Gunpowder。"
+      "text": "Some equipment can be recycled by it. Chains, gold, iron and diamond tools, weapons and armors can be broken down into much more materials than they are smelted.It can also complete these recipes: Skeleton Skull→64*Bone Meal; Creeper Head→64*Gunpowder。"
     },
     {
       "type": "patchouli:multiblock",
@@ -185,6 +182,6 @@
       "enable_visualize": "false",
       "text": "When the cauldron and the campfire is below, the cooking is performed, and both materials and products are in the cauldron. A few recipes require water and consume a layer of water. Detailed instructions on the right."
     },
-    "Auto-compatible with all smoker recipes and campfire recipes, no water required.$(br)can also execute special formulas: $(br)$(item)Dough$() + Sugar + Eggs→$(item)Cake Base Block$()$(br)$(item)Resin$()→$(item)Hardening Resin$()$(br)Spider Eyes + Pufferfish + Poisonous potato + Lily of the valley + Withered rose →$(item)Five Poisons Powder$()$(br)In the presence of water, the following transformations can occur:$(br)Resin→Slime Ball"
+    "Auto-compatible with all smoker recipes and campfire recipes, no water required.$(br)can also execute special formulas: $(br)$(item)Dough$() + Sugar + Eggs→$(item)Cake Base Block$()$(br)Spider Eyes + Pufferfish + Poisonous potato + Lily of the valley + Withered rose →$(item)Five Poisons Powder$()$(br)In the presence of water, the following transformations can occur:$(br)Resin→Slime Ball"
   ]
 }

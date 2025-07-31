@@ -7,6 +7,11 @@
   "pages": [
     "$(thing)可加热方块$()是一系列方块的统称，每种方块有若干温度等级。$(br2)可加热方块有持续时间。当持续时间归零，则温度等级-1。若-1后仍为高温方块，则将持续时间设为10秒。$(br2)挖掘方块时不保留持续时间。如果工具没有$(item)精准采集/熔炼$()附魔，则温度等级-1",
     {
+      "type": "patchouli:text",
+      "title": "可加热方块",
+      "text": "可加热方块的$(thing)持续时间$()存在上限，为$(thing)20分钟$()。$(br2)比较器会检测持续时间，输出红石信号。"
+    },
+    {
       "type": "patchouli:spotlight",
       "item": ["anvilcraft:tungsten_block","minecraft:netherite_block"],
       "title": "常规可加热方块",

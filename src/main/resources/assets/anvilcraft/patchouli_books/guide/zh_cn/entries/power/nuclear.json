@@ -1,0 +1,28 @@
+{
+  "name": "核能发电",
+  "category": "anvilcraft:power_system",
+  "icon": "anvilcraft:uranium_ingot",
+  "sortnum": 2009,
+  "entry_color": "661100",
+  "pages": [
+    "在获得$(item)铀$()和$(item)钚$()以后，可以借助核能产生大量的电力。",
+    {
+      "type": "patchouli:text",
+      "title": "被动发热",
+      "text": "铀块和钚块可以为集热器提供热能用以发热，$(l:power/advanced_heat_collection#unchanged_block)点我$()查看详情"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "主动发热",
+      "text": "铀块和钚块被时移时，会在一瞬间爆发出通常需要数万年才能释放出的能量。$(br2)可用于生产白炽的方块用于热能发电，$(l:advanced/special_heated_block#nuclear_fission)点我$()查看详情"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:power/advanced_heat_collection",
+        "anvilcraft:advanced/special_heated_block"
+      ],
+      "text": ""
+    }
+  ]
+}
