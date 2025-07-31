@@ -55,7 +55,7 @@ public record Merciless(boolean enabled) {
                 levelSum += storedEnchantmentsMutable.getLevel(enchantment);
                 miningEfficiency += storedEnchantmentsMutable.getLevel(enchantment);
             }
-            attackDamage = Math.round(Math.sqrt(levelSum) * 2);
+            attackDamage = Math.round(Math.sqrt(levelSum) * 2 + (double) levelSum / 3);
             stack.set(DataComponents.ENCHANTMENTS, enchantmentsMutable.toImmutable());
             stack.set(DataComponents.STORED_ENCHANTMENTS, storedEnchantmentsMutable.toImmutable());
 
