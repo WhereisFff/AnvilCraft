@@ -156,7 +156,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
             this.getBoundingBox().expandTowards(0, 1.75F, 0),
             EntitySelector.pushableBy(this)
         );
-        if (list.isEmpty()) return;
         for (Entity entity : list) {
             if (entity instanceof FallingBlockEntity) continue;
             if (entity instanceof IonocraftEntity) continue;
