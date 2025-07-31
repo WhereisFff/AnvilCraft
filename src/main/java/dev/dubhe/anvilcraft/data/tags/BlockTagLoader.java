@@ -139,6 +139,12 @@ public class BlockTagLoader {
         provider.addTag(ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)
             .add(findResourceKey(Blocks.END_STONE))
             .add(findResourceKey(Blocks.BEDROCK))
+            .add(findResourceKey(Blocks.COMMAND_BLOCK))
+            .add(findResourceKey(Blocks.REPEATING_COMMAND_BLOCK))
+            .add(findResourceKey(Blocks.CHAIN_COMMAND_BLOCK))
+            .add(findResourceKey(Blocks.BARRIER))
+            .add(findResourceKey(Blocks.STRUCTURE_BLOCK))
+            .add(findResourceKey(Blocks.JIGSAW))
             .add(ModBlocks.END_DUST.getKey())
             .add(ModBlocks.NEGATIVE_MATTER_BLOCK.getKey());
 
