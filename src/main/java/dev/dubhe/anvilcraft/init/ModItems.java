@@ -46,12 +46,7 @@ import dev.dubhe.anvilcraft.item.IonoCraftItem;
 import dev.dubhe.anvilcraft.item.LevitationPowderItem;
 import dev.dubhe.anvilcraft.item.MagnetItem;
 import dev.dubhe.anvilcraft.item.ModFoods;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterAxeItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterHoeItem;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterPickaxeItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterShovelItem;
-import dev.dubhe.anvilcraft.item.MultiphaseMatterSwordItem;
 import dev.dubhe.anvilcraft.item.MultiphaseTranscendiumItem;
 import dev.dubhe.anvilcraft.item.RecoveryPearl;
 import dev.dubhe.anvilcraft.item.ResonatorCoreItem;
@@ -480,31 +475,6 @@ public class ModItems {
         .tag(ItemTags.SWORDS,
             Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
-    public static final ItemEntry<MultiphaseMatterPickaxeItem> MULTIPHASE_MATTER_PICKAXE = REGISTRATE
-        .item("multiphase_matter_pickaxe", MultiphaseMatterPickaxeItem::new)
-        .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.PICKAXES, ModItemTags.EXPLOSION_PROOF, Tags.Items.MINING_TOOL_TOOLS)
-        .register();
-    public static final ItemEntry<MultiphaseMatterAxeItem> MULTIPHASE_MATTER_AXE = REGISTRATE
-        .item("multiphase_matter_axe", MultiphaseMatterAxeItem::new)
-        .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.AXES, Tags.Items.MELEE_WEAPON_TOOLS)
-        .register();
-    public static final ItemEntry<MultiphaseMatterShovelItem> MULTIPHASE_MATTER_SHOVEL = REGISTRATE
-        .item("multiphase_matter_shovel", MultiphaseMatterShovelItem::new)
-        .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.SHOVELS)
-        .register();
-    public static final ItemEntry<MultiphaseMatterHoeItem> MULTIPHASE_MATTER_HOE = REGISTRATE
-        .item("multiphase_matter_hoe", MultiphaseMatterHoeItem::new)
-        .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.HOES)
-        .register();
-    public static final ItemEntry<MultiphaseMatterSwordItem> MULTIPHASE_MATTER_SWORD = REGISTRATE
-        .item("multiphase_matter_sword", MultiphaseMatterSwordItem::new)
-        .model((ctx, provider) -> provider.handheld(ctx))
-        .tag(ItemTags.SWORDS, Tags.Items.MELEE_WEAPON_TOOLS)
-        .register();
     public static final ItemEntry<AnvilHammerItem> ANVIL_HAMMER = REGISTRATE
         .item("anvil_hammer", AnvilHammerItem::new)
         .properties(properties -> properties.durability(35))
@@ -753,6 +723,7 @@ public class ModItems {
                 .predicate(AnvilCraft.of("flight_time"), 0)
                 .model(new ModelFile.UncheckedModelFile(offModel.getUncheckedLocation())).end();
         })
+        .tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("ABA")
@@ -2092,18 +2063,18 @@ public class ModItems {
     public static final ItemEntry<Item> LIME_POWDER =
         REGISTRATE.item("lime_powder", Item::new).register();
 
-    public static final ItemEntry<LevitationPowderItem> LEVITATION_POWDER =
-        REGISTRATE
-            .item("levitation_powder", LevitationPowderItem::new)
-            .recipe((ctx, provider) -> {
-                ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                    .requires(ModBlocks.LEVITATION_POWDER_BLOCK)
-                    .unlockedBy(
-                        AnvilCraftDatagen.hasItem(ModBlocks.LEVITATION_POWDER_BLOCK),
-                        AnvilCraftDatagen.has(ModBlocks.LEVITATION_POWDER_BLOCK))
-                    .save(provider, ctx.getId().withSuffix("_from_block"));
-            })
-            .register();
+    public static final ItemEntry<LevitationPowderItem> LEVITATION_POWDER = REGISTRATE
+        .item("levitation_powder", LevitationPowderItem::new)
+        .tag(ModItemTags.LEVITATIONALS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.LEVITATION_POWDER_BLOCK)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.LEVITATION_POWDER_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.LEVITATION_POWDER_BLOCK))
+                .save(provider, ctx.getId().withSuffix("_from_block"));
+        })
+        .register();
 
     public static final ItemEntry<Item> RAW_ZINC = REGISTRATE
         .item("raw_zinc", Item::new)

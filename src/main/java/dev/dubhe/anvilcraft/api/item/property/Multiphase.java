@@ -3,6 +3,8 @@ package dev.dubhe.anvilcraft.api.item.property;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.util.CodecUtil;
+import dev.dubhe.anvilcraft.util.CollectionUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -20,36 +22,50 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.LinkedList;
 import java.util.Objects;
 import java.util.Optional;
 
 /**
  * 多相
  *
- * @param alpha α相
- * @param beta  β相
+ * @param phases 所有相
  */
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public record Multiphase(Phase alpha, Phase beta) {
+public record Multiphase(LinkedList<Phase> phases) {
     public static final Multiphase EMPTY = make(Component.literal("Empty"));
 
-    public static final Component ALPHA_NAME_SUFFIX = makeSuffix("alpha");
-    public static final Component BETA_NAME_SUFFIX = makeSuffix("beta");
+    private static final String DEFAULT_SUFFIXES = "αβγδεζηθικλμνξοπρστυφχψω";
+    private static final int MAX_PHASE_COUNT = 4;
 
-    private static Component makeSuffix(String name) {
-        return Component.translatable("tooltip.anvilcraft.property.multiphase.suffix." + name);
+    public static Component makeName(int index) {
+        //noinspection DataFlowIssue
+        index = index % Math.min(DEFAULT_SUFFIXES.length(), MAX_PHASE_COUNT);
+        return Component.translatableWithFallback(
+            "tooltip.anvilcraft.property.multiphase.name." + index,
+            "" + DEFAULT_SUFFIXES.charAt(index));
+    }
+
+    public static Component makeSuffix(int index) {
+        //noinspection DataFlowIssue
+        index = index % Math.min(DEFAULT_SUFFIXES.length(), MAX_PHASE_COUNT);
+        return Component.translatableWithFallback(
+            "tooltip.anvilcraft.property.multiphase.suffix." + index,
+            "-" + DEFAULT_SUFFIXES.charAt(index));
     }
 
     public static final Codec<Multiphase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-        Phase.CODEC.fieldOf("alpha").forGetter(Multiphase::alpha),
-        Phase.CODEC.fieldOf("beta").forGetter(Multiphase::beta)
+        CodecUtil.linkedListOf(Phase.CODEC).fieldOf("phases").forGetter(Multiphase::phases)
     ).apply(inst, Multiphase::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, Multiphase> STREAM_CODEC = StreamCodec.composite(
-        Phase.STREAM_CODEC, Multiphase::alpha,
-        Phase.STREAM_CODEC, Multiphase::beta,
+        Phase.STREAM_CODEC.apply(ByteBufCodecs.collection(CollectionUtil::newLinkedList)), Multiphase::phases,
         Multiphase::new
     );
+
+    public Phase peekFirst() {
+        return Objects.requireNonNull(this.phases.peek());
+    }
 
     /**
      * 构建一个全新的多相<br>
@@ -58,13 +74,24 @@ public record Multiphase(Phase alpha, Phase beta) {
      * @param name 原始名称，不含后缀
      * @return 一个全新的多相
      */
-    @SuppressWarnings("DataFlowIssue")
     public static Multiphase make(Component name) {
-        Component newNameAlpha = name.copy().append(ALPHA_NAME_SUFFIX);
-        Phase alpha = Phase.EMPTY.withItemName(newNameAlpha);
-        Component newNameBeta = name.copy().append(BETA_NAME_SUFFIX);
-        Phase beta = Phase.EMPTY.withItemName(newNameBeta);
-        return new Multiphase(alpha, beta);
+        return make(name, 2);
+    }
+
+    /**
+     * 构建一个全新的多相<br>
+     * 该方法用于工具初始化
+     *
+     * @param name 原始名称，不含后缀
+     * @return 一个全新的多相
+     */
+    @SuppressWarnings("SameParameterValue")
+    private static Multiphase make(Component name, int phaseCount) {
+        LinkedList<Phase> phases = new LinkedList<>();
+        for (int i = 0; i < phaseCount; i++) {
+            phases.add(Phase.create(i).withName(makeName(i)).withItemName(name.copy().append(makeSuffix(i))));
+        }
+        return new Multiphase(phases);
     }
 
     /**
@@ -75,11 +102,27 @@ public record Multiphase(Phase alpha, Phase beta) {
      * @return 一个全新的多相
      */
     public static Multiphase make(Component name, @Nullable ItemEnchantments enchantments) {
-        Component newNameAlpha = name.copy().append(ALPHA_NAME_SUFFIX);
-        Phase alpha = Phase.EMPTY.withItemName(newNameAlpha).withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
-        Component newNameBeta = name.copy().append(BETA_NAME_SUFFIX);
-        Phase beta = Phase.EMPTY.withItemName(newNameBeta);
-        return new Multiphase(alpha, beta);
+        return make(name, enchantments, 2);
+    }
+
+    /**
+     * 构建一个全新的多相<br>
+     *
+     * @param name         原始名称，不含后缀
+     * @param enchantments 初始附魔，用于α相
+     * @return 一个全新的多相
+     */
+    @SuppressWarnings("SameParameterValue")
+    private static Multiphase make(Component name, @Nullable ItemEnchantments enchantments, int phaseCount) {
+        LinkedList<Phase> phases = new LinkedList<>();
+        for (int i = 0; i < phaseCount; i++) {
+            Phase phase = Phase.create(i).withName(makeName(i)).withItemName(name.copy().append(makeSuffix(i)));
+            if (i == 0) {
+                phase = phase.withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
+            }
+            phases.add(phase);
+        }
+        return new Multiphase(phases);
     }
 
     /**
@@ -90,81 +133,93 @@ public record Multiphase(Phase alpha, Phase beta) {
      * @return 一个全新的多相
      */
     public static Multiphase make(Item original, PhaseData... dataS) {
-        Phase[] phases = new Phase[2];
-        for (int i = 0; i < 2; i++) {
+        if (dataS.length == 0) throw new IllegalArgumentException("Unexpect length 0 phase data");
+
+        LinkedList<Phase> phases = new LinkedList<>();
+        for (int i = 0; i < dataS.length; i++) {
             PhaseData data = dataS[i];
-            if (data != null) {
-                phases[i] = Phase.EMPTY
-                    .withRepairCost(data.repairCost())
-                    .withEnchantments(data.enchantments());
+            Phase phase;
+            if (data == null) {
+                phase = Phase.create(i).withName(makeName(i)).withItemName(original.getDescription().copy().append(makeSuffix(i)));
+            } else {
+                phase = Phase.create(i).withName(makeName(i)).withRepairCost(data.repairCost()).withEnchantments(data.enchantments());
                 if (data.customName() != null && !data.customName().equals(Component.empty())) {
-                    phases[i] = phases[i]
-                        .withCustomName(data.customName().copy());
+                    phase = phase.withCustomName(data.customName().copy());
                 }
                 if (data.itemName() != null && !data.itemName().equals(Component.empty())) {
-                    phases[i] = phases[i]
-                        .withItemName(data.itemName().copy());
+                    phase = phase.withItemName(data.itemName().copy());
                 } else {
-                    phases[i] = phases[i]
-                        .withItemName(original.getDescription().copy().append(i == 0 ? ALPHA_NAME_SUFFIX : BETA_NAME_SUFFIX));
+                    phase = phase.withItemName(original.getDescription().copy().append(makeSuffix(i)));
                 }
-            } else {
-                phases[i] = Phase.EMPTY
-                    .withCustomName(original.getDescription().copy().append(i == 0 ? ALPHA_NAME_SUFFIX : BETA_NAME_SUFFIX));
             }
+            phases.add(phase);
         }
-        return new Multiphase(phases[0], phases[1]);
+        return new Multiphase(phases);
     }
 
     public void applyToStack(ItemStack stack) {
-        this.alpha.applyToStack(stack);
+        Objects.requireNonNull(this.phases.peek(), "Unexpect no phase multiphase").applyToStack(stack);
     }
 
     public void cyclePhases(ItemStack stack) {
-        final Phase[] storing = {this.alpha};
+        this.cyclePhases(stack, (byte) 1);
+    }
 
-        Optional.ofNullable(
-            this.beta.customName.map(presentValue -> stack.set(DataComponents.CUSTOM_NAME, presentValue))
-                .orElseGet(() -> {
-                    Component c = stack.get(DataComponents.CUSTOM_NAME);
-                    stack.remove(DataComponents.CUSTOM_NAME);
-                    return c;
-                })
+    public void cyclePhases(ItemStack stack, byte index) {
+        if (index == 0) return;
+        LinkedList<Phase> phases = this.phases;
+        for (int i = 0; i < (index - 1) % phases.size(); i++) {
+            phases.offer(phases.poll());
+        }
+        final Phase[] storing = {phases.poll()};
+
+        Optional<Phase> beta = Optional.ofNullable(phases.peek());
+        beta.map(phase -> phase.customName.map(presentValue -> stack.set(DataComponents.CUSTOM_NAME, presentValue))
+            .orElseGet(() -> {
+                Component c = stack.get(DataComponents.CUSTOM_NAME);
+                stack.remove(DataComponents.CUSTOM_NAME);
+                return c;
+            })
         ).ifPresentOrElse(
             name -> storing[0] = storing[0].withCustomName(name),
             () -> storing[0] = storing[0].clearCustomName());
-        Optional.ofNullable(
-            this.beta.itemName.map(presentValue -> stack.set(DataComponents.ITEM_NAME, presentValue))
-                .orElseGet(() -> {
-                    Component c = stack.get(DataComponents.ITEM_NAME);
-                    stack.remove(DataComponents.ITEM_NAME);
-                    return c;
-                })
+        beta.map(phase -> phase.itemName.map(presentValue -> stack.set(DataComponents.ITEM_NAME, presentValue))
+            .orElseGet(() -> {
+                Component c = stack.get(DataComponents.ITEM_NAME);
+                stack.remove(DataComponents.ITEM_NAME);
+                return c;
+            })
         ).ifPresentOrElse(
             name -> storing[0] = storing[0].withItemName(name),
             () -> storing[0] = storing[0].clearItemName());
 
-        Integer repairCost = stack.set(DataComponents.REPAIR_COST, this.beta.repairCost);
-        if (repairCost == null || repairCost < 0) repairCost = 0;
-        storing[0] = storing[0].withRepairCost(repairCost);
+        storing[0] = storing[0]
+            .withRepairCost(
+                beta.map(phase -> stack.set(DataComponents.REPAIR_COST, phase.repairCost))
+                    .map(repairCost -> Math.max(repairCost, 0))
+                    .orElse(0))
+            .withEnchantments(
+                beta.map(phase -> stack.set(EnchantmentHelper.getComponentType(stack), phase.enchantments))
+                    .orElse(ItemEnchantments.EMPTY));
 
-        ItemEnchantments enchantments = stack.set(EnchantmentHelper.getComponentType(stack), this.beta.enchantments);
-        if (enchantments == null) enchantments = ItemEnchantments.EMPTY;
-        storing[0] = storing[0].withEnchantments(enchantments);
-
-        stack.set(ModComponents.MULTIPHASE, new Multiphase(this.beta, storing[0]));
+        phases.offer(storing[0]);
+        stack.set(ModComponents.MULTIPHASE, new Multiphase(phases));
     }
 
     public Multiphase copy() {
-        return new Multiphase(this.alpha.copy(), this.beta.copy());
+        LinkedList<Phase> phases = new LinkedList<>();
+        for (Phase phase : this.phases) {
+            phases.offer(phase.copy());
+        }
+        return new Multiphase(phases);
     }
 
     public Multiphase withAlpha(Phase alpha) {
-        return new Multiphase(alpha, this.beta);
-    }
-
-    public Multiphase withBeta(Phase beta) {
-        return new Multiphase(this.alpha, beta);
+        @SuppressWarnings("unchecked")
+        LinkedList<Phase> phases = (LinkedList<Phase>) this.phases.clone();
+        phases.pollFirst();
+        phases.offerFirst(alpha);
+        return new Multiphase(phases);
     }
 
     public boolean isEmpty() {
@@ -172,22 +227,21 @@ public record Multiphase(Phase alpha, Phase beta) {
     }
 
     public record Phase(
+        int index, Component phaseName,
         Optional<Component> customName, Optional<Component> itemName,
         int repairCost, @NotNull ItemEnchantments enchantments
     ) {
-        public static final Phase EMPTY = new Phase(
-            Optional.empty(), Optional.empty(), 0, ItemEnchantments.EMPTY
-        );
-
         public static final Codec<Phase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName")
-                .forGetter(Phase::customName),
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName")
-                .forGetter(Phase::itemName),
+            Codec.INT.fieldOf("index").forGetter(Phase::index),
+            ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName").forGetter(Phase::itemName),
             Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
             ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
         ).apply(inst, Phase::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.INT, Phase::index,
+            ComponentSerialization.STREAM_CODEC, Phase::phaseName,
             ComponentSerialization.OPTIONAL_STREAM_CODEC, Phase::customName,
             ComponentSerialization.OPTIONAL_STREAM_CODEC, Phase::itemName,
             ByteBufCodecs.INT, Phase::repairCost,
@@ -195,16 +249,18 @@ public record Multiphase(Phase alpha, Phase beta) {
             Phase::new
         );
 
-        public Phase(@Nullable Component name, @Nullable ItemEnchantments enchantments) {
-            this(name, 0, enchantments);
+        public Phase(int index, Component name, @Nullable ItemEnchantments enchantments) {
+            this(index, name, 0, enchantments);
         }
 
-        public Phase(@Nullable Component name, int repairCost, @Nullable ItemEnchantments enchantments) {
-            this(name, name, repairCost, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
+        public Phase(int index, Component name, int repairCost, @Nullable ItemEnchantments enchantments) {
+            this(index, name, Optional.empty(), Optional.empty(), repairCost, enchantments == null ? ItemEnchantments.EMPTY : enchantments);
         }
 
-        public Phase(@Nullable Component customName, @Nullable Component itemName, int repairCost, @NotNull ItemEnchantments enchantments) {
+        public Phase(int index, Component name, @Nullable Component customName, @Nullable Component itemName, int repairCost, @NotNull ItemEnchantments enchantments) {
             this(
+                index,
+                name,
                 Objects.equals(customName, Component.empty()) ? Optional.empty() : Optional.ofNullable(customName),
                 Objects.equals(itemName, Component.empty()) ? Optional.empty() : Optional.ofNullable(itemName),
                 repairCost, enchantments
@@ -219,34 +275,46 @@ public record Multiphase(Phase alpha, Phase beta) {
             return this.itemName.map(Component::copy).orElse(null);
         }
 
-        public static Phase make(Component name, @Nullable ItemEnchantments enchantments) {
-            return EMPTY
+        public static Phase create(Multiphase multiphase) {
+            return create(multiphase.phases.size());
+        }
+
+        public static Phase create(int index) {
+            return new Phase(index, Component.literal("Empty"), Optional.empty(), Optional.empty(), 0, ItemEnchantments.EMPTY);
+        }
+
+        public static Phase make(int index, Component name, @Nullable ItemEnchantments enchantments) {
+            return create(index)
                 .withCustomName(name)
                 .withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
         }
 
+        public Phase withName(Component phaseName) {
+            return new Phase(this.index, phaseName, this.customName, this.itemName, this.repairCost, this.enchantments);
+        }
+
         public Phase withCustomName(Component customName) {
-            return new Phase(Optional.of(customName), this.itemName, this.repairCost, this.enchantments);
+            return new Phase(this.index, this.phaseName, Optional.of(customName), this.itemName, this.repairCost, this.enchantments);
         }
 
         public Phase withItemName(Component itemName) {
-            return new Phase(this.customName, Optional.of(itemName), this.repairCost, this.enchantments);
+            return new Phase(this.index, this.phaseName, this.customName, Optional.of(itemName), this.repairCost, this.enchantments);
         }
 
         public Phase clearCustomName() {
-            return new Phase(Optional.empty(), this.itemName, this.repairCost, this.enchantments);
+            return new Phase(this.index, this.phaseName, Optional.empty(), this.itemName, this.repairCost, this.enchantments);
         }
 
         public Phase clearItemName() {
-            return new Phase(this.customName, Optional.empty(), this.repairCost, this.enchantments);
+            return new Phase(this.index, this.phaseName, this.customName, Optional.empty(), this.repairCost, this.enchantments);
         }
 
         public Phase withRepairCost(int repairCost) {
-            return new Phase(this.customName, this.itemName, repairCost, this.enchantments);
+            return new Phase(this.index, this.phaseName, this.customName, this.itemName, repairCost, this.enchantments);
         }
 
         public Phase withEnchantments(ItemEnchantments enchantments) {
-            return new Phase(this.customName, this.itemName, this.repairCost, enchantments);
+            return new Phase(this.index, this.phaseName, this.customName, this.itemName, this.repairCost, enchantments);
         }
 
         public Phase addEnchantments(ItemEnchantments enchantments) {
@@ -261,7 +329,7 @@ public record Multiphase(Phase alpha, Phase beta) {
                     originalMut.set(enchantmentHolder, enchantments.getLevel(enchantmentHolder));
                 }
             }
-            return new Phase(this.customName, this.itemName, this.repairCost, originalMut.toImmutable());
+            return new Phase(this.index, this.phaseName, this.customName, this.itemName, this.repairCost, originalMut.toImmutable());
         }
 
         public void applyToStack(ItemStack stack) {
@@ -281,9 +349,12 @@ public record Multiphase(Phase alpha, Phase beta) {
 
         public Phase copy() {
             return new Phase(
+                this.index,
+                this.phaseName.copy(),
                 this.customName.map(Component::copy),
                 this.itemName.map(Component::copy),
-                this.repairCost, this.enchantments);
+                this.repairCost,
+                new ItemEnchantments.Mutable(this.enchantments).toImmutable());
         }
 
         @Override
@@ -307,22 +378,6 @@ public record Multiphase(Phase alpha, Phase beta) {
         @Override
         public ItemEnchantments enchantments() {
             return this.enchantments == null ? ItemEnchantments.EMPTY : this.enchantments;
-        }
-
-        public PhaseData withCustomName(@Nullable Component customName) {
-            return new PhaseData(customName, itemName, repairCost, enchantments);
-        }
-
-        public PhaseData withItemName(@Nullable Component itemName) {
-            return new PhaseData(customName, itemName, repairCost, enchantments);
-        }
-
-        public PhaseData withRepairCost(int repairCost) {
-            return new PhaseData(customName, itemName, repairCost, enchantments);
-        }
-
-        public PhaseData withEnchantments(@Nullable ItemEnchantments enchantments) {
-            return new PhaseData(customName, itemName, repairCost, enchantments);
         }
     }
 }

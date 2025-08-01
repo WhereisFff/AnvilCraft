@@ -11,7 +11,7 @@
     "anvilcraft:resentful_amber_block": 0
   },
   "pages": [
-    "$(l:smithing/corrupted_beacon#time_warp)时移$()操作可以将$(item)树脂$()转化为$(item)琥珀$()。如果$(item)树脂块$()中含有敌对生物，那么就会有$(thing)5%$()的概率产生对应的$(item)怨恨琥珀块$()。$(br)利用它和$(l:smithing/tier_1_materials#cursed_gold_block)诅咒金块$()可以生产对应敌对生物的$(item)刷怪笼$()。",
+    "$(l:smithing/corrupted_beacon#time_warp)时移$()操作可以将$(item)树脂$()转化为$(item)琥珀$()。如果$(item)树脂块$()中含有敌对生物，那么就会有$(thing)5%$()的概率产生对应的$(item)怨恨琥珀块$()。$(br2)利用它和$(l:smithing/tier_1_materials#cursed_gold_block)诅咒金块$()可以生产对应敌对生物的$(item)刷怪笼$()。",
     {
       "type": "anvilcraft:time_warp",
       "recipe": "anvilcraft:time_warp/amber",
@@ -19,7 +19,7 @@
     },
     {
       "type": "patchouli:multiblock",
-      "name": "多方块结构合成刷怪笼",
+      "name": "多方块结构转化刷怪笼",
       "multiblock": {
         "mapping": {
           "A": "anvilcraft:cursed_gold_block",
@@ -35,7 +35,7 @@
           ["ACA","B0B","ACA"]
         ]
       },
-      "text": "通过$(l:struct/multiblock)多方块转化$()生成刷怪笼$(br)$(#aa0000)注意$()：不接受$(l:struct/multiblock#craft)多方块合成$()!"
+      "text": "$(#aa0000)注意$()：生成刷怪笼仅接受$(l:struct/multiblock)多方块$(n)转化$()而非$(l:struct/multiblock#craft)多方块合成$()!"
     },
     {
       "type": "patchouli:multiblock",
