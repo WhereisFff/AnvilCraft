@@ -54,7 +54,7 @@ public class AnvilCraftKillerFakePlayer {
     }
 
     public void disable(ServerPlayer player) {
-        DISABLED_KILLERS.stream()
+        ENABLED_KILLERS.stream()
             .filter(killer -> killer.getUUID().equals(player.getUUID()))
             .findFirst()
             .ifPresent(killer -> {
