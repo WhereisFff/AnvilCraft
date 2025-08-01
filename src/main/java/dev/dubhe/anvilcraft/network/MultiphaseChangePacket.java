@@ -45,13 +45,11 @@ public record MultiphaseChangePacket(InteractionHand hand, byte index, boolean m
 
     public void serverHandler(IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
-        context.enqueueWork(() -> Optional.of(player.getMainHandItem())
+        context.enqueueWork(() -> Optional.of(player.getItemInHand(hand))
             .filter(stack -> stack.has(ModComponents.MULTIPHASE) && stack.has(ModComponents.MERCILESS))
-            .or(() -> Optional.of(player.getOffhandItem())
-                .filter(stack -> stack.has(ModComponents.MULTIPHASE) && stack.has(ModComponents.MERCILESS)))
             .ifPresent(stack -> {
-                Objects.requireNonNull(stack.get(ModComponents.MULTIPHASE)).cyclePhases(stack, this.index);
                 stack.set(ModComponents.MERCILESS, new Merciless(this.merciless));
+                Objects.requireNonNull(stack.get(ModComponents.MULTIPHASE)).cyclePhases(stack, this.index);
             }));
     }
 }
