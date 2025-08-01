@@ -80,6 +80,7 @@ public class RecipeGenerator {
                     }
                 } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
                     NonNullList<Ingredient> ingredients = shapelessRecipe.getIngredients();
+                    if (ingredients.isEmpty()) yield Optional.empty();
                     if (ingredients.size() == 1) {
                         UnpackRecipe newRecipe = UnpackRecipe.builder()
                             .result(shapelessRecipe.result)
