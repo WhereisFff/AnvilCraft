@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.recipe.neo.predicate.block;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipePredicateTypes;
@@ -28,31 +29,39 @@ import java.util.Optional;
 public class HasCauldron extends HasBlockBase<HasCauldron> {
     public static final ResourceLocation EMPTY = ResourceLocation.withDefaultNamespace("empty");
     private final ResourceLocation fluid;
+    private final int consume;
 
-    public HasCauldron(Vec3 offset, ResourceLocation fluid) {
-        super(offset, HasCauldron.ofFluid(fluid));
+    public HasCauldron(Vec3 offset, ResourceLocation fluid, int consume) {
+        super(offset, HasCauldron.ofFluid(fluid, consume));
         this.fluid = fluid;
+        this.consume = consume;
     }
 
     public static @NotNull HasCauldron empty(Vec3 offset) {
-        return new HasCauldron(offset, EMPTY);
+        return new HasCauldron(offset, EMPTY, 0);
     }
 
-    public static BlockStatePredicate ofFluid(@NotNull ResourceLocation fluid) {
+    public static BlockStatePredicate ofFluid(@NotNull ResourceLocation fluid, int consume) {
         if (fluid.equals(EMPTY)) {
             return BlockStatePredicate.builder()
                 .of(Blocks.CAULDRON)
                 .build();
         }
-        String namespace = fluid.getNamespace();
-        String path = fluid.getPath();
-        ResourceLocation cauldron = ResourceLocation.fromNamespaceAndPath(namespace, "%s_cauldron".formatted(path));
-        Holder.Reference<Block> reference = BuiltInRegistries.BLOCK.getHolder(cauldron).orElse(null);
-        Block block = Blocks.WATER_CAULDRON;
-        if (reference != null) block = reference.value();
+        Block block = getDefaultCauldron(fluid);
+        BlockState state = block.defaultBlockState();
+        IntegerProperty property = CauldronUtil.LEVEL_4;
+        Optional<Integer> optionalValue = state.getOptionalValue(CauldronUtil.LEVEL_4);
+        if (optionalValue.isEmpty()) {
+            property = CauldronUtil.LEVEL_3;
+        }
+        if (consume > 0) {
+            return BlockStatePredicate.builder()
+                .of(block)
+                .withMin(property, consume)
+                .build();
+        }
         return BlockStatePredicate.builder()
-            .of(block)
-            .withMin(CauldronUtil.LEVEL_4, 1)
+            .of(block, Blocks.CAULDRON)
             .build();
     }
 
@@ -62,17 +71,31 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         BlockPos blockPos = BlockPos.containing(context.getPos().add(this.offset));
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState state = cache.getBlockState(blockPos);
+        if (state.is(Blocks.CAULDRON)) {
+            Block block = getDefaultCauldron(fluid);
+            state = block.defaultBlockState();
+        }
         IntegerProperty property = CauldronUtil.LEVEL_4;
         Optional<Integer> optionalValue = state.getOptionalValue(CauldronUtil.LEVEL_4);
         if (optionalValue.isEmpty()) {
             property = CauldronUtil.LEVEL_3;
             optionalValue = state.getOptionalValue(CauldronUtil.LEVEL_3);
         }
-        int value = optionalValue.orElse(0) - 1;
-        if (value <= 0) {
+        int value = Math.min(Math.max(optionalValue.orElse(0) - this.consume, 0), property.max);
+        if (value == 0) {
             cache.setBlock(blockPos, Blocks.CAULDRON);
         }
         cache.setBlock(blockPos, state.setValue(property, value));
+    }
+
+    private static Block getDefaultCauldron(@NotNull ResourceLocation fluid) {
+        String namespace = fluid.getNamespace();
+        String path = fluid.getPath();
+        ResourceLocation cauldron = ResourceLocation.fromNamespaceAndPath(namespace, "%s_cauldron".formatted(path));
+        Holder.Reference<Block> reference = BuiltInRegistries.BLOCK.getHolder(cauldron).orElse(null);
+        Block block = Blocks.WATER_CAULDRON;
+        if (reference != null) block = reference.value();
+        return block;
     }
 
     @Override
@@ -83,7 +106,8 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
     public static class Type implements IRecipePredicate.Type<HasCauldron> {
         public final MapCodec<HasCauldron> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Vec3.CODEC.fieldOf("offset").forGetter(HasCauldron::getOffset),
-                ResourceLocation.CODEC.fieldOf("predicate").forGetter(HasCauldron::getFluid)
+                ResourceLocation.CODEC.optionalFieldOf("fluid", EMPTY).forGetter(HasCauldron::getFluid),
+                Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::getConsume)
             ).apply(instance, HasCauldron::new)
         );
         public final StreamCodec<RegistryFriendlyByteBuf, HasCauldron> mapCodec = StreamCodec.of(this::encode, this::decode);
@@ -100,11 +124,16 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
 
         public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull HasCauldron hasCauldron) {
             buf.writeVec3(hasCauldron.getOffset());
-            buf.writeResourceLocation(hasCauldron.fluid);
+            buf.writeResourceLocation(hasCauldron.getFluid());
+            buf.writeInt(hasCauldron.getConsume());
         }
 
         public @NotNull HasCauldron decode(@NotNull RegistryFriendlyByteBuf buf) {
-            return new HasCauldron(buf.readVec3(), buf.readResourceLocation());
+            return new HasCauldron(
+                buf.readVec3(),
+                buf.readResourceLocation(),
+                buf.readInt()
+            );
         }
     }
 }

@@ -133,7 +133,15 @@ public class BlockStatePredicate implements Predicate<BlockState> {
             return this.with(property, Boolean.toString(value));
         }
 
-        public Builder with(@NotNull Property<Integer> property, @Nullable Integer minValue, @Nullable Integer maxValue) {
+        public <T extends Comparable<T> & StringRepresentable> Builder with(Property<T> property, @NotNull T value) {
+            return this.with(property, value.getSerializedName());
+        }
+
+        public <T extends Comparable<T>> Builder with(
+            @NotNull Property<T> property,
+            @Nullable T minValue,
+            @Nullable T maxValue
+        ) {
             this.and.add(
                 new PropertyMatcher(
                     property.getName(),
@@ -146,16 +154,18 @@ public class BlockStatePredicate implements Predicate<BlockState> {
             return this;
         }
 
-        public Builder withMin(@NotNull Property<Integer> property, Integer minValue) {
+        public <T extends Comparable<T>> Builder withMin(
+            @NotNull Property<T> property,
+            T minValue
+        ) {
             return this.with(property, minValue, null);
         }
 
-        public Builder withMax(@NotNull Property<Integer> property, Integer maxValue) {
+        public <T extends Comparable<T>> Builder withMax(
+            @NotNull Property<T> property,
+            T maxValue
+        ) {
             return this.with(property, null, maxValue);
-        }
-
-        public <T extends Comparable<T> & StringRepresentable> Builder with(Property<T> property, @NotNull T value) {
-            return this.with(property, value.getSerializedName());
         }
 
         public Builder or() {
