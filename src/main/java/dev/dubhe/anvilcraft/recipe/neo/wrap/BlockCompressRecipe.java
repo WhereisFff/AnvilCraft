@@ -1,40 +1,27 @@
 package dev.dubhe.anvilcraft.recipe.neo.wrap;
 
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipe;
-import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
-import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
+import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Getter
 public class BlockCompressRecipe extends InWorldRecipe {
@@ -46,45 +33,16 @@ public class BlockCompressRecipe extends InWorldRecipe {
         List<ChanceBlockState> results
     ) {
         super(
-            BlockCompressRecipe.getIcon(results),
+            WrapUtils.getItemStack(results),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            BlockCompressRecipe.getPredicates(inputs),
+            WrapUtils.getPredicates(inputs),
             List.of(),
-            BlockCompressRecipe.getOutcomes(results),
+            WrapUtils.getOutcomes(results),
             0,
             true
         );
         this.inputs = inputs;
         this.results = results;
-    }
-
-    private static @NotNull List<IRecipePredicate<?>> getPredicates(
-        @NotNull List<BlockStatePredicate> blocks
-    ) {
-        List<IRecipePredicate<?>> predicates = new ArrayList<>();
-        for (int i = 0; i < blocks.size(); i++) {
-            BlockStatePredicate block = blocks.get(i);
-            predicates.add(new HasBlock(new Vec3(0, -i - 1, 0), block));
-        }
-        return predicates;
-    }
-
-    private static @NotNull List<IRecipeOutcome<?>> getOutcomes(
-        @NotNull List<ChanceBlockState> results
-    ) {
-        List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
-        for (int i = 0; i < results.size(); i++) {
-            ChanceBlockState result = results.get(i);
-            outcomes.add(new SetBlock(result.getState(), new Vec3(0, -i - 1, 0), 1));
-        }
-        return outcomes;
-    }
-
-    private static @NotNull ItemStack getIcon(@NotNull List<ChanceBlockState> results) {
-        if (results.isEmpty()) return Items.ANVIL.getDefaultInstance();
-        Item item = results.getFirst().getState().getBlock().asItem();
-        if (item == Items.AIR) item = Items.ANVIL;
-        return item.getDefaultInstance();
     }
 
     @Override
@@ -132,28 +90,13 @@ public class BlockCompressRecipe extends InWorldRecipe {
             @NotNull RegistryFriendlyByteBuf buf,
             @NotNull BlockCompressRecipe recipe
         ) {
-            RegistryOps<Tag> ops = HolderLookup.Provider
-                .create(Stream.of(BuiltInRegistries.BLOCK.asLookup()))
-                .createSerializationContext(NbtOps.INSTANCE);
-            DataResult<Tag> encode = BlockStatePredicate.CODEC.listOf().encode(recipe.inputs, ops, ops.empty());
-            Tag tag = encode.getOrThrow();
-            buf.writeNbt(tag);
-            buf.writeVarInt(recipe.results.size());
-            for (ChanceBlockState result : recipe.results) {
-                ChanceBlockState.STREAM_CODEC.encode(buf, result);
-            }
+            buf.writeCollection(recipe.inputs, (buf1, input) -> BlockStatePredicate.STREAM_CODEC.encode(buf, input));
+            buf.writeCollection(recipe.results, (buf1, results) -> ChanceBlockState.STREAM_CODEC.encode(buf, results));
         }
 
         private static @NotNull BlockCompressRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            RegistryOps<Tag> ops = HolderLookup.Provider
-                .create(Stream.of(BuiltInRegistries.BLOCK.asLookup()))
-                .createSerializationContext(NbtOps.INSTANCE);
-            List<BlockStatePredicate> inputs = BlockStatePredicate.CODEC.listOf().decode(ops, buf.readNbt()).getOrThrow().getFirst();
-            List<ChanceBlockState> results = new ArrayList<>();
-            int i = buf.readVarInt();
-            for (; i > 0; i--) {
-                results.add(ChanceBlockState.STREAM_CODEC.decode(buf));
-            }
+            List<BlockStatePredicate> inputs = buf.readCollection(ArrayList::new, buf1 -> BlockStatePredicate.STREAM_CODEC.decode(buf));
+            List<ChanceBlockState> results = buf.readCollection(ArrayList::new, buf1 -> ChanceBlockState.STREAM_CODEC.decode(buf));
             return new BlockCompressRecipe(inputs, results);
         }
     }
@@ -209,10 +152,7 @@ public class BlockCompressRecipe extends InWorldRecipe {
 
         @Override
         public @NotNull Item getResult() {
-            if (results.isEmpty()) return Items.ANVIL;
-            Item item = results.getFirst().getState().getBlock().asItem();
-            if (item == Items.AIR) item = Items.ANVIL;
-            return item;
+            return WrapUtils.getItem(results);
         }
     }
 }

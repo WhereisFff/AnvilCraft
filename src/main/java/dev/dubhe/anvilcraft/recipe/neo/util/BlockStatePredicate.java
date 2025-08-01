@@ -217,10 +217,10 @@ public class BlockStatePredicate implements Predicate<BlockState> {
                 ExactMatcher.CODEC, RangedMatcher.CODEC
             )
             .xmap(Either::unwrap, matcher -> {
-                if (matcher instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
-                    return Either.left(statepropertiespredicate$exactmatcher);
-                } else if (matcher instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
-                    return Either.right(statepropertiespredicate$rangedmatcher);
+                if (matcher instanceof ExactMatcher exactMatcher) {
+                    return Either.left(exactMatcher);
+                } else if (matcher instanceof RangedMatcher rangedMatcher) {
+                    return Either.right(rangedMatcher);
                 } else {
                     throw new UnsupportedOperationException();
                 }
@@ -229,10 +229,10 @@ public class BlockStatePredicate implements Predicate<BlockState> {
                 ExactMatcher.STREAM_CODEC, RangedMatcher.STREAM_CODEC
             )
             .map(Either::unwrap, matcher -> {
-                if (matcher instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
-                    return Either.left(statepropertiespredicate$exactmatcher);
-                } else if (matcher instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
-                    return Either.right(statepropertiespredicate$rangedmatcher);
+                if (matcher instanceof ExactMatcher exactMatcher) {
+                    return Either.left(exactMatcher);
+                } else if (matcher instanceof RangedMatcher rangedMatcher) {
+                    return Either.right(rangedMatcher);
                 } else {
                     throw new UnsupportedOperationException();
                 }

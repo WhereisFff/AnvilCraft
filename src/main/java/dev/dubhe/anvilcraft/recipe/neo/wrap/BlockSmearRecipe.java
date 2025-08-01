@@ -20,121 +20,124 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class BlockCrushRecipe extends InWorldRecipe {
-    private final BlockStatePredicate input;
+public class BlockSmearRecipe extends InWorldRecipe {
+    private final List<BlockStatePredicate> inputs;
     private final ChanceBlockState result;
 
-    public BlockCrushRecipe(
-        BlockStatePredicate input,
+    public BlockSmearRecipe(
+        List<BlockStatePredicate> inputs,
         ChanceBlockState result
     ) {
         super(
             WrapUtils.getItemStack(result),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            WrapUtils.getPredicates(input),
+            WrapUtils.getPredicates(inputs),
             List.of(),
             WrapUtils.getOutcomes(result),
             0,
             true
         );
-        this.input = input;
+        this.inputs = inputs;
         this.result = result;
-    }
-    @Override
-    public @NotNull RecipeType<BlockCrushRecipe> getType() {
-        return ModRecipeTypes.BLOCK_CRUSH_TYPE.get();
     }
 
     @Override
-    public @NotNull RecipeSerializer<BlockCrushRecipe> getSerializer() {
-        return ModRecipeTypes.BLOCK_CRUSH_SERIALIZER.get();
+    public @NotNull RecipeSerializer<BlockSmearRecipe> getSerializer() {
+        return ModRecipeTypes.BLOCK_SMEAR_SERIALIZER.get();
+    }
+
+    @Override
+    public @NotNull RecipeType<BlockSmearRecipe> getType() {
+        return ModRecipeTypes.BLOCK_SMEAR_TYPE.get();
     }
 
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
-    public static class Serializer implements RecipeSerializer<BlockCrushRecipe> {
-        private static final MapCodec<BlockCrushRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+    public static class Serializer implements RecipeSerializer<BlockSmearRecipe> {
+        private static final MapCodec<BlockSmearRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockStatePredicate.CODEC
-                .fieldOf("input")
-                .forGetter(BlockCrushRecipe::getInput),
+                .listOf()
+                .fieldOf("inputs")
+                .forGetter(BlockSmearRecipe::getInputs),
             ChanceBlockState.CODEC.codec()
                 .fieldOf("result")
-                .forGetter(BlockCrushRecipe::getResult)
-        ).apply(instance, BlockCrushRecipe::new));
+                .forGetter(BlockSmearRecipe::getResult)
+        ).apply(instance, BlockSmearRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> STREAM_CODEC = StreamCodec.of(
+        private static final StreamCodec<RegistryFriendlyByteBuf, BlockSmearRecipe> STREAM_CODEC = StreamCodec.of(
             Serializer::encode,
             Serializer::decode
         );
 
         @Override
-        public @NotNull MapCodec<BlockCrushRecipe> codec() {
+        public @NotNull MapCodec<BlockSmearRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockSmearRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
 
         private static void encode(
             @NotNull RegistryFriendlyByteBuf buf,
-            @NotNull BlockCrushRecipe recipe
+            @NotNull BlockSmearRecipe recipe
         ) {
-            BlockStatePredicate.STREAM_CODEC.encode(buf, recipe.input);
+            buf.writeCollection(recipe.inputs, (buf1, input) -> BlockStatePredicate.STREAM_CODEC.encode(buf, input));
             ChanceBlockState.STREAM_CODEC.encode(buf, recipe.result);
         }
 
-        private static @NotNull BlockCrushRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            BlockStatePredicate input = BlockStatePredicate.STREAM_CODEC.decode(buf);
+        private static @NotNull BlockSmearRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
+            List<BlockStatePredicate> inputs = buf.readCollection(ArrayList::new, buf1 -> BlockStatePredicate.STREAM_CODEC.decode(buf));
             ChanceBlockState result = ChanceBlockState.STREAM_CODEC.decode(buf);
-            return new BlockCrushRecipe(input, result);
+            return new BlockSmearRecipe(inputs, result);
         }
     }
 
-    public static class Builder extends AbstractRecipeBuilder<BlockCrushRecipe> {
-        private BlockStatePredicate input = null;
+    public static class Builder extends AbstractRecipeBuilder<BlockSmearRecipe> {
+        private final List<BlockStatePredicate> inputs = new ArrayList<>();
         private ChanceBlockState result = null;
 
         public Builder input(BlockStatePredicate input) {
-            this.input = (input);
+            this.inputs.add(input);
             return this;
         }
 
         public Builder input(TagKey<Block> input) {
-            this.input = BlockStatePredicate.builder().of(input).build();
+            this.inputs.add(BlockStatePredicate.builder().of(input).build());
             return this;
         }
 
         public Builder input(Block input) {
-            this.input = (BlockStatePredicate.builder().of(input).build());
+            this.inputs.add(BlockStatePredicate.builder().of(input).build());
             return this;
         }
 
         public Builder result(ChanceBlockState result) {
-            this.result = (result);
+            this.result = result;
             return this;
         }
 
         public Builder result(@NotNull Block result) {
-            this.result = (new ChanceBlockState(result.defaultBlockState(), 1.0));
+            this.result = new ChanceBlockState(result.defaultBlockState(), 1.0);
             return this;
         }
 
         @Override
-        public @NotNull BlockCrushRecipe buildRecipe() {
-            return new BlockCrushRecipe(this.input, this.result);
+        public @NotNull BlockSmearRecipe buildRecipe() {
+            return new BlockSmearRecipe(this.inputs, this.result);
         }
 
         @Override
         public void validate(@NotNull ResourceLocation pId) {
-            if (input == null) {
-                throw new IllegalArgumentException("Recipe input must not be null, RecipeId: " + pId);
+            if (inputs.isEmpty()) {
+                throw new IllegalArgumentException("Recipe inputs must not be empty, RecipeId: " + pId);
             }
             if (result == null) {
                 throw new IllegalArgumentException("Recipe result must not be null, RecipeId: " + pId);
@@ -143,7 +146,7 @@ public class BlockCrushRecipe extends InWorldRecipe {
 
         @Override
         public @NotNull String getType() {
-            return "block_crush";
+            return "block_compress";
         }
 
         @Override
