@@ -7,8 +7,11 @@ import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
 import dev.dubhe.anvilcraft.block.entity.HeatCollectorBlockEntity;
+import dev.dubhe.anvilcraft.util.UnitUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
@@ -29,6 +32,11 @@ public class HeatCollectorTooltipProvider extends ITooltipProvider.BlockEntityTo
 
     @Override
     public List<Component> tooltip(BlockEntity e) {
+        boolean original = false;
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null && player.isShiftKeyDown()) {
+            original = true;
+        }
         if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
         if (!(e instanceof HeatCollectorBlockEntity heatCollector)) return null;
         if (!heatCollector.isWorking()) {
@@ -69,7 +77,7 @@ public class HeatCollectorTooltipProvider extends ITooltipProvider.BlockEntityTo
             lines.add(
                 Component.translatable(
                     "tooltip.anvilcraft.grid_information.output_power",
-                    componentInfo.produces()
+                    UnitUtil.electricityUnit(componentInfo.produces(), original)
                 ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY))
             );
         } else if (type == PowerComponentType.CONSUMER) {
@@ -80,16 +88,18 @@ public class HeatCollectorTooltipProvider extends ITooltipProvider.BlockEntityTo
             lines.add(
                 Component.translatable(
                     "tooltip.anvilcraft.grid_information.input_power",
-                    componentInfo.consumes()
+                    UnitUtil.electricityUnit(componentInfo.consumes(), original)
                 ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         }
 
         List<Component> tooltipLines = List.of(
             Component.translatable("tooltip.anvilcraft.grid_information.title")
                 .setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE)),
-            Component.translatable("tooltip.anvilcraft.grid_information.total_consumed", grid.getConsume())
+            Component.translatable("tooltip.anvilcraft.grid_information.total_consumed",
+                    UnitUtil.electricityUnit(grid.getConsume(), original))
                 .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)),
-            Component.translatable("tooltip.anvilcraft.grid_information.total_generated", grid.getGenerate())
+            Component.translatable("tooltip.anvilcraft.grid_information.total_generated",
+                    UnitUtil.electricityUnit(grid.getGenerate(), original))
                 .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         lines.addAll(tooltipLines);
         return lines;

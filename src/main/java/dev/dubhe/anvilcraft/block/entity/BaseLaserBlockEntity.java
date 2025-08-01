@@ -32,6 +32,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
 import java.util.List;
@@ -75,7 +76,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         return blockState.getCollisionShape(level, blockPos).toAabbs().stream().noneMatch(laseBoundingBox::intersects);
     }
 
-    public void updateIrradiateBlockPos(BlockPos newPos) {
+    public void updateIrradiateBlockPos(@Nullable BlockPos newPos) {
         if (irradiateBlockPos == null) {
             if (newPos != null)
                 markChanged();
@@ -194,6 +195,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
                     level.getBlockEntity(irradiateBlockPos)
                 );
                 Vec3 blockPos = getBlockPos().relative(direction.getOpposite()).getCenter();
+                if (getLevel() == null) return;
                 IItemHandler cap = getLevel()
                     .getCapability(
                         Capabilities.ItemHandler.BLOCK,

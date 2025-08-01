@@ -50,7 +50,6 @@ import java.util.Optional;
 public class CorruptedBeaconBlockEntity extends BlockEntity {
     List<BeaconBeamSection> beamSections = Lists.newArrayList();
     private List<BeaconBeamSection> checkingBeamSections = Lists.newArrayList();
-    @Getter
     int levels;
     private int lastCheckY;
 

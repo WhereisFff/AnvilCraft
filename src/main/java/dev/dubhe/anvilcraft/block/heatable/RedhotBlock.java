@@ -3,8 +3,6 @@ package dev.dubhe.anvilcraft.block.heatable;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModFluidTags;
-import dev.dubhe.anvilcraft.util.MathUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -20,6 +18,7 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.Fluids;
 
 public class RedhotBlock extends HeatableBlock implements IMoveableEntityBlock {
     private final float steppingDamage;
@@ -82,7 +81,7 @@ public class RedhotBlock extends HeatableBlock implements IMoveableEntityBlock {
                 if (posx.equals(pos)) return true;
                 BlockState state = level.getBlockState(posx);
                 FluidState fluidState = level.getFluidState(posx);
-                if (!fluidState.is(ModFluidTags.MENGER_SPONGE_CAN_ABSORB)) return false;
+                if (!fluidState.is(Fluids.WATER)) return false;
                 if (state.getBlock() instanceof BucketPickup bucketpickup
                     && !bucketpickup.pickupBlock(null, level, posx, state).isEmpty()
                 ) return true;

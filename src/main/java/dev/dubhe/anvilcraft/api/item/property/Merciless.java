@@ -42,7 +42,8 @@ public record Merciless(boolean enabled) {
                 stack.get(ModComponents.MERCILESS),
                 "InventoryUtil.getItems(Inventory, Predicate<ItemStack>) method has some problem. The predicate didn't work."
             ).enabled();
-            float attackDamage = 0;
+            int levelSum = 0;
+            float attackDamage;
             float miningEfficiency = 0;
 
             ItemEnchantments.Mutable enchantmentsMutable = new ItemEnchantments.Mutable(
@@ -60,13 +61,14 @@ public record Merciless(boolean enabled) {
             for (Holder<Enchantment> enchantment : storedEnchantmentsMutable.keySet()) {
                 if (isEnabled) {
                     int level = storedEnchantmentsMutable.getLevel(enchantment);
-                    attackDamage += level;
+                    levelSum += level;
                     miningEfficiency += level;
                 } else {
                     enchantmentsMutable.set(enchantment, storedEnchantmentsMutable.getLevel(enchantment));
                     storedEnchantmentsMutable.removeIf(enchantment1 -> enchantment1.equals(enchantment));
                 }
             }
+            attackDamage = Math.round(Math.sqrt(levelSum) * 2 + (double) levelSum / 3);
             stack.set(DataComponents.ENCHANTMENTS, enchantmentsMutable.toImmutable());
             stack.set(DataComponents.STORED_ENCHANTMENTS, storedEnchantmentsMutable.toImmutable());
 

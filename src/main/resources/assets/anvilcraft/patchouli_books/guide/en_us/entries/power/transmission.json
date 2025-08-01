@@ -23,6 +23,12 @@
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:load_monitor",
       "text": "The $(item)Load Monitor$() can display the grid load. Use the comparator to output the redstone signal in proportion to the load. When overloaded, it will also directly output the redstone signal."
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:charge_collector",
+      "title": "Generator",
+      "text": "Any $(thing)Generator$()'s power supply distance are 2. The range is centered on the head 5 x 5 x 5."
     }
   ]
 }

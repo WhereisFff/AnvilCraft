@@ -723,6 +723,7 @@ public class ModItems {
                 .predicate(AnvilCraft.of("flight_time"), 0)
                 .model(new ModelFile.UncheckedModelFile(offModel.getUncheckedLocation())).end();
         })
+        .tag(ItemTags.CHEST_ARMOR_ENCHANTABLE)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("ABA")
@@ -2062,18 +2063,18 @@ public class ModItems {
     public static final ItemEntry<Item> LIME_POWDER =
         REGISTRATE.item("lime_powder", Item::new).register();
 
-    public static final ItemEntry<LevitationPowderItem> LEVITATION_POWDER =
-        REGISTRATE
-            .item("levitation_powder", LevitationPowderItem::new)
-            .recipe((ctx, provider) -> {
-                ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                    .requires(ModBlocks.LEVITATION_POWDER_BLOCK)
-                    .unlockedBy(
-                        AnvilCraftDatagen.hasItem(ModBlocks.LEVITATION_POWDER_BLOCK),
-                        AnvilCraftDatagen.has(ModBlocks.LEVITATION_POWDER_BLOCK))
-                    .save(provider, ctx.getId().withSuffix("_from_block"));
-            })
-            .register();
+    public static final ItemEntry<LevitationPowderItem> LEVITATION_POWDER = REGISTRATE
+        .item("levitation_powder", LevitationPowderItem::new)
+        .tag(ModItemTags.LEVITATIONALS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.LEVITATION_POWDER_BLOCK)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.LEVITATION_POWDER_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.LEVITATION_POWDER_BLOCK))
+                .save(provider, ctx.getId().withSuffix("_from_block"));
+        })
+        .register();
 
     public static final ItemEntry<Item> RAW_ZINC = REGISTRATE
         .item("raw_zinc", Item::new)
