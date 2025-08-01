@@ -161,7 +161,7 @@ public class ModAmuletTypes {
         String typeId, DamageSourcePredicate.Builder builder, ItemLike itemLike
     ) {
         return REGISTER.register(typeId, () -> new AmuletType.Simple(
-            builder.sub().victim(EntityType.PLAYER).build().build(),
+            builder.and().sub().victim(EntityType.PLAYER).build().build(),
             itemLike.asItem().getDefaultInstance()
         ));
     }
@@ -171,7 +171,7 @@ public class ModAmuletTypes {
         DamageSourcePredicate.Builder builder, ItemLike itemLike
     ) {
         return REGISTER.register(typeId, () -> new AmuletType.ImmuneDamageFromObtain(
-            builder.sub().victim(EntityType.PLAYER).build().build(),
+            builder.and().sub().victim(EntityType.PLAYER).build().build(),
             itemLike.asItem().getDefaultInstance()
         ));
     }
@@ -182,7 +182,7 @@ public class ModAmuletTypes {
         DamageSourcePredicate.Builder builder, ItemLike itemLike
     ) {
         return REGISTER.register(typeId, () -> new AmuletType.ImmuneDamageFromObtain(
-            builder.sub().victim(EntityType.PLAYER).build().build(),
+            builder.and().sub().victim(EntityType.PLAYER).build().build(),
             itemLike.asItem().getDefaultInstance()
         ) {
             @Override
@@ -223,7 +223,7 @@ public class ModAmuletTypes {
         TriConsumer<ServerPlayer, ItemStack, Boolean> finalInventoryTick = inventoryTick;
         BiPredicate<ServerPlayer, DamageSource> finalShouldIgnoreDamage = shouldIgnoreDamage;
         return REGISTER.register(typeId, () -> new AmuletType.Simple(
-            builder.sub().victim(EntityType.PLAYER).build().build(),
+            builder.and().sub().victim(EntityType.PLAYER).build().build(),
             itemLike.asItem().getDefaultInstance()
         ) {
             @Override
