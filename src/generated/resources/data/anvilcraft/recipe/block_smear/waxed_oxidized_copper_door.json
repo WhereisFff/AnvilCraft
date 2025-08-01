@@ -1,0 +1,23 @@
+{
+  "type": "anvilcraft:block_smear",
+  "inputs": [
+    {
+      "blocks": "minecraft:honeycomb_block"
+    },
+    {
+      "blocks": "minecraft:oxidized_copper_door"
+    }
+  ],
+  "result": {
+    "state": {
+      "Name": "minecraft:waxed_oxidized_copper_door",
+      "Properties": {
+        "facing": "north",
+        "half": "lower",
+        "hinge": "left",
+        "open": "false",
+        "powered": "false"
+      }
+    }
+  }
+}

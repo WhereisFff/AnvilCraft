@@ -1,0 +1,16 @@
+{
+  "type": "anvilcraft:block_smear",
+  "inputs": [
+    {
+      "blocks": "minecraft:honeycomb_block"
+    },
+    {
+      "blocks": "minecraft:oxidized_copper"
+    }
+  ],
+  "result": {
+    "state": {
+      "Name": "minecraft:waxed_oxidized_copper"
+    }
+  }
+}

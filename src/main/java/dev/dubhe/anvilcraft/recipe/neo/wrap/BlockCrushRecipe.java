@@ -43,6 +43,7 @@ public class BlockCrushRecipe extends InWorldRecipe {
         this.input = input;
         this.result = result;
     }
+
     @Override
     public @NotNull RecipeType<BlockCrushRecipe> getType() {
         return ModRecipeTypes.BLOCK_CRUSH_TYPE.get();

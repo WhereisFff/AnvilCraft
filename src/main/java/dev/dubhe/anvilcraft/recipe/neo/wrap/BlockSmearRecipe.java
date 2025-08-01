@@ -146,7 +146,7 @@ public class BlockSmearRecipe extends InWorldRecipe {
 
         @Override
         public @NotNull String getType() {
-            return "block_compress";
+            return "block_smear";
         }
 
         @Override

@@ -1,0 +1,19 @@
+{
+  "type": "anvilcraft:block_smear",
+  "inputs": [
+    {
+      "blocks": "minecraft:honeycomb_block"
+    },
+    {
+      "blocks": "minecraft:copper_grate"
+    }
+  ],
+  "result": {
+    "state": {
+      "Name": "minecraft:waxed_copper_grate",
+      "Properties": {
+        "waterlogged": "false"
+      }
+    }
+  }
+}

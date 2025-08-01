@@ -1,0 +1,19 @@
+{
+  "type": "anvilcraft:block_smear",
+  "inputs": [
+    {
+      "blocks": "minecraft:moss_block"
+    },
+    {
+      "blocks": "minecraft:dirt"
+    }
+  ],
+  "result": {
+    "state": {
+      "Name": "minecraft:grass_block",
+      "Properties": {
+        "snowy": "false"
+      }
+    }
+  }
+}
