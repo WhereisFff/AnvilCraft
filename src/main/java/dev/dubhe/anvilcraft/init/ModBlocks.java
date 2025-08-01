@@ -2957,6 +2957,7 @@ public class ModBlocks {
         .lang("Block of Levitation Powder")
         .initialProperties(() -> Blocks.SAND)
         .item(LevitationPowderBlockItem::new)
+        .tag(ModItemTags.LEVITATIONALS)
         .recipe((ctx, provider) ->
             ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
                 .requires(ModItems.LEVITATION_POWDER, 9)

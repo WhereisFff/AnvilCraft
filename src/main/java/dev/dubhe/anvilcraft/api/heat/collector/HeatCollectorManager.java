@@ -123,6 +123,9 @@ public class HeatCollectorManager {
     }
 
     private void tick() {
+        if (level.isClientSide) {
+            return;
+        }
         if (this.level.getGameTime() % GRID_TICK != 0) return;
         List<HeatCollectorBlockEntity> collectors = this.getCollectorsFromNWToSE();
         Map<Entry, Double2ObjectMap<HeatCollectorBlockEntity>> heatSources = new HashMap<>();

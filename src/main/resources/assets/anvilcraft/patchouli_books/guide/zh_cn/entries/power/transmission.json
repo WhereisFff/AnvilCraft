@@ -23,6 +23,12 @@
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:load_monitor",
       "text": "$(item)负载监视器$()可以查看电网负载，用比较器按负载比例输出红石信号，过载时本身也将直接输出红石信号。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:charge_collector",
+      "title": "发电机",
+      "text": "所有$(thing)发电机$()供电距离2，范围以自身为中心5x5x5。"
     }
   ]
 }

@@ -38,7 +38,7 @@
         "anvilcraft:machine/automation",
         "anvilcraft:power/consumption",
         "anvilcraft:smithing/corrupted_beacon",
-        "anvilcraft:basic/geode"
+        "anvilcraft:basic/material"
       ],
       "text": ""
     }

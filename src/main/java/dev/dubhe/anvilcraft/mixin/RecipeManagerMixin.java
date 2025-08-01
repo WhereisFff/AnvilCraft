@@ -4,7 +4,11 @@ import com.google.common.collect.Multimap;
 import com.google.gson.JsonElement;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import dev.dubhe.anvilcraft.recipe.generate.BaseGeneratingCache;
+import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
+import dev.dubhe.anvilcraft.recipe.generate.JewelCraftingRecipeGeneratingCache;
+import dev.dubhe.anvilcraft.recipe.generate.MeshRecipeGeneratingCache;
 import dev.dubhe.anvilcraft.recipe.generate.RecipeGenerator;
 
 import net.minecraft.core.HolderLookup;
@@ -28,7 +32,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
 import java.util.Map;
 
 @Mixin(RecipeManager.class)
@@ -70,35 +73,48 @@ abstract class RecipeManagerMixin {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
-        at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;"))
+            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+        at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;")
+    )
     private void beforeBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
-        @Share("caches") LocalRef<List<BaseGeneratingCache<?>>> caches
+        @Share("jewelsCache") LocalRef<JewelCraftingRecipeGeneratingCache> jewelsCache,
+        @Share("meshesCache") LocalRef<MeshRecipeGeneratingCache> meshesCache
     ) {
-        caches.set(BaseGeneratingCache.buildCaches(registries));
+        JewelCraftingRecipeGeneratingCache jewelsCache1 = new JewelCraftingRecipeGeneratingCache(this.registries);
+        jewelsCache.set(jewelsCache1);
+
+        MeshRecipeGeneratingCache meshesCache1 = new MeshRecipeGeneratingCache(this.registries);
+        meshesCache.set(meshesCache1);
     }
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
-        at = @At(
-            value = "INVOKE_ASSIGN",
-            target = "Lcom/google/common/collect/ImmutableMap$Builder;build()Lcom/google/common/collect/ImmutableMap;"))
+            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+        at = @At(value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
+            + "Lcom/google/common/collect/ImmutableMap;")
+    )
     private void afterBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
         @Local ImmutableMultimap.Builder<RecipeType<?>, RecipeHolder<?>> byTypeBuilder,
         @Local ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> byNameBuilder,
-        @Share("caches") LocalRef<List<BaseGeneratingCache<?>>> caches
+        @Share("jewelsCache") LocalRef<JewelCraftingRecipeGeneratingCache> jewelsCache,
+        @Share("meshesCache") LocalRef<MeshRecipeGeneratingCache> meshesCache
     ) {
-        for (var cache : caches.get()) {
-            cache.buildRecipes().ifPresent(recipeHolders -> {
-                byTypeBuilder.putAll(cache.getType(), recipeHolders);
-                for (RecipeHolder<?> holder : recipeHolders) {
+        jewelsCache.get().buildRecipes()
+            .ifPresent(recipeHolders -> {
+                byTypeBuilder.putAll(ModRecipeTypes.JEWEL_CRAFTING_TYPE.get(), recipeHolders);
+                for (RecipeHolder<JewelCraftingRecipe> holder : recipeHolders) {
                     byNameBuilder.put(holder.id(), holder);
                 }
             });
-        }
+        meshesCache.get().buildRecipes()
+            .ifPresent(recipeHolders -> {
+                byTypeBuilder.putAll(ModRecipeTypes.MESH_TYPE.get(), recipeHolders);
+                for (RecipeHolder<MeshRecipe> holder : recipeHolders) {
+                    byNameBuilder.put(holder.id(), holder);
+                }
+            });
         this.byType = byTypeBuilder.build();
         this.byName = byNameBuilder.build();
     }

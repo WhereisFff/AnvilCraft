@@ -134,24 +134,17 @@ public class BlockTagLoader {
             .addTag(Tags.Blocks.GLASS_PANES)
             .addTag(BlockTags.REPLACEABLE);
 
-        provider.addTag(ModBlockTags.INCORRECT_FOR_AMETHYST_TOOL)
-            .addTag(BlockTags.INCORRECT_FOR_STONE_TOOL);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_EMBER_TOOL);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_MULTIPHASE_TOOL)
-            .addTag(ModBlockTags.INCORRECT_FOR_EMBER_TOOL);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_FROST_METAL_TOOL)
-            .addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
-
-        provider.addTag(ModBlockTags.INCORRECT_FOR_TRANSCENDIUM_TOOL);
-
         provider.addTag(ModBlockTags.END_PORTAL_UNABLE_CHANGE).add(findResourceKey(Blocks.DRAGON_EGG));
 
         provider.addTag(ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)
             .add(findResourceKey(Blocks.END_STONE))
             .add(findResourceKey(Blocks.BEDROCK))
+            .add(findResourceKey(Blocks.COMMAND_BLOCK))
+            .add(findResourceKey(Blocks.REPEATING_COMMAND_BLOCK))
+            .add(findResourceKey(Blocks.CHAIN_COMMAND_BLOCK))
+            .add(findResourceKey(Blocks.BARRIER))
+            .add(findResourceKey(Blocks.STRUCTURE_BLOCK))
+            .add(findResourceKey(Blocks.JIGSAW))
             .add(ModBlocks.END_DUST.getKey())
             .add(ModBlocks.NEGATIVE_MATTER_BLOCK.getKey());
 
