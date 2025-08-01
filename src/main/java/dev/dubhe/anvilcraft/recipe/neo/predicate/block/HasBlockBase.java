@@ -55,11 +55,11 @@ public abstract class HasBlockBase<T extends HasBlockBase<T>> implements IRecipe
 
         public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull T hasBlock) {
             buf.writeVec3(hasBlock.getOffset());
-            BlockStatePredicate.encode(buf, hasBlock.getPredicate());
+            BlockStatePredicate.STREAM_CODEC.encode(buf, hasBlock.getPredicate());
         }
 
         public @NotNull T decode(@NotNull RegistryFriendlyByteBuf buf) {
-            return this.of(buf.readVec3(), BlockStatePredicate.decode(buf));
+            return this.of(buf.readVec3(), BlockStatePredicate.STREAM_CODEC.decode(buf));
         }
     }
 }

@@ -1,13 +1,19 @@
 package dev.dubhe.anvilcraft.recipe.neo.util;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.mixin.accessor.StateHolderAccessor;
+import io.netty.buffer.ByteBuf;
 import lombok.Getter;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.tags.TagKey;
+import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -16,44 +22,66 @@ import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.function.Function;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
+@Getter
 public class BlockStatePredicate implements Predicate<BlockState> {
-    @Getter
-    private final Block block;
-    private final List<Map<Property<?>, Comparable<?>>> stateOr;
-    public static final Codec<BlockStatePredicate> CODEC = codec(BuiltInRegistries.BLOCK.byNameCodec(), Block::defaultBlockState);
+    public static final Codec<List<PropertyMatcher>> PROPERTIES_CODEC = Codec.unboundedMap(
+            Codec.STRING, ValueMatcher.CODEC
+        )
+        .xmap(
+            map -> map.entrySet()
+                .stream()
+                .map(entry -> new PropertyMatcher(entry.getKey(), entry.getValue()))
+                .toList(),
+            list -> list.stream()
+                .collect(Collectors.toMap(PropertyMatcher::name, PropertyMatcher::valueMatcher))
+        );
+    public static final StreamCodec<ByteBuf, List<List<PropertyMatcher>>> PROPERTIES_STREAM_CODEC = PropertyMatcher.STREAM_CODEC
+        .apply(ByteBufCodecs.list())
+        .apply(ByteBufCodecs.list())
+        .map(lists -> lists, lists -> lists);
+    public static final Codec<BlockStatePredicate> CODEC = RecordCodecBuilder.create(
+        instance -> instance.group(
+                RegistryCodecs.homogeneousList(Registries.BLOCK)
+                    .optionalFieldOf("blocks", HolderSet.empty())
+                    .forGetter(BlockStatePredicate::getBlocks),
+                PROPERTIES_CODEC
+                    .listOf()
+                    .optionalFieldOf("properties", List.of())
+                    .forGetter(BlockStatePredicate::getProperties)
+            )
+            .apply(instance, BlockStatePredicate::new)
+    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, BlockStatePredicate> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.holderSet(Registries.BLOCK),
+        BlockStatePredicate::getBlocks,
+        PROPERTIES_STREAM_CODEC,
+        BlockStatePredicate::getProperties,
+        BlockStatePredicate::new
+    );
 
-    public BlockStatePredicate(Block block, List<Map<Property<?>, Comparable<?>>> stateOr) {
-        this.block = block;
-        this.stateOr = stateOr;
-    }
+    private final HolderSet<Block> blocks;
+    private final List<List<PropertyMatcher>> properties;
 
-    private static @NotNull BlockStatePredicate create(Block block, @NotNull List<BlockState> stateOr) {
-        return new BlockStatePredicate(block, stateOr.stream().map(StateHolder::getValues).toList());
+    private BlockStatePredicate(HolderSet<Block> blocks, List<List<PropertyMatcher>> properties) {
+        this.blocks = blocks;
+        this.properties = properties;
     }
 
     @Override
-    public boolean test(BlockState blockState) {
-        if (blockState == null) return false;
-        if (!blockState.is(block)) return false;
-        if (this.stateOr.isEmpty()) return true;
-        for (Map<Property<?>, Comparable<?>> stateAnd : stateOr) {
+    public boolean test(BlockState state) {
+        if (this.blocks.size() > 0 && !state.is(this.blocks)) return false;
+        if (this.properties.isEmpty()) return true;
+        for (List<PropertyMatcher> matchers : this.properties) {
             boolean flag = true;
-            for (Property<?> key : stateAnd.keySet()) {
-                if (!blockState.hasProperty(key)) {
-                    flag = false;
-                    break;
-                }
-                Comparable<?> value = stateAnd.get(key);
-                Comparable<?> value1 = blockState.getValue(key);
-                if (!value.equals(value1)) {
+            for (PropertyMatcher matcher : matchers) {
+                if (!matcher.match(state.getBlock().getStateDefinition(), state)) {
                     flag = false;
                     break;
                 }
@@ -63,96 +91,153 @@ public class BlockStatePredicate implements Predicate<BlockState> {
         return false;
     }
 
-    @SuppressWarnings("unchecked")
-    private static <T extends Comparable<T>> List<BlockState> getStateOr(@NotNull BlockStatePredicate predicate) {
-        return predicate.stateOr.stream().map(stateAnd -> {
-            BlockState state = predicate.block.defaultBlockState();
-            for (Property<?> key : stateAnd.keySet()) {
-                Comparable<?> comparable = stateAnd.get(key);
-                state = state.setValue((Property<T>) key, (T) comparable);
-            }
-            return state;
-        }).toList();
+    public static @NotNull Builder builder() {
+        return new Builder();
     }
 
-    protected static Codec<BlockStatePredicate> codec(@NotNull Codec<Block> propertyMap, @NotNull Function<Block, BlockState> holderFunction) {
-        return propertyMap.dispatch("block", BlockStatePredicate::getBlock, (block) -> {
-            BlockState state = holderFunction.apply(block);
-            if (state.getValues().isEmpty()) return MapCodec.unit(new BlockStatePredicate(block, List.of()));
-            @SuppressWarnings("unchecked")
-            MapCodec<BlockState> propertiesCodec = ((StateHolderAccessor<Block, BlockState>) state).getPropertiesCodec();
-            return RecordCodecBuilder.mapCodec(instance -> instance.group(
-                propertiesCodec.codec()
-                    .listOf()
-                    .fieldOf("stateOr")
-                    .forGetter(BlockStatePredicate::getStateOr)
-            ).apply(instance, list -> BlockStatePredicate.create(block, list)));
-        });
-    }
-
-    public static void encode(@NotNull FriendlyByteBuf buf, @NotNull BlockStatePredicate predicate) {
-        ResourceLocation key = BuiltInRegistries.BLOCK.getKey(predicate.getBlock());
-        buf.writeResourceLocation(key);
-        buf.writeCollection(predicate.stateOr, (buf1, state) -> {
-            buf1.writeMap(
-                state,
-                (buf2, property) -> buf2.writeUtf(property.getName()),
-                (buf2, value) -> buf2.writeUtf(value.toString())
-            );
-        });
-    }
-
-    public static @NotNull BlockStatePredicate decode(@NotNull FriendlyByteBuf buf) {
-        ResourceLocation key = buf.readResourceLocation();
-        Block block = BuiltInRegistries.BLOCK.get(key);
-        BlockState state = block.defaultBlockState();
-        List<Map<String, String>> maps = buf.readList(buf1 -> buf1.readMap(
-            FriendlyByteBuf::readUtf,
-            buf2 -> buf2.readUtf()
-        ));
-        StateDefinition<Block, BlockState> definition = state.getBlock().getStateDefinition();
-        List<Map<Property<?>, Comparable<?>>> list = maps.stream().map(map -> {
-            Map<Property<?>, Comparable<?>> map1 = new HashMap<>();
-            for (Map.Entry<String, String> entry : map.entrySet()) {
-                Property<?> property = definition.getProperty(entry.getKey());
-                if (property == null) throw new IllegalStateException();
-                @SuppressWarnings("unchecked")
-                Optional<Comparable<?>> value = (Optional<Comparable<?>>) property.getValue(entry.getValue());
-                if (value.isEmpty()) throw new IllegalStateException();
-                map1.put(property, value.get());
-            }
-            return Collections.unmodifiableMap(map1);
-        }).toList();
-        return new BlockStatePredicate(block, list);
-    }
-
+    @SuppressWarnings("deprecation")
     public static class Builder {
-        private final Block block;
-        private final List<Map<Property<?>, Comparable<?>>> stateOr = new ArrayList<>();
-        private Map<Property<?>, Comparable<?>> stateAnd = new HashMap<>();
+        private final List<List<PropertyMatcher>> properties = new ArrayList<>();
+        private HolderSet<Block> blocks = HolderSet.empty();
+        private List<PropertyMatcher> and = new ArrayList<>();
 
-        private Builder(Block block) {
-            this.block = block;
+        private Builder() {
         }
 
-        public static @NotNull Builder of(Block block) {
-            return new Builder(block);
-        }
-
-        public Builder or() {
-            this.stateOr.add(Collections.unmodifiableMap(stateAnd));
-            this.stateAnd = new HashMap<>();
+        public Builder of(Block... blocks) {
+            this.blocks = HolderSet.direct(Block::builtInRegistryHolder, blocks);
             return this;
         }
 
-        public <T extends Comparable<T>> Builder with(Property<T> property, T value) {
-            this.stateAnd.put(property, value);
+        public Builder of(Collection<Block> blocks) {
+            this.blocks = HolderSet.direct(Block::builtInRegistryHolder, blocks);
+            return this;
+        }
+
+        public Builder of(TagKey<Block> tag) {
+            this.blocks = BuiltInRegistries.BLOCK.getOrCreateTag(tag);
+            return this;
+        }
+
+        public Builder with(@NotNull Property<?> property, String value) {
+            this.and.add(new PropertyMatcher(property.getName(), new ExactMatcher(value)));
+            return this;
+        }
+
+        public Builder with(Property<Integer> property, int value) {
+            return this.with(property, Integer.toString(value));
+        }
+
+        public Builder with(Property<Boolean> property, boolean value) {
+            return this.with(property, Boolean.toString(value));
+        }
+
+        public <T extends Comparable<T> & StringRepresentable> Builder with(Property<T> property, @NotNull T value) {
+            return this.with(property, value.getSerializedName());
+        }
+
+        public Builder or() {
+            this.properties.add(this.and);
+            this.and = new ArrayList<>();
             return this;
         }
 
         public BlockStatePredicate build() {
-            this.or();
-            return new BlockStatePredicate(block, stateOr);
+            if (!this.and.isEmpty()) this.or();
+            return new BlockStatePredicate(this.blocks, Collections.unmodifiableList(this.properties));
         }
+    }
+
+    public record PropertyMatcher(String name, ValueMatcher valueMatcher) {
+        public static final StreamCodec<ByteBuf, PropertyMatcher> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.STRING_UTF8,
+            PropertyMatcher::name,
+            ValueMatcher.STREAM_CODEC,
+            PropertyMatcher::valueMatcher,
+            PropertyMatcher::new
+        );
+
+        public <S extends StateHolder<?, S>> boolean match(@NotNull StateDefinition<?, S> properties, S propertyToMatch) {
+            Property<?> property = properties.getProperty(this.name);
+            return property != null && this.valueMatcher.match(propertyToMatch, property);
+        }
+    }
+
+    public record ExactMatcher(String value) implements ValueMatcher {
+        public static final Codec<ExactMatcher> CODEC = Codec.STRING
+            .xmap(ExactMatcher::new, ExactMatcher::value);
+        public static final StreamCodec<ByteBuf, ExactMatcher> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
+            .map(ExactMatcher::new, ExactMatcher::value);
+
+        @Override
+        public <T extends Comparable<T>> boolean match(@NotNull StateHolder<?, ?> p_298379_, Property<T> p_299294_) {
+            T t = p_298379_.getValue(p_299294_);
+            Optional<T> optional = p_299294_.getValue(this.value);
+            return optional.isPresent() && t.compareTo(optional.get()) == 0;
+        }
+    }
+
+    public record RangedMatcher(Optional<String> minValue, Optional<String> maxValue) implements ValueMatcher {
+        public static final Codec<RangedMatcher> CODEC = RecordCodecBuilder.create(
+            p_337397_ -> p_337397_.group(
+                    Codec.STRING.optionalFieldOf("min").forGetter(RangedMatcher::minValue),
+                    Codec.STRING.optionalFieldOf("max").forGetter(RangedMatcher::maxValue)
+                )
+                .apply(p_337397_, RangedMatcher::new)
+        );
+        public static final StreamCodec<ByteBuf, RangedMatcher> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
+            RangedMatcher::minValue,
+            ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
+            RangedMatcher::maxValue,
+            RangedMatcher::new
+        );
+
+        @Override
+        public <T extends Comparable<T>> boolean match(@NotNull StateHolder<?, ?> stateHolder, Property<T> property) {
+            T t = stateHolder.getValue(property);
+            if (this.minValue.isPresent()) {
+                Optional<T> optional = property.getValue(this.minValue.get());
+                if (optional.isEmpty() || t.compareTo(optional.get()) < 0) {
+                    return false;
+                }
+            }
+
+            if (this.maxValue.isPresent()) {
+                Optional<T> optional1 = property.getValue(this.maxValue.get());
+                return optional1.isPresent() && t.compareTo(optional1.get()) <= 0;
+            }
+
+            return true;
+        }
+    }
+
+    public interface ValueMatcher {
+        Codec<ValueMatcher> CODEC = Codec.either(
+                ExactMatcher.CODEC, RangedMatcher.CODEC
+            )
+            .xmap(Either::unwrap, p_299089_ -> {
+                if (p_299089_ instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
+                    return Either.left(statepropertiespredicate$exactmatcher);
+                } else if (p_299089_ instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
+                    return Either.right(statepropertiespredicate$rangedmatcher);
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            });
+        StreamCodec<ByteBuf, ValueMatcher> STREAM_CODEC = ByteBufCodecs.either(
+                ExactMatcher.STREAM_CODEC, RangedMatcher.STREAM_CODEC
+            )
+            .map(Either::unwrap, p_329686_ -> {
+                if (p_329686_ instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
+                    return Either.left(statepropertiespredicate$exactmatcher);
+                } else if (p_329686_ instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
+                    return Either.right(statepropertiespredicate$rangedmatcher);
+                } else {
+                    throw new UnsupportedOperationException();
+                }
+            });
+
+        <T extends Comparable<T>> boolean match(StateHolder<?, ?> stateHolder, Property<T> property);
     }
 }

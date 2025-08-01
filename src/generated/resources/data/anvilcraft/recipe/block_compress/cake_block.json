@@ -1,8 +1,18 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "anvilcraft:cream_block",
-    "anvilcraft:cake_base_block"
+    {
+      "blocks": "anvilcraft:cream_block"
+    },
+    {
+      "blocks": "anvilcraft:cake_base_block"
+    }
   ],
-  "result": "anvilcraft:cake_block"
+  "results": [
+    {
+      "state": {
+        "Name": "anvilcraft:cake_block"
+      }
+    }
+  ]
 }

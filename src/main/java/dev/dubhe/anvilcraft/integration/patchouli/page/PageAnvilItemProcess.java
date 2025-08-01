@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,11 +28,12 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
     private final @Nullable Function<T, BlockState> state2;
 
     public PageAnvilItemProcess(
-        DeferredHolder<RecipeType<?>, RecipeType<T>> typeHolder,
+        RecipeType<T> recipeType,
+//        DeferredHolder<RecipeType<?>, RecipeType<T>> typeHolder,
         Function<T, List<Object2IntMap.Entry<Ingredient>>> ingredients, Function<T, List<ChanceItemStack>> results,
         Function<T, BlockState> state1, @Nullable Function<T, BlockState> state2
     ) {
-        super(typeHolder.get());
+        super(recipeType);
         this.ingredients = ingredients;
         this.results = results;
         this.state1 = state1;

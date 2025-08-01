@@ -1,8 +1,18 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "anvilcraft:void_matter_block",
-    "anvilcraft:supercritical_nesting_shulker_box"
+    {
+      "blocks": "anvilcraft:void_matter_block"
+    },
+    {
+      "blocks": "anvilcraft:supercritical_nesting_shulker_box"
+    }
   ],
-  "result": "anvilcraft:space_overcompressor"
+  "results": [
+    {
+      "state": {
+        "Name": "anvilcraft:space_overcompressor"
+      }
+    }
+  ]
 }

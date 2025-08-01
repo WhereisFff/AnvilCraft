@@ -2,12 +2,7 @@ package dev.dubhe.anvilcraft.integration.patchouli;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.integration.Integration;
-import dev.dubhe.anvilcraft.integration.patchouli.page.PageJewelCrafting;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageMultipleToOneSmithing;
-import dev.dubhe.anvilcraft.integration.patchouli.page.PageSuperHeating;
-import dev.dubhe.anvilcraft.integration.patchouli.page.PageTimeWarp;
-import dev.dubhe.anvilcraft.integration.patchouli.page.PageItemInject;
-import dev.dubhe.anvilcraft.integration.patchouli.page.PageBlockCompress;
 import vazkii.patchouli.client.book.ClientBookRegistry;
 
 @SuppressWarnings("unused")
@@ -17,11 +12,11 @@ public class PatchouliIntegration {
     }
 
     public void applyClient() {
-        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("time_warp"), PageTimeWarp.class);
-        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("super_heating"), PageSuperHeating.class);
-        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("jewel_crafting"), PageJewelCrafting.class);
+//        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("time_warp"), PageTimeWarp.class);
+//        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("super_heating"), PageSuperHeating.class);
+//        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("jewel_crafting"), PageJewelCrafting.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("multiple_to_one_smithing"), PageMultipleToOneSmithing.class);
-        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("item_inject"), PageItemInject.class);
-        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("block_compress"), PageBlockCompress.class);
+//        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("item_inject"), PageItemInject.class);
+//        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("block_compress"), PageBlockCompress.class);
     }
 }

@@ -1,8 +1,18 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "minecraft:basalt",
-    "minecraft:basalt"
+    {
+      "blocks": "minecraft:basalt"
+    },
+    {
+      "blocks": "minecraft:basalt"
+    }
   ],
-  "result": "minecraft:blackstone"
+  "results": [
+    {
+      "state": {
+        "Name": "minecraft:blackstone"
+      }
+    }
+  ]
 }

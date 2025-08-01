@@ -1,8 +1,21 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "#minecraft:leaves",
-    "minecraft:dirt"
+    {
+      "blocks": "#minecraft:leaves"
+    },
+    {
+      "blocks": "minecraft:dirt"
+    }
   ],
-  "result": "minecraft:podzol"
+  "results": [
+    {
+      "state": {
+        "Name": "minecraft:podzol",
+        "Properties": {
+          "snowy": "false"
+        }
+      }
+    }
+  ]
 }

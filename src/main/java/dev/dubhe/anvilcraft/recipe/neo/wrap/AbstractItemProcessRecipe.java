@@ -58,8 +58,8 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
         super(
             AbstractItemProcessRecipe.getIcon(results),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            List.of(),
-            AbstractItemProcessRecipe.getPredicates(inputOffset, itemIngredients, blockOffset, block),
+            AbstractItemProcessRecipe.getPredicates(blockOffset, block),
+            AbstractItemProcessRecipe.getPredicates(inputOffset, itemIngredients),
             AbstractItemProcessRecipe.getOutcomes(outputOffset, results),
             0,
             false
@@ -77,18 +77,24 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
     }
 
     private static @NotNull List<IRecipePredicate<?>> getPredicates(
-        Vec3 inputOffset,
-        @NotNull List<ItemIngredientPredicate> ingredients,
         Vec3 blockOffset,
-        BlockStatePredicate... blocks
+        BlockStatePredicate @NotNull ... blocks
+    ) {
+        List<IRecipePredicate<?>> predicates = new ArrayList<>();
+        for (int i = 0; i < blocks.length; i++) {
+            BlockStatePredicate block = blocks[i];
+            predicates.add(new HasBlock(blockOffset.subtract(0, i, 0), block));
+        }
+        return predicates;
+    }
+
+    private static @NotNull List<IRecipePredicate<?>> getPredicates(
+        Vec3 inputOffset,
+        @NotNull List<ItemIngredientPredicate> ingredients
     ) {
         List<IRecipePredicate<?>> predicates = new ArrayList<>();
         for (ItemIngredientPredicate ingredient : ingredients) {
             predicates.add(ingredient.toHasItemIngredient(inputOffset, new Vec3(1, 0.5, 1)));
-        }
-        for (int i = 0; i < blocks.length; i++) {
-            BlockStatePredicate block = blocks[i];
-            predicates.add(new HasBlock(blockOffset.subtract(0, i, 0), block));
         }
         return predicates;
     }
@@ -111,31 +117,26 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
     public abstract @NotNull RecipeType<T> getType();
 
     public abstract static class AbstractSerializer<T extends AbstractItemProcessRecipe<T>> implements RecipeSerializer<T> {
-        protected MapCodec<T> codec = null;
-        protected StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = null;
+        protected final MapCodec<T> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ItemIngredientPredicate.CODEC.listOf()
+                .fieldOf("ingredients")
+                .forGetter(T::getItemIngredients),
+            ChanceItemStack.CODEC.listOf()
+                .fieldOf("results")
+                .forGetter(T::getResults)
+        ).apply(instance, this::of));
+
+        protected final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.of(this::encode, this::decode);
 
         protected abstract T of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results);
 
         @Override
         public @NotNull MapCodec<T> codec() {
-            if (this.codec == null) {
-                codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                    ItemIngredientPredicate.CODEC.listOf()
-                        .fieldOf("ingredients")
-                        .forGetter(T::getItemIngredients),
-                    ChanceItemStack.CODEC.listOf()
-                        .fieldOf("results")
-                        .forGetter(T::getResults)
-                ).apply(instance, this::of));
-            }
             return this.codec;
         }
 
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
-            if (this.streamCodec == null) {
-                this.streamCodec = StreamCodec.of(this::encode, this::decode);
-            }
             return this.streamCodec;
         }
 

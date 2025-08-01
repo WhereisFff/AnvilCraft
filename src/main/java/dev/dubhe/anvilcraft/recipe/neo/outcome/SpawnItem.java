@@ -3,11 +3,9 @@ package dev.dubhe.anvilcraft.recipe.neo.outcome;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
-import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeData;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemCache;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -48,7 +46,7 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
                     .forGetter(SpawnItem::getItem),
                 Vec3.CODEC.fieldOf("offset")
                     .forGetter(SpawnItem::getOffset),
-                Codec.DOUBLE.fieldOf("chance")
+                Codec.DOUBLE.optionalFieldOf("chance", 1.0)
                     .forGetter(SpawnItem::getChance)
             ).apply(instance, SpawnItem::new)
         );

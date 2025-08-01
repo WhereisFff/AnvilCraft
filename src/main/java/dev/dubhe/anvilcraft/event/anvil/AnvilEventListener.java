@@ -12,7 +12,6 @@ import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
@@ -129,16 +128,16 @@ public class AnvilEventListener {
         for (int i = 0; i < 9; i++) {
             inputs.add(level.getBlockState(pos.below(i)).getBlock());
         }
-        level.getRecipeManager()
-            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
-            .ifPresent(recipe -> {
-                for (int i = 0; i < recipe.value().inputs.size(); i++) {
-                    level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
-                }
-                level.setBlockAndUpdate(
-                    pos.below(recipe.value().inputs.size() - 1),
-                    recipe.value().result.defaultBlockState());
-            });
+//        level.getRecipeManager()
+//            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
+//            .ifPresent(recipe -> {
+//                for (int i = 0; i < recipe.value().inputs.size(); i++) {
+//                    level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
+//                }
+//                level.setBlockAndUpdate(
+//                    pos.below(recipe.value().inputs.size() - 1),
+//                    recipe.value().result.defaultBlockState());
+//            });
     }
 
     private static void handleBlockSmearRecipe(Level level, final BlockPos pos) {
@@ -146,16 +145,16 @@ public class AnvilEventListener {
         for (int i = 0; i < 9; i++) {
             inputs.add(level.getBlockState(pos.below(i)).getBlock());
         }
-        level.getRecipeManager()
-            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
-            .ifPresent(recipe -> {
-                for (int i = 1; i < recipe.value().inputs.size(); i++) {
-                    level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
-                }
-                level.setBlockAndUpdate(
-                    pos.below(recipe.value().inputs.size() - 1),
-                    recipe.value().result.defaultBlockState());
-            });
+//        level.getRecipeManager()
+//            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
+//            .ifPresent(recipe -> {
+//                for (int i = 1; i < recipe.value().inputs.size(); i++) {
+//                    level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
+//                }
+//                level.setBlockAndUpdate(
+//                    pos.below(recipe.value().inputs.size() - 1),
+//                    recipe.value().result.defaultBlockState());
+//            });
     }
 
     private static void handleItemInjectRecipe(Level level, final BlockPos pos, BlockState state) {

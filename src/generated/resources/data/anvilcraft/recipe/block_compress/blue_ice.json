@@ -1,8 +1,18 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "minecraft:packed_ice",
-    "minecraft:packed_ice"
+    {
+      "blocks": "minecraft:packed_ice"
+    },
+    {
+      "blocks": "minecraft:packed_ice"
+    }
   ],
-  "result": "minecraft:blue_ice"
+  "results": [
+    {
+      "state": {
+        "Name": "minecraft:blue_ice"
+      }
+    }
+  ]
 }

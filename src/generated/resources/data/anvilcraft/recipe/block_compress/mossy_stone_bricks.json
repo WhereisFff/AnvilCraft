@@ -1,8 +1,18 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "minecraft:moss_block",
-    "minecraft:stone_bricks"
+    {
+      "blocks": "minecraft:moss_block"
+    },
+    {
+      "blocks": "minecraft:stone_bricks"
+    }
   ],
-  "result": "minecraft:mossy_stone_bricks"
+  "results": [
+    {
+      "state": {
+        "Name": "minecraft:mossy_stone_bricks"
+      }
+    }
+  ]
 }

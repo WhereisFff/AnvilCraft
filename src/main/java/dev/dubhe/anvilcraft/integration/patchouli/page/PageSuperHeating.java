@@ -6,12 +6,13 @@ import dev.dubhe.anvilcraft.recipe.anvil.SuperHeatingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 
 public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
-    public PageSuperHeating() {
+    public PageSuperHeating(RecipeType<SuperHeatingRecipe> recipeType) {
         super(
-            ModRecipeTypes.SUPER_HEATING_TYPE,
+            recipeType,
             SuperHeatingRecipe::getMergedIngredients,
             SuperHeatingRecipe::getResults,
             recipe -> Blocks.CAULDRON.defaultBlockState(),

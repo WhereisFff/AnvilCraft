@@ -1,8 +1,21 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "minecraft:moss_block",
-    "minecraft:dirt"
+    {
+      "blocks": "minecraft:moss_block"
+    },
+    {
+      "blocks": "minecraft:dirt"
+    }
   ],
-  "result": "minecraft:grass_block"
+  "results": [
+    {
+      "state": {
+        "Name": "minecraft:grass_block",
+        "Properties": {
+          "snowy": "false"
+        }
+      }
+    }
+  ]
 }

@@ -27,10 +27,10 @@ public class BoilingRecipe extends AbstractItemProcessRecipe<BoilingRecipe> {
             new Vec3(0.0, -1.5, 0.0),
             results,
             new Vec3(0.0, -1.0, 0.0),
-            BlockStatePredicate.Builder
+            BlockStatePredicate.builder()
                 .of(Blocks.WATER_CAULDRON)
                 .build(),
-            BlockStatePredicate.Builder
+            BlockStatePredicate.builder()
                 .of(Blocks.CAMPFIRE)
                 .with(CampfireBlock.LIT, true)
                 .build()

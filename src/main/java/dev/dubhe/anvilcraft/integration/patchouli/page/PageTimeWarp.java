@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
 import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
@@ -10,15 +9,16 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
 public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
-    public PageTimeWarp() {
+    public PageTimeWarp(RecipeType<TimeWarpRecipe> recipeType) {
         super(
-            ModRecipeTypes.TIME_WARP_TYPE,
+            recipeType,
             TimeWarpRecipe::getMergedIngredients,
             TimeWarpRecipe::getResults,
             PageTimeWarp::getCauldron,

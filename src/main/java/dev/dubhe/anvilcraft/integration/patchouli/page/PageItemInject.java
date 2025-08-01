@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -8,6 +7,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
@@ -15,8 +15,9 @@ import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 import java.util.List;
 
 public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
-    public PageItemInject() {
-        super(ModRecipeTypes.ITEM_INJECT_TYPE.get());
+    public PageItemInject(RecipeType<ItemInjectRecipe> recipeType) {
+        super(recipeType);
+//        super(ModRecipeTypes.ITEM_INJECT_TYPE.get());
     }
 
     @Override

@@ -1,13 +1,13 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import com.mojang.datafixers.util.Either;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import vazkii.patchouli.client.book.gui.GuiBook;
@@ -16,8 +16,9 @@ import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 import java.util.List;
 
 public class PageBlockCompress extends PageDoubleRecipeRegistry<BlockCompressRecipe> {
-    public PageBlockCompress() {
-        super(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get());
+    public PageBlockCompress(RecipeType<BlockCompressRecipe> recipeType) {
+        super(recipeType);
+//        super(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get());
     }
 
     @Override
