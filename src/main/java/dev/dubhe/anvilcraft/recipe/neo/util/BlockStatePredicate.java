@@ -170,20 +170,20 @@ public class BlockStatePredicate implements Predicate<BlockState> {
             .map(ExactMatcher::new, ExactMatcher::value);
 
         @Override
-        public <T extends Comparable<T>> boolean match(@NotNull StateHolder<?, ?> p_298379_, Property<T> p_299294_) {
-            T t = p_298379_.getValue(p_299294_);
-            Optional<T> optional = p_299294_.getValue(this.value);
+        public <T extends Comparable<T>> boolean match(@NotNull StateHolder<?, ?> value, Property<T> property) {
+            T t = value.getValue(property);
+            Optional<T> optional = property.getValue(this.value);
             return optional.isPresent() && t.compareTo(optional.get()) == 0;
         }
     }
 
     public record RangedMatcher(Optional<String> minValue, Optional<String> maxValue) implements ValueMatcher {
         public static final Codec<RangedMatcher> CODEC = RecordCodecBuilder.create(
-            p_337397_ -> p_337397_.group(
+            instance -> instance.group(
                     Codec.STRING.optionalFieldOf("min").forGetter(RangedMatcher::minValue),
                     Codec.STRING.optionalFieldOf("max").forGetter(RangedMatcher::maxValue)
                 )
-                .apply(p_337397_, RangedMatcher::new)
+                .apply(instance, RangedMatcher::new)
         );
         public static final StreamCodec<ByteBuf, RangedMatcher> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
@@ -216,10 +216,10 @@ public class BlockStatePredicate implements Predicate<BlockState> {
         Codec<ValueMatcher> CODEC = Codec.either(
                 ExactMatcher.CODEC, RangedMatcher.CODEC
             )
-            .xmap(Either::unwrap, p_299089_ -> {
-                if (p_299089_ instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
+            .xmap(Either::unwrap, matcher -> {
+                if (matcher instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
                     return Either.left(statepropertiespredicate$exactmatcher);
-                } else if (p_299089_ instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
+                } else if (matcher instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
                     return Either.right(statepropertiespredicate$rangedmatcher);
                 } else {
                     throw new UnsupportedOperationException();
@@ -228,10 +228,10 @@ public class BlockStatePredicate implements Predicate<BlockState> {
         StreamCodec<ByteBuf, ValueMatcher> STREAM_CODEC = ByteBufCodecs.either(
                 ExactMatcher.STREAM_CODEC, RangedMatcher.STREAM_CODEC
             )
-            .map(Either::unwrap, p_329686_ -> {
-                if (p_329686_ instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
+            .map(Either::unwrap, matcher -> {
+                if (matcher instanceof ExactMatcher statepropertiespredicate$exactmatcher) {
                     return Either.left(statepropertiespredicate$exactmatcher);
-                } else if (p_329686_ instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
+                } else if (matcher instanceof RangedMatcher statepropertiespredicate$rangedmatcher) {
                     return Either.right(statepropertiespredicate$rangedmatcher);
                 } else {
                     throw new UnsupportedOperationException();
