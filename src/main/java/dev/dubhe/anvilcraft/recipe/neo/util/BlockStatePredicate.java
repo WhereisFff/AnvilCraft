@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.StateHolder;
 import net.minecraft.world.level.block.state.properties.Property;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -130,6 +131,27 @@ public class BlockStatePredicate implements Predicate<BlockState> {
 
         public Builder with(Property<Boolean> property, boolean value) {
             return this.with(property, Boolean.toString(value));
+        }
+
+        public Builder with(@NotNull Property<Integer> property, @Nullable Integer minValue, @Nullable Integer maxValue) {
+            this.and.add(
+                new PropertyMatcher(
+                    property.getName(),
+                    new RangedMatcher(
+                        minValue == null ? Optional.empty() : Optional.of(minValue.toString()),
+                        maxValue == null ? Optional.empty() : Optional.of(maxValue.toString())
+                    )
+                )
+            );
+            return this;
+        }
+
+        public Builder withMin(@NotNull Property<Integer> property, Integer minValue) {
+            return this.with(property, minValue, null);
+        }
+
+        public Builder withMax(@NotNull Property<Integer> property, Integer maxValue) {
+            return this.with(property, null, maxValue);
         }
 
         public <T extends Comparable<T> & StringRepresentable> Builder with(Property<T> property, @NotNull T value) {
