@@ -53,9 +53,9 @@ public class AnvilCraftKillerFakePlayer {
         player.setItemInHand(InteractionHand.MAIN_HAND, DUMMY_LOOTING_5_WEAPON.copy());
     }
 
-    public void disable(UUID uuid) {
+    public void disable(ServerPlayer player) {
         DISABLED_KILLERS.stream()
-            .filter(killer -> killer.getUUID().equals(uuid))
+            .filter(killer -> killer.getUUID().equals(player.getUUID()))
             .findFirst()
             .ifPresent(killer -> {
                 killer.getPlayer().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
