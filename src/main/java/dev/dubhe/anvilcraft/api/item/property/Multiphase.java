@@ -231,13 +231,6 @@ public record Multiphase(LinkedList<Phase> phases) {
         Optional<Component> customName, Optional<Component> itemName,
         int repairCost, @NotNull ItemEnchantments enchantments
     ) {
-        public static Phase create(Multiphase multiphase) {
-            return create(multiphase.phases.size());
-        }
-        public static Phase create(int index) {
-            return new Phase(index, Component.literal("Empty"), Optional.empty(), Optional.empty(), 0, ItemEnchantments.EMPTY);
-        }
-
         public static final Codec<Phase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
             Codec.INT.fieldOf("index").forGetter(Phase::index),
             ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
@@ -280,6 +273,14 @@ public record Multiphase(LinkedList<Phase> phases) {
 
         public @Nullable Component getItemName() {
             return this.itemName.map(Component::copy).orElse(null);
+        }
+
+        public static Phase create(Multiphase multiphase) {
+            return create(multiphase.phases.size());
+        }
+
+        public static Phase create(int index) {
+            return new Phase(index, Component.literal("Empty"), Optional.empty(), Optional.empty(), 0, ItemEnchantments.EMPTY);
         }
 
         public static Phase make(int index, Component name, @Nullable ItemEnchantments enchantments) {
