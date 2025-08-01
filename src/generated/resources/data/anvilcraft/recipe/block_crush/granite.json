@@ -1,5 +1,11 @@
 {
   "type": "anvilcraft:block_crush",
-  "input": "minecraft:polished_granite",
-  "result": "minecraft:granite"
+  "input": {
+    "blocks": "minecraft:polished_granite"
+  },
+  "result": {
+    "state": {
+      "Name": "minecraft:granite"
+    }
+  }
 }

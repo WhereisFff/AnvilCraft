@@ -115,12 +115,12 @@ public class AnvilEventListener {
     }
 
     private static void handleBlockCrushRecipe(Level level, final BlockPos pos) {
-        BlockState state = level.getBlockState(pos);
-        level.getRecipeManager()
-            .getRecipeFor(
-                ModRecipeTypes.BLOCK_CRUSH_TYPE.get(), new BlockCrushRecipe.Input(state.getBlock()), level)
-            .ifPresent(recipe ->
-                level.setBlockAndUpdate(pos, recipe.value().result.defaultBlockState()));
+//        BlockState state = level.getBlockState(pos);
+//        level.getRecipeManager()
+//            .getRecipeFor(
+//                ModRecipeTypes.BLOCK_CRUSH_TYPE.get(), new BlockCrushRecipe.Input(state.getBlock()), level)
+//            .ifPresent(recipe ->
+//                level.setBlockAndUpdate(pos, recipe.value().result.defaultBlockState()));
     }
 
     private static void handleBlockCompressRecipe(Level level, final BlockPos pos) {

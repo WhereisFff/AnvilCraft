@@ -1,5 +1,11 @@
 {
   "type": "anvilcraft:block_crush",
-  "input": "minecraft:polished_diorite",
-  "result": "minecraft:diorite"
+  "input": {
+    "blocks": "minecraft:polished_diorite"
+  },
+  "result": {
+    "state": {
+      "Name": "minecraft:diorite"
+    }
+  }
 }

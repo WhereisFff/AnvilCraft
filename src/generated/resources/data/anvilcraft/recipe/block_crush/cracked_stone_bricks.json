@@ -1,5 +1,11 @@
 {
   "type": "anvilcraft:block_crush",
-  "input": "minecraft:stone_bricks",
-  "result": "minecraft:cracked_stone_bricks"
+  "input": {
+    "blocks": "minecraft:stone_bricks"
+  },
+  "result": {
+    "state": {
+      "Name": "minecraft:cracked_stone_bricks"
+    }
+  }
 }

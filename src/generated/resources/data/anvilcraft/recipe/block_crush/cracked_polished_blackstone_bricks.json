@@ -1,5 +1,11 @@
 {
   "type": "anvilcraft:block_crush",
-  "input": "minecraft:polished_blackstone_bricks",
-  "result": "minecraft:cracked_polished_blackstone_bricks"
+  "input": {
+    "blocks": "minecraft:polished_blackstone_bricks"
+  },
+  "result": {
+    "state": {
+      "Name": "minecraft:cracked_polished_blackstone_bricks"
+    }
+  }
 }

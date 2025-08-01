@@ -1,5 +1,11 @@
 {
   "type": "anvilcraft:block_crush",
-  "input": "minecraft:granite",
-  "result": "minecraft:red_sand"
+  "input": {
+    "blocks": "minecraft:granite"
+  },
+  "result": {
+    "state": {
+      "Name": "minecraft:red_sand"
+    }
+  }
 }
