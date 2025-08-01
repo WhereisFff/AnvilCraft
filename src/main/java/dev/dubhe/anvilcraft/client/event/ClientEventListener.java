@@ -3,10 +3,12 @@ package dev.dubhe.anvilcraft.client.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
+import dev.dubhe.anvilcraft.client.gui.screen.MultiphaseScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ResonatorScreen;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.client.support.AmuletSelectorSupport;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
@@ -59,10 +61,40 @@ public class ClientEventListener {
         SoundHelper.INSTANCE.clear();
     }
 
+    private static int lastSwitchPhasePressAction = 0;
+
     @SubscribeEvent
     public static void onKeyPress(Key event) {
         if (ModKeyMappings.TOGGLE_GOGGLE.get().isDown()) AnvilHammerItem.goggleEnabled = !AnvilHammerItem.goggleEnabled;
-        if (ModKeyMappings.SWITCH_PHASE.get().isDown()) PacketDistributor.sendToServer(new SwitchPhasePacket());
+
+        switchPhase:
+        if (event.getKey() == ModKeyMappings.SWITCH_PHASE.get().getKey().getValue()) {
+            if (event.getAction() == InputConstants.REPEAT && !(Minecraft.getInstance().screen instanceof MultiphaseScreen)) {
+                LocalPlayer player = Minecraft.getInstance().player;
+                if (player == null) return;
+                ItemStack stack = player.getMainHandItem();
+                if (stack.has(ModComponents.MULTIPHASE)) {
+                    Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.MAIN_HAND));
+                    return;
+                }
+                stack = player.getOffhandItem();
+                if (stack.has(ModComponents.MULTIPHASE)) {
+                    Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.OFF_HAND));
+                }
+            }
+            if (event.getAction() != InputConstants.RELEASE) {
+                lastSwitchPhasePressAction = event.getAction();
+                break switchPhase;
+            }
+            if (lastSwitchPhasePressAction == InputConstants.PRESS) {
+                PacketDistributor.sendToServer(new SwitchPhasePacket());
+            } else if (
+                lastSwitchPhasePressAction == InputConstants.REPEAT
+                && Minecraft.getInstance().screen instanceof MultiphaseScreen screen
+            ) {
+                screen.wheel.onClosing();
+            }
+        }
 
         if (event.getKey() == ModKeyMappings.SWITCH_RESONATE_MODE.get().getKey().getValue()) {
             if (event.getAction() == InputConstants.PRESS) {
@@ -74,11 +106,12 @@ public class ClientEventListener {
                         InteractionHand.MAIN_HAND,
                         ResonatorItem.getMode(stack)
                     ));
+                    return;
                 }
                 stack = player.getOffhandItem();
                 if (stack.getItem() instanceof ResonatorItem) {
                     Minecraft.getInstance().setScreen(new ResonatorScreen(
-                        InteractionHand.MAIN_HAND,
+                        InteractionHand.OFF_HAND,
                         ResonatorItem.getMode(stack)
                     ));
                 }

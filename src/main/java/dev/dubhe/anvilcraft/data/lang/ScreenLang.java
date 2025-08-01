@@ -180,23 +180,14 @@ public class ScreenLang {
             "Add a sword and an axe of the same type, a Trident and a Mace");
         provider.add("screen.anvilcraft.ember_smithing.resonator_core.missing_tools", "Add same Ember or Frost metal tools");
         provider.add(
-            "screen.anvilcraft.ember_smithing.multiphase_transcendium.two_missing_tools",
-            "Add two Ember Metal Resonators or two Ember Metal Heavy Halberds");
+            "screen.anvilcraft.ember_smithing.multiphase_transcendium.missing_tools",
+            "Add a Ember Metal Resonator or Heavy Halberd and a Frost Metal Resonator or Heavy Halberd");
         provider.add(
-            "screen.anvilcraft.ember_smithing.multiphase_transcendium.four_missing_tools",
-            "Add same Multiphase matter tools or a Multiple Matter Sword, a Multiple Matter Axe, a Trident and a Mace");
+            "screen.anvilcraft.ember_smithing.multiphase_transcendium.resonator_missing_tools",
+            "Add a Ember Metal Resonator and a Frost Metal Resonator");
         provider.add(
-            "screen.anvilcraft.ember_smithing.multiphase_transcendium.resonator_two_missing_tools",
-            "Add two Ember Metal Resonators");
-        provider.add(
-            "screen.anvilcraft.ember_smithing.multiphase_transcendium.resonator_four_missing_tools",
-            "Add same Multiphase matter tools");
-        provider.add(
-            "screen.anvilcraft.ember_smithing.multiphase_transcendium.heavy_halberd_two_missing_tools",
-            "Add two Ember Metal Heavy Halberds");
-        provider.add(
-            "screen.anvilcraft.ember_smithing.multiphase_transcendium.heavy_halberd_four_missing_tools",
-            "Add a Multiple Matter Sword, a Multiple Matter Axe, a Trident and a Mace");
+            "screen.anvilcraft.ember_smithing.multiphase_transcendium.heavy_halberd_missing_tools",
+            "Add a Ember Metal Heavy Halberd and a Frost Metal Heavy Halberd");
 
         provider.add("screen.anvilcraft.resonator.title", "Switch resonate mode");
         provider.add("screen.anvilcraft.resonator.auto", "Auto");
@@ -204,5 +195,8 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.resonator.shovel", "Shovel");
         provider.add("screen.anvilcraft.resonator.hoe", "Hoe");
         provider.add("screen.anvilcraft.resonator.pickaxe", "Pickaxe");
+
+        provider.add("screen.anvilcraft.multiphase.title", "Switch phase");
+        provider.add("screen.anvilcraft.multiphase.merciless", "-Merciless");
     }
 }
