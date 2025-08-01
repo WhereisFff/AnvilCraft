@@ -141,40 +141,38 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
             this.getBoundingBox().expandTowards(0, 1.1F, 0),
             EntitySelector.pushableBy(this)
         );
-        if (!list.isEmpty()) {
-            for (Entity entity : list) {
-                if (entity instanceof FallingBlockEntity) continue;
-                if (entity instanceof IonocraftEntity) continue;
-                entity.setDeltaMovement(
-                    entity.getDeltaMovement().x,
-                    entity.getDeltaMovement().y + 0.04 <= 0
-                    ? motion.y + (this.getY() - entity.getBoundingBox().minY)
-                    : motion.y * 2.8,
-                    entity.getDeltaMovement().z
-                );
-            }
+        if (list.isEmpty()) return;
+        for (Entity entity : list) {
+            if (entity instanceof FallingBlockEntity) continue;
+            if (entity instanceof IonocraftEntity) continue;
+            entity.setDeltaMovement(
+                entity.getDeltaMovement().x,
+                entity.getDeltaMovement().y + 0.04 <= 0
+                ? motion.y + (this.getY() - entity.getBoundingBox().minY)
+                : motion.y * 2.8,
+                entity.getDeltaMovement().z
+            );
         }
     }
 
     @Override
     public void remove(RemovalReason reason) {
+        super.remove(reason);
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().expandTowards(0, 1.75F, 0),
             EntitySelector.pushableBy(this)
         );
-        if (!list.isEmpty()) {
-            for (Entity entity : list) {
-                if (entity instanceof FallingBlockEntity) continue;
-                if (entity instanceof IonocraftEntity) continue;
-                entity.setDeltaMovement(
-                    entity.getDeltaMovement().x,
-                    entity.getGravity(),
-                    entity.getDeltaMovement().z
-                );
-            }
+        if (list.isEmpty()) return;
+        for (Entity entity : list) {
+            if (entity instanceof FallingBlockEntity) continue;
+            if (entity instanceof IonocraftEntity) continue;
+            entity.setDeltaMovement(
+                entity.getDeltaMovement().x,
+                entity.getGravity(),
+                entity.getDeltaMovement().z
+            );
         }
-        super.remove(reason);
     }
 
     @Override
