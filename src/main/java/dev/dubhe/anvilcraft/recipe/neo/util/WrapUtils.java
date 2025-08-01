@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
+import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlockIngredient;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -35,6 +36,29 @@ public class WrapUtils {
         for (int i = 0; i < results.size(); i++) {
             BlockStatePredicate result = results.get(i);
             predicates.add(new HasBlock(new Vec3(0, -i - 1, 0), result));
+        }
+        return predicates;
+    }
+
+    public static @NotNull IRecipePredicate<?> getIngredientPredicate(
+        @NotNull BlockStatePredicate block
+    ) {
+        return new HasBlockIngredient(new Vec3(0, -1, 0), block);
+    }
+
+    public static @NotNull @Unmodifiable List<IRecipePredicate<?>> getIngredientPredicates(
+        @NotNull BlockStatePredicate block
+    ) {
+        return List.of(getIngredientPredicate(block));
+    }
+
+    public static @NotNull List<IRecipePredicate<?>> getIngredientPredicates(
+        @NotNull List<BlockStatePredicate> results
+    ) {
+        List<IRecipePredicate<?>> predicates = new ArrayList<>();
+        for (int i = 0; i < results.size(); i++) {
+            BlockStatePredicate result = results.get(i);
+            predicates.add(new HasBlockIngredient(new Vec3(0, -i - 1, 0), result));
         }
         return predicates;
     }

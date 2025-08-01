@@ -35,7 +35,7 @@ public class BlockCompressRecipe extends InWorldRecipe {
         super(
             WrapUtils.getItemStack(results),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            WrapUtils.getPredicates(inputs),
+            WrapUtils.getIngredientPredicates(inputs),
             List.of(),
             WrapUtils.getOutcomes(results),
             0,

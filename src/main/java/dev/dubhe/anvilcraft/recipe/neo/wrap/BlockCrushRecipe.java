@@ -34,7 +34,7 @@ public class BlockCrushRecipe extends InWorldRecipe {
         super(
             WrapUtils.getItemStack(result),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            WrapUtils.getPredicates(input),
+            WrapUtils.getIngredientPredicates(input),
             List.of(),
             WrapUtils.getOutcomes(result),
             0,
