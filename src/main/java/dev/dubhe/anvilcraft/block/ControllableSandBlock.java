@@ -19,7 +19,7 @@ public class ControllableSandBlock extends Block implements IHammerRemovable {
 
     @SuppressWarnings("ConstantValue")
     protected void move(BlockState state, Level level, BlockPos pos, RandomSource random) {
-        if (level.getBestNeighborSignal(pos) <= 0) return;
+        if (!level.hasNeighborSignal(pos)) return;
         boolean aboveIsFree = StandableFallingBlockEntity.isFree(level, pos.above());
         boolean belowIsFree = StandableFallingBlockEntity.isFree(level, pos.below());
         if (!aboveIsFree && !belowIsFree) return;
@@ -37,7 +37,7 @@ public class ControllableSandBlock extends Block implements IHammerRemovable {
 
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
-        if (level.getBestNeighborSignal(pos) <= 0) return;
+        if (!level.hasNeighborSignal(pos)) return;
         this.move(state, level, pos, level.getRandom());
     }
 
@@ -45,7 +45,7 @@ public class ControllableSandBlock extends Block implements IHammerRemovable {
     protected void neighborChanged(
         BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston
     ) {
-        if (level.getBestNeighborSignal(pos) <= 0) return;
+        if (!level.hasNeighborSignal(pos)) return;
         this.move(state, level, pos, level.getRandom());
     }
 }
