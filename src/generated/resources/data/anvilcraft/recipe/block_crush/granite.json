@@ -4,8 +4,6 @@
     "blocks": "minecraft:polished_granite"
   },
   "result": {
-    "state": {
-      "Name": "minecraft:granite"
-    }
+    "block": "minecraft:granite"
   }
 }

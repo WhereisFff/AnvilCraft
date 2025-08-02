@@ -4,8 +4,6 @@
     "blocks": "minecraft:diorite"
   },
   "result": {
-    "state": {
-      "Name": "anvilcraft:quartz_sand"
-    }
+    "block": "anvilcraft:quartz_sand"
   }
 }

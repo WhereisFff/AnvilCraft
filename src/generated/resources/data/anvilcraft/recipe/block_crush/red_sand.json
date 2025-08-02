@@ -4,8 +4,6 @@
     "blocks": "minecraft:granite"
   },
   "result": {
-    "state": {
-      "Name": "minecraft:red_sand"
-    }
+    "block": "minecraft:red_sand"
   }
 }

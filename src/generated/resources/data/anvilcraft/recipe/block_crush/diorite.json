@@ -4,8 +4,6 @@
     "blocks": "minecraft:polished_diorite"
   },
   "result": {
-    "state": {
-      "Name": "minecraft:diorite"
-    }
+    "block": "minecraft:diorite"
   }
 }

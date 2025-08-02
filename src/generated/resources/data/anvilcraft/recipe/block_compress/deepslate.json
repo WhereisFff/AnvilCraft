@@ -10,12 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:deepslate",
-        "Properties": {
-          "axis": "y"
-        }
-      }
+      "block": "minecraft:deepslate"
     }
   ]
 }

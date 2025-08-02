@@ -9,12 +9,6 @@
     }
   ],
   "result": {
-    "state": {
-      "Name": "minecraft:waxed_oxidized_copper_bulb",
-      "Properties": {
-        "lit": "false",
-        "powered": "false"
-      }
-    }
+    "block": "minecraft:waxed_oxidized_copper_bulb"
   }
 }

@@ -9,15 +9,6 @@
     }
   ],
   "result": {
-    "state": {
-      "Name": "minecraft:waxed_weathered_copper_door",
-      "Properties": {
-        "facing": "north",
-        "half": "lower",
-        "hinge": "left",
-        "open": "false",
-        "powered": "false"
-      }
-    }
+    "block": "minecraft:waxed_weathered_copper_door"
   }
 }

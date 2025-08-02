@@ -9,11 +9,6 @@
     }
   ],
   "result": {
-    "state": {
-      "Name": "minecraft:waxed_exposed_copper_grate",
-      "Properties": {
-        "waterlogged": "false"
-      }
-    }
+    "block": "minecraft:waxed_exposed_copper_grate"
   }
 }

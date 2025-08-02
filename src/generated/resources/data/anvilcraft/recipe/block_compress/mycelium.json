@@ -10,12 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:mycelium",
-        "Properties": {
-          "snowy": "false"
-        }
-      }
+      "block": "minecraft:mycelium"
     }
   ]
 }

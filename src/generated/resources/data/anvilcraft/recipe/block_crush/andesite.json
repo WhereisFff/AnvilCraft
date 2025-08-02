@@ -4,8 +4,6 @@
     "blocks": "minecraft:polished_andesite"
   },
   "result": {
-    "state": {
-      "Name": "minecraft:andesite"
-    }
+    "block": "minecraft:andesite"
   }
 }

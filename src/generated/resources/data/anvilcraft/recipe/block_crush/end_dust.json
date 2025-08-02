@@ -4,8 +4,6 @@
     "blocks": "minecraft:end_stone"
   },
   "result": {
-    "state": {
-      "Name": "anvilcraft:end_dust"
-    }
+    "block": "anvilcraft:end_dust"
   }
 }

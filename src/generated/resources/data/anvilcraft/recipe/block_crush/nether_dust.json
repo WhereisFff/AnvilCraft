@@ -4,8 +4,6 @@
     "blocks": "minecraft:netherrack"
   },
   "result": {
-    "state": {
-      "Name": "anvilcraft:nether_dust"
-    }
+    "block": "anvilcraft:nether_dust"
   }
 }

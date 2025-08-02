@@ -9,15 +9,6 @@
     }
   ],
   "result": {
-    "state": {
-      "Name": "minecraft:waxed_weathered_copper_trapdoor",
-      "Properties": {
-        "facing": "north",
-        "half": "bottom",
-        "open": "false",
-        "powered": "false",
-        "waterlogged": "false"
-      }
-    }
+    "block": "minecraft:waxed_weathered_copper_trapdoor"
   }
 }

@@ -4,8 +4,6 @@
     "blocks": "minecraft:soul_soil"
   },
   "result": {
-    "state": {
-      "Name": "minecraft:soul_sand"
-    }
+    "block": "minecraft:soul_sand"
   }
 }

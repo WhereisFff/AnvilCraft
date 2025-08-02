@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "anvilcraft:space_overcompressor"
-      }
+      "block": "anvilcraft:space_overcompressor"
     }
   ]
 }

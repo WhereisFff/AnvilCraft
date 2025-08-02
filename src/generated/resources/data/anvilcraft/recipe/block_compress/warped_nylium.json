@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:warped_nylium"
-      }
+      "block": "minecraft:warped_nylium"
     }
   ]
 }

@@ -4,8 +4,6 @@
     "blocks": "minecraft:andesite"
   },
   "result": {
-    "state": {
-      "Name": "anvilcraft:cinerite"
-    }
+    "block": "anvilcraft:cinerite"
   }
 }

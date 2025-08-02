@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:crimson_nylium"
-      }
+      "block": "minecraft:crimson_nylium"
     }
   ]
 }

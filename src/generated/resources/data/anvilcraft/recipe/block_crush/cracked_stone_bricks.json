@@ -4,8 +4,6 @@
     "blocks": "minecraft:stone_bricks"
   },
   "result": {
-    "state": {
-      "Name": "minecraft:cracked_stone_bricks"
-    }
+    "block": "minecraft:cracked_stone_bricks"
   }
 }

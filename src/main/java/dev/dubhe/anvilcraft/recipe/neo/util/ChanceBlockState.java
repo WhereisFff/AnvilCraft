@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.api.injection.block.state.IBlockStateExtension;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,7 +30,7 @@ public class ChanceBlockState {
 
     public static final MapCodec<ChanceBlockState> CODEC = RecordCodecBuilder.mapCodec(
         instance -> instance.group(
-            BlockState.CODEC.fieldOf("state")
+            IBlockStateExtension.MAP_CODEC
                 .forGetter(ChanceBlockState::getState),
             Codec.DOUBLE.optionalFieldOf("chance", 1.0)
                 .forGetter(ChanceBlockState::getChance)

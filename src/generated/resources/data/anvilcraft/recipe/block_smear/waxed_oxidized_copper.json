@@ -9,8 +9,6 @@
     }
   ],
   "result": {
-    "state": {
-      "Name": "minecraft:waxed_oxidized_copper"
-    }
+    "block": "minecraft:waxed_oxidized_copper"
   }
 }

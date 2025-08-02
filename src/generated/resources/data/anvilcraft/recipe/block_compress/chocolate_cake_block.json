@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "anvilcraft:chocolate_cake_block"
-      }
+      "block": "anvilcraft:chocolate_cake_block"
     }
   ]
 }

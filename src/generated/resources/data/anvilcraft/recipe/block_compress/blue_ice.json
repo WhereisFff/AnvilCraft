@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:blue_ice"
-      }
+      "block": "minecraft:blue_ice"
     }
   ]
 }

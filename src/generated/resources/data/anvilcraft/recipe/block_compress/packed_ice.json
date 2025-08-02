@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:packed_ice"
-      }
+      "block": "minecraft:packed_ice"
     }
   ]
 }

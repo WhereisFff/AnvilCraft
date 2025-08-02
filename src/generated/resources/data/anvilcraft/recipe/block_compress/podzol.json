@@ -10,12 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:podzol",
-        "Properties": {
-          "snowy": "false"
-        }
-      }
+      "block": "minecraft:podzol"
     }
   ]
 }

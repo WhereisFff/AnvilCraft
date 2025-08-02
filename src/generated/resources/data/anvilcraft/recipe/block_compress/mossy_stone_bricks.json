@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:mossy_stone_bricks"
-      }
+      "block": "minecraft:mossy_stone_bricks"
     }
   ]
 }

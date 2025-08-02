@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.api.injection.block.state.IBlockStateExtension;
 import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
@@ -50,7 +51,7 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
     public static class Type implements IRecipeOutcome.Type<SetBlock> {
         private static final MapCodec<SetBlock> CODEC = RecordCodecBuilder.mapCodec(
             instance -> instance.group(
-                BlockState.CODEC.fieldOf("state")
+                IBlockStateExtension.MAP_CODEC
                     .forGetter(SetBlock::getState),
                 Vec3.CODEC.fieldOf("offset")
                     .forGetter(SetBlock::getOffset),

@@ -10,9 +10,7 @@
   ],
   "results": [
     {
-      "state": {
-        "Name": "minecraft:blackstone"
-      }
+      "block": "minecraft:blackstone"
     }
   ]
 }

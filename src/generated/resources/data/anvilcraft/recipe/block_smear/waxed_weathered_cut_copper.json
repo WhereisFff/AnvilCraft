@@ -9,8 +9,6 @@
     }
   ],
   "result": {
-    "state": {
-      "Name": "minecraft:waxed_weathered_cut_copper"
-    }
+    "block": "minecraft:waxed_weathered_cut_copper"
   }
 }

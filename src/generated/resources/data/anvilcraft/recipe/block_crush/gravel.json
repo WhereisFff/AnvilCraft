@@ -4,8 +4,6 @@
     "blocks": "minecraft:cobblestone"
   },
   "result": {
-    "state": {
-      "Name": "minecraft:gravel"
-    }
+    "block": "minecraft:gravel"
   }
 }

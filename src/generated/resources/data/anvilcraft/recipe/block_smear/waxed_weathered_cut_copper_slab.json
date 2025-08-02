@@ -9,12 +9,6 @@
     }
   ],
   "result": {
-    "state": {
-      "Name": "minecraft:waxed_weathered_cut_copper_slab",
-      "Properties": {
-        "type": "bottom",
-        "waterlogged": "false"
-      }
-    }
+    "block": "minecraft:waxed_weathered_cut_copper_slab"
   }
 }
