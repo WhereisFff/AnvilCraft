@@ -133,8 +133,7 @@ public class RoyalAnvilScreen extends ItemCombinerScreen<RoyalAnvilMenu> {
 
     @Override
     protected void renderErrorIcon(@NotNull GuiGraphics guiGraphics, int x, int y) {
-        if (this.menu.getSlot(0).hasItem()
-            || this.menu.getSlot(1).hasItem()
+        if ((this.menu.getSlot(0).hasItem() || this.menu.getSlot(1).hasItem())
             && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()) {
             guiGraphics.blitSprite(ERROR_SPRITE, x + 99, y + 45, 28, 21);
         }
