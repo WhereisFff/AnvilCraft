@@ -655,7 +655,7 @@
   "screen.anvilcraft.smithing_template.royal_steel_upgrade_smithing_template.base_slot_description": "Put upgradable item",
   "screen.anvilcraft.smithing_template.royal_steel_upgrade_smithing_template.upgrade_ingredients": "Royal Steel Ingot or Royal Steel Block",
   "screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.additions_slot_description": "Put the Transcendium Ingot or Transcendium Block",
-  "screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.applies_to": "Ember Metal Anvil",
+  "screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.applies_to": "Ember Metal Anvil, Ember Anvil Hammer, Ember Dragon Rod",
   "screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.base_slot_description": "Put upgradable item",
   "screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.upgrade_ingredients": "Transcendium Ingot or Transcendium Block",
   "screen.anvilcraft.structure_tool.conversion_output": "The area selected by it will be the output of recipe",

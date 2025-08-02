@@ -52,7 +52,7 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.upgrade_ingredients",
             "Transcendium Ingot or Transcendium Block");
         provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.applies_to",
-            "Ember Metal Anvil");
+            "Ember Metal Anvil, Ember Anvil Hammer, Ember Dragon Rod");
         provider.add("screen.anvilcraft.transcendium_upgrade_smithing_template",
             "Transcendium Upgrade");
         provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.base_slot_description",
