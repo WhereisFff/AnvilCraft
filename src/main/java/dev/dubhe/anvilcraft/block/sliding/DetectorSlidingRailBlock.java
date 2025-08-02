@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -100,7 +101,8 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(POWERED) && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above())).isEmpty()) {
-            level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_CLIENTS);
+            level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_ALL);
+            level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get()).ifPresent(DetectorSlidingRailBlockEntity::cleanPower);
             level.updateNeighbourForOutputSignal(pos, this);
         }
         super.tick(state, level, pos, random);
@@ -108,7 +110,7 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
 
     @Override
     protected boolean isSignalSource(BlockState state) {
-        return state.getValue(POWERED);
+        return true;
     }
 
     @Override
@@ -124,7 +126,7 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
 
     @Override
     protected boolean hasAnalogOutputSignal(BlockState state) {
-        return state.getValue(POWERED);
+        return true;
     }
 
     @Override
@@ -155,9 +157,9 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     public void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity) {
         level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get())
             .ifPresent(detector -> detector.updatePower(entity.getBlockCount()));
-        level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_CLIENTS);
+        level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
         level.updateNeighbourForOutputSignal(pos, this);
-        level.scheduleTick(pos, this, 3);
+        level.scheduleTick(pos, this, 20);
     }
 
     @Override

@@ -19,6 +19,10 @@ public class DetectorSlidingRailBlockEntity extends BlockEntity {
         super(type, pos, blockState);
     }
 
+    public void cleanPower() {
+        this.updatePower(0);
+    }
+
     public void updatePower(int blockCount) {
         if (MAX_PUSH_DEPTH <= 15) {
             this.power = blockCount;
