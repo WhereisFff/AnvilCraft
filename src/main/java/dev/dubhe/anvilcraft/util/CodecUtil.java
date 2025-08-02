@@ -29,8 +29,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Deque;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.function.Function;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CodecUtil {
@@ -146,7 +150,7 @@ public class CodecUtil {
 
     public static <T> StreamCodec<? super FriendlyByteBuf, T> nbtWrapped(Codec<T> codec) {
 
-        return new StreamCodec<FriendlyByteBuf, T>() {
+        return new StreamCodec<>() {
             @Override
             @ParametersAreNonnullByDefault
             @NotNull
@@ -185,6 +189,14 @@ public class CodecUtil {
 
     public static <B, F, S> StreamCodec<B, Pair<F, S>> createPairStreamCodec(StreamCodec<? super B, F> first, StreamCodec<? super B, S> second) {
         return StreamCodec.composite(first, Pair::getFirst, second, Pair::getSecond, Pair::new);
+    }
+
+    public static <T> Codec<LinkedList<T>> linkedListOf(Codec<T> codec) {
+        return dequeOf(codec, LinkedList::new);
+    }
+
+    public static <T, D extends Deque<T>> Codec<D> dequeOf(Codec<T> codec, Function<? super List<T>, ? extends D> dequeFac) {
+        return codec.listOf().xmap(dequeFac, List::copyOf);
     }
 
     public static final StreamCodec<ByteBuf, Vec3i> VEC3I_STREAM_CODEC = new StreamCodec<>() {
