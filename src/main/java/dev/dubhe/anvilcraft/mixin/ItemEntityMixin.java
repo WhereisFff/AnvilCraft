@@ -198,10 +198,10 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void anvilcraft$neutroniumTick(CallbackInfo ci) {
-        ItemEntity thiS = Util.cast(this);
+        ItemEntity thiz = Util.cast(this);
         ItemStack item = this.getItem();
         if (!item.is(ModItems.NEUTRONIUM_INGOT)) return;
-        if (item.onEntityItemUpdate(thiS)) {
+        if (item.onEntityItemUpdate(thiz)) {
             ci.cancel();
             return;
         }
@@ -266,7 +266,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         }
         item = this.getItem();
         if (!this.level().isClientSide && this.age >= this.lifespan) {
-            this.lifespan = Mth.clamp(this.lifespan + EventHooks.onItemExpire(thiS), 0, 32766);
+            this.lifespan = Mth.clamp(this.lifespan + EventHooks.onItemExpire(thiz), 0, 32766);
             if (this.age >= this.lifespan) {
                 this.discard();
             }
