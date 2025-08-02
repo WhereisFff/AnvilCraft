@@ -914,7 +914,7 @@
   "tooltip.anvilcraft.property.merciless": "Merciless: disable all enchantments except specific [Hold %s] and convert them into attack damage and mining efficiency",
   "tooltip.anvilcraft.property.merciless.curse": "All curses",
   "tooltip.anvilcraft.property.merciless.shifting": "Merciless: disable all enchantments except specific (%s) and convert them into attack damage and mining efficiency",
-  "tooltip.anvilcraft.property.multiphase": "Multiphase: press [%s] to switch phases",
+  "tooltip.anvilcraft.property.multiphase": "Multiphase: press [%s] to switch phases or merciless",
   "tooltip.anvilcraft.property.multiphase.name.0": "α",
   "tooltip.anvilcraft.property.multiphase.name.1": "β",
   "tooltip.anvilcraft.property.multiphase.name.2": "γ",
