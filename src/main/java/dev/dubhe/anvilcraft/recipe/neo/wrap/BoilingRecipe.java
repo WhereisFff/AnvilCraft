@@ -3,8 +3,10 @@ package dev.dubhe.anvilcraft.recipe.neo.wrap;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import lombok.Getter;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
@@ -16,19 +18,18 @@ import java.util.List;
 
 @Getter
 public class BoilingRecipe extends AbstractItemProcessRecipe<BoilingRecipe> {
-
     public BoilingRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results
     ) {
         super(
-            new Vec3(0.0, -0.0625, 0.0),
+            new Vec3(0.0, -1.0, 0.0),
             itemIngredients,
             new Vec3(0.0, -1.5, 0.0),
             results,
             new Vec3(0.0, -1.0, 0.0),
-            BlockStatePredicate.builder()
-                .of(Blocks.WATER_CAULDRON)
+            HasCauldronSimple
+                .fluid(ResourceLocation.withDefaultNamespace("water"))
                 .build(),
             BlockStatePredicate.builder()
                 .of(Blocks.CAMPFIRE)

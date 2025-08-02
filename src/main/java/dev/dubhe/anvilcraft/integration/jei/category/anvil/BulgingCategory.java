@@ -203,8 +203,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(
-            AnvilCraftJeiPlugin.BULGING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BULGING_TYPE.get()));
+//        registration.addRecipes(
+//            AnvilCraftJeiPlugin.BULGING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BULGING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

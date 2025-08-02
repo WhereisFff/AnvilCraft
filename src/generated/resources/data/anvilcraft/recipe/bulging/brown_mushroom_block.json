@@ -1,32 +1,19 @@
 {
   "type": "anvilcraft:bulging",
-  "cauldron": "minecraft:water_cauldron",
-  "consume_fluid": false,
-  "from_water": false,
+  "fluid": "minecraft:water",
   "ingredients": [
     {
-      "item": "minecraft:brown_mushroom"
+      "items": "minecraft:brown_mushroom"
     }
   ],
-  "produce_fluid": false,
   "results": [
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 1,
-        "id": "minecraft:brown_mushroom_block"
-      }
+      "id": "minecraft:brown_mushroom_block"
     },
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.1
-      },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:mushroom_stem"
-      }
+      "chance": 0.10000000149011612,
+      "id": "minecraft:mushroom_stem"
     }
-  ]
+  ],
+  "transform": "minecraft:water"
 }

@@ -5,7 +5,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.recipe.anvil.BulgingRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.BulgingRecipe;
 import dev.dubhe.anvilcraft.util.VanillaConstants;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -39,10 +39,10 @@ public class BulgingRecipeLoader {
         });
 
         BulgingRecipe.builder()
-            .cauldron(ModBlocks.CEMENT_CAULDRONS.get(Color.GRAY).get())
+            .cauldron(Blocks.WATER_CAULDRON)
+            .transform(ModBlocks.CEMENT_CAULDRONS.get(Color.GRAY).get())
             .requires(ModItems.LIME_POWDER, 4)
             .requires(ModBlocks.CINERITE)
-            .fromWater(true)
             .save(provider, AnvilCraft.of("bulging/cement_cauldron"));
 
         BulgingRecipe.builder()

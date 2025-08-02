@@ -30,15 +30,17 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
     public static final ResourceLocation EMPTY = ResourceLocation.withDefaultNamespace("empty");
     private final ResourceLocation fluid;
     private final int consume;
+    private final ResourceLocation transform;
 
-    public HasCauldron(Vec3 offset, ResourceLocation fluid, int consume) {
+    public HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, ResourceLocation transform) {
         super(offset, HasCauldron.ofFluid(fluid, consume));
         this.fluid = fluid;
         this.consume = consume;
+        this.transform = transform;
     }
 
     public static @NotNull HasCauldron empty(Vec3 offset) {
-        return new HasCauldron(offset, EMPTY, 0);
+        return new HasCauldron(offset, EMPTY, 0, EMPTY);
     }
 
     public static BlockStatePredicate ofFluid(@NotNull ResourceLocation fluid, int consume) {
@@ -72,7 +74,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState state = cache.getBlockState(blockPos);
         if (state.is(Blocks.CAULDRON)) {
-            Block block = getDefaultCauldron(fluid);
+            Block block = getDefaultCauldron(this.fluid);
             state = block.defaultBlockState();
         }
         IntegerProperty property = CauldronUtil.LEVEL_4;
@@ -85,7 +87,17 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         if (value == 0) {
             cache.setBlock(blockPos, Blocks.CAULDRON);
         }
-        cache.setBlock(blockPos, state.setValue(property, value));
+        state = state.setValue(property, value);
+        if (!this.transform.equals(this.fluid)) {
+            Block block = getDefaultCauldron(this.transform);
+            state = block.defaultBlockState();
+            property = CauldronUtil.LEVEL_4;
+            if (optionalValue.isEmpty()) {
+                property = CauldronUtil.LEVEL_3;
+            }
+            state = state.setValue(property, Math.min(Math.max(value, 0), property.max));
+        }
+        cache.setBlock(blockPos, state);
     }
 
     private static Block getDefaultCauldron(@NotNull ResourceLocation fluid) {
@@ -107,9 +119,11 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         public final MapCodec<HasCauldron> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Vec3.CODEC.fieldOf("offset").forGetter(HasCauldron::getOffset),
                 ResourceLocation.CODEC.optionalFieldOf("fluid", EMPTY).forGetter(HasCauldron::getFluid),
-                Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::getConsume)
+                Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::getConsume),
+                ResourceLocation.CODEC.optionalFieldOf("transform", EMPTY).forGetter(HasCauldron::getTransform)
             ).apply(instance, HasCauldron::new)
         );
+
         public final StreamCodec<RegistryFriendlyByteBuf, HasCauldron> mapCodec = StreamCodec.of(this::encode, this::decode);
 
         @Override
@@ -126,13 +140,15 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
             buf.writeVec3(hasCauldron.getOffset());
             buf.writeResourceLocation(hasCauldron.getFluid());
             buf.writeInt(hasCauldron.getConsume());
+            buf.writeResourceLocation(hasCauldron.getTransform());
         }
 
         public @NotNull HasCauldron decode(@NotNull RegistryFriendlyByteBuf buf) {
             return new HasCauldron(
                 buf.readVec3(),
                 buf.readResourceLocation(),
-                buf.readInt()
+                buf.readInt(),
+                buf.readResourceLocation()
             );
         }
     }

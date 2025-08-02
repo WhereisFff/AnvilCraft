@@ -1,0 +1,213 @@
+package dev.dubhe.anvilcraft.recipe.neo.wrap;
+
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
+import lombok.Getter;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+public class BulgingRecipe extends AbstractItemProcessRecipe<BulgingRecipe> {
+    private final HasCauldronSimple hasCauldron;
+
+    public BulgingRecipe(
+        List<ItemIngredientPredicate> itemIngredients,
+        List<ChanceItemStack> results,
+        HasCauldronSimple hasCauldron
+    ) {
+        super(
+            new Vec3(0.0, -1.0, 0.0),
+            itemIngredients,
+            new Vec3(0.0, -1.5, 0.0),
+            results,
+            new Vec3(0.0, -1.0, 0.0),
+            hasCauldron
+        );
+        this.hasCauldron = hasCauldron;
+    }
+
+    @Override
+    public @NotNull RecipeSerializer<BulgingRecipe> getSerializer() {
+        return ModRecipeTypes.BULGING_SERIALIZER.get();
+    }
+
+    @Override
+    public @NotNull RecipeType<BulgingRecipe> getType() {
+        return ModRecipeTypes.BULGING_TYPE.get();
+    }
+
+    public static @NotNull Builder builder() {
+        return new Builder();
+    }
+
+    public static class Serializer implements RecipeSerializer<BulgingRecipe> {
+        public static final MapCodec<BulgingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ItemIngredientPredicate.CODEC.listOf()
+                .fieldOf("ingredients")
+                .forGetter(BulgingRecipe::getItemIngredients),
+            ChanceItemStack.CODEC.listOf()
+                .fieldOf("results")
+                .forGetter(BulgingRecipe::getResults),
+            HasCauldronSimple.CODEC
+                .forGetter(BulgingRecipe::getHasCauldron)
+        ).apply(instance, BulgingRecipe::new));
+
+        public static final StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> STREAM_CODEC = StreamCodec.of(
+            Serializer::encode,
+            Serializer::decode
+        );
+
+        @Override
+        public @NotNull MapCodec<BulgingRecipe> codec() {
+            return Serializer.CODEC;
+        }
+
+        @Override
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> streamCodec() {
+            return Serializer.STREAM_CODEC;
+        }
+
+        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull BulgingRecipe recipe) {
+            AbstractSerializer.encodeIngredients(buf, recipe.getItemIngredients());
+            AbstractSerializer.encodeResults(buf, recipe.getResults());
+            HasCauldronSimple.STREAM_CODEC.encode(buf, recipe.getHasCauldron());
+        }
+
+        public static @NotNull BulgingRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
+            List<ItemIngredientPredicate> ingredients = AbstractSerializer.decodeIngredients(buf);
+            List<ChanceItemStack> results = AbstractSerializer.decodeResults(buf);
+            HasCauldronSimple hasCauldron = HasCauldronSimple.STREAM_CODEC.decode(buf);
+            return new BulgingRecipe(ingredients, results, hasCauldron);
+        }
+    }
+
+    public static class Builder extends AbstractRecipeBuilder<BulgingRecipe> {
+        private final List<ItemIngredientPredicate> ingredients = new ArrayList<>();
+        private final List<ChanceItemStack> results = new ArrayList<>();
+        private final HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
+
+        public Builder requires(ItemIngredientPredicate ingredient, int count) {
+            for (int i = 0; i < count; i++) {
+                this.ingredients.add(ingredient);
+            }
+            return this;
+        }
+
+        public Builder requires(ItemIngredientPredicate ingredient) {
+            return requires(ingredient, 1);
+        }
+
+        public Builder requires(ItemLike item, int count) {
+            return requires(ItemIngredientPredicate.Builder.item().of(item).build(), count);
+        }
+
+        public Builder requires(ItemLike pItem) {
+            return requires(pItem, 1);
+        }
+
+        public Builder requires(TagKey<Item> tag, int count) {
+            return requires(ItemIngredientPredicate.Builder.item().of(tag).build(), count);
+        }
+
+        public Builder requires(TagKey<Item> pTag) {
+            return requires(pTag, 1);
+        }
+
+        public Builder result(ItemStack stack, double chance) {
+            results.add(ChanceItemStack.of(stack, chance));
+            return this;
+        }
+
+        public Builder result(ItemStack stack) {
+            return this.result(stack, 1.0);
+        }
+
+        public Builder cauldron(ResourceLocation fluid) {
+            this.hasCauldron.fluid(fluid);
+            return this;
+        }
+
+        public Builder cauldron(Block cauldron) {
+            this.cauldron(cauldron2Fluid(cauldron));
+            return this;
+        }
+
+        public Builder transform(ResourceLocation transform) {
+            this.hasCauldron.transform(transform);
+            return this;
+        }
+
+        public Builder transform(Block transform) {
+            this.hasCauldron.transform(cauldron2Fluid(transform));
+            return this;
+        }
+
+        public Builder produceFluid(boolean produceFluid) {
+            if (!produceFluid) return this;
+            this.hasCauldron.consume(-1);
+            return this;
+        }
+
+        public Builder consumeFluid(boolean consumeFluid) {
+            if (!consumeFluid) return this;
+            this.hasCauldron.consume(1);
+            return this;
+        }
+
+        private static @NotNull ResourceLocation cauldron2Fluid(Block cauldron) {
+            ResourceLocation key = BuiltInRegistries.BLOCK.getKey(cauldron);
+            String namespace = key.getNamespace();
+            String path = key.getPath();
+            if (path.endsWith("_cauldron")) path = path.substring(0, path.length() - 9);
+            return ResourceLocation.fromNamespaceAndPath(namespace, path);
+        }
+
+        @Override
+        public @NotNull BulgingRecipe buildRecipe() {
+            return new BulgingRecipe(ingredients, results, hasCauldron.build());
+        }
+
+        @Override
+        public void validate(@NotNull ResourceLocation pId) {
+//            if (ingredients.isEmpty()) {
+//                throw new IllegalArgumentException("Recipe inputs must not be empty, RecipeId: " + pId);
+//            }
+//            if (results.isEmpty()) {
+//                throw new IllegalArgumentException("Recipe results must not be empty, RecipeId: " + pId);
+//            }
+        }
+
+        @Override
+        public @NotNull String getType() {
+            return "bulging";
+        }
+
+        @Override
+        public @NotNull Item getResult() {
+            if (this.results.isEmpty()) {
+                return Items.ANVIL;
+            }
+            return this.results.getFirst().getItem();
+        }
+    }
+}

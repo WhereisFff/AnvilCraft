@@ -1,24 +1,23 @@
 {
   "type": "anvilcraft:bulging",
-  "cauldron": "anvilcraft:gray_cement_cauldron",
-  "consume_fluid": false,
-  "from_water": true,
+  "fluid": "minecraft:water",
   "ingredients": [
     {
-      "item": "anvilcraft:lime_powder"
+      "items": "anvilcraft:lime_powder"
     },
     {
-      "item": "anvilcraft:lime_powder"
+      "items": "anvilcraft:lime_powder"
     },
     {
-      "item": "anvilcraft:lime_powder"
+      "items": "anvilcraft:lime_powder"
     },
     {
-      "item": "anvilcraft:lime_powder"
+      "items": "anvilcraft:lime_powder"
     },
     {
-      "item": "anvilcraft:cinerite"
+      "items": "anvilcraft:cinerite"
     }
   ],
-  "produce_fluid": false
+  "results": [],
+  "transform": "anvilcraft:gray_cement"
 }

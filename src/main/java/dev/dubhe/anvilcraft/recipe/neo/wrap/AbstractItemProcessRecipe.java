@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
@@ -45,6 +46,7 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
     protected final Vec3 outputOffset;
     protected final List<ChanceItemStack> results;
     protected final Vec3 blockOffset;
+    protected final HasCauldronSimple hasCauldron;
     protected final List<BlockStatePredicate> block;
 
     public AbstractItemProcessRecipe(
@@ -53,12 +55,13 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
         Vec3 outputOffset,
         List<ChanceItemStack> results,
         Vec3 blockOffset,
+        HasCauldronSimple hasCauldron,
         BlockStatePredicate... block
     ) {
         super(
             AbstractItemProcessRecipe.getIcon(results),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            AbstractItemProcessRecipe.getPredicates(blockOffset, block),
+            AbstractItemProcessRecipe.getPredicates(blockOffset, hasCauldron, block),
             AbstractItemProcessRecipe.getPredicates(inputOffset, itemIngredients),
             AbstractItemProcessRecipe.getOutcomes(outputOffset, results),
             0,
@@ -69,7 +72,19 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
         this.outputOffset = outputOffset;
         this.results = results;
         this.blockOffset = blockOffset;
+        this.hasCauldron = hasCauldron;
         this.block = List.of(block);
+    }
+
+    public AbstractItemProcessRecipe(
+        Vec3 inputOffset,
+        List<ItemIngredientPredicate> itemIngredients,
+        Vec3 outputOffset,
+        List<ChanceItemStack> results,
+        Vec3 blockOffset,
+        BlockStatePredicate... block
+    ) {
+        this(inputOffset, itemIngredients, outputOffset, results, blockOffset, null, block);
     }
 
     private static ItemStack getIcon(@NotNull List<ChanceItemStack> results) {
@@ -78,10 +93,16 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
 
     private static @NotNull List<IRecipePredicate<?>> getPredicates(
         Vec3 blockOffset,
+        HasCauldronSimple hasCauldron,
         BlockStatePredicate @NotNull ... blocks
     ) {
         List<IRecipePredicate<?>> predicates = new ArrayList<>();
-        for (int i = 0; i < blocks.length; i++) {
+        int i = 0;
+        if (hasCauldron != null) {
+            predicates.add(hasCauldron.toHasCauldron(blockOffset));
+            i += 1;
+        }
+        for (; i < blocks.length; i++) {
             BlockStatePredicate block = blocks[i];
             predicates.add(new HasBlock(blockOffset.subtract(0, i, 0), block));
         }
@@ -140,32 +161,50 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
             return this.streamCodec;
         }
 
-        public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull T recipe) {
-            buf.writeVarInt(recipe.getItemIngredients().size());
-            for (ItemIngredientPredicate itemIngredient : recipe.getItemIngredients()) {
+        public static void encodeIngredients(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<ItemIngredientPredicate> ingredients) {
+            buf.writeVarInt(ingredients.size());
+            for (ItemIngredientPredicate itemIngredient : ingredients) {
                 RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
                 DataResult<Tag> encode = ItemIngredientPredicate.CODEC.encode(itemIngredient, ops, ops.empty());
                 Tag tag = encode.getOrThrow();
                 buf.writeNbt(tag);
             }
-            buf.writeVarInt(recipe.results.size());
-            for (ChanceItemStack result : recipe.results) {
+        }
+
+        public static void encodeResults(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<ChanceItemStack> results) {
+            buf.writeVarInt(results.size());
+            for (ChanceItemStack result : results) {
                 ChanceItemStack.STREAM_CODEC.encode(buf, result);
             }
         }
 
-        public @NotNull T decode(@NotNull RegistryFriendlyByteBuf buf) {
+        public static @NotNull List<ItemIngredientPredicate> decodeIngredients(@NotNull RegistryFriendlyByteBuf buf) {
             int i = buf.readVarInt();
             List<ItemIngredientPredicate> ingredients = new ArrayList<>();
             for (; i > 0; i--) {
                 RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
                 ingredients.add(ItemIngredientPredicate.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst());
             }
+            return ingredients;
+        }
+
+        public static @NotNull List<ChanceItemStack> decodeResults(@NotNull RegistryFriendlyByteBuf buf) {
+            int i = buf.readVarInt();
             List<ChanceItemStack> results = new ArrayList<>();
-            i = buf.readVarInt();
             for (; i > 0; i--) {
                 results.add(ChanceItemStack.STREAM_CODEC.decode(buf));
             }
+            return results;
+        }
+
+        public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull T recipe) {
+            encodeIngredients(buf, recipe.getItemIngredients());
+            encodeResults(buf, recipe.getResults());
+        }
+
+        public @NotNull T decode(@NotNull RegistryFriendlyByteBuf buf) {
+            List<ItemIngredientPredicate> ingredients = decodeIngredients(buf);
+            List<ChanceItemStack> results = decodeResults(buf);
             return this.of(ingredients, results);
         }
     }
