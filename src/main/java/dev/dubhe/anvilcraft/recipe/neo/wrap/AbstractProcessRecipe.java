@@ -40,27 +40,29 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
     protected final List<ItemIngredientPredicate> itemIngredients;
     protected final Vec3 outputOffset;
     protected final List<ChanceItemStack> results;
-    protected final Vec3 blockOffset;
+    protected final Vec3 cauldronOffset;
     protected final HasCauldronSimple hasCauldron;
+    protected final Vec3 blockOffset;
     protected final List<BlockStatePredicate> blocks;
-    protected final List<ChanceBlockState> setBlocks;
+    protected final List<ChanceBlockState> resultBlocks;
 
     public AbstractProcessRecipe(
         Vec3 inputOffset,
         List<ItemIngredientPredicate> itemIngredients,
         Vec3 outputOffset,
         List<ChanceItemStack> results,
-        Vec3 blockOffset,
+        Vec3 cauldronOffset,
         HasCauldronSimple hasCauldron,
-        List<ChanceBlockState> setBlocks,
+        Vec3 blockOffset,
+        List<ChanceBlockState> resultBlocks,
         List<BlockStatePredicate> blocks
     ) {
         super(
             AbstractProcessRecipe.getIcon(results),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            AbstractProcessRecipe.getPredicates(blockOffset, hasCauldron, blocks),
+            AbstractProcessRecipe.getPredicates(cauldronOffset, hasCauldron, blockOffset, blocks),
             AbstractProcessRecipe.getPredicates(inputOffset, itemIngredients),
-            AbstractProcessRecipe.getOutcomes(outputOffset, results, setBlocks),
+            AbstractProcessRecipe.getOutcomes(outputOffset, results, resultBlocks),
             0,
             false
         );
@@ -68,10 +70,11 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         this.itemIngredients = itemIngredients;
         this.outputOffset = outputOffset;
         this.results = results;
-        this.blockOffset = blockOffset;
+        this.cauldronOffset = cauldronOffset;
         this.hasCauldron = hasCauldron;
+        this.blockOffset = blockOffset;
         this.blocks = blocks;
-        this.setBlocks = setBlocks;
+        this.resultBlocks = resultBlocks;
     }
 
     public AbstractProcessRecipe(
@@ -83,7 +86,17 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         HasCauldronSimple hasCauldron,
         BlockStatePredicate... blocks
     ) {
-        this(inputOffset, itemIngredients, outputOffset, results, blockOffset, hasCauldron, null, List.of(blocks));
+        this(
+            inputOffset,
+            itemIngredients,
+            outputOffset,
+            results,
+            blockOffset,
+            hasCauldron,
+            blockOffset.subtract(0, 1, 0),
+            null,
+            List.of(blocks)
+        );
     }
 
     public AbstractProcessRecipe(
@@ -102,18 +115,17 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
     }
 
     private static @NotNull List<IRecipePredicate<?>> getPredicates(
-        Vec3 blockOffset,
+        Vec3 cauldronOffset,
         HasCauldronSimple hasCauldron,
+        Vec3 blockOffset,
         List<BlockStatePredicate> blocks
     ) {
         List<IRecipePredicate<?>> predicates = new ArrayList<>();
-        int i = 0;
         if (hasCauldron != null) {
-            predicates.add(hasCauldron.toHasCauldron(blockOffset));
-            i += 1;
+            predicates.add(hasCauldron.toHasCauldron(cauldronOffset));
         }
         if (blocks != null) {
-            for (; i < blocks.size(); i++) {
+            for (int i = 0; i < blocks.size(); i++) {
                 BlockStatePredicate block = blocks.get(i);
                 predicates.add(new HasBlock(blockOffset.subtract(0, i, 0), block));
             }

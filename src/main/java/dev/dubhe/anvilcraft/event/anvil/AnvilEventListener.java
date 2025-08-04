@@ -195,17 +195,17 @@ public class AnvilEventListener {
     }
 
     private static void handleSqueezingRecipe(Level level, final BlockPos pos, BlockState state) {
-        BlockPos belowPos = pos.below();
-        BlockState belowState = level.getBlockState(belowPos);
-        if (!(belowState.getBlock() instanceof AbstractCauldronBlock)) return;
-        SqueezingRecipe.Input input = new SqueezingRecipe.Input(state.getBlock(), belowState);
-        level.getRecipeManager()
-            .getRecipeFor(ModRecipeTypes.SQUEEZING_TYPE.get(), input, level)
-            .map(RecipeHolder::value)
-            .ifPresent(recipe -> {
-                CauldronUtil.fill(level, belowPos, recipe.getCauldron(), 1, false);
-                level.setBlockAndUpdate(pos, recipe.resultBlock.defaultBlockState());
-            });
+//        BlockPos belowPos = pos.below();
+//        BlockState belowState = level.getBlockState(belowPos);
+//        if (!(belowState.getBlock() instanceof AbstractCauldronBlock)) return;
+//        SqueezingRecipe.Input input = new SqueezingRecipe.Input(state.getBlock(), belowState);
+//        level.getRecipeManager()
+//            .getRecipeFor(ModRecipeTypes.SQUEEZING_TYPE.get(), input, level)
+//            .map(RecipeHolder::value)
+//            .ifPresent(recipe -> {
+//                CauldronUtil.fill(level, belowPos, recipe.getCauldron(), 1, false);
+//                level.setBlockAndUpdate(pos, recipe.resultBlock.defaultBlockState());
+//            });
     }
 
     private static void brokeBlock(@NotNull Level level, BlockPos pos, AnvilFallOnLandEvent event) {

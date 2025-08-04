@@ -7,9 +7,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
-import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
-import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
@@ -20,10 +18,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
@@ -33,21 +29,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
+public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
     private final HasCauldronSimple hasCauldron;
 
-    public BulgingRecipe(
-        List<ItemIngredientPredicate> itemIngredients,
-        List<ChanceItemStack> results,
+    public SqueezingRecipe(
+        List<BlockStatePredicate> ingredients,
+        List<ChanceBlockState> results,
         HasCauldronSimple hasCauldron
     ) {
         super(
             new Vec3(0.0, -1.0, 0.0),
-            itemIngredients,
+            List.of(),
             new Vec3(0.0, -1.5, 0.0),
-            results,
+            List.of(),
+            new Vec3(0.0, -2.0, 0.0),
+            hasCauldron,
             new Vec3(0.0, -1.0, 0.0),
-            hasCauldron
+            results,
+            ingredients
         );
         this.hasCauldron = hasCauldron;
     }
@@ -63,111 +62,92 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<BulgingRecipe> getSerializer() {
-        return ModRecipeTypes.BULGING_SERIALIZER.get();
+    public @NotNull RecipeSerializer<SqueezingRecipe> getSerializer() {
+        return ModRecipeTypes.SQUEEZING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<BulgingRecipe> getType() {
-        return ModRecipeTypes.BULGING_TYPE.get();
+    public @NotNull RecipeType<SqueezingRecipe> getType() {
+        return ModRecipeTypes.SQUEEZING_TYPE.get();
     }
 
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
-    public static class Serializer implements RecipeSerializer<BulgingRecipe> {
-        public static final MapCodec<BulgingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            ItemIngredientPredicate.CODEC.listOf()
+    public static class Serializer implements RecipeSerializer<SqueezingRecipe> {
+        public static final MapCodec<SqueezingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            BlockStatePredicate.CODEC
+                .listOf()
                 .fieldOf("ingredients")
-                .forGetter(BulgingRecipe::getItemIngredients),
-            ChanceItemStack.CODEC.listOf()
+                .forGetter(SqueezingRecipe::getBlocks),
+            ChanceBlockState.CODEC
+                .codec()
+                .listOf()
                 .fieldOf("results")
-                .forGetter(BulgingRecipe::getResults),
+                .forGetter(SqueezingRecipe::getResultBlocks),
             HasCauldronSimple.CODEC
-                .forGetter(BulgingRecipe::getHasCauldron)
-        ).apply(instance, BulgingRecipe::new));
+                .forGetter(SqueezingRecipe::getHasCauldron)
+        ).apply(instance, SqueezingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> STREAM_CODEC = StreamCodec.of(
+        public static final StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> STREAM_CODEC = StreamCodec.of(
             Serializer::encode,
             Serializer::decode
         );
 
         @Override
-        public @NotNull MapCodec<BulgingRecipe> codec() {
+        public @NotNull MapCodec<SqueezingRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> streamCodec() {
+        public @NotNull StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
 
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull BulgingRecipe recipe) {
-            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
-            WrapUtils.encodeResults(buf, recipe.getResults());
+        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SqueezingRecipe recipe) {
+            WrapUtils.encodeBlockIngredients(buf, recipe.getBlocks());
+            WrapUtils.encodeBlockResults(buf, recipe.getResultBlocks());
             HasCauldronSimple.STREAM_CODEC.encode(buf, recipe.getHasCauldron());
         }
 
-        public static @NotNull BulgingRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<ItemIngredientPredicate> ingredients = WrapUtils.decodeIngredients(buf);
-            List<ChanceItemStack> results = WrapUtils.decodeResults(buf);
+        public static @NotNull SqueezingRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
+            List<BlockStatePredicate> ingredients = WrapUtils.decodeBlockIngredients(buf);
+            List<ChanceBlockState> results = WrapUtils.decodeBlockResults(buf);
             HasCauldronSimple hasCauldron = HasCauldronSimple.STREAM_CODEC.decode(buf);
-            return new BulgingRecipe(ingredients, results, hasCauldron);
+            return new SqueezingRecipe(ingredients, results, hasCauldron);
         }
     }
 
-    public static class Builder extends AbstractRecipeBuilder<BulgingRecipe> {
-        private final List<ItemIngredientPredicate> ingredients = new ArrayList<>();
-        private final List<ChanceItemStack> results = new ArrayList<>();
+    public static class Builder extends AbstractRecipeBuilder<SqueezingRecipe> {
+        private final List<BlockStatePredicate> ingredients = new ArrayList<>();
+        private final List<ChanceBlockState> results = new ArrayList<>();
         private final HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
 
-        public Builder requires(ItemIngredientPredicate ingredient) {
+        public Builder requires(BlockStatePredicate ingredient) {
             this.ingredients.add(ingredient);
             return this;
         }
 
-        public Builder requires(ItemLike item, int count) {
-            return requires(ItemIngredientPredicate.Builder.item().of(item).withCount(count).build());
+        public Builder requires(Block ingredient) {
+            return this.requires(BlockStatePredicate.builder().of(ingredient).build());
         }
 
-        public Builder requires(ItemLike pItem) {
-            return requires(pItem, 1);
+        public Builder requires(TagKey<Block> ingredient) {
+            return this.requires(BlockStatePredicate.builder().of(ingredient).build());
         }
 
-        public Builder requires(TagKey<Item> tag, int count) {
-            return requires(ItemIngredientPredicate.Builder.item().of(tag).withCount(count).build());
-        }
-
-        public Builder requires(TagKey<Item> pTag) {
-            return requires(pTag, 1);
-        }
-
-        public Builder result(ItemStack stack, double chance) {
-            results.add(ChanceItemStack.of(stack, chance));
+        public Builder result(ChanceBlockState result) {
+            this.results.add(result);
             return this;
         }
 
-        public Builder result(ItemStack stack) {
-            return this.result(stack, 1.0);
+        public Builder result(@NotNull Block result, double chance) {
+            return this.result(new ChanceBlockState(result.defaultBlockState(), chance));
         }
 
-        public Builder result(@NotNull ItemLike like, double chance, int count) {
-            ItemStack stack = like.asItem().getDefaultInstance();
-            stack.setCount(count);
-            return this.result(stack, 1.0);
-        }
-
-        public Builder result(@NotNull ItemLike like, double chance) {
-            return this.result(like, chance, 1);
-        }
-
-        public Builder result(@NotNull ItemLike like, int count) {
-            return this.result(like, 1.0, count);
-        }
-
-        public Builder result(@NotNull ItemLike like) {
-            return this.result(like, 1);
+        public Builder result(Block result) {
+            return this.result(result, 1.0);
         }
 
         public Builder cauldron(ResourceLocation fluid) {
@@ -211,8 +191,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         }
 
         @Override
-        public @NotNull BulgingRecipe buildRecipe() {
-            return new BulgingRecipe(ingredients, results, hasCauldron.build());
+        public @NotNull SqueezingRecipe buildRecipe() {
+            return new SqueezingRecipe(ingredients, results, hasCauldron.build());
         }
 
         @Override
@@ -226,10 +206,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
 
         @Override
         public @NotNull Item getResult() {
-            if (this.results.isEmpty()) {
-                return Items.ANVIL;
-            }
-            return this.results.getFirst().getItem();
+            return WrapUtils.getItem(this.results);
         }
     }
 }

@@ -144,4 +144,40 @@ public class WrapUtils {
         }
         return results;
     }
+
+    public static void encodeBlockIngredients(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<BlockStatePredicate> ingredients) {
+        buf.writeVarInt(ingredients.size());
+        for (BlockStatePredicate itemIngredient : ingredients) {
+            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
+            DataResult<Tag> encode = BlockStatePredicate.CODEC.encode(itemIngredient, ops, ops.empty());
+            Tag tag = encode.getOrThrow();
+            buf.writeNbt(tag);
+        }
+    }
+
+    public static void encodeBlockResults(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<ChanceBlockState> results) {
+        buf.writeVarInt(results.size());
+        for (ChanceBlockState result : results) {
+            ChanceBlockState.STREAM_CODEC.encode(buf, result);
+        }
+    }
+
+    public static @NotNull List<BlockStatePredicate> decodeBlockIngredients(@NotNull RegistryFriendlyByteBuf buf) {
+        int i = buf.readVarInt();
+        List<BlockStatePredicate> ingredients = new ArrayList<>();
+        for (; i > 0; i--) {
+            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
+            ingredients.add(BlockStatePredicate.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst());
+        }
+        return ingredients;
+    }
+
+    public static @NotNull List<ChanceBlockState> decodeBlockResults(@NotNull RegistryFriendlyByteBuf buf) {
+        int i = buf.readVarInt();
+        List<ChanceBlockState> results = new ArrayList<>();
+        for (; i > 0; i--) {
+            results.add(ChanceBlockState.STREAM_CODEC.decode(buf));
+        }
+        return results;
+    }
 }
