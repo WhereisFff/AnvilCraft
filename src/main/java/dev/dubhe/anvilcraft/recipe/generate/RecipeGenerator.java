@@ -54,15 +54,15 @@ public class RecipeGenerator {
         RecipeType<?> recipeType,
         RecipeHolder<?> recipeHolder
     ) {
-        if (recipeType != RecipeType.SMOKING && recipeType != RecipeType.CRAFTING) return Optional.empty();
-        if (recipeType == RecipeType.SMOKING) {
-            SmokingRecipe recipe = (SmokingRecipe) recipeHolder.value();
-            CookingRecipe newRecipe = CookingRecipe.builder()
-                .requires(recipe.ingredient)
-                .result(recipe.result)
-                .buildRecipe();
-            return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
-        }
+//        if (recipeType != RecipeType.SMOKING && recipeType != RecipeType.CRAFTING) return Optional.empty();
+//        if (recipeType == RecipeType.SMOKING) {
+//            SmokingRecipe recipe = (SmokingRecipe) recipeHolder.value();
+//            CookingRecipe newRecipe = CookingRecipe.builder()
+//                .requires(recipe.ingredient)
+//                .result(recipe.result)
+//                .buildRecipe();
+//            return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
+//        }
 //        if (recipeType == RecipeType.BLASTING) {
 //            BlastingRecipe recipe = (BlastingRecipe) recipeHolder.value();
 //            AbstractItemProcessBuilder<SuperHeatingRecipe> builder =
@@ -94,40 +94,40 @@ public class RecipeGenerator {
 //                .buildRecipe();
 //            return Optional.of(new RecipeHolder<>(newId, newRecipe));
 //        }
-        if (recipeType == RecipeType.CRAFTING) {
-            CraftingRecipe recipe = (CraftingRecipe) recipeHolder.value();
-            if (recipe instanceof ShapedRecipe shapedRecipe) {
-                ShapedRecipePattern pattern = shapedRecipe.pattern;
-                if (pattern.height() == pattern.width()
-                    && pattern.height() != 1
-                    && RecipeUtil.allIngredientEquals(pattern.ingredients())
-                ) {
-                    ItemCompressRecipe newRecipe = ItemCompressRecipe.builder()
-                        .result(shapedRecipe.result)
-                        .requires(pattern.ingredients().getFirst(), pattern.height() * pattern.height())
-                        .buildRecipe();
-                    return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
-                }
-            } else {
-                if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-                    NonNullList<Ingredient> ingredients = shapelessRecipe.getIngredients();
-                    if (ingredients.size() == 1) {
-                        UnpackRecipe newRecipe = UnpackRecipe.builder()
-                            .result(shapelessRecipe.result)
-                            .requires(ingredients.getFirst())
-                            .buildRecipe();
-                        return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
-                    }
-                    if (RecipeUtil.allIngredientEquals(ingredients)) {
-                        ItemCompressRecipe newRecipe = ItemCompressRecipe.builder()
-                            .result(shapelessRecipe.result)
-                            .requires(ingredients.getFirst(), ingredients.size())
-                            .buildRecipe();
-                        return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
-                    }
-                }
-            }
-        }
+//        if (recipeType == RecipeType.CRAFTING) {
+//            CraftingRecipe recipe = (CraftingRecipe) recipeHolder.value();
+//            if (recipe instanceof ShapedRecipe shapedRecipe) {
+//                ShapedRecipePattern pattern = shapedRecipe.pattern;
+//                if (pattern.height() == pattern.width()
+//                    && pattern.height() != 1
+//                    && RecipeUtil.allIngredientEquals(pattern.ingredients())
+//                ) {
+//                    ItemCompressRecipe newRecipe = ItemCompressRecipe.builder()
+//                        .result(shapedRecipe.result)
+//                        .requires(pattern.ingredients().getFirst(), pattern.height() * pattern.height())
+//                        .buildRecipe();
+//                    return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
+//                }
+//            } else {
+//                if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+//                    NonNullList<Ingredient> ingredients = shapelessRecipe.getIngredients();
+//                    if (ingredients.size() == 1) {
+//                        UnpackRecipe newRecipe = UnpackRecipe.builder()
+//                            .result(shapelessRecipe.result)
+//                            .requires(ingredients.getFirst())
+//                            .buildRecipe();
+//                        return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
+//                    }
+//                    if (RecipeUtil.allIngredientEquals(ingredients)) {
+//                        ItemCompressRecipe newRecipe = ItemCompressRecipe.builder()
+//                            .result(shapelessRecipe.result)
+//                            .requires(ingredients.getFirst(), ingredients.size())
+//                            .buildRecipe();
+//                        return Optional.of(new RecipeHolder<>(generateRecipeId(recipeType, recipeHolder), newRecipe));
+//                    }
+//                }
+//            }
+//        }
         return Optional.empty();
     }
 }

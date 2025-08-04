@@ -8,13 +8,13 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class InWorldRecipeManager {
-    public final Map<IRecipeTrigger, Set<InWorldRecipe>> recipes = Collections.synchronizedMap(new HashMap<>());
+    public final Map<IRecipeTrigger, Set<InWorldRecipe>> recipes = new ConcurrentHashMap<>();
 
     public InWorldRecipeManager() {
         InWorldRecipe recipe = InWorldRecipeBuilder
@@ -27,11 +27,11 @@ public class InWorldRecipeManager {
     }
 
     public void register(@NotNull InWorldRecipe recipe) {
-        Set<InWorldRecipe> recipeList = this.recipes.computeIfAbsent(
+        Set<InWorldRecipe> recipeSet = this.recipes.computeIfAbsent(
             recipe.getTrigger(),
             k -> Collections.synchronizedSet(new TreeSet<>())
         );
-        recipeList.add(recipe);
+        recipeSet.add(recipe);
     }
 
     public void trigger(IRecipeTrigger trigger, @NotNull InWorldRecipeContext ctx) {

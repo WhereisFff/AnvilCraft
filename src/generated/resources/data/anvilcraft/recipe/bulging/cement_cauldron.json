@@ -3,15 +3,7 @@
   "fluid": "minecraft:water",
   "ingredients": [
     {
-      "items": "anvilcraft:lime_powder"
-    },
-    {
-      "items": "anvilcraft:lime_powder"
-    },
-    {
-      "items": "anvilcraft:lime_powder"
-    },
-    {
+      "count": 4,
       "items": "anvilcraft:lime_powder"
     },
     {

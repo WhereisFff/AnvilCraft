@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.event;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeManager;
-import dev.dubhe.anvilcraft.util.injection.IRecipeManager;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -38,6 +37,6 @@ public class ResourceEventListener {
             if (!(value instanceof InWorldRecipe recipe)) continue;
             manager1.register(recipe);
         }
-        ((IRecipeManager) manager).anc$setInWorldRecipeManager(manager1);
+        manager.anc$setInWorldRecipeManager(manager1);
     }
 }

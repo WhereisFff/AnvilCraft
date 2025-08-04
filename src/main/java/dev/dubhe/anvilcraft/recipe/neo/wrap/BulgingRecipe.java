@@ -4,10 +4,12 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import lombok.Getter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -19,6 +21,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +47,16 @@ public class BulgingRecipe extends AbstractItemProcessRecipe<BulgingRecipe> {
             hasCauldron
         );
         this.hasCauldron = hasCauldron;
+    }
+
+    @Override
+    public boolean matches(@NotNull InWorldRecipeContext context, @NotNull Level level) {
+        return super.matches(context, level);
+    }
+
+    @Override
+    public @NotNull ItemStack assemble(@NotNull InWorldRecipeContext context, HolderLookup.@NotNull Provider provider) {
+        return super.assemble(context, provider);
     }
 
     @Override
@@ -106,19 +119,13 @@ public class BulgingRecipe extends AbstractItemProcessRecipe<BulgingRecipe> {
         private final List<ChanceItemStack> results = new ArrayList<>();
         private final HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
 
-        public Builder requires(ItemIngredientPredicate ingredient, int count) {
-            for (int i = 0; i < count; i++) {
-                this.ingredients.add(ingredient);
-            }
+        public Builder requires(ItemIngredientPredicate ingredient) {
+            this.ingredients.add(ingredient);
             return this;
         }
 
-        public Builder requires(ItemIngredientPredicate ingredient) {
-            return requires(ingredient, 1);
-        }
-
         public Builder requires(ItemLike item, int count) {
-            return requires(ItemIngredientPredicate.Builder.item().of(item).build(), count);
+            return requires(ItemIngredientPredicate.Builder.item().of(item).withCount(count).build());
         }
 
         public Builder requires(ItemLike pItem) {
@@ -126,7 +133,7 @@ public class BulgingRecipe extends AbstractItemProcessRecipe<BulgingRecipe> {
         }
 
         public Builder requires(TagKey<Item> tag, int count) {
-            return requires(ItemIngredientPredicate.Builder.item().of(tag).build(), count);
+            return requires(ItemIngredientPredicate.Builder.item().of(tag).withCount(count).build());
         }
 
         public Builder requires(TagKey<Item> pTag) {
@@ -189,12 +196,6 @@ public class BulgingRecipe extends AbstractItemProcessRecipe<BulgingRecipe> {
 
         @Override
         public void validate(@NotNull ResourceLocation pId) {
-//            if (ingredients.isEmpty()) {
-//                throw new IllegalArgumentException("Recipe inputs must not be empty, RecipeId: " + pId);
-//            }
-//            if (results.isEmpty()) {
-//                throw new IllegalArgumentException("Recipe results must not be empty, RecipeId: " + pId);
-//            }
         }
 
         @Override

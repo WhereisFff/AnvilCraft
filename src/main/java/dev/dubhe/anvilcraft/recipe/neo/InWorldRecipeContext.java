@@ -10,10 +10,10 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
 public class InWorldRecipeContext implements RecipeInput {
@@ -23,8 +23,8 @@ public class InWorldRecipeContext implements RecipeInput {
     private final Vec3 pos;
     @Getter
     private final Entity entity;
-    private final Map<ResourceLocation, Object> data = Collections.synchronizedMap(new HashMap<>());
-    private final Map<ResourceLocation, Consumer<InWorldRecipeContext>> acceptors = Collections.synchronizedMap(new HashMap<>());
+    private final Map<ResourceLocation, Object> data = new ConcurrentHashMap<>();
+    private final Map<ResourceLocation, Consumer<InWorldRecipeContext>> acceptors = new ConcurrentHashMap<>();
     @Getter
     private final List<IRecipePredicate<?>> stack = Collections.synchronizedList(new LinkedList<>());
 

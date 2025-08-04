@@ -8,6 +8,8 @@ public interface IPrioritized extends Comparable<IPrioritized> {
     }
 
     default int compareTo(@NotNull IPrioritized o) {
-        return Integer.compare(this.getPriority(), o.getPriority());
+        if (this.equals(o)) return 0;
+        int compared = Integer.compare(this.getPriority(), o.getPriority());
+        return compared == 0 ? 1 : compared;
     }
 }

@@ -106,7 +106,7 @@ public class AnvilEventListener {
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
         FallingBlockEntity entity = event.getEntity();
-        InWorldRecipeManager manager = ((IRecipeManager) level.getRecipeManager()).anc$getInWorldRecipeManager();
+        InWorldRecipeManager manager = level.getRecipeManager().anc$getInWorldRecipeManager();
         InWorldRecipeContext context = new InWorldRecipeContext(level, pos.getCenter(), entity);
         manager.trigger(ModRecipeTriggers.ON_ANVIL_FALL_ON.get(), context);
         boolean damageAnvil = context.get(DamageAnvil.DAMAGE_ANVIL);
@@ -124,10 +124,10 @@ public class AnvilEventListener {
     }
 
     private static void handleBlockCompressRecipe(Level level, final BlockPos pos) {
-        List<Block> inputs = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            inputs.add(level.getBlockState(pos.below(i)).getBlock());
-        }
+//        List<Block> inputs = new ArrayList<>();
+//        for (int i = 0; i < 9; i++) {
+//            inputs.add(level.getBlockState(pos.below(i)).getBlock());
+//        }
 //        level.getRecipeManager()
 //            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
 //            .ifPresent(recipe -> {
@@ -141,10 +141,10 @@ public class AnvilEventListener {
     }
 
     private static void handleBlockSmearRecipe(Level level, final BlockPos pos) {
-        List<Block> inputs = new ArrayList<>();
-        for (int i = 0; i < 9; i++) {
-            inputs.add(level.getBlockState(pos.below(i)).getBlock());
-        }
+//        List<Block> inputs = new ArrayList<>();
+//        for (int i = 0; i < 9; i++) {
+//            inputs.add(level.getBlockState(pos.below(i)).getBlock());
+//        }
 //        level.getRecipeManager()
 //            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
 //            .ifPresent(recipe -> {

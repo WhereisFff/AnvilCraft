@@ -78,26 +78,33 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
             state = block.defaultBlockState();
         }
         IntegerProperty property = CauldronUtil.LEVEL_4;
-        Optional<Integer> optionalValue = state.getOptionalValue(CauldronUtil.LEVEL_4);
+        Optional<Integer> optionalValue = state.getOptionalValue(property);
         if (optionalValue.isEmpty()) {
             property = CauldronUtil.LEVEL_3;
-            optionalValue = state.getOptionalValue(CauldronUtil.LEVEL_3);
+            optionalValue = state.getOptionalValue(property);
         }
-        int value = Math.min(Math.max(optionalValue.orElse(0) - this.consume, 0), property.max);
-        if (value == 0) {
-            cache.setBlock(blockPos, Blocks.CAULDRON);
+        int value = Integer.MAX_VALUE;
+        if (optionalValue.isPresent()) {
+            value = Math.min(Math.max(optionalValue.orElse(0) - this.consume, 0), property.max);
+            if (value == 0) {
+                cache.setBlock(blockPos, Blocks.CAULDRON);
+            }
+            state = state.setValue(property, value);
         }
-        state = state.setValue(property, value);
         if (!this.transform.equals(this.fluid)) {
             Block block = getDefaultCauldron(this.transform);
             state = block.defaultBlockState();
             property = CauldronUtil.LEVEL_4;
+            optionalValue = state.getOptionalValue(property);
             if (optionalValue.isEmpty()) {
                 property = CauldronUtil.LEVEL_3;
             }
-            state = state.setValue(property, Math.min(Math.max(value, 0), property.max));
+            if (optionalValue.isPresent()) {
+                state = state.setValue(property, Math.min(Math.max(value, 0), property.max));
+            }
         }
         cache.setBlock(blockPos, state);
+        context.putAcceptor(BlockCache.BLOCK_CACHE.location(), BlockCache.DEFAULT_ACCEPTOR);
     }
 
     private static Block getDefaultCauldron(@NotNull ResourceLocation fluid) {
