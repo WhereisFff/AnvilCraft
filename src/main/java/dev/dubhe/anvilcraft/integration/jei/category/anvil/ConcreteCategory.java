@@ -135,7 +135,7 @@ public class ConcreteCategory implements IRecipeCategory<ColoredConcreteRecipe> 
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(AnvilCraftJeiPlugin.COLORED_CONCRETE, ColoredConcreteRecipe.getAllRecipes());
+//        registration.addRecipes(AnvilCraftJeiPlugin.COLORED_CONCRETE, ColoredConcreteRecipe.getAllRecipes());
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
