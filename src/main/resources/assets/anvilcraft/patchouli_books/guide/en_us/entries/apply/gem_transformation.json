@@ -1,5 +1,5 @@
 {
-  "name": "宝石转化",
+  "name": "熔融宝石与宝石转化",
   "category": "anvilcraft:technology_application",
   "icon": "anvilcraft:melt_gem_bucket",
   "sortnum": 6001,
@@ -20,6 +20,11 @@
       "type": "patchouli:spotlight",
       "item": "anvilcraft:melt_gem_bucket",
       "text": "将一块$(item)绿宝石块$()(四种宝石都可以，但绿宝石最廉价)丢在$(item)加热器$()上的锅中使用铁砧加工，它会被融化为一锅$(item)熔融宝石$()。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "流体交互",
+      "text": "$(li)熔融宝石流动部分与水接触时随机变为【闪长岩、安山岩、花岗岩】中的一种$(li)熔融宝石源头与水接触时变为陶瓦$(li)熔融宝石流体落到水上时，水变为石头"
     },
     {
       "type": "patchouli:spotlight",
