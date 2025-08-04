@@ -4,9 +4,8 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.StampingRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.ItemCrushRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.StampingRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ItemStack;
@@ -30,9 +29,9 @@ public class ItemCrushRecipeLoader {
         StampingRecipe.builder()
             .requires(ModItems.GEODE)
             .result(new ItemStack(Items.AMETHYST_SHARD, 4))
-            .result(ChanceItemStack.of(new ItemStack(ModItems.TOPAZ.get())).withChance(0.25f))
-            .result(ChanceItemStack.of(new ItemStack(ModItems.SAPPHIRE.get())).withChance(0.25f))
-            .result(ChanceItemStack.of(new ItemStack(ModItems.RUBY.get())).withChance(0.25f))
+            .result(ModItems.TOPAZ.get(), 0.25)
+            .result(ModItems.SAPPHIRE.get(), 0.25)
+            .result(ModItems.RUBY.get(), 0.25)
             .save(provider, AnvilCraft.of("stamping/geode_gems"));
         StampingRecipe.builder()
             .requires(Items.COCOA_BEANS)
@@ -41,10 +40,10 @@ public class ItemCrushRecipeLoader {
             .save(provider);
         StampingRecipe.builder()
             .requires(ModItems.PRISMARINE_CLUSTER)
-            .result(new ItemStack(Items.PRISMARINE_CRYSTALS, 2))
-            .result(new ItemStack(Items.PRISMARINE_SHARD))
-            .result(ChanceItemStack.of(new ItemStack(Items.PRISMARINE_CRYSTALS)).withChance(0.5f))
-            .result(ChanceItemStack.of(new ItemStack(ModItems.PRISMARINE_BLADE.asItem())).withChance(0.15f))
+            .result(Items.PRISMARINE_CRYSTALS, 2)
+            .result(Items.PRISMARINE_SHARD)
+            .result(Items.PRISMARINE_CRYSTALS, 0.5)
+            .result(ModItems.PRISMARINE_BLADE, 0.15)
             .save(provider);
 
         ItemCrushRecipe.builder()

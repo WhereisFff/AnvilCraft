@@ -14,6 +14,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -46,6 +47,11 @@ public class StampingUniqueItemsRecipe extends StampingRecipe {
         }
 
         return true;
+    }
+
+    @Override
+    public RecipeType<?> getType() {
+        return ModRecipeTypes.STAMPING_UNIQUE_ITEMS_TYPE.get();
     }
 
     @Override

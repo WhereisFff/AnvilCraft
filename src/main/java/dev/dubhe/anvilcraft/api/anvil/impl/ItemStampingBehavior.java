@@ -17,11 +17,12 @@ public class ItemStampingBehavior implements IAnvilBehavior {
         float fallDistance,
         AnvilFallOnLandEvent event
     ) {
-        return AnvilUtil.itemProcess(
-            ModRecipeTypes.STAMPING_TYPE.get(),
-            level,
-            hitBlockPos,
-            hitBlockPos.getCenter().add(0, 0.25, 0)
-        );
+//        return AnvilUtil.itemProcess(
+//            ModRecipeTypes.STAMPING_TYPE.get(),
+//            level,
+//            hitBlockPos,
+//            hitBlockPos.getCenter().add(0, 0.25, 0)
+//        );
+        return false;
     }
 }

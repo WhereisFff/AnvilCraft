@@ -2,45 +2,24 @@
   "type": "anvilcraft:stamping",
   "ingredients": [
     {
-      "item": "anvilcraft:prismarine_cluster"
+      "items": "anvilcraft:prismarine_cluster"
     }
   ],
   "results": [
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 2,
-        "id": "minecraft:prismarine_crystals"
-      }
+      "chance": 2.0,
+      "id": "minecraft:prismarine_crystals"
     },
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 1,
-        "id": "minecraft:prismarine_shard"
-      }
+      "id": "minecraft:prismarine_shard"
     },
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.5
-      },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:prismarine_crystals"
-      }
+      "chance": 0.5,
+      "id": "minecraft:prismarine_crystals"
     },
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.15
-      },
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:prismarine_blade"
-      }
+      "chance": 0.15,
+      "id": "anvilcraft:prismarine_blade"
     }
   ]
 }

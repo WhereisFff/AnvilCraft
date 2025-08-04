@@ -261,8 +261,14 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             return this.result(result, 1.0);
         }
 
+        public B result(@NotNull ItemLike result, int count, double chance) {
+            ItemStack stack = result.asItem().getDefaultInstance();
+            stack.setCount(count);
+            return this.result(stack, chance);
+        }
+
         public B result(@NotNull ItemLike result, double chance) {
-            return this.result(result.asItem().getDefaultInstance(), chance);
+            return this.result(result, 1, chance);
         }
 
         public B result(@NotNull ItemLike result) {

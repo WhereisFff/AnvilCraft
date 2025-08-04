@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ConcreteRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.HeatProduceTimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.StampingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.StampingUniqueItemsRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SuperHeatingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
@@ -33,6 +32,7 @@ import dev.dubhe.anvilcraft.recipe.neo.wrap.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.SqueezingRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.StampingRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import net.minecraft.core.registries.Registries;
@@ -91,6 +91,10 @@ public class ModRecipeTypes {
         registerType("stamping");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<StampingRecipe>> STAMPING_SERIALIZER =
         RECIPE_SERIALIZERS.register("stamping", StampingRecipe.Serializer::new);
+
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<StampingUniqueItemsRecipe>> STAMPING_UNIQUE_ITEMS_TYPE =
+        registerType("stamping_unique_items");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<StampingUniqueItemsRecipe>> STAMPING_UNIQUE_ITEMS_SERIALIZER =
         RECIPE_SERIALIZERS.register("stamping_unique_items", StampingUniqueItemsRecipe.Serializer::new);
 

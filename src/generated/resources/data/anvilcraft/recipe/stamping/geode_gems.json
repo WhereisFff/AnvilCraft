@@ -2,49 +2,25 @@
   "type": "anvilcraft:stamping",
   "ingredients": [
     {
-      "item": "anvilcraft:geode"
+      "items": "anvilcraft:geode"
     }
   ],
   "results": [
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 4,
-        "id": "minecraft:amethyst_shard"
-      }
+      "count": 4,
+      "id": "minecraft:amethyst_shard"
     },
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.25
-      },
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:topaz"
-      }
+      "chance": 0.25,
+      "id": "anvilcraft:topaz"
     },
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.25
-      },
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:sapphire"
-      }
+      "chance": 0.25,
+      "id": "anvilcraft:sapphire"
     },
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.25
-      },
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:ruby"
-      }
+      "chance": 0.25,
+      "id": "anvilcraft:ruby"
     }
   ]
 }
