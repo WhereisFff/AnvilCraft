@@ -115,6 +115,16 @@ public class FallingGiantAnvilEntity extends FallingBlockEntity {
                         this.discard();
                     }
                 } else {
+                    for (int x = -1; x &lt;= 1; x++) {
+                        for (int z = -1; z &lt;= 1; z++) {
+                            BlockPos crystalPos = blockPos.below().offset(x, 0, z);
+                            BlockState crystalState = level().getBlockState(crystalPos);
+                            if (crystalState.getBlock() instanceof PiezoelectricCrystalBlock) {
+                                ((PiezoelectricCrystalBlock) crystalState.getBlock())
+                                    .onHitByAnvil(this, this.fallDistance, level(), crystalPos);
+                            }
+                        }
+                    }
                     BlockState blockState = this.level().getBlockState(blockPos);
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
                     DirectionalPlaceContext placeContext = new DirectionalPlaceContext(
