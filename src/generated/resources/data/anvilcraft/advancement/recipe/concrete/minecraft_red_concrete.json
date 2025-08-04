@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:concrete/minecraft_concrete"
+        "recipe": "anvilcraft:concrete/minecraft_red_concrete"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:concrete/minecraft_concrete"
+      "anvilcraft:concrete/minecraft_red_concrete"
     ]
   }
 }

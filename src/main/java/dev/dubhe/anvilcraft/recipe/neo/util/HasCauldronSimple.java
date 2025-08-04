@@ -32,7 +32,7 @@ public class HasCauldronSimple {
                 .optionalFieldOf("consume", 0)
                 .forGetter(HasCauldronSimple::getConsume),
             ResourceLocation.CODEC
-                .optionalFieldOf("transform", HasCauldron.EMPTY)
+                .optionalFieldOf("transform", null)
                 .forGetter(HasCauldronSimple::getTransform)
         ).apply(instance, HasCauldronSimple::new)
     );
@@ -67,7 +67,7 @@ public class HasCauldronSimple {
     public static class Builder {
         private ResourceLocation fluid = HasCauldron.EMPTY;
         private int consume = 0;
-        private ResourceLocation transform = HasCauldron.EMPTY;
+        private ResourceLocation transform = null;
 
         public static @NotNull Builder empty() {
             return new Builder();
@@ -80,9 +80,6 @@ public class HasCauldronSimple {
         }
 
         public @NotNull Builder fluid(ResourceLocation fluid) {
-            if (this.transform.equals(this.fluid)) {
-                this.transform = fluid;
-            }
             this.fluid = fluid;
             return this;
         }

@@ -40,7 +40,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
     }
 
     public static @NotNull HasCauldron empty(Vec3 offset) {
-        return new HasCauldron(offset, EMPTY, 0, EMPTY);
+        return new HasCauldron(offset, EMPTY, 0, null);
     }
 
     public static BlockStatePredicate ofFluid(@NotNull ResourceLocation fluid, int consume) {
@@ -91,7 +91,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
             }
             state = state.setValue(property, value);
         }
-        if (!this.transform.equals(this.fluid)) {
+        if (this.transform != null && !this.transform.equals(this.fluid)) {
             Block block = getDefaultCauldron(this.transform);
             state = block.defaultBlockState();
             property = CauldronUtil.LEVEL_4;
@@ -127,7 +127,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
                 Vec3.CODEC.fieldOf("offset").forGetter(HasCauldron::getOffset),
                 ResourceLocation.CODEC.optionalFieldOf("fluid", EMPTY).forGetter(HasCauldron::getFluid),
                 Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::getConsume),
-                ResourceLocation.CODEC.optionalFieldOf("transform", EMPTY).forGetter(HasCauldron::getTransform)
+                ResourceLocation.CODEC.optionalFieldOf("transform", null).forGetter(HasCauldron::getTransform)
             ).apply(instance, HasCauldron::new)
         );
 

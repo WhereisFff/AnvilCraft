@@ -149,6 +149,20 @@ public class BulgingRecipe extends AbstractItemProcessRecipe<BulgingRecipe> {
             return this.result(stack, 1.0);
         }
 
+        public Builder result(@NotNull ItemLike like, double chance, int count) {
+            ItemStack stack = like.asItem().getDefaultInstance();
+            stack.setCount(count);
+            return this.result(stack, 1.0);
+        }
+
+        public Builder result(@NotNull ItemLike like, double chance) {
+            return this.result(like, chance, 1);
+        }
+
+        public Builder result(@NotNull ItemLike like, int count) {
+            return this.result(like, 1.0, count);
+        }
+
         public Builder cauldron(ResourceLocation fluid) {
             this.hasCauldron.fluid(fluid);
             return this;
