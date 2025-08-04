@@ -158,40 +158,40 @@ public class AnvilEventListener {
     }
 
     private static void handleItemInjectRecipe(Level level, final BlockPos pos, BlockState state) {
-        Map<ItemEntity, ItemStack> items = level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).stream()
-            .map(it -> Map.entry(it, it.getItem()))
-            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-        if (items.isEmpty()) return;
-        ItemInjectRecipe.Input input =
-            new ItemInjectRecipe.Input(items.values().stream().toList(), state.getBlock());
-        level.getRecipeManager()
-            .getRecipeFor(ModRecipeTypes.ITEM_INJECT_TYPE.get(), input, level)
-            .ifPresent(recipe -> {
-                for (Ingredient ingredient : recipe.value().getIngredients()) {
-                    for (ItemStack stack : input.items()) {
-                        if (ingredient.test(stack)) {
-                            stack.shrink(1);
-                            break;
-                        }
-                    }
-                }
-                ChanceItemStack stack = recipe.value().resultItem;
-                if (!stack.equals(ChanceItemStack.EMPTY) && !level.isClientSide && level instanceof ServerLevel serverLevel) {
-                    int amount = stack.getStack().getCount() * stack.getAmount().getInt(RecipeUtil.emptyLootContext(serverLevel));
-                    Vec3 posV = pos.getCenter();
-                    level.addFreshEntity(new ItemEntity(
-                        level, posV.x, posV.y, posV.z,
-                        recipe.value().resultItem.getStack().copyWithCount(amount)));
-                }
-                level.setBlockAndUpdate(pos, recipe.value().resultBlock.defaultBlockState());
-                items.forEach((k, v) -> {
-                    if (v.isEmpty()) {
-                        k.discard();
-                        return;
-                    }
-                    k.setItem(v.copy());
-                });
-            });
+//        Map<ItemEntity, ItemStack> items = level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).stream()
+//            .map(it -> Map.entry(it, it.getItem()))
+//            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
+//        if (items.isEmpty()) return;
+//        ItemInjectRecipe.Input input =
+//            new ItemInjectRecipe.Input(items.values().stream().toList(), state.getBlock());
+//        level.getRecipeManager()
+//            .getRecipeFor(ModRecipeTypes.ITEM_INJECT_TYPE.get(), input, level)
+//            .ifPresent(recipe -> {
+//                for (Ingredient ingredient : recipe.value().getIngredients()) {
+//                    for (ItemStack stack : input.items()) {
+//                        if (ingredient.test(stack)) {
+//                            stack.shrink(1);
+//                            break;
+//                        }
+//                    }
+//                }
+//                ChanceItemStack stack = recipe.value().resultItem;
+//                if (!stack.equals(ChanceItemStack.EMPTY) && !level.isClientSide && level instanceof ServerLevel serverLevel) {
+//                    int amount = stack.getStack().getCount() * stack.getAmount().getInt(RecipeUtil.emptyLootContext(serverLevel));
+//                    Vec3 posV = pos.getCenter();
+//                    level.addFreshEntity(new ItemEntity(
+//                        level, posV.x, posV.y, posV.z,
+//                        recipe.value().resultItem.getStack().copyWithCount(amount)));
+//                }
+//                level.setBlockAndUpdate(pos, recipe.value().resultBlock.defaultBlockState());
+//                items.forEach((k, v) -> {
+//                    if (v.isEmpty()) {
+//                        k.discard();
+//                        return;
+//                    }
+//                    k.setItem(v.copy());
+//                });
+//            });
     }
 
     private static void handleSqueezingRecipe(Level level, final BlockPos pos, BlockState state) {

@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -101,14 +102,14 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         }
 
         public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull BulgingRecipe recipe) {
-            AbstractSerializer.encodeIngredients(buf, recipe.getItemIngredients());
-            AbstractSerializer.encodeResults(buf, recipe.getResults());
+            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
+            WrapUtils.encodeResults(buf, recipe.getResults());
             HasCauldronSimple.STREAM_CODEC.encode(buf, recipe.getHasCauldron());
         }
 
         public static @NotNull BulgingRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<ItemIngredientPredicate> ingredients = AbstractSerializer.decodeIngredients(buf);
-            List<ChanceItemStack> results = AbstractSerializer.decodeResults(buf);
+            List<ItemIngredientPredicate> ingredients = WrapUtils.decodeIngredients(buf);
+            List<ChanceItemStack> results = WrapUtils.decodeResults(buf);
             HasCauldronSimple hasCauldron = HasCauldronSimple.STREAM_CODEC.decode(buf);
             return new BulgingRecipe(ingredients, results, hasCauldron);
         }

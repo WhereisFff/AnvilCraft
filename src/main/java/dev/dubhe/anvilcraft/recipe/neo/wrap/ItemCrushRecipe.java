@@ -53,7 +53,7 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
         }
     }
 
-    public static class Builder extends AbstractBuilder<ItemCrushRecipe, Builder> {
+    public static class Builder extends SimpleAbstractBuilder<ItemCrushRecipe, Builder> {
         @Override
         public @NotNull String getType() {
             return "item_crush";

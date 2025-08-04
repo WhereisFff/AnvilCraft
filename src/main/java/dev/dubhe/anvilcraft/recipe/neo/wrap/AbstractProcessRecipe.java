@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.recipe.neo.wrap;
 
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
@@ -14,17 +13,13 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -38,7 +33,6 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Stream;
 
 @Getter
 public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InWorldRecipe {
@@ -98,9 +92,9 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         Vec3 outputOffset,
         List<ChanceItemStack> results,
         Vec3 blockOffset,
-        BlockStatePredicate... block
+        BlockStatePredicate... blocks
     ) {
-        this(inputOffset, itemIngredients, outputOffset, results, blockOffset, null, block);
+        this(inputOffset, itemIngredients, outputOffset, results, blockOffset, null, blocks);
     }
 
     private static ItemStack getIcon(@NotNull List<ChanceItemStack> results) {
@@ -186,50 +180,14 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             return this.streamCodec;
         }
 
-        public static void encodeIngredients(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<ItemIngredientPredicate> ingredients) {
-            buf.writeVarInt(ingredients.size());
-            for (ItemIngredientPredicate itemIngredient : ingredients) {
-                RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
-                DataResult<Tag> encode = ItemIngredientPredicate.CODEC.encode(itemIngredient, ops, ops.empty());
-                Tag tag = encode.getOrThrow();
-                buf.writeNbt(tag);
-            }
-        }
-
-        public static void encodeResults(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<ChanceItemStack> results) {
-            buf.writeVarInt(results.size());
-            for (ChanceItemStack result : results) {
-                ChanceItemStack.STREAM_CODEC.encode(buf, result);
-            }
-        }
-
-        public static @NotNull List<ItemIngredientPredicate> decodeIngredients(@NotNull RegistryFriendlyByteBuf buf) {
-            int i = buf.readVarInt();
-            List<ItemIngredientPredicate> ingredients = new ArrayList<>();
-            for (; i > 0; i--) {
-                RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
-                ingredients.add(ItemIngredientPredicate.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst());
-            }
-            return ingredients;
-        }
-
-        public static @NotNull List<ChanceItemStack> decodeResults(@NotNull RegistryFriendlyByteBuf buf) {
-            int i = buf.readVarInt();
-            List<ChanceItemStack> results = new ArrayList<>();
-            for (; i > 0; i--) {
-                results.add(ChanceItemStack.STREAM_CODEC.decode(buf));
-            }
-            return results;
-        }
-
         public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull T recipe) {
-            encodeIngredients(buf, recipe.getItemIngredients());
-            encodeResults(buf, recipe.getResults());
+            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
+            WrapUtils.encodeResults(buf, recipe.getResults());
         }
 
         public @NotNull T decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<ItemIngredientPredicate> ingredients = decodeIngredients(buf);
-            List<ChanceItemStack> results = decodeResults(buf);
+            List<ItemIngredientPredicate> ingredients = WrapUtils.decodeIngredients(buf);
+            List<ChanceItemStack> results = WrapUtils.decodeResults(buf);
             return this.of(ingredients, results);
         }
     }
@@ -239,10 +197,8 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         B extends AbstractBuilder<T, B>
         > extends AbstractRecipeBuilder<T> {
 
-        private final List<ItemIngredientPredicate> itemIngredients = new ArrayList<>();
-        private final List<ChanceItemStack> results = new ArrayList<>();
-
-        protected abstract T of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results);
+        protected final List<ItemIngredientPredicate> itemIngredients = new ArrayList<>();
+        protected final List<ChanceItemStack> results = new ArrayList<>();
 
         protected abstract B getThis();
 
@@ -302,6 +258,18 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         }
 
         @Override
+        public @NotNull Item getResult() {
+            return results.isEmpty() ? Items.ANVIL : results.getFirst().getItem();
+        }
+    }
+
+    public abstract static class SimpleAbstractBuilder<
+        T extends AbstractProcessRecipe<T>,
+        B extends SimpleAbstractBuilder<T, B>
+        > extends AbstractBuilder<T, B> {
+        protected abstract T of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results);
+
+        @Override
         public @NotNull T buildRecipe() {
             return this.of(this.itemIngredients, this.results);
         }
@@ -314,11 +282,6 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             if (results.isEmpty()) {
                 throw new IllegalArgumentException("Recipe result must not be empty, RecipeId: " + pId);
             }
-        }
-
-        @Override
-        public @NotNull Item getResult() {
-            return results.isEmpty() ? Items.ANVIL : results.getFirst().getItem();
         }
     }
 }

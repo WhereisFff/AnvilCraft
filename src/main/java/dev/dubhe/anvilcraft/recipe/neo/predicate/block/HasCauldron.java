@@ -28,6 +28,7 @@ import java.util.Optional;
 @Getter
 public class HasCauldron extends HasBlockBase<HasCauldron> {
     public static final ResourceLocation EMPTY = ResourceLocation.withDefaultNamespace("empty");
+    public static final ResourceLocation NULL = ResourceLocation.withDefaultNamespace("null");
     private final ResourceLocation fluid;
     private final int consume;
     private final ResourceLocation transform;
@@ -40,7 +41,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
     }
 
     public static @NotNull HasCauldron empty(Vec3 offset) {
-        return new HasCauldron(offset, EMPTY, 0, null);
+        return new HasCauldron(offset, EMPTY, 0, NULL);
     }
 
     public static BlockStatePredicate ofFluid(@NotNull ResourceLocation fluid, int consume) {
@@ -127,7 +128,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
                 Vec3.CODEC.fieldOf("offset").forGetter(HasCauldron::getOffset),
                 ResourceLocation.CODEC.optionalFieldOf("fluid", EMPTY).forGetter(HasCauldron::getFluid),
                 Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::getConsume),
-                ResourceLocation.CODEC.optionalFieldOf("transform", null).forGetter(HasCauldron::getTransform)
+                ResourceLocation.CODEC.optionalFieldOf("transform", NULL).forGetter(HasCauldron::getTransform)
             ).apply(instance, HasCauldron::new)
         );
 

@@ -50,7 +50,7 @@ public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe
         }
     }
 
-    public static class Builder extends AbstractBuilder<ItemCompressRecipe, Builder> {
+    public static class Builder extends SimpleAbstractBuilder<ItemCompressRecipe, Builder> {
         @Override
         public @NotNull String getType() {
             return "item_compress";

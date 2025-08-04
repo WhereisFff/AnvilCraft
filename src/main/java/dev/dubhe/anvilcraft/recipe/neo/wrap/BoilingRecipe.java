@@ -59,7 +59,7 @@ public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {
         }
     }
 
-    public static class Builder extends AbstractBuilder<BoilingRecipe, Builder> {
+    public static class Builder extends SimpleAbstractBuilder<BoilingRecipe, Builder> {
         @Override
         public @NotNull String getType() {
             return "boiling";

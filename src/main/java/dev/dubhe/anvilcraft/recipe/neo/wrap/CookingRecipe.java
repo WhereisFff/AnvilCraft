@@ -56,7 +56,7 @@ public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
         }
     }
 
-    public static class Builder extends AbstractBuilder<CookingRecipe, Builder> {
+    public static class Builder extends SimpleAbstractBuilder<CookingRecipe, Builder> {
         @Override
         public @NotNull String getType() {
             return "cooking";

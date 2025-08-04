@@ -1,9 +1,16 @@
 package dev.dubhe.anvilcraft.recipe.neo.util;
 
+import com.mojang.serialization.DataResult;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlockIngredient;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -14,6 +21,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class WrapUtils {
     public static @NotNull IRecipePredicate<?> getPredicate(
@@ -99,5 +107,41 @@ public class WrapUtils {
     public static @NotNull ItemStack getItemStack(@NotNull List<ChanceBlockState> results) {
         if (results.isEmpty()) return Items.ANVIL.getDefaultInstance();
         return getItem(results.getFirst()).getDefaultInstance();
+    }
+
+    public static void encodeIngredients(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<ItemIngredientPredicate> ingredients) {
+        buf.writeVarInt(ingredients.size());
+        for (ItemIngredientPredicate itemIngredient : ingredients) {
+            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
+            DataResult<Tag> encode = ItemIngredientPredicate.CODEC.encode(itemIngredient, ops, ops.empty());
+            Tag tag = encode.getOrThrow();
+            buf.writeNbt(tag);
+        }
+    }
+
+    public static void encodeResults(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<ChanceItemStack> results) {
+        buf.writeVarInt(results.size());
+        for (ChanceItemStack result : results) {
+            ChanceItemStack.STREAM_CODEC.encode(buf, result);
+        }
+    }
+
+    public static @NotNull List<ItemIngredientPredicate> decodeIngredients(@NotNull RegistryFriendlyByteBuf buf) {
+        int i = buf.readVarInt();
+        List<ItemIngredientPredicate> ingredients = new ArrayList<>();
+        for (; i > 0; i--) {
+            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
+            ingredients.add(ItemIngredientPredicate.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst());
+        }
+        return ingredients;
+    }
+
+    public static @NotNull List<ChanceItemStack> decodeResults(@NotNull RegistryFriendlyByteBuf buf) {
+        int i = buf.readVarInt();
+        List<ChanceItemStack> results = new ArrayList<>();
+        for (; i > 0; i--) {
+            results.add(ChanceItemStack.STREAM_CODEC.decode(buf));
+        }
+        return results;
     }
 }

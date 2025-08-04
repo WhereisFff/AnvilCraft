@@ -1,21 +1,20 @@
 {
   "type": "anvilcraft:item_inject",
+  "block_ingredient": {
+    "blocks": "anvilcraft:overheated_ember_metal_block"
+  },
+  "block_result": {
+    "block": "anvilcraft:transcendium_block"
+  },
   "ingredients": [
     {
-      "item": "anvilcraft:charged_neutronium_ingot"
+      "items": "anvilcraft:charged_neutronium_ingot"
     }
   ],
-  "input_block": "anvilcraft:overheated_ember_metal_block",
-  "result_block": "anvilcraft:transcendium_block",
-  "result_item": {
-    "amount": {
-      "type": "minecraft:binomial",
-      "n": 1.0,
-      "p": 0.5
-    },
-    "stack": {
-      "count": 1,
+  "results": [
+    {
+      "chance": 0.5,
       "id": "anvilcraft:neutronium_ingot"
     }
-  }
+  ]
 }
