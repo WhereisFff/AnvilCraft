@@ -1,28 +1,28 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
+import dev.dubhe.anvilcraft.block.entity.ActivatorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
+import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable {
+public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, EntityBlock {
     public static final List<Direction> SIGNAL_SOURCE_SIDES = List.of(
         Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
     public static final VoxelShape AABB_X = Stream.of(
@@ -112,12 +112,20 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        BlockPos fromPos = pos.above();
-        if (level.isEmptyBlock(fromPos)) return;
-        PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
-        ppi.extending = true;
-        if (!MOVING_PISTON_MAP.containsKey(pos)) {
-            MOVING_PISTON_MAP.put(pos, ppi);
+        Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
+        if (beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)) {
+            beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldNotPower);
+            level.scheduleTick(pos, this, 20);
+            level.updateNeighbourForOutputSignal(pos, this);
+            return;
+        } else {
+            BlockPos fromPos = pos.above();
+            if (level.isEmptyBlock(fromPos)) return;
+            PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
+            ppi.extending = true;
+            if (!MOVING_PISTON_MAP.containsKey(pos)) {
+                MOVING_PISTON_MAP.put(pos, ppi);
+            }
         }
         super.tick(state, level, pos, random);
     }
@@ -131,13 +139,22 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
 
     @Override
     protected boolean isSignalSource(BlockState state) {
-        return state.getValue(POWERED);
+        return true;
     }
 
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         if (!state.getValue(POWERED)) return 0;
+        if (!level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get())
+            .map(ActivatorSlidingRailBlockEntity::isShouldPower)
+            .orElse(false)
+        ) return 0;
         return direction == Direction.DOWN ? 15 : 0;
+    }
+
+    @Override
+    protected int getDirectSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
+        return this.getSignal(state, level, pos, direction);
     }
 
     @Override
@@ -162,6 +179,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         if (entity.getStartPos().equals(pos.above())) return;
         if (!state.getValue(POWERED)) return;
         level.setBlockAndUpdate(pos, state.setValue(FACING, entity.getMoveDirection()));
+        level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get()).ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
         ISlidingRail.stopSlidingBlock(entity);
         level.scheduleTick(pos, this, 4);
         BlockPos blockpos = pos.above();
@@ -173,5 +191,10 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         blockstate = level.getBlockState(blockpos);
         if (!blockstate.getWeakChanges(level, blockpos)) return;
         level.neighborChanged(blockstate, blockpos, this, pos, false);
+    }
+
+    @Override
+    public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return ModBlockEntities.ACTIVATOR_SLIDING_RAIL.create(pos, state);
     }
 }
