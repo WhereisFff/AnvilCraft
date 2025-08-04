@@ -200,6 +200,10 @@ public class ItemTagLoader {
         provider.addTag(ItemTags.PICKAXES)
             .addTag(ModItemTags.RESONATOR);
 
+        provider.addTag(ItemTags.CLUSTER_MAX_HARVESTABLES)
+            .addTag(ModItemTags.DRAGON_ROD)
+            .addTag(ModItemTags.RESONATOR);
+
         provider.addTag(ItemTags.DURABILITY_ENCHANTABLE)
             .add(findResourceKey(ModItems.MAGNET.get()));
     }
