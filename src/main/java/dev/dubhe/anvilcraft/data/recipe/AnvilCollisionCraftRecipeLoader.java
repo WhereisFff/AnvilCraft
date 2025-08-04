@@ -16,7 +16,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .anvil(BlockTags.ANVIL)
             .hitBlock(ModBlocks.NEGATIVE_MATTER_BLOCK.get())
             .outputItem(ModBlocks.VOID_MATTER_BLOCK.asItem(), 8)
-            .save(provider, "negative_matter_block");
+            .save(provider);
         AnvilCollisionCraftRecipe.builder()
             .anvil(ModBlocks.EMBER_ANVIL.get())
             .hitBlock(ModBlocks.FROST_METAL_BLOCK.get())

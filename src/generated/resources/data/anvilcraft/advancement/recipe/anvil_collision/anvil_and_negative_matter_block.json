@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:negative_matter_block"
+        "recipe": "anvilcraft:anvil_collision/anvil_and_negative_matter_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:negative_matter_block"
+      "anvilcraft:anvil_collision/anvil_and_negative_matter_block"
     ]
   }
 }
