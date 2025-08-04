@@ -14,7 +14,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -33,7 +32,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
@@ -69,12 +67,52 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         }
         return this.defaultBlockState()
             .setValue(FACING, facing)
-            .setValue(POWERED, this.isPowered(context.getLevel(), context.getClickedPos()));
+            .setValue(POWERED, this.isPowered(context.getLevel(), context.getClickedPos(), facing));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED);
+    }
+
+    protected boolean findPoweredSlidingRailSignal(Level level, BlockPos pos, Direction facing, boolean searchForward) {
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        switch (facing) {
+            case NORTH -> z -= searchForward ? 1 : -1;
+            case SOUTH -> z += searchForward ? 1 : -1;
+            case EAST -> x += searchForward ? 1 : -1;
+            case WEST -> x -= searchForward ? 1 : -1;
+        }
+
+        return this.isSameRailWithPower(level, new BlockPos(x, y, z), searchForward, 0, facing);
+    }
+
+    protected boolean findPoweredSlidingRailSignal(Level level, BlockPos pos, BlockState state, boolean searchForward, int recursionCount) {
+        if (recursionCount >= 8) return false;
+        int x = pos.getX();
+        int y = pos.getY();
+        int z = pos.getZ();
+        if (!state.hasProperty(FACING)) return false;
+        Direction facing = state.getValue(FACING);
+        switch (facing) {
+            case NORTH -> z -= searchForward ? 1 : -1;
+            case SOUTH -> z += searchForward ? 1 : -1;
+            case EAST -> x += searchForward ? 1 : -1;
+            case WEST -> x -= searchForward ? 1 : -1;
+        }
+
+        return this.isSameRailWithPower(level, new BlockPos(x, y, z), searchForward, recursionCount, facing);
+    }
+
+    protected boolean isSameRailWithPower(Level level, BlockPos pos, boolean searchForward, int recursionCount, Direction facing) {
+        BlockState state = level.getBlockState(pos);
+        if (!(state.getBlock() instanceof PoweredSlidingRailBlock other)) return false;
+        Direction otherFacing = state.getValue(FACING);
+        if (facing != otherFacing) return false;
+        return level.hasNeighborSignal(pos)
+               || other.findPoweredSlidingRailSignal(level, pos, state, searchForward, recursionCount + 1);
     }
 
     @Override
@@ -88,16 +126,11 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    public VoxelShape getShape(
-        BlockState blockState,
-        BlockGetter blockGetter,
-        BlockPos blockPos,
-        CollisionContext collisionContext
-    ) {
-        return switch (blockState.getValue(FACING).getAxis()) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext ctx) {
+        return switch (state.getValue(FACING).getAxis()) {
             case X -> AABB_X;
             case Z -> AABB_Z;
-            default -> super.getShape(blockState, blockGetter, blockPos, collisionContext);
+            default -> super.getShape(state, level, pos, ctx);
         };
     }
 
@@ -107,14 +140,31 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         super.onNeighborChange(state, level, pos, neighbor);
     }
 
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+    private static final int[] UPDATE_POS = new int[] {-1, 1};
+
+    protected boolean updatePower(Level level, BlockPos pos, BlockState state, BlockPos fromPos) {
         boolean powered = state.getValue(POWERED);
         boolean shouldPower = this.isPowered(level, pos);
         if (powered != shouldPower) {
             powered = shouldPower;
             level.setBlockAndUpdate(pos, state.setValue(POWERED, shouldPower));
         }
+        if (powered) {
+            Direction.Axis axis = state.getValue(FACING).getAxis();
+            for (int updatePos : UPDATE_POS) {
+                BlockPos pos1 = pos.relative(axis, updatePos);
+                if (pos1.equals(fromPos)) continue;
+                BlockState state1 = level.getBlockState(pos1);
+                if (!(state1.getBlock() instanceof PoweredSlidingRailBlock other)) continue;
+                level.neighborChanged(pos1, other, pos);
+            }
+        }
+        return powered;
+    }
+
+    @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        boolean powered = this.updatePower(level, pos, state, fromPos);
         if (powered) {
             fromPos = pos.above();
             if (level.isEmptyBlock(fromPos)) {
@@ -137,11 +187,21 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         level.scheduleTick(pos, this, 2);
     }
 
-    private boolean isPowered(SignalGetter level, BlockPos pos) {
+    private boolean isPowered(Level level, BlockPos pos, Direction facing) {
         for (Direction side : SIGNAL_SOURCE_SIDES) {
             if (level.getSignal(pos.relative(side), side) > 0) return true;
         }
-        return false;
+        return this.findPoweredSlidingRailSignal(level, pos, facing, true)
+               || this.findPoweredSlidingRailSignal(level, pos, facing, false);
+    }
+
+    private boolean isPowered(Level level, BlockPos pos) {
+        for (Direction side : SIGNAL_SOURCE_SIDES) {
+            if (level.getSignal(pos.relative(side), side) > 0) return true;
+        }
+        BlockState state = level.getBlockState(pos);
+        return this.findPoweredSlidingRailSignal(level, pos, state, true, 0)
+               || this.findPoweredSlidingRailSignal(level, pos, state, false, 0);
     }
 
     @Override
