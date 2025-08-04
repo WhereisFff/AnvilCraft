@@ -201,9 +201,9 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(
-            AnvilCraftJeiPlugin.TIME_WARP,
-            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.TIME_WARP_TYPE.get()));
+//        registration.addRecipes(
+//            AnvilCraftJeiPlugin.TIME_WARP,
+//            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.TIME_WARP_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

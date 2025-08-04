@@ -17,11 +17,12 @@ public class UnpackBehavior implements IAnvilBehavior {
         float fallDistance,
         AnvilFallOnLandEvent event
     ) {
-        return AnvilUtil.itemProcess(
-            ModRecipeTypes.UNPACK_TYPE.get(),
-            level,
-            hitBlockPos.above(),
-            hitBlockPos.getCenter()
-        );
+//        return AnvilUtil.itemProcess(
+//            ModRecipeTypes.UNPACK_TYPE.get(),
+//            level,
+//            hitBlockPos.above(),
+//            hitBlockPos.getCenter()
+//        );
+        return false;
     }
 }

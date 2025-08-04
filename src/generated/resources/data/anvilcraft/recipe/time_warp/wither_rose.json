@@ -1,24 +1,14 @@
 {
   "type": "anvilcraft:time_warp",
-  "cauldron": "minecraft:cauldron",
-  "consume_fluid": false,
   "ingredients": [
     {
-      "tag": "minecraft:flowers"
+      "items": "#minecraft:flowers"
     }
   ],
-  "produce_fluid": false,
   "results": [
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.2
-      },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:wither_rose"
-      }
+      "chance": 0.20000000298023224,
+      "id": "minecraft:wither_rose"
     }
   ]
 }
