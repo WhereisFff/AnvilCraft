@@ -21,15 +21,16 @@ public class ItemCompressBehavior implements IAnvilBehavior {
         float fallDistance,
         AnvilFallOnLandEvent event
     ) {
-        BlockState heaterIfPossible = level.getBlockState(hitBlockPos.below());
-        if ((heaterIfPossible.is(ModBlocks.HEATER) && !heaterIfPossible.getValue(HeaterBlock.OVERLOAD))
-            || (heaterIfPossible.is(Blocks.CAMPFIRE) && !heaterIfPossible.getValue(CampfireBlock.LIT))
-        ) return false;
-        return AnvilUtil.itemProcess(
-            ModRecipeTypes.ITEM_COMPRESS_TYPE.get(),
-            level,
-            hitBlockPos,
-            hitBlockPos.getCenter()
-        );
+//        BlockState heaterIfPossible = level.getBlockState(hitBlockPos.below());
+//        if ((heaterIfPossible.is(ModBlocks.HEATER) && !heaterIfPossible.getValue(HeaterBlock.OVERLOAD))
+//            || (heaterIfPossible.is(Blocks.CAMPFIRE) && !heaterIfPossible.getValue(CampfireBlock.LIT))
+//        ) return false;
+//        return AnvilUtil.itemProcess(
+//            ModRecipeTypes.ITEM_COMPRESS_TYPE.get(),
+//            level,
+//            hitBlockPos,
+//            hitBlockPos.getCenter()
+//        );
+        return false;
     }
 }
