@@ -115,7 +115,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
         if (beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)) {
             beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldNotPower);
-            level.scheduleTick(pos, this, 20);
+            level.scheduleTick(pos, this, 4);
             level.updateNeighbourForOutputSignal(pos, this);
             return;
         } else {
