@@ -115,8 +115,8 @@ public class FallingGiantAnvilEntity extends FallingBlockEntity {
                         this.discard();
                     }
                 } else {
-                    for (int x = -1; x &lt;= 1; x++) {
-                        for (int z = -1; z &lt;= 1; z++) {
+                    for (int x = -1; x <= 1; x++) {
+                        for (int z = -1; z <= 1; z++) {
                             BlockPos crystalPos = blockPos.below().offset(x, 0, z);
                             BlockState crystalState = level().getBlockState(crystalPos);
                             if (crystalState.getBlock() instanceof PiezoelectricCrystalBlock) {
