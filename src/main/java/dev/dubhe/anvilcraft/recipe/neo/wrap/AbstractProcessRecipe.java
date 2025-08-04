@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
@@ -40,30 +41,32 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @Getter
-public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends InWorldRecipe {
+public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InWorldRecipe {
     protected final Vec3 inputOffset;
     protected final List<ItemIngredientPredicate> itemIngredients;
     protected final Vec3 outputOffset;
     protected final List<ChanceItemStack> results;
     protected final Vec3 blockOffset;
     protected final HasCauldronSimple hasCauldron;
-    protected final List<BlockStatePredicate> block;
+    protected final List<BlockStatePredicate> blocks;
+    protected final List<ChanceBlockState> setBlocks;
 
-    public AbstractItemProcessRecipe(
+    public AbstractProcessRecipe(
         Vec3 inputOffset,
         List<ItemIngredientPredicate> itemIngredients,
         Vec3 outputOffset,
         List<ChanceItemStack> results,
         Vec3 blockOffset,
         HasCauldronSimple hasCauldron,
-        BlockStatePredicate... block
+        List<ChanceBlockState> setBlocks,
+        List<BlockStatePredicate> blocks
     ) {
         super(
-            AbstractItemProcessRecipe.getIcon(results),
+            AbstractProcessRecipe.getIcon(results),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            AbstractItemProcessRecipe.getPredicates(blockOffset, hasCauldron, block),
-            AbstractItemProcessRecipe.getPredicates(inputOffset, itemIngredients),
-            AbstractItemProcessRecipe.getOutcomes(outputOffset, results),
+            AbstractProcessRecipe.getPredicates(blockOffset, hasCauldron, blocks),
+            AbstractProcessRecipe.getPredicates(inputOffset, itemIngredients),
+            AbstractProcessRecipe.getOutcomes(outputOffset, results, setBlocks),
             0,
             false
         );
@@ -73,10 +76,23 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
         this.results = results;
         this.blockOffset = blockOffset;
         this.hasCauldron = hasCauldron;
-        this.block = List.of(block);
+        this.blocks = blocks;
+        this.setBlocks = setBlocks;
     }
 
-    public AbstractItemProcessRecipe(
+    public AbstractProcessRecipe(
+        Vec3 inputOffset,
+        List<ItemIngredientPredicate> itemIngredients,
+        Vec3 outputOffset,
+        List<ChanceItemStack> results,
+        Vec3 blockOffset,
+        HasCauldronSimple hasCauldron,
+        BlockStatePredicate... blocks
+    ) {
+        this(inputOffset, itemIngredients, outputOffset, results, blockOffset, hasCauldron, null, List.of(blocks));
+    }
+
+    public AbstractProcessRecipe(
         Vec3 inputOffset,
         List<ItemIngredientPredicate> itemIngredients,
         Vec3 outputOffset,
@@ -94,7 +110,7 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
     private static @NotNull List<IRecipePredicate<?>> getPredicates(
         Vec3 blockOffset,
         HasCauldronSimple hasCauldron,
-        BlockStatePredicate @NotNull ... blocks
+        List<BlockStatePredicate> blocks
     ) {
         List<IRecipePredicate<?>> predicates = new ArrayList<>();
         int i = 0;
@@ -102,9 +118,11 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
             predicates.add(hasCauldron.toHasCauldron(blockOffset));
             i += 1;
         }
-        for (; i < blocks.length; i++) {
-            BlockStatePredicate block = blocks[i];
-            predicates.add(new HasBlock(blockOffset.subtract(0, i, 0), block));
+        if (blocks != null) {
+            for (; i < blocks.size(); i++) {
+                BlockStatePredicate block = blocks.get(i);
+                predicates.add(new HasBlock(blockOffset.subtract(0, i, 0), block));
+            }
         }
         return predicates;
     }
@@ -122,11 +140,18 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
 
     private static @NotNull List<IRecipeOutcome<?>> getOutcomes(
         Vec3 outputOffset,
-        @NotNull List<ChanceItemStack> results
+        @NotNull List<ChanceItemStack> results,
+        List<ChanceBlockState> setBlocks
     ) {
         List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
         for (ChanceItemStack chanceItemStack : results) {
             outcomes.add(chanceItemStack.toSpawnItem(outputOffset));
+        }
+        if (setBlocks != null) {
+            for (int i = 0; i < setBlocks.size(); i++) {
+                ChanceBlockState chanceBlockState = setBlocks.get(i);
+                outcomes.add(chanceBlockState.toSetBlock(new Vec3(0, -i - 1, 0)));
+            }
         }
         return outcomes;
     }
@@ -137,13 +162,13 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
     @Override
     public abstract @NotNull RecipeType<T> getType();
 
-    public abstract static class AbstractSerializer<T extends AbstractItemProcessRecipe<T>> implements RecipeSerializer<T> {
+    public abstract static class AbstractSerializer<T extends AbstractProcessRecipe<T>> implements RecipeSerializer<T> {
         protected final MapCodec<T> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemIngredientPredicate.CODEC.listOf()
-                .fieldOf("ingredients")
+                .optionalFieldOf("ingredients", List.of())
                 .forGetter(T::getItemIngredients),
             ChanceItemStack.CODEC.listOf()
-                .fieldOf("results")
+                .optionalFieldOf("results", List.of())
                 .forGetter(T::getResults)
         ).apply(instance, this::of));
 
@@ -209,7 +234,10 @@ public abstract class AbstractItemProcessRecipe<T extends InWorldRecipe> extends
         }
     }
 
-    public abstract static class AbstractBuilder<T extends AbstractItemProcessRecipe<T>, B extends AbstractBuilder<T, B>> extends AbstractRecipeBuilder<T> {
+    public abstract static class AbstractBuilder<
+        T extends AbstractProcessRecipe<T>,
+        B extends AbstractBuilder<T, B>
+        > extends AbstractRecipeBuilder<T> {
 
         private final List<ItemIngredientPredicate> itemIngredients = new ArrayList<>();
         private final List<ChanceItemStack> results = new ArrayList<>();

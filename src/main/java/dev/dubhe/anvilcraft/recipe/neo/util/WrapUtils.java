@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.recipe.neo.util;
 
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlockIngredient;
 import net.minecraft.world.item.Item;
@@ -63,16 +62,10 @@ public class WrapUtils {
         return predicates;
     }
 
-    public static @NotNull IRecipeOutcome<?> getOutcome(
-        @NotNull ChanceBlockState result
-    ) {
-        return new SetBlock(result.getState(), new Vec3(0, -1, 0), 1);
-    }
-
     public static @NotNull @Unmodifiable List<IRecipeOutcome<?>> getOutcomes(
         @NotNull ChanceBlockState result
     ) {
-        return List.of(getOutcome(result));
+        return List.of(result.toSetBlock(new Vec3(0, -1, 0)));
     }
 
     public static @NotNull List<IRecipeOutcome<?>> getOutcomes(
@@ -81,7 +74,7 @@ public class WrapUtils {
         List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
             ChanceBlockState result = results.get(i);
-            outcomes.add(new SetBlock(result.getState(), new Vec3(0, -i - 1, 0), 1));
+            outcomes.add(result.toSetBlock(new Vec3(0, -i - 1, 0)));
         }
         return outcomes;
     }

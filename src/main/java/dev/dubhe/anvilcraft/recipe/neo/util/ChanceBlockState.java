@@ -5,6 +5,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.injection.block.state.IBlockStateExtension;
+import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -14,6 +15,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.stream.Stream;
@@ -52,5 +54,9 @@ public class ChanceBlockState {
         BlockState blockState = BlockState.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst();
         double chance = buf.readDouble();
         return new ChanceBlockState(blockState, chance);
+    }
+
+    public SetBlock toSetBlock(Vec3 offset) {
+        return new SetBlock(this.getState(), offset, this.chance);
     }
 }

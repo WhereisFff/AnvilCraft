@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @Getter
-public class CookingRecipe extends AbstractItemProcessRecipe<CookingRecipe> {
+public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
     public CookingRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results

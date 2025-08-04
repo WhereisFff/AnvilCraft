@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class BulgingRecipe extends AbstractItemProcessRecipe<BulgingRecipe> {
+public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
     private final HasCauldronSimple hasCauldron;
 
     public BulgingRecipe(

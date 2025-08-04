@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 @Getter
-public class ItemCompressRecipe extends AbstractItemProcessRecipe<ItemCompressRecipe> {
+public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe> {
 
     public ItemCompressRecipe(
         List<ItemIngredientPredicate> itemIngredients,
