@@ -5,7 +5,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.recipe.anvil.SuperHeatingRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.SuperHeatingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -14,12 +14,12 @@ import net.neoforged.neoforge.common.Tags;
 public class SuperHeatingRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         SuperHeatingRecipe.builder()
-            .blockResult(Blocks.LAVA_CAULDRON)
+            .transform(Blocks.LAVA_CAULDRON)
             .requires(Items.COBBLESTONE, 4)
             .requires(ModItems.LIME_POWDER)
             .save(provider, AnvilCraft.of("super_heating/lava_from_cobblestone"));
         SuperHeatingRecipe.builder()
-            .blockResult(Blocks.LAVA_CAULDRON)
+            .transform(Blocks.LAVA_CAULDRON)
             .requires(Tags.Items.STONES, 4)
             .requires(ModItems.LIME_POWDER)
             .save(provider, AnvilCraft.of("super_heating/lava_from_stone"));
@@ -110,9 +110,9 @@ public class SuperHeatingRecipeLoader {
             .save(provider);
 
         SuperHeatingRecipe.builder()
-            .blockResult(ModBlocks.MELT_GEM_CAULDRON.get())
+            .transform(ModBlocks.MELT_GEM_CAULDRON.get())
             .requires(ModItemTags.GEM_BLOCKS)
-            .save(provider);
+            .save(provider, AnvilCraft.of("super_heating/melt_gem_cauldron"));
 
         SuperHeatingRecipe.builder()
             .requires(ModItems.TRANSCENDIUM_INGOT)

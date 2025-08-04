@@ -156,7 +156,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         }
 
         public Builder cauldron(Block cauldron) {
-            this.cauldron(cauldron2Fluid(cauldron));
+            this.cauldron(WrapUtils.cauldron2Fluid(cauldron));
             return this;
         }
 
@@ -166,7 +166,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         }
 
         public Builder transform(Block transform) {
-            this.hasCauldron.transform(cauldron2Fluid(transform));
+            this.hasCauldron.transform(WrapUtils.cauldron2Fluid(transform));
             return this;
         }
 
@@ -180,14 +180,6 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
             if (!consumeFluid) return this;
             this.hasCauldron.consume(1);
             return this;
-        }
-
-        private static @NotNull ResourceLocation cauldron2Fluid(Block cauldron) {
-            ResourceLocation key = BuiltInRegistries.BLOCK.getKey(cauldron);
-            String namespace = key.getNamespace();
-            String path = key.getPath();
-            if (path.endsWith("_cauldron")) path = path.substring(0, path.length() - 9);
-            return ResourceLocation.fromNamespaceAndPath(namespace, path);
         }
 
         @Override

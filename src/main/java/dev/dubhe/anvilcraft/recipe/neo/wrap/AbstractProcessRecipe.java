@@ -219,9 +219,13 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             return this.getThis();
         }
 
-        public B requires(@NotNull TagKey<Item> ingredient) {
-            this.itemIngredients.add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
+        public B requires(@NotNull TagKey<Item> ingredient, int count) {
+            this.itemIngredients.add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             return this.getThis();
+        }
+
+        public B requires(@NotNull TagKey<Item> ingredient) {
+            return this.requires(ingredient, 1);
         }
 
         public <D> B requires(@NotNull ItemStack ingredient) {

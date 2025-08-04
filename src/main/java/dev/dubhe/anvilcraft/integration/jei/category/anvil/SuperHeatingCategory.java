@@ -92,9 +92,9 @@ public class SuperHeatingCategory extends AbstractItemProgressCategory<SuperHeat
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(
-            AnvilCraftJeiPlugin.SUPER_HEATING,
-            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.SUPER_HEATING_TYPE.get()));
+//        registration.addRecipes(
+//            AnvilCraftJeiPlugin.SUPER_HEATING,
+//            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.SUPER_HEATING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

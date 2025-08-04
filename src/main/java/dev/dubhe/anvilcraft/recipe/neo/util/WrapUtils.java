@@ -11,9 +11,11 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -179,5 +181,13 @@ public class WrapUtils {
             results.add(ChanceBlockState.STREAM_CODEC.decode(buf));
         }
         return results;
+    }
+
+    public static @NotNull ResourceLocation cauldron2Fluid(Block cauldron) {
+        ResourceLocation key = BuiltInRegistries.BLOCK.getKey(cauldron);
+        String namespace = key.getNamespace();
+        String path = key.getPath();
+        if (path.endsWith("_cauldron")) path = path.substring(0, path.length() - 9);
+        return ResourceLocation.fromNamespaceAndPath(namespace, path);
     }
 }
