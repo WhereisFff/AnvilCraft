@@ -115,8 +115,8 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
         if (beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)) {
             beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldNotPower);
-            level.scheduleTick(pos, this, 4);
-            level.updateNeighbourForOutputSignal(pos, this);
+            level.scheduleTick(pos, this, 5);
+            this.updateAbove(level, pos);
             return;
         } else {
             BlockPos fromPos = pos.above();
@@ -181,16 +181,19 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         level.setBlockAndUpdate(pos, state.setValue(FACING, entity.getMoveDirection()));
         level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get()).ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
         ISlidingRail.stopSlidingBlock(entity);
-        level.scheduleTick(pos, this, 4);
-        BlockPos blockpos = pos.above();
-        BlockState blockstate = level.getBlockState(blockpos);
-        blockstate.onNeighborChange(level, blockpos, pos);
-        level.neighborChanged(blockstate, blockpos, this, pos, false);
-        if (!blockstate.isRedstoneConductor(level, blockpos)) return;
-        blockpos = blockpos.above();
-        blockstate = level.getBlockState(blockpos);
-        if (!blockstate.getWeakChanges(level, blockpos)) return;
-        level.neighborChanged(blockstate, blockpos, this, pos, false);
+        level.scheduleTick(pos, this, 3);
+    }
+
+    private void updateAbove(Level level, BlockPos pos) {
+        BlockPos abovePos = pos.above();
+        BlockState aboveState = level.getBlockState(abovePos);
+        aboveState.onNeighborChange(level, abovePos, pos);
+        level.neighborChanged(aboveState, abovePos, this, pos, false);
+        if (!aboveState.isRedstoneConductor(level, abovePos)) return;
+        abovePos = abovePos.above();
+        aboveState = level.getBlockState(abovePos);
+        if (!aboveState.getWeakChanges(level, abovePos)) return;
+        level.neighborChanged(aboveState, abovePos, this, pos, false);
     }
 
     @Override
