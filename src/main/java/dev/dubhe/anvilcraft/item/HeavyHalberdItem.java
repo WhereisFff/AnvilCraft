@@ -149,9 +149,6 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
                 stack.remove(DataComponents.TOOL);
             }
         } else {
-            if (stack.has(ModComponents.MERCILESS)) {
-                stack.set(ModComponents.MERCILESS, Merciless.DEFAULT);
-            }
             if (stack.has(DataComponents.STORED_ENCHANTMENTS) && !stack.has(ModComponents.MERCILESS)) {
                 ItemEnchantments enchantmentsStored = stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
                 ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
@@ -400,6 +397,6 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
 
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
-        return ItemAbilities.DEFAULT_TRIDENT_ACTIONS.contains(itemAbility);
+        return ItemAbilities.DEFAULT_TRIDENT_ACTIONS.contains(itemAbility) || ItemAbilities.DEFAULT_SWORD_ACTIONS.contains(itemAbility);
     }
 }

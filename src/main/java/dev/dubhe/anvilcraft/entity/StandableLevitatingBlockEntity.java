@@ -151,12 +151,12 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
 
     @Override
     public void remove(RemovalReason reason) {
+        super.remove(reason);
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().expandTowards(0, 1.75F, 0),
             EntitySelector.pushableBy(this)
         );
-        if (list.isEmpty()) return;
         for (Entity entity : list) {
             if (entity instanceof FallingBlockEntity) continue;
             if (entity instanceof IonocraftEntity) continue;
@@ -166,7 +166,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
                 entity.getDeltaMovement().z
             );
         }
-        super.remove(reason);
     }
 
     @Override

@@ -108,4 +108,22 @@ public class MathUtil {
         FACTORIAL_CACHE.put(value, result);
         return result;
     }
+
+    public static float clampWithProportion(float value, float min, float max) {
+        float length = Math.abs(max - min);
+        if (length == 0) throw new IllegalArgumentException("The min value " + min + " cannot be equal to the max value" + max + "!");
+
+        if (value > max) {
+            while (value > max + length) {
+                value -= length;
+            }
+            return max - (max - value);
+        } else if (value < min) {
+            while (value < min + length) {
+                value += length;
+            }
+            return min + (value - min);
+        }
+        return value;
+    }
 }

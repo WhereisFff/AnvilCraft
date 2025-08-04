@@ -255,19 +255,22 @@ public class AnvilEventListener {
             .withParameter(LootContextParams.THIS_ENTITY, entity)
             .withParameter(LootContextParams.ORIGIN, pos);
         Block anvil = eventEntity.getBlockState().getBlock();
+        Optional<ServerPlayer> killerOp = Optional.empty();
         if (Util.instanceOfAny(anvil, EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
-            ServerPlayer player = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
-            builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(player))
-                .withParameter(LootContextParams.ATTACKING_ENTITY, player)
-                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player);
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
+            builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(killer))
+                .withParameter(LootContextParams.ATTACKING_ENTITY, killer)
+                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, killer);
             if (anvil instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, player);
+                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, killer);
             }
+            killerOp = Optional.of(killer);
         }
         LootParams lootParams = builder.create(LootContextParamSets.ENTITY);
         LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(entity.getLootTable());
         dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
+        killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
     }
 }

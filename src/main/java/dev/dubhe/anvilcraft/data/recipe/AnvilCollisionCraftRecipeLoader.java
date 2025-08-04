@@ -16,7 +16,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .anvil(BlockTags.ANVIL)
             .hitBlock(ModBlocks.NEGATIVE_MATTER_BLOCK.get())
             .outputItem(ModBlocks.VOID_MATTER_BLOCK.asItem(), 8)
-            .save(provider, "negative_matter_block");
+            .save(provider);
         AnvilCollisionCraftRecipe.builder()
             .anvil(ModBlocks.EMBER_ANVIL.get())
             .hitBlock(ModBlocks.FROST_METAL_BLOCK.get())
@@ -59,14 +59,16 @@ public class AnvilCollisionCraftRecipeLoader {
             .anvil(ModBlocks.EMBER_ANVIL.get())
             .consume(false)
             .hitBlock(ModBlocks.LEVITATION_POWDER_BLOCK.get())
-            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2)
+            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 6)
+            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.5f)
             .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.25f)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
             .anvil(ModBlocks.ROYAL_ANVIL.get())
             .consume(false)
             .hitBlock(ModBlocks.LEVITATION_POWDER_BLOCK.get())
-            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2)
+            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 6)
+            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.5f)
             .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.25f)
             .save(provider);
         CompoundTag heatableData = new CompoundTag();

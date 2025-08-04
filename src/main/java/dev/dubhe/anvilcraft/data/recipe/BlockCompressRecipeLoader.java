@@ -13,7 +13,6 @@ public class BlockCompressRecipeLoader {
         blockCompress(provider, Blocks.STONE, Blocks.STONE, Blocks.DEEPSLATE);
         blockCompress(provider, Blocks.ICE, Blocks.ICE, Blocks.PACKED_ICE);
         blockCompress(provider, Blocks.PACKED_ICE, Blocks.PACKED_ICE, Blocks.BLUE_ICE);
-        blockCompress(provider, Blocks.MOSS_BLOCK, Blocks.DIRT, Blocks.GRASS_BLOCK);
         blockCompress(provider, Blocks.NETHER_WART_BLOCK, Blocks.NETHERRACK, Blocks.CRIMSON_NYLIUM);
         blockCompress(provider, Blocks.WARPED_WART_BLOCK, Blocks.NETHERRACK, Blocks.WARPED_NYLIUM);
         blockCompress(provider, Blocks.BASALT, Blocks.BASALT, Blocks.BLACKSTONE);
@@ -23,10 +22,7 @@ public class BlockCompressRecipeLoader {
             provider,
             ModBlocks.CHOCOLATE_CREAM_BLOCK.get(),
             ModBlocks.CAKE_BASE_BLOCK.get(),
-            ModBlocks.CHOCOLATE_CAKE_BLOCK.get()
-        );
-        blockCompress(provider, Blocks.MOSS_BLOCK, Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE);
-        blockCompress(provider, Blocks.MOSS_BLOCK, Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS);
+            ModBlocks.CHOCOLATE_CAKE_BLOCK.get());
         BlockCompressRecipe.builder()
             .input(BlockTags.LEAVES)
             .input(Blocks.DIRT)

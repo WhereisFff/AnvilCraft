@@ -38,15 +38,15 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         Multiphase multiphase = this.get(ModComponents.MULTIPHASE);
         if (multiphase == null) return;
         if (component.equals(DataComponents.CUSTOM_NAME) && value instanceof Component customName) {
-            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.alpha().withCustomName(customName)));
+            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withCustomName(customName)));
         } else if (component.equals(DataComponents.ITEM_NAME) && value instanceof Component itemName) {
-            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.alpha().withItemName(itemName)));
+            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withItemName(itemName)));
         } else if (component.equals(DataComponents.REPAIR_COST) && value instanceof Integer repairCost) {
-            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.alpha().withRepairCost(repairCost)));
+            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withRepairCost(repairCost)));
         } else if (
             component.equals(EnchantmentHelper.getComponentType(Util.cast(this))) && value instanceof ItemEnchantments enchantments
         ) {
-            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.alpha().withEnchantments(enchantments)));
+            this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withEnchantments(enchantments)));
         }
     }
 

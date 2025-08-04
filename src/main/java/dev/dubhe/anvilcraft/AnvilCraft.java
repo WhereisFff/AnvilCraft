@@ -133,6 +133,7 @@ public class AnvilCraft {
         eventBus.addListener(AnvilCraft::registerPayload);
         eventBus.addListener(AnvilCraft::loadComplete);
         eventBus.addListener(AnvilCraft::packSetup);
+        eventBus.addListener(ModFluids::registerFluidInteractions);
     }
 
     public static @NotNull ResourceLocation of(String path) {
