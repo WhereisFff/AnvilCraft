@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.anvil.impl;
+package dev.dubhe.anvilcraft.anvil;
 
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
