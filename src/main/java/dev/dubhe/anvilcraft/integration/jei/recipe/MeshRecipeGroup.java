@@ -24,51 +24,52 @@ public record MeshRecipeGroup(Ingredient ingredient, List<Result> results) {
     public static int maxRows;
 
     public static ImmutableList<MeshRecipeGroup> getAllRecipesGrouped() {
-        maxRows = 1;
-
-        List<MeshRecipe> recipes = JeiRecipeUtil.getRecipesFromType(ModRecipeTypes.MESH_TYPE.get());
-        Multimap<Ingredient, MeshRecipe> ingredientGrouper = ArrayListMultimap.create();
-
-        for (int i = 0; i < recipes.size(); i++) {
-            MeshRecipe recipe = recipes.get(i);
-            ingredientGrouper.put(recipe.getInput(), recipe);
-
-            for (int j = i + 1; j < recipes.size(); j++) {
-                MeshRecipe other = recipes.get(j);
-
-                if (RecipeUtil.isIngredientsEqual(recipe.getInput(), other.getInput())) {
-                    ingredientGrouper.put(recipe.getInput(), other);
-                    recipes.remove(other);
-                    j--;
-                }
-            }
-        }
-
-        ImmutableList.Builder<MeshRecipeGroup> jeiRecipes = ImmutableList.builder();
-        Comparator<Result> resultSorter =
-            Comparator.comparingDouble(Result::getExpectedCount).reversed();
-
-        for (Ingredient ingredient : ingredientGrouper.keySet()) {
-            Collection<MeshRecipe> values = ingredientGrouper.get(ingredient);
-
-            List<Result> results = new ArrayList<>(values.size());
-
-            for (MeshRecipe recipe : values) {
-                int resultCount = recipe.getResultAmount() instanceof ConstantValue constantValue
-                    ? Math.round(constantValue.value())
-                    : 1;
-                results.add(new Result(recipe.getResult().copyWithCount(resultCount), recipe.getResultAmount()));
-            }
-
-            results.sort(resultSorter);
-
-            jeiRecipes.add(new MeshRecipeGroup(ingredient, results));
-            int rows = Mth.ceil(values.size() / 9f);
-            if (rows > maxRows) {
-                maxRows = rows;
-            }
-        }
-        return jeiRecipes.build();
+        return ImmutableList.of();
+//        maxRows = 1;
+//
+//        List<MeshRecipe> recipes = JeiRecipeUtil.getRecipesFromType(ModRecipeTypes.MESH_TYPE.get());
+//        Multimap<Ingredient, MeshRecipe> ingredientGrouper = ArrayListMultimap.create();
+//
+//        for (int i = 0; i < recipes.size(); i++) {
+//            MeshRecipe recipe = recipes.get(i);
+//            ingredientGrouper.put(recipe.getInput(), recipe);
+//
+//            for (int j = i + 1; j < recipes.size(); j++) {
+//                MeshRecipe other = recipes.get(j);
+//
+//                if (RecipeUtil.isIngredientsEqual(recipe.getInput(), other.getInput())) {
+//                    ingredientGrouper.put(recipe.getInput(), other);
+//                    recipes.remove(other);
+//                    j--;
+//                }
+//            }
+//        }
+//
+//        ImmutableList.Builder<MeshRecipeGroup> jeiRecipes = ImmutableList.builder();
+//        Comparator<Result> resultSorter =
+//            Comparator.comparingDouble(Result::getExpectedCount).reversed();
+//
+//        for (Ingredient ingredient : ingredientGrouper.keySet()) {
+//            Collection<MeshRecipe> values = ingredientGrouper.get(ingredient);
+//
+//            List<Result> results = new ArrayList<>(values.size());
+//
+//            for (MeshRecipe recipe : values) {
+//                int resultCount = recipe.getResultAmount() instanceof ConstantValue constantValue
+//                    ? Math.round(constantValue.value())
+//                    : 1;
+//                results.add(new Result(recipe.getResult().copyWithCount(resultCount), recipe.getResultAmount()));
+//            }
+//
+//            results.sort(resultSorter);
+//
+//            jeiRecipes.add(new MeshRecipeGroup(ingredient, results));
+//            int rows = Mth.ceil(values.size() / 9f);
+//            if (rows > maxRows) {
+//                maxRows = rows;
+//            }
+//        }
+//        return jeiRecipes.build();
     }
 
     public static final class Result {

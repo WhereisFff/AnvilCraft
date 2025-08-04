@@ -1,0 +1,38 @@
+{
+  "type": "anvilcraft:mesh",
+  "ingredients": [
+    {
+      "items": "anvilcraft:cinerite"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.5,
+      "id": "anvilcraft:cinerite"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:lapis_lazuli"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:gunpowder"
+    },
+    {
+      "chance": 0.1,
+      "id": "anvilcraft:zinc_nugget"
+    },
+    {
+      "chance": 0.1,
+      "id": "anvilcraft:lead_nugget"
+    },
+    {
+      "chance": 0.1,
+      "id": "anvilcraft:tin_nugget"
+    },
+    {
+      "chance": 0.1,
+      "id": "anvilcraft:silver_nugget"
+    }
+  ]
+}

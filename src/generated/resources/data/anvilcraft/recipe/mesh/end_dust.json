@@ -1,0 +1,26 @@
+{
+  "type": "anvilcraft:mesh",
+  "ingredients": [
+    {
+      "items": "anvilcraft:end_dust"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.5,
+      "id": "anvilcraft:end_dust"
+    },
+    {
+      "chance": 0.005,
+      "id": "minecraft:chorus_flower"
+    },
+    {
+      "chance": 0.1,
+      "id": "anvilcraft:titanium_nugget"
+    },
+    {
+      "chance": 0.1,
+      "id": "anvilcraft:levitation_powder"
+    }
+  ]
+}

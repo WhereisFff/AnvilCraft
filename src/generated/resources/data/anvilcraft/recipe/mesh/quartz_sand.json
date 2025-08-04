@@ -1,0 +1,17 @@
+{
+  "type": "anvilcraft:mesh",
+  "ingredients": [
+    {
+      "items": "anvilcraft:quartz_sand"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.5,
+      "id": "anvilcraft:quartz_sand"
+    },
+    {
+      "id": "minecraft:quartz"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "anvilcraft:mesh",
+  "ingredients": [
+    {
+      "items": "minecraft:red_sand"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.5,
+      "id": "minecraft:red_sand"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:glowstone_dust"
+    },
+    {
+      "chance": 0.2,
+      "id": "anvilcraft:copper_nugget"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "type": "anvilcraft:mesh",
+  "ingredients": [
+    {
+      "items": "anvilcraft:nether_dust"
+    }
+  ],
+  "results": [
+    {
+      "chance": 0.5,
+      "id": "anvilcraft:nether_dust"
+    },
+    {
+      "chance": 0.1,
+      "id": "minecraft:redstone"
+    },
+    {
+      "chance": 0.1,
+      "id": "anvilcraft:tungsten_nugget"
+    }
+  ]
+}
