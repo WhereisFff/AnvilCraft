@@ -5,16 +5,20 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.StateHolder;
@@ -27,11 +31,10 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Getter
-public class BlockStatePredicate implements Predicate<BlockState> {
+public class BlockStatePredicate {
     public static final Codec<List<PropertyMatcher>> PROPERTIES_CODEC = Codec.unboundedMap(
             Codec.STRING, ValueMatcher.CODEC
         )
@@ -43,10 +46,6 @@ public class BlockStatePredicate implements Predicate<BlockState> {
             list -> list.stream()
                 .collect(Collectors.toMap(PropertyMatcher::name, PropertyMatcher::valueMatcher))
         );
-    public static final StreamCodec<ByteBuf, List<List<PropertyMatcher>>> PROPERTIES_STREAM_CODEC = PropertyMatcher.STREAM_CODEC
-        .apply(ByteBufCodecs.list())
-        .apply(ByteBufCodecs.list())
-        .map(lists -> lists, lists -> lists);
     public static final Codec<BlockStatePredicate> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
                 RegistryCodecs.homogeneousList(Registries.BLOCK)
@@ -55,39 +54,57 @@ public class BlockStatePredicate implements Predicate<BlockState> {
                 PROPERTIES_CODEC
                     .listOf()
                     .optionalFieldOf("properties", List.of())
-                    .forGetter(BlockStatePredicate::getProperties)
+                    .forGetter(BlockStatePredicate::getProperties),
+                NbtPredicate.CODEC.listOf()
+                    .optionalFieldOf("nbts", Collections.emptyList())
+                    .forGetter(BlockStatePredicate::getNbts)
             )
             .apply(instance, BlockStatePredicate::new)
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockStatePredicate> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.holderSet(Registries.BLOCK),
         BlockStatePredicate::getBlocks,
-        PROPERTIES_STREAM_CODEC,
+        PropertyMatcher.STREAM_CODEC.apply(ByteBufCodecs.list()).apply(ByteBufCodecs.list()),
         BlockStatePredicate::getProperties,
+        NbtPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+        BlockStatePredicate::getNbts,
         BlockStatePredicate::new
     );
 
     private final HolderSet<Block> blocks;
     private final List<List<PropertyMatcher>> properties;
+    private final List<NbtPredicate> nbts;
 
-    private BlockStatePredicate(HolderSet<Block> blocks, List<List<PropertyMatcher>> properties) {
+    private BlockStatePredicate(HolderSet<Block> blocks, List<List<PropertyMatcher>> properties, List<NbtPredicate> nbts) {
         this.blocks = blocks;
         this.properties = properties;
+        this.nbts = nbts;
     }
 
-    @Override
-    public boolean test(BlockState state) {
+    public boolean test(@NotNull LevelAccessor level, @NotNull BlockCache cache, BlockPos pos) {
+        BlockState state = cache.getBlockState(pos);
         if (this.blocks.size() > 0 && !state.is(this.blocks)) return false;
         if (this.properties.isEmpty()) return true;
+        boolean flag = false;
         for (List<PropertyMatcher> matchers : this.properties) {
-            boolean flag = true;
+            boolean flag1 = true;
             for (PropertyMatcher matcher : matchers) {
                 if (!matcher.match(state.getBlock().getStateDefinition(), state)) {
-                    flag = false;
+                    flag1 = false;
                     break;
                 }
             }
-            if (flag) return true;
+            if (flag1) {
+                flag = true;
+            }
+        }
+        if (!flag) return false;
+        if (this.nbts.isEmpty()) return true;
+        if (!state.hasBlockEntity() && !this.nbts.isEmpty()) return false;
+        BlockEntity entity = cache.getBlockEntity(pos);
+        if (entity == null) return false;
+        for (NbtPredicate nbt : this.nbts) {
+            if (nbt.test(entity.saveWithFullMetadata(level.registryAccess()))) return true;
         }
         return false;
     }
@@ -99,6 +116,7 @@ public class BlockStatePredicate implements Predicate<BlockState> {
     @SuppressWarnings({"deprecation", "UnusedReturnValue"})
     public static class Builder {
         private final List<List<PropertyMatcher>> properties = new ArrayList<>();
+        private final List<NbtPredicate> nbts = new ArrayList<>();
         private HolderSet<Block> blocks = HolderSet.empty();
         private List<PropertyMatcher> and = new ArrayList<>();
 
@@ -177,9 +195,14 @@ public class BlockStatePredicate implements Predicate<BlockState> {
             return this;
         }
 
+        public Builder nbt(@NotNull CompoundTag tag) {
+            this.nbts.add(new NbtPredicate(tag));
+            return this;
+        }
+
         public BlockStatePredicate build() {
             if (!this.and.isEmpty()) this.or();
-            return new BlockStatePredicate(this.blocks, Collections.unmodifiableList(this.properties));
+            return new BlockStatePredicate(this.blocks, Collections.unmodifiableList(this.properties), this.nbts);
         }
     }
 

@@ -10,6 +10,7 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -29,8 +30,8 @@ public abstract class HasBlockBase<T extends HasBlockBase<T>> implements IRecipe
         Vec3 pos = context.getPos().add(this.offset);
         BlockPos blockPos = BlockPos.containing(pos);
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
-        BlockState blockState = cache.getBlockState(blockPos);
-        return predicate.test(blockState);
+        ServerLevel level = context.getLevel();
+        return predicate.test(level, cache, blockPos);
     }
 
     public abstract static class AbstractType<T extends HasBlockBase<T>> implements IRecipePredicate.Type<T> {
