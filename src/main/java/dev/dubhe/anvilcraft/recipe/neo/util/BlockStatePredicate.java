@@ -96,7 +96,7 @@ public class BlockStatePredicate implements Predicate<BlockState> {
         return new Builder();
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "UnusedReturnValue"})
     public static class Builder {
         private final List<List<PropertyMatcher>> properties = new ArrayList<>();
         private HolderSet<Block> blocks = HolderSet.empty();
@@ -133,8 +133,11 @@ public class BlockStatePredicate implements Predicate<BlockState> {
             return this.with(property, Boolean.toString(value));
         }
 
-        public <T extends Comparable<T> & StringRepresentable> Builder with(Property<T> property, @NotNull T value) {
-            return this.with(property, value.getSerializedName());
+        public <T extends Comparable<T>> Builder with(Property<T> property, @NotNull T value) {
+            if (value instanceof StringRepresentable stringRepresentable) {
+                return this.with(property, stringRepresentable.getSerializedName());
+            }
+            return this.with(property, String.valueOf(value));
         }
 
         public <T extends Comparable<T>> Builder with(

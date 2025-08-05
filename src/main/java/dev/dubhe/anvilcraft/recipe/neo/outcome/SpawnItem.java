@@ -10,7 +10,9 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ItemCache;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,6 +26,10 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
         this.item = item;
         this.offset = offset;
         this.chance = chance;
+    }
+
+    public static @NotNull Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -76,5 +82,56 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
     }
 
     public static class Builder {
+        private Vec3 offset = Vec3.ZERO;
+        private double chance = 1.0;
+        private ItemStack item = ItemStack.EMPTY;
+
+        public Builder offset(Vec3 offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        public Builder offset(double x, double y, double z) {
+            this.offset = new Vec3(x, y, z);
+            return this;
+        }
+
+        public Builder below(double below) {
+            return this.offset(Vec3.ZERO.subtract(0, below, 0));
+        }
+
+        public Builder below() {
+            return this.below(1);
+        }
+
+        public Builder above(double above) {
+            return this.offset(Vec3.ZERO.add(0, above, 0));
+        }
+
+        public Builder above() {
+            return this.above(1);
+        }
+
+        public Builder chance(double chance) {
+            this.chance = chance;
+            return this;
+        }
+
+        public Builder item(ItemStack item) {
+            this.item = item;
+            return this;
+        }
+
+        public Builder item(@NotNull Item item) {
+            return this.item(item.getDefaultInstance());
+        }
+
+        public Builder item(@NotNull ItemLike item) {
+            return this.item(item.asItem());
+        }
+
+        public SpawnItem build() {
+            return new SpawnItem(this.item, this.offset, this.chance);
+        }
     }
 }

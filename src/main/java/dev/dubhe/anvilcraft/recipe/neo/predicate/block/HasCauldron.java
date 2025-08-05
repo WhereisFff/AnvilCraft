@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockCache;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -66,6 +67,10 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         return BlockStatePredicate.builder()
             .of(block, Blocks.CAULDRON)
             .build();
+    }
+
+    public static @NotNull Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -158,6 +163,82 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
                 buf.readInt(),
                 buf.readResourceLocation()
             );
+        }
+    }
+
+    public static class Builder {
+        private Vec3 offset = Vec3.ZERO;
+        private ResourceLocation fluid = HasCauldron.EMPTY;
+        private int consume = 0;
+        private ResourceLocation transform = HasCauldron.NULL;
+
+        public Builder offset(Vec3 offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        public Builder offset(double x, double y, double z) {
+            return this.offset(new Vec3(x, y, z));
+        }
+
+        public Builder below(double below) {
+            return this.offset(Vec3.ZERO.subtract(0, below, 0));
+        }
+
+        public Builder below() {
+            return this.below(1);
+        }
+
+        public Builder above(double above) {
+            return this.offset(Vec3.ZERO.add(0, above, 0));
+        }
+
+        public Builder above() {
+            return this.above(1);
+        }
+
+        public Builder empty() {
+            this.fluid = HasCauldron.EMPTY;
+            return this;
+        }
+
+        public Builder fluid(ResourceLocation fluid) {
+            this.fluid = fluid;
+            return this;
+        }
+
+        public Builder cauldron(Block cauldron) {
+            this.fluid = WrapUtils.cauldron2Fluid(cauldron);
+            return this;
+        }
+
+        public Builder transform(ResourceLocation transform) {
+            this.transform = transform;
+            return this;
+        }
+
+        public Builder consume() {
+            this.consume = 1;
+            return this;
+        }
+
+        public Builder consume(int consume) {
+            this.consume = consume;
+            return this;
+        }
+
+        public Builder produce() {
+            this.consume = -1;
+            return this;
+        }
+
+        public Builder produce(int produce) {
+            this.consume = -produce;
+            return this;
+        }
+
+        public HasCauldron build() {
+            return new HasCauldron(this.offset, this.fluid, this.consume, this.transform);
         }
     }
 }

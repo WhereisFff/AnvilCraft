@@ -18,6 +18,7 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,10 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
         this.state = state;
         this.offset = offset;
         this.chance = chance;
+    }
+
+    public static @NotNull Builder builder() {
+        return new Builder();
     }
 
     @Override
@@ -88,6 +93,57 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
             Vec3 vec3 = buf.readVec3();
             double chance = buf.readDouble();
             return new SetBlock(blockState, vec3, chance);
+        }
+    }
+
+    public static class Builder {
+        private BlockState state;
+        private Vec3 offset;
+        private double chance;
+
+        public Builder offset(Vec3 offset) {
+            this.offset = offset;
+            return this;
+        }
+
+        public Builder offset(double x, double y, double z) {
+            this.offset = new Vec3(x, y, z);
+            return this;
+        }
+
+        public Builder below(double below) {
+            return this.offset(Vec3.ZERO.subtract(0, below, 0));
+        }
+
+        public Builder below() {
+            return this.below(1);
+        }
+
+        public Builder above(double above) {
+            return this.offset(Vec3.ZERO.add(0, above, 0));
+        }
+
+        public Builder above() {
+            return this.above(1);
+        }
+
+        public Builder chance(double chance) {
+            this.chance = chance;
+            return this;
+        }
+
+        public Builder block(BlockState state) {
+            this.state = state;
+            return this;
+        }
+
+        public Builder block(@NotNull Block block) {
+            this.state = block.defaultBlockState();
+            return this;
+        }
+
+        public SetBlock build() {
+            return new SetBlock(state, offset, chance);
         }
     }
 }
