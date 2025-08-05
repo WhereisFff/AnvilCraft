@@ -88,7 +88,7 @@ public class AnvilEventListener {
 
     public static void onLandNeo(@NotNull AnvilFallOnLandEvent event) {
         Level level = event.getLevel();
-        if(!(level instanceof ServerLevel serverLevel)) return;
+        if (!(level instanceof ServerLevel serverLevel)) return;
         BlockPos pos = event.getPos();
         FallingBlockEntity entity = event.getEntity();
         InWorldRecipeManager manager = level.getRecipeManager().anc$getInWorldRecipeManager();
@@ -212,8 +212,8 @@ public class AnvilEventListener {
             .map(b -> b.getBlock() instanceof TranscendenceAnvilBlock)
             .orElse(false);
         ItemStack dummyTool = silkTouch ? BreakBlockUtil.getDummySilkTouchTool(serverLevel)
-                                        : fortune5 ? BreakBlockUtil.getDummyFortune5Tool(serverLevel)
-                                                   : ItemStack.EMPTY;
+            : fortune5 ? BreakBlockUtil.getDummyFortune5Tool(serverLevel)
+            : ItemStack.EMPTY;
         state.spawnAfterBreak(serverLevel, pos, dummyTool, false);
         if (state.getBlock() instanceof IHasMultiBlock multiBlock) {
             multiBlock.onRemove(level, pos, state);
