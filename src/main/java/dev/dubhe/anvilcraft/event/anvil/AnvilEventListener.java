@@ -54,7 +54,6 @@ public class AnvilEventListener {
      */
     @SubscribeEvent
     public static void onLand(@NotNull AnvilFallOnLandEvent event) {
-        onLandNeo(event);
         if (!behaviorRegistered) {
             IAnvilBehavior.register();
             behaviorRegistered = true;
@@ -71,14 +70,7 @@ public class AnvilEventListener {
             brokeBlock(level, hitBlockPos, event);
             return;
         }
-
-        handleBlockCompressRecipe(level, hitBlockPos);
-        handleBlockCrushRecipe(level, hitBlockPos);
-        handleBlockSmearRecipe(level, hitBlockPos);
-        handleItemInjectRecipe(level, hitBlockPos, hitBlockState);
-        handleSqueezingRecipe(level, hitBlockPos, hitBlockState);
-
-
+        handleNeoAnvilRecipe(event);
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
                 return;
@@ -86,7 +78,7 @@ public class AnvilEventListener {
         }
     }
 
-    public static void onLandNeo(@NotNull AnvilFallOnLandEvent event) {
+    public static void handleNeoAnvilRecipe(@NotNull AnvilFallOnLandEvent event) {
         Level level = event.getLevel();
         if (!(level instanceof ServerLevel serverLevel)) return;
         BlockPos pos = event.getPos();
@@ -97,100 +89,6 @@ public class AnvilEventListener {
         boolean damageAnvil = context.get(DamageAnvil.DAMAGE_ANVIL);
         if (!event.isAnvilDamage()) event.setAnvilDamage(damageAnvil);
         context.accept();
-    }
-
-    private static void handleBlockCrushRecipe(Level level, final BlockPos pos) {
-//        BlockState state = level.getBlockState(pos);
-//        level.getRecipeManager()
-//            .getRecipeFor(
-//                ModRecipeTypes.BLOCK_CRUSH_TYPE.get(), new BlockCrushRecipe.Input(state.getBlock()), level)
-//            .ifPresent(recipe ->
-//                level.setBlockAndUpdate(pos, recipe.value().result.defaultBlockState()));
-    }
-
-    private static void handleBlockCompressRecipe(Level level, final BlockPos pos) {
-//        List<Block> inputs = new ArrayList<>();
-//        for (int i = 0; i < 9; i++) {
-//            inputs.add(level.getBlockState(pos.below(i)).getBlock());
-//        }
-//        level.getRecipeManager()
-//            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
-//            .ifPresent(recipe -> {
-//                for (int i = 0; i < recipe.value().inputs.size(); i++) {
-//                    level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
-//                }
-//                level.setBlockAndUpdate(
-//                    pos.below(recipe.value().inputs.size() - 1),
-//                    recipe.value().result.defaultBlockState());
-//            });
-    }
-
-    private static void handleBlockSmearRecipe(Level level, final BlockPos pos) {
-//        List<Block> inputs = new ArrayList<>();
-//        for (int i = 0; i < 9; i++) {
-//            inputs.add(level.getBlockState(pos.below(i)).getBlock());
-//        }
-//        level.getRecipeManager()
-//            .getRecipeFor(ModRecipeTypes.BLOCK_COMPRESS_TYPE.get(), new BlockCompressRecipe.Input(inputs), level)
-//            .ifPresent(recipe -> {
-//                for (int i = 1; i < recipe.value().inputs.size(); i++) {
-//                    level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
-//                }
-//                level.setBlockAndUpdate(
-//                    pos.below(recipe.value().inputs.size() - 1),
-//                    recipe.value().result.defaultBlockState());
-//            });
-    }
-
-    private static void handleItemInjectRecipe(Level level, final BlockPos pos, BlockState state) {
-//        Map<ItemEntity, ItemStack> items = level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).stream()
-//            .map(it -> Map.entry(it, it.getItem()))
-//            .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue));
-//        if (items.isEmpty()) return;
-//        ItemInjectRecipe.Input input =
-//            new ItemInjectRecipe.Input(items.values().stream().toList(), state.getBlock());
-//        level.getRecipeManager()
-//            .getRecipeFor(ModRecipeTypes.ITEM_INJECT_TYPE.get(), input, level)
-//            .ifPresent(recipe -> {
-//                for (Ingredient ingredient : recipe.value().getIngredients()) {
-//                    for (ItemStack stack : input.items()) {
-//                        if (ingredient.test(stack)) {
-//                            stack.shrink(1);
-//                            break;
-//                        }
-//                    }
-//                }
-//                ChanceItemStack stack = recipe.value().resultItem;
-//                if (!stack.equals(ChanceItemStack.EMPTY) && !level.isClientSide && level instanceof ServerLevel serverLevel) {
-//                    int amount = stack.getStack().getCount() * stack.getAmount().getInt(RecipeUtil.emptyLootContext(serverLevel));
-//                    Vec3 posV = pos.getCenter();
-//                    level.addFreshEntity(new ItemEntity(
-//                        level, posV.x, posV.y, posV.z,
-//                        recipe.value().resultItem.getStack().copyWithCount(amount)));
-//                }
-//                level.setBlockAndUpdate(pos, recipe.value().resultBlock.defaultBlockState());
-//                items.forEach((k, v) -> {
-//                    if (v.isEmpty()) {
-//                        k.discard();
-//                        return;
-//                    }
-//                    k.setItem(v.copy());
-//                });
-//            });
-    }
-
-    private static void handleSqueezingRecipe(Level level, final BlockPos pos, BlockState state) {
-//        BlockPos belowPos = pos.below();
-//        BlockState belowState = level.getBlockState(belowPos);
-//        if (!(belowState.getBlock() instanceof AbstractCauldronBlock)) return;
-//        SqueezingRecipe.Input input = new SqueezingRecipe.Input(state.getBlock(), belowState);
-//        level.getRecipeManager()
-//            .getRecipeFor(ModRecipeTypes.SQUEEZING_TYPE.get(), input, level)
-//            .map(RecipeHolder::value)
-//            .ifPresent(recipe -> {
-//                CauldronUtil.fill(level, belowPos, recipe.getCauldron(), 1, false);
-//                level.setBlockAndUpdate(pos, recipe.resultBlock.defaultBlockState());
-//            });
     }
 
     private static void brokeBlock(@NotNull Level level, BlockPos pos, AnvilFallOnLandEvent event) {
