@@ -142,12 +142,12 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
             return this;
         }
 
-        public Builder result(@NotNull Block result, double chance) {
+        public Builder result(@NotNull Block result, float chance) {
             return this.result(new ChanceBlockState(result.defaultBlockState(), chance));
         }
 
         public Builder result(Block result) {
-            return this.result(result, 1.0);
+            return this.result(result, 1.0f);
         }
 
         public Builder cauldron(ResourceLocation fluid) {

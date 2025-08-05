@@ -19,7 +19,7 @@ public class ItemCrushRecipeLoader {
         ItemCrushRecipe.builder()
             .requires(Tags.Items.CROPS_WHEAT)
             .result(new ItemStack(ModItems.FLOUR.get()))
-            .result(ModItems.FLOUR, 0.5)
+            .result(ModItems.FLOUR, 0.5f)
             .save(provider);
         ItemCrushRecipe.builder()
             .requires(ItemTags.LOGS)
@@ -29,9 +29,9 @@ public class ItemCrushRecipeLoader {
         StampingRecipe.builder()
             .requires(ModItems.GEODE)
             .result(new ItemStack(Items.AMETHYST_SHARD, 4))
-            .result(ModItems.TOPAZ.get(), 0.25)
-            .result(ModItems.SAPPHIRE.get(), 0.25)
-            .result(ModItems.RUBY.get(), 0.25)
+            .result(ModItems.TOPAZ.get(), 0.25f)
+            .result(ModItems.SAPPHIRE.get(), 0.25f)
+            .result(ModItems.RUBY.get(), 0.25f)
             .save(provider, AnvilCraft.of("stamping/geode_gems"));
         StampingRecipe.builder()
             .requires(Items.COCOA_BEANS)
@@ -42,8 +42,8 @@ public class ItemCrushRecipeLoader {
             .requires(ModItems.PRISMARINE_CLUSTER)
             .result(Items.PRISMARINE_CRYSTALS, 2)
             .result(Items.PRISMARINE_SHARD)
-            .result(Items.PRISMARINE_CRYSTALS, 0.5)
-            .result(ModItems.PRISMARINE_BLADE, 0.15)
+            .result(Items.PRISMARINE_CRYSTALS, 0.5f)
+            .result(ModItems.PRISMARINE_BLADE, 0.15f)
             .save(provider);
 
         ItemCrushRecipe.builder()
@@ -122,22 +122,22 @@ public class ItemCrushRecipeLoader {
     private static void tool(RegistrateRecipeProvider provider, ItemLike tool, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(tool)
-            .result(result, 0.5)
+            .result(result, 0.5f)
             .save(provider, AnvilCraft.of("item_crush/tool/%s_2_%s".formatted(getName(tool), getName(result))));
     }
 
     private static void blockCrush(RegistrateRecipeProvider provider, ItemLike input, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(input)
-            .result(result, 0.8)
+            .result(result, 0.8f)
             .save(provider, AnvilCraft.of("item_crush/block_crush/%s_from_%s".formatted(getName(result), getName(input))));
     }
 
     private static void armor(RegistrateRecipeProvider provider, ItemLike armor, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(armor)
-            .result(result, 0.5)
-            .result(result, 0.5)
+            .result(result, 0.5f)
+            .result(result, 0.5f)
             .save(provider, AnvilCraft.of("item_crush/armor/%s_2_%s".formatted(getName(armor), getName(result))));
     }
 

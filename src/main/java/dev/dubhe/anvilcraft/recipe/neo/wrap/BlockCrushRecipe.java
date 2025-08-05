@@ -123,7 +123,7 @@ public class BlockCrushRecipe extends InWorldRecipe {
         }
 
         public Builder result(@NotNull Block result) {
-            this.result = (new ChanceBlockState(result.defaultBlockState(), 1.0));
+            this.result = (new ChanceBlockState(result.defaultBlockState(), 1.0f));
             return this;
         }
 

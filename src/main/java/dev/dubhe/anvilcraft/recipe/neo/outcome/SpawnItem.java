@@ -1,18 +1,21 @@
 package dev.dubhe.anvilcraft.recipe.neo.outcome;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemCache;
+import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,9 +23,9 @@ import org.jetbrains.annotations.NotNull;
 public class SpawnItem implements IRecipeOutcome<SpawnItem> {
     private final ItemStack item;
     private final Vec3 offset;
-    private final double chance;
+    private final NumberProvider chance;
 
-    public SpawnItem(ItemStack item, Vec3 offset, double chance) {
+    public SpawnItem(ItemStack item, Vec3 offset, NumberProvider chance) {
         this.item = item;
         this.offset = offset;
         this.chance = chance;
@@ -52,7 +55,7 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
                     .forGetter(SpawnItem::getItem),
                 Vec3.CODEC.fieldOf("offset")
                     .forGetter(SpawnItem::getOffset),
-                Codec.DOUBLE.optionalFieldOf("chance", 1.0)
+                NumberProviders.CODEC.optionalFieldOf("chance", ConstantValue.exactly(1.0f))
                     .forGetter(SpawnItem::getChance)
             ).apply(instance, SpawnItem::new)
         );
@@ -70,20 +73,20 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
         public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SpawnItem spawnItem) {
             ItemStack.STREAM_CODEC.encode(buf, spawnItem.item);
             buf.writeVec3(spawnItem.offset);
-            buf.writeDouble(spawnItem.chance);
+            RecipeUtil.toNetwork(buf, spawnItem.chance);
         }
 
         public static @NotNull SpawnItem decode(@NotNull RegistryFriendlyByteBuf buf) {
             ItemStack stack = ItemStack.STREAM_CODEC.decode(buf);
             Vec3 vec3 = buf.readVec3();
-            double chance = buf.readDouble();
+            NumberProvider chance = RecipeUtil.fromNetwork(buf);
             return new SpawnItem(stack, vec3, chance);
         }
     }
 
     public static class Builder {
         private Vec3 offset = Vec3.ZERO;
-        private double chance = 1.0;
+        private NumberProvider chance = ConstantValue.exactly(1.0f);
         private ItemStack item = ItemStack.EMPTY;
 
         public Builder offset(Vec3 offset) {
@@ -112,9 +115,13 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
             return this.above(1);
         }
 
-        public Builder chance(double chance) {
+        public Builder chance(NumberProvider chance) {
             this.chance = chance;
             return this;
+        }
+
+        public Builder chance(float chance) {
+            return this.chance(ConstantValue.exactly(chance));
         }
 
         public Builder item(ItemStack item) {

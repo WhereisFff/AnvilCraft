@@ -102,7 +102,7 @@ public class ItemInjectRecipeLoader {
         ItemInjectRecipe.builder()
             .requires(ModItems.CHARGED_NEUTRONIUM_INGOT)
             .inputBlock(ModBlocks.OVERHEATED_EMBER_METAL.get())
-            .result(ModItems.NEUTRONIUM_INGOT, 0.5)
+            .result(ModItems.NEUTRONIUM_INGOT, 0.5f)
             .resultBlock(ModBlocks.TRANSCENDIUM_BLOCK.get())
             .save(provider);
     }

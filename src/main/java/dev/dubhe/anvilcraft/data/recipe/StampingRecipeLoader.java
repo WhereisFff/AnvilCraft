@@ -46,8 +46,8 @@ public class StampingRecipeLoader {
         StampingRecipe.builder()
             .requires(Items.HEART_OF_THE_SEA)
             .result(ModItems.SEA_HEART_SHELL_SHARD, 3)
-            .result(ModItems.SEA_HEART_SHELL_SHARD, 1, 0.5)
-            .result(ModItems.SEA_HEART_SHELL_SHARD, 1, 0.5)
+            .result(ModItems.SEA_HEART_SHELL_SHARD, 1, 0.5f)
+            .result(ModItems.SEA_HEART_SHELL_SHARD, 1, 0.5f)
             .result(ModItems.SAPPHIRE)
             .save(provider);
         StampingRecipe.builder()

@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.recipe.neo;
 
 import lombok.Getter;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -18,7 +19,7 @@ import java.util.function.Consumer;
 
 public class InWorldRecipeContext implements RecipeInput {
     @Getter
-    private final Level level;
+    private final ServerLevel level;
     @Getter
     private final Vec3 pos;
     @Getter
@@ -28,7 +29,7 @@ public class InWorldRecipeContext implements RecipeInput {
     @Getter
     private final List<IRecipePredicate<?>> stack = Collections.synchronizedList(new LinkedList<>());
 
-    public InWorldRecipeContext(Level level, Vec3 pos, Entity entity) {
+    public InWorldRecipeContext(ServerLevel level, Vec3 pos, Entity entity) {
         this.level = level;
         this.pos = pos;
         this.entity = entity;

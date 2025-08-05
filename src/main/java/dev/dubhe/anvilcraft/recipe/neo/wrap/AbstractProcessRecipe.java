@@ -256,27 +256,27 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             return this.requires(ingredient, 1);
         }
 
-        public B result(@NotNull ItemStack result, double chance) {
+        public B result(@NotNull ItemStack result, float chance) {
             this.results.add(ChanceItemStack.of(result, chance));
             return this.getThis();
         }
 
         public B result(@NotNull ItemStack result) {
-            return this.result(result, 1.0);
+            return this.result(result, 1.0f);
         }
 
-        public B result(@NotNull ItemLike result, int count, double chance) {
+        public B result(@NotNull ItemLike result, int count, float chance) {
             ItemStack stack = result.asItem().getDefaultInstance();
             stack.setCount(count);
             return this.result(stack, chance);
         }
 
-        public B result(@NotNull ItemLike result, double chance) {
+        public B result(@NotNull ItemLike result, float chance) {
             return this.result(result, 1, chance);
         }
 
         public B result(@NotNull ItemLike result) {
-            return this.result(result, 1.0);
+            return this.result(result, 1.0f);
         }
 
         @Override

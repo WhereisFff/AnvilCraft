@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.recipe.neo.util;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.SpawnItem;
+import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentMap;
@@ -13,25 +14,37 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class ChanceItemStack {
     ItemStack stack;
-    double chance;
+    NumberProvider chance;
 
-    public ChanceItemStack(ItemStack stack, double chance) {
+    public ChanceItemStack(Holder<Item> item, int count, DataComponentPatch components, NumberProvider chance) {
+        this.stack = new ItemStack(item, count, components);
+        this.chance = chance;
+    }
+
+    public ChanceItemStack(Holder<Item> item, int count, DataComponentPatch components, float chance) {
+        this(item, count, components, ConstantValue.exactly(chance));
+    }
+
+    public ChanceItemStack(ItemStack stack, NumberProvider chance) {
         this.stack = stack;
         this.chance = chance;
     }
 
-    public ChanceItemStack(Holder<Item> tag, int count, DataComponentPatch components, double chance) {
-        this.stack = new ItemStack(tag, count, components);
-        this.chance = chance;
+    public ChanceItemStack(ItemStack stack, float chance) {
+        this.stack = stack;
+        this.chance = ConstantValue.exactly(chance);
     }
 
-    public static @NotNull ChanceItemStack of(ItemStack stack, double chance) {
+    public static @NotNull ChanceItemStack of(ItemStack stack, float chance) {
         return new ChanceItemStack(stack, chance);
     }
 
@@ -45,8 +58,8 @@ public class ChanceItemStack {
         DataComponentPatch.CODEC
             .optionalFieldOf("components", DataComponentPatch.EMPTY)
             .forGetter(ChanceItemStack::getComponentsPatch),
-        Codec.DOUBLE
-            .optionalFieldOf("chance", 1.0)
+        NumberProviders.CODEC
+            .optionalFieldOf("chance", ConstantValue.exactly(1.0f))
             .forGetter(ChanceItemStack::getChance)
     ).apply(instance, ChanceItemStack::new));
 
@@ -54,13 +67,14 @@ public class ChanceItemStack {
         @Override
         public void encode(@NotNull RegistryFriendlyByteBuf buffer, @NotNull ChanceItemStack value) {
             ItemStack.STREAM_CODEC.encode(buffer, value.stack);
-            buffer.writeDouble(value.chance);
+            RecipeUtil.toNetwork(buffer, value.chance);
         }
 
         @Override
         public @NotNull ChanceItemStack decode(@NotNull RegistryFriendlyByteBuf buffer) {
             ItemStack decode = ItemStack.STREAM_CODEC.decode(buffer);
-            return new ChanceItemStack(decode, buffer.readDouble());
+            NumberProvider chance = RecipeUtil.fromNetwork(buffer);
+            return new ChanceItemStack(decode, chance);
         }
     };
 
@@ -83,6 +97,6 @@ public class ChanceItemStack {
     }
 
     public SpawnItem toSpawnItem(Vec3 offset) {
-        return new SpawnItem(this.getStack(), offset, this.getChance());
+        return SpawnItem.builder().item(this.stack).chance(this.chance).offset(offset).build();
     }
 }

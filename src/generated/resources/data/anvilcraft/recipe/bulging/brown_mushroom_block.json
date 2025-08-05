@@ -11,7 +11,7 @@
       "id": "minecraft:brown_mushroom_block"
     },
     {
-      "chance": 0.10000000149011612,
+      "chance": 0.1,
       "id": "minecraft:mushroom_stem"
     }
   ]

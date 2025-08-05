@@ -143,19 +143,19 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
             return requires(pTag, 1);
         }
 
-        public Builder result(ItemStack stack, double chance) {
+        public Builder result(ItemStack stack, float chance) {
             results.add(ChanceItemStack.of(stack, chance));
             return this;
         }
 
         public Builder result(ItemStack stack) {
-            return this.result(stack, 1.0);
+            return this.result(stack, 1.0f);
         }
 
         public Builder result(@NotNull ItemLike like, double chance, int count) {
             ItemStack stack = like.asItem().getDefaultInstance();
             stack.setCount(count);
-            return this.result(stack, 1.0);
+            return this.result(stack, 1.0f);
         }
 
         public Builder result(@NotNull ItemLike like, double chance) {

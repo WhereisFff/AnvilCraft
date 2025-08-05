@@ -384,7 +384,7 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     }
 
     public InWorldRecipeBuilder spawnItem(Vec3 offset, double chance, ItemStack stack) {
-        return this.out(SpawnItem.builder().offset(offset).chance(chance).item(stack).build());
+        return this.out(SpawnItem.builder().offset(offset).chance((float) chance).item(stack).build());
     }
 
     public InWorldRecipeBuilder spawnItem(Vec3 offset, ItemStack stack) {
@@ -411,7 +411,7 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     }
 
     public InWorldRecipeBuilder setBlock(Vec3 offset, double chance, @NotNull BlockState state) {
-        return this.out(SetBlock.builder().block(state).offset(offset).chance(chance).build());
+        return this.out(SetBlock.builder().block(state).offset(offset).chance((float) chance).build());
     }
 
     public InWorldRecipeBuilder setBlock(Vec3 offset, @NotNull BlockState state) {

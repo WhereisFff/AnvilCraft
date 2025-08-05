@@ -126,7 +126,7 @@ public class BlockCompressRecipe extends InWorldRecipe {
         }
 
         public Builder result(@NotNull Block result) {
-            this.results.add(new ChanceBlockState(result.defaultBlockState(), 1.0));
+            this.results.add(new ChanceBlockState(result.defaultBlockState(), 1.0f));
             return this;
         }
 

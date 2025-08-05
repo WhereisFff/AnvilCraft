@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.recipe.neo.outcome;
 
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -9,6 +8,7 @@ import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockCache;
+import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -19,7 +19,11 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,9 +33,9 @@ import java.util.stream.Stream;
 public class SetBlock implements IRecipeOutcome<SetBlock> {
     private final BlockState state;
     private final Vec3 offset;
-    private final double chance;
+    private final NumberProvider chance;
 
-    public SetBlock(BlockState state, Vec3 offset, double chance) {
+    public SetBlock(BlockState state, Vec3 offset, NumberProvider chance) {
         this.state = state;
         this.offset = offset;
         this.chance = chance;
@@ -60,7 +64,7 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
                     .forGetter(SetBlock::getState),
                 Vec3.CODEC.fieldOf("offset")
                     .forGetter(SetBlock::getOffset),
-                Codec.DOUBLE.optionalFieldOf("chance", 1.0)
+                NumberProviders.CODEC.optionalFieldOf("chance", ConstantValue.exactly(1.0f))
                     .forGetter(SetBlock::getChance)
             ).apply(instance, SetBlock::new));
 
@@ -84,22 +88,22 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
             Tag tag = encode.getOrThrow();
             buf.writeNbt(tag);
             buf.writeVec3(setBlock.offset);
-            buf.writeDouble(setBlock.chance);
+            RecipeUtil.toNetwork(buf, setBlock.chance);
         }
 
         public static @NotNull SetBlock decode(@NotNull RegistryFriendlyByteBuf buf) {
             RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.BLOCK.asLookup())).createSerializationContext(NbtOps.INSTANCE);
             BlockState blockState = BlockState.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst();
             Vec3 vec3 = buf.readVec3();
-            double chance = buf.readDouble();
+            NumberProvider chance = RecipeUtil.fromNetwork(buf);
             return new SetBlock(blockState, vec3, chance);
         }
     }
 
     public static class Builder {
-        private BlockState state;
-        private Vec3 offset;
-        private double chance;
+        private BlockState state = Blocks.AIR.defaultBlockState();
+        private Vec3 offset = Vec3.ZERO;
+        private NumberProvider chance = ConstantValue.exactly(1.0f);
 
         public Builder offset(Vec3 offset) {
             this.offset = offset;
@@ -127,9 +131,13 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
             return this.above(1);
         }
 
-        public Builder chance(double chance) {
+        public Builder chance(NumberProvider chance) {
             this.chance = chance;
             return this;
+        }
+
+        public Builder chance(float chance) {
+            return this.chance(ConstantValue.exactly(chance));
         }
 
         public Builder block(BlockState state) {
