@@ -165,7 +165,7 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
         if (level == null) return;
         List<Entity> entities2 = level.getEntitiesOfClass(Entity.class, new AABB(getBlockPos()), AccelerationRingBlockEntity::canBeAccelerated);
         for (Entity entity : entities2) {
-            if (entity.getDeltaMovement().length() > AnvilCraft.config.maxAccelerationSpeed * 0.99f) {
+            if (entity.getDeltaMovement().length() > Integer.MAX_VALUE * 0.99f) {
                 overSpeed = true;
                 BlockState state = getBlockState();
                 if (!(state.getBlock() instanceof DeflectionRingBlock block)) return;
@@ -203,6 +203,7 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
         for (Entity entity : entities) {
             if (entity.position().y - getBlockPos().getCenter().y - (entity instanceof FallingBlockEntity || entity instanceof Player ? 0.5 : 0) >= entity.getGravity())
                 return;
+            entity.setDeltaMovement(entity.getDeltaMovement().scale(1.0204081632653061));
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
         }
     }

@@ -43,7 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@SuppressWarnings("LombokSetterMayBeUsed")
 public class AccelerationRingBlockEntity extends BlockEntity implements IPowerConsumer {
     @Getter
     @Setter
@@ -134,10 +133,6 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
                 && checkState.getValue(AccelerationRingBlock.SWITCH) == IPowerComponent.Switch.ON
                 && !checkState.getValue(AccelerationRingBlock.OVERLOAD)
                 && checkState.getValue(AccelerationRingBlock.FACING) == direction)
-                || (checkState.hasProperty(DeflectionRingBlock.HALF)
-                && checkState.getValue(DeflectionRingBlock.HALF) == DirectionCube3x3PartHalf.MID_CENTER
-                && checkState.getValue(DeflectionRingBlock.SWITCH) == IPowerComponent.Switch.ON
-                && !checkState.getValue(DeflectionRingBlock.OVERLOAD))
             ) {
                 found = true;
                 break;
@@ -161,7 +156,7 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
         );
         List<Entity> entities = level.getEntitiesOfClass(Entity.class, aabb, AccelerationRingBlockEntity::canBeAccelerated);
         for (Entity entity : entities) {
-            if (Math.abs(entity.getDeltaMovement().get(direction.getAxis())) > AnvilCraft.config.maxAccelerationSpeed) {
+            if (Math.abs(entity.getDeltaMovement().get(direction.getAxis())) > Integer.MAX_VALUE * 0.99f) {
                 entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
                 continue;
             }
