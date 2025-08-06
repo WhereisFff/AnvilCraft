@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.init;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.DamageAnvil;
+import dev.dubhe.anvilcraft.recipe.neo.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.SpawnItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -20,4 +21,7 @@ public class ModRecipeOutcomeTypes {
 
     public static final DeferredHolder<IRecipeOutcome.Type<?>, SetBlock.Type> SET_BLOCK = OUTCOME_TYPE
         .register("set_block", SetBlock.Type::new);
+
+    public static final DeferredHolder<IRecipeOutcome.Type<?>, ProduceHeat.Type> PRODUCE_HEAT = OUTCOME_TYPE
+        .register("produce_heat", ProduceHeat.Type::new);
 }

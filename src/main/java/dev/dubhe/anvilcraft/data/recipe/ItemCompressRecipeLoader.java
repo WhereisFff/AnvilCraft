@@ -38,7 +38,7 @@ public class ItemCompressRecipeLoader {
         ItemCompressRecipe.builder()
             .requires(ModItems.NEUTRONIUM_INGOT)
             .requires(ModItems.URANIUM_INGOT)
-            .result(ModItems.PLUTONIUM_NUGGET.asStack(6))
+            .result(ModItems.PLUTONIUM_NUGGET, 6)
             .result(ModItems.LIME_POWDER)
             .result(ModItems.NEUTRONIUM_INGOT)
             .save(provider, AnvilCraft.of("item_compress/plutonium_nugget_from_neutronium_ingot"));
@@ -46,7 +46,7 @@ public class ItemCompressRecipeLoader {
         ItemCompressRecipe.builder()
             .requires(ModItems.STABLE_NEUTRONIUM_INGOT)
             .requires(ModItems.URANIUM_INGOT)
-            .result(ModItems.PLUTONIUM_NUGGET.asStack(6))
+            .result(ModItems.PLUTONIUM_NUGGET, 6)
             .result(ModItems.LIME_POWDER)
             .result(ModItems.STABLE_NEUTRONIUM_INGOT)
             .save(provider, AnvilCraft.of("item_compress/plutonium_nugget_from_stable_neutronium_ingot"));

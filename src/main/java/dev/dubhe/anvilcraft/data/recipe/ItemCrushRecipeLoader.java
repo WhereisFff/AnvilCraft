@@ -18,7 +18,7 @@ public class ItemCrushRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         ItemCrushRecipe.builder()
             .requires(Tags.Items.CROPS_WHEAT)
-            .result(new ItemStack(ModItems.FLOUR.get()))
+            .result(ModItems.FLOUR)
             .result(ModItems.FLOUR, 0.5f)
             .save(provider);
         ItemCrushRecipe.builder()
@@ -28,15 +28,15 @@ public class ItemCrushRecipeLoader {
             .save(provider);
         StampingRecipe.builder()
             .requires(ModItems.GEODE)
-            .result(new ItemStack(Items.AMETHYST_SHARD, 4))
+            .result(Items.AMETHYST_SHARD, 4)
             .result(ModItems.TOPAZ.get(), 0.25f)
             .result(ModItems.SAPPHIRE.get(), 0.25f)
             .result(ModItems.RUBY.get(), 0.25f)
             .save(provider, AnvilCraft.of("stamping/geode_gems"));
         StampingRecipe.builder()
             .requires(Items.COCOA_BEANS)
-            .result(new ItemStack(ModItems.COCOA_BUTTER.asItem()))
-            .result(new ItemStack(ModItems.COCOA_POWDER.asItem()))
+            .result(ModItems.COCOA_BUTTER)
+            .result(ModItems.COCOA_POWDER)
             .save(provider);
         StampingRecipe.builder()
             .requires(ModItems.PRISMARINE_CLUSTER)

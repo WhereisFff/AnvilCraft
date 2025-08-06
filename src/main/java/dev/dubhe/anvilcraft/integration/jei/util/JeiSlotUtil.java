@@ -130,7 +130,7 @@ public class JeiSlotUtil {
             ChanceItemStack stack = results.getFirst();
             IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 125, 24)
                 .addItemStack(stack.getStack());
-            JeiRecipeUtil.addTooltips(slot, stack.getChance());
+            JeiRecipeUtil.addTooltips(slot, stack.getMaxCount(), stack.getAmount());
         } else if (outputSize <= 4) {
             int startX = 117;
             int startY = 15;
@@ -140,7 +140,7 @@ public class JeiSlotUtil {
                 ChanceItemStack stack = results.get(index);
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, startX + 18 * col, startY + 18 * row)
                     .addItemStack(stack.getStack());
-                JeiRecipeUtil.addTooltips(slot, stack.getChance());
+                JeiRecipeUtil.addTooltips(slot, stack.getMaxCount(), stack.getAmount());
             }
         } else if (outputSize <= 6) {
             int startX = 108;
@@ -151,7 +151,7 @@ public class JeiSlotUtil {
                 ChanceItemStack stack = results.get(index);
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, startX + 18 * col, startY + 18 * row)
                     .addItemStack(stack.getStack());
-                JeiRecipeUtil.addTooltips(slot, stack.getChance());
+                JeiRecipeUtil.addTooltips(slot, stack.getMaxCount(), stack.getAmount());
             }
         } else {
             int startX = 108;
@@ -163,7 +163,7 @@ public class JeiSlotUtil {
                 ChanceItemStack stack = results.get(index);
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, startX + 18 * col, startY + 18 * row)
                     .addItemStack(stack.getStack());
-                JeiRecipeUtil.addTooltips(slot, stack.getChance());
+                JeiRecipeUtil.addTooltips(slot, stack.getMaxCount(), stack.getAmount());
             }
         }
     }

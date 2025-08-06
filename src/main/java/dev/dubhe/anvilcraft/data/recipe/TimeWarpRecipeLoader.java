@@ -6,15 +6,11 @@ import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.HeatProduceTimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.TimeWarpRecipe;
-import dev.dubhe.anvilcraft.util.CauldronUtil;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Blocks;
@@ -45,31 +41,31 @@ public class TimeWarpRecipeLoader {
 
         TimeWarpRecipe.builder()
             .requires(Items.EMERALD)
-            .result(new ItemStack(Items.EMERALD_BLOCK))
+            .result(Items.EMERALD_BLOCK)
             .consume(1)
             .transform(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItems.RUBY)
-            .result(new ItemStack(ModBlocks.RUBY_BLOCK))
+            .result(ModBlocks.RUBY_BLOCK)
             .consume(1)
             .transform(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItems.TOPAZ)
-            .result(new ItemStack(ModBlocks.TOPAZ_BLOCK))
+            .result(ModBlocks.TOPAZ_BLOCK)
             .consume(1)
             .transform(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItems.SAPPHIRE)
-            .result(new ItemStack(ModBlocks.SAPPHIRE_BLOCK))
+            .result(ModBlocks.SAPPHIRE_BLOCK)
             .consume(1)
             .transform(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ItemTags.LOGS)
-            .result(new ItemStack(Items.COAL))
+            .result(Items.COAL)
             .save(provider, AnvilCraft.of("time_warp/coal_from_logs"));
 
         timeWarpToOilCauldron(provider, Items.ROTTEN_FLESH, 64);
@@ -122,14 +118,14 @@ public class TimeWarpRecipeLoader {
         TimeWarpRecipe.builder()
             .requires(Items.SKELETON_SKULL)
             .requires(Items.COAL, 4)
-            .result(Items.WITHER_SKELETON_SKULL.getDefaultInstance())
+            .result(Items.WITHER_SKELETON_SKULL)
             .save(provider);
 
         TimeWarpRecipe.builder()
             .requires(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE)
             .consume(3)
             .fluid(Blocks.POWDER_SNOW_CAULDRON)
-            .result(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE.asStack())
+            .result(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE)
             .save(provider);
 
         TimeWarpRecipe.builder()
@@ -138,27 +134,27 @@ public class TimeWarpRecipeLoader {
             .requires(Items.IRON_INGOT)
             .consume(3)
             .fluid(Blocks.POWDER_SNOW_CAULDRON)
-            .result(ModItems.FROST_METAL_INGOT.asStack())
+            .result(ModItems.FROST_METAL_INGOT)
             .save(provider);
 
         TimeWarpRecipe.builder()
             .requires(ItemTags.FLOWERS)
-            .result(Items.WITHER_ROSE.getDefaultInstance(), 0.2f)
+            .result(Items.WITHER_ROSE, 0.2f)
             .save(provider);
 
-        HeatProduceTimeWarpRecipe.builder()
-            .heating(HeatTier.INCANDESCENT, 6000)
-            .heating(HeatTier.OVERHEATED, 200)
+        TimeWarpRecipe.builder()
+            .heat(HeatTier.INCANDESCENT, 6000)
+            .heat(HeatTier.OVERHEATED, 200)
             .requires(ModBlocks.URANIUM_BLOCK)
-            .result(ModItems.RAW_URANIUM.asStack(2))
-            .result(ModItems.RAW_LEAD.asStack())
+            .result(ModItems.RAW_URANIUM, 2)
+            .result(ModItems.RAW_LEAD)
             .save(provider, AnvilCraft.of("heat_produce_time_warp/raw_uranium_from_uranium_block"));
-        HeatProduceTimeWarpRecipe.builder()
-            .heating(HeatTier.INCANDESCENT, 12000)
-            .heating(HeatTier.OVERHEATED, 200)
+        TimeWarpRecipe.builder()
+            .heat(HeatTier.INCANDESCENT, 12000)
+            .heat(HeatTier.OVERHEATED, 200)
             .requires(ModBlocks.PLUTONIUM_BLOCK)
-            .result(ModItems.RAW_URANIUM.asStack(3))
-            .result(ModItems.RAW_LEAD.asStack())
+            .result(ModItems.RAW_URANIUM, 3)
+            .result(ModItems.RAW_LEAD)
             .save(provider, AnvilCraft.of("heat_produce_time_warp/raw_uranium_from_plutonium_block"));
     }
 
@@ -166,7 +162,7 @@ public class TimeWarpRecipeLoader {
         RegistrateRecipeProvider provider, ItemLike input, int inputCount, ItemLike output, int outputCount) {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
-            .result(new ItemStack(output, outputCount))
+            .result(output, outputCount)
             .save(provider);
     }
 

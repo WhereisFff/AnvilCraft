@@ -87,10 +87,9 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
 
         for (int i = 0; i < recipe.results().size(); i++) {
             MeshRecipeGroup.Result result = recipe.results().get(i);
-            IRecipeSlotBuilder slot = builder.addSlot(
-                    RecipeIngredientRole.OUTPUT, 1 + (i % 9) * 18, 1 + ROW_START + 18 * (i / 9))
+            IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 1 + (i % 9) * 18, 1 + ROW_START + 18 * (i / 9))
                 .addItemStack(result.item());
-            JeiRecipeUtil.addTooltips(slot, result.provider());
+            JeiRecipeUtil.addTooltips(slot, result.item().getCount(), result.provider());
         }
     }
 

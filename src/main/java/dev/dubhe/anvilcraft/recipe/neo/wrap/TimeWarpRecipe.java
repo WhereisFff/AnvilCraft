@@ -2,11 +2,14 @@ package dev.dubhe.anvilcraft.recipe.neo.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.neo.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.neo.util.Distance;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
@@ -20,6 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -109,8 +113,72 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         }
     }
 
-    public static class Builder extends AbstractBuilder<TimeWarpRecipe, Builder> {
+    public static class Builder extends SimpleAbstractBuilder<TimeWarpRecipe, Builder> {
         HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
+        List<ProduceHeat.HeatData> heatData = new ArrayList<>();
+        Distance distance = Distance.DEFAULT;
+
+        public Builder heat(HeatTier tier, int duration) {
+            this.heatData.add(new ProduceHeat.HeatData(tier, duration));
+            return this;
+        }
+
+        public Builder distance(Distance distance) {
+            this.distance = distance;
+            return this;
+        }
+
+        public Builder distance(Distance.Type type, int distance, boolean isHorizontal) {
+            return this.distance(new Distance(type, distance, isHorizontal));
+        }
+
+        public Builder distanceEuclidean(int distance, boolean isHorizontal) {
+            return this.distance(Distance.Type.EUCLIDEAN, distance, isHorizontal);
+        }
+
+        public Builder distanceEuclidean(boolean isHorizontal) {
+            return this.distance(Distance.Type.EUCLIDEAN, 1, isHorizontal);
+        }
+
+        public Builder distanceEuclidean(int distance) {
+            return this.distance(Distance.Type.EUCLIDEAN, distance, true);
+        }
+
+        public Builder distanceEuclidean() {
+            return this.distance(Distance.Type.EUCLIDEAN, 1, true);
+        }
+
+        public Builder distanceManhattan(int distance, boolean isHorizontal) {
+            return this.distance(Distance.Type.MANHATTAN, distance, isHorizontal);
+        }
+
+        public Builder distanceManhattan(boolean isHorizontal) {
+            return this.distance(Distance.Type.MANHATTAN, 1, isHorizontal);
+        }
+
+        public Builder distanceManhattan(int distance) {
+            return this.distance(Distance.Type.MANHATTAN, distance, true);
+        }
+
+        public Builder distanceManhattan() {
+            return this.distance(Distance.Type.MANHATTAN, 1, true);
+        }
+
+        public Builder distanceChebyshev(int distance, boolean isHorizontal) {
+            return this.distance(Distance.Type.CHEBYSHEV, distance, isHorizontal);
+        }
+
+        public Builder distanceChebyshev(boolean isHorizontal) {
+            return this.distance(Distance.Type.CHEBYSHEV, 1, isHorizontal);
+        }
+
+        public Builder distanceChebyshev(int distance) {
+            return this.distance(Distance.Type.CHEBYSHEV, distance, true);
+        }
+
+        public Builder distanceChebyshev() {
+            return this.distance(Distance.Type.CHEBYSHEV, 1, true);
+        }
 
         public @NotNull Builder fluid(ResourceLocation fluid) {
             this.hasCauldron.fluid(fluid);
@@ -138,8 +206,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         }
 
         @Override
-        public @NotNull TimeWarpRecipe buildRecipe() {
-            return new TimeWarpRecipe(itemIngredients, results, hasCauldron.build());
+        protected TimeWarpRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
+            return new TimeWarpRecipe(itemIngredients, results, this.hasCauldron.build());
         }
 
         @Override

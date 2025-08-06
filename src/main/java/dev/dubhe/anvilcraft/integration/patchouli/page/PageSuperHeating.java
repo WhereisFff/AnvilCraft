@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
+import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
@@ -20,7 +21,7 @@ public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
             SuperHeatingRecipe::getItemIngredients,
             SuperHeatingRecipe::getResults,
             recipe -> Blocks.CAULDRON.defaultBlockState(),
-            recipe -> ModBlocks.HEATER.getDefaultState()
+            recipe -> ModBlocks.HEATER.getDefaultState().setValue(HeaterBlock.OVERLOAD, false)
         );
     }
 

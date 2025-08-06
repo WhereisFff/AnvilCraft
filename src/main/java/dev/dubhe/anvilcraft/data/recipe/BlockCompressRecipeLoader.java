@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.BlockCompressRecipe;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
@@ -23,24 +24,20 @@ public class BlockCompressRecipeLoader {
             ModBlocks.CHOCOLATE_CREAM_BLOCK.get(),
             ModBlocks.CAKE_BASE_BLOCK.get(),
             ModBlocks.CHOCOLATE_CAKE_BLOCK.get());
-        BlockCompressRecipe.builder()
-            .input(BlockTags.LEAVES)
-            .input(Blocks.DIRT)
-            .result(Blocks.PODZOL)
-            .save(provider);
-        BlockCompressRecipe.builder()
-            .input(ModBlockTags.MUSHROOM_BLOCK)
-            .input(Blocks.DIRT)
-            .result(Blocks.MYCELIUM)
-            .save(provider);
-        BlockCompressRecipe.builder()
-            .input(ModBlocks.VOID_MATTER_BLOCK.get())
-            .input(ModBlocks.SUPERCRITICAL_NESTING_SHULKER_BOX.get())
-            .result(ModBlocks.SPACE_OVERCOMPRESSOR.get())
-            .save(provider);
+        blockCompress(provider, BlockTags.LEAVES, Blocks.DIRT, Blocks.PODZOL);
+        blockCompress(provider, ModBlockTags.MUSHROOM_BLOCK, Blocks.DIRT, Blocks.MYCELIUM);
+        blockCompress(
+            provider,
+            ModBlocks.VOID_MATTER_BLOCK.get(),
+            ModBlocks.SUPERCRITICAL_NESTING_SHULKER_BOX.get(),
+            ModBlocks.SPACE_OVERCOMPRESSOR.get());
     }
 
     private static void blockCompress(RegistrateRecipeProvider provider, Block block1, Block block2, Block result) {
         BlockCompressRecipe.builder().input(block1).input(block2).result(result).save(provider);
+    }
+
+    private static void blockCompress(RegistrateRecipeProvider provider, TagKey<Block> tag1, Block block2, Block result) {
+        BlockCompressRecipe.builder().input(tag1).input(block2).result(result).save(provider);
     }
 }

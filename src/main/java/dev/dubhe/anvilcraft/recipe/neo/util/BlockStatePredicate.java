@@ -34,7 +34,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Getter
@@ -121,6 +120,17 @@ public class BlockStatePredicate {
     public List<BlockState> constructStatesForRender() {
         if (this.statesCache != null) return this.statesCache;
         Set<BlockState> states = new HashSet<>();
+        if (this.blocks.size() == 0) {
+            this.statesCache = List.of();
+            return this.statesCache;
+        }
+        if (this.properties.isEmpty()) {
+            for (Holder<Block> blockHolder : this.blocks) {
+                states.add(blockHolder.value().defaultBlockState());
+            }
+            this.statesCache = List.copyOf(states);
+            return this.statesCache;
+        }
         for (Holder<Block> blockHolder : this.blocks) {
             for (List<PropertyMatcher> matchers : this.properties) {
                 for (PropertyMatcher matcher : matchers) {

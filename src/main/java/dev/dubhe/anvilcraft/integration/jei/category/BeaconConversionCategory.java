@@ -104,11 +104,11 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
             .addItemStack(Blocks.BEACON.asItem().getDefaultInstance());
         IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 130, 96)
             .addItemStack(ModBlocks.CORRUPTED_BEACON.asStack());
-        JeiRecipeUtil.addTooltips(slot, recipe.corruptedBeaconOutput.getAmount());
+        JeiRecipeUtil.addTooltips(slot, recipe.corruptedBeaconOutput.getStack().getCount(), recipe.corruptedBeaconOutput.getAmount());
         if (recipe.chance < 1.0f) {
             slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 96)
                 .addItemStack(Blocks.BEACON.asItem().getDefaultInstance());
-            JeiRecipeUtil.addTooltips(slot, recipe.beaconOutput.getAmount());
+            JeiRecipeUtil.addTooltips(slot, recipe.beaconOutput.getStack().getCount(), recipe.beaconOutput.getAmount());
         }
     }
 

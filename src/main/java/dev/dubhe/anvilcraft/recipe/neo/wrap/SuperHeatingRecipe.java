@@ -101,7 +101,7 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         }
     }
 
-    public static class Builder extends AbstractBuilder<SuperHeatingRecipe, Builder> {
+    public static class Builder extends SimpleAbstractBuilder<SuperHeatingRecipe, Builder> {
         HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
 
         public @NotNull Builder fluid(ResourceLocation fluid) {
@@ -125,8 +125,8 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         }
 
         @Override
-        public @NotNull SuperHeatingRecipe buildRecipe() {
-            return new SuperHeatingRecipe(itemIngredients, results, hasCauldron.build());
+        protected SuperHeatingRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
+            return new SuperHeatingRecipe(itemIngredients, results, this.hasCauldron.build());
         }
 
         @Override

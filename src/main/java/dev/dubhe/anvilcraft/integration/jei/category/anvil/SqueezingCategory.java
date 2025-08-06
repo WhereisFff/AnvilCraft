@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.SqueezingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
@@ -95,7 +96,7 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
         }
         for (ChanceItemStack output : recipe.getResults()) {
             builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-                .addItemStack(output.getStack().copyWithCount(output.getCount()));
+                .addItemStack(output.getStack().copyWithCount(output.getMaxCount()));
         }
     }
 
@@ -117,7 +118,9 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
         }
         if (mouseX >= 100 && mouseX <= 120) {
             if (mouseY >= 24 && mouseY <= 42) {
-                tooltip.add(BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron")).getName());
+                List<ChanceBlockState> result = recipe.getResultBlocks();
+                if (result.isEmpty()) return;
+                tooltip.add(result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).getState().getBlock().getName());
             }
             if (mouseY >= 42 && mouseY <= 52) {
                 tooltip.add(BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron")).getName());
@@ -158,16 +161,12 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
 
         RenderHelper.renderBlock(
             guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 20, 20, 12, RenderHelper.SINGLE_BLOCK);
-        List<BlockState> result = new ArrayList<>();
-        for (BlockStatePredicate predicate : recipe.getBlocks()) {
-            result.addAll(predicate.constructStatesForRender());
-        }
-        if (result.isEmpty()) return;
-        renderedState = result.get((int) ((System.currentTimeMillis() / 1000) % result.size()));
-        if (renderedState == null) return;
-        RenderHelper.renderBlock(guiGraphics, renderedState, 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
             guiGraphics, getCauldron(recipe), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
+        List<ChanceBlockState> result = recipe.getResultBlocks();
+        if (result.isEmpty()) return;
+        renderedState = result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).getState();
+        RenderHelper.renderBlock(guiGraphics, renderedState, 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
     }
 
     static BlockState getCauldron(SqueezingRecipe recipe) {

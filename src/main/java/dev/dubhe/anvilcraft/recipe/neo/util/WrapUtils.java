@@ -150,7 +150,7 @@ public class WrapUtils {
     public static void encodeBlockIngredients(@NotNull RegistryFriendlyByteBuf buf, @NotNull List<BlockStatePredicate> ingredients) {
         buf.writeVarInt(ingredients.size());
         for (BlockStatePredicate itemIngredient : ingredients) {
-            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
+            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.BLOCK.asLookup())).createSerializationContext(NbtOps.INSTANCE);
             DataResult<Tag> encode = BlockStatePredicate.CODEC.encode(itemIngredient, ops, ops.empty());
             Tag tag = encode.getOrThrow();
             buf.writeNbt(tag);
@@ -168,7 +168,7 @@ public class WrapUtils {
         int i = buf.readVarInt();
         List<BlockStatePredicate> ingredients = new ArrayList<>();
         for (; i > 0; i--) {
-            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.ITEM.asLookup())).createSerializationContext(NbtOps.INSTANCE);
+            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.BLOCK.asLookup())).createSerializationContext(NbtOps.INSTANCE);
             ingredients.add(BlockStatePredicate.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst());
         }
         return ingredients;

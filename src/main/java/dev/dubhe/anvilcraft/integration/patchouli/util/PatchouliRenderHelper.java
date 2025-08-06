@@ -65,6 +65,21 @@ public class PatchouliRenderHelper {
 
     public static void render2x3(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
+        guiGraphics.blit(EXTRA, x, y, 155, 32, 62, 43, 256, 256);
+    }
+
+    public static void render2x4(GuiGraphics guiGraphics, int x, int y) {
+        RenderSystem.enableBlend();
+        guiGraphics.blit(EXTRA, x, y, 155, 77, 81, 43, 256, 256);
+    }
+
+    public static void render2x5(GuiGraphics guiGraphics, int x, int y) {
+        RenderSystem.enableBlend();
+        guiGraphics.blit(EXTRA, x, y, 155, 122, 100, 43, 256, 256);
+    }
+
+    public static void render3x2(GuiGraphics guiGraphics, int x, int y) {
+        RenderSystem.enableBlend();
         guiGraphics.blit(EXTRA, x, y, 110, 77, 43, 62, 256, 256);
     }
 

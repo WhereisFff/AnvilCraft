@@ -45,10 +45,10 @@ public record MeshRecipeGroup(ItemIngredientPredicate ingredient, List<Result> r
 
             for (MeshRecipe recipe : values) {
                 for (ChanceItemStack stack : recipe.getResults()) {
-                    int resultCount = stack.getChance() instanceof ConstantValue(float value)
+                    int resultCount = stack.getAmount() instanceof ConstantValue(float value)
                                       ? Math.round(value)
                                       : 1;
-                    results.add(new Result(stack.getStack().copyWithCount(resultCount), stack.getChance()));
+                    results.add(new Result(stack.getStack().copyWithCount(resultCount), stack.getAmount()));
                 }
             }
 

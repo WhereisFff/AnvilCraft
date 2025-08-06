@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeTrigger;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.DamageAnvil;
+import dev.dubhe.anvilcraft.recipe.neo.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
@@ -431,7 +432,12 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     }
 
     public InWorldRecipeBuilder damageAnvil() {
-        this.outcomes.add(new DamageAnvil());
+        this.out(new DamageAnvil());
+        return this;
+    }
+
+    public InWorldRecipeBuilder produceHeat(ProduceHeat.Builder builder) {
+        this.out(builder.build());
         return this;
     }
 

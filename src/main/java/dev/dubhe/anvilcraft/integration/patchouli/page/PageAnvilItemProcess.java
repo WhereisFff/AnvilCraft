@@ -80,7 +80,7 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
                 }
             }
         } else if (inputs.size() <= 6) {
-            PatchouliRenderHelper.render2x3(graphics, recipeX - 6, recipeY);
+            PatchouliRenderHelper.render3x2(graphics, recipeX - 6, recipeY);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 3 && i * 2 + j < inputs.size(); j++) {
                     PatchouliRenderHelper.renderIngredient(

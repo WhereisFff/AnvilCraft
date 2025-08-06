@@ -28,6 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -265,10 +266,19 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             return this.result(result, 1.0f);
         }
 
+        public B result(@NotNull ItemLike result, int count, NumberProvider chance) {
+            this.results.add(ChanceItemStack.of(result, count, chance));
+            return this.getThis();
+        }
+
         public B result(@NotNull ItemLike result, int count, float chance) {
             ItemStack stack = result.asItem().getDefaultInstance();
             stack.setCount(count);
             return this.result(stack, chance);
+        }
+
+        public B result(@NotNull ItemLike result, int count) {
+            return this.result(result, count, 1.0f);
         }
 
         public B result(@NotNull ItemLike result, float chance) {

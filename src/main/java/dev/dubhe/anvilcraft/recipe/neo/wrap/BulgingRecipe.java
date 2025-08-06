@@ -3,10 +3,7 @@ package dev.dubhe.anvilcraft.recipe.neo.wrap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
-import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
@@ -17,20 +14,15 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -130,58 +122,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         }
     }
 
-    public static class Builder extends AbstractRecipeBuilder<BulgingRecipe> {
-        private final List<ItemIngredientPredicate> ingredients = new ArrayList<>();
-        private final List<ChanceItemStack> results = new ArrayList<>();
+    public static class Builder extends SimpleAbstractBuilder<BulgingRecipe, Builder> {
         private final HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
-
-        public Builder requires(ItemIngredientPredicate ingredient) {
-            this.ingredients.add(ingredient);
-            return this;
-        }
-
-        public Builder requires(ItemLike item, int count) {
-            return requires(ItemIngredientPredicate.Builder.item().of(item).withCount(count).build());
-        }
-
-        public Builder requires(ItemLike pItem) {
-            return requires(pItem, 1);
-        }
-
-        public Builder requires(TagKey<Item> tag, int count) {
-            return requires(ItemIngredientPredicate.Builder.item().of(tag).withCount(count).build());
-        }
-
-        public Builder requires(TagKey<Item> pTag) {
-            return requires(pTag, 1);
-        }
-
-        public Builder result(ItemStack stack, float chance) {
-            results.add(ChanceItemStack.of(stack, chance));
-            return this;
-        }
-
-        public Builder result(ItemStack stack) {
-            return this.result(stack, 1.0f);
-        }
-
-        public Builder result(@NotNull ItemLike like, double chance, int count) {
-            ItemStack stack = like.asItem().getDefaultInstance();
-            stack.setCount(count);
-            return this.result(stack, 1.0f);
-        }
-
-        public Builder result(@NotNull ItemLike like, double chance) {
-            return this.result(like, chance, 1);
-        }
-
-        public Builder result(@NotNull ItemLike like, int count) {
-            return this.result(like, 1.0, count);
-        }
-
-        public Builder result(@NotNull ItemLike like) {
-            return this.result(like, 1);
-        }
 
         public Builder cauldron(ResourceLocation fluid) {
             this.hasCauldron.fluid(fluid);
@@ -216,8 +158,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         }
 
         @Override
-        public @NotNull BulgingRecipe buildRecipe() {
-            return new BulgingRecipe(ingredients, results, hasCauldron.build());
+        protected BulgingRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
+            return new BulgingRecipe(itemIngredients, results, this.hasCauldron.build());
         }
 
         @Override
@@ -230,11 +172,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         }
 
         @Override
-        public @NotNull Item getResult() {
-            if (this.results.isEmpty()) {
-                return Items.ANVIL;
-            }
-            return this.results.getFirst().getItem();
+        protected Builder getThis() {
+            return this;
         }
     }
 }

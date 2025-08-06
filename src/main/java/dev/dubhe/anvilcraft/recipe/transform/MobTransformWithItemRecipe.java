@@ -69,7 +69,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         .apply(ins, MobTransformWithItemRecipe::new));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, MobTransformWithItemRecipe> STREAM_CODEC = StreamCodec.of(
-        (buf, recipe) -> buf.writeNbt(intoTag(recipe)), friendlyByteBuf -> fromTag(friendlyByteBuf.readNbt()));
+        MobTransformWithItemRecipe::intoTag, MobTransformWithItemRecipe::fromTag);
 
     public final EntityType<?> input;
     public final List<ItemIngredientPredicate> itemIngredients;
@@ -232,12 +232,12 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         }
     }
 
-    public static MobTransformWithItemRecipe fromTag(Tag tag) {
-        return CODEC.decode(NbtOps.INSTANCE, tag).getOrThrow().getFirst();
+    public static MobTransformWithItemRecipe fromTag(RegistryFriendlyByteBuf buf) {
+        return CODEC.decode(buf.registryAccess().createSerializationContext(NbtOps.INSTANCE), buf.readNbt()).getOrThrow().getFirst();
     }
 
-    public static Tag intoTag(MobTransformWithItemRecipe recipe) {
-        return CODEC.encodeStart(NbtOps.INSTANCE, recipe).getOrThrow();
+    public static void intoTag(RegistryFriendlyByteBuf buf, MobTransformWithItemRecipe recipe) {
+        buf.writeNbt(CODEC.encodeStart(buf.registryAccess().createSerializationContext(NbtOps.INSTANCE), recipe).getOrThrow());
     }
 
     public static TransformWithItemRecipeBuilder from(

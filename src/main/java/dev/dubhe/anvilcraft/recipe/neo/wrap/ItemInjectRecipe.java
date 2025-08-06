@@ -20,6 +20,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
+import java.util.function.Supplier;
 
 @Getter
 public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
@@ -111,23 +112,26 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
         }
     }
 
-    public static class Builder extends AbstractBuilder<ItemInjectRecipe, Builder> {
+    public static class Builder extends SimpleAbstractBuilder<ItemInjectRecipe, Builder> {
         BlockStatePredicate.Builder blockIngredient = BlockStatePredicate.builder();
         ChanceBlockState blockResult = null;
 
-        @Override
-        public @NotNull ItemInjectRecipe buildRecipe() {
-            return new ItemInjectRecipe(itemIngredients, results, blockIngredient.build(), blockResult);
+        public Builder inputBlock(Block block) {
+            this.blockIngredient.of(block);
+            return this;
         }
 
-        @Override
-        public void validate(@NotNull ResourceLocation pId) {
-            if (itemIngredients.isEmpty()) {
-                throw new IllegalArgumentException("Recipe inputs must not be empty, RecipeId: " + pId);
-            }
-            if (blockResult == null) {
-                throw new IllegalArgumentException("Recipe block_result must not be null, RecipeId: " + pId);
-            }
+        public Builder inputBlock(@NotNull Supplier<? extends Block> block) {
+            return this.inputBlock(block.get());
+        }
+
+        public Builder resultBlock(@NotNull Block block) {
+            this.blockResult = new ChanceBlockState(block.defaultBlockState(), 1.0F);
+            return this;
+        }
+
+        public Builder resultBlock(@NotNull Supplier<? extends Block> block) {
+            return this.resultBlock(block.get());
         }
 
         @Override
@@ -136,23 +140,18 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
         }
 
         @Override
-        protected Builder getThis() {
-            return this;
-        }
-
-        public Builder inputBlock(Block block) {
-            this.blockIngredient.of(block);
-            return this;
-        }
-
-        public Builder resultBlock(@NotNull Block block) {
-            this.blockResult = new ChanceBlockState(block.defaultBlockState(), 1.0F);
-            return this;
+        protected ItemInjectRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
+            return new ItemInjectRecipe(itemIngredients, results, this.blockIngredient.build(), this.blockResult);
         }
 
         @Override
         public @NotNull Item getResult() {
             return WrapUtils.getItem(blockResult);
+        }
+
+        @Override
+        protected Builder getThis() {
+            return this;
         }
     }
 }

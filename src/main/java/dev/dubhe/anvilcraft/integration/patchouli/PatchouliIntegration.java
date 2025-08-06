@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.integration.patchouli.page.PageItemCompress;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageItemCrush;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageItemInject;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageJewelCrafting;
+import dev.dubhe.anvilcraft.integration.patchouli.page.PageMesh;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageMultipleToOneSmithing;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageStamping;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageSuperHeating;
@@ -35,5 +36,6 @@ public class PatchouliIntegration {
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("bulging"), PageBulging.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("cooking"), PageCooking.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("unpack"), PageUnpack.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("mesh"), PageMesh.class);
     }
 }
