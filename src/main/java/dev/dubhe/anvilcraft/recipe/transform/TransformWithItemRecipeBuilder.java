@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.recipe.transform;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -21,7 +22,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class TransformWithItemRecipeBuilder {
-    private final Ingredient itemInput;
+    private final List<ItemIngredientPredicate> itemIngredients;
     private final TransformResult specialResult;
     private final ItemStack itemResult;
     private int chancePercentPerItem = 5;
@@ -33,11 +34,11 @@ public class TransformWithItemRecipeBuilder {
 
     public TransformWithItemRecipeBuilder(
         EntityType<?> inputType,
-        Ingredient itemInput,
+        List<ItemIngredientPredicate> itemIngredients,
         EntityType<?> specialResult,
         ItemStack itemResult) {
         this.inputType = inputType;
-        this.itemInput = itemInput;
+        this.itemIngredients = itemIngredients;
         this.specialResult = new TransformResult(specialResult, 1d);
         this.itemResult = itemResult;
     }
@@ -50,7 +51,7 @@ public class TransformWithItemRecipeBuilder {
     public MobTransformWithItemRecipe create() {
         return new MobTransformWithItemRecipe(
             inputType,
-            itemInput,
+            itemIngredients,
             specialResult,
             itemResult,
             chancePercentPerItem,

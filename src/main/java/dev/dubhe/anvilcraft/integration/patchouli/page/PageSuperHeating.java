@@ -2,18 +2,22 @@ package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.SuperHeatingRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.SuperHeatingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.CauldronBlock;
+import net.minecraft.world.level.block.state.BlockState;
+
+import java.util.List;
 
 public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
-    public PageSuperHeating(RecipeType<SuperHeatingRecipe> recipeType) {
+    public PageSuperHeating() {
         super(
-            recipeType,
-            SuperHeatingRecipe::getMergedIngredients,
+            ModRecipeTypes.SUPER_HEATING_TYPE.get(),
+            SuperHeatingRecipe::getItemIngredients,
             SuperHeatingRecipe::getResults,
             recipe -> Blocks.CAULDRON.defaultBlockState(),
             recipe -> ModBlocks.HEATER.getDefaultState()
@@ -25,14 +29,14 @@ public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
         GuiGraphics graphics, SuperHeatingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY,
         boolean second
     ) {
-        if (recipe.getResults().isEmpty() && recipe.blockResult != null) {
-            RenderHelper.renderBlock(
-                graphics,
-                CauldronUtil.fullState(recipe.blockResult),
-                recipeX + 85, recipeY + 29, 10,
-                12,
-                RenderHelper.SINGLE_BLOCK
-            );
-        }
+        List<ChanceBlockState> blockResults = recipe.getResultBlocks();
+        if (!recipe.getResults().isEmpty() || blockResults.isEmpty()) return;
+        BlockState state = blockResults.get((parent.ticksInBook / 20) % blockResults.size()).getState();
+        RenderHelper.renderBlock(
+            graphics,
+            state.getBlock() instanceof CauldronBlock ? CauldronUtil.fullState(state.getBlock()) : state,
+            recipeX + 85, recipeY + 29, 10,
+            12,
+            RenderHelper.SINGLE_BLOCK);
     }
 }

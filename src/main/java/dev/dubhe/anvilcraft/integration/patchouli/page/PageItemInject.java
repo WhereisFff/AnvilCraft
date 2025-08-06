@@ -1,55 +1,57 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
+import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
-import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 
 import java.util.List;
 
 public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
-    public PageItemInject(RecipeType<ItemInjectRecipe> recipeType) {
-        super(recipeType);
-//        super(ModRecipeTypes.ITEM_INJECT_TYPE.get());
+    public PageItemInject() {
+        super(Util.cast(ModRecipeTypes.ITEM_INJECT_TYPE.get()));
     }
 
     @Override
     protected void drawRecipe(
-            GuiGraphics graphics, ItemInjectRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second
+        GuiGraphics graphics, ItemInjectRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second
     ) {
         PatchouliRenderHelper.render1x1(graphics, recipeX - 4, recipeY + 16);
 
-        List<Object2IntMap.Entry<Ingredient>> ingredients = recipe.getMergedIngredients();
-        PatchouliRenderHelper.renderIngredientWithCount(parent, graphics, ingredients.get(0), recipeX, recipeY + 20, mouseX, mouseY);
+        List<ItemIngredientPredicate> ingredients = recipe.getItemIngredients();
+        PatchouliRenderHelper.renderIngredient(parent, graphics, ingredients.getFirst(), recipeX, recipeY + 20, mouseX, mouseY);
 
         PatchouliRenderHelper.renderArray(graphics, recipeX + 25, recipeY + 20);
 
         PatchouliRenderHelper.renderAnvilWithAnimation(parent, graphics, recipeX + 50, recipeY + 15);
 
-        RenderHelper.renderBlock(graphics, recipe.inputBlock.defaultBlockState(),
-                recipeX + 50, recipeY + 31, 0,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+        List<BlockState> states = recipe.getBlockIngredient().constructStatesForRender();
+        RenderHelper.renderBlock(
+            graphics, states.get((parent.ticksInBook / 20) % states.size()),
+            recipeX + 50, recipeY + 31, 0,
+            12,
+            RenderHelper.SINGLE_BLOCK);
 
         PatchouliRenderHelper.renderArray(graphics, recipeX + 66, recipeY + 20);
 
-        RenderHelper.renderBlock(graphics, recipe.resultBlock.defaultBlockState(),
-                recipeX + 90, recipeY + 31, 0,
-                12,
-                RenderHelper.SINGLE_BLOCK);
+        RenderHelper.renderBlock(
+            graphics, recipe.getBlockResult().getState(),
+            recipeX + 90, recipeY + 31, 0,
+            12,
+            RenderHelper.SINGLE_BLOCK);
 
         parent.drawCenteredStringNoShadow(
-                graphics, getTitle(second).getVisualOrderText(),
-                GuiBook.PAGE_WIDTH / 2, recipeY - 5,
-                book.headerColor
-        );
+            graphics, getTitle(second).getVisualOrderText(),
+            GuiBook.PAGE_WIDTH / 2, recipeY - 5,
+            book.headerColor);
     }
 
     @Override

@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.ConcreteRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.HeatProduceTimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.StampingUniqueItemsRecipe;
@@ -141,11 +140,6 @@ public class ModRecipeTypes {
     public static final DeferredHolder<RecipeType<?>, RecipeType<MeshRecipe>> MESH_TYPE = registerType("mesh");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<MeshRecipe>> MESH_SERIALIZER =
         RECIPE_SERIALIZERS.register("mesh", MeshRecipe.Serializer::new);
-
-    public static final DeferredHolder<RecipeType<?>, RecipeType<ConcreteRecipe>> CONCRETE_TYPE =
-        registerType("concrete");
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ConcreteRecipe>> CONCRETE_SERIALIZER =
-        RECIPE_SERIALIZERS.register("concrete", ConcreteRecipe.Serializer::new);
 
     public static final DeferredHolder<RecipeType<?>, RecipeType<MobTransformRecipe>> MOB_TRANSFORM_TYPE =
         registerType("mob_transform");

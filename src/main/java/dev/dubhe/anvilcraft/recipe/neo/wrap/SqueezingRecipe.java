@@ -75,6 +75,10 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         return new Builder();
     }
 
+    public boolean isProduceFluid() {
+        return this.hasCauldron.getConsume() < 0;
+    }
+
     public static class Serializer implements RecipeSerializer<SqueezingRecipe> {
         public static final MapCodec<SqueezingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockStatePredicate.CODEC

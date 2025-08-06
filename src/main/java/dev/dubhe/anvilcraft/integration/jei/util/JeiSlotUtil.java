@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.integration.jei.util;
 
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -76,24 +76,24 @@ public class JeiSlotUtil {
     }
 
     public static void addSlotWithCount(
-        IRecipeLayoutBuilder builder, int slotX, int slotY, Object2IntMap.Entry<Ingredient> entry) {
+        IRecipeLayoutBuilder builder, int slotX, int slotY, ItemIngredientPredicate entry) {
         IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, slotX, slotY);
-        slot.addIngredients(entry.getKey());
-        if (entry.getIntValue() > 1) {
-            slot.setOverlay(new DrawableText("" + entry.getIntValue(), 2, 2, 0xFFFFFFFF), 12, 12);
+        slot.addIngredients(Ingredient.of(entry.getItems()));
+        if (entry.count() > 1) {
+            slot.setOverlay(new DrawableText("" + entry.count(), 2, 2, 0xFFFFFFFF), 12, 12);
         }
     }
 
     public static void addInputSlots(
-        IRecipeLayoutBuilder builder, List<Object2IntMap.Entry<Ingredient>> mergedIngredients) {
+        IRecipeLayoutBuilder builder, List<ItemIngredientPredicate> mergedIngredients) {
         int inputSize = mergedIngredients.size();
         if (inputSize == 0) return;
         if (inputSize == 1) {
-            Object2IntMap.Entry<Ingredient> entry = mergedIngredients.getFirst();
+            ItemIngredientPredicate ingredient = mergedIngredients.getFirst();
             IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, 21, 24);
-            slot.addIngredients(entry.getKey());
-            if (entry.getIntValue() > 1) {
-                slot.setOverlay(new DrawableText("" + entry.getIntValue(), 2, 2, 0xFFFFFFFF), 12, 12);
+            slot.addIngredients(Ingredient.of(ingredient.getItems()));
+            if (ingredient.count() > 1) {
+                slot.setOverlay(new DrawableText("" + ingredient.count(), 2, 2, 0xFFFFFFFF), 12, 12);
             }
         } else if (inputSize <= 4) {
             int startX = 11;
@@ -130,7 +130,7 @@ public class JeiSlotUtil {
             ChanceItemStack stack = results.getFirst();
             IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 125, 24)
                 .addItemStack(stack.getStack());
-            JeiRecipeUtil.addTooltips(slot, stack.getAmount());
+            JeiRecipeUtil.addTooltips(slot, stack.getChance());
         } else if (outputSize <= 4) {
             int startX = 117;
             int startY = 15;
@@ -140,7 +140,7 @@ public class JeiSlotUtil {
                 ChanceItemStack stack = results.get(index);
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, startX + 18 * col, startY + 18 * row)
                     .addItemStack(stack.getStack());
-                JeiRecipeUtil.addTooltips(slot, stack.getAmount());
+                JeiRecipeUtil.addTooltips(slot, stack.getChance());
             }
         } else if (outputSize <= 6) {
             int startX = 108;
@@ -151,7 +151,7 @@ public class JeiSlotUtil {
                 ChanceItemStack stack = results.get(index);
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, startX + 18 * col, startY + 18 * row)
                     .addItemStack(stack.getStack());
-                JeiRecipeUtil.addTooltips(slot, stack.getAmount());
+                JeiRecipeUtil.addTooltips(slot, stack.getChance());
             }
         } else {
             int startX = 108;
@@ -163,7 +163,7 @@ public class JeiSlotUtil {
                 ChanceItemStack stack = results.get(index);
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, startX + 18 * col, startY + 18 * row)
                     .addItemStack(stack.getStack());
-                JeiRecipeUtil.addTooltips(slot, stack.getAmount());
+                JeiRecipeUtil.addTooltips(slot, stack.getChance());
             }
         }
     }

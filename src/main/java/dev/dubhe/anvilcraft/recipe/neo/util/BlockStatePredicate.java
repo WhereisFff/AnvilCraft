@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -29,8 +30,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Getter
@@ -107,6 +111,25 @@ public class BlockStatePredicate {
             if (nbt.test(entity.saveWithFullMetadata(level.registryAccess()))) return true;
         }
         return false;
+    }
+
+    private List<BlockState> statesCache;
+
+    /**
+     * 此方法不应用于除渲染外的任何用法！
+     */
+    public List<BlockState> constructStatesForRender() {
+        if (this.statesCache != null) return this.statesCache;
+        Set<BlockState> states = new HashSet<>();
+        for (Holder<Block> blockHolder : this.blocks) {
+            for (List<PropertyMatcher> matchers : this.properties) {
+                for (PropertyMatcher matcher : matchers) {
+                    states.addAll(matcher.applyToState(blockHolder.value().getStateDefinition(), blockHolder.value().defaultBlockState()));
+                }
+            }
+        }
+        this.statesCache = List.copyOf(states);
+        return this.statesCache;
     }
 
     public static @NotNull Builder builder() {
@@ -219,6 +242,12 @@ public class BlockStatePredicate {
             Property<?> property = properties.getProperty(this.name);
             return property != null && this.valueMatcher.match(propertyToMatch, property);
         }
+
+        public <S extends StateHolder<?, S>> List<S> applyToState(@NotNull StateDefinition<?, S> properties, S state) {
+            Property<?> property = properties.getProperty(this.name);
+            if (property == null) return List.of();
+            return this.valueMatcher.applyToState(state, property);
+        }
     }
 
     public record ExactMatcher(String value) implements ValueMatcher {
@@ -232,6 +261,14 @@ public class BlockStatePredicate {
             T t = value.getValue(property);
             Optional<T> optional = property.getValue(this.value);
             return optional.isPresent() && t.compareTo(optional.get()) == 0;
+        }
+
+        @Override
+        public <T extends Comparable<T>, S extends StateHolder<?, S>> List<S> applyToState(S state, Property<T> property) {
+            if (!state.hasProperty(property)) return List.of(state);
+            return property.getValue(this.value)
+                .map(value -> List.of(state.setValue(property, value)))
+                .orElseGet(() -> List.of(state));
         }
     }
 
@@ -268,6 +305,17 @@ public class BlockStatePredicate {
 
             return true;
         }
+
+        @Override
+        public <T extends Comparable<T>, S extends StateHolder<?, S>> List<S> applyToState(S state, Property<T> property) {
+            if (!state.hasProperty(property)) return List.of(state);
+            List<S> states = new ArrayList<>();
+            property.getAllValues()
+                .filter(value -> this.minValue.isEmpty() || this.minValue.flatMap(property::getValue).map(minValue -> value.value().compareTo(minValue) < 0).orElse(false))
+                .filter(value -> this.maxValue.isEmpty() || this.maxValue.flatMap(property::getValue).map(maxValue -> value.value().compareTo(maxValue) > 0).orElse(false))
+                .forEachOrdered(value -> states.add(state.setValue(property, value.value())));
+            return List.copyOf(states);
+        }
     }
 
     public interface ValueMatcher {
@@ -297,5 +345,7 @@ public class BlockStatePredicate {
             });
 
         <T extends Comparable<T>> boolean match(StateHolder<?, ?> stateHolder, Property<T> property);
+
+        <T extends Comparable<T>, S extends StateHolder<?, S>> List<S> applyToState(S state, Property<T> property);
     }
 }

@@ -44,6 +44,10 @@ public class ChanceItemStack {
         this.chance = ConstantValue.exactly(chance);
     }
 
+    public static @NotNull ChanceItemStack of(ItemStack stack) {
+        return new ChanceItemStack(stack, 1f);
+    }
+
     public static @NotNull ChanceItemStack of(ItemStack stack, float chance) {
         return new ChanceItemStack(stack, chance);
     }

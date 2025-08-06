@@ -7,9 +7,9 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.StampingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.StampingUniqueItemsRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.StampingRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -29,7 +29,7 @@ import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class StampingCategory extends AbstractItemProgressCategory<StampingRecipe> {
+public class StampingCategory extends AbstractProgressCategory<StampingRecipe> {
     public StampingCategory(IGuiHelper helper) {
         super(
             helper,
@@ -66,21 +66,22 @@ public class StampingCategory extends AbstractItemProgressCategory<StampingRecip
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.mergedIngredients.size());
+        // TODO: 等待重构StampingUniqueItemsRecipe（目前仅多合一模板使用），重构后直接取消注释并修复import即可
+//        if (recipe instanceof StampingUniqueItemsRecipe) {
+//            ItemStack input = recipe.getItemIngredients().getFirst()
+//                .getItems()[(int) System.currentTimeMillis() / 1000 % recipe.getItemIngredients().size()];
+//            JeiSlotUtil.drawInputSlots(guiGraphics, slot, input.getCount());
+//        } else {
+//            JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
+//        }
 
-        List<ChanceItemStack> results = this.getResults(recipe);
-        if (recipe instanceof StampingUniqueItemsRecipe) {
-            ChanceItemStack result = results.getFirst();
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, result.getStack().getCount());
-        } else {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, results.size());
-        }
+        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
-//        registration.addRecipes(
-//            AnvilCraftJeiPlugin.STAMPING,
-//            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.STAMPING_TYPE.get()));
+        registration.addRecipes(
+            AnvilCraftJeiPlugin.STAMPING,
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.STAMPING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

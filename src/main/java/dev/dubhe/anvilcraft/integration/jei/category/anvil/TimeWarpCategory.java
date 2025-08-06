@@ -8,7 +8,7 @@ import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
-import dev.dubhe.anvilcraft.recipe.anvil.TimeWarpRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -26,10 +26,12 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
@@ -90,7 +92,7 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     public void setRecipe(
         IRecipeLayoutBuilder builder, RecipeHolder<TimeWarpRecipe> recipeHolder, IFocusGroup focuses) {
         TimeWarpRecipe recipe = recipeHolder.value();
-        JeiSlotUtil.addInputSlots(builder, recipe.getMergedIngredients());
+        JeiSlotUtil.addInputSlots(builder, recipe.getItemIngredients());
         if (!recipe.getResults().isEmpty()) {
             JeiSlotUtil.addOutputSlots(builder, recipe.getResults());
         }
@@ -113,27 +115,24 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             20,
             12,
             RenderHelper.SINGLE_BLOCK);
-        BlockState state;
-        if (recipe.isProduceFluid()) {
-            state = Blocks.CAULDRON.defaultBlockState();
-        } else {
-            state = CauldronUtil.fullState(recipe.getCauldron());
-        }
-        RenderHelper.renderBlock(guiGraphics, state, 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
+        Block cauldron = getCauldron(recipe);
+        RenderHelper.renderBlock(guiGraphics, CauldronUtil.fullState(cauldron), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
             guiGraphics, ModBlocks.CORRUPTED_BEACON.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getMergedIngredients().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
         if (!recipe.getResults().isEmpty()) {
             JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResults().size());
             if (recipe.isConsumeFluid()) {
                 guiGraphics.drawString(
                     Minecraft.getInstance().font,
                     Component.translatable(
-                        "gui.anvilcraft.category.time_warp.consume_fluid", recipe.getCauldron().getName()),
+                        "gui.anvilcraft.category.time_warp.consume_fluid",
+                        recipe.getHasCauldron().getConsume(),
+                        cauldron.getName()),
                     10,
                     54,
                     0xFF000000,
@@ -142,23 +141,31 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
                 guiGraphics.drawString(
                     Minecraft.getInstance().font,
                     Component.translatable(
-                        "gui.anvilcraft.category.time_warp.produce_fluid", recipe.getCauldron().getName()),
+                        "gui.anvilcraft.category.time_warp.produce_fluid",
+                        -recipe.getHasCauldron().getConsume(),
+                        cauldron.getName()),
                     10,
                     54,
                     0xFF000000,
                     false);
             }
         } else {
+            BlockState cauldronState;
             if (recipe.isConsumeFluid()) {
-                state = CauldronUtil.getStateFromContentAndLevel(recipe.getCauldron(),
-                    CauldronUtil.maxLevel(recipe.getCauldron()) - 1);
+                cauldronState = CauldronUtil.getStateFromContentAndLevel(cauldron, CauldronUtil.maxLevel(cauldron) - 1);
             } else if (recipe.isProduceFluid()) {
-                state = CauldronUtil.getStateFromContentAndLevel(recipe.getCauldron(), 1);
+                cauldronState = CauldronUtil.getStateFromContentAndLevel(cauldron, 1);
             } else {
-                state = recipe.getCauldron().defaultBlockState();
+                cauldronState = getCauldron(recipe).defaultBlockState();
             }
-            RenderHelper.renderBlock(guiGraphics, state, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
+            RenderHelper.renderBlock(guiGraphics, cauldronState, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
         }
+    }
+
+    private static Block getCauldron(TimeWarpRecipe recipe) {
+        return recipe.isProduceFluid()
+               ? Blocks.CAULDRON
+               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
     }
 
     @Override
@@ -175,7 +182,7 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
                 if (recipe.isProduceFluid()) {
                     text = Blocks.CAULDRON.getName();
                 } else {
-                    text = recipe.getCauldron().getName();
+                    text = getCauldron(recipe).getName();
                 }
                 tooltip.add(text);
             }
@@ -189,10 +196,10 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             if (mouseY >= 24 && mouseY <= 42) {
                 Component text;
                 if (recipe.getResults().isEmpty()) {
-                    if (recipe.isConsumeFluid() && CauldronUtil.maxLevel(recipe.getCauldron()) <= 1) {
+                    if (recipe.isConsumeFluid() && CauldronUtil.maxLevel(getCauldron(recipe)) <= 1) {
                         text = Blocks.CAULDRON.getName();
                     } else {
-                        text = recipe.getCauldron().getName();
+                        text = getCauldron(recipe).getName();
                     }
                     tooltip.add(text);
                 }
@@ -201,9 +208,9 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
-//        registration.addRecipes(
-//            AnvilCraftJeiPlugin.TIME_WARP,
-//            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.TIME_WARP_TYPE.get()));
+        registration.addRecipes(
+            AnvilCraftJeiPlugin.TIME_WARP,
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.TIME_WARP_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

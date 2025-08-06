@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.integration.patchouli.util;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.GuiGraphics;
@@ -83,6 +84,22 @@ public class PatchouliRenderHelper {
 
         guiGraphics.renderFakeItem(stack, x, y);
         guiGraphics.renderItemDecorations(((ScreenAccessor) parent).anvilcraft$getFont(), stack.copyWithCount(count), x, y);
+
+        if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
+            parent.setTooltipStack(stack);
+        }
+    }
+
+    public static void renderIngredient(
+        GuiBookEntry parent, GuiGraphics guiGraphics, ItemIngredientPredicate ingr, int x, int y, int mouseX, int mouseY
+    ) {
+        RenderSystem.enableBlend();
+        ItemStack[] stacks = ingr.getItems();
+        if (stacks.length == 0) return;
+        ItemStack stack = stacks[(parent.ticksInBook / 20) % stacks.length];
+
+        guiGraphics.renderFakeItem(stack, x, y);
+        guiGraphics.renderItemDecorations(((ScreenAccessor) parent).anvilcraft$getFont(), stack, x, y);
 
         if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             parent.setTooltipStack(stack);

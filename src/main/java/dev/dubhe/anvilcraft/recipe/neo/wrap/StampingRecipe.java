@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 

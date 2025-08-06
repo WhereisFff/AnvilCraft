@@ -2,8 +2,9 @@ package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.AbstractItemProcessRecipe;
+import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.neo.wrap.AbstractProcessRecipe;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import mezz.jei.api.gui.ITickTimer;
@@ -16,7 +17,6 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
@@ -26,7 +26,7 @@ import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public abstract class AbstractItemProgressCategory<T extends AbstractItemProcessRecipe> implements IRecipeCategory<RecipeHolder<T>> {
+public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?>> implements IRecipeCategory<RecipeHolder<T>> {
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
@@ -38,7 +38,7 @@ public abstract class AbstractItemProgressCategory<T extends AbstractItemProcess
     protected final IDrawable arrowIn;
     protected final IDrawable arrowOut;
 
-    public AbstractItemProgressCategory(IGuiHelper helper, IDrawable icon, Component title) {
+    public AbstractProgressCategory(IGuiHelper helper, IDrawable icon, Component title) {
         this.icon = icon;
         this.slot = helper.getSlotDrawable();
         this.title = title;
@@ -69,9 +69,9 @@ public abstract class AbstractItemProgressCategory<T extends AbstractItemProcess
     }
 
     protected List<ChanceItemStack> getResults(T recipe) {
-        List<ChanceItemStack> results = new ArrayList<>(recipe.results);
+        List<ChanceItemStack> results = new ArrayList<>(recipe.getResults());
         Object2IntMap<Item> remains = new Object2IntArrayMap<>();
-        for (Ingredient ingredient : recipe.getIngredients()) {
+        for (ItemIngredientPredicate ingredient : recipe.getItemIngredients()) {
             for (ItemStack stack : ingredient.getItems()) {
                 if (stack.hasCraftingRemainingItem()) {
                     ItemStack remain = stack.getCraftingRemainingItem();
@@ -80,7 +80,7 @@ public abstract class AbstractItemProgressCategory<T extends AbstractItemProcess
             }
         }
         remains.object2IntEntrySet().forEach(entry ->
-            results.add(ChanceItemStack.of(new ItemStack(entry.getKey(), entry.getIntValue())))
+            results.add(ChanceItemStack.of(new ItemStack(entry.getKey(), entry.getIntValue()), 1))
         );
         return results;
     }
@@ -88,7 +88,7 @@ public abstract class AbstractItemProgressCategory<T extends AbstractItemProcess
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> recipeHolder, IFocusGroup focuses) {
         T recipe = recipeHolder.value();
-        JeiSlotUtil.addInputSlots(builder, recipe.mergedIngredients);
+        JeiSlotUtil.addInputSlots(builder, recipe.getItemIngredients());
         JeiSlotUtil.addOutputSlots(builder, this.getResults(recipe));
     }
 }

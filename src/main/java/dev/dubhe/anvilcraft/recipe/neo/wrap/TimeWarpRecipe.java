@@ -61,6 +61,14 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         return new Builder();
     }
 
+    public boolean isConsumeFluid() {
+        return this.hasCauldron.getConsume() > 0;
+    }
+
+    public boolean isProduceFluid() {
+        return this.hasCauldron.getConsume() < 0;
+    }
+
     public static class Serializer implements RecipeSerializer<TimeWarpRecipe> {
         private static final MapCodec<TimeWarpRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemIngredientPredicate.CODEC.listOf()

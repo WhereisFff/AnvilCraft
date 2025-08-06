@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.item.HasItemIngredient;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
@@ -13,6 +15,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -55,6 +58,24 @@ public record ItemIngredientPredicate(
 
     public @NotNull HasItemIngredient toHasItemIngredient(Vec3 offset, Vec3 range) {
         return new HasItemIngredient(offset, range, this);
+    }
+
+    private static final Int2ObjectMap<ItemStack[]> INGREDIENT_CACHE = new Int2ObjectArrayMap<>();
+
+    public ItemStack[] getItems() {
+        int hash = this.hashCode();
+        if (!INGREDIENT_CACHE.containsKey(hash)) {
+            //noinspection deprecation
+            INGREDIENT_CACHE.put(
+                hash, this.items()
+                    .map(itemSet -> itemSet.stream()
+                        .map(itemHolder -> new ItemStack(itemHolder, this.count(), this.components().asPatch()))
+                        .toArray(ItemStack[]::new))
+                    .orElse(
+                        new ItemStack[] {new ItemStack(Items.BARRIER.builtInRegistryHolder(), this.count(), this.components().asPatch())})
+            );
+        }
+        return INGREDIENT_CACHE.get(hash);
     }
 
     @SuppressWarnings("UnusedReturnValue")

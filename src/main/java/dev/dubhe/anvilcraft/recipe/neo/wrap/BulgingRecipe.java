@@ -26,6 +26,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -74,6 +75,18 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
 
     public static @NotNull Builder builder() {
         return new Builder();
+    }
+
+    public boolean isConsumeFluid() {
+        return this.hasCauldron.getConsume() > 0;
+    }
+
+    public boolean isProduceFluid() {
+        return this.hasCauldron.getConsume() < 0;
+    }
+
+    public boolean isFromWater() {
+        return this.hasCauldron.getFluid().equals(BuiltInRegistries.FLUID.getKey(Fluids.WATER));
     }
 
     public static class Serializer implements RecipeSerializer<BulgingRecipe> {

@@ -4,6 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
@@ -36,6 +37,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -46,7 +48,9 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
 
     public static final Codec<MobTransformWithItemRecipe> CODEC = RecordCodecBuilder.create(ins -> ins.group(
             CodecUtil.ENTITY_CODEC.fieldOf("input").forGetter(o -> o.input),
-            Ingredient.CODEC.fieldOf("itemInput").forGetter(o -> o.itemInput),
+            ItemIngredientPredicate.CODEC.listOf()
+                .optionalFieldOf("ingredients", List.of())
+                .forGetter(MobTransformWithItemRecipe::getItemIngredients),
             TransformResult.CODEC.fieldOf("specialResult").forGetter(o -> o.specialResult),
             ItemStack.CODEC.fieldOf("itemResult").forGetter(o -> o.itemResult),
             Codec.INT.fieldOf("chancePercentPerItem").forGetter(o -> o.chancePercentPerItem),
@@ -68,7 +72,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         (buf, recipe) -> buf.writeNbt(intoTag(recipe)), friendlyByteBuf -> fromTag(friendlyByteBuf.readNbt()));
 
     public final EntityType<?> input;
-    public final Ingredient itemInput;
+    public final List<ItemIngredientPredicate> itemIngredients;
     public final TransformResult specialResult;
     public final ItemStack itemResult;
     public final int chancePercentPerItem;
@@ -78,7 +82,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
 
     public MobTransformWithItemRecipe(
         EntityType<?> input,
-        Ingredient itemInput,
+        List<ItemIngredientPredicate> itemIngredients,
         TransformResult specialResult,
         ItemStack itemResult,
         int chancePercentPerItem,
@@ -87,7 +91,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         Optional<List<TransformOptions>> options) {
         this(
             input,
-            itemInput,
+            itemIngredients,
             specialResult,
             itemResult,
             chancePercentPerItem,
@@ -98,7 +102,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
 
     public MobTransformWithItemRecipe(
         EntityType<?> input,
-        Ingredient itemInput,
+        List<ItemIngredientPredicate> itemIngredients,
         TransformResult specialResult,
         ItemStack itemResult,
         int chancePercentPerItem,
@@ -106,7 +110,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         List<TagModification> tagModifications,
         List<TransformOptions> options) {
         this.input = input;
-        this.itemInput = itemInput;
+        this.itemIngredients = itemIngredients;
         this.specialResult = specialResult;
         this.itemResult = itemResult;
         this.chancePercentPerItem = chancePercentPerItem;
@@ -128,7 +132,8 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
     }
 
     public boolean testItem(ItemStack item) {
-        return itemInput.test(item);
+        // TODO: 迁移
+        return itemIngredients.getFirst().test(item);
     }
 
     @Override
@@ -158,7 +163,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
 
     @Nullable
     private EntityType<?> getResult(RandomSource rand, LivingEntity livingEntity) {
-        boolean hasTransformItem = itemInput.test(livingEntity.getMainHandItem());
+        boolean hasTransformItem = this.testItem(livingEntity.getMainHandItem());
         float probability = 0;
         if (hasTransformItem) {
             probability = chancePercentPerItem * 0.01f * livingEntity.getMainHandItem().getCount();
@@ -240,8 +245,8 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         ItemLike itemInput,
         EntityType<?> specialResult,
         ItemStack itemResult) {
-        Ingredient item = Ingredient.of(itemInput);
-        return new TransformWithItemRecipeBuilder(type, item, specialResult, itemResult);
+        ItemIngredientPredicate item = ItemIngredientPredicate.Builder.item().of(itemInput).build();
+        return new TransformWithItemRecipeBuilder(type, Collections.singletonList(item), specialResult, itemResult);
     }
 
     @Override
@@ -278,7 +283,9 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         public static final MapCodec<MobTransformWithItemRecipe> MAP_CODEC =
             RecordCodecBuilder.mapCodec(ins -> ins.group(
                     CodecUtil.ENTITY_CODEC.fieldOf("input").forGetter(o -> o.input),
-                    Ingredient.CODEC.fieldOf("itemInput").forGetter(o -> o.itemInput),
+                    ItemIngredientPredicate.CODEC.listOf()
+                        .optionalFieldOf("ingredients", List.of())
+                        .forGetter(MobTransformWithItemRecipe::getItemIngredients),
                     TransformResult.CODEC.fieldOf("specialResult").forGetter(o -> o.specialResult),
                     ItemStack.CODEC.fieldOf("itemResult").forGetter(o -> o.itemResult),
                     Codec.INT.fieldOf("chancePercentPerItem").forGetter(o -> o.chancePercentPerItem),
