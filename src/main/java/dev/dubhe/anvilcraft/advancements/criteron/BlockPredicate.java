@@ -25,13 +25,14 @@ public record BlockPredicate(Optional<HolderSet<Block>> block) implements Predic
     public static class Builder {
         private HolderSet<Block> blocks = HolderSet.empty();
 
-        private Builder() {}
+        private Builder() {
+        }
 
         public static Builder block() {
             return new Builder();
         }
 
-        public Builder of (Block block) {
+        public Builder of(Block block) {
             this.blocks = HolderSet.direct((b) -> b.defaultBlockState().getBlockHolder(), block);
             return this;
         }
