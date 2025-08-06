@@ -77,9 +77,8 @@ public interface IAnvilCraftBlockPlacer {
             soundType.getPitch() * 0.8f
         );
         if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos, 3);
-            if (player != null) {
-                ModCriterionTriggers.PLACER_PLACE_BLOCK.get().trigger((ServerPlayer) player, level.getBlockState(pos).getBlock());
+            for (Player player : PlayerUtil.searchPlayerUsingPos(level, pos, 5)) {
+                ModCriterionTriggers.PLACER_PLACE_BLOCK.get().trigger((ServerPlayer) player, blockState.getBlock());
             }
         }
         return InteractionResult.SUCCESS;

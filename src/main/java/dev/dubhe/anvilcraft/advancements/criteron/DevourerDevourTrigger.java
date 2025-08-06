@@ -12,9 +12,9 @@ import net.minecraft.world.level.block.Block;
 
 import java.util.Optional;
 
-public class AnvilHandleBlockTrigger extends SimpleCriterionTrigger<AnvilHandleBlockTrigger.TriggerInstance> {
+public class DevourerDevourTrigger extends SimpleCriterionTrigger<DevourerDevourTrigger.TriggerInstance> {
     @Override
-    public Codec<AnvilHandleBlockTrigger.TriggerInstance> codec() {
+    public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
     }
 
@@ -28,12 +28,12 @@ public class AnvilHandleBlockTrigger extends SimpleCriterionTrigger<AnvilHandleB
             BlockPredicate.CODEC.optionalFieldOf("block").forGetter(TriggerInstance::block)
         ).apply(instance, TriggerInstance::new));
 
-        public static Criterion<TriggerInstance> handleBlock(Block block) {
-            return handleBlock(BlockPredicate.Builder.block().block(block));
+        public static Criterion<TriggerInstance> devourBlock(Block block) {
+            return devourBlock(BlockPredicate.Builder.block().of(block));
         }
 
-        public static Criterion<TriggerInstance> handleBlock(BlockPredicate.Builder block) {
-            return ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(block.build())));
+        public static Criterion<TriggerInstance> devourBlock(BlockPredicate.Builder block) {
+            return ModCriterionTriggers.DEVOURER_DEVOUR_BLOCK.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(block.build())));
         }
 
         public boolean matches(Block block) {

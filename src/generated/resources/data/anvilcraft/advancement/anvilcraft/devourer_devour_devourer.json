@@ -1,10 +1,10 @@
 {
-  "parent": "anvilcraft:anvilcraft/placer",
+  "parent": "anvilcraft:anvilcraft/placer_place_placer",
   "criteria": {
-    "devour_block": {
+    "devourer_devour_devourer": {
       "conditions": {
         "block": {
-          "blocks": "anvilcraft:block_devourer"
+          "block": "anvilcraft:block_devourer"
         }
       },
       "trigger": "anvilcraft:devourer_devour_block"
@@ -25,7 +25,7 @@
   },
   "requirements": [
     [
-      "devour_block"
+      "devourer_devour_devourer"
     ]
   ],
   "sends_telemetry_event": true

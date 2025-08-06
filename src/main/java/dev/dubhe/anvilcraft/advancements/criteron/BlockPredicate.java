@@ -2,8 +2,6 @@ package dev.dubhe.anvilcraft.advancements.criteron;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import lombok.AccessLevel;
-import lombok.NoArgsConstructor;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -11,38 +9,40 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
+import java.util.Optional;
 import java.util.function.Predicate;
 
-public record BlockPredicate(HolderSet<Block> blocks) implements Predicate<Block> {
+public record BlockPredicate(Optional<HolderSet<Block>> block) implements Predicate<Block> {
     public static final Codec<BlockPredicate> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
-        RegistryCodecs.homogeneousList(Registries.BLOCK).fieldOf("blocks").forGetter(BlockPredicate::blocks)
+        RegistryCodecs.homogeneousList(Registries.BLOCK).optionalFieldOf("block").forGetter(BlockPredicate::block)
     ).apply(instance, BlockPredicate::new));
 
     @Override
     public boolean test(Block block) {
-        return block.defaultBlockState().is(this.blocks.get(0).value());
+        return this.block.isEmpty() || block.defaultBlockState().is(this.block.get());
     }
 
-    @NoArgsConstructor(access = AccessLevel.PRIVATE)
     public static class Builder {
         private HolderSet<Block> blocks = HolderSet.empty();
+
+        private Builder() {}
 
         public static Builder block() {
             return new Builder();
         }
 
-        public Builder block(Block block) {
+        public Builder of (Block block) {
             this.blocks = HolderSet.direct((b) -> b.defaultBlockState().getBlockHolder(), block);
             return this;
         }
 
-        public Builder tag(TagKey<Block> tag) {
+        public Builder of(TagKey<Block> tag) {
             this.blocks = BuiltInRegistries.BLOCK.getOrCreateTag(tag);
             return this;
         }
 
         public BlockPredicate build() {
-            return new BlockPredicate(this.blocks);
+            return new BlockPredicate(Optional.of(this.blocks));
         }
     }
 }

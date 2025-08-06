@@ -12,7 +12,7 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.root.description", "Pick up the anvil, start from the vanilla, and enter the world of technology and magic");
 
         provider.add("advancements.anvilcraft.crab_claw.title", "Win half of the resurrection race");
-        provider.add("advancements.anvilcraft.crab_claw.description", "Obtain crab claws from the crab trap");
+        provider.add("advancements.anvilcraft.crab_claw.description", "Obtain crab claws");
 
         provider.add("advancements.anvilcraft.placer.title", "Placer place placer");
         provider.add("advancements.anvilcraft.placer.description", "Use the block placer to place the block placer");

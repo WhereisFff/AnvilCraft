@@ -44,24 +44,13 @@ public class PlayerUtil {
         }
     }
 
-    public static Player getPlayerWithPos(Level level, BlockPos pos, int radius) {
+    public static List<Player> searchPlayerUsingPos(Level level, BlockPos pos, int radius) {
         if (!level.isClientSide) {
-            BlockPos offset;
-            for (int x = -radius; x <= radius; x++) {
-                for (int y = -radius; y <= radius; y++) {
-                    for (int z = -radius; z <= radius; z++) {
-                        offset = pos.offset(x, y, z);
-                        List<Player> entities = level.getEntitiesOfClass(
-                            Player.class,
-                            new AABB(offset)
-                        );
-                        if (!entities.isEmpty()) {
-                            return entities.getFirst();
-                        }
-                    }
-                }
-            }
+            BlockPos startPos = pos.offset(-radius, -radius, -radius);
+            BlockPos endPos = pos.offset(radius, radius, radius);
+            AABB aabb = new AABB(startPos.getX(), startPos.getY(), startPos.getZ(), endPos.getX(), endPos.getY(), endPos.getZ());
+            return level.getEntitiesOfClass(Player.class, aabb);
         }
-        return null;
+        return List.of();
     }
 }

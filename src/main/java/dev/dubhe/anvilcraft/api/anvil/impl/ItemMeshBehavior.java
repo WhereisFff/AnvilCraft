@@ -3,19 +3,15 @@ package dev.dubhe.anvilcraft.api.anvil.impl;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
-import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
-import dev.dubhe.anvilcraft.util.PlayerUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -63,14 +59,6 @@ public class ItemMeshBehavior implements IAnvilBehavior {
                     .map(entry -> new ItemStack(entry.getKey(), entry.getIntValue()))
                     .toList();
                 AnvilUtil.dropItems(outputs, level, pos.below().getCenter());
-                for (ItemStack itemStack : outputs) {
-                    if (!level.isClientSide) {
-                        Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-                        if (player != null) {
-                            ModCriterionTriggers.ANVIL_HANDLE_ITEM.get().trigger((ServerPlayer) player, itemStack);
-                        }
-                    }
-                }
             }
             if (processed >= AnvilCraft.config.anvilEfficiency) {
                 break;
