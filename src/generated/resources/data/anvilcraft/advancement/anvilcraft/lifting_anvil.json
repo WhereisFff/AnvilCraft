@@ -1,0 +1,31 @@
+{
+  "parent": "anvilcraft:anvilcraft/topaz",
+  "criteria": {
+    "anvil_on_ground": {
+      "trigger": "anvilcraft:anvil_on_ground"
+    },
+    "lifting_anvil": {
+      "trigger": "anvilcraft:lifting_anvil"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.lifting_anvil.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:magnet_block"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.lifting_anvil.title"
+    }
+  },
+  "requirements": [
+    [
+      "lifting_anvil"
+    ],
+    [
+      "anvil_on_ground"
+    ]
+  ]
+}

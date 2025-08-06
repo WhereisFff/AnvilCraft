@@ -35,7 +35,7 @@ public class CrabClawLine {
             true, true, false
         )
         .addCriterion("placer_place_placer", PlacerPlaceTrigger.TriggerInstance.placeBlock(ModBlocks.BLOCK_PLACER.get()))
-        .build(advancementOf("placer_place_placer"));
+        .build(advancementOf("block_placer"));
 
     public static final AdvancementHolder devourer = Advancement.Builder.advancement()
         .parent(placer)
@@ -47,5 +47,5 @@ public class CrabClawLine {
             true, true, false
         )
         .addCriterion("devourer_devour_devourer", DevourerDevourTrigger.TriggerInstance.devourBlock(ModBlocks.BLOCK_DEVOURER.get()))
-        .build(advancementOf("devourer_devour_devourer"));
+        .build(advancementOf("block_devourer"));
 }

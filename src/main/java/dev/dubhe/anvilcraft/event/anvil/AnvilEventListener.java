@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilHurtEntityEvent;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
@@ -17,6 +18,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
@@ -28,6 +30,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -93,6 +96,12 @@ public class AnvilEventListener {
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
                 return;
+            }
+        }
+
+        if (!level.isClientSide) {
+            for (Player player : PlayerUtil.searchPlayerUsingPos(level, pos, 5)) {
+                ModCriterionTriggers.ANVIL_ON_GROUND.get().trigger((ServerPlayer) player);
             }
         }
     }

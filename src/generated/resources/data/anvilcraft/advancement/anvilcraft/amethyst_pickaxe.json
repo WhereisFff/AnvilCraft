@@ -1,0 +1,28 @@
+{
+  "parent": "anvilcraft:anvilcraft/geode",
+  "criteria": {
+    "crafting_amethyst_pickaxe": {
+      "conditions": {
+        "recipe_id": "anvilcraft:amethyst_pickaxe"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.amethyst_pickaxe.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:amethyst_pickaxe"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.amethyst_pickaxe.title"
+    }
+  },
+  "requirements": [
+    [
+      "crafting_amethyst_pickaxe"
+    ]
+  ]
+}

@@ -32,5 +32,9 @@ public class AnvilCraftAdvancement {
         provider.accept(CrabClawLine.crbClaw);
         provider.accept(CrabClawLine.placer);
         provider.accept(CrabClawLine.devourer);
+        provider.accept(GeodeLine.geode);
+        provider.accept(GeodeLine.amethystPickaxe);
+        provider.accept(GeodeLine.topaz);
+        provider.accept(GeodeLine.liftingAnvil);
     }
 }

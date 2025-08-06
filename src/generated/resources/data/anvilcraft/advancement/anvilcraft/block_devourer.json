@@ -1,5 +1,5 @@
 {
-  "parent": "anvilcraft:anvilcraft/placer_place_placer",
+  "parent": "anvilcraft:anvilcraft/block_placer",
   "criteria": {
     "devourer_devour_devourer": {
       "conditions": {
