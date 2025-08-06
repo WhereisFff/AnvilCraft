@@ -9,7 +9,6 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilHurtEntityEvent;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
-import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
@@ -18,7 +17,6 @@ import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
-import dev.dubhe.anvilcraft.util.PlayerUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
@@ -28,10 +26,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -96,20 +92,7 @@ public class AnvilEventListener {
 
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
-                if (!level.isClientSide) {
-                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-                    if (player != null) {
-                        ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
-                    }
-                }
                 return;
-            }
-        }
-
-        if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-            if (player != null) {
-                ModCriterionTriggers.ANVIL_ON_LAND.get().trigger((ServerPlayer) player);
             }
         }
     }
@@ -119,22 +102,8 @@ public class AnvilEventListener {
         level.getRecipeManager()
             .getRecipeFor(
                 ModRecipeTypes.BLOCK_CRUSH_TYPE.get(), new BlockCrushRecipe.Input(state.getBlock()), level)
-            .ifPresent(recipe -> {
-                Block result = recipe.value().result;
-                level.setBlockAndUpdate(pos, result.defaultBlockState());
-                if (!level.isClientSide) {
-                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-                    if (player != null) {
-                        ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().trigger((ServerPlayer) player, result);
-                    }
-                }
-            });
-        if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-            if (player != null) {
-                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
-            }
-        }
+            .ifPresent(recipe ->
+                level.setBlockAndUpdate(pos, recipe.value().result.defaultBlockState()));
     }
 
     private static void handleBlockCompressRecipe(Level level, final BlockPos pos) {
@@ -148,23 +117,10 @@ public class AnvilEventListener {
                 for (int i = 0; i < recipe.value().inputs.size(); i++) {
                     level.setBlockAndUpdate(pos.below(i), Blocks.AIR.defaultBlockState());
                 }
-                Block result = recipe.value().result;
                 level.setBlockAndUpdate(
                     pos.below(recipe.value().inputs.size() - 1),
-                    result.defaultBlockState());
-                if (!level.isClientSide) {
-                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-                    if (player != null) {
-                        ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().trigger((ServerPlayer) player, result);
-                    }
-                }
+                    recipe.value().result.defaultBlockState());
             });
-        if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-            if (player != null) {
-                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
-            }
-        }
     }
 
     private static void handleBlockSmearRecipe(Level level, final BlockPos pos) {
@@ -182,12 +138,6 @@ public class AnvilEventListener {
                     pos.below(recipe.value().inputs.size() - 1),
                     recipe.value().result.defaultBlockState());
             });
-        if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-            if (player != null) {
-                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
-            }
-        }
     }
 
     private static void handleItemInjectRecipe(Level level, final BlockPos pos, BlockState state) {
@@ -225,12 +175,6 @@ public class AnvilEventListener {
                     k.setItem(v.copy());
                 });
             });
-        if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-            if (player != null) {
-                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
-            }
-        }
     }
 
     private static void handleSqueezingRecipe(Level level, final BlockPos pos, BlockState state) {
@@ -242,22 +186,9 @@ public class AnvilEventListener {
             .getRecipeFor(ModRecipeTypes.SQUEEZING_TYPE.get(), input, level)
             .map(RecipeHolder::value)
             .ifPresent(recipe -> {
-                Block resultBlock = recipe.resultBlock;
                 CauldronUtil.fill(level, belowPos, recipe.getCauldron(), 1, false);
-                level.setBlockAndUpdate(pos, resultBlock.defaultBlockState());
-                if (!level.isClientSide) {
-                    Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-                    if (player != null) {
-                        ModCriterionTriggers.ANVIL_HANDLE_BLOCK.get().trigger((ServerPlayer) player, resultBlock);
-                    }
-                }
+                level.setBlockAndUpdate(pos, recipe.resultBlock.defaultBlockState());
             });
-        if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos, 5);
-            if (player != null) {
-                ModCriterionTriggers.ANVIL_CRAFTING.get().trigger((ServerPlayer) player);
-            }
-        }
     }
 
     private static void brokeBlock(@NotNull Level level, BlockPos pos, AnvilFallOnLandEvent event) {
@@ -306,8 +237,6 @@ public class AnvilEventListener {
      */
     @SubscribeEvent
     public static void onAnvilHurtEntity(@NotNull AnvilHurtEntityEvent event) {
-        Level level = event.getLevel();
-        BlockPos pos1 = event.getPos();
         Entity hurtedEntity = event.getHurtedEntity();
         if (!(hurtedEntity instanceof LivingEntity entity)) return;
         if (!(hurtedEntity.level() instanceof ServerLevel serverLevel)) return;
@@ -325,34 +254,22 @@ public class AnvilEventListener {
             .withParameter(LootContextParams.THIS_ENTITY, entity)
             .withParameter(LootContextParams.ORIGIN, pos);
         Block anvil = eventEntity.getBlockState().getBlock();
+        Optional<ServerPlayer> killerOp = Optional.empty();
         if (Util.instanceOfAny(anvil, EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
-            ServerPlayer player = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
-            builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(player))
-                .withParameter(LootContextParams.ATTACKING_ENTITY, player)
-                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player);
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
+            builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(killer))
+                .withParameter(LootContextParams.ATTACKING_ENTITY, killer)
+                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, killer);
             if (anvil instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, player);
+                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, killer);
             }
+            killerOp = Optional.of(killer);
         }
         LootParams lootParams = builder.create(LootContextParamSets.ENTITY);
         LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(entity.getLootTable());
         dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
-        if (!level.isClientSide) {
-            Player player = PlayerUtil.getPlayerWithPos(level, pos1, 5);
-            if (player != null) {
-                ModCriterionTriggers.ANVIL_LOOTING.get().trigger((ServerPlayer) player);
-            }
-
-            if (entity instanceof IronGolem) {
-                if (event.getEntity().fallDistance > 20) {
-                    Player player1 = PlayerUtil.getPlayerWithPos(level, pos1, 5);
-                    if (player != null) {
-                        ModCriterionTriggers.ANVIL_HURT_IRON_GOLEM.get().trigger((ServerPlayer) player1);
-                    }
-                }
-            }
-        }
+        killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
     }
 }

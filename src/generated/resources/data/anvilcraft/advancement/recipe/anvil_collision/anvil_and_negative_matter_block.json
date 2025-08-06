@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:block_compress/mossy_stone_bricks"
+        "recipe": "anvilcraft:anvil_collision/anvil_and_negative_matter_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:block_compress/mossy_stone_bricks"
+      "anvilcraft:anvil_collision/anvil_and_negative_matter_block"
     ]
   }
 }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:wet_sponge"
+        "recipe": "anvilcraft:wet_sponge"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:wet_sponge"
+      "anvilcraft:wet_sponge"
     ]
   }
 }
