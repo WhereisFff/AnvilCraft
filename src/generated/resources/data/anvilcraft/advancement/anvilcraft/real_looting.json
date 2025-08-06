@@ -1,0 +1,25 @@
+{
+  "parent": "anvilcraft:anvilcraft/redstone_milker",
+  "criteria": {
+    "anvil_looting": {
+      "trigger": "anvilcraft:anvil_looting"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.real_looting.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:anvil"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.real_looting.title"
+    }
+  },
+  "requirements": [
+    [
+      "anvil_looting"
+    ]
+  ]
+}

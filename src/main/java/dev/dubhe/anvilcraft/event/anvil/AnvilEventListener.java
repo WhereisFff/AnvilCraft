@@ -28,6 +28,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
@@ -280,5 +281,14 @@ public class AnvilEventListener {
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
+        if (hurtedEntity instanceof IronGolem) {
+            for (Player player : PlayerUtil.searchPlayerUsingPos(serverLevel, BlockPos.containing(pos), 5)) {
+                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger((ServerPlayer) player);
+            }
+            return;
+        }
+        for (Player player : PlayerUtil.searchPlayerUsingPos(serverLevel, BlockPos.containing(pos), 5)) {
+            ModCriterionTriggers.ANVIL_LOOTING.get().trigger((ServerPlayer) player);
+        }
     }
 }

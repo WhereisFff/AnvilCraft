@@ -1,0 +1,32 @@
+{
+  "parent": "anvilcraft:anvilcraft/real_looting",
+  "criteria": {
+    "anvil_looting_iron_golem": {
+      "trigger": "anvilcraft:anvil_looting_iron_golem"
+    },
+    "repair_iron_golem": {
+      "trigger": "anvilcraft:repair_iron_golem"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.iron_meter_reversal.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:iron_block"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.iron_meter_reversal.title"
+    }
+  },
+  "requirements": [
+    [
+      "anvil_looting_iron_golem"
+    ],
+    [
+      "repair_iron_golem"
+    ]
+  ]
+}

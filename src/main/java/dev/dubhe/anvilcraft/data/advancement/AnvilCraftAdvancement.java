@@ -36,5 +36,8 @@ public class AnvilCraftAdvancement {
         provider.accept(GeodeLine.amethystPickaxe);
         provider.accept(GeodeLine.topaz);
         provider.accept(GeodeLine.liftingAnvil);
+        provider.accept(AutomationLine.redstoneMilker);
+        provider.accept(AutomationLine.realLooting);
+        provider.accept(AutomationLine.ironMeterReversal);
     }
 }

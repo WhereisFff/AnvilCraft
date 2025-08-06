@@ -1,9 +1,13 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.DispenserRepairIronGolem;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
 import net.minecraft.advancements.CriterionTrigger;
@@ -30,6 +34,18 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, AnvilOnGroundTrigger> ANVIL_ON_GROUND =
         CT.register("anvil_on_ground", AnvilOnGroundTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, MilkTrigger> MILK =
+        CT.register("milk", MilkTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilLootingTrigger> ANVIL_LOOTING =
+        CT.register("anvil_looting", AnvilLootingTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilLootingIronGolemTrigger> ANVIL_LOOTING_IRON_GOLEM =
+        CT.register("anvil_looting_iron_golem", AnvilLootingIronGolemTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, DispenserRepairIronGolem> REPAIR_IRON_GOLEM =
+        CT.register("repair_iron_golem", DispenserRepairIronGolem::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);

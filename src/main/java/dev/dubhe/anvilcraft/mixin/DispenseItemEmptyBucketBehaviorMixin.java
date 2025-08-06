@@ -1,12 +1,16 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.goat.Goat;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -48,6 +52,11 @@ abstract class DispenseItemEmptyBucketBehaviorMixin extends DefaultDispenseItemB
         if (cows.isEmpty() && goats.isEmpty()) return;
         levelAccessor.gameEvent(null, GameEvent.FLUID_PICKUP, blockPos);
         Item item = Items.MILK_BUCKET;
+        if (!level.isClientSide) {
+            for (Player player : PlayerUtil.searchPlayerUsingPos(level, blockPos, 5)) {
+                ModCriterionTriggers.MILK.get().trigger((ServerPlayer) player);
+            }
+        }
         cir.setReturnValue(
             this.consumeWithRemainder(
                 source,
