@@ -167,20 +167,20 @@ public class TimeWarpRecipe implements Recipe<TimeWarpRecipe.Input> {
 
     public static class Serializer implements RecipeSerializer<TimeWarpRecipe> {
         protected static final MapCodec<TimeWarpRecipe> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
-                CodecUtil.createIngredientListCodec("ingredients", 64, "time_warp")
-                    .forGetter(TimeWarpRecipe::getIngredients),
-                Ingredient.CODEC_NONEMPTY
-                    .listOf()
-                    .optionalFieldOf("exactIngredients")
-                    .forGetter(o -> o.exactIngredients.isEmpty() ? Optional.empty() : Optional.of(o.exactIngredients)),
-                CodecUtil.BLOCK_CODEC.fieldOf("cauldron").forGetter(TimeWarpRecipe::getCauldron),
-                ChanceItemStack.CODEC.listOf()
-                    .optionalFieldOf("results", List.of())
-                    .forGetter(TimeWarpRecipe::getResults),
-                Codec.BOOL.fieldOf("produce_fluid").forGetter(TimeWarpRecipe::isProduceFluid),
-                Codec.BOOL.fieldOf("consume_fluid").forGetter(TimeWarpRecipe::isConsumeFluid),
-                Codec.INT.optionalFieldOf("requiredFluidLevel", 0).forGetter(TimeWarpRecipe::getRequiredFluidLevel)
-            ).apply(ins, TimeWarpRecipe::new));
+            CodecUtil.createIngredientListCodec("ingredients", 64, "time_warp")
+                .forGetter(TimeWarpRecipe::getIngredients),
+            Ingredient.CODEC_NONEMPTY
+                .listOf()
+                .optionalFieldOf("exactIngredients")
+                .forGetter(o -> o.exactIngredients.isEmpty() ? Optional.empty() : Optional.of(o.exactIngredients)),
+            CodecUtil.BLOCK_CODEC.fieldOf("cauldron").forGetter(TimeWarpRecipe::getCauldron),
+            ChanceItemStack.CODEC.listOf()
+                .optionalFieldOf("results", List.of())
+                .forGetter(TimeWarpRecipe::getResults),
+            Codec.BOOL.fieldOf("produce_fluid").forGetter(TimeWarpRecipe::isProduceFluid),
+            Codec.BOOL.fieldOf("consume_fluid").forGetter(TimeWarpRecipe::isConsumeFluid),
+            Codec.INT.optionalFieldOf("requiredFluidLevel", 0).forGetter(TimeWarpRecipe::getRequiredFluidLevel)
+        ).apply(ins, TimeWarpRecipe::new));
 
         protected static final StreamCodec<RegistryFriendlyByteBuf, TimeWarpRecipe> STREAM_CODEC =
             StreamCodec.of(Serializer::encode, Serializer::decode);

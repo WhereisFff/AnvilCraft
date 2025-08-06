@@ -106,7 +106,8 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        renderInput: {
+        renderInput:
+        {
             List<BlockState> input = recipe.value().getInput().constructStatesForRender();
             if (input.isEmpty()) break renderInput;
             BlockState renderedState = input.get((int) ((System.currentTimeMillis() / 1000) % input.size()));

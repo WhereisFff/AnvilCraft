@@ -79,12 +79,12 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.murderPredicate.isPresent() && source.getEntity() != null
-                       && this.murderPredicate.get().matches(level, source.getEntity().position(), source.getEntity()) == this.isOr
+                && this.murderPredicate.get().matches(level, source.getEntity().position(), source.getEntity()) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.weaponPredicate.isPresent()
-                       && source.getWeaponItem() != null
-                       && this.weaponPredicate.get().test(source.getWeaponItem()) == this.isOr
+                && source.getWeaponItem() != null
+                && this.weaponPredicate.get().test(source.getWeaponItem()) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.isDirect.isPresent() && this.isDirect.get() == source.isDirect() == this.isOr) {

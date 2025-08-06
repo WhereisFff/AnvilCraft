@@ -7,8 +7,6 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.StampingRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -25,7 +23,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -72,7 +69,7 @@ public class StampingCategory extends AbstractProgressCategory<StampingRecipe> {
 //                .getItems()[(int) System.currentTimeMillis() / 1000 % recipe.getItemIngredients().size()];
 //            JeiSlotUtil.drawInputSlots(guiGraphics, slot, input.getCount());
 //        } else {
-            JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
 //        }
 
         JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());

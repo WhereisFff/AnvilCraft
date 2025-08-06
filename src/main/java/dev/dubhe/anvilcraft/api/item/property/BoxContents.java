@@ -12,7 +12,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -84,9 +83,9 @@ public final class BoxContents implements TooltipComponent {
     public boolean equals(Object o) {
         if (!(o instanceof BoxContents that)) return false;
         return selection == that.selection
-               && usage == that.usage
-               && Objects.equals(amulets, that.amulets)
-               && Objects.equals(totems, that.totems);
+            && usage == that.usage
+            && Objects.equals(amulets, that.amulets)
+            && Objects.equals(totems, that.totems);
     }
 
     public boolean isEmpty() {

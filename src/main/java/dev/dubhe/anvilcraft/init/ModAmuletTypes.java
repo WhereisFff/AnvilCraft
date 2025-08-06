@@ -215,7 +215,8 @@ public class ModAmuletTypes {
         DamageSourcePredicate.Builder builder, ItemLike itemLike
     ) {
         if (inventoryTick == null) {
-            inventoryTick = (player, amulet, isEnabled) -> {};
+            inventoryTick = (player, amulet, isEnabled) -> {
+            };
         }
         if (shouldIgnoreDamage == null) {
             shouldIgnoreDamage = (player, source) -> false;

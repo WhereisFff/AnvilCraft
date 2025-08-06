@@ -79,27 +79,27 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(1, itemStack)))
             .withSlot(4, 62, 36, itemStack ->
                 !this.inputSlots.getItem(0).is(ModItems.TWO_TO_ONE_SMITHING_TEMPLATE)
-                && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
+                    && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(2, itemStack)))
             .withSlot(5, 98, 36, itemStack ->
                 !this.inputSlots.getItem(0).is(ModItems.TWO_TO_ONE_SMITHING_TEMPLATE)
-                && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
+                    && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(3, itemStack)))
             .withSlot(6, 62, 18, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE)
-                && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
+                    && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(4, itemStack)))
             .withSlot(7, 98, 18, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE)
-                && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
+                    && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(5, itemStack)))
             .withSlot(8, 62, 54, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE)
-                && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
+                    && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(6, itemStack)))
             .withSlot(9, 98, 54, itemStack ->
                 this.inputSlots.getItem(0).is(ModItems.EIGHT_TO_ONE_SMITHING_TEMPLATE)
-                && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
+                    && !this.inputSlots.getItem(1).isEmpty() && this.recipes.stream()
                     .anyMatch(smithingRecipe -> smithingRecipe.value().isInputIngredient(7, itemStack)))
             .withResultSlot(10, 151, 48)
             .build();
@@ -279,8 +279,8 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
         }
 
         return this.getSlot(0).hasItem()
-               && this.getSlot(1).hasItem()
-               && !isInputValid
-               && !this.getSlot(this.getResultSlot()).hasItem();
+            && this.getSlot(1).hasItem()
+            && !isInputValid
+            && !this.getSlot(this.getResultSlot()).hasItem();
     }
 }

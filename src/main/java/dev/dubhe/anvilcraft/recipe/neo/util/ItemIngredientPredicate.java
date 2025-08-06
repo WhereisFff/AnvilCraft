@@ -72,7 +72,7 @@ public record ItemIngredientPredicate(
                         .map(itemHolder -> new ItemStack(itemHolder, this.count(), this.components().asPatch()))
                         .toArray(ItemStack[]::new))
                     .orElse(
-                        new ItemStack[] {new ItemStack(Items.BARRIER.builtInRegistryHolder(), this.count(), this.components().asPatch())})
+                        new ItemStack[]{new ItemStack(Items.BARRIER.builtInRegistryHolder(), this.count(), this.components().asPatch())})
             );
         }
         return INGREDIENT_CACHE.get(hash);

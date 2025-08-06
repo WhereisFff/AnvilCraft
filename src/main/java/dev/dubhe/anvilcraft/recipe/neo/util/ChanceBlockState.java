@@ -5,6 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.injection.block.state.IBlockStateExtension;
 import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
+import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
@@ -17,7 +18,6 @@ import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +42,7 @@ public class ChanceBlockState {
         instance -> instance.group(
             IBlockStateExtension.MAP_CODEC
                 .forGetter(ChanceBlockState::getState),
-            NumberProviders.CODEC
+            CodecUtil.NUMBER_PROVIDER_CODEC
                 .optionalFieldOf("chance", ConstantValue.exactly(1.0f))
                 .forGetter(ChanceBlockState::getChance)
         ).apply(instance, ChanceBlockState::new));

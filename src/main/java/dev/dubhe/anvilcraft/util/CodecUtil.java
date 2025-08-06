@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.util;
 
-import com.mojang.datafixers.util.Function6;
+import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Function7;
 import com.mojang.datafixers.util.Function8;
 import com.mojang.datafixers.util.Pair;
@@ -29,6 +29,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -214,6 +217,16 @@ public class CodecUtil {
             buffer.writeLong(BlockPos.asLong(value.getX(), value.getY(), value.getZ()));
         }
     };
+
+    public static final Codec<NumberProvider> NUMBER_PROVIDER_CODEC = Codec.either(
+        Codec.INT.xmap(ConstantValue::new, value -> Math.round(value.value())),
+        NumberProviders.CODEC
+    ).xmap(Either::unwrap, provider -> {
+        if (!(provider instanceof ConstantValue(float value)) || value - Math.floor(value) >= 1E-5) {
+            return Either.right(provider);
+        }
+        return Either.left((ConstantValue) provider);
+    });
 
     public static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> composite(
         final StreamCodec<? super B, T1> codec1,

@@ -28,6 +28,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -257,28 +259,30 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             return this.requires(ingredient, 1);
         }
 
-        public B result(@NotNull ItemStack result, float chance) {
-            this.results.add(ChanceItemStack.of(result, chance));
+        public B result(@NotNull ItemStack result, NumberProvider count) {
+            this.results.add(ChanceItemStack.of(result, count));
             return this.getThis();
         }
 
-        public B result(@NotNull ItemStack result) {
-            return this.result(result, 1.0f);
+        public B result(@NotNull ItemStack result, float chance) {
+            return this.result(result, BinomialDistributionGenerator.binomial(result.getCount(), chance));
         }
 
-        public B result(@NotNull ItemLike result, int count, NumberProvider chance) {
-            this.results.add(ChanceItemStack.of(result, count, chance));
+        public B result(@NotNull ItemStack result) {
+            return this.result(result, ConstantValue.exactly(result.getCount()));
+        }
+
+        public B result(@NotNull ItemLike result, NumberProvider count) {
+            this.results.add(ChanceItemStack.of(result, count));
             return this.getThis();
         }
 
         public B result(@NotNull ItemLike result, int count, float chance) {
-            ItemStack stack = result.asItem().getDefaultInstance();
-            stack.setCount(count);
-            return this.result(stack, chance);
+            return this.result(result, BinomialDistributionGenerator.binomial(count, chance));
         }
 
         public B result(@NotNull ItemLike result, int count) {
-            return this.result(result, count, 1.0f);
+            return this.result(result, ConstantValue.exactly(count));
         }
 
         public B result(@NotNull ItemLike result, float chance) {
@@ -286,7 +290,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         }
 
         public B result(@NotNull ItemLike result) {
-            return this.result(result, 1.0f);
+            return this.result(result, ConstantValue.exactly(1.0f));
         }
 
         @Override

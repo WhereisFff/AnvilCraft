@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.recipe.neo.wrap.ItemCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.neo.wrap.StampingRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;

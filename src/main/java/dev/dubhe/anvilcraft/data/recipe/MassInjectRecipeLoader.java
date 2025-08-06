@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;

@@ -1,17 +1,13 @@
 package dev.dubhe.anvilcraft.integration.jei.util;
 
-import com.mojang.datafixers.util.Either;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import mezz.jei.common.util.RegistryUtil;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.crafting.BlockTagIngredient;
 
 import java.util.ArrayList;

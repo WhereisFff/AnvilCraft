@@ -90,7 +90,7 @@ public class ClientEventListener {
                 PacketDistributor.sendToServer(new SwitchPhasePacket());
             } else if (
                 lastSwitchPhasePressAction == InputConstants.REPEAT
-                && Minecraft.getInstance().screen instanceof MultiphaseScreen screen
+                    && Minecraft.getInstance().screen instanceof MultiphaseScreen screen
             ) {
                 screen.wheel.onClosing();
             }

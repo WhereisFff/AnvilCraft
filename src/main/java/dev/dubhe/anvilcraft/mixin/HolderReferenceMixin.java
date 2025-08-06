@@ -17,9 +17,9 @@ public class HolderReferenceMixin {
         at = @At(
             value = "NEW",
             target = "(Lnet/minecraft/core/Holder$Reference$Type;"
-                     + "Lnet/minecraft/core/HolderOwner;"
-                     + "Lnet/minecraft/resources/ResourceKey;"
-                     + "Ljava/lang/Object;)Lnet/minecraft/core/Holder$Reference;"))
+                + "Lnet/minecraft/core/HolderOwner;"
+                + "Lnet/minecraft/resources/ResourceKey;"
+                + "Ljava/lang/Object;)Lnet/minecraft/core/Holder$Reference;"))
     private static <T> Holder.Reference<T> createForResonator(
         Holder.Reference.Type type, HolderOwner<T> owner, ResourceKey<T> key, T value, Operation<Holder.Reference<T>> original
     ) {

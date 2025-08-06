@@ -45,8 +45,8 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
     protected static <T extends Item & IMultipleResult> Codec<T> resultCodec() {
         return CodecUtil.ITEM_CODEC.flatXmap(
             item -> item instanceof IMultipleResult
-                    ? DataResult.success((T) item)
-                    : DataResult.error(() -> "Item " + item + " is not instance of IMultipleResult"),
+                ? DataResult.success((T) item)
+                : DataResult.error(() -> "Item " + item + " is not instance of IMultipleResult"),
             DataResult::success
         );
     }
@@ -105,8 +105,8 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
     public boolean matches(MultipleToOneSmithingRecipeInput input, Level level) {
         if (input.inputs().size() != this.inputs.size()) return false;
         return this.isTemplateIngredient(input.template())
-               && this.isMaterialIngredient(input.material())
-               && this.matchesInput(input);
+            && this.isMaterialIngredient(input.material())
+            && this.matchesInput(input);
     }
 
     protected boolean matchesInput(MultipleToOneSmithingRecipeInput input) {

@@ -113,11 +113,11 @@ public class CreateIntegration {
     private static final DeferredRegister<AmuletType> REGISTER = DeferredRegister.create(ModRegistries.AMULET_TYPE_KEY, AnvilCraft.MOD_ID);
     private static final DeferredHolder<AmuletType, ? extends AmuletType> COGWHEEL = REGISTER.register(
         "cogwheel", () -> new AmuletType.ImmuneDamageFromObtain(
-        DamageSourcePredicate.Builder.builder()
-            .type(ModDamageTypeTags.COGWHEEL_AMULET_VALID)
-            .type("create")
-            .murder(ModEntityTypeTags.COGWHEEL_AMULET_VALID)
-            .build().build(),
-        COGWHEEL_AMULET.asStack()
-    ));
+            DamageSourcePredicate.Builder.builder()
+                .type(ModDamageTypeTags.COGWHEEL_AMULET_VALID)
+                .type("create")
+                .murder(ModEntityTypeTags.COGWHEEL_AMULET_VALID)
+                .build().build(),
+            COGWHEEL_AMULET.asStack()
+        ));
 }

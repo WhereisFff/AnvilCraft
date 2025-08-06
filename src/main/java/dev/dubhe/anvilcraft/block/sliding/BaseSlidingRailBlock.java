@@ -64,11 +64,11 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
         if (!Objects.equals(otherAxis, axis)) return false;
         if (axis == null) {
             return pos.relative(Direction.Axis.X, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.X, 1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Y, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Y, 1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Z, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
+                || pos.relative(Direction.Axis.X, 1).equals(otherPos)
+                || pos.relative(Direction.Axis.Y, -1).equals(otherPos)
+                || pos.relative(Direction.Axis.Y, 1).equals(otherPos)
+                || pos.relative(Direction.Axis.Z, -1).equals(otherPos)
+                || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
         }
         return pos.relative(axis, -1).equals(otherPos) || pos.relative(axis, 1).equals(otherPos);
     }

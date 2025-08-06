@@ -6,8 +6,11 @@ import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemCache;
+import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
+import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.Item;
@@ -15,7 +18,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,12 +25,16 @@ import org.jetbrains.annotations.NotNull;
 public class SpawnItem implements IRecipeOutcome<SpawnItem> {
     private final ItemStack item;
     private final Vec3 offset;
-    private final NumberProvider chance;
+    private final NumberProvider count;
 
-    public SpawnItem(ItemStack item, Vec3 offset, NumberProvider chance) {
+    public SpawnItem(ItemStack item, Vec3 offset, NumberProvider count) {
         this.item = item;
         this.offset = offset;
-        this.chance = chance;
+        this.count = count;
+    }
+
+    public SpawnItem(Holder<Item> item, DataComponentPatch patch, Vec3 offset, NumberProvider count) {
+        this(new ItemStack(item, 1, patch), offset, count);
     }
 
     public static @NotNull Builder builder() {
@@ -43,20 +49,24 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
     @Override
     public void accept(@NotNull InWorldRecipeContext context) {
         ItemCache cache = context.computeIfAbsent(ItemCache.ITEM_CACHE);
-        ItemCache.ICacheOutput output = cache.getOutput(this.item, context.getPos().add(this.offset));
-        output.grow(this.item, true);
+        ItemStack stack = this.item.copyWithCount(context.getInt(this.count, 0, 99));
+        ItemCache.ICacheOutput output = cache.getOutput(stack, context.getPos().add(this.offset));
+        output.grow(stack, true);
         context.putAcceptor(ItemCache.ITEM_CACHE.location(), ItemCache.DEFAULT_ACCEPTOR);
     }
 
     public static class Type implements IRecipeOutcome.Type<SpawnItem> {
-        private static final MapCodec<SpawnItem> CODEC = RecordCodecBuilder.mapCodec(
-            instance -> instance.group(
-                ItemStack.CODEC.fieldOf("item")
-                    .forGetter(SpawnItem::getItem),
-                Vec3.CODEC.fieldOf("offset")
+        private static final MapCodec<SpawnItem> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                ItemStack.ITEM_NON_AIR_CODEC.fieldOf("item").forGetter(spawnItem -> spawnItem.getItem().getItemHolder()),
+                DataComponentPatch.CODEC
+                    .optionalFieldOf("components", DataComponentPatch.EMPTY)
+                    .forGetter(spawnItem -> spawnItem.getItem().getComponentsPatch()),
+                Vec3.CODEC
+                    .fieldOf("offset")
                     .forGetter(SpawnItem::getOffset),
-                NumberProviders.CODEC.optionalFieldOf("chance", ConstantValue.exactly(1.0f))
-                    .forGetter(SpawnItem::getChance)
+                CodecUtil.NUMBER_PROVIDER_CODEC
+                    .optionalFieldOf("count", ConstantValue.exactly(1.0f))
+                    .forGetter(SpawnItem::getCount)
             ).apply(instance, SpawnItem::new)
         );
 
@@ -73,20 +83,20 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
         public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SpawnItem spawnItem) {
             ItemStack.STREAM_CODEC.encode(buf, spawnItem.item);
             buf.writeVec3(spawnItem.offset);
-            RecipeUtil.toNetwork(buf, spawnItem.chance);
+            RecipeUtil.toNetwork(buf, spawnItem.count);
         }
 
         public static @NotNull SpawnItem decode(@NotNull RegistryFriendlyByteBuf buf) {
             ItemStack stack = ItemStack.STREAM_CODEC.decode(buf);
             Vec3 vec3 = buf.readVec3();
-            NumberProvider chance = RecipeUtil.fromNetwork(buf);
-            return new SpawnItem(stack, vec3, chance);
+            NumberProvider count = RecipeUtil.fromNetwork(buf);
+            return new SpawnItem(stack, vec3, count);
         }
     }
 
     public static class Builder {
         private Vec3 offset = Vec3.ZERO;
-        private NumberProvider chance = ConstantValue.exactly(1.0f);
+        private NumberProvider count = ConstantValue.exactly(1.0f);
         private ItemStack item = ItemStack.EMPTY;
 
         public Builder offset(Vec3 offset) {
@@ -116,7 +126,7 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
         }
 
         public Builder chance(NumberProvider chance) {
-            this.chance = chance;
+            this.count = chance;
             return this;
         }
 
@@ -138,7 +148,7 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
         }
 
         public SpawnItem build() {
-            return new SpawnItem(this.item, this.offset, this.chance);
+            return new SpawnItem(this.item, this.offset, this.count);
         }
     }
 }

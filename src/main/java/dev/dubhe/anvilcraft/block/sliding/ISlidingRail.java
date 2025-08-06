@@ -1,9 +1,7 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.injection.block.IBlockExtension;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -16,7 +14,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joml.Vector3f;
@@ -25,7 +22,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
@@ -36,8 +32,8 @@ public interface ISlidingRail extends IBlockExtension {
     /**
      * 当滑动方块经过时每tick调用该方法。
      *
-     * @param level 滑轨所处的世界
-     * @param state 滑轨方块状态
+     * @param level  滑轨所处的世界
+     * @param state  滑轨方块状态
      * @param entity 滑动方块实体
      */
     void onSlidingAbove(Level level, BlockState state, SlidingBlockEntity entity);

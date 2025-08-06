@@ -69,8 +69,7 @@ public record Distance(Type type, int distance, boolean isHorizontal) {
     }
 
     public enum Type {
-        EUCLIDEAN, MANHATTAN, CHEBYSHEV
-        ;
+        EUCLIDEAN, MANHATTAN, CHEBYSHEV;
 
         public static final Codec<Type> LOWER_NAME_CODEC = CodecUtil.enumCodecInLowerName(Type.class);
         public static final StreamCodec<ByteBuf, Type> STREAM_CODEC = CodecUtil.enumStreamCodec(Type.class);

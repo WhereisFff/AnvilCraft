@@ -36,13 +36,13 @@ public class EnchantmentHelperMixin {
 
     @WrapOperation(
         method = "runIterationOnItem(Lnet/minecraft/world/item/ItemStack;"
-                 + "Lnet/minecraft/world/entity/EquipmentSlot;"
-                 + "Lnet/minecraft/world/entity/LivingEntity;"
-                 + "Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentInSlotVisitor;)V",
+            + "Lnet/minecraft/world/entity/EquipmentSlot;"
+            + "Lnet/minecraft/world/entity/LivingEntity;"
+            + "Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentInSlotVisitor;)V",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentInSlotVisitor;"
-                     + "accept(Lnet/minecraft/core/Holder;ILnet/minecraft/world/item/enchantment/EnchantedItemInUse;)V"))
+                + "accept(Lnet/minecraft/core/Holder;ILnet/minecraft/world/item/enchantment/EnchantedItemInUse;)V"))
     private static void checkShouldTriggerProvidence(
         EnchantmentHelper.EnchantmentInSlotVisitor instance, Holder<Enchantment> holder, int i, EnchantedItemInUse enchantedItemInUse,
         Operation<Void> original, @Local Holder<Enchantment> enchantment, @Local(argsOnly = true) LivingEntity entity

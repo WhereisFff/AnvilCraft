@@ -6,7 +6,9 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -14,6 +16,7 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 
@@ -81,5 +84,33 @@ public class InWorldRecipeContext implements RecipeInput {
 
     public void accept() {
         this.acceptors.values().forEach(acceptor -> acceptor.accept(this));
+    }
+
+    public @NotNull LootContext emptyLootContext() {
+        return new LootContext.Builder(new LootParams(this.level, Map.of(), Map.of(), 0)).create(Optional.empty());
+    }
+
+    public float getFloat(@NotNull NumberProvider provider, float min, float max) {
+        return Math.clamp(provider.getFloat(this.emptyLootContext()), min, max);
+    }
+
+    public float getFloat(@NotNull NumberProvider provider, float max) {
+        return Math.min(provider.getFloat(this.emptyLootContext()), max);
+    }
+
+    public float getFloat(@NotNull NumberProvider provider) {
+        return provider.getFloat(this.emptyLootContext());
+    }
+
+    public int getInt(@NotNull NumberProvider provider, int min, int max) {
+        return Math.clamp(provider.getInt(this.emptyLootContext()), min, max);
+    }
+
+    public int getInt(@NotNull NumberProvider provider, int max) {
+        return Math.min(provider.getInt(this.emptyLootContext()), max);
+    }
+
+    public int getInt(@NotNull NumberProvider provider) {
+        return provider.getInt(this.emptyLootContext());
     }
 }

@@ -77,7 +77,8 @@ public class ItemInjectRecipe implements Recipe<ItemInjectRecipe.Input> {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        if (!this.resultItem.equals(ChanceItemStack.EMPTY) && this.resultItem.getStack().getItem() != Items.AIR) return this.resultItem.getStack();
+        if (!this.resultItem.equals(ChanceItemStack.EMPTY) && this.resultItem.getStack().getItem() != Items.AIR)
+            return this.resultItem.getStack();
         return resultBlock.asItem().getDefaultInstance();
     }
 

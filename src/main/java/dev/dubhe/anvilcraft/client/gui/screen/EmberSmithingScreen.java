@@ -159,8 +159,8 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
                         optional = Optional.of(templateItem.getMaterialTooltip());
                     } else if (
                         this.hoveredSlot.index >= 2 && this.hoveredSlot.index <= 9
-                        && material.getItem() instanceof IMultipleMaterial materialItem
-                        && this.isSlotEnabled(this.hoveredSlot.index)
+                            && material.getItem() instanceof IMultipleMaterial materialItem
+                            && this.isSlotEnabled(this.hoveredSlot.index)
                     ) {
                         optional = Optional.of(materialItem.getInputTooltip(
                             this.menu.getSlot(0).getItem(), this.menu.getInputStacks()));

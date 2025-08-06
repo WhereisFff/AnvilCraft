@@ -164,8 +164,8 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
 
     private static Block getCauldron(TimeWarpRecipe recipe) {
         return recipe.isProduceFluid()
-               ? Blocks.CAULDRON
-               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
+            ? Blocks.CAULDRON
+            : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
     }
 
     @Override

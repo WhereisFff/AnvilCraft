@@ -140,6 +140,13 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
         }
 
         @Override
+        public void validate(@NotNull ResourceLocation pId) {
+            if (this.itemIngredients.isEmpty()) {
+                throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + pId);
+            }
+        }
+
+        @Override
         protected ItemInjectRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
             return new ItemInjectRecipe(itemIngredients, results, this.blockIngredient.build(), this.blockResult);
         }

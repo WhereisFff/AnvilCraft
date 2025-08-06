@@ -11,15 +11,27 @@
       "id": "minecraft:amethyst_shard"
     },
     {
-      "chance": 0.25,
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
       "id": "anvilcraft:topaz"
     },
     {
-      "chance": 0.25,
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
       "id": "anvilcraft:sapphire"
     },
     {
-      "chance": 0.25,
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
       "id": "anvilcraft:ruby"
     }
   ]

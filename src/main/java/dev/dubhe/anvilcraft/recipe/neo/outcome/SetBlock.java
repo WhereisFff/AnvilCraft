@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockCache;
+import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -23,7 +24,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -62,9 +62,11 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
             instance -> instance.group(
                 IBlockStateExtension.MAP_CODEC
                     .forGetter(SetBlock::getState),
-                Vec3.CODEC.fieldOf("offset")
+                Vec3.CODEC
+                    .fieldOf("offset")
                     .forGetter(SetBlock::getOffset),
-                NumberProviders.CODEC.optionalFieldOf("chance", ConstantValue.exactly(1.0f))
+                CodecUtil.NUMBER_PROVIDER_CODEC
+                    .optionalFieldOf("chance", ConstantValue.exactly(1.0f))
                     .forGetter(SetBlock::getChance)
             ).apply(instance, SetBlock::new));
 

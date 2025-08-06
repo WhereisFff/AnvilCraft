@@ -25,8 +25,8 @@ abstract class PistonMovingBlockEntityMixin {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/Level;"
-                     + "neighborChanged(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;"
-                     + "Lnet/minecraft/core/BlockPos;)V",
+                + "neighborChanged(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;"
+                + "Lnet/minecraft/core/BlockPos;)V",
             shift = At.Shift.AFTER
         )
     )

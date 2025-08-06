@@ -12,7 +12,6 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -95,8 +94,8 @@ public class TransformWithItemRecipeBuilder {
         save(
             recipeOutput,
             AnvilCraft.of(
-                BuiltInRegistries.ENTITY_TYPE.getKey(inputType).getPath()
-                    + "_to_" + BuiltInRegistries.ITEM.getKey(itemResult.getItem()).getPath())
+                    BuiltInRegistries.ENTITY_TYPE.getKey(inputType).getPath()
+                        + "_to_" + BuiltInRegistries.ITEM.getKey(itemResult.getItem()).getPath())
                 .withPrefix("mob_transform_with_item/"));
     }
 

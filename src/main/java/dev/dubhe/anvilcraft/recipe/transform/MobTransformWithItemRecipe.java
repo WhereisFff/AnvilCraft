@@ -12,7 +12,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.commands.data.EntityDataAccessor;
@@ -27,7 +26,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -147,17 +145,17 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider)  {
+    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
         return Items.AIR.getDefaultInstance();
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer()  {
+    public @NotNull RecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<?> getType()  {
+    public @NotNull RecipeType<?> getType() {
         return ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_TYPE.get();
     }
 
