@@ -393,7 +393,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         ChunkPos chunkPos = this.chunkPosition();
         List<ItemCollectorBlockEntity> list = map.get(chunkPos);
         if (list == null || list.isEmpty()) return;
-        ItemStack itemStack = this.getItem();
+        ItemStack itemStack = this.getItem().copy();
         boolean flag = false;
         for (ItemCollectorBlockEntity collector : list) {
             if (collector.isGridWorking()
@@ -423,12 +423,12 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     }
 
     @Override
-    public void setIsAdsorbable(boolean value) {
+    public void anvilcraft$setIsAdsorbable(boolean value) {
         this.anvilCraft$isAdsorbable = value;
     }
 
     @Override
-    public boolean isAdsorbable() {
+    public boolean anvilcraft$isAdsorbable() {
         return this.anvilCraft$isAdsorbable;
     }
 }
