@@ -45,6 +45,7 @@ import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
 import dev.dubhe.anvilcraft.block.SimpleConfinementAnvilonBlock;
+import dev.dubhe.anvilcraft.block.SugarBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendiumBlock;
 import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
@@ -132,6 +133,7 @@ import dev.dubhe.anvilcraft.block.plate.TimeCountedPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
+import dev.dubhe.anvilcraft.block.state.FragmentationDegree;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
@@ -195,6 +197,7 @@ import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
@@ -203,6 +206,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
+import static dev.dubhe.anvilcraft.AnvilCraft.of;
 import static dev.dubhe.anvilcraft.api.power.IPowerComponent.OVERLOAD;
 import static dev.dubhe.anvilcraft.api.power.IPowerComponent.SWITCH;
 
@@ -210,7 +214,6 @@ import static dev.dubhe.anvilcraft.api.power.IPowerComponent.SWITCH;
 @MethodsReturnNonnullByDefault
 @SuppressWarnings({"unused", "CodeBlock2Expr"})
 public class ModBlocks {
-
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_FUNCTION_BLOCK.getKey());
     }
@@ -4473,6 +4476,46 @@ public class ModBlocks {
                 .define('B', ModItems.MAGNET_INGOT)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.EMBER_METAL_NUGGET))
                 .save(provider);
+        })
+        .register();
+
+    public static final BlockEntry<SugarBlock> SUGAR_BLOCK = REGISTRATE
+        .block("sugar_block", SugarBlock::new)
+        .initialProperties(() -> Blocks.LAPIS_BLOCK)
+        .properties(BlockBehaviour.Properties::noLootTable)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.STORAGE_BLOCKS_SUGAR)
+        .blockstate((ctx, provider) -> {
+            BlockModelBuilder sugarBlock = provider.models().cubeAll("sugar_block", of("block/sugar_block"));
+            BlockModelBuilder sugarBlock1 = provider.models().cubeAll("sugar_block1", of("block/sugar_block_1"));
+            BlockModelBuilder sugarBlock2 = provider.models().cubeAll("sugar_block2", of("block/sugar_block_2"));
+            BlockModelBuilder sugarBlock3 = provider.models().cubeAll("sugar_block3", of("block/sugar_block_3"));
+            provider.getVariantBuilder(ctx.get())
+                .partialState()
+                .with(SugarBlock.FRAGMENTATION_DEGREE, FragmentationDegree.ZERO).modelForState().modelFile(sugarBlock)
+                .addModel()
+                .partialState()
+                .with(SugarBlock.FRAGMENTATION_DEGREE, FragmentationDegree.ONE).modelForState().modelFile(sugarBlock1)
+                .addModel()
+                .partialState()
+                .with(SugarBlock.FRAGMENTATION_DEGREE, FragmentationDegree.TWO).modelForState().modelFile(sugarBlock2)
+                .addModel()
+                .partialState()
+                .with(SugarBlock.FRAGMENTATION_DEGREE, FragmentationDegree.THREE).modelForState().modelFile(sugarBlock3)
+                .addModel();
+        })
+        .item()
+        .tag(ModItemTags.STORAGE_BLOCKS_SUGAR)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
+                requires(Items.SUGAR, 9)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.SUGAR))
+                .save(provider);
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.SUGAR, 9)
+                .requires(ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
+                .save(provider, of("sugar_from_sugar_block"));
         })
         .register();
 
