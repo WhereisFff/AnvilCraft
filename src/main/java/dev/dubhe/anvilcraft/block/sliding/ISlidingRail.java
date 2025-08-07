@@ -1,9 +1,8 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.injection.block.IBlockExtension;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.api.sliding.SlidingBlockStructureResolver;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +13,6 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
@@ -25,7 +23,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
@@ -36,25 +33,28 @@ public interface ISlidingRail extends IBlockExtension {
     /**
      * 当滑动方块经过时每tick调用该方法。
      *
-     * @param level 滑轨所处的世界
-     * @param state 滑轨方块状态
+     * @param level  滑轨所处的世界
+     * @param pos    滑轨方块位置
+     * @param state  滑轨方块状态
      * @param entity 滑动方块实体
      */
-    void onSlidingAbove(Level level, BlockState state, SlidingBlockEntity entity);
+    void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity);
 
     Block self();
 
     /**
-     * 当滑轨站尝试滑动顶部方块时调用该方法。<br>
+     * 当滑轨站尝试移动顶部方块到该滑轨顶部时调用该方法。<br>
      * 将在{@link Block#neighborChanged(BlockState, Level, BlockPos, Block, BlockPos, boolean) neighbourChanged()}调用。
      *
-     * @param level 滑轨所处的世界
+     * @param level 滑轨站所处的世界
+     * @param pos   滑轨方块位置
      * @param state 滑轨方块状态
+     * @param top   滑轨站顶部的方块状态
      * @return 将要滑动的方向。若为空，则不滑动。
      */
     @SuppressWarnings("JavadocReference")
-    default Optional<Direction> getSlidingDirection(LevelReader level, BlockState state) {
-        return Optional.empty();
+    default boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top) {
+        return false;
     }
 
     static void whenOnNeighborChange(LevelReader level, BlockPos pos, BlockPos neighbor) {
@@ -96,13 +96,16 @@ public interface ISlidingRail extends IBlockExtension {
     }
 
     static boolean moveBlocks(Level level, BlockPos pos, Direction facing) {
-        PistonStructureResolver resolver = new PistonStructureResolver(level, pos.relative(facing.getOpposite()), facing, true);
+        SlidingBlockStructureResolver resolver = new SlidingBlockStructureResolver(level, pos, facing, true);
         if (!resolver.resolve()) return false;
         List<Triple<BlockPos, BlockState, Optional<CompoundTag>>> toPushes = new ArrayList<>();
         List<BlockPos> toPushPoses = resolver.getToPush();
 
         for (BlockPos toPushPos : toPushPoses) {
             BlockState toPushState = level.getBlockState(toPushPos);
+            if (toPushState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                toPushState = toPushState.setValue(BlockStateProperties.WATERLOGGED, false);
+            }
             Optional<CompoundTag> toPushEntityData = Optional.ofNullable(level.getBlockEntity(toPushPos))
                 .map(entity -> entity.saveCustomOnly(level.registryAccess()));
             toPushes.add(Triple.of(toPushPos, toPushState, toPushEntityData));
@@ -110,16 +113,26 @@ public interface ISlidingRail extends IBlockExtension {
 
         List<BlockPos> toDestroys = resolver.getToDestroy();
 
-        for (int j = toDestroys.size() - 1; j >= 0; j--) {
-            BlockPos destroyingPos = toDestroys.get(j);
+        for (int i = toDestroys.size() - 1; i >= 0; i--) {
+            BlockPos destroyingPos = toDestroys.get(i);
             BlockState destroyingState = level.getBlockState(destroyingPos);
             BlockEntity destroyingEntity = destroyingState.hasBlockEntity() ? level.getBlockEntity(destroyingPos) : null;
             Block.dropResources(destroyingState, level, destroyingPos, destroyingEntity);
             destroyingState.onDestroyedByPushReaction(level, destroyingPos, facing, level.getFluidState(destroyingPos));
         }
 
+        BlockState air = Blocks.AIR.defaultBlockState();
+
         for (BlockPos toPushPos : toPushPoses) {
-            level.setBlock(toPushPos, Blocks.AIR.defaultBlockState(), 0b1010010);
+            level.setBlock(toPushPos, air, 0b1010010);
+        }
+
+        for (var toPushEntry : toPushes) {
+            BlockPos toPushPos = toPushEntry.getLeft();
+            BlockState toPushState = toPushEntry.getMiddle();
+            toPushState.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
+            air.updateNeighbourShapes(level, toPushPos, 0b0000010);
+            air.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
         }
 
         SlidingBlockEntity.slid(level, pos, facing, toPushes);

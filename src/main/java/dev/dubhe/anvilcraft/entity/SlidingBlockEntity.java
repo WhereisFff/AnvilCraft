@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.api.sliding.SlidingBlockSection;
 import dev.dubhe.anvilcraft.block.sliding.ISlidingRail;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModEntities;
 import dev.dubhe.anvilcraft.network.SlidingEntitySyncPacket;
 import dev.dubhe.anvilcraft.util.Util;
@@ -28,7 +27,6 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -50,6 +48,7 @@ public class SlidingBlockEntity extends Entity {
     public static final double DEFAULT_MOVEMENT = 0.75;
     protected static final EntityDataAccessor<BlockPos> DATA_START_POS = SynchedEntityData.defineId(
         SlidingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
+    private int time = 0;
 
     public SlidingBlockEntity(EntityType<? extends SlidingBlockEntity> entityType, Level level) {
         super(entityType, level);
@@ -98,28 +97,25 @@ public class SlidingBlockEntity extends Entity {
         this.setNoGravity(true);
         if (this.section.isEmpty()) {
             this.discard();
-        } else {
-            BlockPos pos = this.blockPosition();
-            BlockPos belowPos = pos.below();
-            BlockState belowState = this.level().getBlockState(belowPos);
-            if (belowState.getBlock() instanceof ISlidingRail slidingRail && !this.level().isClientSide) {
-                slidingRail.onSlidingAbove(this.level(), belowState, this);
-            }
-
-            if (this.level().isOutsideBuildHeight(pos)) {
-                this.section.setBlock(this.level(), this.blockPosition(), this);
-            } else if (this.checkCanMove()) {
-                this.setDeltaMovement(Vec3.ZERO.relative(this.moveDirection, DEFAULT_MOVEMENT));
-            } else if (!this.level().isClientSide && !this.isRemoved()) {
-                BlockState state = this.level().getBlockState(pos);
-                this.setDeltaMovement(Vec3.ZERO.multiply(Vec3.ZERO.relative(this.moveDirection, -0.5)));
-                if (!state.is(Blocks.MOVING_PISTON)) {
-                    this.section.setBlock(this.level(), this.blockPosition(), this);
-                }
-                this.discard();
-            }
-            this.move(MoverType.SELF, this.getDeltaMovement());
+            return;
         }
+        this.time++;
+        BlockPos pos = this.blockPosition();
+        BlockPos belowPos = pos.below();
+        BlockState belowState = this.level().getBlockState(belowPos);
+        if (belowState.getBlock() instanceof ISlidingRail slidingRail && !this.level().isClientSide) {
+            slidingRail.onSlidingAbove(this.level(), belowPos, belowState, this);
+        }
+
+        if (this.level().isOutsideBuildHeight(pos)) {
+            this.stop();
+        } else if (this.checkCanMove()) {
+            this.setDeltaMovement(Vec3.ZERO.relative(this.moveDirection, DEFAULT_MOVEMENT));
+        } else if (!this.level().isClientSide && !this.isRemoved()) {
+            this.setDeltaMovement(Vec3.ZERO);
+            this.stop();
+        }
+        this.move(MoverType.SELF, this.getDeltaMovement());
     }
 
     @Override
@@ -147,6 +143,7 @@ public class SlidingBlockEntity extends Entity {
 
     protected boolean checkCanMove() {
         if (!(this.level().getBlockState(this.blockPosition().below()).getBlock() instanceof ISlidingRail)) return false;
+        if (this.time > 1 && this.getDeltaMovement().equals(Vec3.ZERO)) return false;
         for (Vec3i pos : this.section.getWallsOnSide(this.moveDirection)) {
             BlockPos checking = this.blockPosition().offset(pos);
             if (!this.level().getBlockState(checking).isAir()) return false;
@@ -155,12 +152,17 @@ public class SlidingBlockEntity extends Entity {
         return true;
     }
 
+    public int getBlockCount() {
+        return this.section.size();
+    }
+
     public void setMoveDirection(Direction moveDirection) {
         this.moveDirection = moveDirection;
         if (this.level().isClientSide) return;
         PacketDistributor.sendToPlayersTrackingChunk(
             (ServerLevel) this.level(), new ChunkPos(this.blockPosition()),
-            new SlidingEntitySyncPacket(this.getId(), this.section.blocks(), moveDirection));
+            new SlidingEntitySyncPacket(this.getId(), this.section.blocks(), moveDirection)
+        );
     }
 
     public void stop() {
