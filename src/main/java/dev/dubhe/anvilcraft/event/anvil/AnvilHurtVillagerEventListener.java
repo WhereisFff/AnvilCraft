@@ -73,14 +73,14 @@ public class AnvilHurtVillagerEventListener {
             villager.setXRot(trader.getXRot());
             villager.setYRot(trader.getYRot());
             villager.setYHeadRot(trader.getYHeadRot());
+            MerchantOffers offers = new MerchantOffers();
             if (profession == VillagerProfession.FARMER) {
                 villager.setVillagerXp(250);
                 villageData = villageData.setLevel(5);
-            }
-            villager.setVillagerData(villageData);
-            MerchantOffers offers = new MerchantOffers();
-            for (MerchantOffer offer : trader.getOffers()) {
-                offers.add(offer.copy());
+                villager.setVillagerData(villageData);
+                for (MerchantOffer offer : trader.getOffers()) {
+                    offers.add(offer.copy());
+                }
             }
             villager.setOffers(offers);
             trader.remove(Entity.RemovalReason.DISCARDED);

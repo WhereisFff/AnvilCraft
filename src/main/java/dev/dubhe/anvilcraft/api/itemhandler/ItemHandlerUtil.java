@@ -44,7 +44,7 @@ public class ItemHandlerUtil {
                 filterItem = sourceStack.getItem();
                 maxAmount = (int) (maxAmount / 64f * sourceStack.getMaxStackSize());
             } else if (sourceStack.getItem() != filterItem) continue;
-            while (true) {
+            for (int i = 0; i < maxAmount; i++) {
                 ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
                 int amountToInsert = sourceStack.getCount() - remainder.getCount();
                 sourceStack = remainder;

@@ -3,6 +3,9 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:heater",
   "sortnum": 2003,
+  "extra_recipe_mappings": {
+    "anvilcraft:capacitor": 6
+  },
   "pages": [
     {
       "type": "patchouli:text",
@@ -12,7 +15,7 @@
       "type": "patchouli:crafting",
       "anchor": "heater",
       "recipe": "anvilcraft:heater",
-      "text": "$(item)加热器$()耗电功率为16KW，加热上方方块，允许铁砧执行熔炼操作——以此法冶炼矿物可以获得双倍产出。"
+      "text": "$(item)加热器$()耗电功率为16KW，加热上方方块，允许铁砧执行$(l:advanced/super_heating)高温熔炼$()操作。"
     },
     {
       "type": "patchouli:crafting",
@@ -33,7 +36,30 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:induction_light",
-      "text": "照明，耗电功率为1kW$(br)使用$(item)红石粉$()右键该方块将其改为催熟模式$(br)使用$(item)荧石粉$()右键该方块将其改为防刷怪模式$(br)使用$(l:struct/mineral_fountain#void_matter)虚空物质$()右键该方块将其改为防刷动物模式$(br)以上三种模式耗电功率变为16kW"
+      "text": "$(item)电感灯$()默认仅可以照明，耗电功率为1kW。对其使用不同物品右键可以设置功能模式，详情见后文。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "",
+      "text": "$(li)$(item)红石粉$(): 催熟作物，工作范围5x5x5方块，催熟要求对象位置的方块光等级不小于$(thing)10$() $(li)$(item)荧石粉$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)怪物$()生成 $(li)$(l:struct/mineral_fountain#void_matter)虚空物质$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)动物$()生成$(br2)以上三种模式下，耗电功率变为16kW $(br)$(#666666)区段: 区块的一截，16x16x16大小$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "charger",
+      "recipe": "anvilcraft:charger",
+      "text": "对于不同配方消耗不同能量：$(li)铁锭→磁铁锭$(li)电容器（空）→电容器"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "capacitor_empty",
+      "recipe": "anvilcraft:capacitor_empty",
+      "text": "$(#666666)“5号电池”$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "discharger",
+      "recipe": "anvilcraft:discharger_from_charger",
+      "text": "可以释放电容器中的能量，但是会损失一小部分"
     }
   ]
 }

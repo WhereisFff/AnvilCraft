@@ -68,6 +68,21 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
     }
 
     @Override
+    public boolean isEnchantable(ItemStack stack) {
+        return true;
+    }
+
+    @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 15;
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack toRepair, ItemStack repair) {
+        return repair.is(ModItems.TITANIUM_INGOT);
+    }
+
+    @Override
     @SuppressWarnings({"removal"})
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         ItemProperties.register(
@@ -153,7 +168,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
                 instance.removeModifier(CREATIVE_FLIGHT);
             }
             return;
-        } else if (getFlightTime(equipped) >= AnvilCraft.config.ionoCraftBackpackMaxFlightTime) {
+        } else if (getFlightTime(equipped) >= AnvilCraft.config.ionoCraftBackpackMaxFlightTime && !player.getAbilities().flying) {
             powerComponent.getPowerConsumptions().remove(CONSUMPTION);
             return;
         }

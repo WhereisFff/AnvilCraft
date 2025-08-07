@@ -26,6 +26,7 @@
     },
     {
       "type": "anvilcraft:time_warp",
+      "anchor": "nuclear_fission",
       "recipe": "anvilcraft:heat_produce_time_warp/raw_uranium_from_uranium_block",
       "title": "核裂变",
       "text": "$(l:smithing/corrupted_beacon#time_warp)时移$()$(item)铀块$()或$(item)钚块$()可以释放大量的热能。分别会将仅贴锅周围四个面的方块加热为$(thing)白炽$()并持续5/10分钟或$(thing)超温$()10秒。"

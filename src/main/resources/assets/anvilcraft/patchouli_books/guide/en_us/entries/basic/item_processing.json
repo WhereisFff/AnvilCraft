@@ -14,16 +14,8 @@
     "anvilcraft:uranium_pressure_plate": 2,
     "anvilcraft:bronze_pressure_plate": 2,
     "anvilcraft:brass_pressure_plate": 2,
-    "anvilcraft:cream": 2,
-    "anvilcraft:cocoa_butter": 2,
-    "anvilcraft:cocoa_powder": 2,
-    "anvilcraft:wood_fiber": 4,
-    "anvilcraft:resin": 4,
-    "anvilcraft:flour": 4,
     "minecraft:wet_sponge": 12,
-    "minecraft:sponge": 12,
-    "anvilcraft:dough": 12,
-    "anvilcraft:hardend_resin": 12
+    "minecraft:sponge": 12
   },
   "pages": [
     "Let $(item)Anvil$() fall on the specific blocks to process the items inside or on. Different specific blocks have different processing. The flowing pages of this entry will introduce relevant content in sequence. This mod adds a block that prevents hit items from flying around due to hitbox squeezing: $(item)Stamping Platform$().",
@@ -54,7 +46,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Items can be stamped into slices, such as Iron Ingot→Iron Pressure Plate; Gold Ingot→Gold Pressure Plate; Snowball→Snow; Cherry Leaves→Pink Petals.It is also possible to separate the different components of some items, such as Sugar Cane→Paper+Sugar;Cocoa beans→cocoa butter+cocoa powder; Milk bucket→cream+iron bucket; Wood fiber→paper."
+      "text": "$(li)Items can be stamped into slices, such as Iron Ingot→Iron Pressure Plate; Gold Ingot→Gold Pressure Plate; Snowball→Snow; Cherry Leaves→Pink Petals.$(li)It is also possible to separate the different components of some items, such as Wood fiber→paper. $(li)Batch processing $(l:basic/block_processing#crush)Block Crushing$() operation, but there is a $(thing)20%$() loss."
     },
     {
       "type": "patchouli:multiblock",
@@ -77,7 +69,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Some equipment can be recycled by it. Chains, gold, iron and diamond tools, weapons and armors can be broken down into much more materials than they are smelted.It can also complete these recipes:Wheat→$(item)Wheat Flour$()，Log→$(item)Wood Fiber$()+$(l:basic/more_device#resin_block)Resin$();Skeleton Skull→64*Bone Meal;Creeper Head→64*Gunpowder。"
+      "text": "Some equipment can be recycled by it. Chains, gold, iron and diamond tools, weapons and armors can be broken down into much more materials than they are smelted.It can also complete these recipes: Skeleton Skull→64*Bone Meal; Creeper Head→64*Gunpowder。"
     },
     {
       "type": "patchouli:multiblock",
@@ -167,10 +159,11 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Remove rust from copper products$(br)Dirt→Clay$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)Spider Eye→ Fermented Spider Eye$(br)Coral→Corresponding Coral Block$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)面粉$()→$(item)面团$()$(br)$(item)海绵芽球$()→湿海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
+      "text": "Remove rust from copper products$(br)Dirt→Clay$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)Spider Eye→ Fermented Spider Eye$(br)Coral→Corresponding Coral Block$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)海绵芽球$()→湿海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
     },
     {
       "type": "patchouli:multiblock",
+      "anchor": "cooking",
       "name": "Cooking",
       "multiblock": {
         "mapping": {
@@ -189,6 +182,6 @@
       "enable_visualize": "false",
       "text": "When the cauldron and the campfire is below, the cooking is performed, and both materials and products are in the cauldron. A few recipes require water and consume a layer of water. Detailed instructions on the right."
     },
-    "Auto-compatible with all smoker recipes and campfire recipes, no water required.$(br)can also execute special formulas: $(br)$(item)Dough$() + Sugar + Eggs→$(item)Cake Base Block$()$(br)$(item)Resin$()→$(item)Hardening Resin$()$(br)Spider Eyes + Pufferfish + Poisonous potato + Lily of the valley + Withered rose →$(item)Five Poisons Powder$()$(br)In the presence of water, the following transformations can occur:$(br)Resin→Slime Ball$(br)Raw beef + Red mushrooms + Brown mushrooms + Bowl→$(item)Beef and Mushroom stew$()"
+    "Auto-compatible with all smoker recipes and campfire recipes, no water required.$(br)can also execute special formulas: $(br)$(item)Dough$() + Sugar + Eggs→$(item)Cake Base Block$()$(br)Spider Eyes + Pufferfish + Poisonous potato + Lily of the valley + Withered rose →$(item)Five Poisons Powder$()$(br)In the presence of water, the following transformations can occur:$(br)Resin→Slime Ball"
   ]
 }

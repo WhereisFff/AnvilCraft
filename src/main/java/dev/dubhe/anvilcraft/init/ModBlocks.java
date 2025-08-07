@@ -2069,7 +2069,7 @@ public class ModBlocks {
             DangerUtil.genConfiguredModel("block/transcendium_block").get()))
         .item()
         .properties(Item.Properties::fireResistant)
-        .tag(ModItemTags.EXPLOSION_PROOF)
+        .tag(ModItemTags.EXPLOSION_PROOF, Tags.Items.STORAGE_BLOCKS)
         .build()
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -2091,8 +2091,7 @@ public class ModBlocks {
             context.get(),
             DangerUtil.genConfiguredModel("block/heavy_iron_block").get()))
         .simpleItem()
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-            BlockTags.NEEDS_IRON_TOOL)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
                 .pattern("AAA")
@@ -2999,6 +2998,7 @@ public class ModBlocks {
         .lang("Block of Levitation Powder")
         .initialProperties(() -> Blocks.SAND)
         .item(LevitationPowderBlockItem::new)
+        .tag(ModItemTags.LEVITATIONALS)
         .recipe((ctx, provider) ->
             ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
                 .requires(ModItems.LEVITATION_POWDER, 9)
@@ -3150,8 +3150,10 @@ public class ModBlocks {
         .block("chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnChocolateBlock))
         .lang("Block of Chocolate")
         .initialProperties(() -> Blocks.STONE)
-        .simpleItem()
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .item()
+        .tag(Tags.Items.STORAGE_BLOCKS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, Tags.Blocks.STORAGE_BLOCKS)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
             .pattern("AAA")
@@ -3166,8 +3168,10 @@ public class ModBlocks {
         .block("black_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnBlackChocolateBlock))
         .lang("Block of Black Chocolate")
         .initialProperties(() -> Blocks.STONE)
-        .simpleItem()
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .item()
+        .tag(Tags.Items.STORAGE_BLOCKS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, Tags.Blocks.STORAGE_BLOCKS)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
             .pattern("AAA")
@@ -3182,8 +3186,10 @@ public class ModBlocks {
         .block("white_chocolate_block", p -> new StepEffectBlock(p, StepEffectBlock::stepOnWhiteChocolateBlock))
         .lang("Block of White Chocolate")
         .initialProperties(() -> Blocks.STONE)
-        .simpleItem()
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .item()
+        .tag(Tags.Items.STORAGE_BLOCKS)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, Tags.Blocks.STORAGE_BLOCKS)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
                 RecipeCategory.BUILDING_BLOCKS, ctx.get())
             .pattern("AAA")
@@ -3497,7 +3503,7 @@ public class ModBlocks {
             DangerUtil.genConfiguredModel("block/overheated_ember_metal_block").get()))
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(ModItemTags.HEATABLE_BLOCKS)
+        .tag(ModItemTags.HEATABLE_BLOCKS, ModItemTags.EXPLOSION_PROOF)
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.EMBER_METAL_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,

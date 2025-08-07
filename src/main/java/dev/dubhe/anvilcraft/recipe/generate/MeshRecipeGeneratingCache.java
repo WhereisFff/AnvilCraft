@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.recipe.generate;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Table;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -15,7 +15,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.AzaleaBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BushBlock;
@@ -64,11 +63,6 @@ public class MeshRecipeGeneratingCache extends BaseGeneratingCache<MeshRecipe> {
                 this.leavesAndSaplings.putAll(leaves, saplings);
             });
         }
-    }
-
-    @Override
-    public RecipeType<MeshRecipe> getType() {
-        return ModRecipeTypes.MESH_TYPE.get();
     }
 
     @Override

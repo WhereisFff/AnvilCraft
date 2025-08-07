@@ -120,9 +120,7 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.SWEET_BERRIES))
             .add(findResourceKey(Items.GLOW_BERRIES));
         provider.addTag(ModItemTags.WRENCH)
-            .add(ModItems.ANVIL_HAMMER.getKey())
-            .add(ModItems.ROYAL_ANVIL_HAMMER.getKey())
-            .add(ModItems.EMBER_ANVIL_HAMMER.getKey());
+            .addTag(ModItemTags.ANVIL_HAMMER);
         provider.addTag(ModItemTags.FIRE_STARTER)
             .add(findResourceKey(Items.TORCH))
             .add(findResourceKey(Items.SOUL_TORCH))
@@ -201,6 +199,13 @@ public class ItemTagLoader {
             .addTag(ModItemTags.RESONATOR);
         provider.addTag(ItemTags.PICKAXES)
             .addTag(ModItemTags.RESONATOR);
+
+        provider.addTag(ItemTags.CLUSTER_MAX_HARVESTABLES)
+            .addTag(ModItemTags.DRAGON_ROD)
+            .addTag(ModItemTags.RESONATOR);
+
+        provider.addTag(ItemTags.DURABILITY_ENCHANTABLE)
+            .add(findResourceKey(ModItems.MAGNET.get()));
     }
 
     private static @NotNull ResourceKey<Item> findResourceKey(Item item) {

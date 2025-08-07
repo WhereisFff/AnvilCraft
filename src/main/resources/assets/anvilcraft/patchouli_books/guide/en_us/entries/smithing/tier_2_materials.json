@@ -129,22 +129,6 @@
       "title": "Multiple to One Smithing Template",
       "link_recipe": true,
       "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template."
-    },
-    {
-      "type": "anvilcraft:multiple_to_one_smithing",
-      "recipe": "anvilcraft:two_to_one_smithing/multiphase_matter_pickaxe",
-      "recipe2": "anvilcraft:two_to_one_smithing/multiphase_matter_axe"
-    },
-    {
-      "type": "anvilcraft:multiple_to_one_smithing",
-      "recipe": "anvilcraft:two_to_one_smithing/multiphase_matter_shovel",
-      "recipe2": "anvilcraft:two_to_one_smithing/multiphase_matter_hoe"
-    },
-    {
-      "type": "anvilcraft:multiple_to_one_smithing",
-      "anchor": "multiphase_matter_tools",
-      "recipe": "anvilcraft:two_to_one_smithing/multiphase_matter_sword",
-      "text": "Use $(item)Multiphase Matter$() to upgrade your tools. They will include $(l:advanced/tool_properties#reforging)Fire Reforging$(/l) and $(l:advanced/tool_properties#multiphase)Multiphase$(/l) property."
     }
   ]
 }

@@ -17,6 +17,7 @@ import dev.dubhe.anvilcraft.network.LaserEmitPacket;
 import dev.dubhe.anvilcraft.network.MachineCycleFilterModePacket;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
 import dev.dubhe.anvilcraft.network.MachineOutputDirectionPacket;
+import dev.dubhe.anvilcraft.network.MultiphaseChangePacket;
 import dev.dubhe.anvilcraft.network.MutedSoundSyncPacket;
 import dev.dubhe.anvilcraft.network.PowerGridRemovePacket;
 import dev.dubhe.anvilcraft.network.PowerGridSyncPacket;
@@ -186,6 +187,11 @@ public class ModNetworks {
             SwitchPhasePacket.TYPE,
             SwitchPhasePacket.STREAM_CODEC,
             SwitchPhasePacket.HANDLER
+        );
+        registrar.playBidirectional(
+            MultiphaseChangePacket.TYPE,
+            MultiphaseChangePacket.STREAM_CODEC,
+            MultiphaseChangePacket.HANDLER
         );
         registrar.playToServer(
             SyncEmberGrindstonePacket.TYPE,

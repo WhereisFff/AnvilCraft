@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.util;
 
 public interface AdsorbableItemEntity {
-    default void setIsAdsorbable(boolean value) {
+    default void anvilcraft$setIsAdsorbable(boolean value) {
     }
 
-    default boolean isAdsorbable() {
+    default boolean anvilcraft$isAdsorbable() {
         return true;
     }
 }

@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.recipe.generate;
 
 import com.mojang.logging.LogUtils;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.CookingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SuperHeatingRecipe;
@@ -10,7 +9,6 @@ import dev.dubhe.anvilcraft.recipe.anvil.UnpackRecipe;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.CraftingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -24,10 +22,10 @@ import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.block.Blocks;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 public class RecipeGenerator {
+
     private static final Logger logger = LogUtils.getLogger();
     private static final String HASH_TO_CHAR = "0123456789abcdefghijklmnopqrstuv";
 
@@ -80,6 +78,7 @@ public class RecipeGenerator {
                     }
                 } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
                     NonNullList<Ingredient> ingredients = shapelessRecipe.getIngredients();
+                    if (ingredients.isEmpty()) yield Optional.empty();
                     if (ingredients.size() == 1) {
                         UnpackRecipe newRecipe = UnpackRecipe.builder()
                             .result(shapelessRecipe.result)
@@ -92,7 +91,6 @@ public class RecipeGenerator {
                         ItemCompressRecipe newRecipe = ItemCompressRecipe.builder()
                             .result(shapelessRecipe.result)
                             .requires(ingredients.getFirst(), ingredients.size())
-                            .generated(true)
                             .buildRecipe();
                         yield Optional.of(new RecipeHolder<>(generateRecipeId(type, recipeHolder), newRecipe));
                     }
