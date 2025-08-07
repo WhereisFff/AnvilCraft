@@ -120,7 +120,7 @@ public class VoidEnergyCollectorBlockEntity extends BlockEntity implements IPowe
             voidEnergyCollector.activate(this.level, this.getBlockPos(), this.getBlockState());
             if (this.decayCooldownCount-- <= 1) {
                 makeBlocksDecay();
-                this.decayCooldownCount = level.getRandom().nextInt(0,60);
+                this.decayCooldownCount = level.getRandom().nextInt(0, 60);
             }
         }
         if (power != oldPower && grid != null) grid.markChanged();
