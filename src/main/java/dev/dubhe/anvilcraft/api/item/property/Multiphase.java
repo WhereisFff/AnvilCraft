@@ -56,7 +56,7 @@ public record Multiphase(LinkedList<Phase> phases) {
     }
 
     public static final Codec<Multiphase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-        CodecUtil.linkedListOf(Phase.TRUE_CODEC).fieldOf("phases").forGetter(Multiphase::phases)
+        CodecUtil.linkedListOf(Phase.CODEC).fieldOf("phases").forGetter(Multiphase::phases)
     ).apply(inst, Multiphase::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, Multiphase> STREAM_CODEC = StreamCodec.composite(
         Phase.STREAM_CODEC.apply(ByteBufCodecs.collection(CollectionUtil::newLinkedList)), Multiphase::phases,
