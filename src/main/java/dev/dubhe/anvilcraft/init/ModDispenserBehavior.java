@@ -18,7 +18,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.entity.monster.ZombieVillager;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -130,8 +129,8 @@ public class ModDispenserBehavior {
         ironGolem.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0f, g);
         ItemStack stack1 = stack.copy();
         stack1.shrink(1);
-        for (Player player : PlayerUtil.searchPlayerUsingPos(level, blockPos, 5)) {
-            ModCriterionTriggers.REPAIR_IRON_GOLEM.get().trigger((ServerPlayer) player);
+        for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, blockPos, 5)) {
+            ModCriterionTriggers.REPAIR_IRON_GOLEM.get().trigger(player);
         }
         return stack1;
     }

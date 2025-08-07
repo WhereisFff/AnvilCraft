@@ -10,7 +10,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.goat.Goat;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -53,8 +52,8 @@ abstract class DispenseItemEmptyBucketBehaviorMixin extends DefaultDispenseItemB
         levelAccessor.gameEvent(null, GameEvent.FLUID_PICKUP, blockPos);
         Item item = Items.MILK_BUCKET;
         if (!level.isClientSide) {
-            for (Player player : PlayerUtil.searchPlayerUsingPos(level, blockPos, 5)) {
-                ModCriterionTriggers.MILK.get().trigger((ServerPlayer) player);
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, blockPos, 5)) {
+                ModCriterionTriggers.MILK.get().trigger(player);
             }
         }
         cir.setReturnValue(

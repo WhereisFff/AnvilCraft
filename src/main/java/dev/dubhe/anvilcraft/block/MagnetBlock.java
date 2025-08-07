@@ -14,7 +14,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -118,8 +117,8 @@ public class MagnetBlock extends Block implements IHammerRemovable {
                     break checkAnvil;
                 }
             }
-            for (Player player : PlayerUtil.searchPlayerUsingPos(level, magnetPos, 5)) {
-                ModCriterionTriggers.LIFTING_ANVIL.get().trigger((ServerPlayer) player);
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, magnetPos, 5)) {
+                ModCriterionTriggers.LIFTING_ANVIL.get().trigger(player);
             }
             BlockState blockState = level.getBlockState(currentPos);
             if (level.isEmptyBlock(currentPos) || blockState.getBlock() instanceof LiquidBlock) {

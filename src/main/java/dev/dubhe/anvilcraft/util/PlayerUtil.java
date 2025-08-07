@@ -18,7 +18,6 @@ import java.util.function.Predicate;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class PlayerUtil {
-
     public static boolean isFakePlayer(Player player) {
         return player instanceof FakePlayer;
     }
@@ -44,12 +43,18 @@ public class PlayerUtil {
         }
     }
 
-    public static List<Player> searchPlayerUsingPos(Level level, BlockPos pos, int radius) {
+    /**
+     * 搜索切比雪夫距离内的玩家们
+     *
+     * @param level 世界
+     * @param pos 搜索起点
+     * @param radius 距离
+     * @return 玩家列表
+     */
+    public static List<ServerPlayer> searchPlayerByPos(Level level, BlockPos pos, int radius) {
         if (!level.isClientSide) {
-            BlockPos startPos = pos.offset(-radius, -radius, -radius);
-            BlockPos endPos = pos.offset(radius, radius, radius);
-            AABB aabb = new AABB(startPos.getX(), startPos.getY(), startPos.getZ(), endPos.getX(), endPos.getY(), endPos.getZ());
-            return level.getEntitiesOfClass(Player.class, aabb);
+            AABB aabb = new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX(), pos.getY(), pos.getZ()).inflate(radius);
+            return level.getEntitiesOfClass(ServerPlayer.class, aabb);
         }
         return List.of();
     }

@@ -11,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -77,8 +76,8 @@ public interface IAnvilCraftBlockPlacer {
             soundType.getPitch() * 0.8f
         );
         if (!level.isClientSide) {
-            for (Player player : PlayerUtil.searchPlayerUsingPos(level, pos, 5)) {
-                ModCriterionTriggers.PLACER_PLACE_BLOCK.get().trigger((ServerPlayer) player, blockState.getBlock());
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.PLACER_PLACE_BLOCK.get().trigger(player, blockState.getBlock());
             }
         }
         return InteractionResult.SUCCESS;

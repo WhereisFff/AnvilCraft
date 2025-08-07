@@ -31,7 +31,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -101,8 +100,8 @@ public class AnvilEventListener {
         }
 
         if (!level.isClientSide) {
-            for (Player player : PlayerUtil.searchPlayerUsingPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_ON_GROUND.get().trigger((ServerPlayer) player);
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.ANVIL_ON_GROUND.get().trigger(player);
             }
         }
     }
@@ -282,13 +281,13 @@ public class AnvilEventListener {
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
         if (hurtedEntity instanceof IronGolem) {
-            for (Player player : PlayerUtil.searchPlayerUsingPos(serverLevel, BlockPos.containing(pos), 5)) {
-                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger((ServerPlayer) player);
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(serverLevel, BlockPos.containing(pos), 5)) {
+                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger(player);
             }
             return;
         }
-        for (Player player : PlayerUtil.searchPlayerUsingPos(serverLevel, BlockPos.containing(pos), 5)) {
-            ModCriterionTriggers.ANVIL_LOOTING.get().trigger((ServerPlayer) player);
+        for (ServerPlayer player : PlayerUtil.searchPlayerByPos(serverLevel, BlockPos.containing(pos), 5)) {
+            ModCriterionTriggers.ANVIL_LOOTING.get().trigger(player);
         }
     }
 }
