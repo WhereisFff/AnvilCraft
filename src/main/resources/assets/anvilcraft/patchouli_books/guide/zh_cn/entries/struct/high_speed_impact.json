@@ -3,7 +3,7 @@
   "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:acceleration_ring",
   "sortnum": 5004,
-  "entry_color": "004400",
+  "entry_color": "661100",
   "extra_recipe_mappings": {
     "anvilcraft:negative_matter_nugget": 4,
     "anvilcraft:multiphase_matter": 5
