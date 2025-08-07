@@ -167,7 +167,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
             level.scheduleTick(pos, this, 5);
             this.updateAbove(level, pos);
             return;
-        } else {
+        } else if (state.getValue(POWERED)) {
             BlockPos fromPos = pos.above();
             if (level.isEmptyBlock(fromPos)) return;
             PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
