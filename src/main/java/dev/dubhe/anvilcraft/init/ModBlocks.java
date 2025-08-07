@@ -4482,7 +4482,7 @@ public class ModBlocks {
     public static final BlockEntry<SugarBlock> SUGAR_BLOCK = REGISTRATE
         .block("sugar_block", SugarBlock::new)
         .initialProperties(() -> Blocks.LAPIS_BLOCK)
-        .properties(BlockBehaviour.Properties::noLootTable)
+        .loot(SugarBlock::loot)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.STORAGE_BLOCKS_SUGAR)
         .blockstate((ctx, provider) -> {
             BlockModelBuilder sugarBlock = provider.models().cubeAll("sugar_block", of("block/sugar_block"));
