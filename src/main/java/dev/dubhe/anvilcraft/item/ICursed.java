@@ -24,6 +24,7 @@ public interface ICursed {
      */
     default void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         if (!(entity instanceof Player player)) return;
+        if (level.isClientSide()) return;
         if (player.getAbilities().instabuild || player.getAbilities().invulnerable) return;
         MobEffectInstance weakness = new MobEffectInstance(MobEffects.WEAKNESS, 200, 1, false, true);
         MobEffectInstance slowness = new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, 200, 1, false, true);
