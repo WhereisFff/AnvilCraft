@@ -3,9 +3,9 @@ package dev.dubhe.anvilcraft.data;
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.data.advancement.AdvancementHandler;
 import dev.dubhe.anvilcraft.data.lang.LangHandler;
-import dev.dubhe.anvilcraft.data.provider.ModCuriosProvider;
 import dev.dubhe.anvilcraft.data.provider.ModDamageTypeProvider;
 import dev.dubhe.anvilcraft.data.provider.ModDamageTypeTagProvider;
 import dev.dubhe.anvilcraft.data.provider.ModFurnaceFuelProvider;
@@ -51,9 +51,11 @@ public class AnvilCraftDatagen {
         generator.addProvider(event.includeServer(), new ModFurnaceFuelProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new ModDamageTypeProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new ModDamageTypeTagProvider(packOutput, lookupProvider, existingFileHelper));
-        generator.addProvider(event.includeServer(), new ModCuriosProvider(packOutput, existingFileHelper, lookupProvider));
         generator.addProvider(event.includeServer(), new ModLootModifierProvider(packOutput, lookupProvider, AnvilCraft.MOD_ID));
         generator.addProvider(event.includeClient(), new ModParticleDescriptionProvider(packOutput, existingFileHelper));
+
+        IntegrationHook.setEvent(event);
+        AnvilCraft.getIntegrationManager().loadAllDataIntegrations();
     }
 
     /**

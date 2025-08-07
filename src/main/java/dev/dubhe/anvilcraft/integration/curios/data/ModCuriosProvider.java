@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.data.provider;
+package dev.dubhe.anvilcraft.integration.curios.data;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.core.HolderLookup;
