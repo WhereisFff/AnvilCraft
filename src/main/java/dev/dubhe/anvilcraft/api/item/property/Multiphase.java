@@ -254,6 +254,7 @@ public record Multiphase(LinkedList<Phase> phases) {
         ) {
             return new Phase(0, makeName(0), customName, itemName, repairCost, enchantments);
         }
+
         // TODO: for compatibility, remove in future
         private static Phase compatBeta(
             Optional<Component> customName, Optional<Component> itemName,
@@ -261,6 +262,7 @@ public record Multiphase(LinkedList<Phase> phases) {
         ) {
             return new Phase(1, makeName(1), customName, itemName, repairCost, enchantments);
         }
+        
         // TODO: for compatibility, rename to CODEC in future
         public static final Codec<Phase> TRUE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
             Codec.INT.fieldOf("index").forGetter(Phase::index),
