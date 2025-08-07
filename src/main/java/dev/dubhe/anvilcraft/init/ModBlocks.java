@@ -100,7 +100,8 @@ import dev.dubhe.anvilcraft.block.RoyalSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.RubyLaserBlock;
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
-import dev.dubhe.anvilcraft.block.plate.PlayerInHandItemDurabilityPressurePlateBlock;
+import dev.dubhe.anvilcraft.block.sliding.ActivatorSlidingRailBlock;
+import dev.dubhe.anvilcraft.block.sliding.DetectorSlidingRailBlock;
 import dev.dubhe.anvilcraft.block.sliding.PoweredSlidingRailBlock;
 import dev.dubhe.anvilcraft.block.sliding.SlidingRailBlock;
 import dev.dubhe.anvilcraft.block.sliding.SlidingRailStopBlock;
@@ -124,6 +125,7 @@ import dev.dubhe.anvilcraft.block.plate.FireImmunePressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.HealthPercentPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.ItemDurabilityPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.PlayerHungerPressurePlateBlock;
+import dev.dubhe.anvilcraft.block.plate.PlayerInHandItemDurabilityPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.PlayerInventoryPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.PowerLevelPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.TimeCountedPressurePlateBlock;
@@ -1445,7 +1447,7 @@ public class ModBlocks {
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 16)
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get(), 16)
                 .pattern("A A")
                 .pattern("BAB")
                 .pattern("BBB")
@@ -1465,11 +1467,51 @@ public class ModBlocks {
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 16)
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get(), 8)
+                .pattern("SSS")
+                .pattern("SPS")
+                .pattern("SSS")
+                .define('P', Items.PISTON)
+                .define('S', ModBlocks.SLIDING_RAIL)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.SLIDING_RAIL), AnvilCraftDatagen.has(ModBlocks.SLIDING_RAIL))
+                .save(provider);
+        })
+        .register();
+    public static BlockEntry<ActivatorSlidingRailBlock> ACTIVATOR_SLIDING_RAIL = REGISTRATE
+        .block("activator_sliding_rail", ActivatorSlidingRailBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(it -> it.mapColor(MapColor.COLOR_GRAY))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.SLIDING_RAILS)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .model((ctx, provider) -> provider.blockItem(ctx))
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get(), 8)
                 .pattern("SSS")
                 .pattern("SRS")
                 .pattern("SSS")
                 .define('R', Blocks.REDSTONE_BLOCK)
+                .define('S', ModBlocks.SLIDING_RAIL)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.SLIDING_RAIL), AnvilCraftDatagen.has(ModBlocks.SLIDING_RAIL))
+                .save(provider);
+        })
+        .register();
+    public static BlockEntry<DetectorSlidingRailBlock> DETECTOR_SLIDING_RAIL = REGISTRATE
+        .block("detector_sliding_rail", DetectorSlidingRailBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(it -> it.mapColor(MapColor.COLOR_GRAY))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.SLIDING_RAILS)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .model((ctx, provider) -> provider.blockItem(ctx))
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get(), 8)
+                .pattern("SSS")
+                .pattern("SPS")
+                .pattern("SSS")
+                .define('P', Ingredient.of(Items.STONE_PRESSURE_PLATE, Items.POLISHED_BLACKSTONE_PRESSURE_PLATE))
                 .define('S', ModBlocks.SLIDING_RAIL)
                 .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.SLIDING_RAIL), AnvilCraftDatagen.has(ModBlocks.SLIDING_RAIL))
                 .save(provider);

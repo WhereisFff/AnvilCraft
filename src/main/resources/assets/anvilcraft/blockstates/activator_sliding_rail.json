@@ -1,32 +1,32 @@
 {
   "variants": {
-    "facing=east,activator=false": {
+    "facing=east,powered=false": {
       "model": "anvilcraft:block/activator_sliding_rail",
       "y": 90
     },
-    "facing=east,activator=true": {
+    "facing=east,powered=true": {
       "model": "anvilcraft:block/activator_sliding_rail_on",
       "y": 90
     },
-    "facing=north,activator=false": {
+    "facing=north,powered=false": {
       "model": "anvilcraft:block/activator_sliding_rail"
     },
-    "facing=north,activator=true": {
+    "facing=north,powered=true": {
       "model": "anvilcraft:block/activator_sliding_rail_on"
     },
-    "facing=south,activator=false": {
+    "facing=south,powered=false": {
       "model": "anvilcraft:block/activator_sliding_rail",
       "y": 180
     },
-    "facing=south,activator=true": {
+    "facing=south,powered=true": {
       "model": "anvilcraft:block/activator_sliding_rail_on",
       "y": 180
     },
-    "facing=west,activator=false": {
+    "facing=west,powered=false": {
       "model": "anvilcraft:block/activator_sliding_rail",
       "y": 270
     },
-    "facing=west,activator=true": {
+    "facing=west,powered=true": {
       "model": "anvilcraft:block/activator_sliding_rail_on",
       "y": 270
     }

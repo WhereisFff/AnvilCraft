@@ -194,54 +194,64 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
                     irradiateBlockPos,
                     level.getBlockEntity(irradiateBlockPos)
                 );
-                Vec3 blockPos = getBlockPos().relative(direction.getOpposite()).getCenter();
-                if (getLevel() == null) return;
-                IItemHandler cap = getLevel()
-                    .getCapability(
+                deliverItem(drops, direction, irradiateBlockPos);
+            }
+        }
+    }
+
+    public void deliverItem(List<ItemStack> drops, Direction direction, BlockPos sourceBlockPos) {
+        if (level == null) return;
+        Vec3 blockPos = getBlockPos().relative(direction.getOpposite()).getCenter();
+        BlockPos downStreamPos = getBlockPos().relative(getFacing().getOpposite());
+        if (getLevel() == null) return;
+        IItemHandler cap = getLevel()
+                .getCapability(
                         Capabilities.ItemHandler.BLOCK,
-                        getBlockPos().relative(getFacing().getOpposite()),
+                        downStreamPos,
                         getFacing()
-                    );
-                drops.forEach(itemStack -> {
-                    if (cap != null) {
-                        ItemStack outItemStack = ItemHandlerHelper.insertItem(cap, itemStack, true);
-                        if (outItemStack.isEmpty()) {
-                            ItemHandlerHelper.insertItem(cap, itemStack, false);
-                        } else {
-                            level.addFreshEntity(
-                                new ItemEntity(
+                );
+        BlockState sourceBlock = level.getBlockState(sourceBlockPos);
+        drops.forEach(itemStack -> {
+            if (cap != null) {
+                ItemStack outItemStack = ItemHandlerHelper.insertItem(cap, itemStack, true);
+                if (outItemStack.isEmpty()) {
+                    ItemHandlerHelper.insertItem(cap, itemStack, false);
+                } else {
+                    level.addFreshEntity(
+                            new ItemEntity(
                                     level,
                                     blockPos.x,
                                     blockPos.y,
                                     blockPos.z,
                                     outItemStack)
-                            );
-                        }
-                    } else level.addFreshEntity(new ItemEntity(level, blockPos.x, blockPos.y, blockPos.z, itemStack));
-                });
-                if (irradiateBlock.is(Blocks.ANCIENT_DEBRIS)) {
-                    level.setBlockAndUpdate(irradiateBlockPos, Blocks.NETHERRACK.defaultBlockState());
-                } else if (irradiateBlock.is(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE)) {
-                    level.setBlockAndUpdate(irradiateBlockPos, Blocks.DEEPSLATE.defaultBlockState());
-                } else if (irradiateBlock.is(Tags.Blocks.ORES_IN_GROUND_NETHERRACK)) {
-                    level.setBlockAndUpdate(irradiateBlockPos, Blocks.NETHERRACK.defaultBlockState());
-                } else {
-                    level.setBlockAndUpdate(irradiateBlockPos, Blocks.STONE.defaultBlockState());
+                    );
                 }
+            } else if (level.getBlockEntity(downStreamPos) instanceof BaseLaserBlockEntity downStreamBlockEntity && downStreamBlockEntity.getFacing() == direction) {
+                downStreamBlockEntity.deliverItem(drops, direction, sourceBlockPos);
+            } else level.addFreshEntity(new ItemEntity(level, blockPos.x, blockPos.y, blockPos.z, itemStack));
+        });
+        if (level.getBlockEntity(downStreamPos) instanceof BaseLaserBlockEntity) return;
+        if (sourceBlock.is(Blocks.ANCIENT_DEBRIS)) {
+            level.setBlockAndUpdate(sourceBlockPos, Blocks.NETHERRACK.defaultBlockState());
+        } else if (sourceBlock.is(Tags.Blocks.ORES_IN_GROUND_DEEPSLATE)) {
+            level.setBlockAndUpdate(sourceBlockPos, Blocks.DEEPSLATE.defaultBlockState());
+        } else if (sourceBlock.is(Tags.Blocks.ORES_IN_GROUND_NETHERRACK)) {
+            level.setBlockAndUpdate(sourceBlockPos, Blocks.NETHERRACK.defaultBlockState());
+        } else {
+            level.setBlockAndUpdate(sourceBlockPos, Blocks.STONE.defaultBlockState());
+        }
                 /* else {
-                    if (level.getBlockState(irradiateBlockPos).getBlock().defaultDestroyTime() >= 0
-                        && !(level.getBlockEntity(irradiateBlockPos) instanceof BaseLaserBlockEntity)) {
-                        level.getBlockState(irradiateBlockPos).getBlock()
+                    if (level.getBlockState(sourceBlockPos).getBlock().defaultDestroyTime() >= 0
+                        && !(level.getBlockEntity(sourceBlockPos) instanceof BaseLaserBlockEntity)) {
+                        level.getBlockState(sourceBlockPos).getBlock()
                             .playerWillDestroy(
                                 level,
-                                irradiateBlockPos,
-                                level.getBlockState(irradiateBlockPos),
+                                sourceBlockPos,
+                                level.getBlockState(sourceBlockPos),
                                 anvilCraftBlockPlacer.getPlayer());
-                        level.destroyBlock(irradiateBlockPos, false);
+                        level.destroyBlock(sourceBlockPos, false);
                     }
                 }*/
-            }
-        }
     }
 
     /**

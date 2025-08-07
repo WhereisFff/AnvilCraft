@@ -143,9 +143,11 @@ public final class SlidingBlockSection {
                 continue;
             }
 
-            if (!level.setBlockAndUpdate(pos, state)) continue;
+            state = Block.updateFromNeighbourShapes(state, level, pos);
+            if (!level.setBlock(pos, state, Block.UPDATE_ALL)) continue;
             Optional.ofNullable(level.getBlockEntity(pos))
                 .ifPresent(entity1 -> entity1.loadCustomOnly(info.entityData(), level.registryAccess()));
+            level.neighborChanged(pos, state.getBlock(), pos);
 
             ((ServerLevel) level)
                 .getChunkSource()
