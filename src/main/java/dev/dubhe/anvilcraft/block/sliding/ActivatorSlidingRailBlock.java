@@ -240,7 +240,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         level.setBlockAndUpdate(pos, state.setValue(FACING, entity.getMoveDirection()));
         level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get()).ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
         ISlidingRail.stopSlidingBlock(entity);
-        level.scheduleTick(pos, this, 3);
+        level.scheduleTick(pos, this, 4);
     }
 
     private void updateAbove(Level level, BlockPos pos) {
