@@ -1,6 +1,16 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "has_heavy_iron_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:heavy_iron_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_iron_block": {
       "conditions": {
         "items": [
@@ -11,19 +21,9 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_iron_ingot": {
-      "conditions": {
-        "items": [
-          {
-            "items": "minecraft:iron_ingot"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:chipped_anvil"
+        "recipe": "anvilcraft:damaged_anvil_9"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -31,13 +31,13 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_iron_block",
-      "has_iron_ingot"
+      "has_heavy_iron_block",
+      "has_iron_block"
     ]
   ],
   "rewards": {
     "recipes": [
-      "minecraft:chipped_anvil"
+      "anvilcraft:damaged_anvil_9"
     ]
   }
 }
