@@ -2048,12 +2048,8 @@ public class ModBlocks {
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/heavy_iron_block").get()))
-        .item()
-        .tag(Tags.Items.STORAGE_BLOCKS_IRON)
-        .build()
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-            BlockTags.NEEDS_IRON_TOOL,
-            Tags.Blocks.STORAGE_BLOCKS_IRON)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
                 .pattern("AAA")

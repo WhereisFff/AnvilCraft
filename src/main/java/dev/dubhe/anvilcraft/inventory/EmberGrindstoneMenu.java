@@ -104,7 +104,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
 
             @Override
             public boolean mayPickup(Player player) {
-                return player.experienceLevel >= getCost();
+                return player.isCreative() || player.experienceLevel >= getCost();
             }
 
             public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
