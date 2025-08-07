@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.api.item.property;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModComponents;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
@@ -55,9 +57,23 @@ public record Multiphase(LinkedList<Phase> phases) {
             "-" + DEFAULT_SUFFIXES.charAt(index));
     }
 
-    public static final Codec<Multiphase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
-        CodecUtil.linkedListOf(Phase.CODEC).fieldOf("phases").forGetter(Multiphase::phases)
+    // TODO: for compatibility, remove in future
+    public Multiphase(Phase alpha, Phase beta) {
+        this(new LinkedList<>(List.of(alpha, beta)));
+    }
+
+    // TODO: for compatibility, rename this to CODEC in future
+    public static final Codec<Multiphase> TRUE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
+        CodecUtil.linkedListOf(Phase.TRUE_CODEC).fieldOf("phases").forGetter(Multiphase::phases)
     ).apply(inst, Multiphase::new));
+    // TODO: for compatibility, remove in future
+    public static final Codec<Multiphase> COMPATIBILITY_CODEC = RecordCodecBuilder.create(inst -> inst.group(
+        Phase.ALPHA_CODEC.fieldOf("alpha").forGetter(multiphase -> multiphase.phases().getFirst()),
+        Phase.BETA_CODEC.fieldOf("beta").forGetter(multiphase -> multiphase.phases().get(1))
+    ).apply(inst, Multiphase::new));
+    // TODO: for compatibility, remove in future
+    public static final Codec<Multiphase> CODEC = Codec.either(TRUE_CODEC, COMPATIBILITY_CODEC)
+        .xmap(Either::unwrap, Either::left);
     public static final StreamCodec<RegistryFriendlyByteBuf, Multiphase> STREAM_CODEC = StreamCodec.composite(
         Phase.STREAM_CODEC.apply(ByteBufCodecs.collection(CollectionUtil::newLinkedList)), Multiphase::phases,
         Multiphase::new
@@ -231,7 +247,22 @@ public record Multiphase(LinkedList<Phase> phases) {
         Optional<Component> customName, Optional<Component> itemName,
         int repairCost, @NotNull ItemEnchantments enchantments
     ) {
-        public static final Codec<Phase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+        // TODO: for compatibility, remove in future
+        private static Phase compatAlpha(
+            Optional<Component> customName, Optional<Component> itemName,
+            int repairCost, @NotNull ItemEnchantments enchantments
+        ) {
+            return new Phase(0, makeName(0), customName, itemName, repairCost, enchantments);
+        }
+        // TODO: for compatibility, remove in future
+        private static Phase compatBeta(
+            Optional<Component> customName, Optional<Component> itemName,
+            int repairCost, @NotNull ItemEnchantments enchantments
+        ) {
+            return new Phase(1, makeName(1), customName, itemName, repairCost, enchantments);
+        }
+        // TODO: for compatibility, rename to CODEC in future
+        public static final Codec<Phase> TRUE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
             Codec.INT.fieldOf("index").forGetter(Phase::index),
             ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
             ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
@@ -239,6 +270,26 @@ public record Multiphase(LinkedList<Phase> phases) {
             Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
             ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
         ).apply(inst, Phase::new));
+        // TODO: for compatibility, remove in future
+        public static final Codec<Phase> COMPATIBILITY_ALPHA_CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName").forGetter(Phase::itemName),
+            Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
+            ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
+        ).apply(inst, Phase::compatAlpha));
+        // TODO: for compatibility, remove in future
+        public static final Codec<Phase> COMPATIBILITY_BETA_CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName").forGetter(Phase::itemName),
+            Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
+            ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
+        ).apply(inst, Phase::compatBeta));
+        // TODO: for compatibility, remove in future
+        public static final Codec<Phase> ALPHA_CODEC = Codec.either(TRUE_CODEC, COMPATIBILITY_ALPHA_CODEC)
+            .xmap(Either::unwrap, Either::left);
+        // TODO: for compatibility, remove in future
+        public static final Codec<Phase> BETA_CODEC = Codec.either(TRUE_CODEC, COMPATIBILITY_BETA_CODEC)
+            .xmap(Either::unwrap, Either::left);
         public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, Phase::index,
             ComponentSerialization.STREAM_CODEC, Phase::phaseName,
