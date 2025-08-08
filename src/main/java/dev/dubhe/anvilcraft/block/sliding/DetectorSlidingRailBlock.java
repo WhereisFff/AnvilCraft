@@ -144,11 +144,6 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     }
 
     @Override
-    public boolean isStickyBlock(BlockState state) {
-        return true;
-    }
-
-    @Override
     public @Nullable Property<?> getChangeableProperty(BlockState blockState) {
         return FACING;
     }

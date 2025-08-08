@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -20,6 +21,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -60,8 +62,15 @@ public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerCha
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return this.defaultBlockState()
-            .setValue(AXIS, context.getHorizontalDirection().getOpposite().getAxis());
+        Axis axis = context.getHorizontalDirection().getOpposite().getAxis();
+        Level level = context.getLevel();
+        BlockPos pos = context.getClickedPos();
+        if ((isOtherRailInAxis(level, pos, Axis.X, -1) == TriState.TRUE
+             || isOtherRailInAxis(level, pos, Axis.X, 1) == TriState.TRUE)
+            && (isOtherRailInAxis(level, pos, Axis.Z, -1) == TriState.TRUE
+                || isOtherRailInAxis(level, pos, Axis.Z, 1) == TriState.TRUE)
+        ) axis = Axis.Y;
+        return this.defaultBlockState().setValue(AXIS, axis);
     }
 
     @Override
@@ -88,20 +97,63 @@ public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerCha
     ) {
         return switch (blockState.getValue(AXIS)) {
             case X -> AABB_X;
-            case Z -> AABB_Z;
             case Y -> AABB_Y;
+            case Z -> AABB_Z;
         };
+    }
+
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
+        if (isOtherRailInAxis(level, pos, Axis.X, -1) == TriState.TRUE
+            || isOtherRailInAxis(level, pos, Axis.X, 1) == TriState.TRUE
+        ) {
+            if (state.getValue(AXIS) != Axis.Y
+                && (isOtherRailInAxis(level, pos, Axis.Z, -1) == TriState.TRUE
+                    || isOtherRailInAxis(level, pos, Axis.Z, 1) == TriState.TRUE)
+            ) {
+                level.setBlockAndUpdate(pos, state.setValue(AXIS, Axis.Y));
+            }
+            if (state.getValue(AXIS) == Axis.Y
+                && isOtherRailInAxis(level, pos, Axis.Z, -1) != TriState.TRUE
+                && isOtherRailInAxis(level, pos, Axis.Z, 1) != TriState.TRUE
+            ) {
+                level.setBlockAndUpdate(pos, state.setValue(AXIS, Axis.X));
+            }
+        } else if (
+            isOtherRailInAxis(level, pos, Axis.Z, -1) == TriState.TRUE
+            || isOtherRailInAxis(level, pos, Axis.Z, 1) == TriState.TRUE
+        ) {
+            if (state.getValue(AXIS) == Axis.Y
+                && isOtherRailInAxis(level, pos, Axis.X, -1) != TriState.TRUE
+                && isOtherRailInAxis(level, pos, Axis.X, 1) != TriState.TRUE
+            ) {
+                level.setBlockAndUpdate(pos, state.setValue(AXIS, Axis.Z));
+            }
+        }
+        super.neighborChanged(state, level, pos, block, fromPos, isMoving);
+    }
+
+    private TriState isOtherRailInAxis(Level level, BlockPos pos, Axis axis, int relative) {
+        BlockState other = level.getBlockState(pos.relative(axis, relative));
+        Axis otherAxis;
+        if (other.getBlock() instanceof SlidingRailBlock) {
+            otherAxis = other.getValue(AXIS);
+        } else if (other.getBlock() instanceof PoweredSlidingRailBlock) {
+            otherAxis = other.getValue(PoweredSlidingRailBlock.FACING).getAxis();
+        } else if (other.getBlock() instanceof ActivatorSlidingRailBlock) {
+            otherAxis = other.getValue(ActivatorSlidingRailBlock.FACING).getAxis();
+        } else if (other.getBlock() instanceof DetectorSlidingRailBlock) {
+            otherAxis = other.getValue(DetectorSlidingRailBlock.FACING).getAxis();
+        } else {
+            return TriState.DEFAULT;
+        }
+        return axis == otherAxis || otherAxis == Axis.Y ? TriState.TRUE : TriState.FALSE;
     }
 
     @Override
     public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
         BlockState bs = level.getBlockState(blockPos);
         level.setBlockAndUpdate(blockPos, bs.cycle(AXIS));
-        return true;
-    }
-
-    @Override
-    public boolean isStickyBlock(BlockState state) {
         return true;
     }
 
