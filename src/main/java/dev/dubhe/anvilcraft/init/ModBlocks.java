@@ -43,6 +43,7 @@ import dev.dubhe.anvilcraft.block.EndDustBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
+import dev.dubhe.anvilcraft.block.GunpowderBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
 import dev.dubhe.anvilcraft.block.SimpleConfinementAnvilonBlock;
 import dev.dubhe.anvilcraft.block.SugarBlock;
@@ -4516,6 +4517,26 @@ public class ModBlocks {
                 .requires(ctx.get())
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
                 .save(provider, of("sugar_from_sugar_block"));
+        })
+        .register();
+
+    public static final BlockEntry<GunpowderBlock> GUNPOWER_BLOCK = REGISTRATE
+        .block("gunpowder_block", GunpowderBlock::new)
+        .initialProperties(() -> Blocks.LAPIS_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.STORAGE_BLOCKS_GUNPOWDER)
+        .item()
+        .tag(ModItemTags.STORAGE_BLOCKS_GUNPOWDER)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
+                requires(Items.GUNPOWDER, 9)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.GUNPOWDER))
+                .save(provider);
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.GUNPOWDER, 9)
+                .requires(ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
+                .save(provider, of("gunpowder_from_gunpowder_block"));
         })
         .register();
 
