@@ -113,14 +113,5 @@ public class SuperHeatingRecipeLoader {
             .blockResult(ModBlocks.MELT_GEM_CAULDRON.get())
             .requires(ModItemTags.GEM_BLOCKS)
             .save(provider);
-
-        SuperHeatingRecipe.builder()
-            .requires(ModItems.TRANSCENDIUM_INGOT)
-            .requires(ModItems.MULTIPHASE_MATTER)
-            .requires(ModItems.RESONATOR_CORE)
-            .requires(ModItems.HEAVY_HALBERD_CORE)
-            .requires(ModItems.VOID_MATTER)
-            .result(ModItems.MULTIPHASE_TRANSCENDIUM.asStack())
-            .save(provider);
     }
 }
