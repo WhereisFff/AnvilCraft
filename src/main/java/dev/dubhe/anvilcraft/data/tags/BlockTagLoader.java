@@ -149,6 +149,7 @@ public class BlockTagLoader {
             .add(ModBlocks.NEGATIVE_MATTER_BLOCK.getKey());
 
         provider.addTag(ModBlockTags.VOID_DECAY_PRODUCTS)
+            .add(ModBlocks.FLINT_BLOCK.getKey())
             .add(findResourceKey(Blocks.STONE))
             .add(findResourceKey(Blocks.DEEPSLATE))
             .add(findResourceKey(Blocks.ANDESITE))
