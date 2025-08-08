@@ -44,7 +44,7 @@ public class AnvilHitGunpowderBlockEventListener {
     }
 
     @SubscribeEvent
-    public static void GiantAnvilOnLand(GiantAnvilFallOnLandEvent event) {
+    public static void giantAnvilOnLand(GiantAnvilFallOnLandEvent event) {
         Level level = event.getLevel();
         final BlockPos pos = event.getPos();
         final BlockState blockState = level.getBlockState(pos);
