@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.mixin;
+package dev.dubhe.anvilcraft.mixin.invoker;
 
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.context.BlockPlaceContext;

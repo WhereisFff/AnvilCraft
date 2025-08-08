@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.api.anvil.impl;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.mixin.VaultServerDataAccessor;
+import dev.dubhe.anvilcraft.mixin.accessor.VaultServerDataAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;

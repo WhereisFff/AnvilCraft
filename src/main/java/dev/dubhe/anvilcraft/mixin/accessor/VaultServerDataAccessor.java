@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.mixin;
+package dev.dubhe.anvilcraft.mixin.accessor;
 
 import net.minecraft.world.level.block.entity.vault.VaultServerData;
 import org.spongepowered.asm.mixin.Mixin;
