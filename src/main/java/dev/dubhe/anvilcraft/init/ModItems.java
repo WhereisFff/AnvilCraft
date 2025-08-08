@@ -110,6 +110,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
+import static dev.dubhe.anvilcraft.AnvilCraft.of;
 
 @SuppressWarnings({"unused", "CodeBlock2Expr"})
 public class ModItems {
@@ -2232,6 +2233,18 @@ public class ModItems {
         .item("multiphase_transcendium", MultiphaseTranscendiumItem::new)
         .properties(Item.Properties::fireResistant)
         .tag(ModItemTags.EXPLOSION_PROOF)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                Ingredient.of(ModItems.TRANSCENDIUM_UPGRADE_SMITHING_TEMPLATE),
+                Ingredient.of(ModItems.MULTIPHASE_MATTER),
+                Ingredient.of(ModItems.TRANSCENDIUM_INGOT),
+                RecipeCategory.MISC,
+                ctx.get())
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.TRANSCENDIUM_UPGRADE_SMITHING_TEMPLATE))
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.MULTIPHASE_MATTER))
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModItems.TRANSCENDIUM_INGOT))
+                .save(provider, of("multiphase_transcendium"));
+        })
         .register();
 
     public static final ItemEntry<Item> NEGATIVE_MATTER = REGISTRATE
