@@ -13,6 +13,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathComputationType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
@@ -64,7 +65,9 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
     @Override
     public boolean canStickTo(BlockPos pos, BlockState state, BlockPos otherPos, BlockState other) {
         if (otherPos.equals(pos.above())) return false;
-        if (!AnvilCraft.config.slidingRailStickToEachOther) return other.isStickyBlock();
+        if (!AnvilCraft.config.slidingRailStickToEachOther) {
+            return other.isStickyBlock() && !(other.getBlock() instanceof BaseSlidingRailBlock);
+        }
         if (!other.is(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)) return other.isStickyBlock();
         Direction.Axis axis = state.getOptionalValue(BlockStateProperties.AXIS)
             .or(() -> state.getOptionalValue(BlockStateProperties.FACING).map(Direction::getAxis))
@@ -72,15 +75,24 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
         Direction.Axis otherAxis = other.getOptionalValue(BlockStateProperties.AXIS)
             .or(() -> state.getOptionalValue(BlockStateProperties.FACING).map(Direction::getAxis))
             .orElse(null);
-        if (!Objects.equals(otherAxis, axis)) return false;
-        if (axis == null) {
-            return pos.relative(Direction.Axis.X, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.X, 1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Y, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Y, 1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Z, -1).equals(otherPos)
-                   || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
+        return this.canStickTo(pos, axis, otherPos, otherAxis);
+    }
+
+    private boolean canStickTo(
+        BlockPos pos, @Nullable Direction.Axis axis,
+        BlockPos otherPos, @Nullable Direction.Axis otherAxis
+    ) {
+        if (axis == Direction.Axis.Y || otherAxis == Direction.Axis.Y) return true;
+        boolean axisIsNotNull = axis != null;
+        if (Objects.equals(otherAxis, axis) && axisIsNotNull) {
+            return pos.relative(axis, -1).equals(otherPos) || pos.relative(axis, 1).equals(otherPos);
         }
-        return pos.relative(axis, -1).equals(otherPos) || pos.relative(axis, 1).equals(otherPos);
+        if (axisIsNotNull && otherAxis != null) return false;
+        return pos.relative(Direction.Axis.X, -1).equals(otherPos)
+               || pos.relative(Direction.Axis.X, 1).equals(otherPos)
+               || pos.relative(Direction.Axis.Y, -1).equals(otherPos)
+               || pos.relative(Direction.Axis.Y, 1).equals(otherPos)
+               || pos.relative(Direction.Axis.Z, -1).equals(otherPos)
+               || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
     }
 }

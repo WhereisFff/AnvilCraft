@@ -1521,11 +1521,7 @@ public class ModBlocks {
     public static BlockEntry<SlidingRailStopBlock> SLIDING_RAIL_STOP = REGISTRATE
         .block("sliding_rail_stop", SlidingRailStopBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
-        .properties(it -> it
-            .mapColor(MapColor.COLOR_GRAY)
-            .friction(0.8241758242f)
-            .pushReaction(PushReaction.PUSH_ONLY)
-        )
+        .properties(it -> it.mapColor(MapColor.COLOR_GRAY))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate((ctx, provider) -> {
             provider.simpleBlock(ctx.get(), DangerUtil.genModModelFile("block/sliding_rail_stop").get());

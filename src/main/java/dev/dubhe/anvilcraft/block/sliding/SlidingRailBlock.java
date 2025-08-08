@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -134,8 +135,19 @@ public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerCha
 
     private TriState isOtherRailInAxis(Level level, BlockPos pos, Axis axis, int relative) {
         BlockState other = level.getBlockState(pos.relative(axis, relative));
-        if (!(other.getBlock() instanceof SlidingRailBlock)) return TriState.DEFAULT;
-        return axis.equals(other.getValue(AXIS)) ? TriState.TRUE : TriState.FALSE;
+        Axis otherAxis;
+        if (other.getBlock() instanceof SlidingRailBlock) {
+            otherAxis = other.getValue(AXIS);
+        } else if (other.getBlock() instanceof PoweredSlidingRailBlock) {
+            otherAxis = other.getValue(PoweredSlidingRailBlock.FACING).getAxis();
+        } else if (other.getBlock() instanceof ActivatorSlidingRailBlock) {
+            otherAxis = other.getValue(ActivatorSlidingRailBlock.FACING).getAxis();
+        } else if (other.getBlock() instanceof DetectorSlidingRailBlock) {
+            otherAxis = other.getValue(DetectorSlidingRailBlock.FACING).getAxis();
+        } else {
+            return TriState.DEFAULT;
+        }
+        return axis == otherAxis || otherAxis == Axis.Y ? TriState.TRUE : TriState.FALSE;
     }
 
     @Override
