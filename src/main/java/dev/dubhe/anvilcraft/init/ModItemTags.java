@@ -53,6 +53,7 @@ public class ModItemTags {
 
     public static final TagKey<Item> STORAGE_BLOCKS_SUGAR = bindC("storage_blocks/sugar");
     public static final TagKey<Item> STORAGE_BLOCKS_GUNPOWDER = bindC("storage_blocks/gunpowder");
+    public static final TagKey<Item> STORAGE_BLOCKS_ROTTEN_FLESH = bindC("storage_blocks/rotten_flesh");
 
     public static final TagKey<Item> GEMS_TOPAZ = bindC("gems/topaz");
     public static final TagKey<Item> GEMS_SAPPHIRE = bindC("gems/sapphire");

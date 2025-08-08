@@ -45,6 +45,7 @@ import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.GunpowderBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
+import dev.dubhe.anvilcraft.block.RottenFleshBlock;
 import dev.dubhe.anvilcraft.block.SimpleConfinementAnvilonBlock;
 import dev.dubhe.anvilcraft.block.SugarBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
@@ -163,6 +164,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
+import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SingleItemRecipeBuilder;
 import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
@@ -4537,6 +4539,30 @@ public class ModBlocks {
                 .requires(ctx.get())
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
                 .save(provider, of("gunpowder_from_gunpowder_block"));
+        })
+        .register();
+
+    public static final BlockEntry<RottenFleshBlock> ROTTEN_FLESH_BLOCK = REGISTRATE
+        .block("rotten_flesh_block", RottenFleshBlock::new)
+        .initialProperties(() -> Blocks.NETHER_WART_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_HOE, ModBlockTags.STORAGE_BLOCKS_ROTTEN_FLESH)
+        .item()
+        .tag(ModItemTags.STORAGE_BLOCKS_ROTTEN_FLESH)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
+                requires(Items.ROTTEN_FLESH, 9)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.ROTTEN_FLESH))
+                .save(provider);
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.ROTTEN_FLESH, 9)
+                .requires(ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
+                .save(provider, of("rotten_flesh_from_rotten_flesh_block"));
+
+            SimpleCookingRecipeBuilder.smelting(Ingredient.of(ctx.get()), RecipeCategory.MISC, Items.NETHERRACK, 0.0F, 200)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
+                .save(provider);
         })
         .register();
 
