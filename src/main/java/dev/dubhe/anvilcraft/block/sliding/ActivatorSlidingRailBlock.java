@@ -167,14 +167,12 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
             level.scheduleTick(pos, this, 5);
             this.updateAbove(level, pos);
             return;
-        } else {
+        } else if (state.getValue(POWERED)) {
             BlockPos fromPos = pos.above();
             if (level.isEmptyBlock(fromPos)) return;
             PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
             ppi.extending = true;
-            if (!MOVING_PISTON_MAP.containsKey(pos)) {
-                MOVING_PISTON_MAP.put(pos, ppi);
-            }
+            MOVING_PISTON_MAP.put(pos, ppi);
         }
         super.tick(state, level, pos, random);
     }
@@ -240,7 +238,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         level.setBlockAndUpdate(pos, state.setValue(FACING, entity.getMoveDirection()));
         level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get()).ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
         ISlidingRail.stopSlidingBlock(entity);
-        level.scheduleTick(pos, this, 4);
+        level.scheduleTick(pos, this, 3);
     }
 
     private void updateAbove(Level level, BlockPos pos) {
