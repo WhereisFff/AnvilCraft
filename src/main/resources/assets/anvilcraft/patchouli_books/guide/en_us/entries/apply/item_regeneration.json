@@ -9,7 +9,7 @@
     "anvilcraft:sea_heart_shell_shard": 4
   },
   "pages": [
-    "在获得$(item)腐化信标$()可以进行$(l:smithing/corrupted_beacon#time_warp)时移$()操作后，便有了再生原版珍惜资源的能力。包括以下物品：$(li)$(l:apply/item_regeneration#ancient_debris)远古残骸$()$(li)$(l:apply/item_regeneration#heart_of_the_sea)海洋之心$()$(li)$(l:apply/item_regeneration#diamond)钻石&煤炭$()",
+    "在获得$(item)腐化信标$()可以进行$(l:smithing/corrupted_beacon#time_warp)时移$()操作后，便有了再生原版珍惜资源的能力。包括以下物品：$(li)$(l:apply/item_regeneration#ancient_debris)远古残骸$() $(li)$(l:apply/item_regeneration#heart_of_the_sea)海洋之心$() $(li)$(l:apply/item_regeneration#diamond)钻石&煤炭$() $(li)$(l:apply/item_regeneration#powder_snow)细雪&冰$()",
     {
       "type": "patchouli:spotlight",
       "anchor": "ancient_debris",
@@ -62,6 +62,19 @@
       "recipe": "anvilcraft:super_heating/charcoal",
       "recipe2": "anvilcraft:super_heating/diamond",
       "title": "再生钻石&煤炭",
+      "text": ""
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "powder_snow",
+      "item": "minecraft:powder_snow_bucket",
+      "text": "用铁砧砸击炼药锅上的$(item)雪块$()，会将其转化为$(item)冰$()，并在锅中留下一层细雪。$(br2)可以用皇家铁砧配合切石机自动$(l:basic/block_processing#break)精准采集$()冰块。"
+    },
+    {
+      "type": "anvilcraft:block_compress",
+      "anchor": "ice",
+      "recipe": "anvilcraft:block_compress/packed_ice",
+      "recipe2": "anvilcraft:block_compress/blue_ice",
       "text": ""
     }
   ]
