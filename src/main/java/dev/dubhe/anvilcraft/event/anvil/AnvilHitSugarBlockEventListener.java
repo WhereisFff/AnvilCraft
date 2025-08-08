@@ -24,7 +24,7 @@ public class AnvilHitSugarBlockEventListener {
     }
 
     @SubscribeEvent
-    public static void GiantAnvilOnLand(GiantAnvilFallOnLandEvent event) {
+    public static void giantAnvilOnLand(GiantAnvilFallOnLandEvent event) {
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
         BlockPos hitPos = pos.below();

@@ -4511,8 +4511,8 @@ public class ModBlocks {
         .tag(ModItemTags.STORAGE_BLOCKS_SUGAR)
         .build()
         .recipe((ctx, provider) -> {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
-                requires(Items.SUGAR, 9)
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .requires(Items.SUGAR, 9)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.SUGAR))
                 .save(provider);
 
@@ -4531,8 +4531,8 @@ public class ModBlocks {
         .tag(ModItemTags.STORAGE_BLOCKS_GUNPOWDER)
         .build()
         .recipe((ctx, provider) -> {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
-                requires(Items.GUNPOWDER, 9)
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .requires(Items.GUNPOWDER, 9)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.GUNPOWDER))
                 .save(provider);
 
@@ -4551,8 +4551,8 @@ public class ModBlocks {
         .tag(ModItemTags.STORAGE_BLOCKS_ROTTEN_FLESH)
         .build()
         .recipe((ctx, provider) -> {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
-                requires(Items.ROTTEN_FLESH, 9)
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .requires(Items.ROTTEN_FLESH, 9)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.ROTTEN_FLESH))
                 .save(provider);
 
@@ -4575,8 +4575,8 @@ public class ModBlocks {
         .tag(ModItemTags.STORAGE_BLOCKS_FLINT)
         .build()
         .recipe((ctx, provider) -> {
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
-                requires(Items.FLINT, 9)
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .requires(Items.FLINT, 9)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.FLINT))
                 .save(provider);
 
