@@ -57,6 +57,11 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
     }
 
     @Override
+    public boolean isStickyBlock(BlockState state) {
+        return true;
+    }
+
+    @Override
     public boolean canStickTo(BlockPos pos, BlockState state, BlockPos otherPos, BlockState other) {
         if (otherPos.equals(pos.above())) return false;
         if (!AnvilCraft.config.slidingRailStickToEachOther) return other.isStickyBlock();
