@@ -42,6 +42,7 @@ import dev.dubhe.anvilcraft.block.EmberSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.EndDustBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
+import dev.dubhe.anvilcraft.block.FlintBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.GunpowderBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
@@ -4563,6 +4564,161 @@ public class ModBlocks {
             SimpleCookingRecipeBuilder.smelting(Ingredient.of(ctx.get()), RecipeCategory.MISC, Items.NETHERRACK, 0.0F, 200)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
                 .save(provider);
+        })
+        .register();
+
+    public static final BlockEntry<FlintBlock> FLINT_BLOCK = REGISTRATE
+        .block("flint_block", FlintBlock::new)
+        .initialProperties(() -> Blocks.QUARTZ_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.STORAGE_BLOCKS_FLINT)
+        .item()
+        .tag(ModItemTags.STORAGE_BLOCKS_FLINT)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, ctx.get()).
+                requires(Items.FLINT, 9)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(Items.FLINT))
+                .save(provider);
+
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.FLINT, 9)
+                .requires(ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ctx.get()))
+                .save(provider, of("flint_from_flint_block"));
+        })
+        .register();
+
+    public static final BlockEntry<Block> POLISHED_FLINT_BLOCK = REGISTRATE
+        .block("polished_flint_block", Block::new)
+        .initialProperties(FLINT_BLOCK::get)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .simpleItem()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("AA")
+                .pattern("AA")
+                .define('A', FLINT_BLOCK)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(FLINT_BLOCK))
+                .save(provider, of("shaped/polished_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(FLINT_BLOCK))
+                .save(provider, of("stonecutting/polished_flint_block"));
+        })
+        .register();
+
+    public static final BlockEntry<Block> CUT_FLINT_BLOCK = REGISTRATE
+        .block("cut_flint_block", Block::new)
+        .initialProperties(FLINT_BLOCK::get)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .simpleItem()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("AA")
+                .pattern("AA")
+                .define('A', POLISHED_FLINT_BLOCK)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(POLISHED_FLINT_BLOCK))
+                .save(provider, of("shaped/cut_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_block_from_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(POLISHED_FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(POLISHED_FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_block_from_polished_flint_block"));
+        })
+        .register();
+
+    public static final BlockEntry<SlabBlock> CUT_FLINT_SLAB_BLOCK = REGISTRATE
+        .block("cut_flint_slab", SlabBlock::new)
+        .initialProperties(FLINT_BLOCK::get)
+        .blockstate((ctx, provider) -> {
+            provider.slabBlock(ctx.get(), of("block/cut_flint_block"), of("block/cut_flint_block"));
+        })
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.SLABS)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
+                .pattern("AAA")
+                .define('A', POLISHED_FLINT_BLOCK)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(POLISHED_FLINT_BLOCK))
+                .save(provider, of("shaped/cut_flint_slab"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 2)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_slab_from_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(POLISHED_FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 2)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(POLISHED_FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_slab_from_polished_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(CUT_FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 2)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(CUT_FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_slab_from_cut_flint_block"));
+        })
+        .register();
+
+    public static final BlockEntry<StairBlock> CUT_FLINT_STAIRS_BLOCK = REGISTRATE
+        .block("cut_flint_stairs", (properties) -> new StairBlock(FLINT_BLOCK.getDefaultState(), properties))
+        .initialProperties(FLINT_BLOCK::get)
+        .blockstate((ctx, provider) -> {
+            provider.stairsBlock(ctx.get(), of("block/cut_flint_block"));
+        })
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.STAIRS)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .pattern("A  ")
+                .pattern("AA ")
+                .pattern("AAA")
+                .define('A', CUT_FLINT_BLOCK)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(CUT_FLINT_BLOCK))
+                .save(provider, of("shaped/cut_flint_stairs"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_stairs_from_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(POLISHED_FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(POLISHED_FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_stairs_from_polished_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(CUT_FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(CUT_FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_stairs_from_cut_flint_block"));
+        })
+        .register();
+
+    public static final BlockEntry<RotatedPillarBlock> CUT_FLINT_PILLAR_BLOCK = REGISTRATE
+        .block("cut_flint_pillar", RotatedPillarBlock::new)
+        .simpleItem()
+        .initialProperties(FLINT_BLOCK::get)
+        .blockstate((ctx, provider) -> {
+            provider.axisBlock(ctx.get(), of("block/cut_flint_pillar"), of("block/cut_flint_pillar_top"));
+        })
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 2)
+                .pattern("A")
+                .pattern("A")
+                .define('A', CUT_FLINT_BLOCK)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(CUT_FLINT_BLOCK))
+                .save(provider, of("shaped/cut_flint_pillar"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_pillar_from_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(POLISHED_FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(POLISHED_FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_pillar_from_polished_flint_block"));
+
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(CUT_FLINT_BLOCK.get()), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(CUT_FLINT_BLOCK))
+                .save(provider, of("stonecutting/cut_flint_pillar_from_cut_flint_block"));
         })
         .register();
 

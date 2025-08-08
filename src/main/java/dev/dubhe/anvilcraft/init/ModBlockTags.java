@@ -84,6 +84,7 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_SUGAR = bindC("storage_blocks/sugar");
     public static final TagKey<Block> STORAGE_BLOCKS_GUNPOWDER = bindC("storage_blocks/gunpowder");
     public static final TagKey<Block> STORAGE_BLOCKS_ROTTEN_FLESH = bindC("storage_blocks/rotten_flesh");
+    public static final TagKey<Block> STORAGE_BLOCKS_FLINT = bindC("storage_blocks/flint");
 
     public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
     public static final TagKey<Block> INCORRECT_FOR_TRANSCENDIUM_TOOL = bind("incorrect_for_transcendium_tool");
