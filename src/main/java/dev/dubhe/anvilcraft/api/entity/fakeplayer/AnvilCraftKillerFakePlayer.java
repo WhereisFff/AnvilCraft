@@ -60,6 +60,7 @@ public class AnvilCraftKillerFakePlayer {
             .ifPresent(killer -> {
                 killer.getPlayer().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
                 DISABLED_KILLERS.offer(killer);
+                ENABLED_KILLERS.remove(killer);
             });
     }
 
