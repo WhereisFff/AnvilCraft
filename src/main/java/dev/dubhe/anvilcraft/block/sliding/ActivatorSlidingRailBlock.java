@@ -148,6 +148,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
                 if (pos1.equals(fromPos)) continue;
                 BlockState state1 = level.getBlockState(pos1);
                 if (!(state1.getBlock() instanceof ActivatorSlidingRailBlock other)) continue;
+                if (state1.getOptionalValue(FACING).map(Direction::getAxis).filter(axis::equals).isEmpty()) continue;
                 level.neighborChanged(pos1, other, pos);
             }
         }

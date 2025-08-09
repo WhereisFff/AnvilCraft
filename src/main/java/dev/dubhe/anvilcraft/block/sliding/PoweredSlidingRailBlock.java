@@ -156,10 +156,16 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
                 if (pos1.equals(fromPos)) continue;
                 BlockState state1 = level.getBlockState(pos1);
                 if (!(state1.getBlock() instanceof PoweredSlidingRailBlock other)) continue;
+                if (state1.getOptionalValue(FACING).map(Direction::getAxis).filter(axis::equals).isEmpty()) continue;
                 level.neighborChanged(pos1, other, pos);
             }
         }
         return powered;
+    }
+
+    @Override
+    public boolean getWeakChanges(BlockState state, LevelReader level, BlockPos pos) {
+        return true;
     }
 
     @Override
@@ -237,7 +243,13 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
             ISlidingRail.stopSlidingBlock(entity);
             return;
         }
-        entity.setMoveDirection(state.getValue(FACING));
+        Vec3 entityPos = entity.position();
+        Direction facing = state.getValue(FACING);
+        Direction.Axis horizontalAnother = facing.getClockWise().getAxis();
+        double single = entityPos.get(horizontalAnother);
+        double should = Math.ceil(single) - 0.5;
+        if (Math.abs(should - single) > 0.25) return;
+        entity.setMoveDirection(facing);
     }
 
     @Override

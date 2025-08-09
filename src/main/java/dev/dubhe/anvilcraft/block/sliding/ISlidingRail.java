@@ -135,6 +135,10 @@ public interface ISlidingRail extends IBlockExtension {
             air.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
         }
 
+        for (var toPushEntry : toPushes) {
+            level.updateNeighborsAt(toPushEntry.getLeft(), air.getBlock());
+        }
+
         SlidingBlockEntity.slid(level, pos, facing, toPushes);
         return true;
     }

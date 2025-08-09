@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.entity;
 
+import com.simibubi.create.content.contraptions.actors.seat.SeatEntity;
+import com.simibubi.create.content.contraptions.glue.SuperGlueEntity;
+import com.simibubi.create.content.contraptions.mounted.MountedContraption;
 import dev.dubhe.anvilcraft.api.sliding.SlidingBlockSection;
 import dev.dubhe.anvilcraft.block.sliding.ISlidingRail;
 import dev.dubhe.anvilcraft.init.ModEntities;
@@ -23,11 +26,17 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.decoration.HangingEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.tuple.Triple;
@@ -45,7 +54,7 @@ public class SlidingBlockEntity extends Entity {
     private SlidingBlockSection section;
     @Getter
     private Direction moveDirection;
-    public static final double DEFAULT_MOVEMENT = 0.75;
+    public static final double DEFAULT_MOVEMENT = 0.35;
     protected static final EntityDataAccessor<BlockPos> DATA_START_POS = SynchedEntityData.defineId(
         SlidingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
     private int time = 0;
@@ -106,6 +115,8 @@ public class SlidingBlockEntity extends Entity {
         if (belowState.getBlock() instanceof ISlidingRail slidingRail && !this.level().isClientSide) {
             slidingRail.onSlidingAbove(this.level(), belowPos, belowState, this);
         }
+        Direction.Axis horizontalAnother = this.moveDirection.getClockWise().getAxis();
+        this.setPos(this.position().with(horizontalAnother, Math.ceil(this.position().get(horizontalAnother)) - 0.5));
 
         if (this.level().isOutsideBuildHeight(pos)) {
             this.stop();
@@ -121,24 +132,24 @@ public class SlidingBlockEntity extends Entity {
     @Override
     public void move(MoverType type, Vec3 motion) {
         super.move(type, motion);
-        if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
-        List<Entity> list = this.level().getEntities(
-            this,
-            this.section.getBoundsOnSide(Direction.UP)
-                .expandTowards(0, 1, 0)
-                .move(this.blockPosition()),
-            EntitySelector.pushableBy(this)
-        );
-        if (list.isEmpty()) return;
-        for (Entity entity : list) {
-            if (entity instanceof SlidingBlockEntity) continue;
-            Vec3 collide = this.section.findCollide(this.position(), entity.getBoundingBox());
-            entity.setDeltaMovement(
-                entity.getDeltaMovement().x + collide.x() + DEFAULT_MOVEMENT * 2.8,
-                entity.getDeltaMovement().y < 0 ? 0 : entity.getDeltaMovement().y,
-                entity.getDeltaMovement().z + collide.z() + DEFAULT_MOVEMENT * 2.8
-            );
-        }
+//        if (motion.x == 0 && motion.y == 0 && motion.z == 0) return;
+//        List<Entity> list = this.level().getEntities(
+//            this,
+//            this.section.getBoundsOnSide(Direction.UP)
+//                .expandTowards(0, 1, 0)
+//                .move(this.blockPosition()),
+//            EntitySelector.pushableBy(this)
+//        );
+//        if (list.isEmpty()) return;
+//        for (Entity entity : list) {
+//            if (entity instanceof SlidingBlockEntity) continue;
+//            Vec3 collide = this.section.findCollide(this.position(), entity.getBoundingBox());
+//            entity.setDeltaMovement(
+//                entity.getDeltaMovement().x + collide.x() + DEFAULT_MOVEMENT * 2.8,
+//                entity.getDeltaMovement().y < 0 ? 0 : entity.getDeltaMovement().y,
+//                entity.getDeltaMovement().z + collide.z() + DEFAULT_MOVEMENT * 2.8
+//            );
+//        }
     }
 
     protected boolean checkCanMove() {
@@ -232,8 +243,18 @@ public class SlidingBlockEntity extends Entity {
     }
 
     @Override
+    public Vec3 getLookAngle() {
+        return Vec3.ZERO.relative(this.moveDirection, 1);
+    }
+
+    @Override
     public boolean canBeCollidedWith() {
         return true;
+    }
+
+    @Override
+    public boolean canCollideWith(Entity e) {
+        return e instanceof SlidingBlockEntity;
     }
 
     @Override
