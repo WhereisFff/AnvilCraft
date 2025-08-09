@@ -105,6 +105,7 @@ public interface ISlidingRail extends IBlockExtension {
         List<BlockPos> toPushPoses = resolver.getToPush();
 
         for (BlockPos toPushPos : toPushPoses) {
+            if (toPushPos.equals(pos.below())) return false;
             BlockState toPushState = level.getBlockState(toPushPos);
             if (toPushState.hasProperty(BlockStateProperties.WATERLOGGED)) {
                 toPushState = toPushState.setValue(BlockStateProperties.WATERLOGGED, false);
