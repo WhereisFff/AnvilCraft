@@ -16,6 +16,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -163,6 +164,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
             && !beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)
             && !level.getBlockTicks().hasScheduledTick(pos, this)
             && !MOVING_PISTON_MAP.containsKey(fromPos)
+            && block.equals(Blocks.MOVING_PISTON)
         ) {
             beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
             level.scheduleTick(pos, this, 3);
