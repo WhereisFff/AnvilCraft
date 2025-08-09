@@ -20,18 +20,14 @@ public class FlintBlock extends Block {
     }
 
     public static void ignite(LevelAccessor level, BlockPos pos) {
-        BlockPos above = pos.above();
-        BlockPos below = pos.below();
-        BlockPos west = pos.west();
-        BlockPos east = pos.east();
-        BlockPos south = pos.south();
-        BlockPos north = pos.north();
-        if (level.getBlockState(above).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(below).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(west).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(east).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(south).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(north).is(Blocks.IRON_BLOCK)) {
+        boolean relativeIsIronBlock = false;
+        for (Direction direction : Direction.values()) {
+            if (level.getBlockState(pos.relative(direction)).is(Blocks.IRON_BLOCK)) {
+                relativeIsIronBlock = true;
+                break;
+            }
+        }
+        if (relativeIsIronBlock) {
             List<BlockPos> blocks = new ArrayList<>();
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
