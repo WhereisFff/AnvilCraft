@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -9,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,15 +52,16 @@ public class FlintBlock extends Block {
                 }
             }
 
-            List<BlockPos> newBlocks = blocks.stream()
-                .filter(blockPos -> (Shapes.faceShapeOccludes(box(0, 0, 0, 16, 1, 16),
-                    level.getBlockState(blockPos).getCollisionShape(level, blockPos))
-                    && level.getBlockState(blockPos.above()).isAir())
-                    || level.getBlockState(blockPos).is(ModBlocks.OIL_CAULDRON)
-                    || (level.getBlockState(blockPos).getBlock() instanceof CampfireBlock))
-                .toList();
-            BlockPos blockPos = newBlocks.get(level.getRandom().nextIntBetweenInclusive(0, newBlocks.size() - 1));
-            level.setBlock(blockPos.above(), BaseFireBlock.getState(level, blockPos), 3);
+            List<BlockPos> newBlocks = new ArrayList<>();
+            for (BlockPos blockPos : blocks) {
+                if (BaseFireBlock.canBePlacedAt((Level) level, blockPos.above(), Direction.UP)) {
+                    newBlocks.add(blockPos);
+                }
+            }
+            if (!newBlocks.isEmpty()) {
+                BlockPos blockPos = newBlocks.get(level.getRandom().nextIntBetweenInclusive(0, newBlocks.size() - 1));
+                level.setBlock(blockPos.above(), BaseFireBlock.getState(level, blockPos), 3);
+            }
         }
     }
 
