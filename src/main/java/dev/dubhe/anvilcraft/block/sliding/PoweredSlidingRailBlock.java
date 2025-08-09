@@ -164,6 +164,11 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
+    public boolean getWeakChanges(BlockState state, LevelReader level, BlockPos pos) {
+        return true;
+    }
+
+    @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         boolean powered = this.updatePower(level, pos, state, fromPos);
         if (powered) {
