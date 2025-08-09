@@ -157,6 +157,18 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         this.updatePower(level, pos, state, fromPos);
+        Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
+        if (fromPos.equals(pos.above())
+            && state.getValue(POWERED)
+            && !beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)
+            && !level.getBlockTicks().hasScheduledTick(pos, this)
+            && !MOVING_PISTON_MAP.containsKey(fromPos)
+        ) {
+            beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
+            level.scheduleTick(pos, this, 3);
+            this.updateAbove(level, pos);
+            return;
+        }
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
     }
 
