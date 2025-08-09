@@ -2,7 +2,9 @@ package dev.dubhe.anvilcraft.api.entity.player;
 
 import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.block.state.Orientation;
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.mixin.invoker.BlockItemInvoker;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -73,6 +75,11 @@ public interface IAnvilCraftBlockPlacer {
             (soundType.getVolume() + 1.0f) / 2.0f,
             soundType.getPitch() * 0.8f
         );
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.PLACER_PLACE_BLOCK.get().trigger(player, blockState.getBlock());
+            }
+        }
         return InteractionResult.SUCCESS;
     }
 
