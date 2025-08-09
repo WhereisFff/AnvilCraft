@@ -2,8 +2,6 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
-import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -60,21 +58,20 @@ public class BlockEventListener {
         Level level = event.getLevel();
         BlockPos blockPos = event.getPos();
         BlockState targetBlockState = level.getBlockState(blockPos);
-        if (itemStack.getItem() instanceof AnvilHammerItem
-            || (itemStack.is(Tags.Items.TOOLS_WRENCH) && targetBlockState.getBlock() instanceof IHammerChangeable)
+        if (
+            itemStack.getItem() instanceof AnvilHammerItem
+                || (itemStack.is(Tags.Items.TOOLS_WRENCH) && targetBlockState.getBlock() instanceof IHammerChangeable)
         ) {
             if (player.level().isClientSide()) return;
             if (AnvilHammerItem.ableToUseAnvilHammer(level, blockPos, player)) {
-                BlockState b = level.getBlockState(blockPos);
-                if (player.isShiftKeyDown()) {
-                    if (!b.is(ModBlockTags.HAMMER_REMOVABLE) && !(b.getBlock() instanceof IHammerRemovable)) {
-                        return;
-                    }
-                }
                 event.setCancellationResult(InteractionResult.SUCCESS);
                 event.setCanceled(true);
             }
-        } else if (itemStack.is(Items.IRON_BLOCK) && targetBlockState.is(BlockTags.ANVIL) && player.isShiftKeyDown()) {
+        } else if (
+            itemStack.is(Items.IRON_BLOCK)
+                && targetBlockState.is(BlockTags.ANVIL)
+                && player.isShiftKeyDown()
+        ) {
             onAnvilFixed(level, itemStack, blockPos, targetBlockState);
             event.setCancellationResult(InteractionResult.SUCCESS);
             event.setCanceled(true);

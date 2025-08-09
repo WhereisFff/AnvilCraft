@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.block.entity.ActivatorSlidingRailBlockEntity;
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -15,7 +16,6 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -37,7 +37,7 @@ import java.util.stream.Stream;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, EntityBlock {
+public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, IMoveableEntityBlock {
     public static final List<Direction> SIGNAL_SOURCE_SIDES = List.of(
         Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
     public static final VoxelShape AABB_X = Stream.of(
@@ -167,14 +167,12 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
             level.scheduleTick(pos, this, 5);
             this.updateAbove(level, pos);
             return;
-        } else {
+        } else if (state.getValue(POWERED)) {
             BlockPos fromPos = pos.above();
             if (level.isEmptyBlock(fromPos)) return;
             PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
             ppi.extending = true;
-            if (!MOVING_PISTON_MAP.containsKey(pos)) {
-                MOVING_PISTON_MAP.put(pos, ppi);
-            }
+            MOVING_PISTON_MAP.put(pos, ppi);
         }
         super.tick(state, level, pos, random);
     }
@@ -224,11 +222,6 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     }
 
     @Override
-    public boolean isStickyBlock(BlockState state) {
-        return true;
-    }
-
-    @Override
     public @Nullable Property<?> getChangeableProperty(BlockState blockState) {
         return FACING;
     }
@@ -240,7 +233,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         level.setBlockAndUpdate(pos, state.setValue(FACING, entity.getMoveDirection()));
         level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get()).ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
         ISlidingRail.stopSlidingBlock(entity);
-        level.scheduleTick(pos, this, 4);
+        level.scheduleTick(pos, this, 3);
     }
 
     private void updateAbove(Level level, BlockPos pos) {
