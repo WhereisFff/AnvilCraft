@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
+import dev.dubhe.anvilcraft.api.sliding.SlidingBlockStructureResolver;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -7,11 +8,14 @@ import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -19,8 +23,12 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.apache.commons.lang3.tuple.Triple;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
@@ -76,7 +84,7 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
         if (level.isEmptyBlock(pos.above())) return;
         BlockState topBlock = level.getBlockState(pos.above());
         if (!PistonBaseBlock.isPushable(topBlock, level, pos, null, true, null)) return;
-        BlockPos moveToPos = null;
+        Direction moveToSide = null;
         for (Direction side : Direction.values()) {
             if (side.getAxis() == Direction.Axis.Y) continue;
             BlockPos railPos = pos.relative(side);
@@ -85,11 +93,52 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
                 .map(rail -> rail.canMoveBlockToTop(level, railPos, railState, topBlock, side.getOpposite()))
                 .orElse(false);
             if (!canMove) continue;
-            moveToPos = railPos.above();
+            moveToSide = side;
             break;
         }
-        if (moveToPos == null) return;
-        level.removeBlock(pos.above(), true);
-        level.setBlock(moveToPos, topBlock, 0b1000011);
+        if (moveToSide == null) return;
+
+        SlidingRailStopBlock.moveBlocksAbove(level, pos, moveToSide);
+    }
+
+    private static void moveBlocksAbove(Level level, BlockPos pos, Direction moveToSide) {
+        SlidingBlockStructureResolver resolver = new SlidingBlockStructureResolver(level, pos.above(), moveToSide, true);
+        if (!resolver.resolve()) return;
+        List<Triple<BlockPos, BlockState, Optional<CompoundTag>>> toPushes = new ArrayList<>();
+        List<BlockPos> toPushPoses = resolver.getToPush();
+
+        for (BlockPos toPushPos : toPushPoses) {
+            if (toPushPos.equals(pos)) return;
+            BlockState toPushState = level.getBlockState(toPushPos);
+            if (toPushState.hasProperty(BlockStateProperties.WATERLOGGED)) {
+                toPushState = toPushState.setValue(BlockStateProperties.WATERLOGGED, false);
+            }
+            Optional<CompoundTag> toPushEntityData = Optional.ofNullable(level.getBlockEntity(toPushPos))
+                .map(entity -> entity.saveCustomOnly(level.registryAccess()));
+            toPushes.add(Triple.of(toPushPos, toPushState, toPushEntityData));
+        }
+
+        List<BlockPos> toDestroys = resolver.getToDestroy();
+
+        for (int i = toDestroys.size() - 1; i >= 0; i--) {
+            BlockPos destroyingPos = toDestroys.get(i);
+            BlockState destroyingState = level.getBlockState(destroyingPos);
+            BlockEntity destroyingEntity = destroyingState.hasBlockEntity() ? level.getBlockEntity(destroyingPos) : null;
+            Block.dropResources(destroyingState, level, destroyingPos, destroyingEntity);
+            destroyingState.onDestroyedByPushReaction(level, destroyingPos, moveToSide, level.getFluidState(destroyingPos));
+        }
+
+        for (BlockPos toPushPos : toPushPoses) {
+            level.removeBlock(toPushPos, true);
+        }
+
+        for (var toPushEntry : toPushes) {
+            BlockPos moveToPos = toPushEntry.getLeft().relative(moveToSide);
+            level.setBlock(moveToPos, toPushEntry.getMiddle(), 0b1000011);
+            Optional<CompoundTag> beDataOp = toPushEntry.getRight();
+            Optional<BlockEntity> beOp = Optional.ofNullable(level.getBlockEntity(moveToPos));
+            if (beDataOp.isEmpty() || beOp.isEmpty()) continue;
+            beOp.get().loadCustomOnly(beDataOp.get(), level.registryAccess());
+        }
     }
 }
