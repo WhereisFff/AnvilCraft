@@ -173,13 +173,13 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         boolean powered = this.updatePower(level, pos, state, fromPos);
         if (powered) {
             fromPos = pos.above();
-            if (level.isEmptyBlock(fromPos)) {
-                BlockPos stop = pos.relative(state.getValue(FACING).getOpposite());
-                if (!level.getBlockState(stop).is(ModBlocks.SLIDING_RAIL_STOP) || level.isEmptyBlock(stop.above())) return;
-                BlockState above = level.getBlockState(stop.above());
-                level.setBlock(stop.above(), Blocks.AIR.defaultBlockState(), 0b1000011);
-                level.setBlock(fromPos, above, 0b1000011);
-            }
+//            if (level.isEmptyBlock(fromPos)) {
+//                BlockPos stop = pos.relative(state.getValue(FACING).getOpposite());
+//                if (!level.getBlockState(stop).is(ModBlocks.SLIDING_RAIL_STOP) || level.isEmptyBlock(stop.above())) return;
+//                BlockState above = level.getBlockState(stop.above());
+//                level.setBlock(stop.above(), Blocks.AIR.defaultBlockState(), 0b1000011);
+//                level.setBlock(fromPos, above, 0b1000011);
+//            }
             PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
             ppi.extending = true;
             if (MOVING_PISTON_MAP.containsKey(pos)) {
@@ -253,7 +253,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    public boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top) {
-        return state.getValue(POWERED);
+    public boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top, Direction side) {
+        return state.getValue(POWERED) && state.getValue(FACING) == side.getOpposite();
     }
 }
