@@ -5,17 +5,10 @@
   "sortnum": 4003,
   "entry_color": "661100",
   "extra_recipe_mappings": {
-    "anvilcraft:overheated_ember_metal_block": 0,
-    "anvilcraft:uranium_nugget": 5,
-    "anvilcraft:plutonium_nugget": 7
+    "anvilcraft:overheated_ember_metal_block": 0
   },
   "pages": [
     "$(item)余烬金属块$()属于此类。$(br2)具有2个温度等级：$(thing)普通$()、$(thing)超温$()。$(br2)不能被常规方法加热，但可以被后文介绍的方式加热。",
-    {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:overheated_ember_metal_block",
-      "text": "$(item)超温的余烬金属块$()非常不稳定，往往只能维持一小段时间。且在冷却后，有$(thing)5%$()的概率变为$(item)下界合金块$()。$(br2)可以为$(l:power/advanced_heat_collection)集热器$()提供1024kW能量。"
-    },
     {
       "type": "patchouli:relations",
       "entries": [
@@ -25,40 +18,14 @@
       "text": "阅读此章节前，请先查看前置章节"
     },
     {
-      "type": "anvilcraft:time_warp",
-      "anchor": "nuclear_fission",
-      "recipe": "anvilcraft:heat_produce_time_warp/raw_uranium_from_uranium_block",
-      "title": "核裂变",
-      "text": "$(l:smithing/corrupted_beacon#time_warp)时移$()$(item)铀块$()或$(item)钚块$()可以释放大量的热能。分别会将仅贴锅周围四个面的方块加热为$(thing)白炽$()并持续5/10分钟或$(thing)超温$()10秒。"
-    },
-    {
-      "type": "patchouli:crafting",
-      "anchor": "uranium_block",
-      "recipe": "anvilcraft:uranium_block",
-      "recipe2": "anvilcraft:uranium_ingot",
-      "text": ""
-    },
-    {
       "type": "patchouli:spotlight",
-      "item": "anvilcraft:uranium_nugget",
-      "text": "使用$(item)皇家铁砧$()（或更高级铁砧）$(l:struct/high_speed_impact)撞击$()$(item)红石块$()，平均获得8.5个$(item)铀粒$()。"
-    },
-    {
-      "type": "patchouli:crafting",
-      "anchor": "uranium_block",
-      "recipe": "anvilcraft:plutonium_block",
-      "recipe2": "anvilcraft:plutonium_ingot_from_nuggets",
-      "text": ""
-    },
-    {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:plutonium_nugget",
-      "text": "在锅中用铁砧砸击$(item)铀锭$()和$(item)中子锭$()，获得6*$(item)钚粒$()+1*$(item)中子锭$()+1*$(item)石灰粉$()。"
+      "item": "anvilcraft:overheated_ember_metal_block",
+      "text": "$(item)超温的余烬金属块$()非常不稳定，往往只能维持一小段时间。且在冷却后，有$(thing)5%$()的概率变为$(item)下界合金块$()。$(br2)可以为$(l:power/advanced_heat_collection)集热器$()提供1024kW能量。"
     },
     {
       "type": "patchouli:text",
       "title": "撞击裂变",
-      "text": "使用$(item)皇家铁砧$()（或更高级铁砧）$(l:struct/high_speed_impact)撞击$()$(item)铀块$()或$(item)钚块$()，会将附近最多16个余烬金属块加热为$(thing)超温$()10秒。"
+      "text": "使用$(item)皇家铁砧$()（或更高级铁砧）$(l:struct/high_speed_impact)撞击$()$(item)铀块$()或$(item)钚块$()，会将附近最多16个余烬金属块加热为$(thing)超温$()。"
     }
   ]
 }
