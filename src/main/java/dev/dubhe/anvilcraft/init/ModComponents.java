@@ -6,11 +6,11 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.item.property.Eternal;
+import dev.dubhe.anvilcraft.api.item.property.FilterContent;
 import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.api.item.property.Providence;
 import dev.dubhe.anvilcraft.item.DiskItem;
-import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
@@ -86,9 +86,9 @@ public class ModComponents {
         register("providence", b -> b.persistent(Providence.CODEC)
             .networkSynchronized(Providence.STREAM_CODEC));
 
-    public static final DataComponentType<FilterItem.FilterContent> FILTER_CONTENT =
-        register("filter_contents", b -> b.persistent(FilterItem.FilterContent.CODEC.codec())
-            .networkSynchronized(FilterItem.FilterContent.STREAM_CODEC));
+    public static final DataComponentType<FilterContent> FILTER_CONTENT =
+        register("filter_contents", b -> b.persistent(FilterContent.CODEC.codec())
+            .networkSynchronized(FilterContent.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();

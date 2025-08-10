@@ -2,10 +2,10 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.item.property.FilterContent;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableImageButton;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.component.FilterSlot;
-import dev.dubhe.anvilcraft.item.FilterItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -42,7 +42,7 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
     protected void init() {
         super.init();
 
-        FilterItem.FilterContent content = this.getMenu().getContainer().getContent();
+        FilterContent content = this.getMenu().getContainer().getContent();
         this.addRenderableWidget(
             new SwitchableImageButton(
                 this.leftPos + 115,

@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.network;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.item.property.FilterContent;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.item.FilterItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 
 public record FilterContentSyncPacket(
     int slotIndex,
-    FilterItem.FilterContent filterContent
+    FilterContent filterContent
 ) implements CustomPacketPayload {
     public static final Type<FilterContentSyncPacket> TYPE = new Type<>(AnvilCraft.of("filter_content_sync"));
 
@@ -25,7 +25,7 @@ public record FilterContentSyncPacket(
     public static final StreamCodec<RegistryFriendlyByteBuf, FilterContentSyncPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.INT,
         FilterContentSyncPacket::slotIndex,
-        FilterItem.FilterContent.STREAM_CODEC,
+        FilterContent.STREAM_CODEC,
         FilterContentSyncPacket::filterContent,
         FilterContentSyncPacket::new
     );
