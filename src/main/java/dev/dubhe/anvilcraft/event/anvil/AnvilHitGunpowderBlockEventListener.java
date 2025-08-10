@@ -27,9 +27,8 @@ public class AnvilHitGunpowderBlockEventListener {
         final BlockPos hitPos = pos.below();
         final BlockState hitState = level.getBlockState(hitPos);
         if (hitState.getBlock() instanceof GunpowderBlock gunpowderBlock) {
-            gunpowderBlock.onHit(level, hitPos);
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            int distance = Math.round(event.getFallDistance());
+            gunpowderBlock.explosion(level, hitPos);
+            int distance = (int) Math.ceil(event.getFallDistance()) + 1;
             BlockPos above = pos;
             for (int i = 1; i < distance + 1; i++) {
                 above = above.above();
@@ -38,6 +37,7 @@ public class AnvilHitGunpowderBlockEventListener {
                 }
             }
             above = above.below();
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             AnimateAscendingBlockEntity.animate(level, pos, blockState, above);
             level.setBlockAndUpdate(above, blockState);
         }
@@ -51,9 +51,8 @@ public class AnvilHitGunpowderBlockEventListener {
         final BlockPos hitPos = pos.below();
         final BlockState hitState = level.getBlockState(hitPos);
         if (hitState.getBlock() instanceof GunpowderBlock gunpowderBlock) {
-            gunpowderBlock.onHit(level, hitPos);
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            int distance = Math.round(event.getFallDistance());
+            gunpowderBlock.explosion(level, hitPos);
+            int distance = (int) Math.ceil(event.getFallDistance()) + 1;
             BlockPos above = pos;
             for (int i = 1; i < distance + 1; i++) {
                 above = above.above();
@@ -62,6 +61,7 @@ public class AnvilHitGunpowderBlockEventListener {
                 }
             }
             above = above.below();
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
             AnimateAscendingBlockEntity.animate(level, pos, blockState, above);
             level.setBlockAndUpdate(above, blockState);
         }
