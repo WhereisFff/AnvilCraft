@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
-import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -13,10 +12,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -77,10 +75,7 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
         super.neighborChanged(state, level, pos, neighborBlock, fromPos, isMoving);
         if (level.isEmptyBlock(pos.above())) return;
         BlockState topBlock = level.getBlockState(pos.above());
-        if (topBlock.getPistonPushReaction() == PushReaction.BLOCK
-            || topBlock.getPistonPushReaction() == PushReaction.IGNORE
-            || (topBlock.getBlock() instanceof EntityBlock entityBlock && !(entityBlock instanceof IMoveableEntityBlock))
-        ) return;
+        if (!PistonBaseBlock.isPushable(topBlock, level, pos, null, true, null)) return;
         BlockPos moveToPos = null;
         for (Direction side : Direction.values()) {
             if (side.getAxis() == Direction.Axis.Y) continue;

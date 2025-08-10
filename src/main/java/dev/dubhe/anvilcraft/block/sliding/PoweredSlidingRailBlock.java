@@ -171,15 +171,10 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         boolean powered = this.updatePower(level, pos, state, fromPos);
+        pushAbove:
         if (powered) {
             fromPos = pos.above();
-//            if (level.isEmptyBlock(fromPos)) {
-//                BlockPos stop = pos.relative(state.getValue(FACING).getOpposite());
-//                if (!level.getBlockState(stop).is(ModBlocks.SLIDING_RAIL_STOP) || level.isEmptyBlock(stop.above())) return;
-//                BlockState above = level.getBlockState(stop.above());
-//                level.setBlock(stop.above(), Blocks.AIR.defaultBlockState(), 0b1000011);
-//                level.setBlock(fromPos, above, 0b1000011);
-//            }
+            if (level.isEmptyBlock(fromPos)) break pushAbove;
             PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
             ppi.extending = true;
             if (MOVING_PISTON_MAP.containsKey(pos)) {
