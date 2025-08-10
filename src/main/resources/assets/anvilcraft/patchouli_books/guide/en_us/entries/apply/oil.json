@@ -36,7 +36,7 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:power/advanced_heat_collection",
+        "anvilcraft:power/heat_collection",
         "anvilcraft:smithing/tier_2_materials",
         "anvilcraft:smithing/corrupted_beacon"
       ],
