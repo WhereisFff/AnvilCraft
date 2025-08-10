@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.api.item.property.Providence;
 import dev.dubhe.anvilcraft.item.DiskItem;
+import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
@@ -84,6 +85,10 @@ public class ModComponents {
     public static final DataComponentType<Providence> PROVIDENCE =
         register("providence", b -> b.persistent(Providence.CODEC)
             .networkSynchronized(Providence.STREAM_CODEC));
+
+    public static final DataComponentType<FilterItem.FilterContent> FILTER_CONTENT =
+        register("filter_contents", b -> b.persistent(FilterItem.FilterContent.CODEC.codec())
+            .networkSynchronized(FilterItem.FilterContent.STREAM_CODEC));
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();
