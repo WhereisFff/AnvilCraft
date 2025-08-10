@@ -15,9 +15,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.piston.MovingPistonBlock;
+import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -35,6 +39,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
+
+import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -156,6 +162,23 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     }
 
     @Override
+    public void onNeighborChange(BlockState state, LevelReader level, BlockPos pos, BlockPos neighbor) {
+        if (!level.getBlockState(neighbor).is(Blocks.MOVING_PISTON)) return;
+        Direction dir = level.getBlockState(neighbor).getValue(BlockStateProperties.FACING);
+        if (dir.getAxis() == Direction.Axis.Y
+            || !neighbor.equals(pos.above())
+            || level.getBlockEntity(pos.above(), BlockEntityType.PISTON).map(PistonMovingBlockEntity::isSourcePiston).orElse(true)
+        ) {
+            MOVING_PISTON_MAP.remove(pos);
+            return;
+        }
+        PistonPushInfo ppi = new PistonPushInfo(neighbor, dir);
+        if (MOVING_PISTON_MAP.containsKey(pos)) {
+            MOVING_PISTON_MAP.get(pos).fromPos = neighbor;
+        } else MOVING_PISTON_MAP.put(pos, ppi);
+    }
+
+    @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         this.updatePower(level, pos, state, fromPos);
         Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
@@ -165,6 +188,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
             && !level.getBlockTicks().hasScheduledTick(pos, this)
             && !MOVING_PISTON_MAP.containsKey(fromPos)
             && block.equals(Blocks.MOVING_PISTON)
+            && !level.getBlockEntity(pos.above(), BlockEntityType.PISTON).map(PistonMovingBlockEntity::isSourcePiston).orElse(true)
         ) {
             beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
             level.scheduleTick(pos, this, 3);

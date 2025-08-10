@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
-
 public interface ISlidingRail extends IBlockExtension {
     Map<BlockPos, PistonPushInfo> MOVING_PISTON_MAP = new HashMap<>();
 
@@ -62,7 +60,7 @@ public interface ISlidingRail extends IBlockExtension {
 
     static void whenOnNeighborChange(LevelReader level, BlockPos pos, BlockPos neighbor) {
         if (!level.getBlockState(neighbor).is(Blocks.MOVING_PISTON)) return;
-        Direction dir = level.getBlockState(neighbor).getValue(FACING);
+        Direction dir = level.getBlockState(neighbor).getValue(BlockStateProperties.FACING);
         if (dir.getAxis() == Direction.Axis.Y || !neighbor.equals(pos.above())) {
             MOVING_PISTON_MAP.remove(pos);
             return;
