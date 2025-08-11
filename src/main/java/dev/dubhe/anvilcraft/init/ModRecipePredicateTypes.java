@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlock;
-import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasBlockIngredient;
-import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasCauldron;
-import dev.dubhe.anvilcraft.recipe.neo.predicate.item.HasItem;
-import dev.dubhe.anvilcraft.recipe.neo.predicate.item.HasItemIngredient;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlockIngredient;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItem;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

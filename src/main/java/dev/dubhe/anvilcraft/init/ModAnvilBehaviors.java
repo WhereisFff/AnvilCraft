@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.anvil.CementStainingBehavior;
 import dev.dubhe.anvilcraft.anvil.HitBeeNestBehavior;
 import dev.dubhe.anvilcraft.anvil.HitCrabTrapBehavior;
 import dev.dubhe.anvilcraft.anvil.HitSpawnerBehavior;
-import dev.dubhe.anvilcraft.anvil.ItemMeshBehavior;
 import dev.dubhe.anvilcraft.anvil.ItemStampingBehavior;
 import dev.dubhe.anvilcraft.anvil.MassInjectBehavior;
 import dev.dubhe.anvilcraft.anvil.RedstoneEMPBehavior;
@@ -31,7 +30,6 @@ public class ModAnvilBehaviors {
         event.registerBehavior(state -> state.getBlock() instanceof CementCauldronBlock, new CementStainingBehavior());
         event.registerBehavior(ModBlocks.STAMPING_PLATFORM.get(), new ItemStampingBehavior());
         event.registerBehavior(ModBlocks.SPACE_OVERCOMPRESSOR.get(), new MassInjectBehavior());
-        event.registerBehavior(Blocks.SCAFFOLDING, new ItemMeshBehavior());
         event.registerBehavior(state -> state.is(ModBlockTags.STORAGE_BLOCKS_LEAD), new ResetVaultBehavior());
     }
 }

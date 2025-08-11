@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipeTrigger;
-import dev.dubhe.anvilcraft.recipe.neo.trigger.OnAnvilFallOn;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;
+import dev.dubhe.anvilcraft.recipe.anvil.trigger.OnAnvilFallOn;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

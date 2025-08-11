@@ -10,7 +10,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RedstoneTorchBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 public class RedstoneEMPBehavior implements IAnvilBehavior {
     @Override
@@ -55,7 +54,7 @@ public class RedstoneEMPBehavior implements IAnvilBehavior {
         return false;
     }
 
-    private void redstoneEmp(@NotNull Level level, BlockPos pos) {
+    private void redstoneEmp(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);
         if (!state.is(ModBlockTags.REDSTONE_TORCH)) return;
         state = state.setValue(RedstoneTorchBlock.LIT, false);

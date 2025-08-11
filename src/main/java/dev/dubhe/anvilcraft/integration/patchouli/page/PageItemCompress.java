@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.neo.wrap.ItemCompressRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
 import net.minecraft.world.level.block.Blocks;
 
 public class PageItemCompress extends PageAnvilItemProcess<ItemCompressRecipe> {

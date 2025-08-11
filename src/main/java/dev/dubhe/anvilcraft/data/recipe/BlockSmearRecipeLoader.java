@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.recipe.neo.wrap.BlockSmearRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockSmearRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.HoneycombItem;

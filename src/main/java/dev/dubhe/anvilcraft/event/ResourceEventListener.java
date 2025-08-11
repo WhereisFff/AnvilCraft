@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipe;
-import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeManager;
+import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeManager;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;

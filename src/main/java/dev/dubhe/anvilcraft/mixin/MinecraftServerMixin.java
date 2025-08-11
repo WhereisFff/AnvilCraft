@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeManager;
+import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeManager;
 import dev.dubhe.anvilcraft.util.mixin.recipe.InWorldRecipeManagerInjector;
 import net.minecraft.server.MinecraftServer;
 import org.spongepowered.asm.mixin.Mixin;

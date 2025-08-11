@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.util.injection;
 
-import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeManager;
+import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeManager;
 
 public interface IRecipeManager {
     default void anc$setInWorldRecipeManager(InWorldRecipeManager manager) {

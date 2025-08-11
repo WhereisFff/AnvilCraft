@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.util;
 
-import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import mezz.jei.common.util.RegistryUtil;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;

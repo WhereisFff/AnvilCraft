@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.recipe.generate;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Table;
-import dev.dubhe.anvilcraft.recipe.neo.wrap.MeshRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;

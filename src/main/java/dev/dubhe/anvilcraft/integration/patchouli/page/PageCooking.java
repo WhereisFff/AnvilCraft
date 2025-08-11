@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.neo.wrap.CookingRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.CookingRecipe;
 import net.minecraft.world.level.block.Blocks;
 
 public class PageCooking extends PageAnvilItemProcess<CookingRecipe> {

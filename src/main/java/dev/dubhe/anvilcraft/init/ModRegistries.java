@@ -2,9 +2,9 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletType;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipeTrigger;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.SubscribeEvent;

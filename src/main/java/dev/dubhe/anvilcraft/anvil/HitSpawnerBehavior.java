@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.event.EventHooks;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -60,7 +59,7 @@ public class HitSpawnerBehavior implements IAnvilBehavior {
         ServerLevel serverLevel,
         BlockPos pos,
         RandomSource randomSource,
-        @NotNull BaseSpawnerAccessor accessor
+        BaseSpawnerAccessor accessor
     ) {
         for (int i = 0; i < accessor.getSpawnCount(); ++i) {
             CompoundTag compoundTag = spawnData.getEntityToSpawn();
@@ -159,7 +158,7 @@ public class HitSpawnerBehavior implements IAnvilBehavior {
                         && spawnData.getEntityToSpawn().contains("id", 8)
                     ) {
                         EventHooks.finalizeMobSpawn(
-                            (Mob) entity,
+                            mob,
                             serverLevel,
                             serverLevel.getCurrentDifficultyAt(entity.blockPosition()),
                             MobSpawnType.SPAWNER,

@@ -38,7 +38,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class MassInjectRecipe extends SingleItemRecipe {
-
     private final int mass;
 
     public MassInjectRecipe(Ingredient ingredient, int mass) {

@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.neo.IRecipeOutcome;
-import dev.dubhe.anvilcraft.recipe.neo.outcome.DamageAnvil;
-import dev.dubhe.anvilcraft.recipe.neo.outcome.ProduceHeat;
-import dev.dubhe.anvilcraft.recipe.neo.outcome.SetBlock;
-import dev.dubhe.anvilcraft.recipe.neo.outcome.SpawnItem;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.SetBlock;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.SpawnItem;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 

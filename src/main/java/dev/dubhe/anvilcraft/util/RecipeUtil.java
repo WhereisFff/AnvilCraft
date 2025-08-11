@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.util;
 
-import dev.dubhe.anvilcraft.recipe.anvil.AbstractItemProcessRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.input.IItemsInput;
 import dev.dubhe.anvilcraft.recipe.multiblock.BlockPattern;
 import dev.dubhe.anvilcraft.recipe.multiblock.BlockPredicateWithState;
@@ -12,21 +11,16 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
@@ -37,20 +31,17 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.conditions.ICondition;
-import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class RecipeUtil {
     private static final byte CONSTANT_TYPE = 1;
     private static final byte UNIFORM_TYPE = 2;
@@ -247,66 +238,5 @@ public class RecipeUtil {
         }
 
         return levelLike;
-    }
-
-    public static <T extends AbstractItemProcessRecipe> int compareRecipeHolders(RecipeHolder<T> holderA, RecipeHolder<T> holderB) {
-        T a = holderA.value();
-        T b = holderB.value();
-        if (a.mergedIngredients.size() == b.mergedIngredients.size()) {
-            int countA = a.mergedIngredients.stream().mapToInt(Object2IntMap.Entry::getIntValue).sum();
-            int countB = b.mergedIngredients.stream().mapToInt(Object2IntMap.Entry::getIntValue).sum();
-            return countA - countB;
-        }
-        return a.mergedIngredients.size() - b.mergedIngredients.size();
-    }
-
-
-    public static boolean allIngredientEquals(NonNullList<Ingredient> ingredients) {
-        if (ingredients.size() == 1) return true;
-        for (int i = 0; i < ingredients.size(); i++) {
-            for (int j = i; j < ingredients.size(); j++) {
-                Ingredient a = ingredients.get(i);
-                Ingredient b = ingredients.get(j);
-                if (!isIngredientsEqual(a, b)) return false;
-            }
-        }
-        return true;
-    }
-
-    @SafeVarargs
-    public static boolean ingredientMatchingTags(Ingredient ingredient, TagKey<Item>... tagKey) {
-        AtomicBoolean result = new AtomicBoolean(false);
-        ICondition.IContext ctx = ServerLifecycleHooks.getCurrentServer().getServerResources().managers().getConditionContext();
-        Map<ResourceLocation, Collection<Holder<Item>>> allTags = ctx.getAllTags(Registries.ITEM);
-        for (Ingredient.Value value : ingredient.getValues()) {
-            if (value instanceof Ingredient.TagValue(TagKey<Item> tag)) {
-                if (allTags.containsKey(tag.location())) {
-                    Collection<Holder<Item>> holders = allTags.get(tag.location());
-                    if (holders.stream().anyMatch(it -> Arrays.stream(tagKey)
-                        .anyMatch(tk -> it.value().getDefaultInstance().is(tk))
-                    )) {
-                        result.set(true);
-                    }
-                }
-            }
-            if (value instanceof Ingredient.ItemValue(ItemStack item)) {
-                for (TagKey<Item> itemTagKey : tagKey) {
-                    if (item.is(itemTagKey)) {
-                        result.set(true);
-                    }
-                }
-            }
-        }
-        if (ingredient.isCustom() && ingredient.getCustomIngredient() != null) {
-            ICustomIngredient customIngredient = ingredient.getCustomIngredient();
-            customIngredient.getItems().forEach(it -> {
-                for (TagKey<Item> itemTagKey : tagKey) {
-                    if (it.is(itemTagKey)) {
-                        result.set(true);
-                    }
-                }
-            });
-        }
-        return result.get();
     }
 }
