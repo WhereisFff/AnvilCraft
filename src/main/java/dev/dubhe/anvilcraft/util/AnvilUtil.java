@@ -91,6 +91,7 @@ public class AnvilUtil {
         return false;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     public static void dropItems(@NotNull List<ItemStack> items, Level level, Vec3 pos) {
         for (ItemStack item : items) {
             if (item.isEmpty()) continue;
@@ -120,6 +121,7 @@ public class AnvilUtil {
                 0.0d,
                 0.0d
             );
+            ((AdsorbableItemEntity) entity).anvilcraft$setIsAdsorbable(false);
             level.addFreshEntity(entity);
         }
     }

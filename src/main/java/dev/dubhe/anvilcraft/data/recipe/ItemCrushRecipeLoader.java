@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.ItemCrushRecipe;
@@ -99,17 +100,42 @@ public class ItemCrushRecipeLoader {
         armor(provider, Items.DIAMOND_LEGGINGS, Items.DIAMOND);
         armor(provider, Items.DIAMOND_BOOTS, Items.DIAMOND);
         armor(provider, Items.DIAMOND_HORSE_ARMOR, Items.DIAMOND);
+
+        blockCrush(provider, Items.STONE, Items.COBBLESTONE);
+        blockCrush(provider, Items.COBBLESTONE, Items.GRAVEL);
+        blockCrush(provider, Items.GRAVEL, Items.SAND);
+        blockCrush(provider, Items.POLISHED_GRANITE, Items.GRANITE);
+        blockCrush(provider, Items.GRANITE, Items.RED_SAND);
+        blockCrush(provider, Items.POLISHED_ANDESITE, Items.ANDESITE);
+        blockCrush(provider, Items.ANDESITE, ModBlocks.CINERITE.get());
+        blockCrush(provider, Items.POLISHED_DIORITE, Items.DIORITE);
+        blockCrush(provider, Items.DIORITE, ModBlocks.QUARTZ_SAND.get());
+        blockCrush(provider, Items.STONE_BRICKS, Items.CRACKED_STONE_BRICKS);
+        blockCrush(provider, Items.DEEPSLATE_BRICKS, Items.CRACKED_DEEPSLATE_BRICKS);
+        blockCrush(provider, Items.NETHER_BRICKS, Items.CRACKED_NETHER_BRICKS);
+        blockCrush(provider, Items.DEEPSLATE_TILES, Items.CRACKED_DEEPSLATE_TILES);
+        blockCrush(provider, Items.POLISHED_BLACKSTONE_BRICKS, Items.CRACKED_POLISHED_BLACKSTONE_BRICKS);
+        blockCrush(provider, Items.SOUL_SOIL, Items.SOUL_SAND);
+        blockCrush(provider, Items.NETHERRACK, ModBlocks.NETHER_DUST.get());
+        blockCrush(provider, Items.END_STONE, ModBlocks.END_DUST.get());
     }
 
     private static void itemCrush(RegistrateRecipeProvider provider, ItemLike input, ItemStack result) {
         ItemCrushRecipe.builder().requires(input).result(result).save(provider);
     }
 
+    private static void blockCrush(RegistrateRecipeProvider provider, ItemLike input, ItemLike result) {
+        ItemCrushRecipe.builder()
+            .requires(input)
+            .result(ChanceItemStack.of(new ItemStack(result)).withChance(0.8f))
+            .save(provider, AnvilCraft.of("item_crush/block_crush/%s_from_%s".formatted(getName(result), getName(input))));
+    }
+
     private static void tool(RegistrateRecipeProvider provider, ItemLike tool, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(tool)
             .result(ChanceItemStack.of(new ItemStack(result)).withChance(0.5f))
-            .save(provider, AnvilCraft.of("item_crush/tool_%s_2_%s".formatted(getName(tool), getName(result))));
+            .save(provider, AnvilCraft.of("item_crush/tool/%s_2_%s".formatted(getName(tool), getName(result))));
     }
 
     private static void armor(RegistrateRecipeProvider provider, ItemLike armor, ItemLike result) {
@@ -117,7 +143,7 @@ public class ItemCrushRecipeLoader {
             .requires(armor)
             .result(ChanceItemStack.of(new ItemStack(result)).withChance(0.5f))
             .result(ChanceItemStack.of(new ItemStack(result)).withChance(0.5f))
-            .save(provider, AnvilCraft.of("item_crush/armor_%s_2_%s".formatted(getName(armor), getName(result))));
+            .save(provider, AnvilCraft.of("item_crush/armor/%s_2_%s".formatted(getName(armor), getName(result))));
     }
 
     private static @NotNull String getName(@NotNull ItemLike item) {

@@ -16,8 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
 public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer, IHasAffectRange {
     private static final int MAX_OUTPUT_POWER = 4096;
@@ -76,12 +75,14 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     @Override
     public void onLoad() {
         super.onLoad();
+        if (this.getCurrentLevel() == null) return;
         HeatCollectorManager.addHeatCollector(this.getPos(), this.getCurrentLevel());
     }
 
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
+        if (this.getCurrentLevel() == null) return;
         HeatCollectorManager.removeHeatCollector(this.getPos(), this.getCurrentLevel());
     }
 
@@ -113,8 +114,8 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     }
 
     @Override
-    public Level getCurrentLevel() {
-        return Objects.requireNonNull(this.getLevel());
+    public @Nullable Level getCurrentLevel() {
+        return this.getLevel();
     }
 
     @Override

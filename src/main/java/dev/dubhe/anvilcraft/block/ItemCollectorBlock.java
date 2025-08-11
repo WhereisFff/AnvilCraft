@@ -89,12 +89,7 @@ public class ItemCollectorBlock extends BetterBaseEntityBlock implements IHammer
     ) {
         if (state.is(newState.getBlock())) return;
         if (level.getBlockEntity(pos) instanceof ItemCollectorBlockEntity entity) {
-            Vec3 vec3 = entity.getBlockPos().getCenter();
-            FilteredItemStackHandler depository = entity.getItemHandler();
-            for (int slot = 0; slot < depository.getSlots(); slot++) {
-                Containers.dropItemStack(level, vec3.x, vec3.y, vec3.z, depository.getStackInSlot(slot));
-            }
-            level.updateNeighbourForOutputSignal(pos, this);
+
             List<ChunkPos> chunkPosList = entity.getPoachingMapPositions(8);
             for (ChunkPos chunkPos : chunkPosList) {
                 if (PoachingCollectorMap.containsKey(level) && PoachingCollectorMap.get(level).containsKey(chunkPos)) {
@@ -102,6 +97,15 @@ public class ItemCollectorBlock extends BetterBaseEntityBlock implements IHammer
                     list.remove(entity);
                 }
             }
+            entity.setRemoved();
+            
+            Vec3 vec3 = entity.getBlockPos().getCenter();
+            FilteredItemStackHandler depository = entity.getItemHandler();
+            for (int slot = 0; slot < depository.getSlots(); slot++) {
+                Containers.dropItemStack(level, vec3.x, vec3.y, vec3.z, depository.getStackInSlot(slot));
+            }
+            level.updateNeighbourForOutputSignal(pos, this);
+
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }

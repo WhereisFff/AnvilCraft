@@ -18,8 +18,8 @@ public class BlockSmearRecipeLoader {
         blockSmear(provider, Blocks.MOSS_BLOCK, Blocks.DIRT, Blocks.GRASS_BLOCK);
 
         for (Holder<Block> holder : BuiltInRegistries.BLOCK.holders().toList()) {
-            Optional<BlockState> waxed = HoneycombItem.getWaxed(holder.value().defaultBlockState());
-            waxed.ifPresent(state -> blockSmear(provider, Blocks.HONEYCOMB_BLOCK, holder.value(), state.getBlock()));
+            HoneycombItem.getWaxed(holder.value().defaultBlockState())
+                .ifPresent(state -> blockSmear(provider, Blocks.HONEYCOMB_BLOCK, holder.value(), state.getBlock()));
         }
     }
 

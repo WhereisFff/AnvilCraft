@@ -8,7 +8,9 @@ import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.dfu.AnvilCraftDfu;
 import dev.dubhe.anvilcraft.init.ModAmuletTypes;
+import dev.dubhe.anvilcraft.init.ModAttatchments;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModCommands;
@@ -27,6 +29,7 @@ import dev.dubhe.anvilcraft.init.ModLootItemConditions;
 import dev.dubhe.anvilcraft.init.ModLootItemFunctions;
 import dev.dubhe.anvilcraft.init.ModLootModifiers;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.init.ModNetworks;
 import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
@@ -78,6 +81,7 @@ public class AnvilCraft {
 
     public AnvilCraft(IEventBus modEventBus) {
         MOD_BUS = modEventBus;
+        ModAttatchments.register(modEventBus);
         ModItemGroups.register(modEventBus);
         ModBlocks.register();
         ModFluids.register(modEventBus);
@@ -90,6 +94,7 @@ public class AnvilCraft {
         ModRecipeTypes.register(modEventBus);
         ModDataAttachments.register(modEventBus);
         ModParticles.register(modEventBus);
+        ModMobEffects.register(modEventBus);
         ModInspections.initialize();
 
         ModLootContextParamSets.registerAll();
@@ -108,7 +113,9 @@ public class AnvilCraft {
         integrationManager.compileContent();
         integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
+        AnvilCraftDfu.constructAndOptimize();
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
+        LOGGER.info("let's 0721");
     }
 
     private static void registerEvents(@NotNull IEventBus eventBus) {
@@ -119,6 +126,7 @@ public class AnvilCraft {
         eventBus.addListener(AnvilCraft::registerPayload);
         eventBus.addListener(AnvilCraft::loadComplete);
         eventBus.addListener(AnvilCraft::packSetup);
+        eventBus.addListener(ModFluids::registerFluidInteractions);
     }
 
     public static @NotNull ResourceLocation of(String path) {

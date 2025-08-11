@@ -120,9 +120,7 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.SWEET_BERRIES))
             .add(findResourceKey(Items.GLOW_BERRIES));
         provider.addTag(ModItemTags.WRENCH)
-            .add(ModItems.ANVIL_HAMMER.getKey())
-            .add(ModItems.ROYAL_ANVIL_HAMMER.getKey())
-            .add(ModItems.EMBER_ANVIL_HAMMER.getKey());
+            .addTag(ModItemTags.ANVIL_HAMMER);
         provider.addTag(ModItemTags.FIRE_STARTER)
             .add(findResourceKey(Items.TORCH))
             .add(findResourceKey(Items.SOUL_TORCH))
@@ -189,6 +187,25 @@ public class ItemTagLoader {
         provider.addTag(ModItemTags.CURIOS_IONOCRAFT_BACKPACK)
             .replace(false)
             .add(ModItems.IONOCRAFT_BACKPACK.getKey());
+
+        provider.addTag(ModItemTags.TOTEM)
+            .add(findResourceKey(Items.TOTEM_OF_UNDYING));
+
+        provider.addTag(ItemTags.AXES)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.SHOVELS)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.HOES)
+            .addTag(ModItemTags.RESONATOR);
+        provider.addTag(ItemTags.PICKAXES)
+            .addTag(ModItemTags.RESONATOR);
+
+        provider.addTag(ItemTags.CLUSTER_MAX_HARVESTABLES)
+            .addTag(ModItemTags.DRAGON_ROD)
+            .addTag(ModItemTags.RESONATOR);
+
+        provider.addTag(ItemTags.DURABILITY_ENCHANTABLE)
+            .add(findResourceKey(ModItems.MAGNET.get()));
     }
 
     private static @NotNull ResourceKey<Item> findResourceKey(Item item) {

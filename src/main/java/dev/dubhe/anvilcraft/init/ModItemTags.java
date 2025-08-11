@@ -51,6 +51,11 @@ public class ModItemTags {
     public static final TagKey<Item> STORAGE_BLOCKS_AMBER = bindC("storage_blocks/amber");
     public static final TagKey<Item> STORAGE_BLOCKS_RESIN = bindC("storage_blocks/resin");
 
+    public static final TagKey<Item> STORAGE_BLOCKS_SUGAR = bindC("storage_blocks/sugar");
+    public static final TagKey<Item> STORAGE_BLOCKS_GUNPOWDER = bindC("storage_blocks/gunpowder");
+    public static final TagKey<Item> STORAGE_BLOCKS_ROTTEN_FLESH = bindC("storage_blocks/rotten_flesh");
+    public static final TagKey<Item> STORAGE_BLOCKS_FLINT = bindC("storage_blocks/flint");
+
     public static final TagKey<Item> GEMS_TOPAZ = bindC("gems/topaz");
     public static final TagKey<Item> GEMS_SAPPHIRE = bindC("gems/sapphire");
     public static final TagKey<Item> GEMS_RUBY = bindC("gems/ruby");
@@ -154,10 +159,13 @@ public class ModItemTags {
     public static final TagKey<Item> RESONATOR = bind("tools/resonator");
     public static final TagKey<Item> UNCHARGED_NEUTRONIUM_INGOTS = bind("uncharged_neutronium_ingots");
     public static final TagKey<Item> HEATABLE_BLOCKS = bind("heatable_blocks");
+    public static final TagKey<Item> LEVITATIONALS = bind("levitationals");
 
     public static final TagKey<Item> CURIOS_HEAD = bindCurios("head");
     public static final TagKey<Item> CURIOS_IONOCRAFT_BACKPACK = bindCurios("ionocraft_backpack");
     public static final TagKey<Item> CURIOS_NECKLACE = bindCurios("necklace");
+
+    public static final TagKey<Item> TOTEM = bind("totem");
 
     public static final Object2ObjectMap<Color, TagKey<Item>> DYED_COLORS = initDyedTags();
 

@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.init;
 
 import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import dev.dubhe.anvilcraft.block.entity.AccelerationRingBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.ActivatorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActiveSilencerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
@@ -12,6 +13,7 @@ import dev.dubhe.anvilcraft.block.entity.CorruptedBeaconBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CrabTrapBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CreativeGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeatCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeaterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
@@ -269,6 +271,16 @@ public class ModBlockEntities {
         .blockEntity("plasma_jets", PlasmaJetsBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.PLASMA_JETS)
         .renderer(() -> PlasmaJetsRenderer::new)
+        .register();
+
+    public static final BlockEntityEntry<DetectorSlidingRailBlockEntity> DETECTOR_SLIDING_RAIL = REGISTRATE
+        .blockEntity("detector_sliding_rail", DetectorSlidingRailBlockEntity::new)
+        .validBlocks(ModBlocks.DETECTOR_SLIDING_RAIL)
+        .register();
+
+    public static final BlockEntityEntry<ActivatorSlidingRailBlockEntity> ACTIVATOR_SLIDING_RAIL = REGISTRATE
+        .blockEntity("activator_sliding_rail", ActivatorSlidingRailBlockEntity::new)
+        .validBlocks(ModBlocks.ACTIVATOR_SLIDING_RAIL)
         .register();
 
     public static void register() {

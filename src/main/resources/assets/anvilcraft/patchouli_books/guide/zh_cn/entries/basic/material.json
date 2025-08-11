@@ -1,0 +1,68 @@
+{
+  "name": "简单材料",
+  "category": "anvilcraft:basic_gameplay",
+  "icon": "anvilcraft:geode",
+  "sortnum": 1007,
+  "extra_recipe_mappings": {
+    "anvilcraft:ruby": 2,
+    "anvilcraft:sapphire": 2,
+    "anvilcraft:topaz": 2,
+    "anvilcraft:resin": 4
+  },
+  "pages": [
+    "铁砧工艺在前期添加了若干材料",
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:geode",
+      "text": "获得$(item)晶洞$()有三种方法：$(br)挖掘$(item)紫水晶母岩$()掉落。$(br)若开局开启奖励箱，可在其中获取。$(br)与$(thing)珠宝商$()村民交易"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:geode",
+      "text": "$(item)晶洞$()有三种用途：$(br)手持右键定位附近的$(thing)紫水晶洞穴$()$(br)在冲压平台上被铁砧砸碎，获得$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()三种宝石之一和大量$(item)紫水晶$()。$(br2)科技水平达到一定程度后，可以将其变为$(item)紫水晶母岩$()。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": [
+        "minecraft:emerald",
+        "anvilcraft:ruby",
+        "anvilcraft:sapphire",
+        "anvilcraft:topaz"
+      ],
+      "text": "宝石：包括$(item)绿宝石$()、$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()$(br2)$(#888888)晦涩来说，就是携带#anvilcraft:gems标签的物品$()"
+    },
+    {
+      "type": "anvilcraft:item_crush",
+      "anchor": "resin",
+      "recipe": "anvilcraft:item_crush/wood_fiber",
+      "text": "树脂可用于制作$(l:basic/more_device#resin_block)树脂块$()"
+    },
+    {
+      "type": "anvilcraft:cooking",
+      "anchor": "hardend_resin",
+      "recipe": "anvilcraft:cooking/hardend_resin",
+      "text": ""
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "circuit_board",
+      "recipe": "anvilcraft:circuit_board",
+      "text": "简单的电子原件，用于合成"
+    },
+    {
+      "type": "anvilcraft:super_heating",
+      "anchor": "lime_powder",
+      "recipe": "anvilcraft:super_heating/lime_powder_from_crab_claw",
+      "text": "除了$(item)蟹钳$()，还可以熔炼以下物品得到：$(li)失活的珊瑚扇：1$(li)滴水石锥：1$(li)鹦鹉螺壳：1$(li)失活的珊瑚块：4$(li)滴水石块：4$(li)方解石：4"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:smithing/corrupted_beacon",
+        "anvilcraft:smithing/jewelcrafting_table",
+        "anvilcraft:basic/item_processing"
+      ],
+      "text": ""
+    }
+  ]
+}

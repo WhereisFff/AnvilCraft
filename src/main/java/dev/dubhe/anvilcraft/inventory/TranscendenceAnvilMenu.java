@@ -153,11 +153,11 @@ public class TranscendenceAnvilMenu extends AnvilMenu {
                             anvilCost = Math.max(1, anvilCost / 2);
                         }
 
-                        long t = anvilCost
+                        long cost = anvilCost
                             * enchantmentsOnRightLevel
-                            * inputLeft.getCount()
-                            * (repairCost == 0 ? 1 : repairCost);
-                        totalCost += Math.clamp(t, 0, Integer.MAX_VALUE);
+                            * (repairCost == 0 ? 1 : repairCost)
+                            * inputLeft.getCount() * inputLeft.getCount();
+                        totalCost += Math.clamp(cost, 0, Integer.MAX_VALUE);
                     }
                 }
             }
