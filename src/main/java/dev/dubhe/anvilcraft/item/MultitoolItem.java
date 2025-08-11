@@ -300,8 +300,8 @@ public class MultitoolItem extends Item implements IMultipleResult {
                 level.setBlock(blockpos1, blockstate1, 11);
                 level.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
                 ItemStack itemstack = context.getItemInHand();
-                if (player instanceof ServerPlayer) {
-                    CriteriaTriggers.PLACED_BLOCK.trigger((ServerPlayer)player, blockpos1, itemstack);
+                if (player instanceof ServerPlayer serverPlayer) {
+                    CriteriaTriggers.PLACED_BLOCK.trigger(serverPlayer, blockpos1, itemstack);
                     itemstack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(context.getHand()));
                 }
 
@@ -393,7 +393,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
         DustParticlesDelta dustparticlesdelta = DustParticlesDelta.fromDirection(pos, direction);
         Vec3 vec3 = hitResult.getLocation();
         for (int k = 0; k < j; ++k) {
-            level.addParticle(blockparticleoption, vec3.x - (double)(direction == Direction.WEST ? 1.0E-6F : 0.0F), vec3.y, vec3.z - (double)(direction == Direction.NORTH ? 1.0E-6F : 0.0F), dustparticlesdelta.xd() * (double)i * (double)3.0F * level.getRandom().nextDouble(), 0.0F, dustparticlesdelta.zd() * (double)i * (double)3.0F * level.getRandom().nextDouble());
+            level.addParticle(blockparticleoption, vec3.x - (double) (direction == Direction.WEST ? 1.0E-6F : 0.0F), vec3.y, vec3.z - (double) (direction == Direction.NORTH ? 1.0E-6F : 0.0F), dustparticlesdelta.xd() * (double) i * (double) 3.0F * level.getRandom().nextDouble(), 0.0F, dustparticlesdelta.zd() * (double) i * (double) 3.0F * level.getRandom().nextDouble());
         }
     }
 
