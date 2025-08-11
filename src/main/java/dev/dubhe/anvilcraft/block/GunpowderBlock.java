@@ -2,6 +2,8 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.block.heatable.HeatableBlock;
 import dev.dubhe.anvilcraft.block.heatable.NormalBlock;
+import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.item.MultitoolItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.stats.Stats;
@@ -62,10 +64,15 @@ public class GunpowderBlock extends Block {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (stack.is(Items.FLINT_AND_STEEL) || stack.is(Items.FIRE_CHARGE)) {
+        if (stack.is(Items.FLINT_AND_STEEL)
+            || stack.is(Items.FIRE_CHARGE)
+            || (stack.is(ModItems.MULTITOOL_ITEM)
+            && MultitoolItem.getMode(stack) == MultitoolItem.FLINT_AND_STEEL_MODE)) {
             explosion(level, pos);
             Item item = stack.getItem();
-            if (stack.is(Items.FLINT_AND_STEEL)) {
+            if (stack.is(Items.FLINT_AND_STEEL)
+                || (stack.is(ModItems.MULTITOOL_ITEM)
+                && MultitoolItem.getMode(stack) == MultitoolItem.FLINT_AND_STEEL_MODE)) {
                 stack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(hand));
             } else {
                 stack.consume(1, player);

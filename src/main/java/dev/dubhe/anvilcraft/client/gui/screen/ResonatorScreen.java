@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.WheelWidget;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
@@ -39,6 +40,7 @@ public class ResonatorScreen extends Screen {
         int leftPos = (this.width - 75) / 2;
         int topPos = (this.height - 75) / 2;
         ItemStack holding = player.getItemInHand(this.hand);
+        AnvilCraft.LOGGER.debug("holding item: {}", holding.getOrDefault(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(-1)));
         WheelWidget wheel = new WheelWidget(
             leftPos, topPos, 75, 75,
             12.5f, 32.5f, 0.75f,

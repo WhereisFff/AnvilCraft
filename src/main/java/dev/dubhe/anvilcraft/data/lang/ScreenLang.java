@@ -198,5 +198,9 @@ public class ScreenLang {
 
         provider.add("screen.anvilcraft.multiphase.title", "Switch phase");
         provider.add("screen.anvilcraft.multiphase.merciless", "-Merciless");
+
+        provider.add("screen.anvilcraft.multitool.title", "Switch tool");
+        provider.add("screen.anvilcraft.multitool.off", "Off");
+        provider.add("screen.anvilcraft.multitool.all", "All");
     }
 }
