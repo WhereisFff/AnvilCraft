@@ -149,6 +149,100 @@ public class MultitoolItem extends Item implements IMultipleResult {
         };
     }
 
+    @Override
+    public InteractionResult useOn(UseOnContext context) {
+        return switch (context.getItemInHand().getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()) {
+            case SHEARS_MODE -> useOnAsShears(context);
+            case FLINT_AND_STEEL_MODE -> useOnAsFlintAndSteel(context);
+            case BRUSH_MODE -> useOnAsBrush(context);
+            case MAGNET_MODE -> useOnAsMagnet(context);
+            default -> super.useOn(context);
+        };
+    }
+
+    @Override
+    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
+        return switch (getMode(stack)) {
+            case SHEARS_MODE -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(itemAbility);
+            case FLINT_AND_STEEL_MODE -> ItemAbilities.DEFAULT_FLINT_ACTIONS.contains(itemAbility);
+            case BRUSH_MODE -> ItemAbilities.DEFAULT_BRUSH_ACTIONS.contains(itemAbility);
+            case FISHING_ROD_MODE -> ItemAbilities.DEFAULT_FISHING_ROD_ACTIONS.contains(itemAbility);
+            default -> super.canPerformAction(stack, itemAbility);
+        };
+    }
+
+    @Override
+    public UseAnim getUseAnimation(ItemStack stack) {
+        return switch (getMode(stack)) {
+            case BRUSH_MODE -> UseAnim.BRUSH;
+            case SPYGLASS_MODE -> UseAnim.SPYGLASS;
+            default -> super.getUseAnimation(stack);
+        };
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return switch (getMode(stack)) {
+            case BRUSH_MODE -> 200;
+            case SPYGLASS_MODE -> 1200;
+            default -> super.getUseDuration(stack, entity);
+        };
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
+        if (getMode(stack) == BRUSH_MODE) {
+            onUseTickAsBrush(level, livingEntity, stack, remainingUseDuration);
+        } else {
+            super.onUseTick(level, livingEntity, stack, remainingUseDuration);
+        }
+    }
+
+    @Override
+    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
+        if (getMode(stack) == SHEARS_MODE) {
+            return mineBlockAsShears(stack, level, state, miningEntity);
+        } else {
+            return super.mineBlock(stack, level, state, pos, miningEntity);
+        }
+    }
+
+    @Override
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
+        if (getMode(stack) == SHEARS_MODE) {
+            return interactLivingEntityAsShears(stack, player, interactionTarget, usedHand);
+        } else {
+            return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
+        }
+    }
+
+    @Override
+    public ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
+        if (id == 0) {
+            ItemStack defaultInstance = getDefaultInstance();
+            DataComponentType<ItemEnchantments> type = EnchantmentHelper.getComponentType(defaultInstance);
+            Map<Holder<Enchantment>, Integer> enchantments = new Object2IntArrayMap<>();
+            for (int i = 0; i < 8; i++) {
+                ItemStack inputItem = input.getInputItem(i);
+                for (var entry : inputItem.getOrDefault(type, ItemEnchantments.EMPTY).entrySet()) {
+                    enchantments.merge(entry.getKey(), entry.getIntValue(), Integer::max);
+                }
+            }
+            ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(defaultInstance.getOrDefault(type, ItemEnchantments.EMPTY));
+            for (var entry : enchantments.entrySet()) {
+                mutable.set(entry.getKey(), entry.getValue());
+            }
+            defaultInstance.set(type, mutable.toImmutable());
+            return defaultInstance;
+        }
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public int getEnchantmentValue(ItemStack stack) {
+        return 1;
+    }
+
     private InteractionResultHolder<ItemStack> useAsMagnet(Level level, Player player, InteractionHand usedHand) {
         if (player.isShiftKeyDown()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
         ItemStack item = player.getItemInHand(usedHand);
@@ -252,17 +346,6 @@ public class MultitoolItem extends Item implements IMultipleResult {
         }
     }
 
-    @Override
-    public InteractionResult useOn(UseOnContext context) {
-        return switch (context.getItemInHand().getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()) {
-            case SHEARS_MODE -> useOnAsShears(context);
-            case FLINT_AND_STEEL_MODE -> useOnAsFlintAndSteel(context);
-            case BRUSH_MODE -> useOnAsBrush(context);
-            case MAGNET_MODE -> useOnAsMagnet(context);
-            default -> super.useOn(context);
-        };
-    }
-
     public InteractionResult useOnAsShears(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos blockpos = context.getClickedPos();
@@ -350,35 +433,6 @@ public class MultitoolItem extends Item implements IMultipleResult {
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
-    @Override
-    public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
-        return switch (getMode(stack)) {
-            case SHEARS_MODE -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(itemAbility);
-            case FLINT_AND_STEEL_MODE -> ItemAbilities.DEFAULT_FLINT_ACTIONS.contains(itemAbility);
-            case BRUSH_MODE -> ItemAbilities.DEFAULT_BRUSH_ACTIONS.contains(itemAbility);
-            case FISHING_ROD_MODE -> ItemAbilities.DEFAULT_FISHING_ROD_ACTIONS.contains(itemAbility);
-            default -> super.canPerformAction(stack, itemAbility);
-        };
-    }
-
-    @Override
-    public UseAnim getUseAnimation(ItemStack stack) {
-        return switch (getMode(stack)) {
-            case BRUSH_MODE -> UseAnim.BRUSH;
-            case SPYGLASS_MODE -> UseAnim.SPYGLASS;
-            default -> super.getUseAnimation(stack);
-        };
-    }
-
-    @Override
-    public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        return switch (getMode(stack)) {
-            case BRUSH_MODE -> 200;
-            case SPYGLASS_MODE -> 1200;
-            default -> super.getUseDuration(stack, entity);
-        };
-    }
-
     private HitResult calculateHitResult(Player player) {
         return ProjectileUtil.getHitResultOnViewVector(player,
             (entity) -> !entity.isSpectator() && player.isPickable(),
@@ -442,24 +496,6 @@ public class MultitoolItem extends Item implements IMultipleResult {
         }
     }
 
-    @Override
-    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        if (getMode(stack) == BRUSH_MODE) {
-            onUseTickAsBrush(level, livingEntity, stack, remainingUseDuration);
-        } else {
-            super.onUseTick(level, livingEntity, stack, remainingUseDuration);
-        }
-    }
-
-    @Override
-    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
-        if (getMode(stack) == SHEARS_MODE) {
-            return mineBlockAsShears(stack, level, state, miningEntity);
-        } else {
-            return super.mineBlock(stack, level, state, pos, miningEntity);
-        }
-    }
-
     private boolean mineBlockAsShears(ItemStack stack, Level level, BlockState state, LivingEntity miningEntity) {
         if (!level.isClientSide && !state.is(BlockTags.FIRE)) {
             stack.hurtAndBreak(1, miningEntity, EquipmentSlot.MAINHAND);
@@ -473,15 +509,6 @@ public class MultitoolItem extends Item implements IMultipleResult {
             || state.is(Blocks.VINE)
             || state.is(Blocks.TRIPWIRE)
             || state.is(BlockTags.WOOL);
-    }
-
-    @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        if (getMode(stack) == SHEARS_MODE) {
-            return interactLivingEntityAsShears(stack, player, interactionTarget, usedHand);
-        } else {
-            return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
-        }
     }
 
     private InteractionResult interactLivingEntityAsShears(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
@@ -506,33 +533,6 @@ public class MultitoolItem extends Item implements IMultipleResult {
         }
 
         return InteractionResult.PASS;
-    }
-
-    @Override
-    public ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
-        if (id == 0) {
-            ItemStack defaultInstance = getDefaultInstance();
-            DataComponentType<ItemEnchantments> type = EnchantmentHelper.getComponentType(defaultInstance);
-            Map<Holder<Enchantment>, Integer> enchantments = new Object2IntArrayMap<>();
-            for (int i = 0; i < 8; i++) {
-                ItemStack inputItem = input.getInputItem(i);
-                for (var entry : inputItem.getOrDefault(type, ItemEnchantments.EMPTY).entrySet()) {
-                    enchantments.merge(entry.getKey(), entry.getIntValue(), Integer::max);
-                }
-            }
-            ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(defaultInstance.getOrDefault(type, ItemEnchantments.EMPTY));
-            for (var entry : enchantments.entrySet()) {
-                mutable.set(entry.getKey(), entry.getValue());
-            }
-            defaultInstance.set(type, mutable.toImmutable());
-            return defaultInstance;
-        }
-        return ItemStack.EMPTY;
-    }
-
-    @Override
-    public int getEnchantmentValue(ItemStack stack) {
-        return 1;
     }
 
     public static int getMode(ItemStack item) {
