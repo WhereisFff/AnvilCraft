@@ -202,7 +202,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
                 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
             );
             if (level instanceof ServerLevel serverlevel) {
-                int j = (int)(EnchantmentHelper.getFishingTimeReduction(serverlevel, itemstack, player) * 20.0F);
+                int j = (int) (EnchantmentHelper.getFishingTimeReduction(serverlevel, itemstack, player) * 20.0F);
                 int k = EnchantmentHelper.getFishingLuckBonus(serverlevel, itemstack, player);
                 level.addFreshEntity(new FishingHook(player, level, k, j));
             }
@@ -271,8 +271,8 @@ public class MultitoolItem extends Item implements IMultipleResult {
         if (blockstate1 != null) {
             Player player = context.getPlayer();
             ItemStack itemstack = context.getItemInHand();
-            if (player instanceof ServerPlayer) {
-                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger((ServerPlayer)player, blockpos, itemstack);
+            if (player instanceof ServerPlayer serverPlayer) {
+                CriteriaTriggers.ITEM_USED_ON_BLOCK.trigger(serverPlayer, blockpos, itemstack);
             }
             level.setBlockAndUpdate(blockpos, blockstate1);
             level.gameEvent(GameEvent.BLOCK_CHANGE, blockpos, GameEvent.Context.of(context.getPlayer(), blockstate1));
@@ -392,7 +392,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
         Direction direction = hitResult.getDirection();
         DustParticlesDelta dustparticlesdelta = DustParticlesDelta.fromDirection(pos, direction);
         Vec3 vec3 = hitResult.getLocation();
-        for(int k = 0; k < j; ++k) {
+        for (int k = 0; k < j; ++k) {
             level.addParticle(blockparticleoption, vec3.x - (double)(direction == Direction.WEST ? 1.0E-6F : 0.0F), vec3.y, vec3.z - (double)(direction == Direction.NORTH ? 1.0E-6F : 0.0F), dustparticlesdelta.xd() * (double)i * (double)3.0F * level.getRandom().nextDouble(), 0.0F, dustparticlesdelta.zd() * (double)i * (double)3.0F * level.getRandom().nextDouble());
         }
     }
@@ -491,7 +491,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
             if (target.isShearable(player, stack, interactionTarget.level(), pos)) {
                 List<ItemStack> drops = target.onSheared(player, stack, interactionTarget.level(), pos);
                 if (!isClient) {
-                    for(ItemStack drop : drops) {
+                    for (ItemStack drop : drops) {
                         target.spawnShearedDrop(interactionTarget.level(), pos, drop);
                     }
                 }
