@@ -45,7 +45,7 @@
       "anchor": "laser",
       "title": "Laser",
       "item": "anvilcraft:ruby_laser,anvilcraft:ruby_prism",
-      "text": "When $(l:power/advanced_laser_system)Laser$() irradiates to heatable blocks can heat it.方块被激光照射时，根据激光等级决定加热能力：$(li)1到3级：Heated Tier $(li)4到15级：Redhot Tier $(li)16到63级：Glowing Tier $(li)64级及以上：Incandescent Tier $(br2)At any level, increase its duration by 0.1 seconds per second."
+      "text": "When $(l:power/laser_system)Laser$() irradiates to heatable blocks can heat it.方块被激光照射时，根据激光等级决定加热能力：$(li)1到3级：Heated Tier $(li)4到15级：Redhot Tier $(li)16到63级：Glowing Tier $(li)64级及以上：Incandescent Tier $(br2)At any level, increase its duration by 0.1 seconds per second."
     },
     {
       "type": "patchouli:text",

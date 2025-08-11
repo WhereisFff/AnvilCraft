@@ -1,5 +1,5 @@
 {
-  "name": "Space Overcompressor",
+  "name": "空间超压器",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:space_overcompressor",
   "sortnum": 3007,
@@ -19,7 +19,18 @@
     {
       "type": "anvilcraft:block_compress",
       "recipe": "anvilcraft:block_compress/space_overcompressor",
-      "text": "最后将$(item)虚空物质块$()压入$(item)超临界嵌套潜影盒$()以获得$(item)空间超压器$()"
+      "text": "最后将虚空物质块压入超临界嵌套潜影盒以获得$(item)空间超压器$()"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:neutronium_ingot",
+      "title": "制作中子锭",
+      "text": "将任意$(thing)金属$()块/锭/粒置于超压器之上，用铁砧砸入。当超压器的积攒了足够的质量值后，会在下方输出一个$(item)中子锭$()。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "小贴士",
+      "text": "四种方块继承了潜影盒的性质，会被活塞破坏。 $(br2)右键3种嵌套潜影盒，其分别会发出1,2,3次开启和关闭的声音，每次发声都会被$(item)侦测器$()识别。"
     }
   ]
 }

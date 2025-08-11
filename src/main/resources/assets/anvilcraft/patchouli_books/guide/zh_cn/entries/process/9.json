@@ -14,7 +14,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:ruby_laser,anvilcraft:ruby_prism",
-      "text": "如果你拥有足够的$(thing)电力$()和$(item)红宝石$()，你可以搭建$(l:power/advanced_laser_system)激光系统$().它可以自动提取$(thing)矿石$()，且保留$(item)深板岩$()。"
+      "text": "如果你拥有足够的$(thing)电力$()和$(item)红宝石$()，你可以搭建$(l:power/laser_system)激光系统$().它可以自动提取$(thing)矿石$()，且保留$(item)深板岩$()。"
     },
     {
       "type": "patchouli:multiblock",
@@ -50,7 +50,7 @@
         "anvilcraft:struct/mineral_fountain",
         "anvilcraft:basic/more_device",
         "anvilcraft:basic/block_processing",
-        "anvilcraft:power/advanced_laser_system"
+        "anvilcraft:power/laser_system"
       ],
       "text": ""
     }
