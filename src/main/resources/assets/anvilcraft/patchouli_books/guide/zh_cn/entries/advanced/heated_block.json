@@ -45,7 +45,7 @@
       "anchor": "laser",
       "title": "激光",
       "item": "anvilcraft:ruby_laser,anvilcraft:ruby_prism",
-      "text": "$(l:power/advanced_laser_system)激光$()照射至可加热方块时可加热它。方块被激光照射时，根据激光等级决定加热能力：$(li)1到3级：高温 $(li)4到15级：红热 $(li)16到63级：炽热 $(li)64级及以上：白炽 $(br2)任何等级下，每秒增加0.1秒持续时间。"
+      "text": "$(l:power/laser_system)激光$()照射至可加热方块时可加热它。方块被激光照射时，根据激光等级决定加热能力：$(li)1到3级：高温 $(li)4到15级：红热 $(li)16到63级：炽热 $(li)64级及以上：白炽 $(br2)任何等级下，每秒增加0.1秒持续时间。"
     },
     {
       "type": "patchouli:text",

@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -12,8 +13,10 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -74,13 +77,17 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
         super.neighborChanged(state, level, pos, neighborBlock, fromPos, isMoving);
         if (level.isEmptyBlock(pos.above())) return;
         BlockState topBlock = level.getBlockState(pos.above());
+        if (topBlock.getPistonPushReaction() == PushReaction.BLOCK
+            || topBlock.getPistonPushReaction() == PushReaction.IGNORE
+            || (topBlock.getBlock() instanceof EntityBlock entityBlock && !(entityBlock instanceof IMoveableEntityBlock))
+        ) return;
         BlockPos moveToPos = null;
         for (Direction side : Direction.values()) {
             if (side.getAxis() == Direction.Axis.Y) continue;
             BlockPos railPos = pos.relative(side);
             BlockState railState = level.getBlockState(railPos);
             boolean canMove = Util.castSafely(railState.getBlock(), ISlidingRail.class)
-                .map(rail -> rail.canMoveBlockToTop(level, railPos, railState, topBlock))
+                .map(rail -> rail.canMoveBlockToTop(level, railPos, railState, topBlock, side.getOpposite()))
                 .orElse(false);
             if (!canMove) continue;
             moveToPos = railPos.above();
@@ -88,6 +95,6 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
         }
         if (moveToPos == null) return;
         level.removeBlock(pos.above(), true);
-        level.setBlockAndUpdate(moveToPos, topBlock);
+        level.setBlock(moveToPos, topBlock, 0b1000011);
     }
 }

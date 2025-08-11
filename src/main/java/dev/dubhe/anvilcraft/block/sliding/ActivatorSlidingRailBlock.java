@@ -16,6 +16,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -148,6 +149,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
                 if (pos1.equals(fromPos)) continue;
                 BlockState state1 = level.getBlockState(pos1);
                 if (!(state1.getBlock() instanceof ActivatorSlidingRailBlock other)) continue;
+                if (state1.getOptionalValue(FACING).map(Direction::getAxis).filter(axis::equals).isEmpty()) continue;
                 level.neighborChanged(pos1, other, pos);
             }
         }
@@ -156,6 +158,19 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         this.updatePower(level, pos, state, fromPos);
+        Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
+        if (fromPos.equals(pos.above())
+            && state.getValue(POWERED)
+            && !beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)
+            && !level.getBlockTicks().hasScheduledTick(pos, this)
+            && !MOVING_PISTON_MAP.containsKey(fromPos)
+            && block.equals(Blocks.MOVING_PISTON)
+        ) {
+            beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
+            level.scheduleTick(pos, this, 3);
+            this.updateAbove(level, pos);
+            return;
+        }
         super.neighborChanged(state, level, pos, block, fromPos, isMoving);
     }
 

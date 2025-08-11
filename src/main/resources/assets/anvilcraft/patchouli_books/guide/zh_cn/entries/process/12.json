@@ -9,8 +9,8 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:power/advanced_heat_collection",
-        "anvilcraft:power/advanced_void_energy_collection",
+        "anvilcraft:power/heat_collection",
+        "anvilcraft:power/void_energy_collection",
         "anvilcraft:machine/electricity_generation"
       ],
       "text": ""
