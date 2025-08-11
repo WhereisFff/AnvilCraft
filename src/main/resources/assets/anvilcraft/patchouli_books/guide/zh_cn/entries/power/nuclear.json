@@ -27,7 +27,7 @@
     {
       "type": "patchouli:text",
       "title": "被动发热",
-      "text": "铀块和钚块可以为集热器提供热能用以发热，$(l:power/heat_collection#unchanged_block)点我$()查看详情"
+      "text": "铀块和钚块可以为$(l:power/heat_collection)集热器$()提供热能用以发电: $(li)$(item)铀块$():2kW $(li)$(item)钚块$():8kW"
     },
     {
       "type": "anvilcraft:time_warp",
