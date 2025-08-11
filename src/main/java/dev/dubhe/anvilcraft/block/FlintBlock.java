@@ -19,15 +19,23 @@ public class FlintBlock extends Block {
         super(properties);
     }
 
-    public static void ignite(LevelAccessor level, BlockPos pos) {
-        boolean relativeIsIronBlock = false;
+    public static void ignite(LevelAccessor level, BlockPos pos, boolean isFlint) {
+        boolean flag = false;
         for (Direction direction : Direction.values()) {
-            if (level.getBlockState(pos.relative(direction)).is(Blocks.IRON_BLOCK)) {
-                relativeIsIronBlock = true;
-                break;
+            BlockState blockState = level.getBlockState(pos.relative(direction));
+            if (isFlint) {
+                if (blockState.is(Blocks.IRON_BLOCK) || blockState.is(ModBlocks.HEAVY_IRON_BLOCK)) {
+                    flag = true;
+                    break;
+                }
+            } else {
+                if (blockState.is(ModBlocks.FLINT_BLOCK)) {
+                    flag = true;
+                    break;
+                }
             }
         }
-        if (relativeIsIronBlock) {
+        if (flag) {
             List<BlockPos> blocks = new ArrayList<>();
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
@@ -64,7 +72,7 @@ public class FlintBlock extends Block {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         if (movedByPiston) {
-            ignite(level, pos);
+            ignite(level, pos, true);
         }
     }
 
@@ -72,7 +80,7 @@ public class FlintBlock extends Block {
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         super.onRemove(state, level, pos, newState, movedByPiston);
         if (movedByPiston) {
-            ignite(level, pos);
+            ignite(level, pos, true);
         }
     }
 }
