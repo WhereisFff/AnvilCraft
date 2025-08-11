@@ -174,7 +174,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
                 int i = player.fishing.retrieve(itemstack);
                 ItemStack original = itemstack.copy();
                 itemstack.hurtAndBreak(i, player, LivingEntity.getSlotForHand(usedHand));
-                if(itemstack.isEmpty()) {
+                if (itemstack.isEmpty()) {
                     net.neoforged.neoforge.event.EventHooks.onPlayerDestroyItem(player, original, usedHand);
                 }
             }

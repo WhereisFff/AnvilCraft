@@ -98,7 +98,9 @@ public class MultitoolScreen extends Screen {
     @Override
     public void removed() {
         super.removed();
-        PacketDistributor.sendToServer(new SwitchMultitoolModePacket(this.hand, this.wheel.getCurrentSectionIndex()));
+        PacketDistributor.sendToServer(
+            new SwitchMultitoolModePacket(this.hand,
+                this.wheel.getCurrentSectionIndex()));
     }
 
     @Override
