@@ -4,6 +4,7 @@ package dev.dubhe.anvilcraft.event;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.FallingBlockCollisionEvent;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
@@ -47,9 +48,11 @@ public class FallingBlockCollisionEventListener {
         BlockPos pos = event.getPos();
         if (AnvilCraft.config.anvilCollisionCraftSpeed > event.getSpeed()) return;
         //if (level.isClientSide()) return;
+        BlockState blockState = level.getBlockState(pos);
+        if (blockState.is(ModBlockTags.ANVILON_IMMUNE)) return;
         for (RecipeHolder<AnvilCollisionCraftRecipe> recipe : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
             if (!recipe.value().anvil().is(event.getFallingBlockEntity().blockState)) continue;
-            if (!recipe.value().hitBlock().is(level.getBlockState(pos))) continue;
+            if (!recipe.value().hitBlock().is(blockState)) continue;
             removeBlock(level, pos);
             if (recipe.value().consume())
                 event.getFallingBlockEntity().kill();
