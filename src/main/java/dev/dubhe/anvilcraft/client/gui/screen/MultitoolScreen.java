@@ -102,16 +102,16 @@ public class MultitoolScreen extends Screen {
         }
     }
 
-    @Override
-    public boolean isPauseScreen() {
-        return false;
-    }
-
     private static Consumer4<GuiGraphics, PoseStack, Integer, Integer> render(ItemStack itemStack, int mode) {
         return (graphics, pose, width, height) -> {
             ItemStack item = itemStack.copy();
             item.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(mode));
             graphics.renderItem(item, 2, 2, 9910597);
         };
+    }
+
+    @Override
+    public boolean isPauseScreen() {
+        return false;
     }
 }
