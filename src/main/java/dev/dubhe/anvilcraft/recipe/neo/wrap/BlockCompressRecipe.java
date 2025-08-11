@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -71,9 +72,12 @@ public class BlockCompressRecipe extends InWorldRecipe {
                 .forGetter(BlockCompressRecipe::getResults)
         ).apply(instance, BlockCompressRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, BlockCompressRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        private static final StreamCodec<RegistryFriendlyByteBuf, BlockCompressRecipe> STREAM_CODEC = StreamCodec.composite(
+            BlockStatePredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            BlockCompressRecipe::getInputs,
+            ChanceBlockState.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            BlockCompressRecipe::getResults,
+            BlockCompressRecipe::new
         );
 
         @Override
@@ -84,20 +88,6 @@ public class BlockCompressRecipe extends InWorldRecipe {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockCompressRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        private static void encode(
-            @NotNull RegistryFriendlyByteBuf buf,
-            @NotNull BlockCompressRecipe recipe
-        ) {
-            buf.writeCollection(recipe.inputs, (buf1, input) -> BlockStatePredicate.STREAM_CODEC.encode(buf, input));
-            buf.writeCollection(recipe.results, (buf1, results) -> ChanceBlockState.STREAM_CODEC.encode(buf, results));
-        }
-
-        private static @NotNull BlockCompressRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<BlockStatePredicate> inputs = buf.readCollection(ArrayList::new, buf1 -> BlockStatePredicate.STREAM_CODEC.decode(buf));
-            List<ChanceBlockState> results = buf.readCollection(ArrayList::new, buf1 -> ChanceBlockState.STREAM_CODEC.decode(buf));
-            return new BlockCompressRecipe(inputs, results);
         }
     }
 

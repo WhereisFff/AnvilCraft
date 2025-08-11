@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.recipe.neo.outcome;
 
-import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.injection.block.state.IBlockStateExtension;
@@ -12,13 +11,8 @@ import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -26,8 +20,6 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.stream.Stream;
 
 @Getter
 public class SetBlock implements IRecipeOutcome<SetBlock> {
@@ -70,7 +62,15 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
                     .forGetter(SetBlock::getChance)
             ).apply(instance, SetBlock::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, SetBlock> STREAM_CODEC = StreamCodec.of(Type::encode, Type::decode);
+        private static final StreamCodec<RegistryFriendlyByteBuf, SetBlock> STREAM_CODEC = StreamCodec.composite(
+            BlockState.STREAM_CODEC,
+            SetBlock::getState,
+            RecipeUtil.VEC3_STREAM_CODEC,
+            SetBlock::getOffset,
+            RecipeUtil.NUMBER_PROVIDER_STREAM_CODEC,
+            SetBlock::getChance,
+            SetBlock::new
+        );
 
         @Override
         public @NotNull MapCodec<SetBlock> codec() {
@@ -80,25 +80,6 @@ public class SetBlock implements IRecipeOutcome<SetBlock> {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, SetBlock> streamCodec() {
             return Type.STREAM_CODEC;
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SetBlock setBlock) {
-            RegistryOps<Tag> ops = HolderLookup.Provider
-                .create(Stream.of(BuiltInRegistries.BLOCK.asLookup()))
-                .createSerializationContext(NbtOps.INSTANCE);
-            DataResult<Tag> encode = BlockState.CODEC.encode(setBlock.state, NbtOps.INSTANCE, ops.empty());
-            Tag tag = encode.getOrThrow();
-            buf.writeNbt(tag);
-            buf.writeVec3(setBlock.offset);
-            RecipeUtil.toNetwork(buf, setBlock.chance);
-        }
-
-        public static @NotNull SetBlock decode(@NotNull RegistryFriendlyByteBuf buf) {
-            RegistryOps<Tag> ops = HolderLookup.Provider.create(Stream.of(BuiltInRegistries.BLOCK.asLookup())).createSerializationContext(NbtOps.INSTANCE);
-            BlockState blockState = BlockState.CODEC.decode(ops, buf.readNbt()).getOrThrow().getFirst();
-            Vec3 vec3 = buf.readVec3();
-            NumberProvider chance = RecipeUtil.fromNetwork(buf);
-            return new SetBlock(blockState, vec3, chance);
         }
     }
 

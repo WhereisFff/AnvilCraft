@@ -12,6 +12,7 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -73,9 +74,14 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
                 .forGetter(SuperHeatingRecipe::getHasCauldron)
         ).apply(instance, SuperHeatingRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, SuperHeatingRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        private static final StreamCodec<RegistryFriendlyByteBuf, SuperHeatingRecipe> STREAM_CODEC = StreamCodec.composite(
+            ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            SuperHeatingRecipe::getItemIngredients,
+            ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            SuperHeatingRecipe::getResults,
+            HasCauldronSimple.STREAM_CODEC,
+            SuperHeatingRecipe::getHasCauldron,
+            SuperHeatingRecipe::new
         );
 
         @Override
@@ -86,18 +92,6 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, SuperHeatingRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SuperHeatingRecipe recipe) {
-            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
-            WrapUtils.encodeResults(buf, recipe.getResults());
-            HasCauldronSimple.STREAM_CODEC.encode(buf, recipe.getHasCauldron());
-        }
-
-        public static @NotNull SuperHeatingRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<ItemIngredientPredicate> ingredients = WrapUtils.decodeIngredients(buf);
-            List<ChanceItemStack> results = WrapUtils.decodeResults(buf);
-            return new SuperHeatingRecipe(ingredients, results, HasCauldronSimple.STREAM_CODEC.decode(buf));
         }
     }
 

@@ -15,6 +15,7 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -85,9 +86,14 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
                 .forGetter(TimeWarpRecipe::getHasCauldron)
         ).apply(instance, TimeWarpRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, TimeWarpRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        private static final StreamCodec<RegistryFriendlyByteBuf, TimeWarpRecipe> STREAM_CODEC = StreamCodec.composite(
+            ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            TimeWarpRecipe::getItemIngredients,
+            ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            TimeWarpRecipe::getResults,
+            HasCauldronSimple.STREAM_CODEC,
+            TimeWarpRecipe::getHasCauldron,
+            TimeWarpRecipe::new
         );
 
         @Override
@@ -98,18 +104,6 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, TimeWarpRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull TimeWarpRecipe recipe) {
-            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
-            WrapUtils.encodeResults(buf, recipe.getResults());
-            HasCauldronSimple.STREAM_CODEC.encode(buf, recipe.getHasCauldron());
-        }
-
-        public static @NotNull TimeWarpRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<ItemIngredientPredicate> ingredients = WrapUtils.decodeIngredients(buf);
-            List<ChanceItemStack> results = WrapUtils.decodeResults(buf);
-            return new TimeWarpRecipe(ingredients, results, HasCauldronSimple.STREAM_CODEC.decode(buf));
         }
     }
 

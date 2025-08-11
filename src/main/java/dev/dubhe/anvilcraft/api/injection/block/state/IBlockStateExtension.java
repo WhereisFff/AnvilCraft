@@ -2,11 +2,18 @@ package dev.dubhe.anvilcraft.api.injection.block.state;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.Decoder;
 import com.mojang.serialization.Encoder;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
@@ -14,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
 
 public interface IBlockStateExtension {
     private BlockState self() {
@@ -40,6 +48,23 @@ public interface IBlockStateExtension {
             return state.propertiesCodec()
                 .codec()
                 .lenientOptionalFieldOf("state", state);
+        }
+    );
+
+    StreamCodec<RegistryFriendlyByteBuf, BlockState> STREAM_CODEC = StreamCodec.of(
+        (buffer, value) -> {
+            RegistryOps<Tag> ops = HolderLookup.Provider
+                .create(Stream.of(BuiltInRegistries.BLOCK.asLookup()))
+                .createSerializationContext(NbtOps.INSTANCE);
+            DataResult<Tag> encode = BlockState.CODEC.encode(value, NbtOps.INSTANCE, ops.empty());
+            Tag tag = encode.getOrThrow();
+            buffer.writeNbt(tag);
+        },
+        buffer -> {
+            RegistryOps<Tag> ops = HolderLookup.Provider
+                .create(Stream.of(BuiltInRegistries.BLOCK.asLookup()))
+                .createSerializationContext(NbtOps.INSTANCE);
+            return BlockState.CODEC.decode(ops, buffer.readNbt()).getOrThrow().getFirst();
         }
     );
 

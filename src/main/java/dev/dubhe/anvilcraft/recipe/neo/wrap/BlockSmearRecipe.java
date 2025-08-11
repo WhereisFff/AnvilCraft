@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -70,9 +71,12 @@ public class BlockSmearRecipe extends InWorldRecipe {
                 .forGetter(BlockSmearRecipe::getResult)
         ).apply(instance, BlockSmearRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, BlockSmearRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        private static final StreamCodec<RegistryFriendlyByteBuf, BlockSmearRecipe> STREAM_CODEC = StreamCodec.composite(
+            BlockStatePredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            BlockSmearRecipe::getInputs,
+            ChanceBlockState.STREAM_CODEC,
+            BlockSmearRecipe::getResult,
+            BlockSmearRecipe::new
         );
 
         @Override
@@ -83,20 +87,6 @@ public class BlockSmearRecipe extends InWorldRecipe {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockSmearRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        private static void encode(
-            @NotNull RegistryFriendlyByteBuf buf,
-            @NotNull BlockSmearRecipe recipe
-        ) {
-            buf.writeCollection(recipe.inputs, (buf1, input) -> BlockStatePredicate.STREAM_CODEC.encode(buf, input));
-            ChanceBlockState.STREAM_CODEC.encode(buf, recipe.result);
-        }
-
-        private static @NotNull BlockSmearRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<BlockStatePredicate> inputs = buf.readCollection(ArrayList::new, buf1 -> BlockStatePredicate.STREAM_CODEC.decode(buf));
-            ChanceBlockState result = ChanceBlockState.STREAM_CODEC.decode(buf);
-            return new BlockSmearRecipe(inputs, result);
         }
     }
 

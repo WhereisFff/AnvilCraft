@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -80,9 +81,16 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
                 .forGetter(ItemInjectRecipe::getBlockResult)
         ).apply(instance, ItemInjectRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, ItemInjectRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        private static final StreamCodec<RegistryFriendlyByteBuf, ItemInjectRecipe> STREAM_CODEC = StreamCodec.composite(
+            ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ItemInjectRecipe::getItemIngredients,
+            ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ItemInjectRecipe::getResults,
+            BlockStatePredicate.STREAM_CODEC,
+            ItemInjectRecipe::getBlockIngredient,
+            ChanceBlockState.STREAM_CODEC,
+            ItemInjectRecipe::getBlockResult,
+            ItemInjectRecipe::new
         );
 
         @Override
@@ -93,22 +101,6 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, ItemInjectRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull ItemInjectRecipe recipe) {
-            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
-            WrapUtils.encodeResults(buf, recipe.getResults());
-            BlockStatePredicate.STREAM_CODEC.encode(buf, recipe.getBlockIngredient());
-            ChanceBlockState.encode(buf, recipe.getBlockResult());
-        }
-
-        public static @NotNull ItemInjectRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            return new ItemInjectRecipe(
-                WrapUtils.decodeIngredients(buf),
-                WrapUtils.decodeResults(buf),
-                BlockStatePredicate.STREAM_CODEC.decode(buf),
-                ChanceBlockState.decode(buf)
-            );
         }
     }
 

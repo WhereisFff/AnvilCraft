@@ -13,12 +13,12 @@ import dev.dubhe.anvilcraft.recipe.neo.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.neo.util.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.neo.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -181,7 +181,13 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
                 .forGetter(T::getResults)
         ).apply(instance, this::of));
 
-        protected final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.of(this::encode, this::decode);
+        protected final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.composite(
+            ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            T::getItemIngredients,
+            ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            T::getResults,
+            this::of
+        );
 
         protected abstract T of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results);
 
@@ -193,17 +199,6 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
             return this.streamCodec;
-        }
-
-        public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull T recipe) {
-            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
-            WrapUtils.encodeResults(buf, recipe.getResults());
-        }
-
-        public @NotNull T decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<ItemIngredientPredicate> ingredients = WrapUtils.decodeIngredients(buf);
-            List<ChanceItemStack> results = WrapUtils.decodeResults(buf);
-            return this.of(ingredients, results);
         }
     }
 

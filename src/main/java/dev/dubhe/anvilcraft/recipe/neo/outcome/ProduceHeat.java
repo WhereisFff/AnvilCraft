@@ -94,32 +94,22 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
             Distance.CODEC.fieldOf("distance").forGetter(ProduceHeat::getDistance)
         ).apply(ins, ProduceHeat::new));
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, ProduceHeat> STREAM_CODEC = StreamCodec.composite(
+            HeatData.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            ProduceHeat::getHeatData,
+            Distance.STREAM_CODEC,
+            ProduceHeat::getDistance,
+            ProduceHeat::new
+        );
+
         @Override
         public @NotNull MapCodec<ProduceHeat> codec() {
-            return MAP_CODEC;
+            return Type.MAP_CODEC;
         }
 
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, ProduceHeat> streamCodec() {
-            return StreamCodec.of(Type::encode, Type::decode);
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull ProduceHeat produceHeat) {
-            var heatData = produceHeat.heatData;
-            buf.writeVarInt(heatData.size());
-            for (var data : heatData) {
-                HeatData.STREAM_CODEC.encode(buf, data);
-            }
-            Distance.STREAM_CODEC.encode(buf, produceHeat.distance);
-        }
-
-        public static @NotNull ProduceHeat decode(@NotNull RegistryFriendlyByteBuf buf) {
-            int i = buf.readVarInt();
-            List<HeatData> heatData = new ArrayList<>();
-            for (; i > 0; i--) {
-                heatData.add(new HeatData(HeatTier.STREAM_CODEC.decode(buf), buf.readVarInt()));
-            }
-            return new ProduceHeat(List.copyOf(heatData), Distance.STREAM_CODEC.decode(buf));
+            return Type.STREAM_CODEC;
         }
     }
 

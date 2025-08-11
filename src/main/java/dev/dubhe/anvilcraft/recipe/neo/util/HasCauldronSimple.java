@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.block.HasCauldron;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.phys.Vec3;
@@ -41,20 +42,15 @@ public class HasCauldronSimple {
         return new HasCauldron(offset, fluid, consume, transform);
     }
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, HasCauldronSimple> STREAM_CODEC = StreamCodec.of(
-        HasCauldronSimple::encode,
-        HasCauldronSimple::decode
+    public static final StreamCodec<RegistryFriendlyByteBuf, HasCauldronSimple> STREAM_CODEC = StreamCodec.composite(
+        ResourceLocation.STREAM_CODEC,
+        HasCauldronSimple::getFluid,
+        ByteBufCodecs.INT,
+        HasCauldronSimple::getConsume,
+        ResourceLocation.STREAM_CODEC,
+        HasCauldronSimple::getTransform,
+        HasCauldronSimple::new
     );
-
-    public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull HasCauldronSimple hasCauldronSimple) {
-        buf.writeResourceLocation(hasCauldronSimple.getFluid());
-        buf.writeInt(hasCauldronSimple.getConsume());
-        buf.writeResourceLocation(hasCauldronSimple.getTransform());
-    }
-
-    public static @NotNull HasCauldronSimple decode(@NotNull RegistryFriendlyByteBuf buf) {
-        return new HasCauldronSimple(buf.readResourceLocation(), buf.readInt(), buf.readResourceLocation());
-    }
 
     public static @NotNull Builder empty() {
         return Builder.empty();

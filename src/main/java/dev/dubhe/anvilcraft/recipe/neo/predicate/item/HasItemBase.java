@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeData;
 import dev.dubhe.anvilcraft.recipe.neo.util.IItemStackPredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.ItemCache;
+import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -52,7 +53,16 @@ public abstract class HasItemBase<T extends HasItemBase<T, P>, P extends IItemSt
                 this.itemCodec()
             ).apply(instance, this::create)
         );
-        private final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.of(this::encode, this::decode);
+
+        private final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.composite(
+            RecipeUtil.VEC3_STREAM_CODEC,
+            T::getOffset,
+            RecipeUtil.VEC3_STREAM_CODEC,
+            T::getRange,
+            StreamCodec.of(this::encodeItem, this::decodeItem),
+            T::getItem,
+            this::create
+        );
 
         protected abstract T create(Vec3 offset, Vec3 range, P item);
 
@@ -70,19 +80,6 @@ public abstract class HasItemBase<T extends HasItemBase<T, P>, P extends IItemSt
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
             return this.streamCodec;
-        }
-
-        public void encode(@NotNull FriendlyByteBuf buf, @NotNull T hasItem) {
-            buf.writeVec3(hasItem.getOffset());
-            buf.writeVec3(hasItem.getRange());
-            this.encodeItem(buf, hasItem.item);
-        }
-
-        public @NotNull T decode(@NotNull FriendlyByteBuf buf) {
-            Vec3 offset = buf.readVec3();
-            Vec3 range = buf.readVec3();
-            P item = this.decodeItem(buf);
-            return this.create(offset, range, item);
         }
     }
 }

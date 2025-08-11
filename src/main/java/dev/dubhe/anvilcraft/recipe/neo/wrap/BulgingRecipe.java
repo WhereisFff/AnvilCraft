@@ -12,6 +12,7 @@ import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -93,9 +94,14 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
                 .forGetter(BulgingRecipe::getHasCauldron)
         ).apply(instance, BulgingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        public static final StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> STREAM_CODEC = StreamCodec.composite(
+            ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            BulgingRecipe::getItemIngredients,
+            ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            BulgingRecipe::getResults,
+            HasCauldronSimple.STREAM_CODEC,
+            BulgingRecipe::getHasCauldron,
+            BulgingRecipe::new
         );
 
         @Override
@@ -106,19 +112,6 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull BulgingRecipe recipe) {
-            WrapUtils.encodeIngredients(buf, recipe.getItemIngredients());
-            WrapUtils.encodeResults(buf, recipe.getResults());
-            HasCauldronSimple.STREAM_CODEC.encode(buf, recipe.getHasCauldron());
-        }
-
-        public static @NotNull BulgingRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<ItemIngredientPredicate> ingredients = WrapUtils.decodeIngredients(buf);
-            List<ChanceItemStack> results = WrapUtils.decodeResults(buf);
-            HasCauldronSimple hasCauldron = HasCauldronSimple.STREAM_CODEC.decode(buf);
-            return new BulgingRecipe(ingredients, results, hasCauldron);
         }
     }
 

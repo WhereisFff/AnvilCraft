@@ -68,9 +68,12 @@ public class BlockCrushRecipe extends InWorldRecipe {
                 .forGetter(BlockCrushRecipe::getResult)
         ).apply(instance, BlockCrushRecipe::new));
 
-        private static final StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        private static final StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> STREAM_CODEC = StreamCodec.composite(
+            BlockStatePredicate.STREAM_CODEC,
+            BlockCrushRecipe::getInput,
+            ChanceBlockState.STREAM_CODEC,
+            BlockCrushRecipe::getResult,
+            BlockCrushRecipe::new
         );
 
         @Override
@@ -81,20 +84,6 @@ public class BlockCrushRecipe extends InWorldRecipe {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        private static void encode(
-            @NotNull RegistryFriendlyByteBuf buf,
-            @NotNull BlockCrushRecipe recipe
-        ) {
-            BlockStatePredicate.STREAM_CODEC.encode(buf, recipe.input);
-            ChanceBlockState.STREAM_CODEC.encode(buf, recipe.result);
-        }
-
-        private static @NotNull BlockCrushRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            BlockStatePredicate input = BlockStatePredicate.STREAM_CODEC.decode(buf);
-            ChanceBlockState result = ChanceBlockState.STREAM_CODEC.decode(buf);
-            return new BlockCrushRecipe(input, result);
         }
     }
 

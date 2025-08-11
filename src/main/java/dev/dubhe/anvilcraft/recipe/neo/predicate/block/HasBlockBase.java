@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.recipe.neo.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockCache;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -39,7 +40,13 @@ public abstract class HasBlockBase<T extends HasBlockBase<T>> implements IRecipe
                 BlockStatePredicate.CODEC.fieldOf("predicate").forGetter(T::getPredicate)
             ).apply(instance, this::of)
         );
-        public final StreamCodec<RegistryFriendlyByteBuf, T> mapCodec = StreamCodec.of(this::encode, this::decode);
+        public final StreamCodec<RegistryFriendlyByteBuf, T> mapCodec = StreamCodec.composite(
+            RecipeUtil.VEC3_STREAM_CODEC,
+            T::getOffset,
+            BlockStatePredicate.STREAM_CODEC,
+            T::getPredicate,
+            this::of
+        );
 
         public abstract T of(Vec3 offset, BlockStatePredicate predicate);
 
@@ -51,15 +58,6 @@ public abstract class HasBlockBase<T extends HasBlockBase<T>> implements IRecipe
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
             return this.mapCodec;
-        }
-
-        public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull T hasBlock) {
-            buf.writeVec3(hasBlock.getOffset());
-            BlockStatePredicate.STREAM_CODEC.encode(buf, hasBlock.getPredicate());
-        }
-
-        public @NotNull T decode(@NotNull RegistryFriendlyByteBuf buf) {
-            return this.of(buf.readVec3(), BlockStatePredicate.STREAM_CODEC.decode(buf));
         }
     }
 }

@@ -70,6 +70,16 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
             ).apply(instance, SpawnItem::new)
         );
 
+        public static final StreamCodec<RegistryFriendlyByteBuf, SpawnItem> STREAM_CODEC = StreamCodec.composite(
+            ItemStack.STREAM_CODEC,
+            SpawnItem::getItem,
+            RecipeUtil.VEC3_STREAM_CODEC,
+            SpawnItem::getOffset,
+            RecipeUtil.NUMBER_PROVIDER_STREAM_CODEC,
+            SpawnItem::getCount,
+            SpawnItem::new
+        );
+
         @Override
         public @NotNull MapCodec<SpawnItem> codec() {
             return Type.CODEC;
@@ -77,20 +87,7 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
 
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, SpawnItem> streamCodec() {
-            return StreamCodec.of(Type::encode, Type::decode);
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SpawnItem spawnItem) {
-            ItemStack.STREAM_CODEC.encode(buf, spawnItem.item);
-            buf.writeVec3(spawnItem.offset);
-            RecipeUtil.toNetwork(buf, spawnItem.count);
-        }
-
-        public static @NotNull SpawnItem decode(@NotNull RegistryFriendlyByteBuf buf) {
-            ItemStack stack = ItemStack.STREAM_CODEC.decode(buf);
-            Vec3 vec3 = buf.readVec3();
-            NumberProvider count = RecipeUtil.fromNetwork(buf);
-            return new SpawnItem(stack, vec3, count);
+            return Type.STREAM_CODEC;
         }
     }
 

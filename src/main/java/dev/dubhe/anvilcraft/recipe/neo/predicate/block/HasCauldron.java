@@ -10,11 +10,13 @@ import dev.dubhe.anvilcraft.recipe.neo.util.BlockCache;
 import dev.dubhe.anvilcraft.recipe.neo.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
+import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -137,7 +139,17 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
             ).apply(instance, HasCauldron::new)
         );
 
-        public final StreamCodec<RegistryFriendlyByteBuf, HasCauldron> mapCodec = StreamCodec.of(this::encode, this::decode);
+        public final StreamCodec<RegistryFriendlyByteBuf, HasCauldron> mapCodec = StreamCodec.composite(
+            RecipeUtil.VEC3_STREAM_CODEC,
+            HasCauldron::getOffset,
+            ResourceLocation.STREAM_CODEC,
+            HasCauldron::getFluid,
+            ByteBufCodecs.INT,
+            HasCauldron::getConsume,
+            ResourceLocation.STREAM_CODEC,
+            HasCauldron::getTransform,
+            HasCauldron::new
+        );
 
         @Override
         public @NotNull MapCodec<HasCauldron> codec() {
@@ -147,22 +159,6 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, HasCauldron> streamCodec() {
             return this.mapCodec;
-        }
-
-        public void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull HasCauldron hasCauldron) {
-            buf.writeVec3(hasCauldron.getOffset());
-            buf.writeResourceLocation(hasCauldron.getFluid());
-            buf.writeInt(hasCauldron.getConsume());
-            buf.writeResourceLocation(hasCauldron.getTransform());
-        }
-
-        public @NotNull HasCauldron decode(@NotNull RegistryFriendlyByteBuf buf) {
-            return new HasCauldron(
-                buf.readVec3(),
-                buf.readResourceLocation(),
-                buf.readInt(),
-                buf.readResourceLocation()
-            );
         }
     }
 

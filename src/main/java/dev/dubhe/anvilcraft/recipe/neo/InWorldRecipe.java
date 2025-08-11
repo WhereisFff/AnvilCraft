@@ -147,9 +147,14 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
             return Serializer.CODEC;
         }
 
+        public final StreamCodec<RegistryFriendlyByteBuf, InWorldRecipe> streamCodec = StreamCodec.of(
+            Serializer::encode,
+            Serializer::decode
+        );
+
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, InWorldRecipe> streamCodec() {
-            return StreamCodec.of(Serializer::encode, Serializer::decode);
+            return this.streamCodec;
         }
 
         @SuppressWarnings("unchecked")

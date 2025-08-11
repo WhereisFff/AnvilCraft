@@ -12,6 +12,7 @@ import dev.dubhe.anvilcraft.recipe.neo.util.WrapUtils;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -93,9 +94,14 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
                 .forGetter(SqueezingRecipe::getHasCauldron)
         ).apply(instance, SqueezingRecipe::new));
 
-        public static final StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> STREAM_CODEC = StreamCodec.of(
-            Serializer::encode,
-            Serializer::decode
+        public static final StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> STREAM_CODEC = StreamCodec.composite(
+            BlockStatePredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            SqueezingRecipe::getBlocks,
+            ChanceBlockState.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            SqueezingRecipe::getResultBlocks,
+            HasCauldronSimple.STREAM_CODEC,
+            SqueezingRecipe::getHasCauldron,
+            SqueezingRecipe::new
         );
 
         @Override
@@ -106,19 +112,6 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull SqueezingRecipe recipe) {
-            WrapUtils.encodeBlockIngredients(buf, recipe.getBlocks());
-            WrapUtils.encodeBlockResults(buf, recipe.getResultBlocks());
-            HasCauldronSimple.STREAM_CODEC.encode(buf, recipe.getHasCauldron());
-        }
-
-        public static @NotNull SqueezingRecipe decode(@NotNull RegistryFriendlyByteBuf buf) {
-            List<BlockStatePredicate> ingredients = WrapUtils.decodeBlockIngredients(buf);
-            List<ChanceBlockState> results = WrapUtils.decodeBlockResults(buf);
-            HasCauldronSimple hasCauldron = HasCauldronSimple.STREAM_CODEC.decode(buf);
-            return new SqueezingRecipe(ingredients, results, hasCauldron);
         }
     }
 

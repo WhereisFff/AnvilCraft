@@ -31,14 +31,7 @@ public class DamageAnvil implements IRecipeOutcome<DamageAnvil> {
 
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, DamageAnvil> streamCodec() {
-            return StreamCodec.of(Type::encode, Type::decode);
-        }
-
-        public static void encode(@NotNull RegistryFriendlyByteBuf buf, @NotNull DamageAnvil damageAnvil) {
-        }
-
-        public static @NotNull DamageAnvil decode(@NotNull RegistryFriendlyByteBuf buf) {
-            return new DamageAnvil();
+            return StreamCodec.unit(new DamageAnvil());
         }
     }
 }

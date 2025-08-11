@@ -2,16 +2,23 @@ package dev.dubhe.anvilcraft.recipe.neo.util;
 
 import com.google.common.collect.ImmutableMap;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.recipe.neo.predicate.item.HasItemIngredient;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -22,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 public record ItemIngredientPredicate(
     Optional<HolderSet<Item>> items,
@@ -45,6 +53,23 @@ public record ItemIngredientPredicate(
                 .optionalFieldOf("predicates", Map.of())
                 .forGetter(ItemIngredientPredicate::subPredicates)
         ).apply(instance, ItemIngredientPredicate::new));
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, ItemIngredientPredicate> STREAM_CODEC = StreamCodec.of(
+        (buffer, value) -> {
+            RegistryOps<Tag> ops = HolderLookup.Provider
+                .create(Stream.of(BuiltInRegistries.ITEM.asLookup()))
+                .createSerializationContext(NbtOps.INSTANCE);
+            DataResult<Tag> encode = ItemIngredientPredicate.CODEC.encode(value, ops, ops.empty());
+            Tag tag = encode.getOrThrow();
+            buffer.writeNbt(tag);
+        },
+        buffer -> {
+            RegistryOps<Tag> ops = HolderLookup.Provider
+                .create(Stream.of(BuiltInRegistries.ITEM.asLookup()))
+                .createSerializationContext(NbtOps.INSTANCE);
+            return ItemIngredientPredicate.CODEC.decode(ops, buffer.readNbt()).getOrThrow().getFirst();
+        }
+    );
 
     @Override
     public boolean test(ItemStack itemStack) {
