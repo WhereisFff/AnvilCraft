@@ -8,7 +8,7 @@
     "anvilcraft:cocoa_powder": 6
   },
   "pages": [
-    "通过小手工生产，可以获得更加精致的精加工食品：$(li)$(l:prop/tier_1_food#creamy_bread_roll)奶油面包卷$() $(li)$(l:prop/tier_1_food#chocolate)巧克力$() $(li)$(l:prop/tier_1_food#beef_mushroom_stew)牛肉炖蘑菇$() $(br2)$(#666666)田园诗般的梦幻$()",
+    "通过小手工生产，可以获得更加精致的精加工食品：$(li)$(l:prop/tier_1_food#creamy_bread_roll)奶油面包卷$() $(li)$(l:prop/tier_1_food#chocolate)巧克力$() $(li)$(l:prop/tier_1_food#beef_mushroom_stew)牛肉炖蘑菇$() $(li)$(l:prop/tier_1_food#utusan)五毒散$() $(br2)$(#666666)田园诗般的梦幻$()",
     {
       "type": "anvilcraft:item_crush",
       "recipe": "anvilcraft:item_crush/flour",
@@ -73,6 +73,12 @@
       "anchor": "beef_mushroom_stew",
       "item": "anvilcraft:beef_mushroom_stew",
       "text": "食用牛肉炖蘑菇可以提供10点$(thing)饥饿值$()与16点$(thing)饱食度$()$(br2)用生牛肉+红蘑菇+白蘑菇+碗$(l:basic/item_processing#cooking)烹饪$()获得 $(br2)$(#666666)蘑菇牛真好吃$()"
+    },
+    {
+      "type": "anvilcraft:cooking",
+      "anchor": "utusan",
+      "recipe": "anvilcraft:cooking/utusan",
+      "text": "服用后可以清除身上的所有$(thing)有害效果$() $(br2)但如果本没有有害效果，则获得持续30秒的$(thing)中毒V$()效果 $(br2)$(#888888)是药三分毒$()"
     }
   ]
 }
