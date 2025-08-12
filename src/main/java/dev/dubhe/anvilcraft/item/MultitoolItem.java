@@ -14,10 +14,13 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderOwner;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -26,6 +29,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.ItemTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -70,6 +75,8 @@ import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
+import net.neoforged.neoforge.common.Tags;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.List;
@@ -563,6 +570,36 @@ public class MultitoolItem extends Item implements IMultipleResult {
                 case SOUTH -> new DustParticlesDelta(-1.0F, 0.0F, 0.1);
                 case WEST -> new DustParticlesDelta(-0.1, 0.0F, -1.0F);
                 case EAST -> new DustParticlesDelta(0.1, 0.0F, 1.0F);
+            };
+        }
+    }
+
+    public static class MultitoolHolder extends Holder.Reference<Item> {
+        public MultitoolHolder(Type type, HolderOwner<Item> owner, @Nullable ResourceKey<Item> key, @Nullable Item value) {
+            super(type, owner, key, value);
+        }
+
+        public boolean is(int mode, TagKey<Item> tagKey) {
+            return switch (tagKey) {
+                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_SHEAR)       -> super.is(tag) && mode == SHEARS_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.CREEPER_IGNITERS)    -> super.is(tag) && mode == FLINT_AND_STEEL_MODE;
+                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_IGNITER)     -> super.is(tag) && mode == FLINT_AND_STEEL_MODE;
+                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_BRUSH)       -> super.is(tag) && mode == BRUSH_MODE;
+                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_FISHING_ROD) -> super.is(tag) && mode == FISHING_ROD_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.STRIDER_TEMPT_ITEMS) -> super.is(tag) && mode == WARPED_FUNGUS_ON_A_STICK_MODE;
+                default -> super.is(tagKey);
+            };
+        }
+
+        public boolean is(int mode, HolderSet<Item> holders) {
+            return switch (holders) {
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_SHEAR)       -> holderSet.contains(this) && mode == SHEARS_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(ItemTags.CREEPER_IGNITERS)    -> holderSet.contains(this) && mode == FLINT_AND_STEEL_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_IGNITER)     -> holderSet.contains(this) && mode == FLINT_AND_STEEL_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_BRUSH)       -> holderSet.contains(this) && mode == BRUSH_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_FISHING_ROD) -> holderSet.contains(this) && mode == FISHING_ROD_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(ItemTags.STRIDER_TEMPT_ITEMS) -> holderSet.contains(this) && mode == WARPED_FUNGUS_ON_A_STICK_MODE;
+                default -> holders.contains(this);
             };
         }
     }

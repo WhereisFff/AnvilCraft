@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.component.DataComponentHolder;
@@ -54,15 +55,25 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         method = "is(Lnet/minecraft/tags/TagKey;)Z",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/core/Holder$Reference;is(Lnet/minecraft/tags/TagKey;)Z"))
     private boolean tryUseResonatorVer1(Holder.Reference<Item> instance, TagKey<Item> tagKey, Operation<Boolean> original) {
-        if (!(instance instanceof ResonatorItem.ResonatorHolder holder)) return original.call(instance, tagKey);
-        return holder.is(ResonatorItem.getMode(Util.cast(this)), tagKey);
+        if (instance instanceof ResonatorItem.ResonatorHolder holder) {
+            return holder.is(ResonatorItem.getMode(Util.cast(this)), tagKey);
+        } else if (instance instanceof MultitoolItem.MultitoolHolder holder) {
+            return holder.is(MultitoolItem.getMode(Util.cast(this)), tagKey);
+        } else {
+            return original.call(instance, tagKey);
+        }
     }
 
     @Redirect(
         method = "is(Lnet/minecraft/core/HolderSet;)Z",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/core/HolderSet;contains(Lnet/minecraft/core/Holder;)Z"))
     private boolean tryUseResonatorVer2(HolderSet<Item> instance, Holder<Item> tHolder) {
-        if (!(tHolder instanceof ResonatorItem.ResonatorHolder holder)) return instance.contains(tHolder);
-        return holder.is(ResonatorItem.getMode(Util.cast(this)), instance);
+        if (instance instanceof ResonatorItem.ResonatorHolder holder) {
+            return holder.is(ResonatorItem.getMode(Util.cast(this)), instance);
+        } else if (instance instanceof MultitoolItem.MultitoolHolder holder) {
+            return holder.is(MultitoolItem.getMode(Util.cast(this)), instance);
+        } else {
+            return instance.contains(tHolder);
+        }
     }
 }
