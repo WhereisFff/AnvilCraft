@@ -36,7 +36,7 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
                 return this.isOr;
             }
         }
-        return this.isInverted;
+        return this.isOr == this.isInverted;
     }
 
     public record DamageSourceSubPredicate(

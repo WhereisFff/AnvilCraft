@@ -51,7 +51,7 @@ public class ComradeAmuletItem extends AmuletItem {
         amulet.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, !getSignedPlayers(amulet).isEmpty());
     }
 
-    public static boolean shouldIgnoreDamage(ServerPlayer player, DamageSource source) {
+    public static boolean shouldImmuneDamage(ServerPlayer player, DamageSource source) {
         ItemStack comrade = InventoryUtil.getFirstItem(player.getInventory(), ModItems.COMRADE_AMULET);
         return Optional.ofNullable(source.getEntity())
             .map(Entity::getUUID)
