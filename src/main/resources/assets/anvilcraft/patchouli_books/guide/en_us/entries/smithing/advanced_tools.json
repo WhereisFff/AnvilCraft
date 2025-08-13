@@ -2,7 +2,7 @@
   "name": "Advanced Tools",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:jewelcrafting_table",
-  "sortnum": 3005,
+  "sortnum": 30015,
   "pages": [
     "This page shows all available $(thing)Advanced Tools$().",
     {

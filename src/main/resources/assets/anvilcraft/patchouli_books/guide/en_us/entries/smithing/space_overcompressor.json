@@ -2,7 +2,7 @@
   "name": "空间超压器",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:space_overcompressor",
-  "sortnum": 3007,
+  "sortnum": 13005,
   "entry_color": "004400",
   "pages": [
     "$(item)空间超压器$()具有扭曲空间的力量。可以用来制作$(item)中子锭$()或去辅助进行$(l:struct/multiblock#craft)多方块合成$()。",

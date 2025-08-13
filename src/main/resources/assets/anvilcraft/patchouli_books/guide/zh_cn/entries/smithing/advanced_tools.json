@@ -2,7 +2,7 @@
   "name": "高级工具",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:jewelcrafting_table",
-  "sortnum": 3005,
+  "sortnum": 30015,
   "pages": [
     "本页面展示了目前所有可用的$(thing)高级工具$()。",
     {
