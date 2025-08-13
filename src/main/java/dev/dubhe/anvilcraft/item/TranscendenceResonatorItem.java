@@ -48,11 +48,13 @@ public class TranscendenceResonatorItem extends ResonatorItem {
             Multiphase.PhaseData first = Multiphase.PhaseData.of(
                 firstStack.get(DataComponents.CUSTOM_NAME), firstStack.get(DataComponents.ITEM_NAME),
                 firstStack.getOrDefault(DataComponents.REPAIR_COST, 0),
-                firstStack.getOrDefault(EnchantmentHelper.getComponentType(firstStack), ItemEnchantments.EMPTY));
+                firstStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY),
+                firstStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY));
             Multiphase.PhaseData second = Multiphase.PhaseData.of(
                 secondStack.get(DataComponents.CUSTOM_NAME), secondStack.get(DataComponents.ITEM_NAME),
                 secondStack.getOrDefault(DataComponents.REPAIR_COST, 0),
-                secondStack.getOrDefault(EnchantmentHelper.getComponentType(secondStack), ItemEnchantments.EMPTY));
+                secondStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY),
+                secondStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY));
 
             Multiphase multiphase = Multiphase.make(this, first, second);
             ItemStack result = this.getDefaultInstance();

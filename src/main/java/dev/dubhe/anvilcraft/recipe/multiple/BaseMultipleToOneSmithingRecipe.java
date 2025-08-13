@@ -106,13 +106,10 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
         if (input.inputs().size() != this.inputs.size()) return false;
         return this.isTemplateIngredient(input.template())
                && this.isMaterialIngredient(input.material())
-               && input.inputs().size() == 1
-               ? this.inputs.getFirst().test(input.getItem(0))
-               : this.matchesInput(input);
+               && this.matchesInput(input);
     }
 
     protected boolean matchesInput(MultipleToOneSmithingRecipeInput input) {
-        int result = 0;
         List<Ingredient> ingredientsCloned = new ArrayList<>(this.inputs);
         List<ItemStack> inputsCloned = new ArrayList<>(input.inputs());
 
@@ -123,14 +120,13 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
             while (inputIt.hasNext()) {
                 ItemStack stack = inputIt.next();
                 if (ingredient.test(stack)) {
-                    result++;
                     ingredientIt.remove();
                     inputIt.remove();
                     break;
                 }
             }
         }
-        return result == this.inputSize();
+        return ingredientsCloned.isEmpty();
     }
 
     @Override

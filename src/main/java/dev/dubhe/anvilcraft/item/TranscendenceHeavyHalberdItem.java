@@ -15,7 +15,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Unbreakable;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 
@@ -63,11 +62,13 @@ public class TranscendenceHeavyHalberdItem extends HeavyHalberdItem implements I
             Multiphase.PhaseData first = Multiphase.PhaseData.of(
                 firstStack.get(DataComponents.CUSTOM_NAME), null,
                 firstStack.getOrDefault(DataComponents.REPAIR_COST, 0),
-                firstStack.getOrDefault(EnchantmentHelper.getComponentType(firstStack), ItemEnchantments.EMPTY));
+                firstStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY),
+                firstStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY));
             Multiphase.PhaseData second = Multiphase.PhaseData.of(
                 secondStack.get(DataComponents.CUSTOM_NAME), null,
                 secondStack.getOrDefault(DataComponents.REPAIR_COST, 0),
-                secondStack.getOrDefault(EnchantmentHelper.getComponentType(secondStack), ItemEnchantments.EMPTY));
+                secondStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY),
+                secondStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY));
 
             Multiphase multiphase = Multiphase.make(this, first, second);
             ItemStack result = this.getDefaultInstance();

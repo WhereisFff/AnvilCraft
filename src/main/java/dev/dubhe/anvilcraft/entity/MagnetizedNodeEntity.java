@@ -67,7 +67,7 @@ public class MagnetizedNodeEntity extends Entity {
                 blockPos.getZ() + 1.01
         );
         level()
-                .getEntities(EntityType.ITEM, aabb, it -> ((AdsorbableItemEntity) it).isAdsorbable())
+                .getEntities(EntityType.ITEM, aabb, it -> ((AdsorbableItemEntity) it).anvilcraft$isAdsorbable())
                 .forEach(entity -> {
                     entity.teleportTo(position().x, position().y, position().z);
                     entity.setDeltaMovement(Vec3.ZERO);

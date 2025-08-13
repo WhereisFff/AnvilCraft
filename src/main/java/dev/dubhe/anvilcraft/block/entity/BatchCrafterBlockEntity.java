@@ -244,8 +244,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
         boolean hasDisplayItemStack = displayItemStack != null && !displayItemStack.isEmpty();
         tag.putBoolean("HasDisplayItemStack", hasDisplayItemStack);
         if (hasDisplayItemStack) {
-            CompoundTag item = new CompoundTag();
-            this.displayItemStack.save(provider, item);
+            CompoundTag item = (CompoundTag) this.displayItemStack.save(provider);
             tag.put("ResultItemStack", item);
         }
         tag.putBoolean("PoweredBefore", this.poweredBefore);

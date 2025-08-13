@@ -5,7 +5,7 @@
   "sortnum": 9,
   "entry_color": "004400",
   "pages": [
-    "收集2块$(item)下界合金锭$()就可以制作$(l:struct/mineral_fountain#impact_pile)冲击桩$()以制造$(l:struct/mineral_fountain#mineral_fountain)矿物涌泉$()，它可以生产$(thing)金属矿$()与本模组中期极为重要的两种矿物——$(l:struct/mineral_fountain#void_stone)虚空石$()和$(l:struct/mineral_fountain#earth_core_shard_ore)地核碎片矿石$()。$(br)首先将$(item)冲击桩$()放在$(item)基岩$()上，然后从至少20格的高度放置的$(item)铁砧$()砸击，就会生成$(item)矿物涌泉$()。$(br2)$(#888888)获取下界合金时至少保留80组下界岩，之后用以获得钨。",
+    "收集2块$(item)下界合金锭$()就可以制作$(l:struct/mineral_fountain#impact_pile)冲击桩$()以制造$(l:struct/mineral_fountain#mineral_fountain)矿物涌泉$()，它可以生产$(thing)金属矿$()与本模组中期极为重要的两种矿物——$(l:struct/mineral_fountain#void_matter)虚空石$()和$(l:struct/mineral_fountain#earth_core_shard)地核碎片矿石$()。$(br)首先将$(item)冲击桩$()放在$(item)基岩$()上，然后从至少20格的高度放置的$(item)铁砧$()砸击，就会生成$(item)矿物涌泉$()。$(br2)$(#888888)获取下界合金时至少保留80组下界岩，之后用以获得钨。",
     {
       "type": "anvilcraft:block_compress",
       "recipe": "anvilcraft:block_compress/deepslate",
@@ -14,7 +14,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:ruby_laser,anvilcraft:ruby_prism",
-      "text": "如果你拥有足够的$(thing)电力$()和$(item)红宝石$()，你可以搭建$(l:power/advanced_laser_system)激光系统$().它可以自动提取$(thing)矿石$()，且保留$(item)深板岩$()。"
+      "text": "如果你拥有足够的$(thing)电力$()和$(item)红宝石$()，你可以搭建$(l:power/laser_system)激光系统$().它可以自动提取$(thing)矿石$()，且保留$(item)深板岩$()。"
     },
     {
       "type": "patchouli:multiblock",
@@ -50,7 +50,7 @@
         "anvilcraft:struct/mineral_fountain",
         "anvilcraft:basic/more_device",
         "anvilcraft:basic/block_processing",
-        "anvilcraft:power/advanced_laser_system"
+        "anvilcraft:power/laser_system"
       ],
       "text": ""
     }

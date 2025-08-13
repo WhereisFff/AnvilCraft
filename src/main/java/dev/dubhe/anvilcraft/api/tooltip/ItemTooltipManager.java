@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.util.ListUtil;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -231,7 +232,8 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .map(Objects::toString)
+                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                    .map(TranslatableContents::getKey)
                     .filter(key -> key.contains("enchantment"))
                     .isEmpty()
             ) {
@@ -250,7 +252,8 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .map(Objects::toString)
+                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                    .map(TranslatableContents::getKey)
                     .filter(key -> key.contains("enchantment"))
                     .isEmpty()
             ) {
@@ -269,9 +272,10 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .map(Objects::toString)
-                    .filter(key -> !key.contains("enchantment"))
-                    .isPresent()
+                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                    .map(TranslatableContents::getKey)
+                    .filter(key -> key.contains("enchantment"))
+                    .isEmpty()
             ) {
                 i = j;
                 break;

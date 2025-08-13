@@ -2,27 +2,39 @@
   "name": "核能发电",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:uranium_ingot",
-  "sortnum": 2009,
+  "sortnum": 2010,
   "entry_color": "661100",
+  "extra_recipe_mappings": {
+    "anvilcraft:uranium_nugget": 1,
+    "anvilcraft:uranium_ingot": 1,
+    "anvilcraft:uranium_block": 1,
+    "anvilcraft:plutonium_nugget": 2,
+    "anvilcraft:plutonium_ingot": 2,
+    "anvilcraft:plutonium_block": 2
+  },
   "pages": [
-    "在获得$(item)铀$()和$(item)钚$()以后，可以借助核能产生大量的电力。",
+    "本章节将会讲述：$(li)如何获得$(item)铀$()和$(item)钚$() $(li)如何借助核能产生大量的电力",
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:uranium_nugget",
+      "text": "使用$(item)皇家铁砧$()（或更高级铁砧）$(l:struct/high_speed_impact)撞击$()$(item)红石块$()，平均获得8.5个$(item)铀粒$()。$(br2)之后可以通过$(item)矿物涌泉$()量产。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:plutonium_nugget",
+      "text": "在锅中用铁砧砸击$(item)铀锭$()和$(item)中子锭$()，获得6*$(item)钚粒$()+1*$(item)中子锭$()+1*$(item)石灰粉$()。$(br2)因为过于活跃而没有粗矿形式，无法通过$(item)矿物涌泉$()量产。"
+    },
     {
       "type": "patchouli:text",
       "title": "被动发热",
-      "text": "铀块和钚块可以为集热器提供热能用以发热，$(l:power/advanced_heat_collection#unchanged_block)点我$()查看详情"
+      "text": "铀块和钚块可以为$(l:power/heat_collection)集热器$()提供热能用以发电: $(li)$(item)铀块$():2kW $(li)$(item)钚块$():8kW"
     },
     {
-      "type": "patchouli:text",
-      "title": "主动发热",
-      "text": "铀块和钚块被时移时，会在一瞬间爆发出通常需要数万年才能释放出的能量。$(br2)可用于生产白炽的方块用于热能发电，$(l:advanced/special_heated_block#nuclear_fission)点我$()查看详情"
-    },
-    {
-      "type": "patchouli:relations",
-      "entries": [
-        "anvilcraft:power/advanced_heat_collection",
-        "anvilcraft:advanced/special_heated_block"
-      ],
-      "text": ""
+      "type": "anvilcraft:time_warp",
+      "anchor": "nuclear_fission",
+      "recipe": "anvilcraft:heat_produce_time_warp/raw_uranium_from_uranium_block",
+      "title": "时移核衰变",
+      "text": "$(l:smithing/corrupted_beacon#time_warp)时移$()$(item)铀块$()或$(item)钚块$()会在一瞬间爆发出通常需要数万年才能释放大量的热能。$(br2)将与锅水平相邻的方块加热为$(thing)白炽$()并持续5/10分钟，可用于热能发电"
     }
   ]
 }

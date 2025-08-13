@@ -17,6 +17,7 @@ public class LevitationPowderItem extends Item implements ILevitationLike<Levita
         @NotNull ItemStack stack, @NotNull Level level, @NotNull Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
         if (!(entity instanceof Player player)) return;
+        if (level.isClientSide()) return;
         this.addEffectToPlayer(player);
     }
 }

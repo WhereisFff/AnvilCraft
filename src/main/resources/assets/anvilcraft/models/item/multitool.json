@@ -1,0 +1,49 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made by XeKr with Blockbench",
+	"texture_size": [32, 32],
+	"textures": {
+		"0": "anvilcraft:item/multitool",
+		"particle": "anvilcraft:item/multitool"
+	},
+	"elements": [
+		{
+			"from": [6, 3, 5.5],
+			"to": [10, 13, 6.5],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [0, 0, 2, 5], "texture": "#0"},
+				"east": {"uv": [0, 0, 0.5, 5], "texture": "#0"},
+				"south": {"uv": [2, 0, 0, 5], "texture": "#0"},
+				"west": {"uv": [1.5, 0, 2, 5], "texture": "#0"},
+				"up": {"uv": [2, 0, 0, 0.5], "texture": "#0"},
+				"down": {"uv": [2, 4.5, 0, 5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6, 3, 9.5],
+			"to": [10, 13, 10.5],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"north": {"uv": [2, 0, 4, 5], "texture": "#0"},
+				"east": {"uv": [2, 0, 2.5, 5], "texture": "#0"},
+				"south": {"uv": [4, 0, 2, 5], "texture": "#0"},
+				"west": {"uv": [3.5, 0, 4, 5], "texture": "#0"},
+				"up": {"uv": [4, 0, 2, 0.5], "texture": "#0"},
+				"down": {"uv": [4, 4.5, 2, 5], "texture": "#0"}
+			}
+		},
+		{
+			"from": [6.2, 3.2, 6.5],
+			"to": [9.8, 12.8, 9.5],
+			"rotation": {"angle": -45, "axis": "z", "origin": [8, 8, 8]},
+			"faces": {
+				"east": {"uv": [4, 0, 5.5, 4.5], "texture": "#0"},
+				"west": {"uv": [4, 0, 5.5, 4.5], "texture": "#0"},
+				"up": {"uv": [5.5, 1.5, 7, 0], "rotation": 90, "texture": "#0"},
+				"down": {"uv": [5.5, 1.5, 7, 0], "rotation": 90, "texture": "#0"}
+			}
+		}
+	],
+	"display": {}
+}
