@@ -1,7 +1,7 @@
 {
   "name": "Tier 2 Materials",
   "category": "anvilcraft:smithing_system",
-  "icon": "anvilcraft:frost_metal_ingot",
+  "icon": "anvilcraft:ember_metal_ingot",
   "sortnum": 23006,
   "entry_color": "661100",
   "pages": [
@@ -128,7 +128,7 @@
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "Multiple to One Smithing Template",
       "link_recipe": true,
-      "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template."
+      "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template. $(br2)It is used to participate in multiple_to_one smithing on the $(item)Embers smithing table$()"
     }
   ]
 }
