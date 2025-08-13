@@ -4,7 +4,6 @@
   "icon": "anvilcraft:creamy_bread_roll",
   "sortnum": 4005,
   "extra_recipe_mappings": {
-    "anvilcraft:beef_mushroom_stew": 12,
     "anvilcraft:cocoa_powder": 6
   },
   "pages": [
@@ -72,6 +71,7 @@
       "type": "patchouli:spotlight",
       "anchor": "beef_mushroom_stew",
       "item": "anvilcraft:beef_mushroom_stew",
+      "link_recipe": true,
       "text": "食用牛肉炖蘑菇可以提供10点$(thing)饥饿值$()与16点$(thing)饱食度$()$(br2)用生牛肉+红蘑菇+白蘑菇+碗$(l:basic/item_processing#cooking)烹饪$()获得 $(br2)$(#666666)蘑菇牛真好吃$()"
     },
     {

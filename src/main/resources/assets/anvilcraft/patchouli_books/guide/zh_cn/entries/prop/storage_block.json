@@ -2,7 +2,7 @@
   "name": "材料方块",
   "category": "anvilcraft:special_props",
   "icon": "anvilcraft:sugar_block",
-  "sortnum": 4008,
+  "sortnum": 4003,
   "pages": [
     "模组为腐肉等材料添加了9合1制作对于存储方块的配方，便于存储。$(br2)同时，每个方块都有$(thing)独特$()的性质。",
     {

@@ -2,7 +2,7 @@
   "name": "核能发电",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:uranium_ingot",
-  "sortnum": 2010,
+  "sortnum": 22010,
   "entry_color": "661100",
   "extra_recipe_mappings": {
     "anvilcraft:uranium_nugget": 1,

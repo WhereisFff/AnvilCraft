@@ -2,7 +2,7 @@
     "name": "护符",
     "category": "anvilcraft:special_props",
     "icon": "anvilcraft:anvil_amulet",
-    "sortnum":4003,
+    "sortnum":4007,
     "pages":[
         {
             "type":"text",

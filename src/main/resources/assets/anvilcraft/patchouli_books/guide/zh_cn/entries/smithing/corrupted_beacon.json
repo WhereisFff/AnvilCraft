@@ -2,7 +2,7 @@
   "name": "腐化信标",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:corrupted_beacon",
-  "sortnum": 3003,
+  "sortnum": 13004,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:corrupted_beacon": 1

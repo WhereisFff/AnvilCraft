@@ -2,7 +2,7 @@
   "name": "Heated Block",
   "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:glowing_tungsten_block",
-  "sortnum": 4001,
+  "sortnum": 17003,
   "entry_color": "004400",
   "pages": [
     "$(thing)Heatable Block$()是一系列方块的统称，每种方块有若干温度等级。$(br2)可加热方块有持续时间。当持续时间归零，则温度等级-1。若-1后仍为高温方块，则将持续时间设为10秒。$(br2)挖掘方块时不保留持续时间。如果工具没有$(item)精准采集/熔炼$()附魔，则温度等级-1",
