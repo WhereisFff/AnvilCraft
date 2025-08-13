@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.WheelWidget;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
