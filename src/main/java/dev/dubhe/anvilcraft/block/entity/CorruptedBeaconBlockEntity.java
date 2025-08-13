@@ -210,7 +210,7 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         }
         if (result == null) return;
         Entity vehicle = null;
-        if (livingEntity.isPassenger()){
+        if (livingEntity.isPassenger()) {
             vehicle = livingEntity.getVehicle();
         }
         livingEntity.discard();
