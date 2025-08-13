@@ -1159,7 +1159,7 @@ public class ModItems {
 
     public static final ItemEntry<? extends Item> FROST_METAL_INGOT = REGISTRATE
         .item("frost_metal_ingot", Item::new)
-        .tag(Tags.Items.INGOTS)
+        .tag(Tags.Items.INGOTS, ModItemTags.FROST_METAL_NUGGETS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.FROST_METAL_BLOCK)
@@ -1183,7 +1183,7 @@ public class ModItems {
 
     public static final ItemEntry<? extends Item> FROST_METAL_NUGGET = REGISTRATE
         .item("frost_metal_nugget", Item::new)
-        .tag(Tags.Items.NUGGETS)
+        .tag(Tags.Items.NUGGETS, ModItemTags.FROST_METAL_NUGGETS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModItems.FROST_METAL_INGOT)
@@ -1236,7 +1236,7 @@ public class ModItems {
     public static final ItemEntry<? extends Item> TRANSCENDIUM_INGOT = REGISTRATE
         .item("transcendium_ingot", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(Tags.Items.INGOTS, ModItemTags.EXPLOSION_PROOF)
+        .tag(Tags.Items.INGOTS, ModItemTags.EXPLOSION_PROOF, ModItemTags.TRANSCENDIUM_INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.TRANSCENDIUM_BLOCK)
@@ -1261,7 +1261,7 @@ public class ModItems {
     public static final ItemEntry<? extends Item> TRANSCENDIUM_NUGGET = REGISTRATE
         .item("transcendium_nugget", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(Tags.Items.NUGGETS, ModItemTags.EXPLOSION_PROOF)
+        .tag(Tags.Items.NUGGETS, ModItemTags.EXPLOSION_PROOF, ModItemTags.TRANSCENDIUM_NUGGETS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModItems.TRANSCENDIUM_INGOT)

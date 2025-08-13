@@ -534,7 +534,8 @@ public class ModBlocks {
              BlockTags.ANVIL,
              ModBlockTags.CANT_BROKEN_ANVIL,
              BlockTags.MINEABLE_WITH_PICKAXE,
-             BlockTags.NEEDS_DIAMOND_TOOL)
+             BlockTags.NEEDS_DIAMOND_TOOL,
+            ModBlockTags.COLLISION_IMMUNE)
         .properties(properties -> properties.lightLevel(state -> 9)
             .noOcclusion()
             .strength(50.0f, 1200f))
@@ -1841,11 +1842,12 @@ public class ModBlocks {
             BlockTags.BEACON_BASE_BLOCKS,
             ModBlockTags.OVERSEER_BASE,
             Tags.Blocks.STORAGE_BLOCKS,
-            ModBlockTags.HAMMER_REMOVABLE)
+            ModBlockTags.HAMMER_REMOVABLE,
+            ModBlockTags.STORAGE_BLOCKS_FROST_METAL)
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get()))
         .item()
-        .tag(Tags.Items.STORAGE_BLOCKS)
+        .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_FROST_METAL)
         .build()
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -2062,17 +2064,19 @@ public class ModBlocks {
             .noOcclusion()
             .emissiveRendering(ModBlocks::always))
         .tag(BlockTags.BEACON_BASE_BLOCKS,
-             BlockTags.MINEABLE_WITH_PICKAXE,
-             Tags.Blocks.NEEDS_NETHERITE_TOOL,
-             BlockTags.WITHER_IMMUNE,
-             BlockTags.DRAGON_IMMUNE,
-             Tags.Blocks.STORAGE_BLOCKS)
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            Tags.Blocks.NEEDS_NETHERITE_TOOL,
+            BlockTags.WITHER_IMMUNE,
+            BlockTags.DRAGON_IMMUNE,
+            Tags.Blocks.STORAGE_BLOCKS,
+            ModBlockTags.STORAGE_BLOCKS_TRANSCENDIUM,
+            ModBlockTags.COLLISION_IMMUNE)
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/transcendium_block").get()))
         .item()
         .properties(Item.Properties::fireResistant)
-        .tag(ModItemTags.EXPLOSION_PROOF, Tags.Items.STORAGE_BLOCKS)
+        .tag(ModItemTags.EXPLOSION_PROOF, Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_TRANSCENDIUM)
         .build()
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
