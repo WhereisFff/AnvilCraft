@@ -2,7 +2,7 @@
   "name": "特殊可加热方块",
   "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:overheated_ember_metal_block",
-  "sortnum": 4003,
+  "sortnum": 27005,
   "entry_color": "661100",
   "extra_recipe_mappings": {
     "anvilcraft:overheated_ember_metal_block": 0
