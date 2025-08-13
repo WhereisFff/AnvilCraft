@@ -843,6 +843,7 @@
   "tooltip.anvilcraft.item.disk.store": "Right click block to copy its setting",
   "tooltip.anvilcraft.item.ember_anvil": "Wither proof",
   "tooltip.anvilcraft.item.ember_anvil_hammer": "It's a hammer, an anvil, a wrench, goggles, and a mace",
+  "tooltip.anvilcraft.item.ember_glass": "Wither proof, No tools required on collect",
   "tooltip.anvilcraft.item.ember_grindstone": "Wither proof",
   "tooltip.anvilcraft.item.ember_metal_block": "Wither proof",
   "tooltip.anvilcraft.item.ember_smithing_table": "Wither proof",
