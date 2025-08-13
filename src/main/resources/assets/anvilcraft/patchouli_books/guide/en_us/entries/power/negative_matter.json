@@ -2,7 +2,7 @@
   "name": "负物质发电",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:negative_matter",
-  "sortnum": 2009,
+  "sortnum": 22009,
   "entry_color": "661100",
   "extra_recipe_mappings": {
     "anvilcraft:negative_matter_nugget": 1,

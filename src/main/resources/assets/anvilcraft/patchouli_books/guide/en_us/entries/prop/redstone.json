@@ -2,7 +2,7 @@
   "name": "红石元件(重要)",
   "category": "anvilcraft:special_props",
   "icon": "minecraft:redstone",
-  "sortnum": 4009,
+  "sortnum": 4001,
   "pages": [
     {
       "type": "patchouli:text",

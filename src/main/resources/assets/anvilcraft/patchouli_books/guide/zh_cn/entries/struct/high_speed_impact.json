@@ -2,7 +2,7 @@
   "name": "铁砧高速撞击合成",
   "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:acceleration_ring",
-  "sortnum": 5004,
+  "sortnum": 25005,
   "entry_color": "661100",
   "extra_recipe_mappings": {
     "anvilcraft:multiphase_matter": 5

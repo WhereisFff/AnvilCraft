@@ -2,7 +2,7 @@
   "name": "滑轨",
   "category": "anvilcraft:special_props",
   "icon": "anvilcraft:sliding_rail",
-  "sortnum": 4007,
+  "sortnum": 4004,
   "pages": [
     "类似于用于承载矿车的铁轨，滑轨用于运输物品和方块。$(br2)槽内的$(thing)物品$()可以无摩擦持续滑行。 $(br2)当一个$(thing)方块$()被活塞推到滑轨上时(方向和滑轨朝向一致)，其将在滑轨上持续滑行。若此时和别的方块一起移动，则作为一个结构一起滑动。",
     {

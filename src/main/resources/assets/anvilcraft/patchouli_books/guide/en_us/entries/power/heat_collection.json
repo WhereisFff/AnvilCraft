@@ -2,7 +2,7 @@
   "name": "Heat Collection",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:heat_collector",
-  "sortnum": 2005,
+  "sortnum": 12005,
   "entry_color": "004400",
   "pages": [
     "使用集热器来收集$(thing)可集热方块$()的热能。后文会依次介绍：$(li)什么是$(thing)可集热方块$() $(li)$(l:power/heat_collection#method)如何搭建发电设施$()",

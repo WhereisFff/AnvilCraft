@@ -2,7 +2,7 @@
   "name": "制造刷怪笼",
   "category": "anvilcraft:technology_application",
   "icon": "minecraft:spawner",
-  "sortnum": 6003,
+  "sortnum": 16003,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "minecraft:spawner": 0,
