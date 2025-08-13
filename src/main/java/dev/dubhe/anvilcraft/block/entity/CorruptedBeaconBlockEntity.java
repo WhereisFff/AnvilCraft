@@ -218,8 +218,8 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         if (result instanceof ZombieHorse || result instanceof SkeletonHorse) {
             ((AbstractHorse) result).setTamed(true);
         }
-        if (level.tryAddFreshEntityWithPassengers(result)){
-            if(vehicle!=null){
+        if (level.tryAddFreshEntityWithPassengers(result)) {
+            if (vehicle != null) {
                 result.startRiding(vehicle);
             }
         }
