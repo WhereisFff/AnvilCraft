@@ -112,7 +112,7 @@ public class CreateIntegration {
 
     private static final DeferredRegister<AmuletType> REGISTER = DeferredRegister.create(ModRegistries.AMULET_TYPE_KEY, AnvilCraft.MOD_ID);
     private static final DeferredHolder<AmuletType, ? extends AmuletType> COGWHEEL = REGISTER.register(
-        "cogwheel", () -> AmuletType.builder("cogwheel")
+        "cogwheel", () -> AmuletType.builderAnc("cogwheel")
             .immuneDamageFromObtain()
             .obtain(builder -> builder
                 .type("create")

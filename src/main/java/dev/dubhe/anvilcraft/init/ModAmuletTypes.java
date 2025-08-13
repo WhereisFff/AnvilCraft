@@ -2,8 +2,16 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.item.abnormal.IAbnormal;
+import dev.dubhe.anvilcraft.item.abnormal.ICursed;
+import dev.dubhe.anvilcraft.item.abnormal.ILevitation;
+import dev.dubhe.anvilcraft.item.abnormal.IRadiation;
+import dev.dubhe.anvilcraft.item.abnormal.ISuperHeavy;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.neoforged.bus.api.IEventBus;
@@ -19,7 +27,7 @@ public class ModAmuletTypes {
 
     public static final DeferredHolder<AmuletType, ? extends AmuletType> EMERALD = register(
         "emerald",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .inventoryTick((player, amulet, isEnabled) -> {
                 if (isEnabled) {
                     player.setData(DISCOUNT_RATE, 0.3f);
@@ -31,13 +39,13 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> TOPAZ = register(
         "topaz",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .immuneDamageFromObtain()
             .amulet(ModItems.TOPAZ_AMULET)
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> RUBY = register(
         "ruby",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .inventoryTick((player, amulet, isEnabled) -> {
                 if (isEnabled && !player.isInLava()) {
                     MobEffectInstance effect = player.getEffect(MobEffects.FIRE_RESISTANCE);
@@ -59,7 +67,7 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> SAPPHIRE = register(
         "sapphire",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .inventoryTick((player, amulet, isEnabled) -> {
                 if (isEnabled && !player.isInWater()) {
                     MobEffectInstance effect = player.getEffect(MobEffects.CONDUIT_POWER);
@@ -81,7 +89,7 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> ANVIL = register(
         "anvil",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .obtain(builder -> builder
                 .weapon(ModItemTags.ANVIL_HAMMER)
                 .buildAndSub())
@@ -89,7 +97,7 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> COMRADE = register(
         "comrade",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .obtain(builder -> builder
                 .isSameTeam(true)
                 .buildAndSub())
@@ -99,13 +107,13 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> FEATHER = register(
         "feather",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .immuneDamageFromObtain()
             .amulet(ModItems.FEATHER_AMULET)
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> CAT = register(
         "cat",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .inventoryTick((player, amulet, isEnabled) -> {
                 CompoundTag root = player.getData(ModDataAttachments.SCARE_ENTITIES);
                 root.putBoolean("creepers", isEnabled);
@@ -116,7 +124,7 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> DOG = register(
         "dog",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .inventoryTick((player, amulet, isEnabled) -> {
                 CompoundTag root = player.getData(ModDataAttachments.SCARE_ENTITIES);
                 root.putBoolean("skeletons", isEnabled);
@@ -126,9 +134,24 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> SILENCE = register(
         "silence",
-        type -> AmuletType.builder(type)
+        type -> AmuletType.builderAnc(type)
             .amulet(ModItems.SILENCE_AMULET)
     );
+    public static final DeferredHolder<AmuletType, ? extends AmuletType> ABNORMAL = register(
+        "abnormal",
+        type -> AmuletType.builderAnc(type)
+            .obtainOr(ModAmuletTypes::obtainAbnormal)
+            .amulet(ModItems.ABNORMAL_AMULET)
+    );
+
+    private static boolean obtainAbnormal(ServerPlayer player, DamageSource source) {
+        if (!source.is(DamageTypes.WITHER)) return false;
+        if (IAbnormal.getAbnormalCount(player, ICursed.class) < 1) return false;
+        if (IAbnormal.getAbnormalCount(player, ILevitation.class) < 64) return false;
+        if (IAbnormal.getAbnormalCount(player, ISuperHeavy.class) < 1) return false;
+        if (IAbnormal.getAbnormalCount(player, IRadiation.class) < 1152) return false;
+        return true;
+    }
 
     private static DeferredHolder<AmuletType, ? extends AmuletType> register(String typeId, Function<String, AmuletType.Builder> builder) {
         return REGISTER.register(typeId, builder.apply(typeId)::build);

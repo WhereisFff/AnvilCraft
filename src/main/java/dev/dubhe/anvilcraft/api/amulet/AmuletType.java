@@ -4,6 +4,8 @@ import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.util.predicate.DamageSourcePredicate;
+import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -15,6 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -40,12 +43,20 @@ public class AmuletType {
         this.amulet = Lazy.of(amulet);
     }
 
-    public static Builder builder(ResourceLocation typeId) {
-        return new Builder(typeId);
+    public static Builder builder(ResourceLocation typeId, boolean optionalType, boolean optionalMurder) {
+        return new Builder(typeId, optionalType, optionalMurder);
     }
 
-    public static Builder builder(String type) {
-        return new Builder(type);
+    public static Builder builder(ResourceLocation typeId) {
+        return new Builder(typeId, false, false);
+    }
+
+    public static Builder builderAnc(String type, boolean optionalType, boolean optionalMurder) {
+        return new Builder(type, optionalType, optionalMurder);
+    }
+
+    public static Builder builderAnc(String type) {
+        return new Builder(type, false, false);
     }
 
     public boolean canObtain(ServerPlayer player, DamageSource source) {
@@ -66,30 +77,39 @@ public class AmuletType {
 
     public static class Builder {
         private DamageSourcePredicate.DamageSourceSubPredicate.Builder obtain;
-        private Obtain otherObtain;
+        private final Object2BooleanMap<Obtain> otherObtain = new Object2BooleanArrayMap<>();
         private InventoryTick inventoryTick;
         private ImmuneDamage immuneDamage;
         private Supplier<ItemStack> amulet;
         private boolean isImmuneDamageFromObtain;
 
-        Builder(ResourceLocation typeId) {
-            this.obtain = defaultObtain(typeId);
+        Builder(ResourceLocation typeId, boolean optionalType, boolean optionalMurder) {
+            this.obtain = defaultObtain(typeId, optionalType, optionalMurder);
         }
 
-        Builder(String type) {
-            this.obtain = defaultObtain(type);
+        Builder(String type, boolean optionalType, boolean optionalMurder) {
+            this.obtain = defaultObtain(AnvilCraft.of("amulet_valid/" + type), optionalType, optionalMurder);
         }
 
-        private static DamageSourcePredicate.DamageSourceSubPredicate.Builder defaultObtain(ResourceLocation typeId) {
-            return DamageSourcePredicate.Builder.builder()
+        private static DamageSourcePredicate.DamageSourceSubPredicate.Builder defaultObtain(
+            ResourceLocation typeId, boolean optionalType, boolean optionalMurder
+        ) {
+            var builder = DamageSourcePredicate.Builder.builder()
                 .victim(EntityType.PLAYER)
-                .build().and().sub()
-                .type(TagKey.create(Registries.DAMAGE_TYPE, typeId))
-                .murder(TagKey.create(Registries.ENTITY_TYPE, typeId));
-        }
-
-        private static DamageSourcePredicate.DamageSourceSubPredicate.Builder defaultObtain(String type) {
-            return defaultObtain(AnvilCraft.of("amulet_valid/" + type));
+                .build().and().sub();
+            TagKey<DamageType> damageTypeTag = TagKey.create(Registries.DAMAGE_TYPE, typeId);
+            if (optionalType) {
+                builder.optionalType(damageTypeTag);
+            } else {
+                builder.type(damageTypeTag);
+            }
+            TagKey<EntityType<?>> entityTypeTag = TagKey.create(Registries.ENTITY_TYPE, typeId);
+            if (optionalType) {
+                builder.optionalMurder(entityTypeTag);
+            } else {
+                builder.murder(entityTypeTag);
+            }
+            return builder;
         }
 
         public Builder obtain(UnaryOperator<DamageSourcePredicate.DamageSourceSubPredicate.Builder> builder) {
@@ -98,20 +118,12 @@ public class AmuletType {
         }
 
         public Builder obtain(Obtain obtain) {
-            if (this.otherObtain == null) {
-                this.otherObtain = obtain;
-                return this;
-            }
-            this.otherObtain = this.otherObtain.and(obtain);
+            this.otherObtain.put(obtain, true);
             return this;
         }
 
         public Builder obtainOr(Obtain obtain) {
-            if (this.otherObtain == null) {
-                this.otherObtain = obtain;
-                return this;
-            }
-            this.otherObtain = this.otherObtain.or(obtain);
+            this.otherObtain.put(obtain, false);
             return this;
         }
 
@@ -162,8 +174,8 @@ public class AmuletType {
 
         public AmuletType build() {
             Obtain obtain = this.obtain.build().build()::matches;
-            if (this.otherObtain != null) {
-                obtain = obtain.and(this.otherObtain);
+            for (var entry : this.otherObtain.object2BooleanEntrySet()) {
+                obtain = entry.getBooleanValue() ? obtain.and(entry.getKey()) : obtain.or(entry.getKey());
             }
             InventoryTick inventoryTick = this.inventoryTick;
             if (inventoryTick == null) {

@@ -30,7 +30,8 @@ public class EntityTypeTagLoader {
             .addOptionalTag(ModEntityTypeTags.CAT_AMULET_VALID)
             .addOptionalTag(ModEntityTypeTags.DOG_AMULET_VALID)
             .addOptionalTag(ModEntityTypeTags.SILENCE_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.COGWHEEL_AMULET_VALID);
+            .addOptionalTag(ModEntityTypeTags.COGWHEEL_AMULET_VALID)
+            .addOptionalTag(ModEntityTypeTags.ABNORMAL_AMULET_VALID);
 
         provider.addTag(ModEntityTypeTags.EMERALD_AMULET_VALID)
             .add(findResourceKey(EntityType.IRON_GOLEM))
@@ -61,5 +62,7 @@ public class EntityTypeTagLoader {
             .add(findResourceKey(EntityType.WARDEN));
 
         provider.addTag(ModEntityTypeTags.COGWHEEL_AMULET_VALID);
+
+        provider.addTag(ModEntityTypeTags.ABNORMAL_AMULET_VALID);
     }
 }

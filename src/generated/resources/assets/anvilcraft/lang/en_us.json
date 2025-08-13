@@ -397,6 +397,7 @@
   "gui.anvilcraft.category.void_decay.not_consumed": "Not consumed in conversion",
   "gui.anvilcraft.category.void_decay.random_tick": "The block at center will be converted when received random tick",
   "hud.anvilcraft.ionocraft_backpack_power": "Ionocraft Backpack Power: %d%%",
+  "item.anvilcraft.abnormal_amulet": "Abnormal Amulet",
   "item.anvilcraft.amber": "Amber",
   "item.anvilcraft.amethyst_axe": "Amethyst Axe",
   "item.anvilcraft.amethyst_hoe": "Amethyst Hoe",

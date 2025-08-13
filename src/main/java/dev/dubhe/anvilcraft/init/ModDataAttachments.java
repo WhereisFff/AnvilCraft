@@ -24,7 +24,7 @@ public class ModDataAttachments {
 
     public static final Supplier<AttachmentType<AmuletRaffleProbability>> AMULET_RAFFLE_PROBABILITY = ATTACHMENT_TYPES.register(
         "amulet_raffle_probability", () -> AttachmentType.builder(() -> AmuletRaffleProbability.EMPTY)
-            .serialize(AmuletRaffleProbability.CODEC).build());
+            .serialize(AmuletRaffleProbability.CODEC).copyOnDeath().build());
 
     public static final Supplier<AttachmentType<CompoundTag>> SCARE_ENTITIES = ATTACHMENT_TYPES.register(
         "scare_entities", () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build());

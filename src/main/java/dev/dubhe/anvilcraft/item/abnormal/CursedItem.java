@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.item;
+package dev.dubhe.anvilcraft.item.abnormal;
 
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
@@ -14,14 +14,8 @@ public class CursedItem extends Item implements ICursed {
     }
 
     @Override
-    public void inventoryTick(
-        ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
+    public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
         ICursed.super.inventoryTick(stack, level, entity, slotId, isSelected);
-    }
-
-    @Override
-    public boolean isPiglinCurrency(ItemStack stack) {
-        return ICursed.super.isPiglinCurrency(stack);
     }
 }

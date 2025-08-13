@@ -80,7 +80,6 @@ public interface Obtain extends BiPredicate<ServerPlayer, DamageSource> {
 
         @Override
         public @NotNull Obtain negate() {
-            this.first = this.first.negate();
             this.subs.getLast().negate();
             return this;
         }
@@ -93,7 +92,7 @@ public interface Obtain extends BiPredicate<ServerPlayer, DamageSource> {
 
         private static abstract class Sub {
             protected final BiPredicate<? super ServerPlayer, ? super DamageSource> self;
-            protected boolean isNegate = true;
+            protected boolean isNegate = false;
 
             protected Sub(BiPredicate<? super ServerPlayer, ? super DamageSource> self) {
                 this.self = self;

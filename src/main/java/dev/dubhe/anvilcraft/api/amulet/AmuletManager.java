@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
-import java.util.function.IntUnaryOperator;
 import java.util.function.Supplier;
 
 public class AmuletManager {
@@ -98,15 +97,15 @@ public class AmuletManager {
 
     public void startRaffle(ServerPlayer player, DamageSource source, boolean isConsumedInBox) {
         RandomSource random = player.getRandom();
-        int raffleProbability = Math.min(this.getRaffleProbability(player, source, isConsumedInBox), 100);
+        int probability = Math.min(this.getRaffleProbability(player, source, isConsumedInBox), 100);
 
-        if (raffleProbability > random.nextIntBetweenInclusive(0, 100)) {
+        if (probability > random.nextIntBetweenInclusive(0, 100)) {
             Optional<AmuletType> type = this.getTypeMatchedDamage(player, source, player.registryAccess()).map(Holder::value);
             type.ifPresent(amuletType -> player.getInventory().placeItemBackInInventory(amuletType.amulet().get().copy()));
 
-            this.setRaffleProbability(player, source, value -> 20);
+            this.setRaffleProbability(player, source, 0);
         } else {
-            this.setRaffleProbability(player, source, value -> Math.min(value + (isConsumedInBox ? 10 : 5), 100));
+            this.setRaffleProbability(player, source, Math.min(probability + (isConsumedInBox ? 10 : 5), 100));
         }
     }
 
@@ -130,15 +129,15 @@ public class AmuletManager {
         }
     }
 
-    public void setRaffleProbability(ServerPlayer player, DamageSource source, IntUnaryOperator modifier) {
+    public void setRaffleProbability(ServerPlayer player, DamageSource source, int probability) {
         Optional<Holder<AmuletType>> typeHolder = this.getTypeMatchedDamage(player, source, player.registryAccess());
-        typeHolder.ifPresent(holder -> this.setRaffleProbability(player, holder, modifier));
+        typeHolder.ifPresent(holder -> this.setRaffleProbability(player, holder, probability));
     }
 
-    public void setRaffleProbability(ServerPlayer player, Holder<AmuletType> type, IntUnaryOperator modifier) {
+    public void setRaffleProbability(ServerPlayer player, Holder<AmuletType> type, int probability) {
         AmuletRaffleProbability arp = player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY);
         if (!this.hasAmuletInInventory(player, type)) {
-            arp.setProbability(type.value(), modifier);
+            arp.setProbability(type.value(), probability);
         } else {
             arp.setProbability(type.value(), 0);
         }
