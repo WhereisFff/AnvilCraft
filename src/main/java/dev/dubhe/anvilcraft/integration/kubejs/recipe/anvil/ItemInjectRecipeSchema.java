@@ -99,20 +99,20 @@ public interface ItemInjectRecipeSchema {
             return this.result(result, ConstantValue.exactly(1.0f));
         }
 
-        public ItemInjectKubeRecipe input(Block... block) {
+        public ItemInjectKubeRecipe inputBlock(Block... block) {
             this.setValue(INPUT_BLOCK, BlockStatePredicate.builder().of(block).build());
             this.save();
             return this;
         }
 
-        public final ItemInjectKubeRecipe inputTag(TagKey<Block> tag) {
+        public final ItemInjectKubeRecipe inputBlockTag(TagKey<Block> tag) {
             this.setValue(INPUT_BLOCK, BlockStatePredicate.builder().of(tag).build());
             this.save();
             return this;
         }
 
-        public ItemInjectKubeRecipe result(@NotNull Block block) {
-            this.setValue(OUTPUT_BLOCK, new ChanceBlockState(block.defaultBlockState(), 1.0f));
+        public ItemInjectKubeRecipe resultBlock(@NotNull Block block) {
+            this.setValue(RESULT_BLOCK, new ChanceBlockState(block.defaultBlockState(), 1.0f));
             this.save();
             return this;
         }
@@ -125,7 +125,7 @@ public interface ItemInjectRecipeSchema {
             if (getValue(INPUT_BLOCK) == null) {
                 throw new KubeRuntimeException("input_block is Empty!").source(sourceLine);
             }
-            if (getValue(OUTPUT_BLOCK) == null) {
+            if (getValue(RESULT_BLOCK) == null) {
                 throw new KubeRuntimeException("output_block is Empty!").source(sourceLine);
             }
         }
@@ -142,14 +142,14 @@ public interface ItemInjectRecipeSchema {
     RecipeKey<BlockStatePredicate> INPUT_BLOCK = BlockStatePredicateComponent.INSTANCE
         .inputKey("input_block")
         .defaultOptional();
-    RecipeKey<ChanceBlockState> OUTPUT_BLOCK = ChanceBlockStateComponent.INSTANCE
+    RecipeKey<ChanceBlockState> RESULT_BLOCK = ChanceBlockStateComponent.INSTANCE
         .outputKey("result_block")
         .defaultOptional();
 
-    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, RESULTS, INPUT_BLOCK, OUTPUT_BLOCK)
+    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, RESULTS, INPUT_BLOCK, RESULT_BLOCK)
         .factory(new KubeRecipeFactory(AnvilCraft.of("item_inject"), ItemInjectKubeRecipe.class, ItemInjectKubeRecipe::new))
-        .constructor(INGREDIENTS, RESULTS, INPUT_BLOCK, OUTPUT_BLOCK)
-        .constructor(INGREDIENTS, INPUT_BLOCK, OUTPUT_BLOCK)
+        .constructor(INGREDIENTS, RESULTS, INPUT_BLOCK, RESULT_BLOCK)
+        .constructor(INGREDIENTS, INPUT_BLOCK, RESULT_BLOCK)
         .constructor(new IDRecipeConstructor())
         .constructor();
 }
