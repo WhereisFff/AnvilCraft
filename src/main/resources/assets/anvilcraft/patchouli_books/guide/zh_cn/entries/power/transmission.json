@@ -12,12 +12,12 @@
       "type": "patchouli:crafting",
       "anchor": "transmission_pole",
       "recipe": "anvilcraft:transmission_pole",
-      "text": "$(item)输电杆$()供电距离8，范围以头部为中心17x17x17。"
+      "text": "$(item)输电杆$()供电区域半径为8，范围以头部为中心17x17x17。"
     },
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:remote_transmission_pole",
-      "text": "$(item)远程输电杆$()供电距离16，范围以头部为中心33x33x33。"
+      "text": "$(item)远程输电杆$()供电区域半径为16，范围以头部为中心33x33x33。"
     },
     {
       "type": "patchouli:crafting",
@@ -28,7 +28,7 @@
       "type": "patchouli:spotlight",
       "item": "anvilcraft:charge_collector",
       "title": "发电机",
-      "text": "所有$(thing)发电机$()供电距离2，范围以自身为中心5x5x5。"
+      "text": "所有$(thing)发电机$()供电区域半径为2，范围以自身为中心5x5x5。"
     }
   ]
 }

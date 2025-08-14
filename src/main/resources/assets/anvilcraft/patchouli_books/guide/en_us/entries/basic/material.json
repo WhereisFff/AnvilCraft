@@ -75,7 +75,7 @@
       "type": "anvilcraft:item_crush",
       "anchor": "resin",
       "recipe": "anvilcraft:item_crush/wood_fiber",
-      "text": "树脂可用于制作$(item)树脂块$()、$(item)黏液球$()、$(item)硬化树脂$()"
+      "text": "树脂可用于制作$(item)树脂块$()、$(l:basic/item_regeneration#slime_ball)黏液球$()、$(item)硬化树脂$()"
     },
     {
       "type": "patchouli:crafting",
