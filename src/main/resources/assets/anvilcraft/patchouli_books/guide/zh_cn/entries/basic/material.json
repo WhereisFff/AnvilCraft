@@ -4,9 +4,6 @@
   "icon": "anvilcraft:geode",
   "sortnum": 1007,
   "extra_recipe_mappings": {
-    "anvilcraft:ruby": 2,
-    "anvilcraft:sapphire": 2,
-    "anvilcraft:topaz": 2,
     "anvilcraft:resin": 4
   },
   "pages": [
@@ -23,19 +20,20 @@
     },
     {
       "type": "patchouli:spotlight",
-      "item": [
-        "minecraft:emerald",
-        "anvilcraft:ruby",
-        "anvilcraft:sapphire",
-        "anvilcraft:topaz"
-      ],
-      "text": "宝石：包括$(item)绿宝石$()、$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()$(br2)$(#888888)晦涩来说，就是携带#anvilcraft:gems标签的物品$()"
+      "item": "tag:anvilcraft:gems",
+      "text": "宝石：包括$(item)绿宝石$()、$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()$(br2)$(#666666)晦涩来说，就是携带#anvilcraft:gems标签的物品$()"
     },
     {
       "type": "anvilcraft:item_crush",
       "anchor": "resin",
       "recipe": "anvilcraft:item_crush/wood_fiber",
-      "text": "树脂可用于制作$(l:basic/more_device#resin_block)树脂块$()"
+      "text": "树脂可用于制作$(item)树脂块$()、$(item)黏液球$()、$(item)硬化树脂$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "anchor": "resin_block",
+      "recipe": "anvilcraft:resin_block",
+      "text": "$(item)树脂块$()可以抓捕$(thing)碰撞箱$()的长宽小于1.5,高小于2的生物，但对于敌对和中立生物，额外要求其拥有虚弱状态。之后可以右键地面释放生物。$(br)举个例子，村民可以直接抓取，僵尸需要对其施加虚弱效果才能抓取。"
     },
     {
       "type": "anvilcraft:cooking",
