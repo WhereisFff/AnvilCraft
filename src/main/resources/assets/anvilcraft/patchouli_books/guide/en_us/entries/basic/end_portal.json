@@ -4,7 +4,6 @@
   "icon": "minecraft:end_portal_frame",
   "sortnum": 1010,
   "extra_recipe_mappings": {
-    "anvilcraft:end_dust": 1,
     "anvilcraft:spectral_anvil": 2
   },
   "pages": [
