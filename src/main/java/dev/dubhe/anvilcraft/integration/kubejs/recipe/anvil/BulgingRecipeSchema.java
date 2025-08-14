@@ -2,76 +2,147 @@ package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
-import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftRecipeComponents;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
+import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceItemStackComponent;
+import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.HasCauldronSimpleComponent;
+import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ItemIngredientPredicateComponent;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
+import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import dev.latvian.mods.kubejs.error.KubeRuntimeException;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
-import dev.latvian.mods.kubejs.recipe.component.BlockComponent;
-import dev.latvian.mods.kubejs.recipe.component.BooleanComponent;
-import dev.latvian.mods.kubejs.recipe.component.IngredientComponent;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public interface BulgingRecipeSchema {
-    @SuppressWarnings({"DataFlowIssue", "unused"})
+    @SuppressWarnings({"unused"})
     class BulgingKubeRecipe extends AnvilCraftKubeRecipe {
-        public BulgingKubeRecipe requires(Ingredient... ingredient) {
-            computeIfAbsent(INGREDIENTS, ArrayList::new).addAll(Arrays.stream(ingredient).toList());
-            save();
+        private final HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
+
+        public BulgingKubeRecipe cauldron(ResourceLocation fluid) {
+            this.hasCauldron.fluid(fluid);
+            this.setValue(CAULDRON, hasCauldron.build());
+            this.save();
             return this;
         }
 
-        public BulgingKubeRecipe requires(Ingredient ingredient, int count) {
-            if (getValue(INGREDIENTS) == null) setValue(INGREDIENTS, new ArrayList<>());
-            for (int i = 0; i < count; i++) {
-                getValue(INGREDIENTS).add(ingredient);
-            }
-            save();
+        public BulgingKubeRecipe cauldron(Block cauldron) {
+            this.cauldron(WrapUtils.cauldron2Fluid(cauldron));
+            this.setValue(CAULDRON, hasCauldron.build());
+            this.save();
             return this;
         }
 
-        public BulgingKubeRecipe result(ItemStack stack, float chance) {
-            if (getValue(RESULTS) == null) setValue(RESULTS, new ArrayList<>());
-            getValue(RESULTS).add(ChanceItemStack.of(stack).withChance(chance));
-            save();
+        public BulgingKubeRecipe transform(ResourceLocation transform) {
+            this.hasCauldron.transform(transform);
+            this.setValue(CAULDRON, hasCauldron.build());
+            this.save();
             return this;
         }
 
-        public BulgingKubeRecipe result(ItemStack stack) {
-            return result(stack, 1.0f);
-        }
-
-        public BulgingKubeRecipe cauldron(Block block) {
-            setValue(CAULDRON, block);
-            save();
+        public BulgingKubeRecipe transform(Block transform) {
+            this.hasCauldron.transform(WrapUtils.cauldron2Fluid(transform));
+            this.setValue(CAULDRON, hasCauldron.build());
+            this.save();
             return this;
         }
 
         public BulgingKubeRecipe produceFluid(boolean produceFluid) {
-            setValue(PRODUCE_FLUID, produceFluid);
-            save();
+            if (!produceFluid) return this;
+            this.hasCauldron.consume(-1);
+            this.setValue(CAULDRON, hasCauldron.build());
+            this.save();
             return this;
         }
 
         public BulgingKubeRecipe consumeFluid(boolean consumeFluid) {
-            setValue(CONSUME_FLUID, consumeFluid);
-            save();
+            if (!consumeFluid) return this;
+            this.hasCauldron.consume(1);
+            this.setValue(CAULDRON, hasCauldron.build());
+            this.save();
             return this;
         }
 
-        public BulgingKubeRecipe fromWater(boolean fromWater) {
-            setValue(FROM_WATER, fromWater);
-            save();
+        public BulgingKubeRecipe requires(@NotNull TagKey<Item> ingredient, int count) {
+            this.computeIfAbsent(INGREDIENTS, ArrayList::new)
+                .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
+            this.save();
             return this;
+        }
+
+        public BulgingKubeRecipe requires(@NotNull TagKey<Item> ingredient) {
+            return this.requires(ingredient, 1);
+        }
+
+        public BulgingKubeRecipe requires(@NotNull ItemStack ingredient) {
+            this.computeIfAbsent(INGREDIENTS, ArrayList::new)
+                .add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
+            this.save();
+            return this;
+        }
+
+        public BulgingKubeRecipe requires(@NotNull ItemLike ingredient, int count) {
+            this.computeIfAbsent(INGREDIENTS, ArrayList::new)
+                .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
+            this.save();
+            return this;
+        }
+
+        public BulgingKubeRecipe requires(@NotNull ItemLike ingredient) {
+            return this.requires(ingredient, 1);
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemStack result, NumberProvider count) {
+            this.computeIfAbsent(RESULTS, ArrayList::new)
+                .add(ChanceItemStack.of(result, count));
+            this.save();
+            return this;
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemStack result, float chance) {
+            return this.result(result, BinomialDistributionGenerator.binomial(result.getCount(), chance));
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemStack result) {
+            return this.result(result, ConstantValue.exactly(result.getCount()));
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemLike result, NumberProvider count) {
+            this.computeIfAbsent(RESULTS, ArrayList::new)
+                .add(ChanceItemStack.of(result, count));
+            this.save();
+            return this;
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemLike result, int count, float chance) {
+            return this.result(result, BinomialDistributionGenerator.binomial(count, chance));
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemLike result, int count) {
+            return this.result(result, ConstantValue.exactly(count));
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemLike result, float chance) {
+            return this.result(result, 1, chance);
+        }
+
+        public BulgingKubeRecipe result(@NotNull ItemLike result) {
+            return this.result(result, ConstantValue.exactly(1.0f));
         }
 
         @Override
@@ -85,18 +156,23 @@ public interface BulgingRecipeSchema {
         }
     }
 
-    RecipeKey<List<Ingredient>> INGREDIENTS = IngredientComponent.INGREDIENT.asList().inputKey("ingredients").defaultOptional();
-    RecipeKey<List<ChanceItemStack>> RESULTS = AnvilCraftRecipeComponents.CHANCE_ITEM_STACK.asList().inputKey("results").defaultOptional();
-    RecipeKey<Block> CAULDRON = BlockComponent.BLOCK.outputKey("cauldron").optional(Blocks.WATER_CAULDRON).alwaysWrite();
-    RecipeKey<Boolean> PRODUCE_FLUID = BooleanComponent.BOOLEAN.otherKey("produce_fluid").optional(false).alwaysWrite();
-    RecipeKey<Boolean> CONSUME_FLUID = BooleanComponent.BOOLEAN.otherKey("consume_fluid").optional(false).alwaysWrite();
-    RecipeKey<Boolean> FROM_WATER = BooleanComponent.BOOLEAN.otherKey("from_water").optional(false).alwaysWrite();
+    RecipeKey<List<ItemIngredientPredicate>> INGREDIENTS = ItemIngredientPredicateComponent.INSTANCE
+        .asList()
+        .inputKey("ingredients")
+        .defaultOptional();
+    RecipeKey<List<ChanceItemStack>> RESULTS = ChanceItemStackComponent.INSTANCE
+        .asList()
+        .inputKey("results")
+        .defaultOptional();
+    RecipeKey<HasCauldronSimple> CAULDRON = HasCauldronSimpleComponent.INSTANCE
+        .outputKey("cauldron")
+        .optional(HasCauldronSimple.fluid(HasCauldron.EMPTY).build())
+        .alwaysWrite();
 
-    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, RESULTS, CAULDRON, PRODUCE_FLUID, CONSUME_FLUID, FROM_WATER)
+    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, RESULTS, CAULDRON)
         .factory(new KubeRecipeFactory(AnvilCraft.of("bulging"), BulgingKubeRecipe.class, BulgingKubeRecipe::new))
-        .constructor(INGREDIENTS, RESULTS, CAULDRON, PRODUCE_FLUID, CONSUME_FLUID, FROM_WATER)
+        .constructor(INGREDIENTS, RESULTS, CAULDRON)
         .constructor(INGREDIENTS, RESULTS)
-        .constructor(INGREDIENTS, RESULTS, CAULDRON, PRODUCE_FLUID, CONSUME_FLUID)
         .constructor(new IDRecipeConstructor())
         .constructor();
 }

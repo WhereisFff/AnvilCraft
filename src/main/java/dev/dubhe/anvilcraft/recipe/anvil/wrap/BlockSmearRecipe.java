@@ -7,8 +7,8 @@ import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -38,7 +38,7 @@ public class BlockSmearRecipe extends InWorldRecipe {
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
             WrapUtils.getPredicates(inputs),
             List.of(),
-            WrapUtils.getOutcomes(result),
+            WrapUtils.getOutcomes(result, -2),
             0,
             true
         );

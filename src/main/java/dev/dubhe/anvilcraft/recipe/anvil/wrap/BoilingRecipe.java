@@ -2,9 +2,9 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import lombok.Getter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -23,7 +23,7 @@ public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {
         List<ChanceItemStack> results
     ) {
         super(
-            new Vec3(0.0, -1.0, 0.0),
+            new Vec3(0.0, -1.5, 0.0),
             itemIngredients,
             new Vec3(0.0, -1.5, 0.0),
             results,

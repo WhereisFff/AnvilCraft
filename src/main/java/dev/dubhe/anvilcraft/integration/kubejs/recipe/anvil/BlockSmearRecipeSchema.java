@@ -16,22 +16,29 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
-public interface BlockCrushRecipeSchema {
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+public interface BlockSmearRecipeSchema {
     @SuppressWarnings("unused")
-    class BlockCrushKubeRecipe extends AnvilCraftKubeRecipe {
-        public BlockCrushKubeRecipe input(Block... block) {
-            this.setValue(INPUT, BlockStatePredicate.builder().of(block).build());
+    class BlockSmearKubeRecipe extends AnvilCraftKubeRecipe {
+        public BlockSmearKubeRecipe input(Block... block) {
+            this.computeIfAbsent(INPUTS, ArrayList::new)
+                .add(BlockStatePredicate.builder().of(block).build());
             this.save();
             return this;
         }
 
-        public final BlockCrushKubeRecipe inputTag(TagKey<Block> tag) {
-            this.setValue(INPUT, BlockStatePredicate.builder().of(tag).build());
+        @SafeVarargs
+        public final BlockSmearKubeRecipe inputTag(TagKey<Block>... block) {
+            this.computeIfAbsent(INPUTS, ArrayList::new)
+                .addAll(Arrays.stream(block).map(tag -> BlockStatePredicate.builder().of(tag).build()).toList());
             this.save();
             return this;
         }
 
-        public BlockCrushKubeRecipe result(@NotNull Block block) {
+        public BlockSmearKubeRecipe result(@NotNull Block block) {
             this.setValue(RESULT, new ChanceBlockState(block.defaultBlockState(), 1.0f));
             this.save();
             return this;
@@ -39,7 +46,7 @@ public interface BlockCrushRecipeSchema {
 
         @Override
         protected void validate() {
-            if (getValue(INPUT) == null) {
+            if (this.computeIfAbsent(INPUTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
             }
             if (getValue(RESULT) == null) {
@@ -48,16 +55,18 @@ public interface BlockCrushRecipeSchema {
         }
     }
 
-    RecipeKey<BlockStatePredicate> INPUT = BlockStatePredicateComponent.INSTANCE
-        .key("input", ComponentRole.INPUT)
+
+    RecipeKey<List<BlockStatePredicate>> INPUTS = BlockStatePredicateComponent.INSTANCE
+        .asList()
+        .key("inputs", ComponentRole.INPUT)
         .defaultOptional();
     RecipeKey<ChanceBlockState> RESULT = ChanceBlockStateComponent.INSTANCE
         .key("result", ComponentRole.OUTPUT)
         .defaultOptional();
 
-    RecipeSchema SCHEMA = new RecipeSchema(INPUT, RESULT)
-        .factory(new KubeRecipeFactory(AnvilCraft.of("block_crush"), BlockCrushKubeRecipe.class, BlockCrushKubeRecipe::new))
-        .constructor(INPUT, RESULT)
+    RecipeSchema SCHEMA = new RecipeSchema(INPUTS, RESULT)
+        .factory(new KubeRecipeFactory(AnvilCraft.of("block_crush"), BlockSmearKubeRecipe.class, BlockSmearKubeRecipe::new))
+        .constructor(INPUTS, RESULT)
         .constructor(new IDRecipeConstructor())
         .constructor();
 }

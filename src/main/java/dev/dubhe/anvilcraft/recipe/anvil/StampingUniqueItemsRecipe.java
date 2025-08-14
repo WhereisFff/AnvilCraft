@@ -3,9 +3,9 @@ package dev.dubhe.anvilcraft.recipe.anvil;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.input.ItemProcessInput;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.CollectionUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
@@ -100,7 +100,7 @@ public class StampingUniqueItemsRecipe implements Recipe<ItemProcessInput> {
         return ModRecipeTypes.STAMPING_UNIQUE_ITEMS_SERIALIZER.get();
     }
 
-    public int getMaxCraftTime(ItemProcessInput pInput) {
+    public int getMaxCraftTime() {
         return 1;
     }
 
@@ -204,7 +204,7 @@ public class StampingUniqueItemsRecipe implements Recipe<ItemProcessInput> {
         public Builder result(ItemLike item, int count, float chance) {
             ItemStack stack = item.asItem().getDefaultInstance();
             stack.setCount(count);
-            return this.result(ChanceItemStack.of(stack).withChance(chance));
+            return this.result(ChanceItemStack.of(stack, chance));
         }
 
         @Override

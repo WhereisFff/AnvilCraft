@@ -9,14 +9,11 @@ import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ChanceBlockState;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.util.HasCauldronSimple;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import lombok.Getter;
-import net.minecraft.core.component.DataComponentPredicate;
-import net.minecraft.core.component.DataComponentType;
-import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -226,28 +223,13 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             return this.requires(ingredient, 1);
         }
 
-        public <D> B requires(@NotNull ItemStack ingredient) {
-            Item item = ingredient.getItem();
-            ItemStack defaultInstance = item.getDefaultInstance();
-            ItemIngredientPredicate.Builder predicate = ItemIngredientPredicate.Builder.item().of(item);
-            for (TypedDataComponent<?> component : item.components()) {
-                Object o = defaultInstance.get(component.type());
-                if (o != null && o.equals(component.value())) continue;
-                //noinspection unchecked
-                predicate.hasComponents(
-                    DataComponentPredicate.builder()
-                        .expect((DataComponentType<D>) component.type(), (D) component.value())
-                        .build()
-                );
-            }
-            this.itemIngredients.add(predicate.withCount(ingredient.getCount()).build());
+        public B requires(@NotNull ItemStack ingredient) {
+            this.itemIngredients.add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
             return this.getThis();
         }
 
         public B requires(@NotNull ItemLike ingredient, int count) {
-            ItemStack stack = ingredient.asItem().getDefaultInstance();
-            stack.setCount(count);
-            return this.requires(stack);
+            return this.requires(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
         }
 
         public B requires(@NotNull ItemLike ingredient) {

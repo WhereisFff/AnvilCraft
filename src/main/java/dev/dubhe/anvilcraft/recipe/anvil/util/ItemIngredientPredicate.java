@@ -12,6 +12,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.component.TypedDataComponent;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.NbtOps;
@@ -129,6 +131,23 @@ public record ItemIngredientPredicate(
 
         public Builder of(TagKey<Item> tag) {
             this.items = Optional.of(BuiltInRegistries.ITEM.getOrCreateTag(tag));
+            return this;
+        }
+
+        public <D> Builder of(@NotNull ItemStack stack) {
+            Item item = stack.getItem();
+            ItemStack defaultInstance = item.getDefaultInstance();
+            this.of(item);
+            for (TypedDataComponent<?> component : item.components()) {
+                Object o = defaultInstance.get(component.type());
+                if (o != null && o.equals(component.value())) continue;
+                //noinspection unchecked
+                this.hasComponents(
+                    DataComponentPredicate.builder()
+                        .expect((DataComponentType<D>) component.type(), (D) component.value())
+                        .build()
+                );
+            }
             return this;
         }
 
