@@ -178,7 +178,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
         int repairCost = input.getOrDefault(DataComponents.REPAIR_COST, 0);
         int anvilCost = enchantment.enchantment.value().getAnvilCost();
         return Math.clamp(
-            (long) anvilCost * enchantment.level * input.getCount() * (repairCost <= 0 ? 1 : repairCost),
+            (long) anvilCost * enchantment.level * input.getCount() + repairCost,
             0, Integer.MAX_VALUE
         );
     }

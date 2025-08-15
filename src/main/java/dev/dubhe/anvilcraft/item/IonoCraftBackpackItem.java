@@ -168,7 +168,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
                 instance.removeModifier(CREATIVE_FLIGHT);
             }
             return;
-        } else if (getFlightTime(equipped) >= AnvilCraft.config.ionoCraftBackpackMaxFlightTime) {
+        } else if (getFlightTime(equipped) >= AnvilCraft.config.ionoCraftBackpackMaxFlightTime && !player.getAbilities().flying) {
             powerComponent.getPowerConsumptions().remove(CONSUMPTION);
             return;
         }

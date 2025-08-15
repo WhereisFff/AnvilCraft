@@ -42,7 +42,7 @@ public class AnvilUtil {
                 0.0d,
                 0.0d
             );
-            ((AdsorbableItemEntity) entity).setIsAdsorbable(false);
+            ((AdsorbableItemEntity) entity).anvilcraft$setIsAdsorbable(false);
             level.addFreshEntity(entity);
         }
     }

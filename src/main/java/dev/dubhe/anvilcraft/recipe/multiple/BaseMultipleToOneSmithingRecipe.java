@@ -263,12 +263,12 @@ public abstract class BaseMultipleToOneSmithingRecipe<T extends Item & IMultiple
         }
 
         @SafeVarargs
-        public final Builder<T, R> material(NonNullSupplier<? extends Item>... materialGetters) {
-            this.material = Ingredient.of(Collections2.transform(List.of(materialGetters), NonNullSupplier::get).toArray(new Item[0]));
+        public final Builder<T, R> material(NonNullSupplier<? extends ItemLike>... materialGetters) {
+            this.material = Ingredient.of(Collections2.transform(List.of(materialGetters), NonNullSupplier::get).toArray(new ItemLike[0]));
             return this;
         }
 
-        public Builder<T, R> material(int count, NonNullSupplier<? extends Item> materialGetter) {
+        public Builder<T, R> material(int count, NonNullSupplier<? extends ItemLike> materialGetter) {
             for (int i = 0; i < count; i++) {
                 this.input(Ingredient.of(materialGetter.get()));
             }

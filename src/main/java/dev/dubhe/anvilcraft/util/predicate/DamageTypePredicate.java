@@ -31,7 +31,7 @@ public record DamageTypePredicate(
                 return this.isOr == !this.isInverted;
             }
         }
-        return this.isInverted;
+        return this.isOr == this.isInverted;
     }
 
     public record DamageTypeSubPredicate(
@@ -96,7 +96,7 @@ public record DamageTypePredicate(
             }
 
             @SafeVarargs
-            public final Builder tag(TagKey<DamageType>... tags) {
+            public final Builder tags(TagKey<DamageType>... tags) {
                 return this.tag(TagPredicate.is(true, tags));
             }
 

@@ -15,6 +15,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,6 +46,7 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -218,20 +220,24 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
             Object2IntMap<Holder<Enchantment>> enchantments = new Object2IntArrayMap<>();
             for (int i = 0; i < 4; i++) {
                 ItemStack inputStack = input.getInputItem(i);
-                for (
-                    Object2IntMap.Entry<Holder<Enchantment>> entry
-                    : inputStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY).entrySet()
-                ) {
+                DataComponentType<ItemEnchantments> type = EnchantmentHelper.getComponentType(defaultStack);
+                if (inputStack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
+                    type = DataComponents.STORED_ENCHANTMENTS;
+                }
+                for (var entry : inputStack.getOrDefault(type, ItemEnchantments.EMPTY).entrySet()) {
                     enchantments.mergeInt(entry.getKey(), entry.getIntValue(), Integer::max);
                 }
             }
 
-            ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(
-                defaultStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY));
+            DataComponentType<ItemEnchantments> type = EnchantmentHelper.getComponentType(defaultStack);
+            if (defaultStack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
+                type = DataComponents.STORED_ENCHANTMENTS;
+            }
+            ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(defaultStack.getOrDefault(type, ItemEnchantments.EMPTY));
             for (Object2IntMap.Entry<Holder<Enchantment>> entry : enchantments.object2IntEntrySet()) {
                 mutable.set(entry.getKey(), entry.getIntValue());
             }
-            defaultStack.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
+            defaultStack.set(type, mutable.toImmutable());
 
             return defaultStack;
         }

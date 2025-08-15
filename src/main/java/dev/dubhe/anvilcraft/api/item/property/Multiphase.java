@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.api.item.property;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModComponents;
@@ -237,7 +238,18 @@ public record Multiphase(LinkedList<Phase> phases) {
         Optional<Component> customName, Optional<Component> itemName,
         int repairCost, @NotNull ItemEnchantments enchantments, @NotNull ItemEnchantments storedEnchantments
     ) {
-        public static final Codec<Phase> CODEC = RecordCodecBuilder.create(inst -> inst.group(
+        // TODO: for compatibility, remove in future
+        private static Phase compat(
+            int index, Component phaseName,
+            Optional<Component> customName, Optional<Component> itemName,
+            int repairCost, @NotNull ItemEnchantments enchantments
+        ) {
+            return new Phase(
+                index, phaseName, customName, itemName, repairCost, enchantments, ItemEnchantments.EMPTY);
+        }
+        
+        // TODO: for compatibility, rename to CODEC in future
+        public static final Codec<Phase> TRUE_CODEC = RecordCodecBuilder.create(inst -> inst.group(
             Codec.INT.fieldOf("index").forGetter(Phase::index),
             ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
             ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
@@ -246,6 +258,17 @@ public record Multiphase(LinkedList<Phase> phases) {
             ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments),
             ItemEnchantments.CODEC.fieldOf("storedEnchantments").forGetter(Phase::storedEnchantments)
         ).apply(inst, Phase::new));
+        // TODO: for compatibility, remove in future
+        public static final Codec<Phase> COMPATIBILITY_CODEC = RecordCodecBuilder.create(inst -> inst.group(
+            Codec.INT.fieldOf("index").forGetter(Phase::index),
+            ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
+            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName").forGetter(Phase::itemName),
+            Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
+            ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
+        ).apply(inst, Phase::compat));
+        public static final Codec<Phase> CODEC = Codec.either(TRUE_CODEC, COMPATIBILITY_CODEC)
+            .xmap(Either::unwrap, Either::left);
         public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = CodecUtil.composite(
             ByteBufCodecs.INT, Phase::index,
             ComponentSerialization.STREAM_CODEC, Phase::phaseName,

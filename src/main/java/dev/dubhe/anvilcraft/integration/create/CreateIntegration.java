@@ -6,21 +6,18 @@ import com.simibubi.create.api.packager.unpacking.UnpackingHandler;
 import com.simibubi.create.api.registry.SimpleRegistry;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
 import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModDamageTypeTags;
-import dev.dubhe.anvilcraft.init.ModEntityTypeTags;
 import dev.dubhe.anvilcraft.init.ModItemGroups;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.util.predicate.DamageSourcePredicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.CreativeModeTab;
@@ -112,12 +109,11 @@ public class CreateIntegration {
 
     private static final DeferredRegister<AmuletType> REGISTER = DeferredRegister.create(ModRegistries.AMULET_TYPE_KEY, AnvilCraft.MOD_ID);
     private static final DeferredHolder<AmuletType, ? extends AmuletType> COGWHEEL = REGISTER.register(
-        "cogwheel", () -> new AmuletType.ImmuneDamageFromObtain(
-            DamageSourcePredicate.Builder.builder()
-                .type(ModDamageTypeTags.COGWHEEL_AMULET_VALID)
+        "cogwheel", () -> AmuletType.builderAnc("cogwheel")
+            .immuneDamageFromObtain()
+            .obtain(builder -> builder
                 .type("create")
-                .murder(ModEntityTypeTags.COGWHEEL_AMULET_VALID)
-                .build().build(),
-            COGWHEEL_AMULET.asStack()
-        ));
+                .buildAndSub())
+            .amulet(COGWHEEL_AMULET)
+            .build());
 }

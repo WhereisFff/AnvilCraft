@@ -164,13 +164,13 @@ public class AmuletSelectorSupport {
                 this.renderTotem(guiGraphics, x + 3, y + 3, content);
 
                 if (getCurrentSelectedIndex() == 0) {
-                    this.renderSelectionBox(guiGraphics, x + 3, y + 3, x + 3 + 35, y + 3 + 53);
+                    this.renderSelectionBox(guiGraphics, x + 3, y + 3, x + 3 + 53, y + 3 + 53);
                 }
                 poseStack.popPose();
 
                 poseStack.pushPose();
-                poseStack.translate(x + 4, y + 4 + 9, 1001);
-                poseStack.scale(34f / 16, 34f / 16, 0);
+                poseStack.translate(x + 4 + 2, y + 4 + 2, 1001);
+                poseStack.scale(47f / 16, 47f / 16, 0);
                 ItemStack amulet1 = amulets.getFirst();
                 guiGraphics.renderFakeItem(amulet1, 0, 0);
                 guiGraphics.renderItemDecorations(Minecraft.getInstance().font, amulet1, 0, 0);

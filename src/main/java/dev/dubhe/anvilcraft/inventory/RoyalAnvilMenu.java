@@ -2,7 +2,8 @@ package dev.dubhe.anvilcraft.inventory;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
-import dev.dubhe.anvilcraft.item.ICursed;
+import dev.dubhe.anvilcraft.item.abnormal.IAbnormal;
+import dev.dubhe.anvilcraft.item.abnormal.ICursed;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
@@ -187,11 +188,9 @@ public class RoyalAnvilMenu extends AnvilMenu {
 
             if (extraFormat != null) {
                 repairCostT = 1;
-                Integer baseRepairCost = inputItemLeft.get(DataComponents.REPAIR_COST);
                 totalCost += repairCostT
                     * inputItemLeft.getCount()
-                    * inputItemRight.getCount()
-                    * (baseRepairCost == null || baseRepairCost == 0 ? 1 : baseRepairCost);
+                    * inputItemRight.getCount();
                 Component currentName = inputItemLeft.getHoverName();
                 if (!this.itemName.equals(currentName.getString())
                     && this.itemName != null
@@ -259,7 +258,7 @@ public class RoyalAnvilMenu extends AnvilMenu {
         super.onTake(player, stack);
         Level level = player.level();
         if (level.isClientSide()) return;
-        int curedNumber = ICursed.hasCursedNumber(player);
+        int curedNumber = IAbnormal.getAbnormalCount(player, ICursed.class);
         if (curedNumber <= 0) return;
         LightningBolt bolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
         bolt.setPos(player.getX(), player.getY(), player.getZ());

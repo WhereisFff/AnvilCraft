@@ -149,6 +149,4 @@ public abstract class LevelRendererMixin {
         RenderSystem.enableDepthTest();
         minecraft.getMainRenderTarget().bindWrite(false);
     }
-
-
 }

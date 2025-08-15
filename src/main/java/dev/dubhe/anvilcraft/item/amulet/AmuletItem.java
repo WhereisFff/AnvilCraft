@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item.amulet;
 
-import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.Item;
 

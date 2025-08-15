@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.item.amulet;
 
 import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
-import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import dev.dubhe.anvilcraft.init.ModAmuletTypes;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
@@ -51,7 +51,7 @@ public class ComradeAmuletItem extends AmuletItem {
         amulet.set(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, !getSignedPlayers(amulet).isEmpty());
     }
 
-    public static boolean shouldIgnoreDamage(ServerPlayer player, DamageSource source) {
+    public static boolean shouldImmuneDamage(ServerPlayer player, DamageSource source) {
         ItemStack comrade = InventoryUtil.getFirstItem(player.getInventory(), ModItems.COMRADE_AMULET);
         return Optional.ofNullable(source.getEntity())
             .map(Entity::getUUID)

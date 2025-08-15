@@ -1,12 +1,15 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
+import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
+import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,6 +18,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -61,5 +65,13 @@ abstract class PlayerMixin extends LivingEntity {
     private void disableKiller(DamageSource cause, CallbackInfo ci, @Share("killer") LocalRef<ServerPlayer> killerRef) {
         if (killerRef.get() == null) return;
         AnvilCraftFakePlayers.anvilCraftKiller.disable(killerRef.get());
+    }
+
+    @ModifyReturnValue(method = "isScoping", at = @At("RETURN"))
+    private boolean isScoping(boolean original) {
+        return this.isUsingItem()
+            && (this.getUseItem().is(Items.SPYGLASS)
+            || (this.getUseItem().is(ModItems.MULTITOOL_ITEM)
+            && MultitoolItem.getMode(this.getUseItem()) == MultitoolItem.SPYGLASS_MODE));
     }
 }

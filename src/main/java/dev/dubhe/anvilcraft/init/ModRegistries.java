@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;

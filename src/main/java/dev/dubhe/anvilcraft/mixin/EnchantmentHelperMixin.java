@@ -16,6 +16,7 @@ import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -23,13 +24,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(EnchantmentHelper.class)
-public class EnchantmentHelperMixin {
+abstract class EnchantmentHelperMixin {
     @Unique
     private static final ThreadLocal<ResourceKey<Level>> anvilcraft$dimension = new ThreadLocal<>();
 
     @Inject(method = "doPostAttackEffectsWithItemSource", at = @At("HEAD"))
     private static void cachedServerLevel(
-        ServerLevel level, Entity entity, DamageSource damageSource, ItemStack itemSource, CallbackInfo ci
+        @NotNull ServerLevel level,
+        Entity entity,
+        DamageSource damageSource,
+        ItemStack itemSource,
+        CallbackInfo ci
     ) {
         anvilcraft$dimension.set(level.dimension());
     }
@@ -44,8 +49,13 @@ public class EnchantmentHelperMixin {
             target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper$EnchantmentInSlotVisitor;"
                 + "accept(Lnet/minecraft/core/Holder;ILnet/minecraft/world/item/enchantment/EnchantedItemInUse;)V"))
     private static void checkShouldTriggerProvidence(
-        EnchantmentHelper.EnchantmentInSlotVisitor instance, Holder<Enchantment> holder, int i, EnchantedItemInUse enchantedItemInUse,
-        Operation<Void> original, @Local Holder<Enchantment> enchantment, @Local(argsOnly = true) LivingEntity entity
+        EnchantmentHelper.EnchantmentInSlotVisitor instance,
+        Holder<Enchantment> holder,
+        int i,
+        EnchantedItemInUse enchantedItemInUse,
+        @NotNull Operation<Void> original,
+        @Local @NotNull Holder<Enchantment> enchantment,
+        @Local(argsOnly = true) LivingEntity entity
     ) {
         original.call(instance, holder, i, enchantedItemInUse);
         if (!enchantment.is(ModEnchantmentTags.PROVIDENCE_BONUS)) {
