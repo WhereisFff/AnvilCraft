@@ -47,11 +47,13 @@ public class FallingBlockCollisionEventListener {
         BlockPos pos = event.getPos();
         if (AnvilCraft.config.anvilCollisionCraftSpeed > event.getSpeed()) return;
         //if (level.isClientSide()) return;
-        for (RecipeHolder<AnvilCollisionCraftRecipe> recipe : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
-            if (!recipe.value().anvil().is(event.getFallingBlockEntity().blockState)) continue;
-            if (!recipe.value().hitBlock().is(level.getBlockState(pos))) continue;
+        BlockState blockState = level.getBlockState(pos);
+        for (RecipeHolder<AnvilCollisionCraftRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
+            AnvilCollisionCraftRecipe recipe = recipeHolder.value();
+            if (!recipe.anvil().is(event.getFallingBlockEntity().blockState)) continue;
+            if (!recipe.hitBlock().is(blockState)) continue;
             removeBlock(level, pos);
-            if (recipe.value().consume())
+            if (recipe.consume())
                 event.getFallingBlockEntity().kill();
 
             //Entity source = event.getFallingBlockEntity();
@@ -85,7 +87,7 @@ public class FallingBlockCollisionEventListener {
                 largeExplosionParticles,
                 explosionSound
             );
-            ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.value().transformBlocks());
+            ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.transformBlocks());
             explosion.explode();
             explosion.finalizeExplosion(spawnParticles);
             if (level instanceof ServerLevel serverLevel) {
@@ -111,7 +113,7 @@ public class FallingBlockCollisionEventListener {
             }
 
             ArrayList<ItemStack> itemEntities = new ArrayList<>();
-            for (OutputItem outputItem : recipe.value().outputItems()) {
+            for (OutputItem outputItem : recipe.outputItems()) {
                 ItemStack itemStack;
                 if ((itemStack = outputItem.getResult(level.random)) == null) continue;
                 itemEntities.add(itemStack);

@@ -189,7 +189,6 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.NETHER_GOLD_ORE))
             .add(findResourceKey(Blocks.GILDED_BLACKSTONE))
             .add(findResourceKey(Blocks.NETHER_QUARTZ_ORE))
-            //FlintBlockNeedsToBeSupplementedHere
             .add(ModBlocks.VOID_STONE.getKey())
             .add(ModBlocks.END_DUST.getKey())
             .add(ModBlocks.DEEPSLATE_TIN_ORE.getKey())

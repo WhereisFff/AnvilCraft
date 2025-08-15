@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -57,7 +58,11 @@ public class MagnetizedNodeEntity extends Entity {
         }
         super.tick();
         if (!this.level().isClientSide && !this.level().getBlockState(this.blockPos).is(this.blockState.getBlock())) {
-            this.kill();
+            BlockState currentState = this.level().getBlockState(this.blockPos);
+            if (!currentState.is(this.blockState.getBlock())
+                && (!currentState.is(BlockTags.CAULDRONS) || !this.blockState.is(BlockTags.CAULDRONS))) {
+                this.kill();
+            }
         }
         AABB aabb = new AABB(blockPos.getX() - 0.01,
                 blockPos.getY() - 0.01,
