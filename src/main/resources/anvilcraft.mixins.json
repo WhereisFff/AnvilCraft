@@ -38,6 +38,7 @@
     "RecipeManagerMixin",
     "RedstoneWireBlockMixin",
     "ServerGamePacketListenerMixin",
+    "ServerLevelMixin",
     "ServerPlayerMixin",
     "VaultBlockEntityServerMixin",
     "VibrationSystemUserMixin",
