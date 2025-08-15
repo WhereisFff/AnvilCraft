@@ -3,9 +3,6 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "anvilcraft:block_placer",
   "sortnum": 1005,
-  "extra_recipe_mappings": {
-    "anvilcraft:crab_claw": 3
-  },
   "pages": [
     {
       "type": "patchouli:text",
@@ -14,13 +11,7 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:magnet",
-      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。$(br2)shift+右键，在方块上表面生成$(item)磁化节点$()。"
-    },
-    {
-      "type": "patchouli:entity",
-      "anchor": "trader",
-      "entity": "anvilcraft:magnetized_node",
-      "text": "吸引所有接触到其$(thing)附着方块$()的物品，且不会再次吸引加工后的产物，方便进行$(l:basic/item_processing)物品处理$()"
+      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。$(br2)shift+右键，在方块上表面生成$(item)磁化节点$()。其可以吸引所有接触到其$(thing)附着方块$()的物品，且不会再次吸引加工后的产物，方便进行$(l:basic/item_processing)物品处理$()"
     },
     {
       "type": "patchouli:crafting",
@@ -30,6 +21,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:crab_claw",
+      "link_recipe": true,
       "text": "主手或副手手持时增加3格触及距离，右键可以强制撬开$(item)潜影贝$()，从$(item)蟹笼$()产出。"
     },
     {
@@ -71,7 +63,7 @@
         ]
       },
       "enable_visualize": "false",
-      "text": "溜槽成链时，被指向的溜槽变为简化溜槽，不再从世界吸取物品，不能过滤。"
+      "text": "溜槽成链时，被指向的溜槽变为简化溜槽，不再从世界吸取物品，不能过滤，不受红石信号控制。"
     },
     {
       "type": "patchouli:crafting",
@@ -85,9 +77,9 @@
     },
     {
       "type": "patchouli:crafting",
-      "anchor": "resin_block",
-      "recipe": "anvilcraft:resin_block",
-      "text": "$(item)树脂块$()可以抓捕$(thing)碰撞箱$()的长宽小于1.5,高小于2的生物，但对于敌对和中立生物，额外要求其拥有虚弱状态。之后可以右键地面释放生物。$(br)举个例子，村民可以直接抓取，僵尸需要对其施加虚弱效果才能抓取。"
+      "anchor": "disk",
+      "recipe": "anvilcraft:disk",
+      "text": "首次右键复制方块过滤栏，后续右键其他方块粘贴，潜行右键清空。 $(p)不会改变方块朝向等设置"
     }
   ]
 }
