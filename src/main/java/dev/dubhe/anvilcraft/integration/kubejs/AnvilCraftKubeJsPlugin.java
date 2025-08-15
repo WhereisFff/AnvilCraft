@@ -15,7 +15,6 @@ import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.TimeWarpRecipeSchema
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.BlockStatePredicateComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceBlockStateComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceItemStackComponent;
-import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.HasCauldronSimpleComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ItemIngredientPredicateComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.mineral.MineralFountainChanceRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.mineral.MineralFountainRecipeSchema;
@@ -61,7 +60,6 @@ public class AnvilCraftKubeJsPlugin implements KubeJSPlugin {
         registry.register(BlockStatePredicateComponent.INSTANCE);
         registry.register(ChanceBlockStateComponent.INSTANCE);
         registry.register(ChanceItemStackComponent.INSTANCE);
-        registry.register(HasCauldronSimpleComponent.INSTANCE);
         registry.register(ItemIngredientPredicateComponent.INSTANCE);
     }
 

@@ -2,17 +2,18 @@ package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
+import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftRecipeComponents;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceItemStackComponent;
-import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.HasCauldronSimpleComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ItemIngredientPredicateComponent;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import dev.latvian.mods.kubejs.error.KubeRuntimeException;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
+import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
+import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import net.minecraft.resources.ResourceLocation;
@@ -32,48 +33,36 @@ import java.util.List;
 public interface BulgingRecipeSchema {
     @SuppressWarnings({"unused"})
     class BulgingKubeRecipe extends AnvilCraftKubeRecipe {
-        private final HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
-
         public BulgingKubeRecipe cauldron(ResourceLocation fluid) {
-            this.hasCauldron.fluid(fluid);
-            this.setValue(CAULDRON, hasCauldron.build());
+            this.setValue(FLUID, fluid);
             this.save();
             return this;
         }
 
         public BulgingKubeRecipe cauldron(Block cauldron) {
-            this.cauldron(WrapUtils.cauldron2Fluid(cauldron));
-            this.setValue(CAULDRON, hasCauldron.build());
-            this.save();
-            return this;
+            return this.cauldron(WrapUtils.cauldron2Fluid(cauldron));
         }
 
         public BulgingKubeRecipe transform(ResourceLocation transform) {
-            this.hasCauldron.transform(transform);
-            this.setValue(CAULDRON, hasCauldron.build());
+            this.setValue(TRANSFORM, transform);
             this.save();
             return this;
         }
 
         public BulgingKubeRecipe transform(Block transform) {
-            this.hasCauldron.transform(WrapUtils.cauldron2Fluid(transform));
-            this.setValue(CAULDRON, hasCauldron.build());
-            this.save();
-            return this;
+            return this.transform(WrapUtils.cauldron2Fluid(transform));
         }
 
         public BulgingKubeRecipe produceFluid(boolean produceFluid) {
             if (!produceFluid) return this;
-            this.hasCauldron.consume(-1);
-            this.setValue(CAULDRON, hasCauldron.build());
+            this.setValue(CONSUME, -1);
             this.save();
             return this;
         }
 
         public BulgingKubeRecipe consumeFluid(boolean consumeFluid) {
             if (!consumeFluid) return this;
-            this.hasCauldron.consume(1);
-            this.setValue(CAULDRON, hasCauldron.build());
+            this.setValue(CONSUME, 1);
             this.save();
             return this;
         }
@@ -164,14 +153,24 @@ public interface BulgingRecipeSchema {
         .asList()
         .inputKey("results")
         .defaultOptional();
-    RecipeKey<HasCauldronSimple> CAULDRON = HasCauldronSimpleComponent.INSTANCE
-        .outputKey("cauldron")
-        .optional(HasCauldronSimple.fluid(HasCauldron.EMPTY).build())
+    RecipeKey<ResourceLocation> FLUID = AnvilCraftRecipeComponents.RESOURCE_LOCATION
+        .key("fluid", ComponentRole.OUTPUT)
+        .optional(HasCauldron.EMPTY)
+        .alwaysWrite();
+    RecipeKey<Integer> CONSUME = NumberComponent.INT
+        .key("consume", ComponentRole.OUTPUT)
+        .optional(0)
+        .alwaysWrite();
+    RecipeKey<ResourceLocation> TRANSFORM = AnvilCraftRecipeComponents.RESOURCE_LOCATION
+        .key("transform", ComponentRole.OUTPUT)
+        .optional(HasCauldron.NULL)
         .alwaysWrite();
 
-    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, RESULTS, CAULDRON)
+    RecipeSchema SCHEMA = new RecipeSchema(INGREDIENTS, RESULTS, FLUID, CONSUME, TRANSFORM)
         .factory(new KubeRecipeFactory(AnvilCraft.of("bulging"), BulgingKubeRecipe.class, BulgingKubeRecipe::new))
-        .constructor(INGREDIENTS, RESULTS, CAULDRON)
+        .constructor(INGREDIENTS, RESULTS, FLUID, CONSUME, TRANSFORM)
+        .constructor(INGREDIENTS, RESULTS, FLUID, CONSUME)
+        .constructor(INGREDIENTS, RESULTS, FLUID)
         .constructor(INGREDIENTS, RESULTS)
         .constructor(new IDRecipeConstructor())
         .constructor();
