@@ -109,6 +109,6 @@ public class ChanceItemStack {
     }
 
     public SpawnItem toSpawnItem(Vec3 offset) {
-        return SpawnItem.builder().item(this.stack).chance(this.count).offset(offset).build();
+        return SpawnItem.builder().item(this.stack).count(this.count).offset(offset).build();
     }
 }

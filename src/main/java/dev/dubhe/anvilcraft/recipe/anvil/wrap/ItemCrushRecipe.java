@@ -23,9 +23,9 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
         super(
             new Vec3(0.0, -0.0625, 0.0),
             itemIngredients,
-            new Vec3(0.0, -1.5, 0.0),
+            new Vec3(0.0, -1.0, 0.0),
             results,
-            new Vec3(0.0, -0.6, 0.0),
+            new Vec3(0.0, -1.0, 0.0),
             BlockStatePredicate.builder()
                 .of(ModBlocks.CRUSHING_TABLE.get())
                 .build()

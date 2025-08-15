@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeManager;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.generate.JewelCraftingRecipeGeneratingCache;
@@ -33,7 +34,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @Mixin(RecipeManager.class)
 abstract class RecipeManagerMixin implements IRecipeManager {
@@ -130,5 +134,35 @@ abstract class RecipeManagerMixin implements IRecipeManager {
     @Override
     public InWorldRecipeManager anc$getInWorldRecipeManager() {
         return this.anc$inWorldRecipeManager;
+    }
+
+    @Override
+    public HolderLookup.Provider anc$getRegistries() {
+        return this.registries;
+    }
+
+    @Override
+    public void anc$addRecipes(@NotNull List<RecipeHolder<InWorldRecipe>> recipes) {
+        ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> byNameBuilder = ImmutableMap.builder();
+        ImmutableMultimap.Builder<RecipeType<?>, RecipeHolder<?>> byTypeBuilder = ImmutableMultimap.builder();
+        Set<ResourceLocation> keys = new HashSet<>();
+        this.byName.forEach((key, value) -> {
+            if (key == null || value == null) return;
+            if (keys.contains(key)) return;
+            keys.add(key);
+            byNameBuilder.put(key, value);
+        });
+        this.byType.forEach((key, value) -> {
+            if (key == null || value == null) return;
+            byTypeBuilder.put(key, value);
+        });
+        recipes.forEach(recipe -> {
+            if (keys.contains(recipe.id())) return;
+            keys.add(recipe.id());
+            byNameBuilder.put(recipe.id(), recipe);
+            byTypeBuilder.put(recipe.value().getType(), recipe);
+        });
+        this.byName = byNameBuilder.build();
+        this.byType = byTypeBuilder.build();
     }
 }

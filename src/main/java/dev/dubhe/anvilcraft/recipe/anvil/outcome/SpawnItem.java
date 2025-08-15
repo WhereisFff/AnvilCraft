@@ -122,13 +122,13 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
             return this.above(1);
         }
 
-        public Builder chance(NumberProvider chance) {
-            this.count = chance;
+        public Builder count(NumberProvider count) {
+            this.count = count;
             return this;
         }
 
-        public Builder chance(float chance) {
-            return this.chance(ConstantValue.exactly(chance));
+        public Builder count(float chance) {
+            return this.count(ConstantValue.exactly(chance));
         }
 
         public Builder item(ItemStack item) {

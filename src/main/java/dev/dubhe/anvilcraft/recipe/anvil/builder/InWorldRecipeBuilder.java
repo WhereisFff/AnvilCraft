@@ -385,7 +385,7 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     }
 
     public InWorldRecipeBuilder spawnItem(Vec3 offset, double chance, ItemStack stack) {
-        return this.out(SpawnItem.builder().offset(offset).chance((float) chance).item(stack).build());
+        return this.out(SpawnItem.builder().offset(offset).count((float) chance).item(stack).build());
     }
 
     public InWorldRecipeBuilder spawnItem(Vec3 offset, ItemStack stack) {

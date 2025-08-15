@@ -40,7 +40,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         super(
             new Vec3(0.0, -1.0, 0.0),
             List.of(),
-            new Vec3(0.0, -1.5, 0.0),
+            new Vec3(0.0, -1.0, 0.0),
             List.of(),
             new Vec3(0.0, -2.0, 0.0),
             hasCauldron,

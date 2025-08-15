@@ -78,7 +78,7 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
         JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
         JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
 
-        if (recipe.getResultBlocks() != Blocks.AIR) {
+        if (!recipe.getResultBlocks().isEmpty()) {
             BlockState result = recipe.getResultBlocks()
                 .get((int) ((System.currentTimeMillis() / 1000) % recipe.getResultBlocks().size())).getState();
             RenderHelper.renderBlock(guiGraphics, result, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);

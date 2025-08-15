@@ -25,9 +25,9 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
         super(
             new Vec3(0.0, 0, 0.0),
             itemIngredients,
-            new Vec3(0.0, -1.5, 0.0),
+            new Vec3(0.0, -1.0, 0.0),
             results,
-            new Vec3(0.0, -0.6, 0.0),
+            new Vec3(0.0, -1.0, 0.0),
             BlockStatePredicate.builder()
                 .of(Blocks.IRON_TRAPDOOR)
                 .with(TrapDoorBlock.HALF, Half.TOP)

@@ -190,6 +190,9 @@ public class ItemCache {
         for (BlockPos blockPos : newRange) {
             BlockEntity entity = level.getBlockEntity(blockPos);
             if (entity == null) continue;
+            Map.Entry<Set<ICacheElement>, Set<ICacheElement>> entry = ItemCache.toElement(this, entity);
+            this.inputs.addAll(entry.getKey());
+            this.outputs.addAll(entry.getValue());
         }
     }
 
@@ -327,7 +330,7 @@ public class ItemCache {
     }
 
     public interface ICacheElement extends ICacheInput, ICacheOutput {
-        int getCapacity();
+        int getCapacity(@NotNull ItemStack stack);
 
         @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         boolean is(ItemStack stack);
@@ -369,7 +372,7 @@ public class ItemCache {
             if (!this.is(stack)) return copy;
             int growCount = copy.getCount();
             int simulateCount = this.simulate.getCount();
-            int grownSimulateCount = Math.min(this.getCapacity(), simulateCount + growCount);
+            int grownSimulateCount = Math.min(this.getCapacity(stack), simulateCount + growCount);
             int grownCount = grownSimulateCount - simulateCount;
             int remainingCount = growCount - grownCount;
             if (remainingCount > 0) copy.setCount(remainingCount);
@@ -448,8 +451,8 @@ public class ItemCache {
         }
 
         @Override
-        public int getCapacity() {
-            return this.simulate.getMaxStackSize();
+        public int getCapacity(@NotNull ItemStack stack) {
+            return this.simulate.isEmpty() ? stack.getMaxStackSize() : this.simulate.getMaxStackSize();
         }
     }
 
@@ -471,7 +474,7 @@ public class ItemCache {
         }
 
         @Override
-        public int getCapacity() {
+        public int getCapacity(@NotNull ItemStack stack) {
             return this.iItemHandler.getSlotLimit(this.slot);
         }
 
