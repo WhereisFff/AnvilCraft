@@ -124,7 +124,7 @@ public class ModMenuTypes {
         .register();
 
     public static final MenuEntry<AdvancedComparatorMenu> ADVANCED_COMPARATOR = REGISTRATE
-        .menu("advanced_comparator",AdvancedComparatorMenu::new, ()-> AdvancedComparatorScreen::new)
+        .menu("advanced_comparator", AdvancedComparatorMenu::new, () -> AdvancedComparatorScreen::new)
         .register();
 
     public static final MenuEntry<TranscendenceAnvilMenu> TRANSCENDENCE_ANVIL = REGISTRATE

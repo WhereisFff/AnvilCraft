@@ -153,12 +153,12 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
     }
 
     protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state) {
-        if (!(level.getBlockEntity(pos) instanceof AdvancedComparatorBlockEntity ComparatorEntity)) return;
+        if (!(level.getBlockEntity(pos) instanceof AdvancedComparatorBlockEntity comparatorEntity)) return;
         Direction direction = state.getValue(AdvancedComparatorBlock.FACING).getOpposite();
         BlockPos neighbourPos = pos.relative(direction);
-        boolean shouldPower = ComparatorEntity.isOutputting();
-        boolean isInput = ComparatorEntity.inputtingSignal > 0;
-        Mode mode = ComparatorEntity.compareMode;
+        boolean shouldPower = comparatorEntity.isOutputting();
+        boolean isInput = comparatorEntity.inputtingSignal > 0;
+        Mode mode = comparatorEntity.compareMode;
         level.setBlockAndUpdate(pos, state
             .setValue(AdvancedComparatorBlock.POWERED, shouldPower)
             .setValue(AdvancedComparatorBlock.INPUT, isInput)
