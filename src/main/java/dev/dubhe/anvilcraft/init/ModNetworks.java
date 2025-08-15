@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
+import dev.dubhe.anvilcraft.network.AdvancedComparatorUpdatePacket;
 import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
@@ -183,6 +184,11 @@ public class ModNetworks {
             PulseGeneratorUpdatePacket.TYPE,
             PulseGeneratorUpdatePacket.STREAM_CODEC,
             PulseGeneratorUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
+            AdvancedComparatorUpdatePacket.TYPE,
+            AdvancedComparatorUpdatePacket.STREAM_CODEC,
+            AdvancedComparatorUpdatePacket.HANDLER
         );
         registrar.playToServer(
             SwitchPhasePacket.TYPE,

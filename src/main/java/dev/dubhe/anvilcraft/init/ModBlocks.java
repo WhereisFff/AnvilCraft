@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent.Switch;
 import dev.dubhe.anvilcraft.block.AccelerationRingBlock;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
+import dev.dubhe.anvilcraft.block.AdvancedComparatorBlock;
 import dev.dubhe.anvilcraft.block.AmberBlock;
 import dev.dubhe.anvilcraft.block.ArrowBlock;
 import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
@@ -4769,6 +4770,30 @@ public class ModBlocks {
                 .pattern("III")
                 .define('B', ModItems.CIRCUIT_BOARD)
                 .define('C', Items.CLOCK)
+                .define('I', Items.IRON_INGOT)
+                .define('R', Items.REDSTONE_TORCH)
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Items.IRON_INGOT))
+                .save(provider)
+        )
+        .register();
+
+    public static final BlockEntry<AdvancedComparatorBlock> ADVANCED_COMPARATOR = REGISTRATE
+        .block("advanced_comparator", AdvancedComparatorBlock::new)
+        .properties(properties -> properties
+            .strength(3.0F, 3.5F)
+            .sound(SoundType.STONE)
+            .noOcclusion()
+        )
+        .blockstate((ctx, provider) -> {})
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .simpleItem()
+        .recipe((ctx, provider) ->
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get())
+                .pattern(" R ")
+                .pattern("CBC")
+                .pattern("III")
+                .define('B', ModItems.CIRCUIT_BOARD)
+                .define('C', Items.COMPARATOR)
                 .define('I', Items.IRON_INGOT)
                 .define('R', Items.REDSTONE_TORCH)
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Items.IRON_INGOT))
