@@ -122,6 +122,9 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     @Override
     public void applyDiskData(CompoundTag data) {
         this.readDataNbt(data.getCompound("Data"));
+        if (this.getLevel() == null) return;
+        Util.castSafely(this.getBlockState().getBlock(), PulseGeneratorBlock.class)
+            .ifPresent(block -> block.update(this.getLevel(), this.getBlockPos(), this.getBlockState()));
     }
 
     @ApiStatus.Internal
