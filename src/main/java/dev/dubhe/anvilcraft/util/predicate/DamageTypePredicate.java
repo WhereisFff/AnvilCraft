@@ -97,12 +97,7 @@ public record DamageTypePredicate(
 
             @SafeVarargs
             public final Builder tags(TagKey<DamageType>... tags) {
-                return this.tag(TagPredicate.is(true, false, tags));
-            }
-
-            @SafeVarargs
-            public final Builder optionalTags(TagKey<DamageType>... tags) {
-                return this.tag(TagPredicate.is(true, true, tags));
+                return this.tag(TagPredicate.is(true, tags));
             }
 
             public Builder namespace(String namespace) {

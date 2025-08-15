@@ -7,6 +7,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.critereon.DistancePredicate;
 import net.minecraft.advancements.critereon.EntityEquipmentPredicate;
 import net.minecraft.advancements.critereon.EntityFlagsPredicate;
+import net.minecraft.advancements.critereon.EntityTypePredicate;
 import net.minecraft.advancements.critereon.LocationPredicate;
 import net.minecraft.advancements.critereon.MobEffectsPredicate;
 import net.minecraft.advancements.critereon.MovementPredicate;
@@ -235,22 +236,12 @@ public record EntityPredicate(List<EntitySubPredicate> subPredicates, boolean is
             }
 
             public Builder of(EntityType<?> entityType) {
-                this.entityType = Optional.of(EntityTypePredicate.of(entityType, false));
+                this.entityType = Optional.of(EntityTypePredicate.of(entityType));
                 return this;
             }
 
             public Builder of(TagKey<EntityType<?>> entityTypeTag) {
-                this.entityType = Optional.of(EntityTypePredicate.of(entityTypeTag, false));
-                return this;
-            }
-
-            public Builder ofOptional(EntityType<?> entityType) {
-                this.entityType = Optional.of(EntityTypePredicate.of(entityType, true));
-                return this;
-            }
-
-            public Builder ofOptional(TagKey<EntityType<?>> entityTypeTag) {
-                this.entityType = Optional.of(EntityTypePredicate.of(entityTypeTag, true));
+                this.entityType = Optional.of(EntityTypePredicate.of(entityTypeTag));
                 return this;
             }
 

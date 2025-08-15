@@ -137,7 +137,7 @@ public class ModAmuletTypes {
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> ABNORMAL = register(
         "abnormal",
-        type -> AmuletType.builderAnc(type, true, true)
+        type -> AmuletType.builderAnc(type)
             .obtainOr(
                 (player, source) ->
                     source.is(DamageTypes.WITHER)

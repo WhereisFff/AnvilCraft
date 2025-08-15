@@ -21,7 +21,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
@@ -47,20 +46,12 @@ public class AmuletType {
         this.amulet = Lazy.of(amulet);
     }
 
-    public static Builder builder(ResourceLocation typeId, boolean optionalType, boolean optionalMurder) {
-        return new Builder(typeId, optionalType, optionalMurder);
-    }
-
     public static Builder builder(ResourceLocation typeId) {
-        return new Builder(typeId, false, false);
-    }
-
-    public static Builder builderAnc(String type, boolean optionalType, boolean optionalMurder) {
-        return new Builder(type, optionalType, optionalMurder);
+        return new Builder(typeId);
     }
 
     public static Builder builderAnc(String type) {
-        return new Builder(type, false, false);
+        return new Builder(type);
     }
 
     public boolean canObtain(ServerPlayer player, DamageSource source) {
@@ -88,33 +79,22 @@ public class AmuletType {
         private boolean canObtainFromDeath = true;
         private boolean isImmuneDamageFromObtain;
 
-        Builder(ResourceLocation typeId, boolean optionalType, boolean optionalMurder) {
-            this.obtain = defaultObtain(typeId, optionalType, optionalMurder);
+        Builder(ResourceLocation typeId) {
+            this.obtain = defaultObtain(typeId);
         }
 
-        Builder(String type, boolean optionalType, boolean optionalMurder) {
-            this.obtain = defaultObtain(AnvilCraft.of("amulet_valid/" + type), optionalType, optionalMurder);
+        Builder(String type) {
+            this.obtain = defaultObtain(AnvilCraft.of("amulet_valid/" + type));
         }
 
         private static DamageSourcePredicate.DamageSourceSubPredicate.Builder defaultObtain(
-            ResourceLocation typeId, boolean optionalType, boolean optionalMurder
+            ResourceLocation typeId
         ) {
-            var builder = DamageSourcePredicate.Builder.builder()
+            return DamageSourcePredicate.Builder.builder()
                 .victim(EntityType.PLAYER)
-                .build().and().sub();
-            TagKey<DamageType> damageTypeTag = TagKey.create(Registries.DAMAGE_TYPE, typeId);
-            if (optionalType) {
-                builder.optionalType(damageTypeTag);
-            } else {
-                builder.type(damageTypeTag);
-            }
-            TagKey<EntityType<?>> entityTypeTag = TagKey.create(Registries.ENTITY_TYPE, typeId);
-            if (optionalMurder) {
-                builder.optionalMurder(entityTypeTag);
-            } else {
-                builder.murder(entityTypeTag);
-            }
-            return builder;
+                .build().and().sub()
+                .type(TagKey.create(Registries.DAMAGE_TYPE, typeId))
+                .murder(TagKey.create(Registries.ENTITY_TYPE, typeId));
         }
 
         public Builder obtain(UnaryOperator<DamageSourcePredicate.DamageSourceSubPredicate.Builder> builder) {

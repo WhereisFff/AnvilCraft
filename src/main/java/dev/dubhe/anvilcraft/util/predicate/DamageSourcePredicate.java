@@ -135,14 +135,6 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
                 return this;
             }
 
-            @SafeVarargs
-            public final Builder optionalType(TagKey<DamageType>... tags) {
-                this.typePredicate = this.typePredicate
-                    .map(typeTagPredicate -> typeTagPredicate.sub().optionalTags(tags).build())
-                    .or(() -> Optional.of(DamageTypePredicate.Builder.builder().optionalTags(tags).build()));
-                return this;
-            }
-
             public Builder type(String namespace) {
                 this.typePredicate = this.typePredicate
                     .map(typeTagPredicate -> typeTagPredicate.sub().namespace(namespace).build())
@@ -168,21 +160,6 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
             public final Builder murder(TagKey<EntityType<?>>... entityTypeTags) {
                 for (TagKey<EntityType<?>> entityTypeTag : entityTypeTags) {
                     this.murder(EntityPredicate.Builder.builder().of(entityTypeTag).build());
-                }
-                return this;
-            }
-
-            public Builder optionalMurder(EntityType<?>... entityTypes) {
-                for (EntityType<?> entityType : entityTypes) {
-                    this.murder(EntityPredicate.Builder.builder().ofOptional(entityType).build());
-                }
-                return this;
-            }
-
-            @SafeVarargs
-            public final Builder optionalMurder(TagKey<EntityType<?>>... entityTypeTags) {
-                for (TagKey<EntityType<?>> entityTypeTag : entityTypeTags) {
-                    this.murder(EntityPredicate.Builder.builder().ofOptional(entityTypeTag).build());
                 }
                 return this;
             }
