@@ -6,6 +6,8 @@ import dev.dubhe.anvilcraft.api.power.PowerComponentInfo;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
+import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
+import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.util.UnitUtil;
 import dev.dubhe.anvilcraft.util.Util;
@@ -16,6 +18,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,8 +43,14 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
         if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
         boolean overloaded = false;
         BlockPos pos;
-        if (e.getBlockState().getBlock() instanceof AbstractMultiPartBlock<?> multiPartBlock) {
+        BlockState blockState = e.getBlockState();
+        if (blockState.getBlock() instanceof AbstractMultiPartBlock<?> multiPartBlock) {
             pos = multiPartBlock.getMainPartPos(e.getBlockPos(), e.getBlockState());
+            if (blockState.getBlock() instanceof TransmissionPoleBlock) {
+                pos = pos.above(2);
+            } else if (blockState.getBlock() instanceof RemoteTransmissionPoleBlock) {
+                pos = pos.above(3);
+            }
         } else if (e instanceof IPowerComponent) {
             if (e.getBlockState().hasProperty(IPowerComponent.OVERLOAD)) {
                 overloaded = e.getBlockState()
