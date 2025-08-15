@@ -168,7 +168,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         );
     }
 
-    public static abstract class BaseSerializer<R extends BaseMultipleToOneSmithingRecipe> implements RecipeSerializer<R> {
+    public abstract static class BaseSerializer<R extends BaseMultipleToOneSmithingRecipe> implements RecipeSerializer<R> {
         private final Function<Data, R> fromData = this::fromData;
 
         protected abstract R fromData(Data data);
@@ -184,7 +184,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         }
     }
 
-    public static abstract class BaseBuilder<R extends BaseMultipleToOneSmithingRecipe> extends AbstractRecipeBuilder<R> {
+    public abstract static class BaseBuilder<R extends BaseMultipleToOneSmithingRecipe> extends AbstractRecipeBuilder<R> {
         protected final ItemIngredientPredicate template;
         protected ItemIngredientPredicate material;
         protected final ImmutableList.Builder<ItemIngredientPredicate> inputs;
