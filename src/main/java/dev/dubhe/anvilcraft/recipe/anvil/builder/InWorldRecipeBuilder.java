@@ -431,13 +431,13 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
         return this.setBlock(this.offset, state);
     }
 
-    public InWorldRecipeBuilder damageAnvil() {
-        this.out(new DamageAnvil());
+    public InWorldRecipeBuilder produceHeat(ProduceHeat.@NotNull Builder builder) {
+        this.out(builder.build());
         return this;
     }
 
-    public InWorldRecipeBuilder produceHeat(ProduceHeat.Builder builder) {
-        this.out(builder.build());
+    public InWorldRecipeBuilder damageAnvil() {
+        this.out(new DamageAnvil());
         return this;
     }
 
