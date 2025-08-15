@@ -177,7 +177,10 @@ public class ScreenLang {
             "screen.anvilcraft.ember_smithing.four.missing",
             "Add Resonator Core, Heavy Halberd Core, Multiphase Transcendium or Frost Metal Block");
         provider.add("screen.anvilcraft.ember_smithing.eight.missing", "Add Multiphase Matter");
-        provider.add("screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools", "Add same Ember metal tools or weapons");
+        provider.add(
+            "screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools",
+            "Add a Shear, a Flint and Steel, a Brush, a Spyglass, a Magnet, "
+            + "a Fishing Rod, a Carrot on a Stick and a Warped Fungus on a Stick");
         provider.add(
             "screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools",
             "Add a sword and an axe of the same type, a Trident and a Mace");
