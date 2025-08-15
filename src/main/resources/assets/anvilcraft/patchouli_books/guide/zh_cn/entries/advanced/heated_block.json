@@ -2,7 +2,7 @@
   "name": "可加热方块",
   "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:glowing_tungsten_block",
-  "sortnum": 4001,
+  "sortnum": 17003,
   "entry_color": "004400",
   "pages": [
     "$(thing)可加热方块$()是一系列方块的统称，每种方块有若干温度等级。$(br2)可加热方块有持续时间。当持续时间归零，则温度等级-1。若-1后仍为高温方块，则将持续时间设为10秒。$(br2)挖掘方块时不保留持续时间。如果工具没有$(item)精准采集/熔炼$()附魔，则温度等级-1",
@@ -16,6 +16,12 @@
       "item": ["anvilcraft:tungsten_block","minecraft:netherite_block"],
       "title": "常规可加热方块",
       "text": "$(item)钨块$()、$(item)下界合金块$()属于此类。$(br2)具有5个温度等级：$(thing)普通$()、$(thing)高温$()、$(thing)红热$()、$(thing)炽热$()、$(thing)白炽$()。$(br2)可以被后文所有加热方式加热。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": ["anvilcraft:redhot_tungsten_block","anvilcraft:glowing_netherite_block","anvilcraft:incandescent_tungsten_block"],
+      "title": "*特性",
+      "text": "不是$(thing)普通$()等级的可加热方块称为$(thing)高温方块$()，可以为$(l:power/heat_collection#unchanged_block)集热器$()提供给热量以发电。$(br2)$(thing)红热$()、$(thing)炽热$()、$(thing)白炽$()等级的方块会烫伤踩在上面的生物，分别造成1, 2, 4点伤害。 $(br2)$(thing)红热$()、$(thing)炽热$()、$(thing)白炽$()等级的方块接触水一段时间后，和海绵类似，蒸发距离4, 6, 8以内的水。"
     },
     {
       "type": "patchouli:text",

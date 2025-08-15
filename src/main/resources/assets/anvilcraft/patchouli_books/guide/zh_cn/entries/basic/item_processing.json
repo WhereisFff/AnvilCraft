@@ -3,27 +3,12 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:iron_ingot",
   "sortnum": 1002,
-  "extra_recipe_mappings": {
-    "anvilcraft:copper_pressure_plate": 2,
-    "anvilcraft:tungsten_pressure_plate": 2,
-    "anvilcraft:titanium_pressure_plate": 2,
-    "anvilcraft:zinc_pressure_plate": 2,
-    "anvilcraft:tin_pressure_plate": 2,
-    "anvilcraft:lead_pressure_plate": 2,
-    "anvilcraft:silver_pressure_plate": 2,
-    "anvilcraft:uranium_pressure_plate": 2,
-    "anvilcraft:bronze_pressure_plate": 2,
-    "anvilcraft:brass_pressure_plate": 2,
-    "minecraft:wet_sponge": 12,
-    "minecraft:sponge": 12
-  },
   "pages": [
     "让$(item)铁砧$()落在特定方块上就可以加工该方块顶部或内部的物品，不同的特定方块有不同的处理，本条目的后续页面依次介绍。本模组增加了一种方块可以让直接被砸的物品不因碰撞箱挤压而乱飞：$(item)冲压平台$()。",
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:stamping_platform",
-      "recipe2": "anvilcraft:shaped_crushing_table_recipe",
-      "text": ""
+      "recipe2": "anvilcraft:shaped_crushing_table_recipe"
     },
     {
       "type": "patchouli:multiblock",
@@ -45,8 +30,26 @@
       "text": "下方是冲压平台时执行物品冲压操作，原料和产物都在平台中，具体描述见右侧。"
     },
     {
-      "type": "patchouli:text",
-      "text": "可以将物品砸成对应的薄片，例如铁锭→铁压力板；金锭→金压力板；雪球→雪片；樱花树叶→粉色花瓣。$(br)还可以分离一些物品的不同组分，例如木质纤维→纸。"
+      "type": "patchouli:spotlight",
+      "item": [
+        "anvilcraft:copper_pressure_plate",
+        "anvilcraft:tungsten_pressure_plate",
+        "anvilcraft:titanium_pressure_plate",
+        "anvilcraft:zinc_pressure_plate",
+        "anvilcraft:tin_pressure_plate",
+        "anvilcraft:lead_pressure_plate",
+        "anvilcraft:silver_pressure_plate",
+        "anvilcraft:uranium_pressure_plate",
+        "anvilcraft:plutonium_pressure_plate",
+        "anvilcraft:bronze_pressure_plate",
+        "anvilcraft:brass_pressure_plate",
+        "minecraft:snow",
+        "minecraft:paper",
+        "minecraft:pink_petals"
+      ],
+      "link_recipe": true,
+      "title": "冲压配方",
+      "text": "可以将物品砸成对应的薄片: $(li)铁锭→铁压力板 $(li)金锭→金压力板 $(li)雪球→雪片 $(li)樱花树叶→粉色花瓣 $(li)木质纤维→纸"
     },
     {
       "type": "patchouli:multiblock",

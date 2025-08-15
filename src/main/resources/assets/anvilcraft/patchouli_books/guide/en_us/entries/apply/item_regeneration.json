@@ -2,7 +2,7 @@
   "name": "进阶原版物品再生",
   "category": "anvilcraft:technology_application",
   "icon": "minecraft:ancient_debris",
-  "sortnum": 6002,
+  "sortnum": 16002,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "minecraft:netherite_scrap": 1,

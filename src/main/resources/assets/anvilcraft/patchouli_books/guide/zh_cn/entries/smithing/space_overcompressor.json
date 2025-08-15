@@ -2,7 +2,7 @@
   "name": "空间超压器",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:space_overcompressor",
-  "sortnum": 3007,
+  "sortnum": 13005,
   "entry_color": "004400",
   "pages": [
     "$(item)空间超压器$()具有扭曲空间的力量。可以用来制作$(item)中子锭$()或去辅助进行$(l:struct/multiblock#craft)多方块合成$()。",
@@ -31,6 +31,12 @@
       "type": "patchouli:text",
       "title": "小贴士",
       "text": "四种方块继承了潜影盒的性质，会被活塞破坏。 $(br2)右键3种嵌套潜影盒，其分别会发出1,2,3次开启和关闭的声音，每次发声都会被$(item)侦测器$()识别。"
+    },
+    {
+      "type": "anvilcraft:stamping",
+      "recipe": "anvilcraft:stamping/shulker_box_from_nesting_shulker_box",
+      "title": "解压",
+      "text": "三种$(item)嵌套潜影盒$()都可以解压回$(item)潜影盒$()"
     }
   ]
 }

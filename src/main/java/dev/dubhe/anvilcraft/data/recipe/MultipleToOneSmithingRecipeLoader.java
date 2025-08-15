@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.multiple.EightToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.FourToOneSmithingRecipe;
@@ -58,6 +59,20 @@ public class MultipleToOneSmithingRecipeLoader {
             .input(Items.FISHING_ROD)
             .input(Items.CARROT_ON_A_STICK)
             .input(Items.WARPED_FUNGUS_ON_A_STICK)
+            .save(provider);
+        FourToOneSmithingRecipe.builder(ModItems.GEM_AMULET, 0)
+            .material(ModBlocks.FROST_METAL_BLOCK)
+            .input(ModItems.SAPPHIRE_AMULET)
+            .input(ModItems.RUBY_AMULET)
+            .input(ModItems.TOPAZ_AMULET)
+            .input(ModItems.EMERALD_AMULET)
+            .save(provider);
+        FourToOneSmithingRecipe.builder(ModItems.NATURE_AMULET, 0)
+            .material(ModBlocks.FROST_METAL_BLOCK)
+            .input(ModItems.SILENCE_AMULET)
+            .input(ModItems.FEATHER_AMULET)
+            .input(ModItems.CAT_AMULET)
+            .input(ModItems.DOG_AMULET)
             .save(provider);
     }
 }

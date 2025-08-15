@@ -77,13 +77,13 @@ public class AnvilCollisionCraftRecipeLoader {
             .anvil(BlockTags.ANVIL)
             .consume(false)
             .hitBlock(ModBlocks.URANIUM_BLOCK.get())
-            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL, heatableData), 16)
+            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, heatableData), 16)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
             .anvil(BlockTags.ANVIL)
             .consume(false)
             .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
-            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL, heatableData), 16)
+            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, heatableData), 16)
             .save(provider);
     }
 }

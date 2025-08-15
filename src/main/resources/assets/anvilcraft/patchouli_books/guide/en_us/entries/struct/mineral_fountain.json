@@ -2,7 +2,7 @@
   "name": "矿物涌泉",
   "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:mineral_fountain",
-  "sortnum": 5001,
+  "sortnum": 15001,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:mineral_fountain": 0,

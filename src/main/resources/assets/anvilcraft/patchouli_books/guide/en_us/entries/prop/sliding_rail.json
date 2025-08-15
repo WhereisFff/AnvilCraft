@@ -2,14 +2,14 @@
   "name": "滑轨",
   "category": "anvilcraft:special_props",
   "icon": "anvilcraft:sliding_rail",
-  "sortnum": 4007,
+  "sortnum": 4004,
   "pages": [
-    "类似于用于承载矿车的铁轨，滑轨用于运输物品和方块。$(br2)槽内的$(thing)物品$()可以无摩擦持续滑行。 $(br2)当一个$(thing)方块$()被活塞推到滑轨上时(方向和滑轨朝向一致)，其将在滑轨上持续滑行。如果是黏性方块，会携带其粘连的方块一起滑行。",
+    "类似于用于承载矿车的铁轨，滑轨用于运输物品和方块。$(br2)槽内的$(thing)物品$()可以无摩擦持续滑行。 $(br2)当一个$(thing)方块$()被活塞推到滑轨上时(方向和滑轨朝向一致)，其将在滑轨上持续滑行。若此时和别的方块一起移动，则作为一个结构一起滑动。",
     {
       "type": "patchouli:crafting",
       "anchor": "sliding_rail",
       "recipe": "anvilcraft:sliding_rail",
-      "text": "本模组为各种冰提供了$(l:apply/item_regeneration#ice)再生方式$() $(br2)$(#888888)船：芜~湖~$()"
+      "text": "本模组为各种冰提供了$(l:apply/item_regeneration#ice)再生方式$() $(br2)$(#888888)可以用来划船$()"
     },
     {
       "type": "patchouli:crafting",
@@ -38,7 +38,7 @@
       "type": "patchouli:crafting",
       "anchor": "detector_sliding_rail",
       "recipe": "anvilcraft:detector_sliding_rail",
-      "text": "上方有$(thing)方块$()滑过时，自身向周围除了上方外的五个方向发出红石信号。$(br2)可被比较器检测，检测滑行的$(thing)方块$()粘连的方块数量输出红石信号强度。$(br)eg：四个方块粘在一起经过，则比较器发出信号强度为4"
+      "text": "上方有$(thing)方块$()滑过时，自身向周围除了上方外的五个方向发出红石信号。$(br2)可被比较器检测，检测滑行的$(thing)方块$()所属结构的方块数量，输出红石信号强度。$(br)eg：四个方块粘在一起经过，则比较器发出信号强度为4"
     }
   ]
 }
