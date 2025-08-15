@@ -141,16 +141,17 @@ import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.item.ChuteBlockItem;
-import dev.dubhe.anvilcraft.item.CursedBlockItem;
+import dev.dubhe.anvilcraft.item.abnormal.CursedBlockItem;
 import dev.dubhe.anvilcraft.item.EndDustBlockItem;
 import dev.dubhe.anvilcraft.item.FlexibleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
-import dev.dubhe.anvilcraft.item.LevitationPowderBlockItem;
+import dev.dubhe.anvilcraft.item.abnormal.LevitationBlockItem;
 import dev.dubhe.anvilcraft.item.PlaceInWaterBlockItem;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.item.SimpleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
+import dev.dubhe.anvilcraft.item.abnormal.RadiationBlockItem;
 import dev.dubhe.anvilcraft.util.DangerUtil;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
@@ -2696,9 +2697,8 @@ public class ModBlocks {
             BlockTags.BEACON_BASE_BLOCKS,
             Tags.Blocks.STORAGE_BLOCKS,
             ModBlockTags.STORAGE_BLOCKS_URANIUM)
-        .item()
-        .tag(ModItemTags.STORAGE_BLOCKS_URANIUM,
-            Tags.Items.STORAGE_BLOCKS)
+        .item(RadiationBlockItem::new)
+        .tag(ModItemTags.STORAGE_BLOCKS_URANIUM, Tags.Items.STORAGE_BLOCKS, ModItemTags.RADIATIONS)
         .build()
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -2717,11 +2717,11 @@ public class ModBlocks {
         .lang("Block of Plutonium")
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-             BlockTags.BEACON_BASE_BLOCKS,
-             Tags.Blocks.STORAGE_BLOCKS,
-             ModBlockTags.STORAGE_BLOCKS_PLUTONIUM)
-        .item()
-        .tag(ModItemTags.STORAGE_BLOCKS_PLUTONIUM, Tags.Items.STORAGE_BLOCKS)
+            BlockTags.BEACON_BASE_BLOCKS,
+            Tags.Blocks.STORAGE_BLOCKS,
+            ModBlockTags.STORAGE_BLOCKS_PLUTONIUM)
+        .item(RadiationBlockItem::new)
+        .tag(ModItemTags.STORAGE_BLOCKS_PLUTONIUM, Tags.Items.STORAGE_BLOCKS, ModItemTags.RADIATIONS)
         .build()
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
@@ -3004,7 +3004,7 @@ public class ModBlocks {
         .block("levitation_powder_block", LevitationPowderBlock::new)
         .lang("Block of Levitation Powder")
         .initialProperties(() -> Blocks.SAND)
-        .item(LevitationPowderBlockItem::new)
+        .item(LevitationBlockItem::new)
         .tag(ModItemTags.LEVITATIONALS)
         .recipe((ctx, provider) ->
             ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, ctx.get())
@@ -3399,7 +3399,7 @@ public class ModBlocks {
     public static final Object2ObjectMap<Color, BlockEntry<WallBlock>> REINFORCED_CONCRETE_WALLS =
         registerReinforcedConcreteWalls();
 
-    public static final BlockEntry<HeatedBlock> HEATED_NETHERITE = REGISTRATE
+    public static final BlockEntry<HeatedBlock> HEATED_NETHERITE_BLOCK = REGISTRATE
         .block("heated_netherite_block", HeatedBlock::new)
         .lang("Heated Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -3411,7 +3411,7 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.HEATED_BLOCKS)
         .register();
 
-    public static final BlockEntry<HeatedBlock> HEATED_TUNGSTEN = REGISTRATE
+    public static final BlockEntry<HeatedBlock> HEATED_TUNGSTEN_BLOCK = REGISTRATE
         .block("heated_tungsten_block", HeatedBlock::new)
         .lang("Heated Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
@@ -3423,7 +3423,7 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.HEATED_BLOCKS)
         .register();
 
-    public static final BlockEntry<RedhotBlock> REDHOT_NETHERITE = REGISTRATE
+    public static final BlockEntry<RedhotBlock> REDHOT_NETHERITE_BLOCK = REGISTRATE
         .block("redhot_netherite_block", RedhotBlock::new)
         .lang("Redhot Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -3432,11 +3432,11 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_NETHERITE))
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_NETHERITE_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.REDHOT_BLOCKS)
         .register();
 
-    public static final BlockEntry<RedhotBlock> REDHOT_TUNGSTEN = REGISTRATE
+    public static final BlockEntry<RedhotBlock> REDHOT_TUNGSTEN_BLOCK = REGISTRATE
         .block("redhot_tungsten_block", RedhotBlock::new)
         .lang("Redhot Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
@@ -3445,11 +3445,11 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_TUNGSTEN))
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.HEATED_TUNGSTEN_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.REDHOT_BLOCKS)
         .register();
 
-    public static final BlockEntry<GlowingBlock> GLOWING_NETHERITE = REGISTRATE
+    public static final BlockEntry<GlowingBlock> GLOWING_NETHERITE_BLOCK = REGISTRATE
         .block("glowing_netherite_block", GlowingBlock::new)
         .lang("Glowing Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -3458,11 +3458,11 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_NETHERITE))
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_NETHERITE_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.GLOWING_BLOCKS)
         .register();
 
-    public static final BlockEntry<GlowingBlock> GLOWING_TUNGSTEN = REGISTRATE
+    public static final BlockEntry<GlowingBlock> GLOWING_TUNGSTEN_BLOCK = REGISTRATE
         .block("glowing_tungsten_block", GlowingBlock::new)
         .lang("Glowing Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
@@ -3471,11 +3471,11 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_TUNGSTEN))
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.REDHOT_TUNGSTEN_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.GLOWING_BLOCKS)
         .register();
 
-    public static final BlockEntry<IncandescentBlock> INCANDESCENT_NETHERITE = REGISTRATE
+    public static final BlockEntry<IncandescentBlock> INCANDESCENT_NETHERITE_BLOCK = REGISTRATE
         .block("incandescent_netherite_block", IncandescentBlock::new)
         .lang("Incandescent Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
@@ -3484,11 +3484,11 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_NETHERITE))
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_NETHERITE_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.INCANDESCENT_BLOCKS)
         .register();
 
-    public static final BlockEntry<IncandescentBlock> INCANDESCENT_TUNGSTEN = REGISTRATE
+    public static final BlockEntry<IncandescentBlock> INCANDESCENT_TUNGSTEN_BLOCK = REGISTRATE
         .block("incandescent_tungsten_block", IncandescentBlock::new)
         .lang("Incandescent Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
@@ -3497,11 +3497,11 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
-        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_TUNGSTEN))
+        .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.GLOWING_TUNGSTEN_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.HEATABLE_BLOCKS, ModBlockTags.INCANDESCENT_BLOCKS)
         .register();
 
-    public static final BlockEntry<OverheatedEmberMetalBlock> OVERHEATED_EMBER_METAL = REGISTRATE
+    public static final BlockEntry<OverheatedEmberMetalBlock> OVERHEATED_EMBER_METAL_BLOCK = REGISTRATE
         .block("overheated_ember_metal_block", OverheatedEmberMetalBlock::new)
         .lang("Overheated Block of Ember Metal")
         .initialProperties(ModBlocks.EMBER_METAL_BLOCK)
@@ -3522,7 +3522,7 @@ public class ModBlocks {
         .register();
 
     // raw blocks
-    public static final BlockEntry<Block> RAW_ZINC = REGISTRATE
+    public static final BlockEntry<Block> RAW_ZINC_BLOCK = REGISTRATE
         .block("raw_zinc_block", Block::new)
         .lang("Block of Raw Zinc")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
@@ -3543,7 +3543,7 @@ public class ModBlocks {
             Tags.Items.STORAGE_BLOCKS)
         .build()
         .register();
-    public static final BlockEntry<Block> RAW_TIN = REGISTRATE
+    public static final BlockEntry<Block> RAW_TIN_BLOCK = REGISTRATE
         .block("raw_tin_block", Block::new)
         .lang("Block of Raw Tin")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
@@ -3561,7 +3561,7 @@ public class ModBlocks {
             Tags.Items.STORAGE_BLOCKS)
         .build()
         .register();
-    public static final BlockEntry<Block> RAW_TITANIUM = REGISTRATE
+    public static final BlockEntry<Block> RAW_TITANIUM_BLOCK = REGISTRATE
         .block("raw_titanium_block", Block::new)
         .lang("Block of Raw Titanium")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
@@ -3581,7 +3581,7 @@ public class ModBlocks {
             Tags.Items.STORAGE_BLOCKS)
         .build()
         .register();
-    public static final BlockEntry<Block> RAW_TUNGSTEN = REGISTRATE
+    public static final BlockEntry<Block> RAW_TUNGSTEN_BLOCK = REGISTRATE
         .block("raw_tungsten_block", Block::new)
         .lang("Block of Raw Tungsten")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
@@ -3602,7 +3602,7 @@ public class ModBlocks {
         .build()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.STORAGE_BLOCKS_RAW_TUNGSTEN)
         .register();
-    public static final BlockEntry<Block> RAW_LEAD = REGISTRATE
+    public static final BlockEntry<Block> RAW_LEAD_BLOCK = REGISTRATE
         .block("raw_lead_block", Block::new)
         .lang("Block of Raw Lead")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
@@ -3620,7 +3620,7 @@ public class ModBlocks {
             Tags.Items.STORAGE_BLOCKS)
         .build()
         .register();
-    public static final BlockEntry<Block> RAW_SILVER = REGISTRATE
+    public static final BlockEntry<Block> RAW_SILVER_BLOCK = REGISTRATE
         .block("raw_silver_block", Block::new)
         .lang("Block of Raw Silver")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
@@ -3639,7 +3639,7 @@ public class ModBlocks {
             Tags.Items.STORAGE_BLOCKS)
         .build()
         .register();
-    public static final BlockEntry<Block> RAW_URANIUM = REGISTRATE
+    public static final BlockEntry<Block> RAW_URANIUM_BLOCK = REGISTRATE
         .block("raw_uranium_block", Block::new)
         .lang("Block of Raw Uranium")
         .initialProperties(() -> Blocks.RAW_IRON_BLOCK)
@@ -3654,9 +3654,10 @@ public class ModBlocks {
                 AnvilCraftDatagen.has(ModItems.RAW_URANIUM))
             .save(provider))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.STORAGE_BLOCKS_RAW_URANIUM)
-        .item()
+        .item(RadiationBlockItem::new)
         .tag(ModItemTags.STORAGE_BLOCKS_RAW_URANIUM,
-            Tags.Items.STORAGE_BLOCKS)
+            Tags.Items.STORAGE_BLOCKS,
+            ModItemTags.RADIATIONS)
         .build()
         .register();
     // ores
@@ -3741,8 +3742,8 @@ public class ModBlocks {
     public static final BlockEntry<Block> DEEPSLATE_URANIUM_ORE = REGISTRATE
         .block("deepslate_uranium_ore", Block::new)
         .initialProperties(() -> Blocks.DEEPSLATE_IRON_ORE)
-        .item()
-        .tag(Tags.Items.ORES, ModItemTags.URANIUM_ORES)
+        .item(RadiationBlockItem::new)
+        .tag(Tags.Items.ORES, ModItemTags.URANIUM_ORES, ModItemTags.RADIATIONS)
         .build()
         .loot((tables, block) -> tables.add(block, tables.createOreDrop(block, ModItems.RAW_URANIUM.get())))
         .tag(

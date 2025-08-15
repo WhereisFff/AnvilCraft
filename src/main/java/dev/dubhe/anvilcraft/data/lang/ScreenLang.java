@@ -172,8 +172,10 @@ public class ScreenLang {
             "Frost Metal Ingot");
 
         provider.add("screen.anvilcraft.ember_smithing.tooltip.missing_template", "Add Multiple to One Template");
-        provider.add("screen.anvilcraft.ember_smithing.two.missing", "Add Multiphase Matter or Multiphase Transcendium");
-        provider.add("screen.anvilcraft.ember_smithing.four.missing", "Add Resonator Core, Heavy Halberd Core or Multiphase Transcendium");
+        provider.add("screen.anvilcraft.ember_smithing.two.missing", "Add Multiphase Transcendium");
+        provider.add(
+            "screen.anvilcraft.ember_smithing.four.missing",
+            "Add Resonator Core, Heavy Halberd Core, Multiphase Transcendium or Frost Metal Block");
         provider.add("screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools", "Add same Ember metal tools or weapons");
         provider.add(
             "screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools",

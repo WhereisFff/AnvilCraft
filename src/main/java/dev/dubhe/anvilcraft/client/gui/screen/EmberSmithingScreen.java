@@ -56,14 +56,14 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
     );
 
     /**
-     * 皇家锻造台 GUI
+     * 余烬锻造台 GUI
      *
-     * @param menu            菜单
-     * @param playerInventory 背包
-     * @param title           标题
+     * @param menu      菜单
+     * @param inventory 背包
+     * @param title     标题
      */
-    public EmberSmithingScreen(EmberSmithingMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, BACKGROUND);
+    public EmberSmithingScreen(EmberSmithingMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, BACKGROUND);
     }
 
     @Override

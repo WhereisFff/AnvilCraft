@@ -1,11 +1,13 @@
 package dev.dubhe.anvilcraft.init;
 
 import com.mojang.datafixers.util.Unit;
+import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import dev.dubhe.anvilcraft.api.item.property.Eternal;
 import dev.dubhe.anvilcraft.api.item.property.Providence;
 import dev.dubhe.anvilcraft.block.state.Color;
@@ -19,7 +21,7 @@ import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.CannedFoodItem;
 import dev.dubhe.anvilcraft.item.CapacitorItem;
 import dev.dubhe.anvilcraft.item.CrabClawItem;
-import dev.dubhe.anvilcraft.item.CursedItem;
+import dev.dubhe.anvilcraft.item.abnormal.CursedItem;
 import dev.dubhe.anvilcraft.item.DiskItem;
 import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.item.EmberAnvilHammerItem;
@@ -43,7 +45,7 @@ import dev.dubhe.anvilcraft.item.GuideBookItem;
 import dev.dubhe.anvilcraft.item.HeavyHalberdCoreItem;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import dev.dubhe.anvilcraft.item.IonoCraftItem;
-import dev.dubhe.anvilcraft.item.LevitationPowderItem;
+import dev.dubhe.anvilcraft.item.abnormal.LevitationItem;
 import dev.dubhe.anvilcraft.item.MagnetItem;
 import dev.dubhe.anvilcraft.item.ModFoods;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
@@ -58,7 +60,8 @@ import dev.dubhe.anvilcraft.item.RoyalShovelItem;
 import dev.dubhe.anvilcraft.item.RoyalSwordItem;
 import dev.dubhe.anvilcraft.item.SeedsPackItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
-import dev.dubhe.anvilcraft.item.SuperHeavyItem;
+import dev.dubhe.anvilcraft.item.abnormal.RadiationItem;
+import dev.dubhe.anvilcraft.item.abnormal.SuperHeavyItem;
 import dev.dubhe.anvilcraft.item.TopazItem;
 import dev.dubhe.anvilcraft.item.TranscendenceAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.TranscendenceHeavyHalberdItem;
@@ -67,6 +70,7 @@ import dev.dubhe.anvilcraft.item.TranscendiumUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.UtusanItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
+import dev.dubhe.anvilcraft.item.amulet.BigAmuletItem;
 import dev.dubhe.anvilcraft.item.template.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.template.FourToOneTemplateItem;
@@ -884,6 +888,20 @@ public class ModItems {
             .register();
     }
 
+    private static @NotNull ItemBuilder<? extends BigAmuletItem, Registrate> createBigAmuletItem(
+        String type, Supplier<DeferredHolder<AmuletType, ?>> typeGetter
+    ) {
+        return REGISTRATE
+            .item(type + "_amulet", properties -> new BigAmuletItem(properties) {
+                @Override
+                public Holder<AmuletType> getType() {
+                    return typeGetter.get();
+                }
+            })
+            .properties(properties -> properties.stacksTo(1))
+            .tag(ModItemTags.AMULET);
+    }
+
     public static final ItemEntry<? extends AmuletItem> EMERALD_AMULET =
         createAmuletItem(
             "emerald", () -> ModAmuletTypes.EMERALD,
@@ -934,6 +952,17 @@ public class ModItems {
             "silence", () -> ModAmuletTypes.SILENCE,
             builder -> builder.requires(Items.ECHO_SHARD, 16)
         );
+    public static final ItemEntry<? extends AmuletItem> ABNORMAL_AMULET =
+        createAmuletItem(
+            "abnormal", () -> ModAmuletTypes.ABNORMAL, //TODO: 修改配方
+            builder -> builder.requires(ModItems.CURSED_GOLD_INGOT, 1).requires(ModItems.LEVITATION_POWDER, 16)
+        );
+    public static final ItemEntry<? extends BigAmuletItem> GEM_AMULET = createBigAmuletItem(
+        "gem", () -> ModAmuletTypes.GEM)
+        .register();
+    public static final ItemEntry<? extends BigAmuletItem> NATURE_AMULET = createBigAmuletItem(
+        "nature", () -> ModAmuletTypes.NATURE)
+        .register();
 
     public static final ItemEntry<CapacitorItem> CAPACITOR = REGISTRATE
         .item("capacitor", CapacitorItem::new)
@@ -1837,10 +1866,9 @@ public class ModItems {
                 .save(provider, AnvilCraft.of("blasting/" + ctx.getName() + "_from_ore"));
         })
         .register();
-    public static final ItemEntry<Item> URANIUM_NUGGET = REGISTRATE
-        .item("uranium_nugget", Item::new)
-        .tag(ModItemTags.URANIUM_NUGGETS,
-            Tags.Items.NUGGETS)
+    public static final ItemEntry<RadiationItem> URANIUM_NUGGET = REGISTRATE
+        .item("uranium_nugget", RadiationItem::new)
+        .tag(ModItemTags.URANIUM_NUGGETS, Tags.Items.NUGGETS, ModItemTags.RADIATIONS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModItemTags.URANIUM_INGOTS)
@@ -1850,10 +1878,9 @@ public class ModItems {
                 .save(provider);
         })
         .register();
-    public static final ItemEntry<Item> URANIUM_INGOT = REGISTRATE
-        .item("uranium_ingot", Item::new)
-        .tag(ModItemTags.URANIUM_INGOTS,
-            Tags.Items.INGOTS)
+    public static final ItemEntry<RadiationItem> URANIUM_INGOT = REGISTRATE
+        .item("uranium_ingot", RadiationItem::new)
+        .tag(ModItemTags.URANIUM_INGOTS, Tags.Items.INGOTS, ModItemTags.RADIATIONS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.URANIUM_BLOCK)
@@ -1910,9 +1937,9 @@ public class ModItems {
                 .save(provider, AnvilCraft.of("blasting/" + ctx.getName() + "_from_ore"));
         })
         .register();
-    public static final ItemEntry<Item> PLUTONIUM_NUGGET = REGISTRATE
-        .item("plutonium_nugget", Item::new)
-        .tag(ModItemTags.PLUTONIUM_NUGGETS, Tags.Items.NUGGETS)
+    public static final ItemEntry<RadiationItem> PLUTONIUM_NUGGET = REGISTRATE
+        .item("plutonium_nugget", RadiationItem::new)
+        .tag(ModItemTags.PLUTONIUM_NUGGETS, Tags.Items.NUGGETS, ModItemTags.RADIATIONS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModItemTags.PLUTONIUM_INGOTS)
@@ -1922,9 +1949,9 @@ public class ModItems {
                 .save(provider, AnvilCraft.of(BuiltInRegistries.ITEM.getKey(ctx.get()).getPath() + "_from_ingot"));
         })
         .register();
-    public static final ItemEntry<Item> PLUTONIUM_INGOT = REGISTRATE
-        .item("plutonium_ingot", Item::new)
-        .tag(ModItemTags.PLUTONIUM_INGOTS, Tags.Items.INGOTS)
+    public static final ItemEntry<RadiationItem> PLUTONIUM_INGOT = REGISTRATE
+        .item("plutonium_ingot", RadiationItem::new)
+        .tag(ModItemTags.PLUTONIUM_INGOTS, Tags.Items.INGOTS, ModItemTags.RADIATIONS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.PLUTONIUM_BLOCK)
@@ -2064,8 +2091,8 @@ public class ModItems {
     public static final ItemEntry<Item> LIME_POWDER =
         REGISTRATE.item("lime_powder", Item::new).register();
 
-    public static final ItemEntry<LevitationPowderItem> LEVITATION_POWDER = REGISTRATE
-        .item("levitation_powder", LevitationPowderItem::new)
+    public static final ItemEntry<LevitationItem> LEVITATION_POWDER = REGISTRATE
+        .item("levitation_powder", LevitationItem::new)
         .tag(ModItemTags.LEVITATIONALS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -2079,82 +2106,82 @@ public class ModItems {
 
     public static final ItemEntry<Item> RAW_ZINC = REGISTRATE
         .item("raw_zinc", Item::new)
-        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_ZINC, ModItemTags.RAW_ZINC)
+        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_ZINC)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.RAW_ZINC)
+                .requires(ModBlocks.RAW_ZINC_BLOCK)
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_ZINC), AnvilCraftDatagen.has(ModBlocks.RAW_ZINC))
+                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_ZINC_BLOCK), AnvilCraftDatagen.has(ModBlocks.RAW_ZINC_BLOCK))
                 .save(provider);
         })
         .register();
     public static final ItemEntry<Item> RAW_TIN = REGISTRATE
         .item("raw_tin", Item::new)
-        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_TIN, ModItemTags.RAW_TIN)
+        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_TIN)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.RAW_TIN)
-                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RAW_TIN), AnvilCraftDatagen.has(ModBlocks.RAW_TIN))
+                .requires(ModBlocks.RAW_TIN_BLOCK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RAW_TIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RAW_TIN_BLOCK))
                 .save(provider);
         })
         .register();
     public static final ItemEntry<Item> RAW_TITANIUM = REGISTRATE
         .item("raw_titanium", Item::new)
-        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_TITANIUM, ModItemTags.RAW_TITANIUM)
+        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_TITANIUM)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.RAW_TITANIUM)
+                .requires(ModBlocks.RAW_TITANIUM_BLOCK)
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_TITANIUM),
-                    AnvilCraftDatagen.has(ModBlocks.RAW_TITANIUM))
+                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_TITANIUM_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.RAW_TITANIUM_BLOCK))
                 .save(provider);
         })
         .register();
     public static final ItemEntry<Item> RAW_TUNGSTEN = REGISTRATE
         .item("raw_tungsten", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_TUNGSTEN, ModItemTags.RAW_TUNGSTEN)
+        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_TUNGSTEN)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.RAW_TUNGSTEN)
+                .requires(ModBlocks.RAW_TUNGSTEN_BLOCK)
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_TUNGSTEN),
-                    AnvilCraftDatagen.has(ModBlocks.RAW_TUNGSTEN))
+                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_TUNGSTEN_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.RAW_TUNGSTEN_BLOCK))
                 .save(provider);
         })
         .register();
     public static final ItemEntry<Item> RAW_LEAD = REGISTRATE
         .item("raw_lead", Item::new)
-        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_LEAD, ModItemTags.RAW_LEAD)
+        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_LEAD)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.RAW_LEAD)
+                .requires(ModBlocks.RAW_LEAD_BLOCK)
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_LEAD), AnvilCraftDatagen.has(ModBlocks.RAW_LEAD))
+                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_LEAD_BLOCK), AnvilCraftDatagen.has(ModBlocks.RAW_LEAD_BLOCK))
                 .save(provider);
         })
         .register();
     public static final ItemEntry<Item> RAW_SILVER = REGISTRATE
         .item("raw_silver", Item::new)
-        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_SILVER, ModItemTags.RAW_SILVER)
+        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_SILVER)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.RAW_SILVER)
+                .requires(ModBlocks.RAW_SILVER_BLOCK)
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_SILVER),
-                    AnvilCraftDatagen.has(ModBlocks.RAW_SILVER))
+                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_SILVER_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.RAW_SILVER_BLOCK))
                 .save(provider);
         })
         .register();
-    public static final ItemEntry<Item> RAW_URANIUM = REGISTRATE
-        .item("raw_uranium", Item::new)
-        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_URANIUM, ModItemTags.RAW_URANIUM)
+    public static final ItemEntry<RadiationItem> RAW_URANIUM = REGISTRATE
+        .item("raw_uranium", RadiationItem::new)
+        .tag(ModItemTags.RAW_ORES, ModItemTags.RAW_ORES, ModItemTags.RAW_URANIUM, ModItemTags.RADIATIONS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
-                .requires(ModBlocks.RAW_URANIUM)
+                .requires(ModBlocks.RAW_URANIUM_BLOCK)
                 .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_URANIUM),
-                    AnvilCraftDatagen.has(ModBlocks.RAW_URANIUM))
+                    AnvilCraftDatagen.hasItem(ModBlocks.RAW_URANIUM_BLOCK),
+                    AnvilCraftDatagen.has(ModBlocks.RAW_URANIUM_BLOCK))
                 .save(provider);
         })
         .register();

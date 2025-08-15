@@ -6,13 +6,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
+import dev.dubhe.anvilcraft.util.ListUtil;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,8 +57,8 @@ public final class BoxContents implements TooltipComponent {
     }
 
     public int sum(ToIntFunction<ItemStack> fn) {
-        int sum = totems.size();
-        for (ItemStack it : amulets) {
+        int sum = this.totems.size();
+        for (ItemStack it : this.amulets) {
             int i = fn.applyAsInt(it);
             sum += i;
         }
@@ -66,13 +66,13 @@ public final class BoxContents implements TooltipComponent {
     }
 
     int computeUsage() {
-        return sum(it -> it.getItem() instanceof AmuletItem ? 6 : 0);
+        return sum(it -> it.getItem() instanceof AmuletItem amulet ? amulet.getWeight() : 0);
     }
 
     public List<ItemStack> allItems() {
         ImmutableList.Builder<ItemStack> builder = ImmutableList.builder();
-        builder.addAll(amulets);
-        builder.addAll(totems);
+        builder.addAll(this.amulets);
+        builder.addAll(this.totems);
         return builder.build();
     }
 
@@ -83,27 +83,27 @@ public final class BoxContents implements TooltipComponent {
     @Override
     public boolean equals(Object o) {
         if (!(o instanceof BoxContents that)) return false;
-        return selection == that.selection
-               && usage == that.usage
-               && Objects.equals(amulets, that.amulets)
-               && Objects.equals(totems, that.totems);
+        return this.selection == that.selection
+               && this.usage == that.usage
+               && ListUtil.equals(this.amulets, that.amulets, ItemStack::isSameItemSameComponents)
+               && ListUtil.equals(this.totems, that.totems, ItemStack::isSameItemSameComponents);
     }
 
     public boolean isEmpty() {
-        return usage <= 0;
+        return this.usage <= 0;
     }
 
     public boolean isAmuletEmpty() {
-        return usage >= 0 && amulets.isEmpty() && !totems.isEmpty();
+        return this.usage >= 0 && this.amulets.isEmpty() && !this.totems.isEmpty();
     }
 
     public int getMaxSelection() {
-        return amulets.size() + totems.size(); // this makes sense
+        return this.amulets.size() + this.totems.size(); // this makes sense
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(amulets, totems, selection, usage);
+        return Objects.hash(this.amulets, this.totems, this.selection, this.usage);
     }
 
     public static class Mutable {
@@ -121,14 +121,14 @@ public final class BoxContents implements TooltipComponent {
 
         public boolean tryInsert(ItemStack itemStack) {
             if (itemStack.getItem() instanceof AmuletItem item) {
-                if (usage + item.getWeight() > AmuletBoxItem.CAPACITY) return false;
-                usage += item.getWeight();
-                amulets.add(itemStack.copy());
+                if (this.usage + item.getWeight() > AmuletBoxItem.CAPACITY) return false;
+                this.usage += item.getWeight();
+                this.amulets.add(itemStack.copy());
                 return true;
             } else if (itemStack.is(ModItemTags.TOTEM)) {
-                if (usage + 1 > AmuletBoxItem.CAPACITY) return false;
-                usage++;
-                totems.add(itemStack.copy());
+                if (this.usage + 1 > AmuletBoxItem.CAPACITY) return false;
+                this.usage++;
+                this.totems.add(itemStack.copy());
                 return true;
             }
             return false;
@@ -137,19 +137,19 @@ public final class BoxContents implements TooltipComponent {
         public ItemStack pop() {
             ItemStack stack = ItemStack.EMPTY;
 
-            if (amulets.size() > this.selection) {
-                stack = amulets.remove(this.selection);
+            if (this.amulets.size() > this.selection) {
+                stack = this.amulets.remove(this.selection);
                 if (stack.getItem() instanceof AmuletItem item) {
-                    usage -= item.getWeight();
+                    this.usage -= item.getWeight();
                 }
-            } else if (totems.size() > this.selection - amulets.size()) {
-                stack = totems.remove(this.selection - amulets.size());
+            } else if (this.totems.size() > this.selection - this.amulets.size()) {
+                stack = this.totems.remove(this.selection - this.amulets.size());
                 if (stack.is(ModItemTags.TOTEM)) {
-                    usage--;
+                    this.usage--;
                 }
             }
 
-            usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
+            this.usage = Math.clamp(this.usage, 0, AmuletBoxItem.CAPACITY);
             return stack.copy();
         }
 
@@ -158,16 +158,16 @@ public final class BoxContents implements TooltipComponent {
         }
 
         public BoxContents immutable() {
-            return new BoxContents(ImmutableList.copyOf(amulets), ImmutableList.copyOf(totems), selection);
+            return new BoxContents(ImmutableList.copyOf(this.amulets), ImmutableList.copyOf(this.totems), this.selection);
         }
 
         public ItemStack popTotem() {
-            if (totems.isEmpty()) return ItemStack.EMPTY;
-            ItemStack first = totems.removeFirst();
+            if (this.totems.isEmpty()) return ItemStack.EMPTY;
+            ItemStack first = this.totems.removeFirst();
             if (first.is(ModItemTags.TOTEM)) {
-                usage--;
+                this.usage--;
             }
-            usage = Math.clamp(usage, 0, AmuletBoxItem.CAPACITY);
+            this.usage = Math.clamp(this.usage, 0, AmuletBoxItem.CAPACITY);
             return first;
         }
     }
