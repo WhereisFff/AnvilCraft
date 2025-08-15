@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.item.amulet;
 
 import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
-import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import dev.dubhe.anvilcraft.init.ModAmuletTypes;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;

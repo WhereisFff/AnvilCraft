@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface InventoryTick extends TriConsumer<ServerPlayer, ItemStack, Boolean> {
-    InventoryTick EMPTY = (player, amulet, isEnabled) -> {};
+    InventoryTick NOP = (player, amulet, isEnabled) -> {};
 
     void inventoryTick(ServerPlayer player, ItemStack amulet, boolean isEnabled);
 

@@ -1,0 +1,25 @@
+{
+  "type": "anvilcraft:four_to_one_smithing",
+  "inputs": [
+    {
+      "item": "anvilcraft:sapphire_amulet"
+    },
+    {
+      "item": "anvilcraft:ruby_amulet"
+    },
+    {
+      "item": "anvilcraft:topaz_amulet"
+    },
+    {
+      "item": "anvilcraft:emerald_amulet"
+    }
+  ],
+  "material": {
+    "item": "anvilcraft:frost_metal_block"
+  },
+  "recipeId": 0,
+  "result": "anvilcraft:gem_amulet",
+  "template": {
+    "item": "anvilcraft:four_to_one_smithing_template"
+  }
+}

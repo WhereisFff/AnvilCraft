@@ -1,11 +1,10 @@
 package dev.dubhe.anvilcraft.api.amulet;
 
 import com.mojang.serialization.Codec;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import java.util.function.Function;
-import java.util.function.IntUnaryOperator;
 
 /**
  * 存储了玩家目前护符抽取的额外概率
@@ -35,11 +34,8 @@ public record AmuletRaffleProbability(Object2IntOpenHashMap<AmuletType> map) {
      * @param probability 新概率
      * @return 旧概率
      */
+    @SuppressWarnings("UnusedReturnValue")
     public int setProbability(AmuletType type, int probability) {
         return this.map.put(type, probability);
-    }
-
-    public int setProbability(AmuletType type, IntUnaryOperator probability) {
-        return this.map.put(type, probability.applyAsInt(this.map.getInt(type)));
     }
 }

@@ -13,7 +13,7 @@ import java.util.function.BiPredicate;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public interface ImmuneDamage extends BiPredicate<ServerPlayer, DamageSource> {
-    ImmuneDamage FALSE = (player, source) -> false;
+    ImmuneDamage NEVER = (player, source) -> false;
 
     boolean shouldImmuneDamage(ServerPlayer player, DamageSource source);
 

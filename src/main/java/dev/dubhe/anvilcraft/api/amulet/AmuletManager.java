@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.api.amulet;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Sets;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
@@ -42,7 +43,10 @@ public class AmuletManager {
             () -> (AmuletItem) ModItems.FEATHER_AMULET.asItem(),
             () -> (AmuletItem) ModItems.CAT_AMULET.asItem(),
             () -> (AmuletItem) ModItems.DOG_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.SILENCE_AMULET.asItem()
+            () -> (AmuletItem) ModItems.SILENCE_AMULET.asItem(),
+            () -> (AmuletItem) ModItems.ABNORMAL_AMULET.asItem(),
+            () -> (AmuletItem) ModItems.GEM_AMULET.asItem(),
+            () -> (AmuletItem) ModItems.NATURE_AMULET.asItem()
         );
         this.registerFinders(
             (player, holders) -> processFoundStack(player.getWeaponItem(), holders),
@@ -145,7 +149,7 @@ public class AmuletManager {
 
     public boolean hasAmuletInInventory(Player player, ItemLike itemLike) {
         List<Holder<AmuletType>> holders = this.getTypesFromInventory(player);
-        return !holders.isEmpty() && CollectionUtil.anyMatch(holders, holder -> holder.value().matchesByItem(itemLike));
+        return !holders.isEmpty() && CollectionUtil.anyMatch(holders, holder -> holder.value().matches(itemLike));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")

@@ -1,11 +1,13 @@
 package dev.dubhe.anvilcraft.init;
 
 import com.mojang.datafixers.util.Unit;
+import com.tterrag.registrate.Registrate;
+import com.tterrag.registrate.builders.ItemBuilder;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import com.tterrag.registrate.util.entry.ItemEntry;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.amulet.AmuletType;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
 import dev.dubhe.anvilcraft.api.item.property.Eternal;
 import dev.dubhe.anvilcraft.api.item.property.Providence;
 import dev.dubhe.anvilcraft.block.state.Color;
@@ -68,6 +70,7 @@ import dev.dubhe.anvilcraft.item.TranscendiumUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.UtusanItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
+import dev.dubhe.anvilcraft.item.amulet.BigAmuletItem;
 import dev.dubhe.anvilcraft.item.template.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.template.FourToOneTemplateItem;
@@ -885,6 +888,20 @@ public class ModItems {
             .register();
     }
 
+    private static @NotNull ItemBuilder<? extends BigAmuletItem, Registrate> createBigAmuletItem(
+        String type, Supplier<DeferredHolder<AmuletType, ?>> typeGetter
+    ) {
+        return REGISTRATE
+            .item(type + "_amulet", properties -> new BigAmuletItem(properties) {
+                @Override
+                public Holder<AmuletType> getType() {
+                    return typeGetter.get();
+                }
+            })
+            .properties(properties -> properties.stacksTo(1))
+            .tag(ModItemTags.AMULET);
+    }
+
     public static final ItemEntry<? extends AmuletItem> EMERALD_AMULET =
         createAmuletItem(
             "emerald", () -> ModAmuletTypes.EMERALD,
@@ -937,9 +954,15 @@ public class ModItems {
         );
     public static final ItemEntry<? extends AmuletItem> ABNORMAL_AMULET =
         createAmuletItem(
-            "abnormal", () -> ModAmuletTypes.ABNORMAL,
-            builder -> builder.requires(Items.ECHO_SHARD, 16) //TODO: 修改配方
+            "abnormal", () -> ModAmuletTypes.ABNORMAL, //TODO: 修改配方
+            builder -> builder.requires(ModItems.CURSED_GOLD_INGOT, 1).requires(ModItems.LEVITATION_POWDER, 16)
         );
+    public static final ItemEntry<? extends BigAmuletItem> GEM_AMULET = createBigAmuletItem(
+        "gem", () -> ModAmuletTypes.GEM)
+        .register();
+    public static final ItemEntry<? extends BigAmuletItem> NATURE_AMULET = createBigAmuletItem(
+        "nature", () -> ModAmuletTypes.NATURE)
+        .register();
 
     public static final ItemEntry<CapacitorItem> CAPACITOR = REGISTRATE
         .item("capacitor", CapacitorItem::new)

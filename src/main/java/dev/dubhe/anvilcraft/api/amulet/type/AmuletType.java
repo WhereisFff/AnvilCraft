@@ -1,7 +1,11 @@
-package dev.dubhe.anvilcraft.api.amulet;
+package dev.dubhe.anvilcraft.api.amulet.type;
 
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.amulet.Effect;
+import dev.dubhe.anvilcraft.api.amulet.ImmuneDamage;
+import dev.dubhe.anvilcraft.api.amulet.InventoryTick;
+import dev.dubhe.anvilcraft.api.amulet.Obtain;
 import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.util.predicate.DamageSourcePredicate;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
@@ -63,8 +67,8 @@ public class AmuletType {
         return this.obtain.canObtain(player, source);
     }
 
-    public boolean matchesByItem(ItemLike itemLike) {
-        return this.amulet.get().is(itemLike.asItem());
+    public boolean matches(ItemLike item) {
+        return this.amulet.get().is(item.asItem());
     }
 
     public void inventoryTick(ServerPlayer player, ItemStack amulet, boolean isEnabled) {
@@ -81,6 +85,7 @@ public class AmuletType {
         private InventoryTick inventoryTick;
         private ImmuneDamage immuneDamage;
         private Supplier<ItemStack> amulet;
+        private boolean canObtainFromDeath = true;
         private boolean isImmuneDamageFromObtain;
 
         Builder(ResourceLocation typeId, boolean optionalType, boolean optionalMurder) {
@@ -104,7 +109,7 @@ public class AmuletType {
                 builder.type(damageTypeTag);
             }
             TagKey<EntityType<?>> entityTypeTag = TagKey.create(Registries.ENTITY_TYPE, typeId);
-            if (optionalType) {
+            if (optionalMurder) {
                 builder.optionalMurder(entityTypeTag);
             } else {
                 builder.murder(entityTypeTag);
@@ -159,6 +164,11 @@ public class AmuletType {
             return this;
         }
 
+        public Builder cannotObtainFromDeath() {
+            this.canObtainFromDeath = false;
+            return this;
+        }
+
         public Builder amulet(Supplier<ItemStack> amuletGetter) {
             this.amulet = amuletGetter;
             return this;
@@ -177,16 +187,19 @@ public class AmuletType {
             for (var entry : this.otherObtain.object2BooleanEntrySet()) {
                 obtain = entry.getBooleanValue() ? obtain.and(entry.getKey()) : obtain.or(entry.getKey());
             }
+            if (!this.canObtainFromDeath) {
+                obtain = (player, source) -> false;
+            }
             InventoryTick inventoryTick = this.inventoryTick;
             if (inventoryTick == null) {
-                inventoryTick = InventoryTick.EMPTY;
+                inventoryTick = InventoryTick.NOP;
             }
             ImmuneDamage immuneDamage = this.immuneDamage;
             if (this.isImmuneDamageFromObtain) {
                 immuneDamage = obtain::canObtain;
             }
             if (immuneDamage == null) {
-                immuneDamage = ImmuneDamage.FALSE;
+                immuneDamage = ImmuneDamage.NEVER;
             }
             if (this.amulet == null) {
                 throw new IllegalArgumentException("The amulet of the amulet type cannot be null!");
