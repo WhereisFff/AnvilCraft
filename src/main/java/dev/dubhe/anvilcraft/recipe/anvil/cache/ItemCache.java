@@ -415,7 +415,7 @@ public class ItemCache {
 
         @Override
         public int getCount() {
-            return this.simulate.getCount();
+            return this.simulate.isEmpty() ? 0 : this.simulate.getCount();
         }
     }
 

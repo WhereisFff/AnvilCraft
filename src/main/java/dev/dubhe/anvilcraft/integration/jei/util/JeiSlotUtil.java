@@ -8,7 +8,9 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.common.gui.elements.DrawableText;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 
 import java.util.List;
 
@@ -92,9 +94,9 @@ public class JeiSlotUtil {
             ItemIngredientPredicate ingredient = mergedIngredients.getFirst();
             IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.INPUT, 21, 24);
             slot.addIngredients(Ingredient.of(ingredient.getItems()));
-            if (ingredient.count() > 1) {
-                slot.setOverlay(new DrawableText("" + ingredient.count(), 2, 2, 0xFFFFFFFF), 12, 12);
-            }
+//            if (ingredient.count() > 1) {
+//                slot.setOverlay(new DrawableText("" + ingredient.count(), 2, 2, 0xFFFFFFFF), 12, 12);
+//            }
         } else if (inputSize <= 4) {
             int startX = 11;
             int startY = 15;
@@ -138,8 +140,12 @@ public class JeiSlotUtil {
                 int row = index / 2;
                 int col = index % 2;
                 ChanceItemStack stack = results.get(index);
+                ItemStack itemStack = stack.getStack().copy();
+                if (stack.getCount() instanceof ConstantValue) {
+                    itemStack.setCount(stack.getMaxCount());
+                }
                 IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, startX + 18 * col, startY + 18 * row)
-                    .addItemStack(stack.getStack());
+                    .addItemStack(itemStack);
                 JeiRecipeUtil.addTooltips(slot, stack.getMaxCount(), stack.getCount());
             }
         } else if (outputSize <= 6) {

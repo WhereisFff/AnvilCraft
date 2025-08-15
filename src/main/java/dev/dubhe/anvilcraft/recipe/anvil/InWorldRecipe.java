@@ -58,15 +58,20 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
 
     @Override
     public boolean matches(@NotNull InWorldRecipeContext context, @NotNull Level level) {
-        boolean nonConflicting = ShapelessMatcher.compatible(this.nonConflicting, context);
+        boolean nonConflicting = ShapelessMatcher.compatible(this.conflicting, context);
         if (!nonConflicting) {
             return false;
         }
+        boolean flag;
         if (this.compatible) {
-            return ShapelessMatcher.compatible(this.conflicting, context);
+            flag = ShapelessMatcher.compatible(this.nonConflicting, context);
         } else {
-            return ShapelessMatcher.incompatible(this.conflicting, context);
+            flag = ShapelessMatcher.incompatible(this.nonConflicting, context);
         }
+        if (!flag) {
+            context.getStack().removeAll(this.conflicting);
+        }
+        return flag;
     }
 
     @Override

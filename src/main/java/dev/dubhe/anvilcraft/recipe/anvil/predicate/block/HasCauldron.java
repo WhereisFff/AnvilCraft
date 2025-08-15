@@ -91,15 +91,16 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
             property = CauldronUtil.LEVEL_3;
             optionalValue = state.getOptionalValue(property);
         }
-        int value = Integer.MAX_VALUE;
+        int value;
         if (optionalValue.isPresent()) {
             value = Math.min(Math.max(optionalValue.orElse(0) - this.consume, 0), property.max);
             if (value == 0) {
                 cache.setBlock(blockPos, Blocks.CAULDRON);
+            } else {
+                state = state.setValue(property, value);
             }
-            state = state.setValue(property, value);
         }
-        if (this.transform != null && !this.transform.equals(this.fluid)) {
+        if (this.transform != null && !this.transform.equals(this.fluid) && !this.transform.equals(HasCauldron.NULL)) {
             Block block = getDefaultCauldron(this.transform);
             state = block.defaultBlockState();
             property = CauldronUtil.LEVEL_4;
@@ -107,8 +108,11 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
             if (optionalValue.isEmpty()) {
                 property = CauldronUtil.LEVEL_3;
             }
-            if (optionalValue.isPresent()) {
-                state = state.setValue(property, Math.min(Math.max(value, 0), property.max));
+            value = Math.min(Math.max(optionalValue.orElse(0) - this.consume, 0), property.max);
+            if (value == 0) {
+                cache.setBlock(blockPos, Blocks.CAULDRON);
+            } else {
+                state = state.setValue(property, value);
             }
         }
         cache.setBlock(blockPos, state);

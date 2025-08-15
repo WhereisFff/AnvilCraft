@@ -63,7 +63,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             AbstractProcessRecipe.getPredicates(cauldronOffset, hasCauldron, blockOffset, blocks),
             AbstractProcessRecipe.getPredicates(inputOffset, itemIngredients),
             AbstractProcessRecipe.getOutcomes(outputOffset, results, resultBlocks),
-            0,
+            AbstractProcessRecipe.getPriority(itemIngredients, results, hasCauldron, resultBlocks, blocks),
             false
         );
         this.inputOffset = inputOffset;
@@ -75,6 +75,20 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         this.blockOffset = blockOffset;
         this.blocks = blocks;
         this.resultBlocks = resultBlocks;
+    }
+
+    private static int getPriority(
+        List<ItemIngredientPredicate> itemIngredients,
+        List<ChanceItemStack> results,
+        HasCauldronSimple hasCauldron,
+        List<ChanceBlockState> resultBlocks,
+        List<BlockStatePredicate> blocks
+    ) {
+        return (itemIngredients == null ? 0 : itemIngredients.size())
+            + (results == null ? 0 : results.size())
+            + (hasCauldron != null ? 1 : 0)
+            + (resultBlocks == null ? 0 : resultBlocks.size())
+            + (blocks == null ? 0 : blocks.size() * 100);
     }
 
     public AbstractProcessRecipe(
@@ -93,7 +107,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             results,
             blockOffset,
             hasCauldron,
-            blockOffset.subtract(0, 1, 0),
+            blockOffset.subtract(0, hasCauldron == null ? 0 : 1, 0),
             null,
             List.of(blocks)
         );
@@ -139,7 +153,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
     ) {
         List<IRecipePredicate<?>> predicates = new ArrayList<>();
         for (ItemIngredientPredicate ingredient : ingredients) {
-            predicates.add(ingredient.toHasItemIngredient(inputOffset, new Vec3(1, 0.5, 1)));
+            predicates.add(ingredient.toHasItemIngredient(inputOffset, new Vec3(1, 1, 1)));
         }
         return predicates;
     }

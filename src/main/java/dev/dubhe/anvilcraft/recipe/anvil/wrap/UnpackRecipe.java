@@ -23,7 +23,7 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
         List<ChanceItemStack> results
     ) {
         super(
-            new Vec3(0.0, 0, 0.0),
+            new Vec3(0.0, 0.0, 0.0),
             itemIngredients,
             new Vec3(0.0, -1.0, 0.0),
             results,
@@ -31,7 +31,7 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
             BlockStatePredicate.builder()
                 .of(Blocks.IRON_TRAPDOOR)
                 .with(TrapDoorBlock.HALF, Half.TOP)
-                .with(TrapDoorBlock.OPEN, true)
+                .with(TrapDoorBlock.OPEN, false)
                 .build()
         );
     }

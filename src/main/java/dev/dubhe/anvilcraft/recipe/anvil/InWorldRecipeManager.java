@@ -47,6 +47,7 @@ public class InWorldRecipeManager {
                 accept = true;
                 recipe.assemble(ctx, ctx.getLevel().registryAccess());
             }
+            if (accept) break;
         }
     }
 }

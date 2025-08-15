@@ -99,7 +99,7 @@ public class ChanceItemStack {
     }
 
     public int getMaxCount() {
-        return this.stack.getCount();
+        return (int) Math.round(RecipeUtil.getExpectedValue(this.count));
     }
 
     public DataComponentPatch getComponentsPatch() {

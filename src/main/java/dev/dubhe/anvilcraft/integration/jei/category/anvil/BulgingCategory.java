@@ -55,7 +55,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
     public BulgingCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(
             Blocks.ANVIL.defaultBlockState(),
-            CauldronUtil.fullState(Blocks.WATER_CAULDRON));
+            CauldronUtil.fullState(Blocks.WATER_CAULDRON)
+        );
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.bulging");
         timer = helper.createTickTimer(30, 60, true);
