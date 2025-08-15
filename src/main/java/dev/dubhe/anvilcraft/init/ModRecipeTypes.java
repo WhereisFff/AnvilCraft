@@ -180,17 +180,17 @@ public class ModRecipeTypes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<ChargerChargingRecipe>> CHARGER_CHARGING_SERIALIZER =
         RECIPE_SERIALIZERS.register("charger_charging", ChargerChargingRecipe.Serializer::new);
 
-    public static final DeferredHolder<RecipeType<?>, RecipeType<BaseMultipleToOneSmithingRecipe<?>>> MULTIPLE_TO_ONE_SMITHING_TYPE =
+    public static final DeferredHolder<RecipeType<?>, RecipeType<BaseMultipleToOneSmithingRecipe>> MULTIPLE_TO_ONE_SMITHING_TYPE =
         registerType("multiple_to_one_smithing");
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<? extends TwoToOneSmithingRecipe<?>>>
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<? extends TwoToOneSmithingRecipe>>
         TWO_TO_ONE_SMITHING_SERIALIZER =
-        RECIPE_SERIALIZERS.register("two_to_one_smithing", TwoToOneSmithingRecipe::createSerializer);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<? extends FourToOneSmithingRecipe<?>>>
+        RECIPE_SERIALIZERS.register("two_to_one_smithing", TwoToOneSmithingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<? extends FourToOneSmithingRecipe>>
         FOUR_TO_ONE_SMITHING_SERIALIZER =
-        RECIPE_SERIALIZERS.register("four_to_one_smithing", FourToOneSmithingRecipe::createSerializer);
-    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<? extends EightToOneSmithingRecipe<?>>>
+        RECIPE_SERIALIZERS.register("four_to_one_smithing", FourToOneSmithingRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<? extends EightToOneSmithingRecipe>>
         EIGHT_TO_ONE_SMITHING_SERIALIZER =
-        RECIPE_SERIALIZERS.register("eight_to_one_smithing", EightToOneSmithingRecipe::createSerializer);
+        RECIPE_SERIALIZERS.register("eight_to_one_smithing", EightToOneSmithingRecipe.Serializer::new);
 
     private static <T extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<T>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> new RecipeType<>() {

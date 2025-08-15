@@ -128,7 +128,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         createRecipeHolderType("jewel_crafting");
     public static final RecipeType<RecipeHolder<ChargerChargingRecipe>> CHARGER_CHARGING =
         createRecipeHolderType("charger_charging");
-    public static final RecipeType<RecipeHolder<BaseMultipleToOneSmithingRecipe<?>>> MULTIPLE_TO_ONE_SMITHING =
+    public static final RecipeType<RecipeHolder<BaseMultipleToOneSmithingRecipe>> MULTIPLE_TO_ONE_SMITHING =
         createRecipeHolderType("multiple_to_one_smithing");
 
     public static final RecipeType<RecipeHolder<MobTransformRecipe>> MOB_TRANSFORM =

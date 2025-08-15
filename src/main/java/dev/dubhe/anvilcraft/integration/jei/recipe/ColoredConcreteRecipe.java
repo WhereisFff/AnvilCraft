@@ -17,6 +17,7 @@ public record ColoredConcreteRecipe(Color color, List<ItemIngredientPredicate> i
     public static ImmutableList<ColoredConcreteRecipe> getAllRecipes() {
         ImmutableList.Builder<ColoredConcreteRecipe> builder = ImmutableList.builder();
         for (BulgingRecipe recipe : JeiRecipeUtil.getRecipesFromType(ModRecipeTypes.BULGING_TYPE.get())) {
+            if (recipe.getResults().isEmpty()) continue;
             ChanceItemStack result = recipe.getResults().getFirst();
             if (!result.getStack().is(ModItemTags.REINFORCED_CONCRETE)) continue;
             Color color = Color.valueOf(

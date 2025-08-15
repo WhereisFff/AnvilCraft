@@ -73,6 +73,14 @@ public record ItemIngredientPredicate(
         }
     );
 
+    public static Builder of(ItemLike... items) {
+        return new Builder().of(items);
+    }
+
+    public static Builder of(TagKey<Item> tag) {
+        return new Builder().of(tag);
+    }
+
     @Override
     public boolean test(ItemStack itemStack) {
         return this.testIgnoreCount(itemStack) && this.testCount(itemStack.getCount());
