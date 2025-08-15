@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.api.amulet.type;
 
 import com.google.common.collect.Lists;
-import dev.dubhe.anvilcraft.api.amulet.Effect;
+import dev.dubhe.anvilcraft.api.amulet.fromto.Effect;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.item.ItemStack;

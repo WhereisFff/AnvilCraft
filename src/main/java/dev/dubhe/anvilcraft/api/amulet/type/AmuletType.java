@@ -2,10 +2,10 @@ package dev.dubhe.anvilcraft.api.amulet.type;
 
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.amulet.Effect;
-import dev.dubhe.anvilcraft.api.amulet.ImmuneDamage;
-import dev.dubhe.anvilcraft.api.amulet.InventoryTick;
-import dev.dubhe.anvilcraft.api.amulet.Obtain;
+import dev.dubhe.anvilcraft.api.amulet.fromto.Effect;
+import dev.dubhe.anvilcraft.api.amulet.fromto.ImmuneDamage;
+import dev.dubhe.anvilcraft.api.amulet.fromto.InventoryTick;
+import dev.dubhe.anvilcraft.api.amulet.fromto.Obtain;
 import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.util.predicate.DamageSourcePredicate;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;

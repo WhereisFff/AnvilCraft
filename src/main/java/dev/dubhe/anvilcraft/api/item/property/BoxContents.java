@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
+import dev.dubhe.anvilcraft.util.ListUtil;
 import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -84,8 +85,8 @@ public final class BoxContents implements TooltipComponent {
         if (!(o instanceof BoxContents that)) return false;
         return this.selection == that.selection
                && this.usage == that.usage
-               && Objects.equals(this.amulets, that.amulets)
-               && Objects.equals(this.totems, that.totems);
+               && ListUtil.equals(this.amulets, that.amulets, ItemStack::isSameItemSameComponents)
+               && ListUtil.equals(this.totems, that.totems, ItemStack::isSameItemSameComponents);
     }
 
     public boolean isEmpty() {

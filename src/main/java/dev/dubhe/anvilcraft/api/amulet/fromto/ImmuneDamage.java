@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.amulet;
+package dev.dubhe.anvilcraft.api.amulet.fromto;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.server.level.ServerPlayer;
@@ -12,93 +12,96 @@ import java.util.function.BiPredicate;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public interface Obtain extends BiPredicate<ServerPlayer, DamageSource> {
-    boolean canObtain(ServerPlayer player, DamageSource source);
+public interface ImmuneDamage extends BiPredicate<ServerPlayer, DamageSource> {
+    ImmuneDamage NEVER = (player, source) -> false;
+
+    boolean shouldImmuneDamage(ServerPlayer player, DamageSource source);
 
     @Override
     default boolean test(ServerPlayer player, DamageSource source) {
-        return this.canObtain(player, source);
+        return this.shouldImmuneDamage(player, source);
     }
 
     @Override
-    default Obtain and(BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
+    default ImmuneDamage and(BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
         return new Multiple(this).and(other);
     }
 
     @Override
-    default Obtain negate() {
+    default ImmuneDamage negate() {
         return new Negate(this);
     }
 
     @Override
-    default Obtain or(BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
+    default ImmuneDamage or(BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
         return new Multiple(this).or(other);
     }
 
-    class Negate implements Obtain {
-        protected final Obtain self;
+    class Negate implements ImmuneDamage {
+        protected final ImmuneDamage self;
         private boolean isNegate = true;
 
-        protected Negate(Obtain self) {
+        protected Negate(ImmuneDamage self) {
             this.self = self;
         }
 
         @Override
-        public boolean canObtain(ServerPlayer player, DamageSource source) {
-            return this.self.canObtain(player, source) ^ this.isNegate;
+        public boolean shouldImmuneDamage(ServerPlayer player, DamageSource source) {
+            return this.self.shouldImmuneDamage(player, source) ^ this.isNegate;
         }
 
         @Override
-        public @NotNull Obtain negate() {
+        public @NotNull ImmuneDamage negate() {
             this.isNegate = !this.isNegate;
             return this;
         }
     }
 
-    class Multiple implements Obtain {
-        private Obtain first;
+    class Multiple implements ImmuneDamage {
+        private ImmuneDamage first;
         private final List<Sub> subs = new ArrayList<>();
 
-        Multiple(Obtain first) {
+        Multiple(ImmuneDamage first) {
             this.first = first;
         }
 
         @Override
-        public boolean canObtain(ServerPlayer player, DamageSource source) {
-            boolean result = this.first.canObtain(player, source);
+        public boolean shouldImmuneDamage(ServerPlayer player, DamageSource source) {
+            boolean result = this.first.shouldImmuneDamage(player, source);
             for (Sub sub : this.subs) {
-                result = sub.canObtain(player, source, result);
+                result = sub.shouldImmuneDamage(player, source, result);
             }
             return result;
         }
 
         @Override
-        public @NotNull Obtain and(@NotNull BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
+        public @NotNull ImmuneDamage and(@NotNull BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
             this.subs.add(new And(other));
             return this;
         }
 
         @Override
-        public @NotNull Obtain negate() {
+        public @NotNull ImmuneDamage negate() {
+            this.first = this.first.negate();
             this.subs.getLast().negate();
             return this;
         }
 
         @Override
-        public @NotNull Obtain or(@NotNull BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
+        public @NotNull ImmuneDamage or(@NotNull BiPredicate<? super ServerPlayer, ? super DamageSource> other) {
             this.subs.add(new Or(other));
             return this;
         }
 
-        private static abstract class Sub {
+        private abstract static class Sub {
             protected final BiPredicate<? super ServerPlayer, ? super DamageSource> self;
-            protected boolean isNegate = false;
+            protected boolean isNegate = true;
 
             protected Sub(BiPredicate<? super ServerPlayer, ? super DamageSource> self) {
                 this.self = self;
             }
 
-            abstract boolean canObtain(ServerPlayer player, DamageSource source, boolean otherResult);
+            abstract boolean shouldImmuneDamage(ServerPlayer player, DamageSource source, boolean otherResult);
 
             void negate() {
                 this.isNegate = !this.isNegate;
@@ -111,7 +114,7 @@ public interface Obtain extends BiPredicate<ServerPlayer, DamageSource> {
             }
 
             @Override
-            public boolean canObtain(ServerPlayer player, DamageSource source, boolean otherResult) {
+            public boolean shouldImmuneDamage(ServerPlayer player, DamageSource source, boolean otherResult) {
                 return (otherResult && this.self.test(player, source)) ^ this.isNegate;
             }
         }
@@ -122,7 +125,7 @@ public interface Obtain extends BiPredicate<ServerPlayer, DamageSource> {
             }
 
             @Override
-            public boolean canObtain(ServerPlayer player, DamageSource source, boolean otherResult) {
+            public boolean shouldImmuneDamage(ServerPlayer player, DamageSource source, boolean otherResult) {
                 return (otherResult || this.self.test(player, source)) ^ this.isNegate;
             }
         }

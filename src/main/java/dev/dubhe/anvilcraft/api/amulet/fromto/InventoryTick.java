@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.amulet;
+package dev.dubhe.anvilcraft.api.amulet.fromto;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
