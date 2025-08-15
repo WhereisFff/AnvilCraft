@@ -124,6 +124,7 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "multiple_templates",
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "多合一锻造模板",
       "link_recipe": true,

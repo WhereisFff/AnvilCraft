@@ -5,7 +5,7 @@
   "sortnum": 22010,
   "entry_color": "661100",
   "pages": [
-    "本章节将会讲述：$(li)如何获得$(item)铀$()和$(item)钚$() $(li)如何借助核能产生大量的电力",
+    "本章节将会讲述：$(li)如何获得$(item)铀$()和$(item)钚$() $(li)如何借助核能产生大量的电力 $(p)$(#880000)注意$():携带18组铀/钚(块/锭/粒)会受到凋零效果",
     {
       "type": "patchouli:spotlight",
       "item": ["anvilcraft:uranium_nugget","anvilcraft:uranium_ingot","anvilcraft:uranium_block"],

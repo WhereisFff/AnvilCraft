@@ -124,6 +124,7 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "multiple_templates",
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "Multiple to One Smithing Template",
       "link_recipe": true,
