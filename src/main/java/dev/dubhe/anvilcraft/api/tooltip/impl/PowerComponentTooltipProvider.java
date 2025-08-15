@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.api.power.PowerComponentInfo;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
+import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.util.UnitUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
@@ -39,7 +40,9 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
         if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
         boolean overloaded = false;
         BlockPos pos;
-        if (e instanceof IPowerComponent) {
+        if (e.getBlockState().getBlock() instanceof AbstractMultiPartBlock<?> multiPartBlock) {
+            pos = multiPartBlock.getMainPartPos(e.getBlockPos(), e.getBlockState());
+        }else if (e instanceof IPowerComponent) {
             if (e.getBlockState().hasProperty(IPowerComponent.OVERLOAD)) {
                 overloaded = e.getBlockState()
                     .getValues()
