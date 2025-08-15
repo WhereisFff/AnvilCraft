@@ -50,6 +50,7 @@ import dev.dubhe.anvilcraft.item.MagnetItem;
 import dev.dubhe.anvilcraft.item.ModFoods;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
 import dev.dubhe.anvilcraft.item.MultiphaseTranscendiumItem;
+import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.RecoveryPearl;
 import dev.dubhe.anvilcraft.item.ResonatorCoreItem;
 import dev.dubhe.anvilcraft.item.RoyalAnvilHammerItem;
@@ -688,6 +689,23 @@ public class ModItems {
         .tag(
             ItemTags.DURABILITY_ENCHANTABLE, ItemTags.MINING_ENCHANTABLE, ItemTags.MINING_LOOT_ENCHANTABLE,
             ModItemTags.RESONATOR, ModItemTags.EXPLOSION_PROOF)
+        .model(DataGenUtil::noExtraModelOrState)
+        .register();
+    public static final ItemEntry<MultitoolItem> MULTITOOL_ITEM = REGISTRATE
+        .item("multitool", MultitoolItem::new)
+        .tag(Tags.Items.TOOLS,
+            Tags.Items.TOOLS_IGNITER,
+            Tags.Items.TOOLS_SHEAR,
+            Tags.Items.TOOLS_BRUSH,
+            Tags.Items.TOOLS_FISHING_ROD,
+            Tags.Items.ENCHANTABLES,
+            ItemTags.CREEPER_IGNITERS,
+            ItemTags.VANISHING_ENCHANTABLE,
+            ItemTags.DURABILITY_ENCHANTABLE,
+            ItemTags.MINING_ENCHANTABLE,
+            ItemTags.FISHING_ENCHANTABLE,
+            ItemTags.STRIDER_TEMPT_ITEMS)
+        .properties((properties) -> properties.durability(2031))
         .model(DataGenUtil::noExtraModelOrState)
         .register();
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRATE

@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
@@ -26,8 +27,14 @@ abstract class HolderReferenceMixin {
         ResourceKey<T> key, T value,
         Operation<Holder.Reference<T>> original
     ) {
-        if (!(value instanceof ResonatorItem resonator)) return original.call(type, owner, key, value);
-        //noinspection unchecked
-        return (Holder.Reference<T>) new ResonatorItem.ResonatorHolder(type, (HolderOwner<Item>) owner, (ResourceKey<Item>) key, resonator);
+        if (value instanceof ResonatorItem resonator) {
+            //noinspection unchecked
+            return (Holder.Reference<T>) new ResonatorItem.ResonatorHolder(type, (HolderOwner<Item>) owner, (ResourceKey<Item>) key, resonator);
+        } else if (value instanceof MultitoolItem multitoolItem) {
+            //noinspection unchecked
+            return (Holder.Reference<T>) new MultitoolItem.MultitoolHolder(type, (HolderOwner<Item>) owner, (ResourceKey<Item>) key, multitoolItem);
+        } else {
+            return original.call(type, owner, key, value);
+        }
     }
 }

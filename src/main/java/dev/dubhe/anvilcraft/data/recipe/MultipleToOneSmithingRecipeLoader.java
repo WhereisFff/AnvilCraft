@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.data.recipe;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.recipe.multiple.EightToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.FourToOneSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.multiple.TwoToOneSmithingRecipe;
 import net.minecraft.world.item.Items;
@@ -47,6 +48,17 @@ public class MultipleToOneSmithingRecipeLoader {
             .material(ModItems.MULTIPHASE_TRANSCENDIUM)
             .input(ModItems.EMBER_METAL_RESONATOR)
             .input(ModItems.FROST_METAL_RESONATOR)
+            .save(provider);
+        EightToOneSmithingRecipe.builder(ModItems.MULTITOOL_ITEM, 0)
+            .material(ModItems.MULTIPHASE_MATTER)
+            .input(Items.SHEARS)
+            .input(Items.FLINT_AND_STEEL)
+            .input(Items.BRUSH)
+            .input(Items.SPYGLASS)
+            .input(ModItems.MAGNET)
+            .input(Items.FISHING_ROD)
+            .input(Items.CARROT_ON_A_STICK)
+            .input(Items.WARPED_FUNGUS_ON_A_STICK)
             .save(provider);
         FourToOneSmithingRecipe.builder(ModItems.GEM_AMULET, 0)
             .material(ModBlocks.FROST_METAL_BLOCK)
