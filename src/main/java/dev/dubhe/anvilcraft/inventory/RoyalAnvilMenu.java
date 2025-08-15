@@ -187,11 +187,9 @@ public class RoyalAnvilMenu extends AnvilMenu {
 
             if (extraFormat != null) {
                 repairCostT = 1;
-                Integer baseRepairCost = inputItemLeft.get(DataComponents.REPAIR_COST);
                 totalCost += repairCostT
                     * inputItemLeft.getCount()
-                    * inputItemRight.getCount()
-                    * (baseRepairCost == null || baseRepairCost == 0 ? 1 : baseRepairCost);
+                    * inputItemRight.getCount();
                 Component currentName = inputItemLeft.getHoverName();
                 if (!this.itemName.equals(currentName.getString())
                     && this.itemName != null
