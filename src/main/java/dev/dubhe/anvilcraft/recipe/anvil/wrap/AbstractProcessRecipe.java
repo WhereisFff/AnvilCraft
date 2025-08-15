@@ -77,20 +77,6 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         this.resultBlocks = resultBlocks;
     }
 
-    private static int getPriority(
-        List<ItemIngredientPredicate> itemIngredients,
-        List<ChanceItemStack> results,
-        HasCauldronSimple hasCauldron,
-        List<ChanceBlockState> resultBlocks,
-        List<BlockStatePredicate> blocks
-    ) {
-        return (itemIngredients == null ? 0 : itemIngredients.size())
-            + (results == null ? 0 : results.size())
-            + (hasCauldron != null ? 1 : 0)
-            + (resultBlocks == null ? 0 : resultBlocks.size())
-            + (blocks == null ? 0 : blocks.size() * 100);
-    }
-
     public AbstractProcessRecipe(
         Vec3 inputOffset,
         List<ItemIngredientPredicate> itemIngredients,
@@ -126,6 +112,20 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
 
     private static ItemStack getIcon(@NotNull List<ChanceItemStack> results) {
         return results.isEmpty() ? Items.ANVIL.getDefaultInstance() : results.getFirst().getStack();
+    }
+
+    private static int getPriority(
+        List<ItemIngredientPredicate> itemIngredients,
+        List<ChanceItemStack> results,
+        HasCauldronSimple hasCauldron,
+        List<ChanceBlockState> resultBlocks,
+        List<BlockStatePredicate> blocks
+    ) {
+        return (itemIngredients == null ? 0 : itemIngredients.size())
+            + (results == null ? 0 : results.size())
+            + (hasCauldron != null ? 1 : 0)
+            + (resultBlocks == null ? 0 : resultBlocks.size())
+            + (blocks == null ? 0 : blocks.size() * 100);
     }
 
     private static @NotNull List<IRecipePredicate<?>> getPredicates(
