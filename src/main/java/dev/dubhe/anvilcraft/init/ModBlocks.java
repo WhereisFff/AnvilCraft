@@ -1424,7 +1424,10 @@ public class ModBlocks {
     public static final BlockEntry<SpaceOvercompressorBlock> SPACE_OVERCOMPRESSOR = REGISTRATE
         .block("space_overcompressor", SpaceOvercompressorBlock::new)
         .initialProperties(() -> Blocks.SHULKER_BOX)
-        .properties(BlockBehaviour.Properties::noOcclusion)
+        .properties(properties -> properties
+            .noOcclusion()
+            .pushReaction(PushReaction.NORMAL)
+        )
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .item()
