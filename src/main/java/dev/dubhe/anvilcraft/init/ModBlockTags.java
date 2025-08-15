@@ -80,6 +80,8 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_RUBY = bindC("storage_blocks/ruby");
     public static final TagKey<Block> STORAGE_BLOCKS_AMBER = bindC("storage_blocks/amber");
     public static final TagKey<Block> STORAGE_BLOCKS_RESIN = bindC("storage_blocks/resin");
+    public static final TagKey<Block> STORAGE_BLOCKS_TRANSCENDIUM = bindC("storage_blocks/transcendium");
+    public static final TagKey<Block> STORAGE_BLOCKS_FROST_METAL = bindC("storage_blocks/frost_metal");
 
     public static final TagKey<Block> STORAGE_BLOCKS_SUGAR = bindC("storage_blocks/sugar");
     public static final TagKey<Block> STORAGE_BLOCKS_GUNPOWDER = bindC("storage_blocks/gunpowder");
@@ -93,6 +95,8 @@ public class ModBlockTags {
 
     public static final TagKey<Block> FELLING_APPLICABLE = bind("felling_applicable");
     public static final TagKey<Block> CLEANING_APPLICABLE = bind("cleaning_applicable");
+
+    public static final TagKey<Block> COLLISION_IMMUNE = bind("collision_immune");
 
     //mekanism tags
     public static final TagKey<Block> MEKANISM_CARDBOARD_BOX_BLACKLIST = bindMekanism("cardboard_blacklist");
