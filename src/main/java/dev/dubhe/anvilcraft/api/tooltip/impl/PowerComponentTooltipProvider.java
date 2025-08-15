@@ -42,7 +42,7 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
         BlockPos pos;
         if (e.getBlockState().getBlock() instanceof AbstractMultiPartBlock<?> multiPartBlock) {
             pos = multiPartBlock.getMainPartPos(e.getBlockPos(), e.getBlockState());
-        }else if (e instanceof IPowerComponent) {
+        } else if (e instanceof IPowerComponent) {
             if (e.getBlockState().hasProperty(IPowerComponent.OVERLOAD)) {
                 overloaded = e.getBlockState()
                     .getValues()
