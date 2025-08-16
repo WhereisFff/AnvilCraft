@@ -18,9 +18,10 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Collection;
 import java.util.Objects;
 
-public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
+public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements IGhostIngredientScreen {
     private static final ResourceLocation BACKGROUND_LOCATION = AnvilCraft.of("textures/gui/container/filter/background.png");
 
     private static final WidgetSprites INCLUDE_COMPONENTS = new WidgetSprites(
@@ -101,6 +102,18 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
     }
 
     private void sync(Button button) {
+        this.getMenu().sync();
+    }
+
+    @Override
+    public Collection<Integer> getGhostSlots() {
+        return IGhostIngredientScreen.range(36, 54, 1);
+    }
+
+    @Override
+    public void acceptGhost(Slot slot, ItemStack filterStack) {
+        if (!(slot instanceof FilterSlot filterSlot)) return;
+        filterSlot.set(filterStack.copyWithCount(1));
         this.getMenu().sync();
     }
 }
