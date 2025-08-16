@@ -280,14 +280,11 @@ public class AnvilEventListener {
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
-        if (hurtedEntity instanceof IronGolem) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(serverLevel, BlockPos.containing(pos), 5)) {
-                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger(player);
-            }
-            return;
-        }
         for (ServerPlayer player : PlayerUtil.searchPlayerByPos(serverLevel, BlockPos.containing(pos), 5)) {
             ModCriterionTriggers.ANVIL_LOOTING.get().trigger(player);
+            if (hurtedEntity instanceof IronGolem) {
+                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger(player);
+            }
         }
     }
 }
