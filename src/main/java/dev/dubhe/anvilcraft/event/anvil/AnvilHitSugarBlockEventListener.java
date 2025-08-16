@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.event.anvil;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
-import dev.dubhe.anvilcraft.api.event.anvil.GiantAnvilFallOnLandEvent;
 import dev.dubhe.anvilcraft.block.SugarBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -14,17 +13,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 public class AnvilHitSugarBlockEventListener {
     @SubscribeEvent
     public static void onLand(AnvilFallOnLandEvent event) {
-        Level level = event.getLevel();
-        BlockPos pos = event.getPos();
-        BlockPos hitPos = pos.below();
-        BlockState hitState = level.getBlockState(hitPos);
-        if (hitState.getBlock() instanceof SugarBlock sugarBlock) {
-            sugarBlock.onHit(level, hitPos);
-        }
-    }
-
-    @SubscribeEvent
-    public static void giantAnvilOnLand(GiantAnvilFallOnLandEvent event) {
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
         BlockPos hitPos = pos.below();

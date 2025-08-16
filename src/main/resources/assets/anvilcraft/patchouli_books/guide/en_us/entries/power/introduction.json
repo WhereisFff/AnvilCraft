@@ -18,11 +18,20 @@
       "type": "patchouli:crafting",
       "anchor": "anvil_hammer",
       "recipe": "anvilcraft:anvil_hammer",
-      "text": "The $(item)Anvil Hammer$() is the wrench in this mod. You can debug the direction of some blocks with it, and dismantle some blocks with it when holding shift. At the same time, it is an anvil. Left-clicking on a block with it is same as the block being hit by a anvil."
+      "text": "$(item)铁砧锤$()是极其强大的工具，所有功能会在后文罗列。"
     },
     {
       "type": "patchouli:text",
-      "text": "It is also a hammer, which drops attacking mobs from a height and adds damage to mobs as from an anvil falling. Also a goggles, which can be worn on the head to view the grid range and grid load info. It is also a head mallet, and when worn on the head, the elytra fly and hit mobs to deal damage. Note that left-clicking on a block, left-clicking and head-mallet hitting a mob will consume the anvil hammer's durability, but other operations will not."
+      "text": "$(li)主手持右键调整某些方块的方向（长按则使用轮盘模式） $(br)$(li)主手持$(thing)蹲下右键$()可以拆除某些方块 $(br)$(li)可作为护目镜戴在头上，查看电网范围、电网负载信息和红石元件信息 $(br)$(li)左键方块对模拟$(thing)铁砧砸到方块$()的操作，模拟的铁砧掉落高度等于玩家摔落高度 "
+    },
+    {
+      "type": "patchouli:text",
+      "text": "$(li)作为$(item)重锤$()使用，从高处落下攻击生物对生物追加如同铁砧下落增加的伤害 $(br)$(li)还是头槌，戴在头上时鞘翅$(thing)飞行撞击生物$()造成伤害 $(br)$(li)主手持有铁砧锤时，副手使用烟花火箭对着脚下的方块使用，可以向上$(thing)火箭跳$()，烟花等级越高跳的越高"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "",
+      "text": "$(br)$(#660000)注意$()：左键敲击方块、左键攻击生物、头槌撞击生物 会消耗铁砧锤的耐久，其他操作不会。"
     }
   ]
 }
