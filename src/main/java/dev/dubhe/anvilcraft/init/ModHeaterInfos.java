@@ -19,7 +19,7 @@ import java.util.Set;
 public class ModHeaterInfos {
     public static final HeaterInfo<HeliostatsBlockEntity> HELIOSTATS = HeatRecorder.registerProducerInfo(HeaterInfo.blockEntity(
         ModBlockEntities.HELIOSTATS,
-        heliostats -> Set.of(heliostats.getIrritatePos()),
+        heliostats -> Set.of(heliostats.getIrritatePos(), heliostats.getIrritatePos().above()),
         HeatTierLine.builder()
             .addPoint(4, HeatTier.NORMAL)
             .addPoint(12, HeatTier.HEATED, 4)

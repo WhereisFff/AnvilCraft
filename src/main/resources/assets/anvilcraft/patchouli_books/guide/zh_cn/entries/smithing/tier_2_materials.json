@@ -1,8 +1,8 @@
 {
   "name": "二阶材料",
   "category": "anvilcraft:smithing_system",
-  "icon": "anvilcraft:frost_metal_ingot",
-  "sortnum": 3004,
+  "icon": "anvilcraft:ember_metal_ingot",
+  "sortnum": 23006,
   "entry_color": "661100",
   "pages": [
     "本页面展示了目前所有可用的$(thing)二阶材料$()。",
@@ -14,6 +14,7 @@
     },
     {
       "type": "anvilcraft:time_warp",
+      "title": "浮霜锻造模板",
       "recipe": "anvilcraft:time_warp/frost_metal_ingot",
       "text": "使用1$(item)钛锭$()、1$(item)银锭$()、1$(item)铁锭$()进行时移来制作。"
     },
@@ -68,9 +69,9 @@
       "recipe2": "anvilcraft:ember_metal_nugget_from_ingot"
     },
     {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:ember_metal_upgrade_smithing_template",
-      "text": "在村庄铁匠铺可以找到锻造模板，与$(l:smithing/jewelcrafting_table)珠宝匠$(/l)村民交易也可以得到锻造模板。"
+      "type": "anvilcraft:stamping",
+      "recipe": "anvilcraft:stamping/ember_metal_upgrade_smithing_template",
+      "text": "使用$(item)皇家升级锻造模板$()进行冲压配方以获得。可用于将$(thing)皇家钢系列工具$()升级为$(thing)余烬金属系列工具$()。"
     },
     {
       "type": "patchouli:smithing",
@@ -126,7 +127,7 @@
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "多合一锻造模板",
       "link_recipe": true,
-      "text": "将多个互不相同的$(thing)锻造模板$()进行物品冲压加工获得，由模板数量决定获得的是几合一锻造模板。"
+      "text": "将多个互不相同的$(thing)锻造模板$()进行物品冲压加工获得，由模板数量决定获得的是几合一锻造模板。$(br2)用于在$(item)余烬锻造台$()上参与多合一锻造"
     }
   ]
 }

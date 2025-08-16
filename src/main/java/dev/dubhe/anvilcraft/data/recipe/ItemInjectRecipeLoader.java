@@ -41,43 +41,43 @@ public class ItemInjectRecipeLoader {
             .save(provider);
 
         ItemInjectRecipe.builder()
-            .requires(ModBlocks.RAW_ZINC)
+            .requires(ModBlocks.RAW_ZINC_BLOCK)
             .inputBlock(Blocks.DEEPSLATE)
             .resultBlock(ModBlocks.DEEPSLATE_ZINC_ORE.get())
             .save(provider);
 
         ItemInjectRecipe.builder()
-            .requires(ModBlocks.RAW_TIN)
+            .requires(ModBlocks.RAW_TIN_BLOCK)
             .inputBlock(Blocks.DEEPSLATE)
             .resultBlock(ModBlocks.DEEPSLATE_TIN_ORE.get())
             .save(provider);
 
         ItemInjectRecipe.builder()
-            .requires(ModBlocks.RAW_TITANIUM)
+            .requires(ModBlocks.RAW_TITANIUM_BLOCK)
             .inputBlock(Blocks.DEEPSLATE)
             .resultBlock(ModBlocks.DEEPSLATE_TITANIUM_ORE.get())
             .save(provider);
 
         ItemInjectRecipe.builder()
-            .requires(ModBlocks.RAW_TUNGSTEN)
+            .requires(ModBlocks.RAW_TUNGSTEN_BLOCK)
             .inputBlock(Blocks.DEEPSLATE)
             .resultBlock(ModBlocks.DEEPSLATE_TUNGSTEN_ORE.get())
             .save(provider);
 
         ItemInjectRecipe.builder()
-            .requires(ModBlocks.RAW_LEAD)
+            .requires(ModBlocks.RAW_LEAD_BLOCK)
             .inputBlock(Blocks.DEEPSLATE)
             .resultBlock(ModBlocks.DEEPSLATE_LEAD_ORE.get())
             .save(provider);
 
         ItemInjectRecipe.builder()
-            .requires(ModBlocks.RAW_SILVER)
+            .requires(ModBlocks.RAW_SILVER_BLOCK)
             .inputBlock(Blocks.DEEPSLATE)
             .resultBlock(ModBlocks.DEEPSLATE_SILVER_ORE.get())
             .save(provider);
 
         ItemInjectRecipe.builder()
-            .requires(ModBlocks.RAW_URANIUM)
+            .requires(ModBlocks.RAW_URANIUM_BLOCK)
             .inputBlock(Blocks.DEEPSLATE)
             .resultBlock(ModBlocks.DEEPSLATE_URANIUM_ORE.get())
             .save(provider);
@@ -102,7 +102,7 @@ public class ItemInjectRecipeLoader {
 
         ItemInjectRecipe.builder()
             .requires(ModItems.CHARGED_NEUTRONIUM_INGOT)
-            .inputBlock(ModBlocks.OVERHEATED_EMBER_METAL.get())
+            .inputBlock(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK.get())
             .resultItem(ChanceItemStack.of(ModItems.NEUTRONIUM_INGOT.asStack()).withChance(0.5f))
             .resultBlock(ModBlocks.TRANSCENDIUM_BLOCK.get())
             .save(provider);
