@@ -1,11 +1,11 @@
 ## 注册物品
 
-### 打开 `init.ModItems.java` ，你将看到如下语句：
+### 打开 `init.AddonItems.java` ，你将看到如下语句：
 
 * ```java
   public static final ItemEntry<Item> EXAMPLE_ITEM = REGISTRATE
-    .item("example_item", Item::new)
-    .register();
+        .item("example_item", Item::new)
+        .register();
   ```
   该语句即为注册物品的示例，其中 `example_item` 为你即将注册的物品的ID，`Item::new` 为你物品类构造方法的引用。
 * ```java
