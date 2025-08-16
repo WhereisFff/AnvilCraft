@@ -12,7 +12,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 
 public class AutomationLine {
-    public static final AdvancementHolder redstoneMilker = Advancement.Builder.recipeAdvancement()
+    public static final AdvancementHolder redstoneMilker = Advancement.Builder.advancement()
         .parent(AnvilCraftAdvancement.root)
         .display(
             Blocks.DISPENSER,
@@ -24,7 +24,7 @@ public class AutomationLine {
         .addCriterion("milk", MilkTrigger.TriggerInstance.milk())
         .build(AnvilCraft.advancementOf("redstone_milker"));
 
-    public static final AdvancementHolder realLooting = Advancement.Builder.recipeAdvancement()
+    public static final AdvancementHolder realLooting = Advancement.Builder.advancement()
         .parent(redstoneMilker)
         .display(
             Blocks.ANVIL,
@@ -36,7 +36,7 @@ public class AutomationLine {
         .addCriterion("anvil_looting", AnvilLootingTrigger.TriggerInstance.looting())
         .build(AnvilCraft.advancementOf("real_looting"));
 
-    public static final AdvancementHolder ironMeterReversal = Advancement.Builder.recipeAdvancement()
+    public static final AdvancementHolder ironMeterReversal = Advancement.Builder.advancement()
         .parent(realLooting)
         .display(
             Blocks.IRON_BLOCK,

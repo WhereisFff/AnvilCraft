@@ -21,5 +21,6 @@
     [
       "anvil_looting"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

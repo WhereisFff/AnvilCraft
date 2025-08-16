@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import net.minecraft.core.BlockPos;
@@ -48,6 +49,7 @@ public class ItemMeshBehavior implements IAnvilBehavior {
                     for (RecipeHolder<MeshRecipe> recipe : cacheMeshRecipes) {
                         int amount = recipe.value().resultAmount.getInt(context);
                         itemCounts.mergeInt(recipe.value().result.getItem(), amount, Integer::sum);
+                        TriggerUtil.mesh(level, pos, stack.getItem(), recipe.value().result.getItem());
                     }
                     stack.shrink(1);
                     processed++;

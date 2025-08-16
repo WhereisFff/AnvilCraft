@@ -1,0 +1,30 @@
+{
+  "parent": "anvilcraft:anvilcraft/stone_crusher",
+  "criteria": {
+    "mesh": {
+      "conditions": {
+        "input": {
+          "items": "minecraft:sand"
+        },
+        "output": {
+          "items": "minecraft:gold_nugget"
+        }
+      },
+      "trigger": "anvilcraft:mesh"
+    }
+  },
+  "display": {
+    "description": "Use an anvil to smash the sand on the scaffold to obtain gold nugget",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:gold_nugget"
+    },
+    "title": "Fossick"
+  },
+  "requirements": [
+    [
+      "mesh"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

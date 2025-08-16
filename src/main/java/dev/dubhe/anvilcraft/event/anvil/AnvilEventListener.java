@@ -9,7 +9,6 @@ import dev.dubhe.anvilcraft.api.event.anvil.AnvilHurtEntityEvent;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
-import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.BlockCompressRecipe;
@@ -18,8 +17,8 @@ import dev.dubhe.anvilcraft.recipe.anvil.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.SqueezingRecipe;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
-import dev.dubhe.anvilcraft.util.PlayerUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -28,7 +27,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
@@ -81,6 +79,7 @@ public class AnvilEventListener {
         final BlockState hitBlockState = level.getBlockState(hitBlockPos);
         BlockPos belowPos = hitBlockPos.below();
         BlockState hitBelowState = level.getBlockState(belowPos);
+        TriggerUtil.anvilOnGround(level, pos);
         if (hitBelowState.is(Blocks.STONECUTTER)) {
             brokeBlock(level, hitBlockPos, event);
             return;
@@ -95,13 +94,8 @@ public class AnvilEventListener {
 
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
+                TriggerUtil.anythingAnvilCrafting(level, pos);
                 return;
-            }
-        }
-
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_ON_GROUND.get().trigger(player);
             }
         }
     }
@@ -111,8 +105,11 @@ public class AnvilEventListener {
         level.getRecipeManager()
             .getRecipeFor(
                 ModRecipeTypes.BLOCK_CRUSH_TYPE.get(), new BlockCrushRecipe.Input(state.getBlock()), level)
-            .ifPresent(recipe ->
-                level.setBlockAndUpdate(pos, recipe.value().result.defaultBlockState()));
+            .ifPresent(recipe -> {
+                level.setBlockAndUpdate(pos, recipe.value().result.defaultBlockState());
+                TriggerUtil.anythingAnvilCrafting(level, pos);
+                TriggerUtil.blockCrushing(level, pos, state.getBlock().asItem(), recipe.value().result.asItem());
+            });
     }
 
     private static void handleBlockCompressRecipe(Level level, final BlockPos pos) {
@@ -129,6 +126,10 @@ public class AnvilEventListener {
                 level.setBlockAndUpdate(
                     pos.below(recipe.value().inputs.size() - 1),
                     recipe.value().result.defaultBlockState());
+                TriggerUtil.anythingAnvilCrafting(level, pos);
+                for (Block block : inputs) {
+                    TriggerUtil.blockCompressing(level, pos, block.asItem(), recipe.value().result.asItem());
+                }
             });
     }
 
@@ -146,6 +147,7 @@ public class AnvilEventListener {
                 level.setBlockAndUpdate(
                     pos.below(recipe.value().inputs.size() - 1),
                     recipe.value().result.defaultBlockState());
+                TriggerUtil.anythingAnvilCrafting(level, pos);
             });
     }
 
@@ -183,6 +185,7 @@ public class AnvilEventListener {
                     }
                     k.setItem(v.copy());
                 });
+                TriggerUtil.anythingAnvilCrafting(level, pos);
             });
     }
 
@@ -197,6 +200,8 @@ public class AnvilEventListener {
             .ifPresent(recipe -> {
                 CauldronUtil.fill(level, belowPos, recipe.getCauldron(), 1, false);
                 level.setBlockAndUpdate(pos, recipe.resultBlock.defaultBlockState());
+                TriggerUtil.anythingAnvilCrafting(level, pos);
+                TriggerUtil.squeezing(level, pos, state.getBlock().asItem(), recipe.resultBlock.asItem());
             });
     }
 
@@ -280,11 +285,7 @@ public class AnvilEventListener {
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
-        for (ServerPlayer player : PlayerUtil.searchPlayerByPos(serverLevel, BlockPos.containing(pos), 5)) {
-            ModCriterionTriggers.ANVIL_LOOTING.get().trigger(player);
-            if (hurtedEntity instanceof IronGolem) {
-                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger(player);
-            }
-        }
+        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos));
+        TriggerUtil.anvilLootingIronGolem(serverLevel, BlockPos.containing(pos));
     }
 }

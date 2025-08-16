@@ -1,0 +1,44 @@
+{
+  "parent": "anvilcraft:anvilcraft/ice_maker",
+  "criteria": {
+    "blue_ice": {
+      "conditions": {
+        "input": {
+          "items": "minecraft:packed_ice"
+        },
+        "output": {
+          "items": "minecraft:blue_ice"
+        }
+      },
+      "trigger": "anvilcraft:block_compressing"
+    },
+    "packed_ice": {
+      "conditions": {
+        "input": {
+          "items": "minecraft:ice"
+        },
+        "output": {
+          "items": "minecraft:packed_ice"
+        }
+      },
+      "trigger": "anvilcraft:block_compressing"
+    }
+  },
+  "display": {
+    "description": "Use an anvil to compress two pieces of ice to make packed ice, and then use an anvil to compress two pieces of packed ice to make blue ice",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:blue_ice"
+    },
+    "title": "4 to 81"
+  },
+  "requirements": [
+    [
+      "packed_ice"
+    ],
+    [
+      "blue_ice"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

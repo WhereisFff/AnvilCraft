@@ -27,5 +27,6 @@
     [
       "use_topaz"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

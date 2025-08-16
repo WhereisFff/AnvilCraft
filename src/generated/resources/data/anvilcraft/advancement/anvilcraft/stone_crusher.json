@@ -1,0 +1,44 @@
+{
+  "parent": "anvilcraft:anvilcraft/dang",
+  "criteria": {
+    "crush_cobblestone": {
+      "conditions": {
+        "input": {
+          "items": "minecraft:cobblestone"
+        },
+        "output": {
+          "items": "minecraft:gravel"
+        }
+      },
+      "trigger": "anvilcraft:block_crushing"
+    },
+    "crush_gravel": {
+      "conditions": {
+        "input": {
+          "items": "minecraft:gravel"
+        },
+        "output": {
+          "items": "minecraft:sand"
+        }
+      },
+      "trigger": "anvilcraft:block_crushing"
+    }
+  },
+  "display": {
+    "description": "Use an anvil to cobblestone to obtain gravel, then smash gravel to obtain sand",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:sand"
+    },
+    "title": "Stone Crusher"
+  },
+  "requirements": [
+    [
+      "crush_cobblestone"
+    ],
+    [
+      "crush_gravel"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

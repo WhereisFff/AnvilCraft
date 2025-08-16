@@ -27,5 +27,6 @@
     [
       "anvil_on_ground"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

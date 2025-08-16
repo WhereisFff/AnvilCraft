@@ -27,7 +27,7 @@ public class GeodeLine {
         .addCriterion("use_geode", UseItemTrigger.TriggerInstance.useItem(ModItems.GEODE.get()))
         .build(advancementOf("geode"));
 
-    public static final AdvancementHolder amethystPickaxe = Advancement.Builder.recipeAdvancement()
+    public static final AdvancementHolder amethystPickaxe = Advancement.Builder.advancement()
         .parent(geode)
         .display(
             ModItems.AMETHYST_PICKAXE,
@@ -39,7 +39,7 @@ public class GeodeLine {
         .addCriterion("crafting_amethyst_pickaxe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("amethyst_pickaxe")))
         .build(advancementOf("amethyst_pickaxe"));
 
-    public static final AdvancementHolder topaz = Advancement.Builder.recipeAdvancement()
+    public static final AdvancementHolder topaz = Advancement.Builder.advancement()
         .parent(amethystPickaxe)
         .display(
             ModItems.TOPAZ,
@@ -51,7 +51,7 @@ public class GeodeLine {
         .addCriterion("use_topaz", UseItemTrigger.TriggerInstance.useItem(ModItems.TOPAZ.get()))
         .build(advancementOf("topaz"));
 
-    public static final AdvancementHolder liftingAnvil = Advancement.Builder.recipeAdvancement()
+    public static final AdvancementHolder liftingAnvil = Advancement.Builder.advancement()
         .parent(topaz)
         .display(
             ModBlocks.MAGNET_BLOCK,

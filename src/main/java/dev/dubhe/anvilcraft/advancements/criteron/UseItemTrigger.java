@@ -33,8 +33,8 @@ public class UseItemTrigger extends SimpleCriterionTrigger<UseItemTrigger.Trigge
             return useItem(ItemPredicate.Builder.item().of(item));
         }
 
-        public static Criterion<TriggerInstance> useItem(ItemPredicate.Builder block) {
-            return ModCriterionTriggers.USE_ITEM.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(block.build())));
+        public static Criterion<TriggerInstance> useItem(ItemPredicate.Builder item) {
+            return ModCriterionTriggers.USE_ITEM.get().createCriterion(new TriggerInstance(Optional.empty(), Optional.of(item.build())));
         }
 
         public boolean matches(Item item) {

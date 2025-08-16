@@ -24,5 +24,6 @@
     [
       "crafting_amethyst_pickaxe"
     ]
-  ]
+  ],
+  "sends_telemetry_event": true
 }

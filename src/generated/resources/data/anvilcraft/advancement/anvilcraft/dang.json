@@ -1,0 +1,23 @@
+{
+  "parent": "anvilcraft:anvilcraft/root",
+  "criteria": {
+    "anything_anvil_crafting": {
+      "trigger": "anvilcraft:anything_anvil_crafting"
+    }
+  },
+  "display": {
+    "description": "Perform anything anvil crafting",
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:anvil"
+    },
+    "title": "Dang!"
+  },
+  "requirements": [
+    [
+      "anything_anvil_crafting"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

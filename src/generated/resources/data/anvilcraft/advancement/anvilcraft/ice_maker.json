@@ -1,0 +1,30 @@
+{
+  "parent": "anvilcraft:anvilcraft/dang",
+  "criteria": {
+    "make_ice": {
+      "conditions": {
+        "input": {
+          "items": "minecraft:snow_block"
+        },
+        "output": {
+          "items": "minecraft:ice"
+        }
+      },
+      "trigger": "anvilcraft:squeezing"
+    }
+  },
+  "display": {
+    "description": "Use an anvil to smash snow blocks on a cauldron pot to make ice",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:ice"
+    },
+    "title": "Ice Maker"
+  },
+  "requirements": [
+    [
+      "make_ice"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

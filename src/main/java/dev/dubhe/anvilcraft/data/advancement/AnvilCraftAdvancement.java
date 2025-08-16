@@ -39,5 +39,10 @@ public class AnvilCraftAdvancement {
         provider.accept(AutomationLine.redstoneMilker);
         provider.accept(AutomationLine.realLooting);
         provider.accept(AutomationLine.ironMeterReversal);
+        provider.accept(AnvilProcessingLine.dang);
+        provider.accept(AnvilProcessingLine.stoneCrusher);
+        provider.accept(AnvilProcessingLine.fossick);
+        provider.accept(AnvilProcessingLine.iceMaker);
+        provider.accept(AnvilProcessingLine.four281);
     }
 }
