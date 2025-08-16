@@ -9,6 +9,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -40,6 +41,14 @@ public class HasCauldronSimple {
 
     public HasCauldron toHasCauldron(Vec3 offset) {
         return new HasCauldron(offset, fluid, consume, transform);
+    }
+
+    public Block getFluidCauldron() {
+        return HasCauldron.getDefaultCauldron(this.fluid);
+    }
+
+    public Block getTransformCauldron() {
+        return HasCauldron.getDefaultCauldron(this.transform);
     }
 
     public static final StreamCodec<RegistryFriendlyByteBuf, HasCauldronSimple> STREAM_CODEC = StreamCodec.composite(

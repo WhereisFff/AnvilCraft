@@ -148,7 +148,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
                     0,
                     70,
                     0xFF000000,
-                    false);
+                    false
+                );
                 pose.popPose();
             } else if (recipe.isProduceFluid()) {
                 PoseStack pose = guiGraphics.pose();
@@ -163,11 +164,12 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
                     0,
                     70,
                     0xFF000000,
-                    false);
+                    false
+                );
                 pose.popPose();
             }
         } else {
-            Block result = getResultCauldron(recipe);
+            Block result = recipe.getHasCauldron().getTransformCauldron();
             if (recipe.isConsumeFluid()) {
                 state = CauldronUtil.getStateFromContentAndLevel(result, CauldronUtil.maxLevel(result) - 1);
             } else if (recipe.isProduceFluid()) {
@@ -177,18 +179,6 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
             }
             RenderHelper.renderBlock(guiGraphics, state, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
         }
-    }
-
-    private static Block getMaterialCauldron(BulgingRecipe recipe) {
-        return !recipe.isConsumeFluid()
-               ? Blocks.CAULDRON
-               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron"));
-    }
-
-    private static Block getResultCauldron(BulgingRecipe recipe) {
-        return recipe.isProduceFluid()
-               ? Blocks.CAULDRON
-               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
     }
 
     @Override
@@ -202,7 +192,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         BulgingRecipe recipe = recipeHolder.value();
         if (mouseX >= 72 && mouseX <= 90) {
             if (mouseY >= 34 && mouseY <= 53) {
-                Block material = getMaterialCauldron(recipe);
+                Block material = recipe.getHasCauldron().getFluidCauldron();
                 Component text;
                 if (recipe.isFromWater()) {
                     text = Blocks.WATER_CAULDRON.getName();
@@ -218,7 +208,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         }
         if (mouseX >= 124 && mouseX <= 140) {
             if (mouseY >= 24 && mouseY <= 42) {
-                Block result = getResultCauldron(recipe);
+                Block result = recipe.getHasCauldron().getTransformCauldron();
                 Component text;
                 if (recipe.getResults().isEmpty()) {
                     if (recipe.isConsumeFluid()) {

@@ -27,7 +27,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -116,10 +115,25 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             20,
             12,
             RenderHelper.SINGLE_BLOCK);
-        Block material = getMaterialCauldron(recipe);
-        RenderHelper.renderBlock(guiGraphics, CauldronUtil.fullState(material), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
+        Block material = recipe.getHasCauldron().getFluidCauldron();
         RenderHelper.renderBlock(
-            guiGraphics, ModBlocks.CORRUPTED_BEACON.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics,
+            CauldronUtil.fullState(material),
+            81,
+            30,
+            10,
+            12,
+            RenderHelper.SINGLE_BLOCK
+        );
+        RenderHelper.renderBlock(
+            guiGraphics,
+            ModBlocks.CORRUPTED_BEACON.getDefaultState(),
+            81,
+            40,
+            0,
+            12,
+            RenderHelper.SINGLE_BLOCK
+        );
 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
@@ -159,29 +173,17 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
                 pose.popPose();
             }
         } else {
-            Block result = getResultCauldron(recipe);
+            Block result = recipe.getHasCauldron().getTransformCauldron();
             BlockState cauldronState;
             if (recipe.isConsumeFluid()) {
                 cauldronState = CauldronUtil.getStateFromContentAndLevel(result, CauldronUtil.maxLevel(result) - 1);
             } else if (recipe.isProduceFluid()) {
                 cauldronState = CauldronUtil.getStateFromContentAndLevel(result, 1);
             } else {
-                cauldronState = getResultCauldron(recipe).defaultBlockState();
+                cauldronState = recipe.getHasCauldron().getTransformCauldron().defaultBlockState();
             }
             RenderHelper.renderBlock(guiGraphics, cauldronState, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
         }
-    }
-
-    private static Block getMaterialCauldron(TimeWarpRecipe recipe) {
-        return !recipe.isConsumeFluid()
-               ? Blocks.CAULDRON
-               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
-    }
-
-    private static Block getResultCauldron(TimeWarpRecipe recipe) {
-        return recipe.isProduceFluid()
-            ? Blocks.CAULDRON
-            : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron"));
     }
 
     @Override
@@ -198,7 +200,7 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
                 if (recipe.isProduceFluid()) {
                     text = Blocks.CAULDRON.getName();
                 } else {
-                    text = getMaterialCauldron(recipe).getName();
+                    text = recipe.getHasCauldron().getFluidCauldron().getName();
                 }
                 tooltip.add(text);
             }
@@ -212,10 +214,10 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             if (mouseY >= 24 && mouseY <= 42) {
                 Component text;
                 if (recipe.getResults().isEmpty()) {
-                    if (recipe.isConsumeFluid() && CauldronUtil.maxLevel(getResultCauldron(recipe)) <= 1) {
+                    if (recipe.isConsumeFluid() && CauldronUtil.maxLevel(recipe.getHasCauldron().getTransformCauldron()) <= 1) {
                         text = Blocks.CAULDRON.getName();
                     } else {
-                        text = getResultCauldron(recipe).getName();
+                        text = recipe.getHasCauldron().getTransformCauldron().getName();
                     }
                     tooltip.add(text);
                 }

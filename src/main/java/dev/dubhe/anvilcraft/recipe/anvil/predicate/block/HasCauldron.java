@@ -53,7 +53,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
                 .of(Blocks.CAULDRON)
                 .build();
         }
-        Block block = getDefaultCauldron(fluid);
+        Block block = HasCauldron.getDefaultCauldron(fluid);
         BlockState state = block.defaultBlockState();
         IntegerProperty property = CauldronUtil.LEVEL_4;
         Optional<Integer> optionalValue = state.getOptionalValue(CauldronUtil.LEVEL_4);
@@ -82,44 +82,42 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState state = cache.getBlockState(blockPos);
         if (state.is(Blocks.CAULDRON)) {
-            Block block = getDefaultCauldron(this.fluid);
+            Block block = this.getFluidCauldron();
             state = block.defaultBlockState();
         }
         IntegerProperty property = CauldronUtil.LEVEL_4;
-        Optional<Integer> optionalValue = state.getOptionalValue(property);
-        if (optionalValue.isEmpty()) {
+        Optional<Integer> fluidLevel = state.getOptionalValue(property);
+        if (fluidLevel.isEmpty()) {
             property = CauldronUtil.LEVEL_3;
-            optionalValue = state.getOptionalValue(property);
+            fluidLevel = state.getOptionalValue(property);
         }
-        int value;
-        if (optionalValue.isPresent()) {
-            value = Math.min(Math.max(optionalValue.orElse(0) - this.consume, 0), property.max);
-            if (value == 0) {
-                cache.setBlock(blockPos, Blocks.CAULDRON);
+        if (fluidLevel.isPresent()) {
+            fluidLevel = Optional.of(Math.clamp(fluidLevel.orElse(0) - this.consume, 0, property.max));
+            if (fluidLevel.orElse(0) == 0) {
+                state = Blocks.CAULDRON.defaultBlockState();
             } else {
-                state = state.setValue(property, value);
+                state = state.setValue(property, fluidLevel.orElse(0));
             }
         }
-        if (this.transform != null && !this.transform.equals(this.fluid) && !this.transform.equals(HasCauldron.NULL)) {
-            Block block = getDefaultCauldron(this.transform);
+        if (
+            fluidLevel.orElse(0) > 0
+                && this.transform != null
+                && !this.transform.equals(this.fluid)
+                && !this.transform.equals(HasCauldron.NULL)
+        ) {
+            Block block = this.getTransformCauldron();
             state = block.defaultBlockState();
             property = CauldronUtil.LEVEL_4;
-            optionalValue = state.getOptionalValue(property);
-            if (optionalValue.isEmpty()) {
-                property = CauldronUtil.LEVEL_3;
-            }
-            value = Math.min(Math.max(optionalValue.orElse(0) - this.consume, 0), property.max);
-            if (value == 0) {
-                cache.setBlock(blockPos, Blocks.CAULDRON);
-            } else {
-                state = state.setValue(property, value);
-            }
+            Optional<Integer> transformLevel = state.getOptionalValue(property);
+            if (transformLevel.isEmpty()) property = CauldronUtil.LEVEL_3;
+            transformLevel = Optional.of(Math.clamp(fluidLevel.orElse(0), 1, property.max));
+            state = state.setValue(property, transformLevel.orElse(1));
         }
         cache.setBlock(blockPos, state);
         context.putAcceptor(BlockCache.BLOCK_CACHE.location(), BlockCache.DEFAULT_ACCEPTOR);
     }
 
-    private static Block getDefaultCauldron(@NotNull ResourceLocation fluid) {
+    public static Block getDefaultCauldron(@NotNull ResourceLocation fluid) {
         String namespace = fluid.getNamespace();
         String path = fluid.getPath();
         ResourceLocation cauldron = ResourceLocation.fromNamespaceAndPath(namespace, "%s_cauldron".formatted(path));
@@ -127,6 +125,14 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         Block block = Blocks.WATER_CAULDRON;
         if (reference != null) block = reference.value();
         return block;
+    }
+
+    public Block getFluidCauldron() {
+        return HasCauldron.getDefaultCauldron(this.fluid);
+    }
+
+    public Block getTransformCauldron() {
+        return HasCauldron.getDefaultCauldron(this.transform);
     }
 
     @Override
