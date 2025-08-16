@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.cache;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.network.RecipeCacheSyncPacket;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.Util;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -10,9 +11,12 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Map;
 import java.util.Set;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public class JewelCraftingRecipeCache {
     private Map<Item, RecipeHolder<JewelCraftingRecipe>> jewelCraftingCache;
 

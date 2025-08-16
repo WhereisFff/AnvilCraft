@@ -2,14 +2,13 @@
   "name": "铁砧高速撞击合成",
   "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:acceleration_ring",
-  "sortnum": 5004,
+  "sortnum": 25005,
   "entry_color": "661100",
   "extra_recipe_mappings": {
-    "anvilcraft:negative_matter_nugget": 4,
     "anvilcraft:multiphase_matter": 5
   },
   "pages": [
-    "铁砧以高速撞击一些特定的方块时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(l:power/advanced_large_electromagnet#acceleration_ring)加速环$()和$(l:power/advanced_large_electromagnet#deflection_ring)偏转环$()，并要提供至少3072kW的能量。$(br2)$(#888888)通过原版的堆叠TNT加速，水流防爆等机制，可以制作不需要电的对撞机，但较有挑战性。$()",
+    "铁砧以高速撞击一些特定的方块时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(l:power/large_electromagnet#acceleration_ring)加速环$()和$(l:power/large_electromagnet#deflection_ring)偏转环$()，并要提供至少3072kW的能量。$(br2)$(#888888)通过原版的堆叠TNT加速，水流防爆等机制，可以制作不需要电的对撞机，但较有挑战性。$()",
     {
       "type": "patchouli:multiblock",
       "name": "建立环形加速器",
@@ -72,7 +71,7 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:power/advanced_large_electromagnet"
+        "anvilcraft:power/large_electromagnet"
       ],
       "text": ""
     }

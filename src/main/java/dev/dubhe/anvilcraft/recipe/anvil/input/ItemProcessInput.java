@@ -1,10 +1,14 @@
 package dev.dubhe.anvilcraft.recipe.anvil.input;
 
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeInput;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
+@MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 public record ItemProcessInput(List<ItemStack> items) implements RecipeInput, IItemsInput {
     @Override
     public ItemStack getItem(int pIndex) {

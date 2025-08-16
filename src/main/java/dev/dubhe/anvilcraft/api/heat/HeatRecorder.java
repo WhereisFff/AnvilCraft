@@ -275,18 +275,18 @@ public class HeatRecorder {
     static {
         registerHeatables(AnvilCraft.of("netherite"))
             .normal(Blocks.NETHERITE_BLOCK, (level, pos, state) -> state.is(Tags.Blocks.STORAGE_BLOCKS_NETHERITE))
-            .heated(ModBlocks.HEATED_NETHERITE)
-            .redhot(ModBlocks.REDHOT_NETHERITE)
-            .glowing(ModBlocks.GLOWING_NETHERITE)
-            .incandescent(ModBlocks.INCANDESCENT_NETHERITE);
+            .heated(ModBlocks.HEATED_NETHERITE_BLOCK)
+            .redhot(ModBlocks.REDHOT_NETHERITE_BLOCK)
+            .glowing(ModBlocks.GLOWING_NETHERITE_BLOCK)
+            .incandescent(ModBlocks.INCANDESCENT_NETHERITE_BLOCK);
         registerHeatables(AnvilCraft.of("tungsten"))
             .normal(ModBlocks.TUNGSTEN_BLOCK, (level, pos, state) -> state.is(ModBlockTags.STORAGE_BLOCKS_TUNGSTEN))
-            .heated(ModBlocks.HEATED_TUNGSTEN)
-            .redhot(ModBlocks.REDHOT_TUNGSTEN)
-            .glowing(ModBlocks.GLOWING_TUNGSTEN)
-            .incandescent(ModBlocks.INCANDESCENT_TUNGSTEN);
+            .heated(ModBlocks.HEATED_TUNGSTEN_BLOCK)
+            .redhot(ModBlocks.REDHOT_TUNGSTEN_BLOCK)
+            .glowing(ModBlocks.GLOWING_TUNGSTEN_BLOCK)
+            .incandescent(ModBlocks.INCANDESCENT_TUNGSTEN_BLOCK);
         registerHeatables(AnvilCraft.of("ember_metal"))
             .normal(ModBlocks.EMBER_METAL_BLOCK)
-            .overheated(ModBlocks.OVERHEATED_EMBER_METAL);
+            .overheated(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK);
     }
 }

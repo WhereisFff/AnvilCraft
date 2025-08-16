@@ -248,23 +248,23 @@ public class ModBlockEntities {
 
     public static final BlockEntityEntry<HeatedBlockEntity> HEATED_BLOCK = REGISTRATE
         .blockEntity("heated_block", HeatedBlockEntity::createBlockEntity)
-        .validBlocks(ModBlocks.HEATED_NETHERITE, ModBlocks.HEATED_TUNGSTEN)
+        .validBlocks(ModBlocks.HEATED_NETHERITE_BLOCK, ModBlocks.HEATED_TUNGSTEN_BLOCK)
         .register();
     public static final BlockEntityEntry<RedhotBlockEntity> REDHOT_BLOCK = REGISTRATE
         .blockEntity("redhot_block", RedhotBlockEntity::createBlockEntity)
-        .validBlocks(ModBlocks.REDHOT_NETHERITE, ModBlocks.REDHOT_TUNGSTEN)
+        .validBlocks(ModBlocks.REDHOT_NETHERITE_BLOCK, ModBlocks.REDHOT_TUNGSTEN_BLOCK)
         .register();
     public static final BlockEntityEntry<GlowingBlockEntity> GLOWING_BLOCK = REGISTRATE
         .blockEntity("glowing_block", GlowingBlockEntity::createBlockEntity)
-        .validBlocks(ModBlocks.GLOWING_NETHERITE, ModBlocks.GLOWING_TUNGSTEN)
+        .validBlocks(ModBlocks.GLOWING_NETHERITE_BLOCK, ModBlocks.GLOWING_TUNGSTEN_BLOCK)
         .register();
     public static final BlockEntityEntry<IncandescentBlockEntity> INCANDESCENT_BLOCK = REGISTRATE
         .blockEntity("incandescent_block", IncandescentBlockEntity::createBlockEntity)
-        .validBlocks(ModBlocks.INCANDESCENT_NETHERITE, ModBlocks.INCANDESCENT_TUNGSTEN)
+        .validBlocks(ModBlocks.INCANDESCENT_NETHERITE_BLOCK, ModBlocks.INCANDESCENT_TUNGSTEN_BLOCK)
         .register();
     public static final BlockEntityEntry<OverheatedBlockEntity> OVERHEATED_BLOCK = REGISTRATE
         .blockEntity("overheated_block", OverheatedBlockEntity::createBlockEntity)
-        .validBlocks(ModBlocks.OVERHEATED_EMBER_METAL)
+        .validBlocks(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK)
         .register();
 
     public static final BlockEntityEntry<PlasmaJetsBlockEntity> PLASMA_JETS = REGISTRATE

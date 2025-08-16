@@ -1,18 +1,15 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
+import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.RenderHelper;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
@@ -21,17 +18,17 @@ import java.util.List;
 import java.util.function.Function;
 
 public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeRegistry<T> {
-    private final Function<T, List<Object2IntMap.Entry<Ingredient>>> ingredients;
+    private final Function<T, List<ItemIngredientPredicate>> ingredients;
     private final Function<T, List<ChanceItemStack>> results;
     private final Function<T, BlockState> state1;
     private final @Nullable Function<T, BlockState> state2;
 
     public PageAnvilItemProcess(
-        DeferredHolder<RecipeType<?>, RecipeType<T>> typeHolder,
-        Function<T, List<Object2IntMap.Entry<Ingredient>>> ingredients, Function<T, List<ChanceItemStack>> results,
+        RecipeType<T> recipeType,
+        Function<T, List<ItemIngredientPredicate>> ingredients, Function<T, List<ChanceItemStack>> results,
         Function<T, BlockState> state1, @Nullable Function<T, BlockState> state2
     ) {
-        super(typeHolder.get());
+        super(recipeType);
         this.ingredients = ingredients;
         this.results = results;
         this.state1 = state1;
@@ -72,21 +69,21 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
         PatchouliRenderHelper.renderArray(graphics, recipeX + 37, recipeY + 25);
         PatchouliRenderHelper.renderArray(graphics, recipeX + 70, recipeY + 25);
 
-        List<Object2IntMap.Entry<Ingredient>> inputs = this.ingredients.apply(recipe);
+        List<ItemIngredientPredicate> inputs = this.ingredients.apply(recipe);
         if (inputs.size() <= 4) {
             PatchouliRenderHelper.render2x2(graphics, recipeX - 8, recipeY + 8);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 2 && i * 2 + j < inputs.size(); j++) {
-                    PatchouliRenderHelper.renderIngredientWithCount(
+                    PatchouliRenderHelper.renderIngredient(
                         parent, graphics, inputs.get(i * 2 + j), recipeX - 4 + j * 19, recipeY + 12 + i * 19, mouseX, mouseY
                     );
                 }
             }
         } else if (inputs.size() <= 6) {
-            PatchouliRenderHelper.render2x3(graphics, recipeX - 6, recipeY);
+            PatchouliRenderHelper.render3x2(graphics, recipeX - 6, recipeY);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 3 && i * 2 + j < inputs.size(); j++) {
-                    PatchouliRenderHelper.renderIngredientWithCount(
+                    PatchouliRenderHelper.renderIngredient(
                         parent, graphics, inputs.get(i * 2 + j), recipeX - 4 + j * 19, recipeY + 4 + i * 19, mouseX, mouseY
                     );
                 }

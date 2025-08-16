@@ -19,6 +19,7 @@ public class ModDamageTypeTags {
     public static final TagKey<DamageType> DOG_AMULET_VALID = bind("amulet_valid/dog");
     public static final TagKey<DamageType> SILENCE_AMULET_VALID = bind("amulet_valid/silence");
     public static final TagKey<DamageType> COGWHEEL_AMULET_VALID = bind("amulet_valid/cogwheel");
+    public static final TagKey<DamageType> ABNORMAL_AMULET_VALID = bind("amulet_valid/abnormal");
 
     private static TagKey<DamageType> bindC(String id) {
         return TagKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath("c", id));
