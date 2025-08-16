@@ -1,5 +1,6 @@
 # MENU
 
+- [前言](./index.md)
 - [附属开发](./addon/index.md)
     - [环境搭建与模组构建](./addon/01_environment.md)
     - [创建你的第一个物品](./addon/02_create_item.md)

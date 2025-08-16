@@ -66,3 +66,27 @@
 12. 运行 `Tasks -> loom -> genSources` 任务
 13. 重载 Gradle 脚本
 14. 至此开发环境的准备工作已全部就绪
+
+## 四、验证环境
+
+1. 运行 `Tasks -> forgegradle runs -> runClient` 任务测试环境
+    * 如果能正常启动 Minecraft 并看到你的模组，说明环境配置成功
+
+2. 检查日志输出
+    * 确认没有错误信息
+    * 查看模组是否正确加载
+
+## 五、常见问题及解决方案
+
+1. **Gradle 同步失败**
+    * 检查网络连接，确保可以访问 Maven 仓库
+    * 尝试使用 `./gradlew --refresh-dependencies` 命令刷新依赖
+
+2. **找不到 AnvilCraft 依赖**
+    * 检查 [Maven 仓库](https://server.cjsah.net:1002/maven/dev/dubhe/anvilcraft-neoforge-1.21.1/maven-metadata.xml)
+      中的最新版本号
+    * 确保版本号与 Minecraft 版本匹配
+
+3. **IDEA 无法识别项目**
+    * 删除 `.idea` 文件夹和 `*.iml` 文件，重新导入项目
+    * 确保选择了正确的 JDK 版本 (Java 21)
