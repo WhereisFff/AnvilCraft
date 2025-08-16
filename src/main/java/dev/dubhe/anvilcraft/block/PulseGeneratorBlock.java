@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.util.Util;
@@ -11,6 +12,8 @@ import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.DustParticleOptions;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtUtils;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
@@ -26,7 +29,6 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -48,7 +50,7 @@ import java.util.Optional;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements EntityBlock, IHammerChangeable, IHammerRemovable {
+public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements IMoveableEntityBlock, IHammerChangeable, IHammerRemovable {
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     protected static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 4.0, 16.0);
     public static final MapCodec<PulseGeneratorBlock> CODEC = simpleCodec(PulseGeneratorBlock::new);
@@ -146,8 +148,10 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
         boolean canStart = switch (generator.getStartMode()) {
             case RISING_EDGE -> !lastInputting && nowInputting;
             case FALLING_EDGE -> lastInputting && !nowInputting;
-            case LOOP -> !generator.isDeadlock() && generator.getState() == PulseGeneratorBlockEntity.State.DEFAULT;
-        } && !generator.isProcessing();
+            case LOOP -> !generator.isDeadlock()
+                         && (generator.getState() == PulseGeneratorBlockEntity.State.DEFAULT
+                             || !level.getBlockTicks().hasScheduledTick(pos, this));
+        } && (!generator.isProcessing() || !level.getBlockTicks().hasScheduledTick(pos, this));
         if (canStart) {
             this.startWaiting(level, pos, state, generator);
         }
@@ -205,6 +209,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
     protected void checkOnSignalEnd(Level level, BlockPos pos, BlockState state, PulseGeneratorBlockEntity generator) {
         generator.setState(PulseGeneratorBlockEntity.State.DEFAULT);
         this.updateBlockAndNeighbours(level, pos, state, generator);
+        generator.setChanged();
 
         if (generator.getStartMode() == PulseGeneratorBlockEntity.Mode.LOOP) {
             this.startWaiting(level, pos, state, generator);
@@ -304,5 +309,19 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements E
     @Override
     public @Nullable Property<?> getChangeableProperty(BlockState blockState) {
         return FACING;
+    }
+
+    @Override
+    public @NotNull CompoundTag clearData(@NotNull Level level, @NotNull BlockPos pos) {
+        CompoundTag data = new CompoundTag();
+        level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
+            .ifPresent(be -> be.saveAdditional(data, level.registryAccess()));
+        return data;
+    }
+
+    @Override
+    public void setData(@NotNull Level level, @NotNull BlockPos pos, @NotNull CompoundTag tag) {
+        level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
+            .ifPresent(be -> be.loadAdditional(tag, level.registryAccess()));
     }
 }
