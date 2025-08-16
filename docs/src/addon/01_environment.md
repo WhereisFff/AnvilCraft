@@ -4,7 +4,6 @@
 2. 安装 `IntelliJ IDEA` 的插件
     * [Chinese (Simplified) Language Pack / 中文语言包](https://plugins.jetbrains.com/plugin/13710-chinese-simplified-language-pack----)
     * [Minecraft Development](https://plugins.jetbrains.com/plugin/8327-minecraft-development)
-    * [Architectury](https://plugins.jetbrains.com/plugin/16210-architectury)
 
 ## 二、从附属模板创建仓库
 
