@@ -46,11 +46,7 @@ import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.bus.api.IEventBus;
@@ -58,7 +54,6 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.progress.StartupNotificationManager;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -136,7 +131,6 @@ public class AnvilCraft {
 
         eventBus.addListener(AnvilCraft::registerPayload);
         eventBus.addListener(AnvilCraft::loadComplete);
-        eventBus.addListener(AnvilCraft::packSetup);
         eventBus.addListener(ModFluids::registerFluidInteractions);
     }
 
@@ -182,24 +176,13 @@ public class AnvilCraft {
             }
             if (Util.isLoaded("apothic_enchanting")) {
                 LOGGER.info(
-                    "Apothic Enchanting found. Set "
-                        + "royalAnvilBeyondMaxLevel, "
-                        + "emberAnvilBeyondMaxLevel and "
-                        + "transcendenceAnvilBeyondMaxLevel to true.");
+                    "Apothic Enchanting found. Set royalAnvilBeyondMaxLevel, "
+                        + "emberAnvilBeyondMaxLevel and transcendenceAnvilBeyondMaxLevel to true."
+                );
                 config.royalAnvilBeyondMaxLevel = true;
                 config.emberAnvilBeyondMaxLevel = true;
                 config.transcendenceAnvilBeyondMaxLevel = true;
             }
         });
-    }
-
-    public static void packSetup(@NotNull AddPackFindersEvent event) {
-        event.addPackFinders(
-            of("resourcepacks/transparent_cauldron"),
-            PackType.CLIENT_RESOURCES,
-            Component.translatable("pack.anvilcraft.builtin_pack"),
-            PackSource.BUILT_IN,
-            false,
-            Pack.Position.TOP);
     }
 }
