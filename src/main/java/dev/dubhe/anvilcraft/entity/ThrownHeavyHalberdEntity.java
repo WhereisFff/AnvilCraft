@@ -109,7 +109,7 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
     private boolean isAcceptableReturnOwner() {
         Entity entity = this.getOwner();
         return entity != null && entity.isAlive()
-               && (!(entity instanceof ServerPlayer) || !entity.isSpectator());
+            && (!(entity instanceof ServerPlayer) || !entity.isSpectator());
     }
 
     public boolean isFoil() {
@@ -219,8 +219,8 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
 
     private byte getLoyaltyFromItem(ItemStack stack) {
         return this.level() instanceof ServerLevel serverlevel
-               ? (byte) Mth.clamp(EnchantmentHelper.getTridentReturnToOwnerAcceleration(serverlevel, stack, this), 0, 127)
-               : 0;
+            ? (byte) Mth.clamp(EnchantmentHelper.getTridentReturnToOwnerAcceleration(serverlevel, stack, this), 0, 127)
+            : 0;
     }
 
     @Override

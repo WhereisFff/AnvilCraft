@@ -71,8 +71,8 @@
     },
     {
       "type": "anvilcraft:time_warp",
-      "recipe": "anvilcraft:heat_produce_time_warp/raw_uranium_from_uranium_block",
-      "recipe2": "anvilcraft:heat_produce_time_warp/raw_uranium_from_plutonium_block"
+      "recipe": "anvilcraft:time_warp/raw_uranium_from_uranium_block",
+      "recipe2": "anvilcraft:time_warp/raw_uranium_from_plutonium_block"
     },
     {
       "type": "anvilcraft:time_warp",

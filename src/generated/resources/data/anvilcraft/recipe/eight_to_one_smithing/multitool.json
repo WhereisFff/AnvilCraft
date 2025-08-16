@@ -2,36 +2,51 @@
   "type": "anvilcraft:eight_to_one_smithing",
   "inputs": [
     {
-      "item": "minecraft:shears"
+      "items": "minecraft:shears"
     },
     {
-      "item": "minecraft:flint_and_steel"
+      "items": "minecraft:flint_and_steel"
     },
     {
-      "item": "minecraft:brush"
+      "items": "minecraft:brush"
     },
     {
-      "item": "minecraft:spyglass"
+      "items": "minecraft:spyglass"
     },
     {
-      "item": "anvilcraft:magnet"
+      "items": "anvilcraft:magnet"
     },
     {
-      "item": "minecraft:fishing_rod"
+      "items": "minecraft:fishing_rod"
     },
     {
-      "item": "minecraft:carrot_on_a_stick"
+      "items": "minecraft:carrot_on_a_stick"
     },
     {
-      "item": "minecraft:warped_fungus_on_a_stick"
+      "items": "minecraft:warped_fungus_on_a_stick"
     }
   ],
   "material": {
-    "item": "anvilcraft:multiphase_matter"
+    "items": "anvilcraft:multiphase_matter"
   },
-  "recipeId": 0,
-  "result": "anvilcraft:multitool",
+  "result": {
+    "item": {
+      "count": 1,
+      "id": "anvilcraft:multitool"
+    },
+    "modifiers": [
+      {
+        "type": "anvilcraft:copy_data",
+        "types": [
+          {
+            "type": "anvilcraft:multiphase",
+            "input_type": "eight"
+          }
+        ]
+      }
+    ]
+  },
   "template": {
-    "item": "anvilcraft:eight_to_one_smithing_template"
+    "items": "anvilcraft:eight_to_one_smithing_template"
   }
 }

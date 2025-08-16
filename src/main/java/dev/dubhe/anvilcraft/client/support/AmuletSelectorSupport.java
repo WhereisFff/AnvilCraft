@@ -121,21 +121,21 @@ public class AmuletSelectorSupport {
     }
 
     public enum Layout {
-        EMPTY((byte) 0, new boolean[][] {
-            new boolean[] {false, false, false, false},
-            new boolean[] {false, false, false, false},
-            new boolean[] {false, false, false, false},
-            new boolean[] {false, false, false, false}}
+        EMPTY((byte) 0, new boolean[][]{
+            new boolean[]{false, false, false, false},
+            new boolean[]{false, false, false, false},
+            new boolean[]{false, false, false, false},
+            new boolean[]{false, false, false, false}}
         ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
             }
         },
-        NO_AMULET((byte) 0, new boolean[][] {
-            new boolean[] {false, false, false, false},
-            new boolean[] {false, false, false, false},
-            new boolean[] {false, false, false, false},
-            new boolean[] {false, false, false, false}}
+        NO_AMULET((byte) 0, new boolean[][]{
+            new boolean[]{false, false, false, false},
+            new boolean[]{false, false, false, false},
+            new boolean[]{false, false, false, false},
+            new boolean[]{false, false, false, false}}
         ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
@@ -146,11 +146,11 @@ public class AmuletSelectorSupport {
                 poseStack.popPose();
             }
         },
-        BIG_AMULET_1((byte) 1, new boolean[][] {
-            new boolean[] {true, true, true, false},
-            new boolean[] {true, true, true, false},
-            new boolean[] {true, true, true, false},
-            new boolean[] {false, false, false, false}}
+        BIG_AMULET_1((byte) 1, new boolean[][]{
+            new boolean[]{true, true, true, false},
+            new boolean[]{true, true, true, false},
+            new boolean[]{true, true, true, false},
+            new boolean[]{false, false, false, false}}
         ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
@@ -177,11 +177,11 @@ public class AmuletSelectorSupport {
                 poseStack.popPose();
             }
         },
-        SMALL_AMULET_1((byte) 1, new boolean[][] {
-            new boolean[] {true, true, false, false},
-            new boolean[] {true, true, false, false},
-            new boolean[] {true, true, false, false},
-            new boolean[] {false, false, false, false}}
+        SMALL_AMULET_1((byte) 1, new boolean[][]{
+            new boolean[]{true, true, false, false},
+            new boolean[]{true, true, false, false},
+            new boolean[]{true, true, false, false},
+            new boolean[]{false, false, false, false}}
         ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {
@@ -208,11 +208,11 @@ public class AmuletSelectorSupport {
                 poseStack.popPose();
             }
         },
-        SMALL_AMULET_2((byte) 2, new boolean[][] {
-            new boolean[] {true, true, true, true},
-            new boolean[] {true, true, true, true},
-            new boolean[] {true, true, true, true},
-            new boolean[] {false, false, false, false}}
+        SMALL_AMULET_2((byte) 2, new boolean[][]{
+            new boolean[]{true, true, true, true},
+            new boolean[]{true, true, true, true},
+            new boolean[]{true, true, true, true},
+            new boolean[]{false, false, false, false}}
         ) {
             @Override
             public void render(GuiGraphics guiGraphics, int x, int y, BoxContents content) {

@@ -179,9 +179,9 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     private void eternalProof(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.getItem().has(ModComponents.ETERNAL)
             && (source.is(DamageTypeTags.IS_EXPLOSION)
-                || source.is(DamageTypeTags.IS_FIRE)
-                || source.is(DamageTypes.CACTUS)
-                || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
+            || source.is(DamageTypeTags.IS_FIRE)
+            || source.is(DamageTypes.CACTUS)
+            || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
             cir.setReturnValue(false);
         }
     }
