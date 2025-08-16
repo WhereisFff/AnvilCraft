@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.property.FilterContent;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableImageButton;
+import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.component.FilterSlot;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,6 +17,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+
+import java.util.Objects;
 
 public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
     private static final ResourceLocation BACKGROUND_LOCATION = AnvilCraft.of("textures/gui/container/filter/background.png");
@@ -45,8 +48,8 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
         FilterContent content = this.getMenu().getContainer().getContent();
         this.addRenderableWidget(
             new SwitchableImageButton(
-                this.leftPos + 115,
-                this.topPos + 58,
+                this.leftPos + 25,
+                this.topPos + 25,
                 INCLUDE_COMPONENTS,
                 content::isIncludeComponents,
                 content::setIncludeComponents,
@@ -55,8 +58,8 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
         );
         this.addRenderableWidget(
             new SwitchableImageButton(
-                this.leftPos + 151,
-                this.topPos + 58,
+                this.leftPos + 25,
+                this.topPos + 43,
                 BLACK_LIST,
                 content::isBlackList,
                 content::setBlackList,
@@ -84,6 +87,10 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> {
         ) {
             ItemStack filterStack = this.menu.getCarried();
             if (!filterStack.isEmpty()) {
+                if (filterStack.has(ModComponents.FILTER_CONTENT)) {
+                    FilterContent content = Objects.requireNonNull(filterStack.get(ModComponents.FILTER_CONTENT));
+                    if (content.getNestingLevel() >= 2) return;
+                }
                 filterStack = filterStack.copyWithCount(1);
             }
             filterSlot.set(filterStack);

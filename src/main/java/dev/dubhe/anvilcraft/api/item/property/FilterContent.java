@@ -23,6 +23,7 @@ import net.minecraft.world.item.Items;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import java.util.Objects;
 
 @Getter
 @EqualsAndHashCode
@@ -72,7 +73,20 @@ public class FilterContent {
         this.blackList = false;
     }
 
+    public int getNestingLevel() {
+        int maxLevel = 0;
+        for (ItemStack stack : list) {
+            if (stack.has(ModComponents.FILTER_CONTENT)) {
+                FilterContent content = Objects.requireNonNull(stack.get(ModComponents.FILTER_CONTENT));
+                int nestingLevel = content.getNestingLevel();
+                if (nestingLevel > maxLevel) maxLevel = nestingLevel;
+            }
+        }
+        return maxLevel + 1;
+    }
+
     public static boolean filter(ItemStack filterStack, ItemStack stack, boolean isIncludeComponents, boolean isBlackList) {
+        if (filterStack.isEmpty()) return !isBlackList;
         if (!filterStack.has(ModComponents.FILTER_CONTENT)) {
             if (filterStack.is(Items.NAME_TAG) && filterStack.has(DataComponents.CUSTOM_NAME)) {
                 Component name = filterStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
@@ -83,18 +97,19 @@ public class FilterContent {
                 }
             }
             boolean flag = false;
-            if (isIncludeComponents && ItemStack.isSameItem(filterStack, stack)) flag = true;
-            else if (ItemStack.isSameItemSameComponents(filterStack, stack)) flag = true;
+            if (!isIncludeComponents && ItemStack.isSameItem(filterStack, stack)) flag = true;
+            else if (isIncludeComponents && ItemStack.isSameItemSameComponents(filterStack, stack)) flag = true;
             if (flag) return !isBlackList;
-            return false;
+            return isBlackList;
         }
         FilterContent content = filterStack.get(ModComponents.FILTER_CONTENT);
         if (content == null) return false;
         for (ItemStack itemStack : content.getList()) {
+            if (itemStack.isEmpty()) continue;
             if (FilterContent.filter(itemStack, stack, content.isIncludeComponents(), content.isBlackList())) {
-                return !content.isBlackList();
+                return !isBlackList;
             }
         }
-        return content.isBlackList();
+        return isBlackList;
     }
 }
