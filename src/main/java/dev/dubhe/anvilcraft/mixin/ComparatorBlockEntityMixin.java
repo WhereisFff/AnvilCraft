@@ -37,7 +37,8 @@ public abstract class ComparatorBlockEntityMixin extends BlockEntity implements 
     @Shadow
     public abstract int getOutputSignal();
 
-    @Shadow private int output;
+    @Shadow
+    private int output;
 
     @Override
     public List<Component> anvilcraft$getTooltip() {

@@ -8,7 +8,7 @@
     "minecraft:lava_bucket": 9
   },
   "pages": [
-    "模组可以再生资源：$(li)$(l:basic/item_regeneration#guide)铁砧工艺指南$()$(li)$(l:basic/item_regeneration#quartz)石英/黏土/荧石/青金石$()$(li)$(l:basic/item_regeneration#sponge)湿海绵$()$(li)$(l:basic/item_regeneration#echo_shard)回响碎片$()$(li)$(l:basic/item_regeneration#lava)熔岩$()",
+    "模组可以再生资源：$(li)$(l:basic/item_regeneration#guide)铁砧工艺指南$()$(li)$(l:basic/item_regeneration#quartz)石英/黏土/荧石/青金石$() $(li)$(l:basic/item_regeneration#sponge)湿海绵$() $(li)$(l:basic/item_regeneration#echo_shard)回响碎片$() $(li)$(l:basic/item_regeneration#lava)熔岩$() $(li)$(l:basic/item_regeneration#slime_ball)黏液球$()",
     {
       "type": "patchouli:crafting",
       "anchor": "guide",
@@ -61,6 +61,13 @@
       "recipe2": "anvilcraft:super_heating/lava_from_stone",
       "title": "再生熔岩",
       "text": ""
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "slime_ball",
+      "item": "minecraft:slime_ball",
+      "link_recipe": true,
+      "text": "将$(l:basic/material#resin)树脂$()投入装水的炼药锅中，且在下面放上营火，铁砧砸击后可$(l:basic/item_processing#cooking)生产黏液球$()。"
     }
   ]
 }

@@ -413,9 +413,9 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
         public boolean is(int mode, TagKey<Item> tagKey) {
             if (mode == AUTO_MODE) return super.is(tagKey);
             return switch (tagKey) {
-                case TagKey<Item> tag when tag.equals(ItemTags.AXES)     -> super.is(tag) && mode == AXE_MODE;
-                case TagKey<Item> tag when tag.equals(ItemTags.SHOVELS)  -> super.is(tag) && mode == SHOVEL_MODE;
-                case TagKey<Item> tag when tag.equals(ItemTags.HOES)     -> super.is(tag) && mode == HOE_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.AXES) -> super.is(tag) && mode == AXE_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.SHOVELS) -> super.is(tag) && mode == SHOVEL_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.HOES) -> super.is(tag) && mode == HOE_MODE;
                 case TagKey<Item> tag when tag.equals(ItemTags.PICKAXES) -> super.is(tag) && mode == PICKAXE_MODE;
                 default -> super.is(tagKey);
             };
@@ -424,9 +424,9 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
         public boolean is(int mode, HolderSet<Item> holders) {
             if (mode == AUTO_MODE) return holders.contains(this);
             return switch (holders) {
-                case HolderSet.Named<Item> h when h.key().equals(ItemTags.AXES)     -> h.contains(this) && mode == AXE_MODE;
-                case HolderSet.Named<Item> h when h.key().equals(ItemTags.SHOVELS)  -> h.contains(this) && mode == SHOVEL_MODE;
-                case HolderSet.Named<Item> h when h.key().equals(ItemTags.HOES)     -> h.contains(this) && mode == HOE_MODE;
+                case HolderSet.Named<Item> h when h.key().equals(ItemTags.AXES) -> h.contains(this) && mode == AXE_MODE;
+                case HolderSet.Named<Item> h when h.key().equals(ItemTags.SHOVELS) -> h.contains(this) && mode == SHOVEL_MODE;
+                case HolderSet.Named<Item> h when h.key().equals(ItemTags.HOES) -> h.contains(this) && mode == HOE_MODE;
                 case HolderSet.Named<Item> h when h.key().equals(ItemTags.PICKAXES) -> h.contains(this) && mode == PICKAXE_MODE;
                 default -> holders.contains(this);
             };

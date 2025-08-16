@@ -2,7 +2,7 @@
   "name": "腐化信标",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:corrupted_beacon",
-  "sortnum": 3003,
+  "sortnum": 13004,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:corrupted_beacon": 1
@@ -18,7 +18,7 @@
       "item": "anvilcraft:corrupted_beacon",
       "text": "完全使用$(l:smithing/tier_1_materials#cursed_gold_block)诅咒金块$()作为信标底座，并使用$(l:smithing/tier_1_materials#cursed_gold_ingot)诅咒金锭$()激活信标，则信标有概率转化为$(item)腐化信标$()。底座层数越多，转化概率越大。使用诅咒金锭激活信标时天气将转为雷雨天。"
     },
-    "生物转化：$(br)$(thing)猪$()→$(thing)疣猪兽$()$(br)$(thing)牛$()→$(thing)劫掠兽$()$(br)$(thing)守卫者$()→$(thing)远古守卫者$()$(br)$(thing)猪灵$()→$(thing)猪灵蛮兵$()$(br)$(thing)村民$()→30%$(thing)掠夺者$()、60%$(thing)卫道士$()、10%$(thing)唤魔者$()$(br)$(thing)悦灵$()→$(thing)恼鬼$()$(br)$(thing)蝙蝠$()→$(thing)幻翼$()$(br)$(thing)马$()→10%$(thing)僵尸马$()、90%$(thing)骷髅马$()$(br)$(thing)蠹虫$()→$(thing)末影螨$()",
+    "生物转化：$(br)$(thing)猪$()→$(thing)疣猪兽$()$(br)$(thing)牛$()→$(thing)劫掠兽$()$(br)$(thing)守卫者$()→$(thing)远古守卫者$()$(br)$(thing)猪灵$()→$(thing)猪灵蛮兵$()$(br)$(thing)村民$()→30%$(thing)掠夺者$()、60%$(thing)卫道士$()、10%$(thing)唤魔者$()$(br)$(thing)悦灵$()→$(thing)恼鬼$()$(br)$(thing)蝙蝠$()→$(thing)幻翼$()$(br)$(thing)马$()→10%$(thing)僵尸马$()、90%$(thing)骷髅马$()$(br)$(thing)蠹虫$()→$(thing)末影螨$()$(br)$(thing)骷髅$()→→20%$(thing)凋零骷髅$()、80%$(thing)流浪者$()",
     {
       "type": "patchouli:multiblock",
       "anchor": "time_warp",
@@ -71,8 +71,8 @@
     },
     {
       "type": "anvilcraft:time_warp",
-      "recipe": "anvilcraft:heat_produce_time_warp/raw_uranium_from_uranium_block",
-      "recipe2": "anvilcraft:heat_produce_time_warp/raw_uranium_from_plutonium_block"
+      "recipe": "anvilcraft:time_warp/raw_uranium_from_uranium_block",
+      "recipe2": "anvilcraft:time_warp/raw_uranium_from_plutonium_block"
     },
     {
       "type": "anvilcraft:time_warp",

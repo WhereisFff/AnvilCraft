@@ -140,8 +140,8 @@ public class TranscendenceAnvilMenu extends AnvilMenu {
                         Enchantment enchantment = holder.value();
                         enchantmentsOnRightLevel =
                             enchantmentsOnLeftLevel == enchantmentsOnRightLevel
-                            ? enchantmentsOnRightLevel + 1
-                            : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
+                                ? enchantmentsOnRightLevel + 1
+                                : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
 
                         if (!AnvilCraft.config.transcendenceAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
                             enchantmentsOnRightLevel = enchantment.getMaxLevel();
@@ -153,9 +153,8 @@ public class TranscendenceAnvilMenu extends AnvilMenu {
                             anvilCost = Math.max(1, anvilCost / 2);
                         }
 
-                        long cost = anvilCost
+                        long cost = (long) anvilCost
                             * enchantmentsOnRightLevel
-                            * (repairCost == 0 ? 1 : repairCost)
                             * inputLeft.getCount() * inputLeft.getCount();
                         totalCost += Math.clamp(cost, 0, Integer.MAX_VALUE);
                     }
@@ -164,11 +163,9 @@ public class TranscendenceAnvilMenu extends AnvilMenu {
 
             if (extraFormat != null) {
                 repairCostT = 1;
-                Integer baseRepairCost = inputLeft.getOrDefault(DataComponents.REPAIR_COST, 0);
                 totalCost += repairCostT
                     * inputLeft.getCount()
-                    * inputRight.getCount()
-                    * (baseRepairCost == 0 ? 1 : baseRepairCost);
+                    * inputRight.getCount();
                 Component currentName = inputLeft.getHoverName();
                 if (!this.itemName.equals(currentName.getString())
                     && this.itemName != null

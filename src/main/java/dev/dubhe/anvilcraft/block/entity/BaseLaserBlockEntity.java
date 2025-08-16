@@ -31,7 +31,6 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -122,7 +121,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         );
     }
 
-    public void tick(@NotNull Level level) {
+    public void tick(Level level) {
         if (changed) {
             if (level instanceof ServerLevel serverLevel) {
                 PacketDistributor.sendToPlayersTrackingChunk(
@@ -205,11 +204,11 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         BlockPos downStreamPos = getBlockPos().relative(getFacing().getOpposite());
         if (getLevel() == null) return;
         IItemHandler cap = getLevel()
-                .getCapability(
-                        Capabilities.ItemHandler.BLOCK,
-                        downStreamPos,
-                        getFacing()
-                );
+            .getCapability(
+                Capabilities.ItemHandler.BLOCK,
+                downStreamPos,
+                getFacing()
+            );
         BlockState sourceBlock = level.getBlockState(sourceBlockPos);
         drops.forEach(itemStack -> {
             if (cap != null) {
@@ -218,12 +217,12 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
                     ItemHandlerHelper.insertItem(cap, itemStack, false);
                 } else {
                     level.addFreshEntity(
-                            new ItemEntity(
-                                    level,
-                                    blockPos.x,
-                                    blockPos.y,
-                                    blockPos.z,
-                                    outItemStack)
+                        new ItemEntity(
+                            level,
+                            blockPos.x,
+                            blockPos.y,
+                            blockPos.z,
+                            outItemStack)
                     );
                 }
             } else if (level.getBlockEntity(downStreamPos) instanceof BaseLaserBlockEntity downStreamBlockEntity && downStreamBlockEntity.getFacing() == direction) {
@@ -317,7 +316,6 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
             Double.POSITIVE_INFINITY,
             Double.POSITIVE_INFINITY);
     }
-
 
     @Override
     public void clearRemoved() {

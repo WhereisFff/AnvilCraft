@@ -18,9 +18,13 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(DamageEntity.class)
 public class DamageEntityMixin {
-    @Shadow @Final private LevelBasedValue minDamage;
+    @Shadow
+    @Final
+    private LevelBasedValue minDamage;
 
-    @Shadow @Final private LevelBasedValue maxDamage;
+    @Shadow
+    @Final
+    private LevelBasedValue maxDamage;
 
     @WrapOperation(
         method = "apply",

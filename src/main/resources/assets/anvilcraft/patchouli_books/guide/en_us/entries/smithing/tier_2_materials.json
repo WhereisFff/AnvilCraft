@@ -1,8 +1,8 @@
 {
   "name": "Tier 2 Materials",
   "category": "anvilcraft:smithing_system",
-  "icon": "anvilcraft:frost_metal_ingot",
-  "sortnum": 3004,
+  "icon": "anvilcraft:ember_metal_ingot",
+  "sortnum": 23006,
   "entry_color": "661100",
   "pages": [
     "This page shows all available $(thing)tier 2 materials$().",
@@ -69,10 +69,9 @@
       "recipe2": "anvilcraft:ember_metal_nugget_from_ingot"
     },
     {
-      "type": "patchouli:spotlight",
-      "title": "Ember Metal Template",
-      "item": "anvilcraft:ember_metal_upgrade_smithing_template",
-      "text": "You can find this template in the Village's Weaponsmith. Trade with $(l:smithing/jewelcrafting_table)Jeweler$(/l) villager can also get this template."
+      "type": "anvilcraft:stamping",
+      "recipe": "anvilcraft:stamping/ember_metal_upgrade_smithing_template",
+      "text": "Use Stamping with $(item)Royal Steel Upgrade Smithing Template$() to craft this. Can be used to upgrade $(thing)Royal Steel tools$() to $(thing)Ember Metal tools$()."
     },
     {
       "type": "patchouli:smithing",
@@ -128,7 +127,7 @@
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "Multiple to One Smithing Template",
       "link_recipe": true,
-      "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template."
+      "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template. $(br2)It is used to participate in multiple_to_one smithing on the $(item)Embers smithing table$()"
     }
   ]
 }
