@@ -43,7 +43,7 @@ public class ItemHandlerUtil {
             if (filterStack == null) {
                 filterStack = sourceStack.copy();
                 maxAmount = (int) (maxAmount / 64f * sourceStack.getMaxStackSize());
-            } else if (!ItemStack.isSameItemSameComponents(filterStack,sourceStack)) continue;
+            } else if (!ItemStack.isSameItemSameComponents(filterStack, sourceStack)) continue;
             for (int i = 0; i < maxAmount; i++) {
                 ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
                 int amountToInsert = sourceStack.getCount() - remainder.getCount();
@@ -85,7 +85,7 @@ public class ItemHandlerUtil {
             if (filterStack == null) {
                 filterStack = sourceStack.copy();
                 maxAmount = (int) (maxAmount / 64f * sourceStack.getMaxStackSize());
-            } else if (!ItemStack.isSameItemSameComponents(filterStack,sourceStack)) continue;
+            } else if (!ItemStack.isSameItemSameComponents(filterStack, sourceStack)) continue;
             for (int i = 0; i < maxAmount; i++) {
                 ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
                 int amountToInsert = sourceStack.getCount() - remainder.getCount();
