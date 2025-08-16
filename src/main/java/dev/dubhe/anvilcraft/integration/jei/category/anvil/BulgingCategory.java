@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -37,6 +38,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -134,48 +136,59 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
             JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResults().size());
             HasCauldronSimple hasCauldron = recipe.getHasCauldron();
             if (recipe.isConsumeFluid()) {
+                PoseStack pose = guiGraphics.pose();
+                pose.pushPose();
+                pose.scale(0.8f, 0.8f, 1.0f);
                 guiGraphics.drawString(
                     Minecraft.getInstance().font,
                     Component.translatable(
                         "gui.anvilcraft.category.bulging.consume_fluid",
                         hasCauldron.getConsume(),
-                        Component.translatable("fluid." + hasCauldron.getTransform().toString().replace(':', '.'))),
-                    10,
-                    54,
+                        Component.translatable("block." + hasCauldron.getFluid().toString().replace(':', '.'))),
+                    0,
+                    70,
                     0xFF000000,
                     false);
+                pose.popPose();
             } else if (recipe.isProduceFluid()) {
+                PoseStack pose = guiGraphics.pose();
+                pose.pushPose();
+                pose.scale(0.8f, 0.8f, 1.0f);
                 guiGraphics.drawString(
                     Minecraft.getInstance().font,
                     Component.translatable(
                         "gui.anvilcraft.category.bulging.produce_fluid",
                         -hasCauldron.getConsume(),
-                        Component.translatable("fluid." + hasCauldron.getTransform().toString().replace(':', '.'))),
-                    10,
-                    54,
+                        Component.translatable("block." + hasCauldron.getTransform().toString().replace(':', '.'))),
+                    0,
+                    70,
                     0xFF000000,
                     false);
+                pose.popPose();
             }
         } else {
+            Block result = getResultCauldron(recipe);
             if (recipe.isConsumeFluid()) {
-                state = CauldronUtil.getStateFromContentAndLevel(
-                    getCauldron(recipe),
-                    CauldronUtil.maxLevel(getCauldron(recipe)) - 1);
+                state = CauldronUtil.getStateFromContentAndLevel(result, CauldronUtil.maxLevel(result) - 1);
             } else if (recipe.isProduceFluid()) {
-                state = CauldronUtil.getStateFromContentAndLevel(getCauldron(recipe), 1);
+                state = CauldronUtil.getStateFromContentAndLevel(result, 1);
             } else {
-                state = CauldronUtil.fullState(getCauldron(recipe));
+                state = CauldronUtil.fullState(result);
             }
             RenderHelper.renderBlock(guiGraphics, state, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
         }
     }
 
-    static Block getCauldron(BulgingRecipe recipe) {
-        if (recipe.isProduceFluid()) {
-            return Blocks.CAULDRON;
-        } else {
-            return BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron"));
-        }
+    private static Block getMaterialCauldron(BulgingRecipe recipe) {
+        return !recipe.isConsumeFluid()
+               ? Blocks.CAULDRON
+               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron"));
+    }
+
+    private static Block getResultCauldron(BulgingRecipe recipe) {
+        return recipe.isProduceFluid()
+               ? Blocks.CAULDRON
+               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
     }
 
     @Override
@@ -184,35 +197,38 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         RecipeHolder<BulgingRecipe> recipeHolder,
         IRecipeSlotsView recipeSlotsView,
         double mouseX,
-        double mouseY) {
+        double mouseY
+    ) {
         BulgingRecipe recipe = recipeHolder.value();
         if (mouseX >= 72 && mouseX <= 90) {
             if (mouseY >= 34 && mouseY <= 53) {
+                Block material = getMaterialCauldron(recipe);
                 Component text;
                 if (recipe.isFromWater()) {
                     text = Blocks.WATER_CAULDRON.getName();
                 } else if (recipe.isConsumeFluid()) {
-                    text = getCauldron(recipe).getName();
+                    text = material.getName();
                 } else if (recipe.isProduceFluid()) {
                     text = Blocks.CAULDRON.getName();
                 } else {
-                    text = getCauldron(recipe).getName();
+                    text = material.getName();
                 }
                 tooltip.add(text);
             }
         }
         if (mouseX >= 124 && mouseX <= 140) {
             if (mouseY >= 24 && mouseY <= 42) {
+                Block result = getResultCauldron(recipe);
                 Component text;
                 if (recipe.getResults().isEmpty()) {
                     if (recipe.isConsumeFluid()) {
-                        if (CauldronUtil.maxLevel(getCauldron(recipe)) > 1) {
-                            text = getCauldron(recipe).getName();
+                        if (CauldronUtil.maxLevel(result) > 1) {
+                            text = result.getName();
                         } else {
                             text = Blocks.CAULDRON.getName();
                         }
                     } else {
-                        text = getCauldron(recipe).getName();
+                        text = result.getName();
                     }
                     tooltip.add(text);
                 }
@@ -221,8 +237,9 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
-        registration.addRecipes(
-            AnvilCraftJeiPlugin.BULGING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BULGING_TYPE.get()));
+        List<RecipeHolder<BulgingRecipe>> holders = JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BULGING_TYPE.get());
+        holders.removeIf(holder -> holder.id().getPath().startsWith("concrete/"));
+        registration.addRecipes(AnvilCraftJeiPlugin.BULGING, holders);
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

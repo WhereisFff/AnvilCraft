@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -115,8 +116,8 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             20,
             12,
             RenderHelper.SINGLE_BLOCK);
-        Block cauldron = getCauldron(recipe);
-        RenderHelper.renderBlock(guiGraphics, CauldronUtil.fullState(cauldron), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
+        Block material = getMaterialCauldron(recipe);
+        RenderHelper.renderBlock(guiGraphics, CauldronUtil.fullState(material), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
             guiGraphics, ModBlocks.CORRUPTED_BEACON.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
 
@@ -127,45 +128,60 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
         if (!recipe.getResults().isEmpty()) {
             JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResults().size());
             if (recipe.isConsumeFluid()) {
+                PoseStack pose = guiGraphics.pose();
+                pose.pushPose();
+                pose.scale(0.8f, 0.8f, 1.0f);
                 guiGraphics.drawString(
                     Minecraft.getInstance().font,
                     Component.translatable(
                         "gui.anvilcraft.category.time_warp.consume_fluid",
                         recipe.getHasCauldron().getConsume(),
-                        cauldron.getName()),
-                    10,
-                    54,
+                        material.getName()),
+                    0,
+                    70,
                     0xFF000000,
                     false);
+                pose.popPose();
             } else if (recipe.isProduceFluid()) {
+                PoseStack pose = guiGraphics.pose();
+                pose.pushPose();
+                pose.scale(0.8f, 0.8f, 1.0f);
                 guiGraphics.drawString(
                     Minecraft.getInstance().font,
                     Component.translatable(
                         "gui.anvilcraft.category.time_warp.produce_fluid",
                         -recipe.getHasCauldron().getConsume(),
-                        cauldron.getName()),
-                    10,
-                    54,
+                        material.getName()),
+                    0,
+                    70,
                     0xFF000000,
                     false);
+                pose.popPose();
             }
         } else {
+            Block result = getResultCauldron(recipe);
             BlockState cauldronState;
             if (recipe.isConsumeFluid()) {
-                cauldronState = CauldronUtil.getStateFromContentAndLevel(cauldron, CauldronUtil.maxLevel(cauldron) - 1);
+                cauldronState = CauldronUtil.getStateFromContentAndLevel(result, CauldronUtil.maxLevel(result) - 1);
             } else if (recipe.isProduceFluid()) {
-                cauldronState = CauldronUtil.getStateFromContentAndLevel(cauldron, 1);
+                cauldronState = CauldronUtil.getStateFromContentAndLevel(result, 1);
             } else {
-                cauldronState = getCauldron(recipe).defaultBlockState();
+                cauldronState = getResultCauldron(recipe).defaultBlockState();
             }
             RenderHelper.renderBlock(guiGraphics, cauldronState, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
         }
     }
 
-    private static Block getCauldron(TimeWarpRecipe recipe) {
+    private static Block getMaterialCauldron(TimeWarpRecipe recipe) {
+        return !recipe.isConsumeFluid()
+               ? Blocks.CAULDRON
+               : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
+    }
+
+    private static Block getResultCauldron(TimeWarpRecipe recipe) {
         return recipe.isProduceFluid()
             ? Blocks.CAULDRON
-            : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getTransform().withSuffix("_cauldron"));
+            : BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron"));
     }
 
     @Override
@@ -182,7 +198,7 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
                 if (recipe.isProduceFluid()) {
                     text = Blocks.CAULDRON.getName();
                 } else {
-                    text = getCauldron(recipe).getName();
+                    text = getMaterialCauldron(recipe).getName();
                 }
                 tooltip.add(text);
             }
@@ -196,10 +212,10 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             if (mouseY >= 24 && mouseY <= 42) {
                 Component text;
                 if (recipe.getResults().isEmpty()) {
-                    if (recipe.isConsumeFluid() && CauldronUtil.maxLevel(getCauldron(recipe)) <= 1) {
+                    if (recipe.isConsumeFluid() && CauldronUtil.maxLevel(getResultCauldron(recipe)) <= 1) {
                         text = Blocks.CAULDRON.getName();
                     } else {
-                        text = getCauldron(recipe).getName();
+                        text = getResultCauldron(recipe).getName();
                     }
                     tooltip.add(text);
                 }

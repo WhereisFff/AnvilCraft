@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
@@ -142,11 +143,13 @@ public class TimeWarpRecipeLoader {
             .save(provider);
 
         TimeWarpRecipe.builder()
+            .heat(HeatTier.INCANDESCENT, 6000)
             .requires(ModBlocks.URANIUM_BLOCK)
             .result(ModItems.RAW_URANIUM, 2)
             .result(ModItems.RAW_LEAD.asStack())
             .save(provider, AnvilCraft.of("time_warp/raw_uranium_from_uranium_block"));
         TimeWarpRecipe.builder()
+            .heat(HeatTier.INCANDESCENT, 12000)
             .requires(ModBlocks.PLUTONIUM_BLOCK)
             .result(ModItems.RAW_URANIUM, 3)
             .result(ModItems.RAW_LEAD.asStack())
