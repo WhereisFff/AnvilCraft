@@ -109,8 +109,7 @@
 
 ### 自定义物品类
 
-除了使用原版 [Item](file:///D:/Projects/repos/AnvilCraft/src/main/java/dev/dubhe/anvilcraft/api/registry/AnvilCraftRegistrate.java#L30-L30)
-类，你还可以创建自定义的物品类：
+除了使用原版 Item 类，你还可以创建自定义的物品类：
 
 ```java
 public class CustomItem extends Item {

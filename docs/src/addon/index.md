@@ -32,6 +32,7 @@
 
 1. [环境搭建与模组构建](./01_environment.md) - 配置开发环境
 2. [创建你的第一个物品](./02_create_item.md) - 学习基本的物品注册
+3. [创建你的第一个方块](./03_create_block.md) - 学习基本的方块注册
 
 ## 技术栈
 
@@ -40,7 +41,7 @@ AnvilCraft 附属模组开发主要使用以下技术：
 * **Java 21** - 开发语言
 * **Gradle** - 构建工具
 * **Registrate** - 内容注册系统
-* **NeoForge/Forge** - 模组加载器 API
+* **NeoForge** - 模组加载器 API
 * **Lombok** - 简化 Java 代码编写
 
 ## 最佳实践
