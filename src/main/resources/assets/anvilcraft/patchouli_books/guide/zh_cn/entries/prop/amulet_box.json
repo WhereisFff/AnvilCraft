@@ -2,7 +2,7 @@
     "name": "护符盒",
     "category": "anvilcraft:special_props",
     "icon": "anvilcraft:amulet_box",
-    "sortnum":4002,
+    "sortnum":4006,
     "pages":[
         {
             "type": "text",

@@ -34,6 +34,7 @@ import dev.dubhe.anvilcraft.network.SlidingEntitySyncPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
+import dev.dubhe.anvilcraft.network.SwitchMultitoolModePacket;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
 import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
@@ -238,6 +239,11 @@ public class ModNetworks {
             ComparatorSyncPacket.TYPE,
             ComparatorSyncPacket.STREAM_CODEC,
             ComparatorSyncPacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchMultitoolModePacket.TYPE,
+            SwitchMultitoolModePacket.STREAM_CODEC,
+            SwitchMultitoolModePacket.HANDLER
         );
     }
 }

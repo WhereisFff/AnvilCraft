@@ -23,7 +23,6 @@ public interface IMultipleMaterial {
      * @param template 作为模板的物品
      * @param id       槽位id
      * @param inputs   其它槽位内的物品
-     *
      * @return 该槽位应显示的纹理集
      */
     List<ResourceLocation> getEmptySlotTextures(ItemStack template, int id, List<ItemStack> inputs);

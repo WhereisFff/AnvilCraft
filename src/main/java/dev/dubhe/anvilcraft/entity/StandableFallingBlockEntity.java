@@ -83,7 +83,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
             this.discard();
         } else if (
             (this.time <= 1 || !this.getDeltaMovement().equals(Vec3.ZERO))
-            && isFree(this.level(), new BlockPos(
+                && isFree(this.level(), new BlockPos(
                 this.getBlockX(), (int) Math.floor(blockPos.getBottomCenter().y - 0.04), this.getBlockZ()))
         ) {
             this.setDeltaMovement(this.getDeltaMovement().add(0.0, -0.04, 0.0));
@@ -148,8 +148,8 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
             entity.setDeltaMovement(
                 entity.getDeltaMovement().x,
                 entity.getDeltaMovement().y + 0.04 <= 0
-                ? motion.y + (this.getY() - entity.getBoundingBox().minY)
-                : motion.y * 2.8,
+                    ? motion.y + (this.getY() - entity.getBoundingBox().minY)
+                    : motion.y * 2.8,
                 entity.getDeltaMovement().z
             );
         }
@@ -183,7 +183,7 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
     @Override
     public boolean canCollideWith(Entity entity) {
         return super.canCollideWith(entity)
-               && !Util.instanceOfAny(entity, FallingBlockEntity.class, IonocraftEntity.class);
+            && !Util.instanceOfAny(entity, FallingBlockEntity.class, IonocraftEntity.class);
     }
 
     @Override
@@ -193,6 +193,6 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
 
     public static boolean isFree(Level level, BlockPos pos) {
         return FallingBlock.isFree(level.getBlockState(pos))
-               || level.getBlockState(pos).getCollisionShape(level, pos).equals(Shapes.empty());
+            || level.getBlockState(pos).getCollisionShape(level, pos).equals(Shapes.empty());
     }
 }

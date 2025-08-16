@@ -6,11 +6,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BatchCrafterBlock.class)
-public class AE2BatchCrafterBlockMixin {
+abstract class AE2BatchCrafterBlockMixin {
     @WrapOperation(
         method = "onRemove",
         at = @At(
@@ -23,7 +24,7 @@ public class AE2BatchCrafterBlockMixin {
         double x,
         double y,
         double z,
-        ItemStack itemStack,
+        @NotNull ItemStack itemStack,
         Operation<Void> original
     ) {
         if (itemStack.getItem() instanceof WrappedGenericStack item) {

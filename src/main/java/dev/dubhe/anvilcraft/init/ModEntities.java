@@ -4,10 +4,10 @@ import com.tterrag.registrate.util.entry.EntityEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.renderer.entity.AscendingBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.IonocraftRenderer;
+import dev.dubhe.anvilcraft.client.renderer.entity.MagnetizedNodeEntityRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SlidingBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SpectralBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.ThrownHeavyHalberdRenderer;
-import dev.dubhe.anvilcraft.client.renderer.entity.MagnetizedNodeEntityRenderer;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.entity.FallingSpectralBlockEntity;
@@ -98,15 +98,15 @@ public class ModEntities {
         .register();
 
     public static final EntityEntry<? extends SlidingBlockEntity> SLIDING_BLOCK = AnvilCraft.REGISTRATE
-            .<SlidingBlockEntity>entity("sliding_block", SlidingBlockEntity::new, MobCategory.MISC)
-            .renderer(() -> SlidingBlockRenderer::new)
-            .register();
+        .<SlidingBlockEntity>entity("sliding_block", SlidingBlockEntity::new, MobCategory.MISC)
+        .renderer(() -> SlidingBlockRenderer::new)
+        .register();
 
     public static final EntityEntry<? extends MagnetizedNodeEntity> MAGNETIZED_NODE = AnvilCraft.REGISTRATE
-            .<MagnetizedNodeEntity>entity("magnetized_node", MagnetizedNodeEntity::new, MobCategory.MISC)
-            .properties(it -> it.eyeHeight(0f))
-            .renderer(() -> MagnetizedNodeEntityRenderer::new)
-            .register();
+        .<MagnetizedNodeEntity>entity("magnetized_node", MagnetizedNodeEntity::new, MobCategory.MISC)
+        .properties(it -> it.eyeHeight(0f))
+        .renderer(() -> MagnetizedNodeEntityRenderer::new)
+        .register();
 
     public static void register() {
         // intentionally empty

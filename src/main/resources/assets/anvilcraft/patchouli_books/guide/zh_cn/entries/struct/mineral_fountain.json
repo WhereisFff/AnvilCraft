@@ -2,7 +2,7 @@
   "name": "矿物涌泉",
   "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:mineral_fountain",
-  "sortnum": 5001,
+  "sortnum": 15001,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:mineral_fountain": 0,
@@ -11,7 +11,7 @@
     "anvilcraft:earth_core_shard_block": 6,
     "anvilcraft:void_stone": 7,
     "anvilcraft:void_matter": 7,
-    "anvilcraft:void_block": 7
+    "anvilcraft:void_matter_block": 7
   },
   "pages": [
     {
@@ -86,12 +86,12 @@
       "type": "patchouli:spotlight",
       "anchor": "void_matter",
       "item": ["anvilcraft:void_matter","anvilcraft:void_matter_block","anvilcraft:void_stone"],
-      "text": "$(item)虚空物质$()系列物品在$(thing)虚空$()中会上升 $(br2)可用于制作$(l:power/advanced_void_energy_collection#void_energy_collector)虚空能收集器$() $(br2)方块形态下需要使用钻石镐及以上等级镐挖掘 $(br2)虚空物质块具有$(l:advanced/void_decay)特性：虚空衰变$()"
+      "text": "$(item)虚空物质$()系列物品在$(thing)虚空$()中会上升 $(br2)可用于制作$(l:power/void_energy_collection#void_energy_collector)虚空能收集器$() $(br2)方块形态下需要使用钻石镐及以上等级镐挖掘 $(br2)虚空物质块具有$(l:advanced/void_decay)特性：虚空衰变$()"
     },
     {
       "type": "patchouli:text",
       "title": "应用：无限金属矿",
-      "text": "在获得一定量的金属后，你可以通过$(l:smithing/corrupted_beacon#time_warp)时移$()将金属块转化为粗矿，$(item)矿物涌泉$()再生矿物，$(l:power/advanced_laser_system)激光系统$()自动采矿。$(br2)这要求你现阶段有能力制造$(l:smithing/corrupted_beacon)腐化信标$()、$(l:struct/mineral_fountain#impact_pile)冲击桩$()、$(l:power/advanced_laser_system#ruby_laser)激光器$()、$(l:power/advanced_laser_system#ruby_prism)棱镜$()并有充足的电力以供$(item)激光器$()工作"
+      "text": "在获得一定量的金属后，你可以通过$(l:smithing/corrupted_beacon#time_warp)时移$()将金属块转化为粗矿，$(item)矿物涌泉$()再生矿物，$(l:power/laser_system)激光系统$()自动采矿。$(br2)这要求你现阶段有能力制造$(l:smithing/corrupted_beacon)腐化信标$()、$(l:struct/mineral_fountain#impact_pile)冲击桩$()、$(l:power/laser_system#ruby_laser)激光器$()、$(l:power/laser_system#ruby_prism)棱镜$()并有充足的电力以供$(item)激光器$()工作"
     },
     {
       "type": "patchouli:multiblock",
@@ -151,8 +151,8 @@
       "entries": [
         "anvilcraft:basic/minerals",
         "anvilcraft:smithing/corrupted_beacon",
-        "anvilcraft:power/advanced_laser_system",
-        "anvilcraft:power/advanced_void_energy_collection",
+        "anvilcraft:power/laser_system",
+        "anvilcraft:power/void_energy_collection",
         "anvilcraft:advanced/heated_block"
       ],
       "text": ""

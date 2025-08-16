@@ -95,7 +95,7 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
                 UnitUtil.electricityUnit(grid.getConsume(), original)
             ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)),
             Component.translatable("tooltip.anvilcraft.grid_information.total_generated",
-                    UnitUtil.electricityUnit(grid.getGenerate(), original)
+                UnitUtil.electricityUnit(grid.getGenerate(), original)
             ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         lines.addAll(tooltipLines);
         return lines;

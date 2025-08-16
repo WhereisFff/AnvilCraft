@@ -50,10 +50,12 @@ public interface ISlidingRail extends IBlockExtension {
      * @param pos   滑轨方块位置
      * @param state 滑轨方块状态
      * @param top   滑轨站顶部的方块状态
+     * @param side  滑轨站相对于滑轨的方向
+     *
      * @return 将要滑动的方向。若为空，则不滑动。
      */
     @SuppressWarnings("JavadocReference")
-    default boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top) {
+    default boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top, Direction side) {
         return false;
     }
 
@@ -102,6 +104,7 @@ public interface ISlidingRail extends IBlockExtension {
         List<BlockPos> toPushPoses = resolver.getToPush();
 
         for (BlockPos toPushPos : toPushPoses) {
+            if (toPushPos.equals(pos.below())) return false;
             BlockState toPushState = level.getBlockState(toPushPos);
             if (toPushState.hasProperty(BlockStateProperties.WATERLOGGED)) {
                 toPushState = toPushState.setValue(BlockStateProperties.WATERLOGGED, false);
@@ -133,6 +136,10 @@ public interface ISlidingRail extends IBlockExtension {
             toPushState.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
             air.updateNeighbourShapes(level, toPushPos, 0b0000010);
             air.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
+        }
+
+        for (var toPushEntry : toPushes) {
+            level.updateNeighborsAt(toPushEntry.getLeft(), air.getBlock());
         }
 
         SlidingBlockEntity.slid(level, pos, facing, toPushes);

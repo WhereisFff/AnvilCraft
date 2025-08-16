@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseFireBlock;
@@ -9,7 +10,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.shapes.Shapes;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,19 +19,23 @@ public class FlintBlock extends Block {
         super(properties);
     }
 
-    public static void ignite(LevelAccessor level, BlockPos pos) {
-        BlockPos above = pos.above();
-        BlockPos below = pos.below();
-        BlockPos west = pos.west();
-        BlockPos east = pos.east();
-        BlockPos south = pos.south();
-        BlockPos north = pos.north();
-        if (level.getBlockState(above).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(below).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(west).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(east).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(south).is(Blocks.IRON_BLOCK)
-            || level.getBlockState(north).is(Blocks.IRON_BLOCK)) {
+    public static void ignite(LevelAccessor level, BlockPos pos, boolean isFlint) {
+        boolean flag = false;
+        for (Direction direction : Direction.values()) {
+            BlockState blockState = level.getBlockState(pos.relative(direction));
+            if (isFlint) {
+                if (blockState.is(Blocks.IRON_BLOCK) || blockState.is(ModBlocks.HEAVY_IRON_BLOCK)) {
+                    flag = true;
+                    break;
+                }
+            } else {
+                if (blockState.is(ModBlocks.FLINT_BLOCK)) {
+                    flag = true;
+                    break;
+                }
+            }
+        }
+        if (flag) {
             List<BlockPos> blocks = new ArrayList<>();
             for (int x = -1; x < 2; x++) {
                 for (int y = -1; y < 2; y++) {
@@ -52,22 +56,23 @@ public class FlintBlock extends Block {
                 }
             }
 
-            List<BlockPos> newBlocks = blocks.stream()
-                .filter(blockPos -> (Shapes.faceShapeOccludes(box(0, 0, 0, 16, 1, 16),
-                    level.getBlockState(blockPos).getCollisionShape(level, blockPos))
-                    && level.getBlockState(blockPos.above()).isAir())
-                    || level.getBlockState(blockPos).is(ModBlocks.OIL_CAULDRON)
-                    || (level.getBlockState(blockPos).getBlock() instanceof CampfireBlock))
-                .toList();
-            BlockPos blockPos = newBlocks.get(level.getRandom().nextIntBetweenInclusive(0, newBlocks.size() - 1));
-            level.setBlock(blockPos.above(), BaseFireBlock.getState(level, blockPos), 3);
+            List<BlockPos> newBlocks = new ArrayList<>();
+            for (BlockPos blockPos : blocks) {
+                if (BaseFireBlock.canBePlacedAt((Level) level, blockPos.above(), Direction.UP)) {
+                    newBlocks.add(blockPos);
+                }
+            }
+            if (!newBlocks.isEmpty()) {
+                BlockPos blockPos = newBlocks.get(level.getRandom().nextIntBetweenInclusive(0, newBlocks.size() - 1));
+                level.setBlock(blockPos.above(), BaseFireBlock.getState(level, blockPos), 3);
+            }
         }
     }
 
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         if (movedByPiston) {
-            ignite(level, pos);
+            ignite(level, pos, true);
         }
     }
 
@@ -75,7 +80,7 @@ public class FlintBlock extends Block {
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         super.onRemove(state, level, pos, newState, movedByPiston);
         if (movedByPiston) {
-            ignite(level, pos);
+            ignite(level, pos, true);
         }
     }
 }

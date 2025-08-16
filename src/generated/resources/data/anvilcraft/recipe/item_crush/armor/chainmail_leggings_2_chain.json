@@ -2,31 +2,25 @@
   "type": "anvilcraft:item_crush",
   "ingredients": [
     {
-      "item": "minecraft:chainmail_leggings"
+      "items": "minecraft:chainmail_leggings"
     }
   ],
   "results": [
     {
-      "amount": {
+      "count": {
         "type": "minecraft:binomial",
         "n": 1.0,
         "p": 0.5
       },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:chain"
-      }
+      "id": "minecraft:chain"
     },
     {
-      "amount": {
+      "count": {
         "type": "minecraft:binomial",
         "n": 1.0,
         "p": 0.5
       },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:chain"
-      }
+      "id": "minecraft:chain"
     }
   ]
 }

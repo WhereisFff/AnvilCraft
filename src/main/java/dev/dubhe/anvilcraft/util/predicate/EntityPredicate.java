@@ -135,8 +135,8 @@ public record EntityPredicate(List<EntitySubPredicate> subPredicates, boolean is
                         return this.isInverted;
                     }
                 } else if (this.distanceToPlayer.isPresent()
-                           && this.distanceToPlayer.get()
-                                  .matches(position.x, position.y, position.z, entity.getX(), entity.getY(), entity.getZ()) == this.isOr
+                    && this.distanceToPlayer.get()
+                    .matches(position.x, position.y, position.z, entity.getX(), entity.getY(), entity.getZ()) == this.isOr
                 ) {
                     return this.isOr == !this.isInverted;
                 }
@@ -179,12 +179,12 @@ public record EntityPredicate(List<EntitySubPredicate> subPredicates, boolean is
                     } else if (this.vehicle.isPresent() && !this.vehicle.get().matches(level, position, entity.getVehicle()) == this.isOr) {
                         return this.isOr == !this.isInverted;
                     } else if (this.passenger.isPresent()
-                               && entity.getPassengers().stream().anyMatch(
+                        && entity.getPassengers().stream().anyMatch(
                         entity1 -> this.passenger.get().matches(level, position, entity1)) == this.isOr
                     ) {
                         return this.isOr == !this.isInverted;
                     } else if (this.targetedEntity.isPresent()
-                               && !this.targetedEntity.get().matches(
+                        && !this.targetedEntity.get().matches(
                         level, position, entity instanceof Mob ? ((Mob) entity).getTarget() : null) == this.isOr
                     ) {
                         return this.isOr == !this.isInverted;

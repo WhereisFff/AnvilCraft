@@ -2,7 +2,7 @@
   "name": "原油与燃烧",
   "category": "anvilcraft:technology_application",
   "icon": "anvilcraft:oil_bucket",
-  "sortnum": 6004,
+  "sortnum": 16004,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:oil": 1,
@@ -36,7 +36,7 @@
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:power/advanced_heat_collection",
+        "anvilcraft:power/heat_collection",
         "anvilcraft:smithing/tier_2_materials",
         "anvilcraft:smithing/corrupted_beacon"
       ],

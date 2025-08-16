@@ -62,10 +62,10 @@ public class AnvilCraftAdvancement {
             .build(AnvilCraft.of("anvilcraft/dragon_rod"));
 
         AdvancementHolder amulet = Advancement.Builder.recipeAdvancement()
-                .parent(root)
-                .addCriterion("get_any_amulet", InventoryChangeTrigger.TriggerInstance.hasItems(
-                        ItemPredicate.Builder.item().of(ModItemTags.AMULET)))
-                .build(AnvilCraft.of("anvilcraft/advanced_amulet"));
+            .parent(root)
+            .addCriterion("get_any_amulet", InventoryChangeTrigger.TriggerInstance.hasItems(
+                ItemPredicate.Builder.item().of(ModItemTags.AMULET)))
+            .build(AnvilCraft.of("anvilcraft/advanced_amulet"));
 
         provider.accept(root);
         provider.accept(crabClaw);

@@ -45,7 +45,7 @@ public class PlayerInHandItemDurabilityPressurePlateBlock extends PowerLevelPres
 
         Integer maxDamage = item.get(DataComponents.MAX_DAMAGE);
         Integer damage = item.get(DataComponents.DAMAGE);
-        if (maxDamage != null)  {
+        if (maxDamage != null) {
             if (damage == null) {
                 damage = 0;
             }
