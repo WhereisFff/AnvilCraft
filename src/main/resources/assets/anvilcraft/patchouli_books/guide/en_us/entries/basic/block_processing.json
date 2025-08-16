@@ -140,6 +140,6 @@
       "enable_visualize": "false",
       "text": "Block becomes dropped item. Detailed instructions on the right."
     },
-    "使用不同的铁砧，具有不同的破坏效果：$(br)普通铁砧：常规挖掘；$(br)$(#004400)皇家铁砧$()：精准采集；$(br)$(#661100)余烬铁砧$()：熔炼；$(br)$(#660066)超限铁砧$()：时运V；$(br2)If the block can not be break by normal TNT explosion, such as obsidian, it can still be broken, but the anvil will be damaged by one durability level. $(br)In order to prevent the anvil from falling on the stonecutter and becoming the drop after the block is broken, you need to control the timing of the redstone circuit."
+    "可以破坏无法被普通TNT爆炸破坏的方块，如$(item)黑曜石$()，但是普通铁砧将固定损坏一个耐久等级。$(p)为了防止方块破坏后铁砧掉在切石机上变为掉落物，你需要控制收回铁砧的时间。$(p)属于$(l:advanced/anvil_destroy)铁砧挖掘$(/l)"
   ]
 }
