@@ -8,6 +8,10 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.init.ModRegistries;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -39,11 +43,29 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CodecUtil {
+    public static final Codec<IRecipeTrigger> TRIGGER_CODEC = ModRegistries.TRIGGER_REGISTRY
+        .byNameCodec();
+
+    public static final Codec<IRecipePredicate<?>> PREDICATE_CODEC = ModRegistries.PREDICATE_TYPE_REGISTRY
+        .byNameCodec()
+        .dispatch(
+            IRecipePredicate::getType,
+            type -> Objects.requireNonNull(ModRegistries.PREDICATE_TYPE_REGISTRY.get(type.getId())).codec()
+        );
+
+    public static final Codec<IRecipeOutcome<?>> OUTCOME_CODEC = ModRegistries.OUTCOME_TYPE_REGISTRY
+        .byNameCodec()
+        .dispatch(
+            IRecipeOutcome::getType,
+            type -> Objects.requireNonNull(ModRegistries.OUTCOME_TYPE_REGISTRY.get(type.getId())).codec()
+        );
+
     public static <T> Codec<Optional<T>> createOptionalCodec(Codec<T> elementCodec) {
         return RecordCodecBuilder.create(ins -> ins.group(
                 Codec.BOOL.fieldOf("isPresent").forGetter(Optional::isPresent),

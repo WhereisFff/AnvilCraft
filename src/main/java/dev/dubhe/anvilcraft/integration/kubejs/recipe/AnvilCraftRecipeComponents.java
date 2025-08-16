@@ -1,6 +1,9 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe;
 
 import com.mojang.serialization.Codec;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;
 import dev.dubhe.anvilcraft.recipe.multiblock.BlockPattern;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.dubhe.anvilcraft.recipe.transform.TagModification;
@@ -29,6 +32,57 @@ public class AnvilCraftRecipeComponents {
         @Override
         public String toString() {
             return "resource_location";
+        }
+    };
+
+    public static final RecipeComponent<IRecipeTrigger> TRIGGER = new RecipeComponent<>() {
+        @Override
+        public Codec<IRecipeTrigger> codec() {
+            return CodecUtil.TRIGGER_CODEC;
+        }
+
+        @Override
+        public TypeInfo typeInfo() {
+            return TypeInfo.of(IRecipeTrigger.class);
+        }
+
+        @Override
+        public String toString() {
+            return "trigger";
+        }
+    };
+
+    public static final RecipeComponent<IRecipePredicate<?>> RECIPE_PREDICATE = new RecipeComponent<>() {
+        @Override
+        public Codec<IRecipePredicate<?>> codec() {
+            return CodecUtil.PREDICATE_CODEC;
+        }
+
+        @Override
+        public TypeInfo typeInfo() {
+            return TypeInfo.of(IRecipePredicate.class);
+        }
+
+        @Override
+        public String toString() {
+            return "recipe_predicate";
+        }
+    };
+
+    public static final RecipeComponent<IRecipeOutcome<?>> RECIPE_OUTCOME = new RecipeComponent<>() {
+        @Override
+        public Codec<IRecipeOutcome<?>> codec() {
+            return CodecUtil.OUTCOME_CODEC;
+        }
+
+        @Override
+        public TypeInfo typeInfo() {
+            return TypeInfo.of(IRecipeOutcome.class);
+        }
+
+        @Override
+        public String toString() {
+            return "recipe_outcome";
         }
     };
 

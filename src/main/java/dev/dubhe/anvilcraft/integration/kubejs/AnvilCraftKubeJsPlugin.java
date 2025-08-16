@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.BlockCompressRecipeS
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.BlockCrushRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.BlockSmearRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.BulgingRecipeSchema;
+import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.InWorldRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.ItemInjectRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.ItemProcessRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil.SqueezingRecipeSchema;
@@ -20,6 +21,9 @@ import dev.dubhe.anvilcraft.integration.kubejs.recipe.mineral.MineralFountainCha
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.mineral.MineralFountainRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.multiblock.MultiblockRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.transform.MobTransformRecipeSchema;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.multiblock.BlockPredicateWithState;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
@@ -45,11 +49,19 @@ public class AnvilCraftKubeJsPlugin implements KubeJSPlugin {
         bindings.add("ValueFunction", NumericTagValuePredicate.ValueFunction.class);
         bindings.add("ModifyOperation", TagModification.ModifyOperation.class);
         bindings.add("TransformOptions", TransformOptions.class);
+
+        // 绑定配方接口类型
+        bindings.add("IRecipeTrigger", IRecipeTrigger.class);
+        bindings.add("IRecipePredicate", IRecipePredicate.class);
+        bindings.add("IRecipeOutcome", IRecipeOutcome.class);
     }
 
     @Override
     public void registerRecipeComponents(RecipeComponentFactoryRegistry registry) {
         registry.register(AnvilCraftRecipeComponents.RESOURCE_LOCATION);
+        registry.register(AnvilCraftRecipeComponents.TRIGGER);
+        registry.register(AnvilCraftRecipeComponents.RECIPE_PREDICATE);
+        registry.register(AnvilCraftRecipeComponents.RECIPE_OUTCOME);
         registry.register(AnvilCraftRecipeComponents.BLOCK_PATTERN);
         registry.register(AnvilCraftRecipeComponents.ENTITY_TYPE);
         registry.register(AnvilCraftRecipeComponents.TRANSFORM_RESULT);
@@ -80,6 +92,9 @@ public class AnvilCraftKubeJsPlugin implements KubeJSPlugin {
         registry.register(AnvilCraft.of("squeezing"), SqueezingRecipeSchema.SCHEMA);
         registry.register(AnvilCraft.of("bulging"), BulgingRecipeSchema.SCHEMA);
         registry.register(AnvilCraft.of("time_warp"), TimeWarpRecipeSchema.SCHEMA);
+
+        // 注册InWorldRecipe
+        registry.register(AnvilCraft.of("in_world"), InWorldRecipeSchema.SCHEMA);
 
         registry.register(AnvilCraft.of("multiblock"), MultiblockRecipeSchema.SCHEMA);
 
