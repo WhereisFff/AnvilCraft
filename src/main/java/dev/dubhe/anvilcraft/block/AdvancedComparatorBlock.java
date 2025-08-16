@@ -4,12 +4,17 @@ import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity.Mode;
+import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity.State;
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -18,10 +23,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.RedStoneWireBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -30,6 +32,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -37,8 +40,10 @@ import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
+import java.util.List;
+import java.util.Optional;
 
-public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implements EntityBlock, IHammerRemovable {
+public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implements IMoveableEntityBlock, IHammerRemovable {
     public static final MapCodec<AdvancedComparatorBlock> CODEC = simpleCodec(AdvancedComparatorBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
@@ -137,11 +142,101 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
         level.updateNeighborsAtExceptFromFacing(front, this, facing);
     }
 
-    protected void update(Level level, BlockPos pos, BlockState state) {
+    public void update(Level level, BlockPos pos, BlockState state) {
         if (level.isClientSide) return;
         BlockEntity blockentity = level.getBlockEntity(pos);
         if (!(blockentity instanceof AdvancedComparatorBlockEntity comparator)) return;
+        Mode mode = comparator.getCompareMode();
+        int highLimit = comparator.getHighLimit();
+        int lowLimit = comparator.getLowLimit();
+        int inputtingSignal = comparator.getInputtingSignal();
+        if (mode == Mode.WINDOW && highLimit == lowLimit && inputtingSignal == highLimit) {
+            comparator.setState(State.OUTPUT_HIGH);
+            return;
+        }
+        switch (comparator.getState()) {
+            case OUTPUT_LOW -> {
+                if (mode == Mode.HYSTERESIS) {
+                    if (inputtingSignal >= highLimit) {
+                        comparator.setState(State.OUTPUT_HIGH);
+                        comparator.setChanged();
+                    }
+                } else if (mode == Mode.WINDOW) {
+                    if (inputtingSignal >= lowLimit && inputtingSignal <= highLimit) {
+                        comparator.setState(State.OUTPUT_HIGH);
+                        comparator.setChanged();
+                    }
+                }
+            }
+            case OUTPUT_HIGH -> {
+                if (mode == Mode.HYSTERESIS) {
+                    if (inputtingSignal < lowLimit) {
+                        comparator.setState(State.OUTPUT_LOW);
+                        comparator.setChanged();
+                    }
+                } else if (mode == Mode.WINDOW) {
+                    if (inputtingSignal < lowLimit || inputtingSignal > highLimit) {
+                        comparator.setState(State.OUTPUT_LOW);
+                        comparator.setChanged();
+                    }
+                }
+            }
+        }
         comparator.setInputtingSignal(getInputSignal(level, pos, state));
+        this.updateBlockAndNeighbours(level, pos, state, comparator);
+    }
+
+    public static int getInputSignal(Level level, BlockPos pos, BlockState state) {
+        Direction direction = state.getValue(FACING);
+        BlockPos blockpos = pos.relative(direction);
+        BlockState blockstate = level.getBlockState(blockpos);
+        int i = level.getSignal(blockpos, direction);
+        if (blockstate.hasAnalogOutputSignal()) {
+            i = blockstate.getAnalogOutputSignal(level, blockpos);
+        } else if (i < 15 && blockstate.isRedstoneConductor(level, blockpos)) {
+            blockpos = blockpos.relative(direction);
+            blockstate = level.getBlockState(blockpos);
+            ItemFrame itemframe = getItemFrame(level, direction, blockpos);
+            int j = Math.max(itemframe.getAnalogOutput(), blockstate.hasAnalogOutputSignal() ? blockstate.getAnalogOutputSignal(level, blockpos) : Integer.MIN_VALUE);
+            if (j != Integer.MIN_VALUE) {
+                i = j;
+            }
+        }
+        return i;
+    }
+
+    private static ItemFrame getItemFrame(Level level, Direction facing, BlockPos pos) {
+        List<ItemFrame> list = level.getEntitiesOfClass(ItemFrame.class, new AABB(
+            pos.getX(), pos.getY(), pos.getZ(), (pos.getX() + 1), (pos.getY() + 1), (pos.getZ() + 1)), (p_352876_) -> p_352876_ != null && p_352876_.getDirection() == facing);
+        return list.getFirst();
+    }
+
+    public static int getAlternateSignal(SignalGetter level, BlockPos pos, BlockState state, boolean isHigh) {
+        Direction direction = state.getValue(FACING);
+        Direction right = direction.getClockWise();
+        Direction left = direction.getCounterClockWise();
+        return isHigh ? Math.max(level.getSignal(pos.relative(right), right), level.getSignal(pos.relative(left), left))
+            : Math.min(level.getSignal(pos.relative(right), right), level.getSignal(pos.relative(left), left));
+    }
+
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        Optional<AdvancedComparatorBlockEntity> optional = level.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get());
+        if (level.isClientSide || optional.isEmpty()) return;
+        AdvancedComparatorBlockEntity blockEntity = optional.get();
+        blockEntity.updateInputtingSignal(level, pos, state);
+        this.updateBlockAndNeighbours(level, pos, state, blockEntity);
+    }
+
+    protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state, AdvancedComparatorBlockEntity blockEntity) {
+        Direction direction = state.getValue(AdvancedComparatorBlock.FACING).getOpposite();
+        BlockPos neighbourPos = pos.relative(direction);
+        boolean shouldPower = blockEntity.isOutputting();
+        boolean isInput = blockEntity.getInputtingSignal() > 0;
+        Mode mode = blockEntity.getCompareMode();
+        level.setBlockAndUpdate(pos, state.setValue(AdvancedComparatorBlock.POWERED, shouldPower).setValue(AdvancedComparatorBlock.INPUT, isInput).setValue(AdvancedComparatorBlock.OUTPUT, shouldPower).setValue(AdvancedComparatorBlock.MODE, mode));
+        level.neighborChanged(neighbourPos, state.getBlock(), pos);
+        level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
     }
 
     @Override
@@ -151,28 +246,14 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
     ) {
         if (level.isClientSide()) return null;
         if (type != ModBlockEntities.ADVANCED_COMPARATOR.get()) return null;
-        return (level1, pos, state1, blockEntity) ->
-            AdvancedComparatorBlockEntity.tick(level1, pos, state1, (AdvancedComparatorBlockEntity) blockEntity);
-    }
-
-    public static int getInputSignal(Level level, BlockPos pos, BlockState state) {
-        Direction direction = state.getValue(FACING);
-        BlockPos blockpos = pos.relative(direction);
-        int i = level.getSignal(blockpos, direction);
-        if (i >= 15) {
-            return i;
-        } else {
-            BlockState blockstate = level.getBlockState(blockpos);
-            return Math.max(i, blockstate.is(Blocks.REDSTONE_WIRE) ? blockstate.getValue(RedStoneWireBlock.POWER) : 0);
-        }
-    }
-
-    public static int getAlternateSignal(SignalGetter level, BlockPos pos, BlockState state, boolean isHigh) {
-        Direction direction = state.getValue(FACING);
-        Direction right = direction.getClockWise();
-        Direction left = direction.getCounterClockWise();
-        return isHigh ? Math.max(level.getSignal(pos.relative(right), right), level.getSignal(pos.relative(left), left))
-            : Math.min(level.getSignal(pos.relative(right), right), level.getSignal(pos.relative(left), left));
+        return (level1, pos, state1, blockEntity1) -> {
+            Optional<AdvancedComparatorBlockEntity> optional = level1.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get());
+            if (level1.isClientSide || optional.isEmpty()) return;
+            AdvancedComparatorBlockEntity blockEntity = optional.get();
+            blockEntity.updateInputtingSignal(level1, pos, state);
+            this.updateBlockAndNeighbours(level1, pos, state, blockEntity);
+            this.update(level1, pos, state1);
+        };
     }
 
     @Override

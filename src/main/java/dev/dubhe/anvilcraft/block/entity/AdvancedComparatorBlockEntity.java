@@ -5,12 +5,11 @@ import dev.dubhe.anvilcraft.block.AdvancedComparatorBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.AdvancedComparatorMenu;
-import lombok.AccessLevel;
+import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -19,6 +18,8 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -33,14 +34,12 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuProvider, IDiskCloneable {
     protected Mode compareMode = Mode.HYSTERESIS;
+    private State state = State.OUTPUT_LOW;
     protected boolean outputInvert = false;
     protected boolean redstoneControl = false;
     protected int highLimit = 10;
     protected int lowLimit = 5;
     protected int inputtingSignal = 0;
-
-    @Setter(AccessLevel.NONE)
-    private State state = State.OUTPUT_LOW;
 
     public AdvancedComparatorBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.ADVANCED_COMPARATOR.get(), pos, blockState);
@@ -55,6 +54,13 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
     }
 
     @Override
+    public void saveToItem(ItemStack stack, HolderLookup.Provider registries) {
+        CompoundTag data = this.constructDataNbt();
+        BlockItem.setBlockEntityData(stack, this.getType(), data);
+        stack.applyComponents(this.collectComponents());
+    }
+
+    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.put("ExtraData", this.constructDataNbt());
@@ -66,9 +72,9 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
         CompoundTag data = tag.getCompound("ExtraData");
         this.readDataNbt(data);
         if ((this.compareMode == Mode.HYSTERESIS && this.inputtingSignal >= this.highLimit)
-            || (this.compareMode == Mode.WINDOW && this.inputtingSignal <= this.highLimit))
+            || (this.compareMode == Mode.WINDOW && this.inputtingSignal <= this.highLimit)) {
             this.state = State.OUTPUT_HIGH;
-        else this.state = State.OUTPUT_LOW;
+        } else this.state = State.OUTPUT_LOW;
     }
 
     public CompoundTag constructDataNbt() {
@@ -100,76 +106,21 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
     @Override
     public void applyDiskData(CompoundTag data) {
         this.readDataNbt(data.getCompound("Data"));
+        if (this.getLevel() == null) return;
+        Util.castSafely(this.getBlockState().getBlock(), AdvancedComparatorBlock.class)
+            .ifPresent(block -> block.update(this.getLevel(), this.getBlockPos(), this.getBlockState()));
     }
 
-    protected void tickTime() {
-        if (this.compareMode == Mode.WINDOW && highLimit == lowLimit && inputtingSignal == highLimit) {
-            this.state = State.OUTPUT_HIGH;
-            return;
-        }
-        switch (this.state) {
-            case OUTPUT_LOW -> {
-                if (this.compareMode == Mode.HYSTERESIS) {
-                    if (inputtingSignal >= highLimit) {
-                        this.state = State.OUTPUT_HIGH;
-                        this.setChanged();
-                    }
-                } else if (this.compareMode == Mode.WINDOW) {
-                    if (inputtingSignal >= lowLimit && inputtingSignal <= highLimit) {
-                        this.state = State.OUTPUT_HIGH;
-                        this.setChanged();
-                    }
-                }
-            }
-            case OUTPUT_HIGH -> {
-                if (this.compareMode == Mode.HYSTERESIS) {
-                    if (inputtingSignal < lowLimit) {
-                        this.state = State.OUTPUT_LOW;
-                        this.setChanged();
-                    }
-                } else if (this.compareMode == Mode.WINDOW) {
-                    if (inputtingSignal < lowLimit || inputtingSignal > highLimit) {
-                        this.state = State.OUTPUT_LOW;
-                        this.setChanged();
-                    }
-                }
-            }
-        }
+    public boolean isOutputting() {
+        return this.state == AdvancedComparatorBlockEntity.State.OUTPUT_HIGH != this.outputInvert;
     }
 
-    private void updateInputtingSignal(Level level, BlockPos pos, BlockState state) {
+    public void updateInputtingSignal(Level level, BlockPos pos, BlockState state) {
         this.inputtingSignal = AdvancedComparatorBlock.getInputSignal(level, pos, state);
         if (this.isRedstoneControl()) {
             this.highLimit = AdvancedComparatorBlock.getAlternateSignal(level, pos, state, true);
             this.lowLimit = AdvancedComparatorBlock.getAlternateSignal(level, pos, state, false);
         }
-    }
-
-    public static void tick(Level level, BlockPos pos, BlockState state, AdvancedComparatorBlockEntity ComparatorEntity) {
-        if (level.isClientSide) return;
-        ComparatorEntity.tickTime();
-        ComparatorEntity.updateInputtingSignal(level, pos, state);
-        ComparatorEntity.updateBlockAndNeighbours(level, pos, state);
-    }
-
-    protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state) {
-        if (!(level.getBlockEntity(pos) instanceof AdvancedComparatorBlockEntity comparatorEntity)) return;
-        Direction direction = state.getValue(AdvancedComparatorBlock.FACING).getOpposite();
-        BlockPos neighbourPos = pos.relative(direction);
-        boolean shouldPower = comparatorEntity.isOutputting();
-        boolean isInput = comparatorEntity.inputtingSignal > 0;
-        Mode mode = comparatorEntity.compareMode;
-        level.setBlockAndUpdate(pos, state
-            .setValue(AdvancedComparatorBlock.POWERED, shouldPower)
-            .setValue(AdvancedComparatorBlock.INPUT, isInput)
-            .setValue(AdvancedComparatorBlock.OUTPUT, shouldPower)
-            .setValue(AdvancedComparatorBlock.MODE, mode));
-        level.neighborChanged(neighbourPos, state.getBlock(), pos);
-        level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
-    }
-
-    public boolean isOutputting() {
-        return this.state == AdvancedComparatorBlockEntity.State.OUTPUT_HIGH != this.outputInvert;
     }
 
     @Override
@@ -203,7 +154,7 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
             return (byte) this.ordinal();
         }
 
-        public static AdvancedComparatorBlockEntity.Mode fromIndex(int index) {
+        public static Mode fromIndex(int index) {
             return values()[index];
         }
 
