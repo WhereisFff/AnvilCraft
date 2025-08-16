@@ -52,7 +52,7 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.upgrade_ingredients",
             "Transcendium Ingot or Transcendium Block");
         provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.applies_to",
-            "Ember Metal Anvil");
+            "Ember Metal Anvil, Ember Anvil Hammer, Ember Dragon Rod");
         provider.add("screen.anvilcraft.transcendium_upgrade_smithing_template",
             "Transcendium Upgrade");
         provider.add("screen.anvilcraft.smithing_template.transcendium_upgrade_smithing_template.base_slot_description",
@@ -172,13 +172,22 @@ public class ScreenLang {
             "Frost Metal Ingot");
 
         provider.add("screen.anvilcraft.ember_smithing.tooltip.missing_template", "Add Multiple to One Template");
-        provider.add("screen.anvilcraft.ember_smithing.two.missing", "Add Multiphase Matter");
-        provider.add("screen.anvilcraft.ember_smithing.four.missing", "Add Resonator Core or Heavy Halberd Core");
+        provider.add("screen.anvilcraft.ember_smithing.two.missing", "Add Multiphase Matter or Multiphase Transcendium");
+        provider.add("screen.anvilcraft.ember_smithing.four.missing", "Add Resonator Core, Heavy Halberd Core or Multiphase Transcendium");
         provider.add("screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools", "Add same Ember metal tools or weapons");
         provider.add(
             "screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools",
-            "Add a sword and an axe of the same type, a trident and a mace");
+            "Add a sword and an axe of the same type, a Trident and a Mace");
         provider.add("screen.anvilcraft.ember_smithing.resonator_core.missing_tools", "Add same Ember or Frost metal tools");
+        provider.add(
+            "screen.anvilcraft.ember_smithing.multiphase_transcendium.missing_tools",
+            "Add a Ember Metal Resonator or Heavy Halberd and a Frost Metal Resonator or Heavy Halberd");
+        provider.add(
+            "screen.anvilcraft.ember_smithing.multiphase_transcendium.resonator_missing_tools",
+            "Add a Ember Metal Resonator and a Frost Metal Resonator");
+        provider.add(
+            "screen.anvilcraft.ember_smithing.multiphase_transcendium.heavy_halberd_missing_tools",
+            "Add a Ember Metal Heavy Halberd and a Frost Metal Heavy Halberd");
 
         provider.add("screen.anvilcraft.resonator.title", "Switch resonate mode");
         provider.add("screen.anvilcraft.resonator.auto", "Auto");
@@ -186,5 +195,8 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.resonator.shovel", "Shovel");
         provider.add("screen.anvilcraft.resonator.hoe", "Hoe");
         provider.add("screen.anvilcraft.resonator.pickaxe", "Pickaxe");
+
+        provider.add("screen.anvilcraft.multiphase.title", "Switch phase");
+        provider.add("screen.anvilcraft.multiphase.merciless", "-Merciless");
     }
 }

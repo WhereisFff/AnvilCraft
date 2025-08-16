@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.util;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.IntFunction;
 
 public class ListUtil {
     public static <T> Optional<T> safelyGet(List<T> list, int index) {
@@ -11,7 +12,7 @@ public class ListUtil {
     }
 
     public static <T> List<T> cycle(List<T> original, int times) {
-        if (times == 0) return new ArrayList<>(original);
+        if (times == 0 || original.isEmpty()) return new ArrayList<>(original);
         times %= original.size();
         if (times == 0) return new ArrayList<>(original);
         List<T> cycled = new ArrayList<>();
@@ -21,7 +22,15 @@ public class ListUtil {
         return cycled;
     }
 
-    public static <T, R extends T> List<R> subList(List<T> original, Class<R> clazz) {
+    public static <T> List<T> createWithValues(int size, IntFunction<T> valueFac) {
+        List<T> result = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            result.add(valueFac.apply(i));
+        }
+        return result;
+    }
+
+    public static <T, R extends T> List<R> cast(List<T> original, Class<R> clazz) {
         ArrayList<R> results = new ArrayList<>();
         for (T t : original) {
             if (clazz.isInstance(t)) {

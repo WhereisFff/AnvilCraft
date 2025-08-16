@@ -28,7 +28,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -254,19 +253,23 @@ public class AnvilEventListener {
             .withOptionalParameter(LootContextParams.ATTACKING_ENTITY, eventEntity)
             .withParameter(LootContextParams.THIS_ENTITY, entity)
             .withParameter(LootContextParams.ORIGIN, pos);
-        if (Util.instanceOfAny(eventEntity.getBlockState().getBlock(), EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
-            ServerPlayer player = AnvilCraftFakePlayers.anvilCraftKiller.getPlayer();
-            builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(player))
-                .withParameter(LootContextParams.ATTACKING_ENTITY, player)
-                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, player);
-        }
-        if (eventEntity.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
-            builder.withParameter(LootContextParams.TOOL, AnvilCraftFakePlayers.anvilCraftKiller.getDummyLooting5Weapon(serverLevel));
+        Block anvil = eventEntity.getBlockState().getBlock();
+        Optional<ServerPlayer> killerOp = Optional.empty();
+        if (Util.instanceOfAny(anvil, EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
+            builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(killer))
+                .withParameter(LootContextParams.ATTACKING_ENTITY, killer)
+                .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, killer);
+            if (anvil instanceof TranscendenceAnvilBlock) {
+                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, killer);
+            }
+            killerOp = Optional.of(killer);
         }
         LootParams lootParams = builder.create(LootContextParamSets.ENTITY);
         LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(entity.getLootTable());
         dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
+        killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
     }
 }

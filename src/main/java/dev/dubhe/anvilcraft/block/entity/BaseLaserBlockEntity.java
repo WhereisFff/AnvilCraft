@@ -279,6 +279,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         super.setRemoved();
         if (level == null) return;
         if (irradiateBlockPos == null) return;
+        if (!level.isLoaded(irradiateBlockPos)) return;
         if (!(level.getBlockEntity(irradiateBlockPos) instanceof BaseLaserBlockEntity irradiateBlockEntity)) return;
         irradiateBlockEntity.onCancelingIrradiation(this);
         if (level.isClientSide()) {

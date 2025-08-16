@@ -21,6 +21,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -43,6 +44,20 @@ public class DragonRodItem extends Item {
     public DragonRodItem(Properties properties, int enchantmentValue) {
         super(properties.component(ModComponents.DEVOUR_RANGE, DEFAULT_RANGE).rarity(Rarity.EPIC));
         this.enchantmentValue = enchantmentValue;
+    }
+
+    @Override
+    public boolean isValidRepairItem(ItemStack stack, ItemStack repairCandidate) {
+        if (stack.is(ModItems.DRAGON_ROD)) {
+            return repairCandidate.is(Items.IRON_INGOT);
+        } else if (stack.is(ModItems.ROYAL_DRAGON_ROD)) {
+            return repairCandidate.is(ModItems.ROYAL_STEEL_INGOT);
+        } else if (stack.is(ModItems.EMBER_DRAGON_ROD)) {
+            return repairCandidate.is(ModItems.EMBER_METAL_INGOT);
+        } else if (stack.is(ModItems.TRANSCENDENCE_DRAGON_ROD)) {
+            return repairCandidate.is(ModItems.TRANSCENDIUM_INGOT);
+        }
+        return super.isValidRepairItem(stack, repairCandidate);
     }
 
     @Override

@@ -150,11 +150,12 @@ public class EmberAnvilMenu extends AnvilMenu {
                             anvilCost = Math.max(1, anvilCost / 2);
                         }
 
-                        long t = anvilCost
-                            * enchantmentsOnRightLevel
-                            * inputItemLeft.getCount()
-                            * (repairCost == 0 ? 1 : repairCost);
-                        totalCost += Math.clamp(t, 0, Integer.MAX_VALUE);
+                        totalCost += Math.clamp(
+                            anvilCost * enchantmentsOnRightLevel * (repairCost == 0 ? 1 : repairCost),
+                            0, Integer.MAX_VALUE);
+                        if (inputItemLeft.getCount() > 1) {
+                            totalCost = 99999999;
+                        }
                     }
                 }
             }

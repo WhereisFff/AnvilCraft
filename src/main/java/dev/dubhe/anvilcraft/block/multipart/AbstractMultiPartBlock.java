@@ -115,9 +115,9 @@ public abstract class AbstractMultiPartBlock<P extends Enum<P>> extends Block im
     }
 
     public void removePartsAndUpdate(Level level, BlockPos pos) {
-        BlockState bs = level.getBlockState(pos);
+        BlockState baseState = level.getBlockState(pos);
         for (P part : getParts()) {
-            BlockPos bp = pos.offset(this.offsetFrom(bs, part));
+            BlockPos bp = pos.offset(this.offsetFrom(baseState, part));
             BlockState blockState = level.getBlockState(bp);
             level.setBlock(bp, blockState.getFluidState().createLegacyBlock(), 3, 0);
         }

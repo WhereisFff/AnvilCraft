@@ -45,6 +45,15 @@
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:amethyst_sword",
       "text": "The $(item)Amethyst Sword$() has Beheading I. It's a new enchantment added to the mod. Each level increases the chance of some mobs dropping heads, capped at III. For the player and the ender dragon, the probability is very high."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:basic/material",
+        "anvilcraft:basic/amethyst_tools",
+        "anvilcraft:machine/resources_access"
+      ],
+      "text": "手册自带了$(l:machine/resources_access)前期自动刷铁机$()"
     }
   ]
 }

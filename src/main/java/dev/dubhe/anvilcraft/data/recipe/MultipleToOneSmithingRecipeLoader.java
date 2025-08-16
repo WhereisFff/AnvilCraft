@@ -9,26 +9,6 @@ import net.neoforged.neoforge.common.Tags;
 
 public class MultipleToOneSmithingRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
-        TwoToOneSmithingRecipe.builder(ModItems.MULTIPHASE_MATTER_AXE, 0)
-            .material(ModItems.MULTIPHASE_MATTER)
-            .input(2, ModItems.EMBER_METAL_AXE)
-            .save(provider);
-        TwoToOneSmithingRecipe.builder(ModItems.MULTIPHASE_MATTER_HOE, 0)
-            .material(ModItems.MULTIPHASE_MATTER)
-            .input(2, ModItems.EMBER_METAL_HOE)
-            .save(provider);
-        TwoToOneSmithingRecipe.builder(ModItems.MULTIPHASE_MATTER_PICKAXE, 0)
-            .material(ModItems.MULTIPHASE_MATTER)
-            .input(2, ModItems.EMBER_METAL_PICKAXE)
-            .save(provider);
-        TwoToOneSmithingRecipe.builder(ModItems.MULTIPHASE_MATTER_SHOVEL, 0)
-            .material(ModItems.MULTIPHASE_MATTER)
-            .input(2, ModItems.EMBER_METAL_SHOVEL)
-            .save(provider);
-        TwoToOneSmithingRecipe.builder(ModItems.MULTIPHASE_MATTER_SWORD, 0)
-            .material(ModItems.MULTIPHASE_MATTER)
-            .input(2, ModItems.EMBER_METAL_SWORD)
-            .save(provider);
         FourToOneSmithingRecipe.builder(ModItems.FROST_METAL_HEAVY_HALBERD, 0)
             .material(ModItems.HEAVY_HALBERD_CORE)
             .input(ModItems.FROST_METAL_SWORD)
@@ -43,6 +23,11 @@ public class MultipleToOneSmithingRecipeLoader {
             .input(Items.TRIDENT)
             .input(Tags.Items.TOOLS_MACE)
             .save(provider);
+        TwoToOneSmithingRecipe.builder(ModItems.TRANSCENDENCE_HEAVY_HALBERD, 0)
+            .material(ModItems.MULTIPHASE_TRANSCENDIUM)
+            .input(ModItems.EMBER_METAL_HEAVY_HALBERD)
+            .input(ModItems.FROST_METAL_HEAVY_HALBERD)
+            .save(provider);
         FourToOneSmithingRecipe.builder(ModItems.FROST_METAL_RESONATOR, 0)
             .material(ModItems.RESONATOR_CORE)
             .input(ModItems.FROST_METAL_AXE)
@@ -56,6 +41,11 @@ public class MultipleToOneSmithingRecipeLoader {
             .input(ModItems.EMBER_METAL_SHOVEL)
             .input(ModItems.EMBER_METAL_HOE)
             .input(ModItems.EMBER_METAL_PICKAXE)
+            .save(provider);
+        TwoToOneSmithingRecipe.builder(ModItems.TRANSCENDENCE_RESONATOR, 0)
+            .material(ModItems.MULTIPHASE_TRANSCENDIUM)
+            .input(ModItems.EMBER_METAL_RESONATOR)
+            .input(ModItems.FROST_METAL_RESONATOR)
             .save(provider);
     }
 }

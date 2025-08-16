@@ -135,12 +135,12 @@ public abstract class BaseChuteBlockEntity
                 );
                 if (targetList != null && !targetList.isEmpty()) {
                     for (IItemHandler target : targetList) {
+                        BlockEntity targetBE = level.getBlockEntity(targetPos);
+                        boolean setChuteCD = targetBE != null && isTargetEmpty(targetBE);
                         boolean success = ItemHandlerUtil.exportToTarget(getItemHandler(), 64, stack -> true, target);
                         if (success) {
                             //特判溜槽cd7gt
-                            BlockEntity targetBE = level.getBlockEntity(targetPos);
-                            if (targetBE != null && isTargetEmpty(targetBE))
-                                setChuteCD(targetBE);
+                            if (setChuteCD) setChuteCD(targetBE);
                             resetCD = true;
                             break;
                         }

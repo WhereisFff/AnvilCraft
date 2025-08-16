@@ -124,9 +124,6 @@ public class LivingEntityEventListener {
                     break;
                 }
             }
-
         }
-
     }
-
 }

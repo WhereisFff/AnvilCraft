@@ -20,6 +20,7 @@ import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.ThrownEmberMetalHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownFrostMetalHeavyHalberdEntity;
+import dev.dubhe.anvilcraft.entity.ThrownTranscendenceHeavyHalberdEntity;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.world.entity.MobCategory;
 
@@ -79,6 +80,16 @@ public class ModEntities {
 
     public static final EntityEntry<? extends ThrownEmberMetalHeavyHalberdEntity> THROWN_EMBER_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRATE
         .<ThrownEmberMetalHeavyHalberdEntity>entity("thrown_ember_metal_heavy_halberd", ThrownEmberMetalHeavyHalberdEntity::new, MobCategory.MISC)
+        .properties(it -> it.sized(0.5F, 0.5F)
+            .eyeHeight(0.13F)
+            .clientTrackingRange(4)
+            .updateInterval(20))
+        .renderer(() -> ThrownHeavyHalberdRenderer::new)
+        .register();
+
+    public static final EntityEntry<? extends ThrownTranscendenceHeavyHalberdEntity> THROWN_TRANSCENDENCE_HEAVY_HALBERD = AnvilCraft.REGISTRATE
+        .<ThrownTranscendenceHeavyHalberdEntity>entity(
+            "thrown_transcendence_heavy_halberd", ThrownTranscendenceHeavyHalberdEntity::new, MobCategory.MISC)
         .properties(it -> it.sized(0.5F, 0.5F)
             .eyeHeight(0.13F)
             .clientTrackingRange(4)

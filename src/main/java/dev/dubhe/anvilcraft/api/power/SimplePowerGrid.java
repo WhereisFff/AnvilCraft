@@ -260,8 +260,8 @@ public class SimplePowerGrid {
                 float size = it.range() * 2 + 1;
                 input.add(Shapes.create(AABB.ofSize(center, size, size, size)));
             }
-            Future<VoxelShape> future = ShapeUtil.threadedJoin(input, BooleanOp.OR, EXECUTOR);
             try {
+                Future<VoxelShape> future = ShapeUtil.threadedJoin(input, BooleanOp.OR, EXECUTOR);
                 VoxelShape shape = future.get();
                 List<Line> lines = new ArrayList<>();
                 shape.forAllEdges((minX, minY, minZ, maxX, maxY, maxZ) -> {

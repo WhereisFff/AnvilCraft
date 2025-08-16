@@ -21,15 +21,16 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,7 +38,7 @@ import java.util.UUID;
 @ParametersAreNonnullByDefault
 public class ComradeAmuletItem extends AmuletItem {
     public ComradeAmuletItem(Properties properties) {
-        super(properties);
+        super(properties.component(ModComponents.SIGNED_PLAYERS, SignedPlayers.EMPTY));
     }
 
     @Override
@@ -52,8 +53,10 @@ public class ComradeAmuletItem extends AmuletItem {
 
     public static boolean shouldIgnoreDamage(ServerPlayer player, DamageSource source) {
         ItemStack comrade = InventoryUtil.getFirstItem(player.getInventory(), ModItems.COMRADE_AMULET);
-        UUID murderUUID = Objects.requireNonNull(source.getEntity()).getUUID();
-        return !comrade.isEmpty() && canIgnorePlayer(comrade, murderUUID);
+        return Optional.ofNullable(source.getEntity())
+            .map(Entity::getUUID)
+            .filter(uuid -> !comrade.isEmpty() && canIgnorePlayer(comrade, uuid))
+            .isPresent();
     }
 
     @Override
@@ -100,6 +103,7 @@ public class ComradeAmuletItem extends AmuletItem {
     }
 
     public record SignedPlayers(Map<String, UUID> playerInfos) {
+        public static final SignedPlayers EMPTY = new SignedPlayers(new HashMap<>());
         public static final Codec<SignedPlayers> CODEC = Codec.unboundedMap(
             Codec.STRING, UUIDUtil.CODEC
         ).xmap(SignedPlayers::new, SignedPlayers::playerInfos);

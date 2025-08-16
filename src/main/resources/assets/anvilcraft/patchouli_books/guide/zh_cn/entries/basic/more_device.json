@@ -4,7 +4,7 @@
   "icon": "anvilcraft:block_placer",
   "sortnum": 1005,
   "extra_recipe_mappings": {
-    "anvilcraft:crab_claw": 2
+    "anvilcraft:crab_claw": 3
   },
   "pages": [
     {
@@ -14,7 +14,13 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:magnet",
-      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。"
+      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。$(br2)shift+右键，在方块上表面生成$(item)磁化节点$()。"
+    },
+    {
+      "type": "patchouli:entity",
+      "anchor": "trader",
+      "entity": "anvilcraft:magnetized_node",
+      "text": "吸引所有接触到其$(thing)附着方块$()的物品，且不会再次吸引加工后的产物，方便进行$(l:basic/item_processing)物品处理$()"
     },
     {
       "type": "patchouli:crafting",
@@ -24,17 +30,23 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:crab_claw",
-      "text": "主手或副手手持时增加3格触及距离，从$(item)蟹笼$()产出。"
+      "text": "主手或副手手持时增加3格触及距离，右键可以强制撬开$(item)潜影贝$()，从$(item)蟹笼$()产出。"
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "block_placer",
       "recipe": "anvilcraft:block_placer",
       "text": "$(item)方块放置器$()有红石信号或被铁砧砸时放置方块，方块物品从其背后的容器方块、实体库存、掉落物中取。红石信号使其放置在面前，铁砧根据下落高度n使其间隔n格放置。可以被活塞推拉。"
     },
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:block_devourer",
-      "text": "$(item)方块吞噬器$()有红石信号或被铁砧砸时破坏前方方块，红石激活范围3x3，铁砧激活根据高度1和2分别为5x5和7x7，掉落物会尝试进入吞噬器后方的方块、实体内，无法进入则原地掉落。世界基质方块如石头、下界岩等只有极少概率掉落。"
+      "text": "$(item)方块吞噬器$()在有红石信号或被铁砧砸时破坏前方方块。$(br2)红石激活时，破坏范围3x3，铁砧激活根据高度1-3分别为5x5，7x7到9x9。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": "anvilcraft:block_devourer",
+      "text": "掉落物会尝试进入吞噬器后方的方块、实体内，无法进入则原地掉落。$(br2)世界基质方块如石头、下界岩等只有极少概率掉落。$(br2)更廉价的方块破坏器可以使用$(l:basic/block_processing#break)铁砧+切石机$()"
     },
     {
       "type": "patchouli:crafting",
@@ -63,6 +75,11 @@
     },
     {
       "type": "patchouli:crafting",
+      "recipe": "anvilcraft:magnetic_chute",
+      "text": "$(item)磁性溜槽$()是一种特殊的溜槽。相较于只能吸取上方物品的溜槽，可以吸取侧方甚至下方的物品。"
+    },
+    {
+      "type": "patchouli:crafting",
       "anchor": "pulse_generator",
       "recipe": "anvilcraft:pulse_generator",
       "text": "通过$(item)脉冲发生器$()的gui可以设置其在什么时候、延迟多少时间发出多长时间的脉冲。"
@@ -88,7 +105,7 @@
       "type": "patchouli:crafting",
       "anchor": "resin_block",
       "recipe": "anvilcraft:resin_block",
-      "text": "$(item)树脂块$()可以抓捕$(thing)碰撞箱$()的长宽小于1.5,高小于2的生物，但对于敌对和中立生物，额外要求其拥有虚弱状态。之后可以右键地面释放生物。$(br)举个例子，村民可以直接抓取，僵尸需要对其施加虚弱效果才能抓取。$(br)$(item)树脂$()通过$(l:basic/item_processing#item_crush)粉碎$()$(item)原木$()获得。"
+      "text": "$(item)树脂块$()可以抓捕$(thing)碰撞箱$()的长宽小于1.5,高小于2的生物，但对于敌对和中立生物，额外要求其拥有虚弱状态。之后可以右键地面释放生物。$(br)举个例子，村民可以直接抓取，僵尸需要对其施加虚弱效果才能抓取。"
     }
   ]
 }

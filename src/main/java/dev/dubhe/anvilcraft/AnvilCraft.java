@@ -8,7 +8,9 @@ import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.dfu.AnvilCraftDfu;
 import dev.dubhe.anvilcraft.init.ModAmuletTypes;
+import dev.dubhe.anvilcraft.init.ModAttatchments;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModCommands;
@@ -79,6 +81,7 @@ public class AnvilCraft {
 
     public AnvilCraft(IEventBus modEventBus) {
         MOD_BUS = modEventBus;
+        ModAttatchments.register(modEventBus);
         ModItemGroups.register(modEventBus);
         ModBlocks.register();
         ModFluids.register(modEventBus);
@@ -110,6 +113,7 @@ public class AnvilCraft {
         integrationManager.compileContent();
         integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
+        AnvilCraftDfu.constructAndOptimize();
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
         LOGGER.info("let's 0721");
     }
@@ -122,6 +126,7 @@ public class AnvilCraft {
         eventBus.addListener(AnvilCraft::registerPayload);
         eventBus.addListener(AnvilCraft::loadComplete);
         eventBus.addListener(AnvilCraft::packSetup);
+        eventBus.addListener(ModFluids::registerFluidInteractions);
     }
 
     public static @NotNull ResourceLocation of(String path) {

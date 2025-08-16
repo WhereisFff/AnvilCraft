@@ -81,7 +81,8 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
             this.materialIcon.tick(templateOptional.get().getEmptySlotTextures());
             if (materialOptional.isPresent() && materialOptional.get().getItem() instanceof IMultipleMaterial material) {
                 this.inputIcons.forEach(
-                    icon -> icon.tick(material.getEmptySlotTextures(icon.slotIndex - 2, this.menu.getInputStacks())));
+                    icon -> icon.tick(material.getEmptySlotTextures(
+                        this.menu.getSlot(0).getItem(), icon.slotIndex - 2, this.menu.getInputStacks())));
             } else {
                 this.inputIcons.forEach(icon -> icon.tick(List.of()));
             }
@@ -161,7 +162,8 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
                         && material.getItem() instanceof IMultipleMaterial materialItem
                         && this.isSlotEnabled(this.hoveredSlot.index)
                     ) {
-                        optional = Optional.of(materialItem.getInputTooltip());
+                        optional = Optional.of(materialItem.getInputTooltip(
+                            this.menu.getSlot(0).getItem(), this.menu.getInputStacks()));
                     }
                 }
             }
