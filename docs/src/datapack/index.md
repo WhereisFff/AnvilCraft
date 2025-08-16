@@ -1,6 +1,6 @@
 # 数据包
 
-- [InWorld 配方系统](00_inworld_recipe.md)
+- [InWorld 配方](00_inworld_recipe.md)
 - [物品压缩配方](01_item_compress_recipe.md)
 - [方块压缩配方](02_block_compress_recipe.md)
 - [物品粉碎配方](03_item_crush_recipe.md)
