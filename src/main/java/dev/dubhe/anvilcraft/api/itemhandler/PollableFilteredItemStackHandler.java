@@ -21,6 +21,12 @@ public class PollableFilteredItemStackHandler extends FilteredItemStackHandler {
         }
     }
 
+    @Override
+    public boolean isFiltered(int slot, ItemStack stack) {
+        ItemStack filter = this.getFilteredItems().get(slot);
+        return filter.isEmpty() || ItemStack.isSameItem(filter, stack);
+    }
+
     private int getEmptyOrSmallerSlot(ItemStack stack) {
         int slotCount = this.getSlots();
         int slot = -1;

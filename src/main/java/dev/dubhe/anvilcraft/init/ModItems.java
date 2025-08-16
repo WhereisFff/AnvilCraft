@@ -32,6 +32,7 @@ import dev.dubhe.anvilcraft.item.EmberMetalResonatorItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
+import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHoeItem;
@@ -831,6 +832,12 @@ public class ModItems {
                 RegistrateRecipeProvider.has(ModItems.MAGNET_INGOT))
             .save(provider))
         .register();
+
+    public static final ItemEntry<FilterItem> FILTER = REGISTRATE
+        .item("filter", FilterItem::new)
+        .properties((properties) -> properties.stacksTo(16))
+        .register();
+
     public static final ItemEntry<CrabClawItem> CRAB_CLAW = REGISTRATE
         .item("crab_claw", CrabClawItem::new)
         .model(DataGenUtil::noExtraModelOrState)
