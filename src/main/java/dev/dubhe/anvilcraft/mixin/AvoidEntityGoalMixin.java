@@ -1,7 +1,5 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import com.llamalad7.mixinextras.sugar.Share;
-import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
 import dev.dubhe.anvilcraft.util.dummy.DummyCat;
 import dev.dubhe.anvilcraft.util.dummy.DummyWolf;
@@ -24,15 +22,25 @@ import javax.annotation.Nullable;
 
 @Mixin(AvoidEntityGoal.class)
 public abstract class AvoidEntityGoalMixin<T extends LivingEntity> {
-    @Shadow @Final protected Class<T> avoidClass;
+    @Shadow
+    @Final
+    protected Class<T> avoidClass;
 
-    @Shadow @Final protected PathfinderMob mob;
+    @Shadow
+    @Final
+    protected PathfinderMob mob;
 
-    @Shadow @Final protected float maxDist;
+    @Shadow
+    @Final
+    protected float maxDist;
 
-    @Shadow @Final private TargetingConditions avoidEntityTargeting;
+    @Shadow
+    @Final
+    private TargetingConditions avoidEntityTargeting;
 
-    @Shadow @Nullable protected T toAvoid;
+    @Shadow
+    @Nullable
+    protected T toAvoid;
 
     @Redirect(
         method = "canUse",

@@ -140,8 +140,8 @@ public class TranscendenceAnvilMenu extends AnvilMenu {
                         Enchantment enchantment = holder.value();
                         enchantmentsOnRightLevel =
                             enchantmentsOnLeftLevel == enchantmentsOnRightLevel
-                            ? enchantmentsOnRightLevel + 1
-                            : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
+                                ? enchantmentsOnRightLevel + 1
+                                : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
 
                         if (!AnvilCraft.config.transcendenceAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
                             enchantmentsOnRightLevel = enchantment.getMaxLevel();

@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
 import lombok.Getter;
@@ -99,7 +99,6 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
      * 向集热器添加热能
      *
      * @param num 添加至收集器的热能
-     *
      * @return 溢出的热能(即未被添加至该收集器的热能)
      */
     public int inputtingHeat(int num) {

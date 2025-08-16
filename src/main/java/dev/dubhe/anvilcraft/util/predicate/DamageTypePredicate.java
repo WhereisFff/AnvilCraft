@@ -58,8 +58,8 @@ public record DamageTypePredicate(
                 return this.isOr == !this.isInverted;
             } else if (
                 this.namespace.isPresent()
-                && typeHolder.unwrapKey().isPresent()
-                && this.namespace.get().contains(typeHolder.unwrapKey().get().location().getNamespace()) == this.isOr
+                    && typeHolder.unwrapKey().isPresent()
+                    && this.namespace.get().contains(typeHolder.unwrapKey().get().location().getNamespace()) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
             }

@@ -132,7 +132,16 @@ public class FallingBlockCollisionEventListener {
                 for (int i = 0; i < number; i++) {
                     Vec3 deltaMovementVec3 = new Vec3(deltaMovement);
                     Vec3 itemPos = originItemPos.add(deltaMovementVec3.scale(0.2));
-                    ItemEntity itemEntity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, new ItemStack(itemStack.getItem(), quotient + Math.max(Math.min(1, remainder), 0)));
+                    ItemEntity itemEntity = new ItemEntity(
+                        level,
+                        itemPos.x,
+                        itemPos.y,
+                        itemPos.z,
+                        new ItemStack(
+                            itemStack.getItem(),
+                            quotient + Math.clamp(remainder, 0, 1)
+                        )
+                    );
                     deltaMovement.rotateAxis(dRoute, (float) normal.x, (float) normal.y, (float) normal.z);
                     itemEntity.setDeltaMovement(new Vec3(deltaMovement));
                     MergeCooldownItemEntity.castFromItemEntity(itemEntity).setMergeCooldown(5);

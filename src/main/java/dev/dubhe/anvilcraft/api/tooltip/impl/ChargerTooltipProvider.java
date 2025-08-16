@@ -12,7 +12,6 @@ import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
@@ -68,9 +67,9 @@ public class ChargerTooltipProvider extends ITooltipProvider.BlockEntityTooltipP
 
         lines.add(Component.translatable("tooltip.anvilcraft.grid_information.title").withStyle(ChatFormatting.BLUE));
         lines.add(Component.translatable("tooltip.anvilcraft.grid_information.total_consumed", grid.getConsume())
-                      .withStyle(ChatFormatting.GRAY));
+            .withStyle(ChatFormatting.GRAY));
         lines.add(Component.translatable("tooltip.anvilcraft.grid_information.total_generated", grid.getGenerate())
-                      .withStyle(ChatFormatting.GRAY));
+            .withStyle(ChatFormatting.GRAY));
 
         double progress = charger.getProgress();
         lines.add(Component.translatable("tooltip.anvilcraft.working_progress.title").withStyle(ChatFormatting.BLUE));

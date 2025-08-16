@@ -2,33 +2,22 @@
   "type": "anvilcraft:item_compress",
   "ingredients": [
     {
-      "item": "anvilcraft:stable_neutronium_ingot"
+      "items": "anvilcraft:stable_neutronium_ingot"
     },
     {
-      "item": "anvilcraft:uranium_ingot"
+      "items": "anvilcraft:uranium_ingot"
     }
   ],
   "results": [
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 6,
-        "id": "anvilcraft:plutonium_nugget"
-      }
+      "count": 6,
+      "id": "anvilcraft:plutonium_nugget"
     },
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:lime_powder"
-      }
+      "id": "anvilcraft:lime_powder"
     },
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:stable_neutronium_ingot"
-      }
+      "id": "anvilcraft:stable_neutronium_ingot"
     }
   ]
 }

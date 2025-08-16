@@ -19,7 +19,7 @@ import dev.dubhe.anvilcraft.integration.create.VisualizationUnsupported;
 import dev.dubhe.anvilcraft.integration.iris.IrisState;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
-import dev.dubhe.anvilcraft.util.FullBrightLevel;
+import dev.dubhe.anvilcraft.util.FullBrightLevelProxy;
 import dev.dubhe.anvilcraft.util.MathUtil;
 import dev.dubhe.anvilcraft.util.VertexConsumerWithPose;
 import net.minecraft.client.Camera;
@@ -113,7 +113,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     private final Camera camera;
 
     private final Level replacementLevel = VisualizationUnsupported.wrap(Objects.requireNonNull(minecraft.level));
-    private final BlockAndTintGetter fullBrightLevel = new FullBrightLevel(minecraft.level);
+    private final BlockAndTintGetter fullBrightLevel = new FullBrightLevelProxy(minecraft.level);
     private BlockState currentBlockState;
     private final List<SelectionItem> items = new ArrayList<>();
     private long displayTime = System.currentTimeMillis();

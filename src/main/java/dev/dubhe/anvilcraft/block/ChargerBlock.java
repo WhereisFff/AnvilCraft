@@ -12,7 +12,6 @@ import dev.dubhe.anvilcraft.util.StateListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.Container;
 import net.minecraft.world.Containers;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -117,7 +116,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
         if (state.is(newState.getBlock())) return;
         if (level.getBlockEntity(pos) instanceof ChargerBlockEntity entity) {
             Vec3 vec3 = entity.getBlockPos().getCenter();
-            FilteredItemStackHandler depository = entity.getFilteredItemDepository();
+            FilteredItemStackHandler depository = entity.getFilteredItemStackHandler();
             for (int slot = 0; slot < depository.getSlots(); slot++) {
                 Containers.dropItemStack(level, vec3.x, vec3.y, vec3.z, depository.getStackInSlot(slot));
             }
