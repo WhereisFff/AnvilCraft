@@ -59,15 +59,21 @@ public abstract class LivingEntityMixin extends Entity {
     @Unique
     private int anvilcraft$rageTick = 0;
 
-    @Shadow public abstract boolean hasEffect(Holder<MobEffect> effect);
+    @Shadow
+    public abstract boolean hasEffect(Holder<MobEffect> effect);
 
-    @Shadow public abstract ItemStack getItemInHand(InteractionHand hand);
+    @Shadow
+    public abstract ItemStack getItemInHand(InteractionHand hand);
 
-    @Shadow public abstract void kill();
+    @Shadow
+    public abstract void kill();
 
-    @Shadow @Nullable protected Player lastHurtByPlayer;
+    @Shadow
+    @Nullable
+    protected Player lastHurtByPlayer;
 
-    @Shadow protected int lastHurtByPlayerTime;
+    @Shadow
+    protected int lastHurtByPlayerTime;
 
     private LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);

@@ -12,8 +12,8 @@ public interface TotemHandler {
      * 图腾触发时执行
      *
      * @param damageSource 伤害来源
-     * @param entity 持有图腾的实体
-     * @param totemItem 图腾物品
+     * @param entity       持有图腾的实体
+     * @param totemItem    图腾物品
      * @return 是否执行成功
      */
     boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem);

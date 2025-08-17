@@ -135,9 +135,9 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
 
     public static boolean canModify(ItemStack stack, DynamicPowerComponent component) {
         return stack.is(ModItems.IONOCRAFT_BACKPACK)
-               && component.getPowerGrid() != null
-               && component.getPowerGrid().isWorking()
-               && component.getPowerConsumptions().contains(CONSUMPTION);
+            && component.getPowerGrid() != null
+            && component.getPowerGrid().isWorking()
+            && component.getPowerConsumptions().contains(CONSUMPTION);
     }
 
     public static void addStackProvider(Function<Player, ItemStack> provider) {

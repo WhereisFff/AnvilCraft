@@ -94,7 +94,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
     public static double getThrownBaseDamage(ItemStack stack) {
         for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
             if ((entry.matches(Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_ID)
-                 || entry.matches(Attributes.ATTACK_DAMAGE, Merciless.MERCILESS_ID))
+                || entry.matches(Attributes.ATTACK_DAMAGE, Merciless.MERCILESS_ID))
                 && entry.modifier().operation().equals(AttributeModifier.Operation.ADD_VALUE)
             ) {
                 return entry.modifier().amount() / 3;
@@ -383,8 +383,8 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         }
 
         return entity.level() instanceof ServerLevel level
-               ? damageBonus + EnchantmentHelper.modifyFallBasedDamage(level, entity.getWeaponItem(), target, source, 0.0F) * fallDistance
-               : damageBonus;
+            ? damageBonus + EnchantmentHelper.modifyFallBasedDamage(level, entity.getWeaponItem(), target, source, 0.0F) * fallDistance
+            : damageBonus;
     }
 
     @Override

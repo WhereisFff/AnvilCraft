@@ -232,10 +232,10 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
-                    .map(TranslatableContents::getKey)
-                    .filter(key -> key.contains("enchantment"))
-                    .isEmpty()
+                .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                .map(TranslatableContents::getKey)
+                .filter(key -> key.contains("enchantment"))
+                .isEmpty()
             ) {
                 i = j;
                 break;
@@ -252,10 +252,10 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
-                    .map(TranslatableContents::getKey)
-                    .filter(key -> key.contains("enchantment"))
-                    .isEmpty()
+                .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                .map(TranslatableContents::getKey)
+                .filter(key -> key.contains("enchantment"))
+                .isEmpty()
             ) {
                 i = j;
                 break;
@@ -272,10 +272,10 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
-                    .map(TranslatableContents::getKey)
-                    .filter(key -> key.contains("enchantment"))
-                    .isEmpty()
+                .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                .map(TranslatableContents::getKey)
+                .filter(key -> key.contains("enchantment"))
+                .isEmpty()
             ) {
                 i = j;
                 break;

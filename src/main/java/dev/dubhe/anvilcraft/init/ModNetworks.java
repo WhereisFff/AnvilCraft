@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
+import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
@@ -203,6 +204,11 @@ public class ModNetworks {
             DragonRodDevourPacket.TYPE,
             DragonRodDevourPacket.STREAM_CODEC,
             DragonRodDevourPacket.HANDLER
+        );
+        registrar.playToServer(
+            FilterContentSyncPacket.TYPE,
+            FilterContentSyncPacket.STREAM_CODEC,
+            FilterContentSyncPacket.HANDLER
         );
         registrar.playBidirectional(
             SilencerSyncPacket.TYPE,

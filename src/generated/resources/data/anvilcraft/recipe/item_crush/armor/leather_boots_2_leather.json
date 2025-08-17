@@ -2,31 +2,25 @@
   "type": "anvilcraft:item_crush",
   "ingredients": [
     {
-      "item": "minecraft:leather_boots"
+      "items": "minecraft:leather_boots"
     }
   ],
   "results": [
     {
-      "amount": {
+      "count": {
         "type": "minecraft:binomial",
         "n": 1.0,
         "p": 0.5
       },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:leather"
-      }
+      "id": "minecraft:leather"
     },
     {
-      "amount": {
+      "count": {
         "type": "minecraft:binomial",
         "n": 1.0,
         "p": 0.5
       },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:leather"
-      }
+      "id": "minecraft:leather"
     }
   ]
 }
