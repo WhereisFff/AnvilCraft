@@ -98,7 +98,7 @@ public class AnvilCollisionCraftRecipeLoader {
                             .speed(256)
                             .save(provider);
                 },
-                ModBlocks.ROYAL_ANVIL.get(), ModBlocks.TRANSCENDENCE_ANVIL.get()
+                ModBlocks.EMBER_ANVIL.get(), ModBlocks.TRANSCENDENCE_ANVIL.get()
         );
     }
 
