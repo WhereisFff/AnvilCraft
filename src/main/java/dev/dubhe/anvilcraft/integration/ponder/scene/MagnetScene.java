@@ -19,9 +19,9 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class MagnetScene {
-    public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> HELPER = helper.withKeyFunction(RegistryEntry::getId);
-        HELPER.forComponents(
+    public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
+        PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
+        helper.forComponents(
             ModBlocks.MAGNET_BLOCK,
             ModBlocks.HOLLOW_MAGNET_BLOCK,
             ModBlocks.FERRITE_CORE_MAGNET_BLOCK
