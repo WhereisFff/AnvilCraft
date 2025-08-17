@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.ponder.scene;
 
+import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
@@ -22,7 +23,11 @@ public class AnvilScene {
                 Items.CHIPPED_ANVIL,
                 Items.DAMAGED_ANVIL
             )
-            .addStoryBoard("anvil/01", AnvilScene::crafting);
+            .addStoryBoard(
+                "anvil/01",
+                AnvilScene::crafting,
+                AnvilCraftPonderTags.ANVIL
+            );
     }
 
     private static void crafting(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {

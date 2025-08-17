@@ -22,14 +22,20 @@ public class MagnetScene {
     public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(
-            ModBlocks.MAGNET_BLOCK,
-            ModBlocks.HOLLOW_MAGNET_BLOCK,
-            ModBlocks.FERRITE_CORE_MAGNET_BLOCK
-        ).addStoryBoard("magnet/01", MagnetScene::crafting, AnvilCraftPonderTags.ANVIL);
+                ModBlocks.MAGNET_BLOCK,
+                ModBlocks.HOLLOW_MAGNET_BLOCK,
+                ModBlocks.FERRITE_CORE_MAGNET_BLOCK
+            )
+            .addStoryBoard(
+                "magnet/01",
+                MagnetScene::crafting,
+                AnvilCraftPonderTags.MAGNET_BLOCK,
+                AnvilCraftPonderTags.ANVIL
+            );
     }
 
     private static void crafting(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
-        scene.title("magnet", "Use magnet to draw the anvil");
+        scene.title("magnet", "Use magnet to attract the anvil");
         scene.configureBasePlate(0, 0, 5);
 
         Selection basePlate = util.select().fromTo(0, 0, 0, 5, 0, 5);
@@ -43,7 +49,7 @@ public class MagnetScene {
         scene.idle(5);
 
         scene.overlay().showText(30)
-            .text("The anvil needs to be lifted and smashed down for processing")
+            .text("The anvil needs to be lifted and fallen for processing")
             .pointAt(util.vector().blockSurface(util.grid().at(2, 2, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
@@ -76,7 +82,7 @@ public class MagnetScene {
 
         scene.overlay().showText(30)
             .text("Magnet will stop working when it receives a redstone signal.")
-            .pointAt(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.WEST))
+            .pointAt(util.vector().blockSurface(util.grid().at(2, 4, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
         scene.idle(40);
