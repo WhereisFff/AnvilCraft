@@ -7,16 +7,20 @@ import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class AnvilScene {
     public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> helper) {
-        helper.forComponents(
-                ResourceLocation.withDefaultNamespace("anvil"),
-                ResourceLocation.withDefaultNamespace("chipped_anvil"),
-                ResourceLocation.withDefaultNamespace("damaged_anvil")
+        PonderSceneRegistrationHelper<Item> HELPER = helper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
+        HELPER.forComponents(
+                Items.ANVIL,
+                Items.CHIPPED_ANVIL,
+                Items.DAMAGED_ANVIL
             )
             .addStoryBoard("anvil/01", AnvilScene::crafting);
     }
