@@ -87,20 +87,22 @@ public class AnvilCollisionCraftRecipeLoader {
                 .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.5f)
                 .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.25f)
                 .save(provider);
-        CompoundTag heatableData = new CompoundTag();
-        heatableData.putInt("duration", 200);
+        CompoundTag uraniumHeatableData = new CompoundTag();
+        uraniumHeatableData.putInt("duration", 400);
         AnvilCollisionCraftRecipe.builder()
                 .anvil(BlockTags.ANVIL)
                 .consume(false)
                 .hitBlock(ModBlocks.URANIUM_BLOCK.get())
-                .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, heatableData), 16)
+                .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, uraniumHeatableData), 16)
                 .speed(256)
                 .save(provider);
+        CompoundTag plutoniumHeatableData = new CompoundTag();
+        plutoniumHeatableData.putInt("duration", 1200);
         AnvilCollisionCraftRecipe.builder()
                 .anvil(BlockTags.ANVIL)
                 .consume(false)
                 .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
-                .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, heatableData), 16)
+                .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, plutoniumHeatableData), 16)
                 .speed(256)
                 .save(provider);
     }

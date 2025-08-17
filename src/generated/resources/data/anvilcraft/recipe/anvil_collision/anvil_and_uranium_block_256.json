@@ -18,7 +18,7 @@
       "max_count": 16,
       "output": {
         "beData": {
-          "duration": 200
+          "duration": 400
         },
         "chance": 1.0,
         "id": "anvilcraft:overheated_ember_metal_block"
