@@ -628,6 +628,8 @@
   "screen.anvilcraft.button.off": "off",
   "screen.anvilcraft.button.on": "on",
   "screen.anvilcraft.button.record": "Retention item filtering: %s",
+  "screen.anvilcraft.deflection_ring.speed": "  Last Entity Speed: %d m/tick",
+  "screen.anvilcraft.deflection_ring.state": "Deflection Ring State",
   "screen.anvilcraft.ember_grindstone.cost": "Exp. Cost: %d",
   "screen.anvilcraft.ember_grindstone.title": "Extract enchantment",
   "screen.anvilcraft.ember_metal_upgrade_smithing_template": "Ember Metal Upgrade",

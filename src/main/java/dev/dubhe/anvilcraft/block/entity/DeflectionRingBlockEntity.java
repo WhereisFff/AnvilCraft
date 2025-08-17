@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.network.UpdateDeflectionRingLastEntitySpeedPacket;
 import dev.dubhe.anvilcraft.util.DistanceComparator;
 import lombok.Getter;
 import lombok.Setter;
@@ -18,10 +19,15 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -29,6 +35,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2d;
@@ -44,8 +51,10 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
     @Setter
     private PowerGrid grid;
 
+    @Setter
     @Getter
     private double lastEntitySpeed = 0;
+    private int resetEntitySpeedTickCounter = 0;
 
     @Getter
     private boolean overSpeed = false;
@@ -94,11 +103,19 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
     }
 
     private void updateLastEntitySpeed(Double speed) {
+        this.resetEntitySpeedTickCounter = 0;
         this.lastEntitySpeed = speed;
         BlockState state = getBlockState();
         if (level == null) return;
         if (!(state.getBlock() instanceof DeflectionRingBlock block)) return;
         block.forEachPart(level, getBlockPos(), it -> level.updateNeighbourForOutputSignal(it, level.getBlockState(it).getBlock()));
+        if (!(level instanceof ServerLevel serverLevel)) return;
+        PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()), new UpdateDeflectionRingLastEntitySpeedPacket(getBlockPos(), lastEntitySpeed));
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
     }
 
     @Override
@@ -149,6 +166,8 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
 
     public void tick() {
         if (level == null) return;
+        if (resetEntitySpeedTickCounter >= 40) updateLastEntitySpeed(0.0);
+        else resetEntitySpeedTickCounter++;
         if (overSpeed && overSpeedTick > 1) {
             overSpeed = false;
             overSpeedTick = 0;
@@ -236,7 +255,6 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
             }
             Vec3 blockCenter = getBlockPos().getCenter();
             entity.setPos(fixedPos.add(blockCenter));
-            updateLastEntitySpeed(entity.getDeltaMovement().length());
         }
         List<Entity> entities = level.getEntitiesOfClass(Entity.class, AABB.encapsulatingFullBlocks(getBlockPos().east().north(), getBlockPos().west().south()), AccelerationRingBlockEntity::canBeAccelerated);
         for (Entity entity : entities) {
@@ -244,6 +262,8 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
                 return;
             entity.setDeltaMovement(entity.getDeltaMovement().scale(1.0204081632653061));
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
+            if (level.isClientSide) continue;
+            updateLastEntitySpeed(entity.getDeltaMovement().length());
         }
     }
 
