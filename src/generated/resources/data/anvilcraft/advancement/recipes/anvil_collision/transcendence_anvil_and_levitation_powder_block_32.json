@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/anvil_and_plutonium_block"
+        "recipe": "anvilcraft:anvil_collision/transcendence_anvil_and_levitation_powder_block_32"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/anvil_and_plutonium_block"
+      "anvilcraft:anvil_collision/transcendence_anvil_and_levitation_powder_block_32"
     ]
   }
 }

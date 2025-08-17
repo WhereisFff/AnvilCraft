@@ -3,24 +3,22 @@
   "anvil": {
     "tag": "minecraft:anvil"
   },
-  "consume": false,
+  "consume": true,
   "hitBlock": {
-    "id": "anvilcraft:uranium_block"
+    "id": "anvilcraft:corrupted_beacon"
   },
   "output_items": [],
+  "speed": 32,
   "transform_blocks": [
     {
       "chance": 1.0,
       "input": {
-        "id": "anvilcraft:ember_metal_block"
+        "id": "anvilcraft:confinement_chamber"
       },
-      "max_count": 16,
+      "max_count": 8,
       "output": {
-        "beData": {
-          "duration": 200
-        },
         "chance": 1.0,
-        "id": "anvilcraft:overheated_ember_metal_block"
+        "id": "anvilcraft:confined_time_anvilon"
       }
     }
   ]

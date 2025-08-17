@@ -5,21 +5,11 @@
   },
   "consume": true,
   "hitBlock": {
-    "id": "anvilcraft:space_overcompressor"
+    "id": "anvilcraft:corrupted_beacon"
   },
   "output_items": [],
+  "speed": 128,
   "transform_blocks": [
-    {
-      "chance": 1.0,
-      "input": {
-        "id": "anvilcraft:confinement_chamber"
-      },
-      "max_count": 8,
-      "output": {
-        "chance": 1.0,
-        "id": "anvilcraft:confined_space_anvilon"
-      }
-    },
     {
       "chance": 1.0,
       "input": {
