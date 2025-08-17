@@ -3,26 +3,22 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import lombok.Getter;
-import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -37,11 +33,6 @@ import java.util.List;
 @Getter
 public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
     /**
-     * 炼药锅条件
-     */
-    private final HasCauldronSimple hasCauldron;
-
-    /**
      * 构造一个压榨配方
      *
      * @param ingredients 原料方块列表
@@ -55,19 +46,14 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
     ) {
         super(
             new Property()
-                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setCauldronOffset(new Vec3i(0, -1, 0))
                 .setHasCauldron(hasCauldron)
-                .setBlockInputOffset(new Vec3(0.0, -2.0, 0.0))
+                .setBlockInputOffset(new Vec3i(0, -2, 0))
+                .setConsumeInputBlocks(true)
                 .setInputBlocks(ingredients)
-                .setItemInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setBlockOutputOffset(new Vec3i(0, -1, 0))
                 .setResultBlocks(results)
         );
-        this.hasCauldron = hasCauldron;
-    }
-
-    @Override
-    public boolean matches(@NotNull InWorldRecipeContext context, @NotNull Level level) {
-        return super.matches(context, level);
     }
 
     @Override
@@ -95,7 +81,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
      * @return 如果产生流体返回true，否则返回false
      */
     public boolean isProduceFluid() {
-        return this.hasCauldron.getConsume() < 0;
+        return this.getHasCauldron().getConsume() < 0;
     }
 
     /**

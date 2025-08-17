@@ -89,6 +89,11 @@ public class HasItemIngredient extends HasItemBase<HasItemIngredient, ItemIngred
         protected RecordCodecBuilder<HasItemIngredient, ItemIngredientPredicate> itemCodec() {
             return ItemIngredientPredicate.CODEC.fieldOf("item").forGetter(HasItemIngredient::getItem);
         }
+
+        @Override
+        public boolean conflict() {
+            return true;
+        }
     }
 
     /**

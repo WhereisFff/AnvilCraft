@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import lombok.Getter;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -31,11 +32,6 @@ import java.util.List;
 @Getter
 public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
     /**
-     * 炼药锅条件
-     */
-    private final HasCauldronSimple hasCauldron;
-
-    /**
      * 构造一个膨发配方
      *
      * @param itemIngredients 物品原料列表
@@ -53,10 +49,9 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
                 .setInputItems(itemIngredients)
                 .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
                 .setResultItems(results)
-                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setCauldronOffset(new Vec3i(0, -1, 0))
                 .setHasCauldron(hasCauldron)
         );
-        this.hasCauldron = hasCauldron;
     }
 
     @Override
@@ -84,7 +79,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果消耗流体返回true，否则返回false
      */
     public boolean isConsumeFluid() {
-        return this.hasCauldron.getConsume() > 0;
+        return this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -93,7 +88,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果产生流体返回true，否则返回false
      */
     public boolean isProduceFluid() {
-        return this.hasCauldron.getConsume() < 0;
+        return this.getHasCauldron().getConsume() < 0;
     }
 
     /**
@@ -102,7 +97,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果使用水返回true，否则返回false
      */
     public boolean isFromWater() {
-        return this.hasCauldron.getFluid().equals(BuiltInRegistries.FLUID.getKey(Fluids.WATER));
+        return this.getHasCauldron().getFluid().equals(BuiltInRegistries.FLUID.getKey(Fluids.WATER));
     }
 
     /**

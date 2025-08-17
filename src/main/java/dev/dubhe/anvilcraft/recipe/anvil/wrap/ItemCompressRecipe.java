@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import lombok.Getter;
+import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.phys.Vec3;
@@ -37,7 +38,7 @@ public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe
                 .setInputItems(itemIngredients)
                 .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
                 .setResultItems(results)
-                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setCauldronOffset(new Vec3i(0, -1, 0))
                 .setHasCauldron(HasCauldronSimple.empty().build())
         );
     }
