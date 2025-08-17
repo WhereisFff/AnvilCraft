@@ -30,10 +30,10 @@ public class MagnetScene {
         Selection basePlate = util.select().fromTo(0, 0, 0, 5, 0, 5);
         scene.world().showSection(basePlate, Direction.UP);
 
-        Selection cauldron = util.select().position(2,1,2);
+        Selection cauldron = util.select().position(2, 1, 2);
         scene.world().showSection(cauldron, Direction.NORTH);
 
-        Selection anvil = util.select().position(2,2,2);
+        Selection anvil = util.select().position(2, 2, 2);
         ElementLink<WorldSectionElement> anvilLink = scene.world().showIndependentSection(anvil, Direction.NORTH);
         scene.idle(5);
 
@@ -44,7 +44,7 @@ public class MagnetScene {
                 .placeNearTarget();
         scene.idle(40);
 
-        Selection magnet = util.select().position(2,4,2);
+        Selection magnet = util.select().position(2, 4, 2);
         scene.world().showIndependentSection(magnet, Direction.WEST);
         scene.idle(10);
 
@@ -58,10 +58,10 @@ public class MagnetScene {
                 .placeNearTarget();
         scene.idle(40);
         // 放置红石块使磁铁失效
-        Selection redstoneBlock = util.select().position(3,4,2);
+        Selection redstoneBlock = util.select().position(3, 4, 2);
         scene.world().showIndependentSection(redstoneBlock, Direction.WEST);
         scene.idle(10);
-        scene.world().modifyBlock(new BlockPos(2,4,2),
+        scene.world().modifyBlock(new BlockPos(2, 4, 2),
                 bs -> bs.setValue(MagnetBlock.LIT, true),
                 false
         );
