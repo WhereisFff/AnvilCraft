@@ -33,7 +33,7 @@ public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
 
         PatchouliRenderHelper.renderAnvilWithAnimation(parent, graphics, recipeX + 50, recipeY + 15);
 
-        List<BlockState> states = recipe.getBlockIngredient().constructStatesForRender();
+        List<BlockState> states = recipe.getFirstInputBlock().constructStatesForRender();
         if (!states.isEmpty()) {
             RenderHelper.renderBlock(
                 graphics, states.get((parent.ticksInBook / 20) % states.size()),
@@ -45,7 +45,7 @@ public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
         PatchouliRenderHelper.renderArray(graphics, recipeX + 66, recipeY + 20);
 
         RenderHelper.renderBlock(
-            graphics, recipe.getBlockResult().getState(),
+            graphics, recipe.getFirstResultBlock().getState(),
             recipeX + 90, recipeY + 31, 0,
             12,
             RenderHelper.SINGLE_BLOCK);

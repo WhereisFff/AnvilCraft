@@ -9,12 +9,14 @@ import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlockIngredient;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import lombok.Getter;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,6 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
@@ -35,6 +38,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * 抽象处理配方类
@@ -79,7 +83,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
      * @return 输入物品列表
      */
     public List<ItemIngredientPredicate> getInputItems() {
-        return this.property.getInputItems();
+        return Objects.requireNonNullElseGet(this.property.getInputItems(), List::of);
     }
 
     /**
@@ -88,7 +92,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
      * @return 结果物品列表
      */
     public List<ChanceItemStack> getResultItems() {
-        return this.property.getResultItems();
+        return Objects.requireNonNullElseGet(this.property.getResultItems(), List::of);
     }
 
     /**
@@ -97,7 +101,19 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
      * @return 输入方块列表
      */
     public List<BlockStatePredicate> getInputBlocks() {
-        return this.property.getInputBlocks();
+        return Objects.requireNonNullElseGet(this.property.getInputBlocks(), List::of);
+    }
+
+    /**
+     * 获取首个输入方块
+     *
+     * @return 首个输入方块
+     */
+    public BlockStatePredicate getFirstInputBlock() {
+        return Objects.requireNonNullElseGet(
+            this.getInputBlocks().getFirst(),
+            () -> BlockStatePredicate.builder().of(Blocks.AIR).build()
+        );
     }
 
     /**
@@ -106,7 +122,19 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
      * @return 结果方块列表
      */
     public List<ChanceBlockState> getResultBlocks() {
-        return this.property.getResultBlocks();
+        return Objects.requireNonNullElseGet(this.property.getResultBlocks(), List::of);
+    }
+
+    /**
+     * 获取首个结果方块
+     *
+     * @return 首个结果方块
+     */
+    public ChanceBlockState getFirstResultBlock() {
+        return Objects.requireNonNullElseGet(
+            this.getResultBlocks().getFirst(),
+            () -> new ChanceBlockState(Blocks.AIR.defaultBlockState(), 1.0f)
+        );
     }
 
     /**
@@ -435,7 +463,9 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         /**
          * 方块输入偏移量
          */
-        private Vec3 blockInputOffset = Vec3.ZERO;
+        private Vec3i blockInputOffset = Vec3i.ZERO;
+
+        private boolean consumeInputBlocks = false;
 
         /**
          * 输入方块列表
@@ -445,7 +475,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         /**
          * 方块输出偏移量
          */
-        private Vec3 blockOutputOffset = Vec3.ZERO;
+        private Vec3i blockOutputOffset = Vec3i.ZERO;
 
         /**
          * 结果方块列表
@@ -455,7 +485,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         /**
          * 炼药锅偏移量
          */
-        private Vec3 cauldronOffset = Vec3.ZERO;
+        private Vec3i cauldronOffset = Vec3i.ZERO;
 
         /**
          * 炼药锅条件
@@ -553,7 +583,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param blockInputOffset 方块输入偏移量
          * @return 属性实例
          */
-        public Property setBlockInputOffset(Vec3 blockInputOffset) {
+        public Property setBlockInputOffset(Vec3i blockInputOffset) {
             this.blockInputOffset = blockInputOffset;
             return this;
         }
@@ -566,6 +596,17 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          */
         public Property setInputBlocks(List<BlockStatePredicate> inputBlocks) {
             this.inputBlocks = inputBlocks;
+            return this;
+        }
+
+        /**
+         * 设置是否消耗输入方块
+         *
+         * @param consumeInputBlocks 是否消耗输入方块
+         * @return 属性实例
+         */
+        public Property setConsumeInputBlocks(boolean consumeInputBlocks) {
+            this.consumeInputBlocks = consumeInputBlocks;
             return this;
         }
 
@@ -585,7 +626,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param blockOutputOffset 方块输出偏移量
          * @return 属性实例
          */
-        public Property setBlockOutputOffset(Vec3 blockOutputOffset) {
+        public Property setBlockOutputOffset(Vec3i blockOutputOffset) {
             this.blockOutputOffset = blockOutputOffset;
             return this;
         }
@@ -617,7 +658,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param cauldronOffset 炼药锅偏移量
          * @return 属性实例
          */
-        public Property setCauldronOffset(Vec3 cauldronOffset) {
+        public Property setCauldronOffset(Vec3i cauldronOffset) {
             this.cauldronOffset = cauldronOffset;
             return this;
         }
@@ -695,12 +736,18 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         private @NotNull List<IRecipePredicate<?>> getNonConflictingPredicates() {
             List<IRecipePredicate<?>> predicates = new ArrayList<>();
             if (this.hasCauldron != null) {
-                predicates.add(this.hasCauldron.toHasCauldron(this.cauldronOffset));
+                predicates.add(this.hasCauldron.toHasCauldron(this.getCauldronOffset()));
             }
             if (this.inputBlocks != null) {
                 for (int i = 0; i < this.inputBlocks.size(); i++) {
                     BlockStatePredicate block = this.inputBlocks.get(i);
-                    predicates.add(new HasBlock(this.blockInputOffset.subtract(0, i, 0), block));
+                    IRecipePredicate<?> hasBlock;
+                    if (consumeInputBlocks) {
+                        hasBlock = new HasBlockIngredient(this.getBlockInputOffset().subtract(0, i, 0), block);
+                    } else {
+                        hasBlock = new HasBlock(this.getBlockInputOffset().subtract(0, i, 0), block);
+                    }
+                    predicates.add(hasBlock);
                 }
             }
             return predicates;
@@ -736,13 +783,25 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             if (this.resultBlocks != null) {
                 for (int i = 0; i < this.resultBlocks.size(); i++) {
                     ChanceBlockState chanceBlockState = this.resultBlocks.get(i);
-                    outcomes.add(chanceBlockState.toSetBlock(this.blockOutputOffset.subtract(0, i, 0)));
+                    outcomes.add(chanceBlockState.toSetBlock(this.getBlockOutputOffset().subtract(0, i, 0)));
                 }
             }
             if (this.produceHeat != null) {
                 outcomes.add(this.produceHeat);
             }
             return outcomes;
+        }
+
+        public Vec3 getBlockOutputOffset() {
+            return new Vec3(this.blockOutputOffset.getX(), this.blockOutputOffset.getY(), this.blockOutputOffset.getZ());
+        }
+
+        public Vec3 getBlockInputOffset() {
+            return new Vec3(this.blockInputOffset.getX(), this.blockInputOffset.getY(), this.blockInputOffset.getZ());
+        }
+
+        public Vec3 getCauldronOffset() {
+            return new Vec3(this.cauldronOffset.getX(), this.cauldronOffset.getY(), this.cauldronOffset.getZ());
         }
     }
 }
