@@ -14,11 +14,13 @@ public class SuperHeatingRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         SuperHeatingRecipe.builder()
             .transform(Blocks.LAVA_CAULDRON)
+            .produce(1)
             .requires(Items.COBBLESTONE, 4)
             .requires(ModItems.LIME_POWDER)
             .save(provider, AnvilCraft.of("super_heating/lava_from_cobblestone"));
         SuperHeatingRecipe.builder()
             .transform(Blocks.LAVA_CAULDRON)
+            .produce(1)
             .requires(Tags.Items.STONES, 4)
             .requires(ModItems.LIME_POWDER)
             .save(provider, AnvilCraft.of("super_heating/lava_from_stone"));
