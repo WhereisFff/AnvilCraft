@@ -13,9 +13,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * 物品粉碎配方类
+ * <p>
+ * 该配方用于在铁砧下落时粉碎物品，需要在铁砧下方放置粉碎台作为触发条件
+ * </p>
+ */
 @Getter
 public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
 
+    /**
+     * 构造一个物品粉碎配方
+     *
+     * @param itemIngredients 物品原料列表
+     * @param results         结果物品列表
+     */
     public ItemCrushRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results
@@ -45,10 +57,18 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
         return ModRecipeTypes.ITEM_CRUSH_TYPE.get();
     }
 
+    /**
+     * 创建一个构建器实例
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 物品粉碎配方序列化器
+     */
     public static class Serializer extends AbstractSerializer<ItemCrushRecipe> {
         @Override
         protected ItemCrushRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
@@ -56,6 +76,9 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
         }
     }
 
+    /**
+     * 物品粉碎配方构建器
+     */
     public static class Builder extends SimpleAbstractBuilder<ItemCrushRecipe, Builder> {
         @Override
         public @NotNull String getType() {

@@ -23,8 +23,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * 超级加热配方类
+ * <p>
+ * 该配方用于在铁砧下落时超级加热物品，需要在铁砧下方放置加热器作为热源
+ * </p>
+ */
 @Getter
 public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe> {
+    /**
+     * 构造一个超级加热配方
+     *
+     * @param itemIngredients 物品原料列表
+     * @param results         结果物品列表
+     * @param hasCauldron     炼药锅条件
+     */
     public SuperHeatingRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results,
@@ -58,11 +71,22 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         return ModRecipeTypes.SUPER_HEATING_TYPE.get();
     }
 
+    /**
+     * 创建一个构建器实例
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 超级加热配方序列化器
+     */
     public static class Serializer implements RecipeSerializer<SuperHeatingRecipe> {
+        /**
+         * 编解码器
+         */
         private static final MapCodec<SuperHeatingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemIngredientPredicate.CODEC.listOf()
                 .optionalFieldOf("ingredients", List.of())
@@ -74,6 +98,9 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
                 .forGetter(SuperHeatingRecipe::getHasCauldron)
         ).apply(instance, SuperHeatingRecipe::new));
 
+        /**
+         * 流编解码器
+         */
         private static final StreamCodec<RegistryFriendlyByteBuf, SuperHeatingRecipe> STREAM_CODEC = StreamCodec.composite(
             ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
             SuperHeatingRecipe::getInputItems,
@@ -95,24 +122,54 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         }
     }
 
+    /**
+     * 超级加热配方构建器
+     */
     public static class Builder extends SimpleAbstractBuilder<SuperHeatingRecipe, Builder> {
+        /**
+         * 炼药锅条件构建器
+         */
         HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
 
+        /**
+         * 设置流体
+         *
+         * @param fluid 流体ID
+         * @return 构建器实例
+         */
         public @NotNull Builder fluid(ResourceLocation fluid) {
             this.hasCauldron.fluid(fluid);
             return this;
         }
 
+        /**
+         * 设置转换后的流体
+         *
+         * @param transform 转换后的流体ID
+         * @return 构建器实例
+         */
         public @NotNull Builder transform(ResourceLocation transform) {
             this.hasCauldron.transform(transform);
             return this;
         }
 
+        /**
+         * 设置转换后的炼药锅方块
+         *
+         * @param cauldron 转换后的炼药锅方块
+         * @return 构建器实例
+         */
         public @NotNull Builder transform(Block cauldron) {
             this.transform(WrapUtils.cauldron2Fluid(cauldron));
             return this;
         }
 
+        /**
+         * 设置消耗量
+         *
+         * @param consume 消耗量
+         * @return 构建器实例
+         */
         public Builder consume(int consume) {
             this.hasCauldron.consume(consume);
             return this;

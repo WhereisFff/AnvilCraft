@@ -15,8 +15,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * 烹饪配方类
+ * <p>
+ * 该配方用于在铁砧下落时烹饪物品，需要在铁砧下方放置点燃的营火作为加热源
+ * </p>
+ */
 @Getter
 public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
+    /**
+     * 构造一个烹饪配方
+     *
+     * @param itemIngredients 物品原料列表
+     * @param results         结果物品列表
+     */
     public CookingRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results
@@ -49,10 +61,18 @@ public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
         return ModRecipeTypes.COOKING_TYPE.get();
     }
 
+    /**
+     * 创建一个构建器实例
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 烹饪配方序列化器
+     */
     public static class Serializer extends AbstractSerializer<CookingRecipe> {
         @Override
         protected CookingRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
@@ -60,6 +80,9 @@ public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
         }
     }
 
+    /**
+     * 烹饪配方构建器
+     */
     public static class Builder extends SimpleAbstractBuilder<CookingRecipe, Builder> {
         @Override
         public @NotNull String getType() {

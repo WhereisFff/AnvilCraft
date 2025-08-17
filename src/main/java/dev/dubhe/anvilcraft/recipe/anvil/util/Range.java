@@ -10,14 +10,32 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Iterator;
 import java.util.Objects;
 
-
+/**
+ * 范围类
+ * <p>
+ * 定义一个三维空间范围，用于表示配方中的检测区域
+ * </p>
+ */
 @Data
 public class Range implements Iterable<BlockPos> {
+    /**
+     * 起始点
+     */
     @NotNull
     private Vec3 start;
+
+    /**
+     * 结束点
+     */
     @NotNull
     private Vec3 end;
 
+    /**
+     * 构造一个范围
+     *
+     * @param start 起始点
+     * @param end   结束点
+     */
     public Range(@NotNull Vec3 start, @NotNull Vec3 end) {
         this.start = new Vec3(
             Math.min(start.x, end.x),
@@ -31,11 +49,24 @@ public class Range implements Iterable<BlockPos> {
         );
     }
 
+    /**
+     * 根据中心点和范围创建范围
+     *
+     * @param pos   中心点
+     * @param range 范围
+     * @return 范围实例
+     */
     public static @NotNull Range of(@NotNull Vec3 pos, @NotNull Vec3 range) {
         range = new Vec3(Math.abs(range.x()), Math.abs(range.y()), Math.abs(range.z()));
         return new Range(pos.subtract(range), pos.add(range));
     }
 
+    /**
+     * 检查是否包含另一个范围
+     *
+     * @param range 范围
+     * @return 是否包含
+     */
     public boolean contains(@NotNull Range range) {
         return range.start.x() >= this.start.x()
             && range.start.y() >= this.start.y()
@@ -45,20 +76,45 @@ public class Range implements Iterable<BlockPos> {
             && range.end.z() <= this.end.z();
     }
 
+    /**
+     * 检查是否包含指定位置和范围
+     *
+     * @param pos   位置
+     * @param range 范围
+     * @return 是否包含
+     */
     public boolean contains(@NotNull Vec3 pos, @NotNull Vec3 range) {
         return this.contains(Range.of(pos, range));
     }
 
+    /**
+     * 检查是否与另一个范围交叉
+     *
+     * @param range 范围
+     * @return 是否交叉
+     */
     public boolean cross(@NotNull Range range) {
         return Math.max(range.start.x, this.start.x) < Math.min(range.end.x, this.end.x)
             && Math.max(range.start.y, this.start.y) < Math.min(range.end.y, this.end.y)
             && Math.max(range.start.z, this.start.z) < Math.min(range.end.z, this.end.z);
     }
 
+    /**
+     * 检查是否与指定位置和范围交叉
+     *
+     * @param pos   位置
+     * @param range 范围
+     * @return 是否交叉
+     */
     public boolean cross(@NotNull Vec3 pos, @NotNull Vec3 range) {
         return this.cross(Range.of(pos, range));
     }
 
+    /**
+     * 扩展范围以包含另一个范围
+     *
+     * @param range 范围
+     */
     public void grow(@NotNull Range range) {
         this.start = new Vec3(
             Math.min(range.start.x, this.start.x),
@@ -72,11 +128,21 @@ public class Range implements Iterable<BlockPos> {
         );
     }
 
+    /**
+     * 转换为AABB（无偏移）
+     *
+     * @return AABB
+     */
     public AABB toAABB() {
         return this.toAABB(Vec3.ZERO);
     }
 
-
+    /**
+     * 转换为AABB（带偏移）
+     *
+     * @param offset 偏移量
+     * @return AABB
+     */
     public AABB toAABB(@NotNull Vec3 offset) {
         return new AABB(
             offset.x + this.start.x,
@@ -106,6 +172,9 @@ public class Range implements Iterable<BlockPos> {
         return Objects.hash(start, end);
     }
 
+    /**
+     * 方块位置迭代器
+     */
     private static class BlockPosIterator implements Iterator<BlockPos> {
         private final Range range;
         private BlockPos lastPos = null;
@@ -113,10 +182,18 @@ public class Range implements Iterable<BlockPos> {
         private BlockPos nextPos = null;
         private boolean end = false;
 
+        /**
+         * 构造一个方块位置迭代器
+         *
+         * @param range 范围
+         */
         public BlockPosIterator(Range range) {
             this.range = range;
         }
 
+        /**
+         * 生成下一个位置
+         */
         private void genNext() {
             if (this.end) return;
             if (this.genNext) return;
