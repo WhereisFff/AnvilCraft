@@ -137,7 +137,7 @@ public class DeflectionRingBlock extends FlexibleMultiPartBlock<DirectionCube3x3
         if (!(blockState.getBlock() instanceof AbstractMultiPartBlock<?> abstractMultiPartBlock)) return 0;
         BlockPos blockPos = abstractMultiPartBlock.getMainPartPos(pos, blockState);
         if (!(level.getBlockEntity(blockPos) instanceof DeflectionRingBlockEntity blockEntity)) return 0;
-        return (int) (Math.log(blockEntity.getLastEntitySpeed()) / Math.log(2) * 2);
+        return Math.max(0, (int) (Math.log(blockEntity.getLastEntitySpeed()) / Math.log(2) * 2) - 1);
     }
 
     @Override
