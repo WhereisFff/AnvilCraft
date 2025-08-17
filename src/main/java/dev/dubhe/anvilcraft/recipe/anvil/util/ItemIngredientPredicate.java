@@ -54,7 +54,8 @@ public record ItemIngredientPredicate(
             ItemSubPredicate.CODEC
                 .optionalFieldOf("predicates", Map.of())
                 .forGetter(ItemIngredientPredicate::subPredicates)
-        ).apply(instance, ItemIngredientPredicate::new));
+        ).apply(instance, ItemIngredientPredicate::new)
+    );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemIngredientPredicate> STREAM_CODEC = StreamCodec.of(
         (buffer, value) -> {
