@@ -46,97 +46,16 @@ public class FallingBlockCollisionEventListener {
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
         if (AnvilCraft.config.anvilCollisionCraftSpeed > event.getSpeed()) return;
-        //if (level.isClientSide()) return;
+        AnvilCollisionCraftRecipe resultRecipe = null;
         for (RecipeHolder<AnvilCollisionCraftRecipe> recipe : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
             if (!recipe.value().anvil().is(event.getFallingBlockEntity().blockState)) continue;
             if (!recipe.value().hitBlock().is(level.getBlockState(pos))) continue;
-            removeBlock(level, pos);
-            if (recipe.value().consume())
-                event.getFallingBlockEntity().kill();
-
-            //Entity source = event.getFallingBlockEntity();
-            DamageSource damageSource = Explosion.getDefaultDamageSource(level, null);
-            ExplosionDamageCalculator damageCalculator = new ItemImmuneExplosionDamage();
-            double x = pos.getCenter().x;
-            double y = pos.getCenter().y;
-            double z = pos.getCenter().z;
-            float radius = 4f;
-            boolean fire = true;
-            boolean spawnParticles = true;
-            ParticleOptions smallExplosionParticles = ParticleTypes.EXPLOSION;
-            ParticleOptions largeExplosionParticles = ParticleTypes.EXPLOSION_EMITTER;
-            Holder<SoundEvent> explosionSound = SoundEvents.GENERIC_EXPLODE;
-            Explosion.BlockInteraction blockInteraction =
-                level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLOSION_DROP_DECAY)
-                    ? Explosion.BlockInteraction.DESTROY_WITH_DECAY
-                    : Explosion.BlockInteraction.DESTROY;
-            Explosion explosion = new Explosion(
-                level,
-                null,
-                damageSource,
-                damageCalculator,
-                x,
-                y,
-                z,
-                radius,
-                fire,
-                blockInteraction,
-                smallExplosionParticles,
-                largeExplosionParticles,
-                explosionSound
-            );
-            ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.value().transformBlocks());
-            explosion.explode();
-            explosion.finalizeExplosion(spawnParticles);
-            if (level instanceof ServerLevel serverLevel) {
-                for (ServerPlayer serverplayer : serverLevel.players()) {
-                    if (serverplayer.distanceToSqr(x, y, z) < 4096.0) {
-                        serverplayer.connection
-                            .send(
-                                new ClientboundExplodePacket(
-                                    x,
-                                    y,
-                                    z,
-                                    radius,
-                                    explosion.getToBlow(),
-                                    explosion.getHitPlayers().get(serverplayer),
-                                    explosion.getBlockInteraction(),
-                                    explosion.getSmallExplosionParticles(),
-                                    explosion.getLargeExplosionParticles(),
-                                    explosion.getExplosionSound()
-                                )
-                            );
-                    }
-                }
-            }
-
-            ArrayList<ItemStack> itemEntities = new ArrayList<>();
-            for (OutputItem outputItem : recipe.value().outputItems()) {
-                ItemStack itemStack;
-                if ((itemStack = outputItem.getResult(level.random)) == null) continue;
-                itemEntities.add(itemStack);
-            }
-            for (ItemStack itemStack : itemEntities) {
-                int number = Math.min(itemStack.getCount(), 16);
-                Vec3 originItemPos = entityPos.add(pos.getCenter().subtract(entityPos).scale(0.5)).subtract(0, 0.4, 0);
-                Vec3 normal = pos.getCenter().subtract(entityPos).scale(0.6).multiply(1, 0, 1);
-                float dRoute;
-                if (number == 2) dRoute = 0f;
-                else dRoute = (float) (2 * Math.PI / (number - 2));
-                Vector3f deltaMovement = normal.toVector3f().rotateY((float) (Math.PI / 2));
-                int remainder = itemStack.getCount() % number;
-                int quotient = itemStack.getCount() / number;
-                for (int i = 0; i < number; i++) {
-                    Vec3 deltaMovementVec3 = new Vec3(deltaMovement);
-                    Vec3 itemPos = originItemPos.add(deltaMovementVec3.scale(0.2));
-                    ItemEntity itemEntity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, new ItemStack(itemStack.getItem(), quotient + Math.max(Math.min(1, remainder), 0)));
-                    deltaMovement.rotateAxis(dRoute, (float) normal.x, (float) normal.y, (float) normal.z);
-                    itemEntity.setDeltaMovement(new Vec3(deltaMovement));
-                    MergeCooldownItemEntity.castFromItemEntity(itemEntity).setMergeCooldown(5);
-                    level.addFreshEntity(itemEntity);
-                    remainder--;
-                }
-            }
+            if (event.getSpeed() < recipe.value().speed()) continue;
+            if (resultRecipe != null && resultRecipe.speed() < recipe.value().speed()) return;
+            resultRecipe = recipe.value();
+        }
+        if (resultRecipe != null) {
+            executeRecipe(event, resultRecipe, level, pos, entityPos);
             return;
         }
         if (event.getFallingBlockEntity().getBlockState().is(BlockTags.ANVIL)) {
@@ -154,6 +73,95 @@ public class FallingBlockCollisionEventListener {
                 true,
                 Level.ExplosionInteraction.TNT
             );
+        }
+    }
+
+    private static void executeRecipe(FallingBlockCollisionEvent event, AnvilCollisionCraftRecipe recipe, Level level, BlockPos pos, Vec3 entityPos) {
+        removeBlock(level, pos);
+        if (recipe.consume())
+            event.getFallingBlockEntity().kill();
+
+        DamageSource damageSource = Explosion.getDefaultDamageSource(level, null);
+        ExplosionDamageCalculator damageCalculator = new ItemImmuneExplosionDamage();
+        double x = pos.getCenter().x;
+        double y = pos.getCenter().y;
+        double z = pos.getCenter().z;
+        float radius = 4f;
+        boolean fire = true;
+        boolean spawnParticles = true;
+        ParticleOptions smallExplosionParticles = ParticleTypes.EXPLOSION;
+        ParticleOptions largeExplosionParticles = ParticleTypes.EXPLOSION_EMITTER;
+        Holder<SoundEvent> explosionSound = SoundEvents.GENERIC_EXPLODE;
+        Explosion.BlockInteraction blockInteraction =
+            level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLOSION_DROP_DECAY)
+                ? Explosion.BlockInteraction.DESTROY_WITH_DECAY
+                : Explosion.BlockInteraction.DESTROY;
+        Explosion explosion = new Explosion(
+                level,
+            null,
+            damageSource,
+            damageCalculator,
+            x,
+            y,
+            z,
+            radius,
+            fire,
+            blockInteraction,
+            smallExplosionParticles,
+            largeExplosionParticles,
+            explosionSound
+        );
+        ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.transformBlocks());
+        explosion.explode();
+        explosion.finalizeExplosion(spawnParticles);
+        if (level instanceof ServerLevel serverLevel) {
+            for (ServerPlayer serverplayer : serverLevel.players()) {
+                if (serverplayer.distanceToSqr(x, y, z) < 4096.0) {
+                    serverplayer.connection
+                        .send(
+                            new ClientboundExplodePacket(
+                                x,
+                                y,
+                                z,
+                                radius,
+                                explosion.getToBlow(),
+                                explosion.getHitPlayers().get(serverplayer),
+                                explosion.getBlockInteraction(),
+                                explosion.getSmallExplosionParticles(),
+                                explosion.getLargeExplosionParticles(),
+                                explosion.getExplosionSound()
+                            )
+                        );
+                }
+            }
+        }
+
+        ArrayList<ItemStack> itemEntities = new ArrayList<>();
+        for (OutputItem outputItem : recipe.outputItems()) {
+            ItemStack itemStack;
+            if ((itemStack = outputItem.getResult(level.random)) == null) continue;
+            itemEntities.add(itemStack);
+        }
+        for (ItemStack itemStack : itemEntities) {
+            int number = Math.min(itemStack.getCount(), 16);
+            Vec3 originItemPos = entityPos.add(pos.getCenter().subtract(entityPos).scale(0.5)).subtract(0, 0.4, 0);
+            Vec3 normal = pos.getCenter().subtract(entityPos).scale(0.6).multiply(1, 0, 1);
+            float dRoute;
+            if (number == 2) dRoute = 0f;
+            else dRoute = (float) (2 * Math.PI / (number - 2));
+            Vector3f deltaMovement = normal.toVector3f().rotateY((float) (Math.PI / 2));
+            int remainder = itemStack.getCount() % number;
+            int quotient = itemStack.getCount() / number;
+            for (int i = 0; i < number; i++) {
+                Vec3 deltaMovementVec3 = new Vec3(deltaMovement);
+                Vec3 itemPos = originItemPos.add(deltaMovementVec3.scale(0.2));
+                ItemEntity itemEntity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, new ItemStack(itemStack.getItem(), quotient + Math.max(Math.min(1, remainder), 0)));
+                deltaMovement.rotateAxis(dRoute, (float) normal.x, (float) normal.y, (float) normal.z);
+                itemEntity.setDeltaMovement(new Vec3(deltaMovement));
+                MergeCooldownItemEntity.castFromItemEntity(itemEntity).setMergeCooldown(5);
+                level.addFreshEntity(itemEntity);
+                remainder--;
+            }
         }
     }
 

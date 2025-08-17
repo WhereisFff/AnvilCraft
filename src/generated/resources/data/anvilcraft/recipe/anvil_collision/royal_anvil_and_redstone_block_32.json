@@ -24,5 +24,6 @@
       "id": "anvilcraft:uranium_nugget"
     }
   ],
+  "speed": 32,
   "transform_blocks": []
 }

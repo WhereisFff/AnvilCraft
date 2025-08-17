@@ -14,5 +14,6 @@
       "id": "anvilcraft:void_matter_block"
     }
   ],
+  "speed": 32,
   "transform_blocks": []
 }

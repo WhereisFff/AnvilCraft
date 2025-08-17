@@ -41,7 +41,8 @@ public record AnvilCollisionCraftRecipe(
     boolean consume,
     InputBlock hitBlock,
     List<BlockTransform> transformBlocks,
-    List<OutputItem> outputItems
+    List<OutputItem> outputItems,
+    int speed
 ) implements Recipe<AnvilCollisionCraftRecipe.Input> {
 
     @Override
@@ -102,7 +103,8 @@ public record AnvilCollisionCraftRecipe(
             Codec.BOOL.fieldOf("consume").forGetter(AnvilCollisionCraftRecipe::consume),
             InputBlock.CODEC.fieldOf("hitBlock").forGetter(AnvilCollisionCraftRecipe::hitBlock),
             BlockTransform.CODEC.listOf().fieldOf("transform_blocks").forGetter(AnvilCollisionCraftRecipe::transformBlocks),
-            OutputItem.CODEC.listOf().fieldOf("output_items").forGetter(AnvilCollisionCraftRecipe::outputItems)
+            OutputItem.CODEC.listOf().fieldOf("output_items").forGetter(AnvilCollisionCraftRecipe::outputItems),
+            Codec.INT.fieldOf("speed").forGetter(AnvilCollisionCraftRecipe::speed)
         ).apply(it, AnvilCollisionCraftRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, AnvilCollisionCraftRecipe> STREAM_CODEC = StreamCodec.of(
@@ -125,6 +127,7 @@ public record AnvilCollisionCraftRecipe(
             InputBlock.STREAM_CODEC.encode(buf, recipe.hitBlock);
             writeList(buf, recipe.transformBlocks, BlockTransform.STREAM_CODEC);
             writeList(buf, recipe.outputItems, OutputItem.STREAM_CODEC);
+            buf.writeVarInt(recipe.speed);
         }
 
         private static AnvilCollisionCraftRecipe decode(RegistryFriendlyByteBuf buf) {
@@ -133,7 +136,8 @@ public record AnvilCollisionCraftRecipe(
                 buf.readBoolean(),
                 InputBlock.STREAM_CODEC.decode(buf),
                 readList(buf, BlockTransform.STREAM_CODEC),
-                readList(buf, OutputItem.STREAM_CODEC)
+                readList(buf, OutputItem.STREAM_CODEC),
+                buf.readVarInt()
             );
         }
 
@@ -164,6 +168,7 @@ public record AnvilCollisionCraftRecipe(
         private List<BlockTransform> transformBlocks = new ArrayList<>();
         @Setter
         private List<OutputItem> outputItems = new ArrayList<>();
+        private int speed = 32;
 
         public Builder anvil(Block anvil) {
             this.anvil = new InputBlock(anvil, Map.of());
@@ -236,6 +241,11 @@ public record AnvilCollisionCraftRecipe(
             return outputItem(new OutputItem(new ItemStack(item, 1), 1f));
         }
 
+        public Builder speed(int speed) {
+            this.speed = speed;
+            return this;
+        }
+
         @Override
         public Item getResult() {
             if (anvil.getBlock() == null) {
@@ -246,7 +256,7 @@ public record AnvilCollisionCraftRecipe(
 
         @Override
         public AnvilCollisionCraftRecipe buildRecipe() {
-            return new AnvilCollisionCraftRecipe(anvil, consume, hitBlock, transformBlocks, outputItems);
+            return new AnvilCollisionCraftRecipe(anvil, consume, hitBlock, transformBlocks, outputItems, speed);
         }
 
         @Override
@@ -268,8 +278,9 @@ public record AnvilCollisionCraftRecipe(
         public void save(RecipeOutput recipeOutput) {
             save(
                 recipeOutput,
-                AnvilCraft.of(this.anvil.getKey() + "_and_" + this.hitBlock.getKey())
-                    .withPrefix(getType() + "/"));
+                AnvilCraft.of(this.anvil.getKey() + "_and_" + this.hitBlock.getKey() + "_" + this.speed)
+                    .withPrefix(getType() + "/")
+            );
         }
     }
 

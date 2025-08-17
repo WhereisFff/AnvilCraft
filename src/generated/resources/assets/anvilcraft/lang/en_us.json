@@ -740,8 +740,6 @@
   "text.autoconfig.anvilcraft.option.magnetAttractsDistance.@Tooltip": "Maximum length a magnet attracts",
   "text.autoconfig.anvilcraft.option.magnetItemAttractsRadius": "Magnet Item Attracts Radius",
   "text.autoconfig.anvilcraft.option.magnetItemAttractsRadius.@Tooltip": "Maximum radius a handheld magnet attracts",
-  "text.autoconfig.anvilcraft.option.maxAccelerationSpeed": "Max Acceleration Speed",
-  "text.autoconfig.anvilcraft.option.maxAccelerationSpeed.@Tooltip": "Max acceleration speed (m/tick)",
   "text.autoconfig.anvilcraft.option.powerConverter": "Power Converter",
   "text.autoconfig.anvilcraft.option.powerConverter.powerConverterCountdown": "Power Converter Countdown",
   "text.autoconfig.anvilcraft.option.powerConverter.powerConverterCountdown.@Tooltip": "The working interval of power converters",

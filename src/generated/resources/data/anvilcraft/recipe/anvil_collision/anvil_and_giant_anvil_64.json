@@ -8,16 +8,17 @@
     "id": "anvilcraft:giant_anvil"
   },
   "output_items": [],
+  "speed": 64,
   "transform_blocks": [
     {
       "chance": 1.0,
       "input": {
         "id": "anvilcraft:confinement_chamber"
       },
-      "max_count": 16,
+      "max_count": 8,
       "output": {
         "chance": 1.0,
-        "id": "anvilcraft:confined_mass_anvilon"
+        "id": "anvilcraft:confined_energy_anvilon"
       }
     }
   ]

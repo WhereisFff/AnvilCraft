@@ -8,6 +8,7 @@
     "id": "anvilcraft:plutonium_block"
   },
   "output_items": [],
+  "speed": 64,
   "transform_blocks": [
     {
       "chance": 1.0,
