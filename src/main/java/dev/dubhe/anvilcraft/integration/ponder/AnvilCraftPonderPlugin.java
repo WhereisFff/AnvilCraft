@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.integration.ponder;
 import com.tterrag.registrate.providers.ProviderType;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.integration.Integration;
+import dev.dubhe.anvilcraft.api.integration.IntegrationType;
 import dev.dubhe.anvilcraft.integration.ponder.data.PonderLangHandler;
 import net.createmod.ponder.api.registration.PonderPlugin;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
@@ -13,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
-@Integration("ponder")
+@Integration(value = "ponder", type = {IntegrationType.CLIENT, IntegrationType.DATA})
 public class AnvilCraftPonderPlugin implements PonderPlugin {
 
     /**
