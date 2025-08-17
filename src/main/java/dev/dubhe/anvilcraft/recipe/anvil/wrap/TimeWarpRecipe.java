@@ -24,28 +24,29 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 时间扭曲配方类
+ * 时移配方类
  * <p>
- * 该配方用于在铁砧下落时产生时间扭曲效果，需要在铁砧下方放置腐化信标作为触发条件
+ * 该配方用于在铁砧下落时产生时移效果，需要在铁砧下方放置腐化信标作为触发条件
  * </p>
  */
 @Getter
 public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
     /**
-     * 构造一个时间扭曲配方
+     * 构造一个时移配方
      *
      * @param itemIngredients 物品原料列表
      * @param results         结果物品列表
      * @param hasCauldron     炼药锅条件
+     * @param produceHeat     产热信息
      */
     public TimeWarpRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results,
-        HasCauldronSimple hasCauldron
+        HasCauldronSimple hasCauldron,
+        ProduceHeat produceHeat
     ) {
         super(
             new Property()
@@ -62,6 +63,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
                         .with(CorruptedBeaconBlock.LIT, true)
                         .build()
                 )
+                .setProduceHeat(produceHeat)
         );
     }
 
@@ -103,7 +105,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
     }
 
     /**
-     * 时间扭曲配方序列化器
+     * 时移配方序列化器
      */
     public static class Serializer implements RecipeSerializer<TimeWarpRecipe> {
         /**
@@ -117,7 +119,9 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
                 .optionalFieldOf("results", List.of())
                 .forGetter(TimeWarpRecipe::getResultItems),
             HasCauldronSimple.CODEC
-                .forGetter(TimeWarpRecipe::getHasCauldron)
+                .forGetter(TimeWarpRecipe::getHasCauldron),
+            ProduceHeat.Type.MAP_CODEC
+                .forGetter(TimeWarpRecipe::getProduceHeat)
         ).apply(instance, TimeWarpRecipe::new));
 
         /**
@@ -130,6 +134,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
             TimeWarpRecipe::getResultItems,
             HasCauldronSimple.STREAM_CODEC,
             TimeWarpRecipe::getHasCauldron,
+            ProduceHeat.Type.STREAM_CODEC,
+            TimeWarpRecipe::getProduceHeat,
             TimeWarpRecipe::new
         );
 
@@ -145,7 +151,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
     }
 
     /**
-     * 时间扭曲配方构建器
+     * 时移配方构建器
      */
     public static class Builder extends SimpleAbstractBuilder<TimeWarpRecipe, Builder> {
         /**
@@ -154,14 +160,9 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
 
         /**
-         * 热量数据列表
+         * 产热信息构建器
          */
-        List<ProduceHeat.HeatData> heatData = new ArrayList<>();
-
-        /**
-         * 距离
-         */
-        Distance distance = Distance.DEFAULT;
+        ProduceHeat.Builder produceHeat = ProduceHeat.builder();
 
         /**
          * 添加热量
@@ -171,7 +172,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder heat(HeatTier tier, int duration) {
-            this.heatData.add(new ProduceHeat.HeatData(tier, duration));
+            this.produceHeat.heat(tier, duration);
             return this;
         }
 
@@ -182,7 +183,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distance(Distance distance) {
-            this.distance = distance;
+            this.produceHeat.distance(distance);
             return this;
         }
 
@@ -195,7 +196,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distance(Distance.Type type, int distance, boolean isHorizontal) {
-            return this.distance(new Distance(type, distance, isHorizontal));
+            this.produceHeat.distance(type, distance, isHorizontal);
+            return this;
         }
 
         /**
@@ -206,7 +208,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceEuclidean(int distance, boolean isHorizontal) {
-            return this.distance(Distance.Type.EUCLIDEAN, distance, isHorizontal);
+            this.produceHeat.distanceEuclidean(distance, isHorizontal);
+            return this;
         }
 
         /**
@@ -216,7 +219,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceEuclidean(boolean isHorizontal) {
-            return this.distance(Distance.Type.EUCLIDEAN, 1, isHorizontal);
+            this.produceHeat.distanceEuclidean(1, isHorizontal);
+            return this;
         }
 
         /**
@@ -226,7 +230,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceEuclidean(int distance) {
-            return this.distance(Distance.Type.EUCLIDEAN, distance, true);
+            this.produceHeat.distanceEuclidean(distance);
+            return this;
         }
 
         /**
@@ -235,7 +240,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceEuclidean() {
-            return this.distance(Distance.Type.EUCLIDEAN, 1, true);
+            this.produceHeat.distanceEuclidean();
+            return this;
         }
 
         /**
@@ -246,7 +252,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceManhattan(int distance, boolean isHorizontal) {
-            return this.distance(Distance.Type.MANHATTAN, distance, isHorizontal);
+            this.produceHeat.distanceManhattan(distance, isHorizontal);
+            return this;
         }
 
         /**
@@ -256,7 +263,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceManhattan(boolean isHorizontal) {
-            return this.distance(Distance.Type.MANHATTAN, 1, isHorizontal);
+            this.produceHeat.distanceManhattan(1, isHorizontal);
+            return this;
         }
 
         /**
@@ -266,7 +274,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceManhattan(int distance) {
-            return this.distance(Distance.Type.MANHATTAN, distance, true);
+            this.produceHeat.distanceManhattan(distance);
+            return this;
         }
 
         /**
@@ -275,7 +284,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceManhattan() {
-            return this.distance(Distance.Type.MANHATTAN, 1, true);
+            this.produceHeat.distanceManhattan();
+            return this;
         }
 
         /**
@@ -286,7 +296,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceChebyshev(int distance, boolean isHorizontal) {
-            return this.distance(Distance.Type.CHEBYSHEV, distance, isHorizontal);
+            this.produceHeat.distanceChebyshev(distance, isHorizontal);
+            return this;
         }
 
         /**
@@ -296,7 +307,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceChebyshev(boolean isHorizontal) {
-            return this.distance(Distance.Type.CHEBYSHEV, 1, isHorizontal);
+            this.produceHeat.distanceChebyshev(isHorizontal);
+            return this;
         }
 
         /**
@@ -306,7 +318,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceChebyshev(int distance) {
-            return this.distance(Distance.Type.CHEBYSHEV, distance, true);
+            this.produceHeat.distanceChebyshev(distance);
+            return this;
         }
 
         /**
@@ -315,7 +328,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder distanceChebyshev() {
-            return this.distance(Distance.Type.CHEBYSHEV, 1, true);
+            this.produceHeat.distanceChebyshev();
+            return this;
         }
 
         /**
@@ -375,7 +389,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
 
         @Override
         protected TimeWarpRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
-            return new TimeWarpRecipe(itemIngredients, results, this.hasCauldron.build());
+            return new TimeWarpRecipe(itemIngredients, results, this.hasCauldron.build(), this.produceHeat.build());
         }
 
         @Override

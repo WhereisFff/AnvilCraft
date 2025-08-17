@@ -71,11 +71,6 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull InWorldRecipeContext context, HolderLookup.@NotNull Provider provider) {
-        return super.assemble(context, provider);
-    }
-
-    @Override
     public @NotNull RecipeSerializer<SqueezingRecipe> getSerializer() {
         return ModRecipeTypes.SQUEEZING_SERIALIZER.get();
     }
