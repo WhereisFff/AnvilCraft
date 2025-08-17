@@ -128,8 +128,8 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
          * Map编解码器
          */
         public static final MapCodec<ProduceHeat> MAP_CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
-            HeatData.CODEC.listOf().fieldOf("heatData").forGetter(ProduceHeat::getHeatData),
-            Distance.CODEC.fieldOf("distance").forGetter(ProduceHeat::getDistance)
+            HeatData.CODEC.listOf().optionalFieldOf("heat", List.of()).forGetter(ProduceHeat::getHeatData),
+            Distance.CODEC.optionalFieldOf("distance", Distance.DEFAULT).forGetter(ProduceHeat::getDistance)
         ).apply(ins, ProduceHeat::new));
 
         /**

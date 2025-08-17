@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
@@ -115,6 +116,15 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
      */
     public HasCauldronSimple getHasCauldron() {
         return this.property.getHasCauldron();
+    }
+
+    /**
+     * 获取产热信息
+     *
+     * @return 产热信息
+     */
+    public ProduceHeat getProduceHeat() {
+        return this.property.getProduceHeat();
     }
 
     /**
@@ -453,6 +463,11 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         private HasCauldronSimple hasCauldron = null;
 
         /**
+         * 产热信息
+         */
+        private ProduceHeat produceHeat = null;
+
+        /**
          * 优先级
          */
         private Integer priority = null;
@@ -619,6 +634,17 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         }
 
         /**
+         * 设置产热信息
+         *
+         * @param produceHeat 产热信息
+         * @return 属性实例
+         */
+        public Property setProduceHeat(ProduceHeat produceHeat) {
+            this.produceHeat = produceHeat;
+            return this;
+        }
+
+        /**
          * 设置优先级
          *
          * @param priority 优先级
@@ -712,6 +738,9 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
                     ChanceBlockState chanceBlockState = this.resultBlocks.get(i);
                     outcomes.add(chanceBlockState.toSetBlock(this.blockOutputOffset.subtract(0, i, 0)));
                 }
+            }
+            if (this.produceHeat != null) {
+                outcomes.add(this.produceHeat);
             }
             return outcomes;
         }
