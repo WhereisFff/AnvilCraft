@@ -63,7 +63,7 @@ public class ItemCompressCategory extends AbstractProgressCategory<ItemCompressR
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
         JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
     }
 

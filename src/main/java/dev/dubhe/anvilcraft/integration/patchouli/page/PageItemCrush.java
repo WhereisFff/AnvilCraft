@@ -8,8 +8,8 @@ public class PageItemCrush extends PageAnvilItemProcess<ItemCrushRecipe> {
     public PageItemCrush() {
         super(
             ModRecipeTypes.ITEM_CRUSH_TYPE.get(),
-            ItemCrushRecipe::getItemIngredients,
-            ItemCrushRecipe::getResults,
+            ItemCrushRecipe::getInputItems,
+            ItemCrushRecipe::getResultItems,
             recipe -> ModBlocks.CRUSHING_TABLE.getDefaultState(),
             null);
     }

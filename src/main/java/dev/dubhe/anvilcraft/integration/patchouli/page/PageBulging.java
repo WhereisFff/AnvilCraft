@@ -13,15 +13,15 @@ public class PageBulging extends PageAnvilItemProcess<BulgingRecipe> {
     public PageBulging() {
         super(
             ModRecipeTypes.BULGING_TYPE.get(),
-            BulgingRecipe::getItemIngredients,
-            BulgingRecipe::getResults,
+            BulgingRecipe::getInputItems,
+            BulgingRecipe::getResultItems,
             recipe -> CauldronUtil.fullState(Blocks.WATER_CAULDRON),
             null);
     }
 
     @Override
     protected void drawExtra(GuiGraphics graphics, BulgingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-        if (!recipe.getResults().isEmpty() || getCauldron(recipe) == null) return;
+        if (!recipe.getResultItems().isEmpty() || getCauldron(recipe) == null) return;
         RenderHelper.renderBlock(
             graphics, getCauldron(recipe),
             recipeX + 90, recipeY + 29, 10,

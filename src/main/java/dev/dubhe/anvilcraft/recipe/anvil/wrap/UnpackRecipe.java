@@ -23,16 +23,19 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
         List<ChanceItemStack> results
     ) {
         super(
-            new Vec3(0.0, 0.0, 0.0),
-            itemIngredients,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            new Vec3(0.0, -1.0, 0.0),
-            BlockStatePredicate.builder()
-                .of(Blocks.IRON_TRAPDOOR)
-                .with(TrapDoorBlock.HALF, Half.TOP)
-                .with(TrapDoorBlock.OPEN, false)
-                .build()
+            new Property()
+                .setItemInputOffset(Vec3.ZERO)
+                .setInputItems(itemIngredients)
+                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultItems(results)
+                .setBlockInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setInputBlocks(
+                    BlockStatePredicate.builder()
+                        .of(Blocks.IRON_TRAPDOOR)
+                        .with(TrapDoorBlock.HALF, Half.TOP)
+                        .with(TrapDoorBlock.OPEN, false)
+                        .build()
+                )
         );
     }
 

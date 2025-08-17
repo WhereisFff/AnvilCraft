@@ -17,12 +17,12 @@ public record ColoredConcreteRecipe(Color color, List<ItemIngredientPredicate> i
     public static ImmutableList<ColoredConcreteRecipe> getAllRecipes() {
         ImmutableList.Builder<ColoredConcreteRecipe> builder = ImmutableList.builder();
         for (BulgingRecipe recipe : JeiRecipeUtil.getRecipesFromType(ModRecipeTypes.BULGING_TYPE.get())) {
-            if (recipe.getResults().isEmpty()) continue;
-            ChanceItemStack result = recipe.getResults().getFirst();
+            if (recipe.getResultItems().isEmpty()) continue;
+            ChanceItemStack result = recipe.getResultItems().getFirst();
             if (!result.getStack().is(ModItemTags.REINFORCED_CONCRETE)) continue;
             Color color = Color.valueOf(
                 BuiltInRegistries.ITEM.getKey(result.getItem()).getPath().substring(20).toUpperCase(Locale.ROOT));
-            builder.add(new ColoredConcreteRecipe(color, recipe.getItemIngredients(), result));
+            builder.add(new ColoredConcreteRecipe(color, recipe.getInputItems(), result));
         }
         return builder.build();
     }

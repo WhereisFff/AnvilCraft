@@ -20,14 +20,17 @@ public class StampingRecipe extends AbstractProcessRecipe<StampingRecipe> {
         List<ChanceItemStack> results
     ) {
         super(
-            new Vec3(0.0, -0.0625, 0.0),
-            itemIngredients,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            new Vec3(0.0, -1.0, 0.0),
-            BlockStatePredicate.builder()
-                .of(ModBlocks.STAMPING_PLATFORM.get())
-                .build()
+            new Property()
+                .setItemInputOffset(new Vec3(0.0, -0.0625, 0.0))
+                .setInputItems(itemIngredients)
+                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultItems(results)
+                .setBlockInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setInputBlocks(
+                    BlockStatePredicate.builder()
+                        .of(ModBlocks.STAMPING_PLATFORM.get())
+                        .build()
+                )
         );
     }
 

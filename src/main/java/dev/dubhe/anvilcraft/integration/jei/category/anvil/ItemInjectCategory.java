@@ -87,7 +87,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
     public void setRecipe(
         IRecipeLayoutBuilder builder, RecipeHolder<ItemInjectRecipe> recipeHolder, IFocusGroup focuses) {
         ItemInjectRecipe recipe = recipeHolder.value();
-        JeiSlotUtil.addInputSlots(builder, recipe.getItemIngredients());
+        JeiSlotUtil.addInputSlots(builder, recipe.getInputItems());
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
             .addIngredients(Ingredient.of(
                 recipe.getBlockIngredient().getBlocks().stream().map(state -> new ItemStack(state.value())).toArray(ItemStack[]::new)));
@@ -122,7 +122,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
         RenderHelper.renderBlock(
             guiGraphics, recipe.getBlockResult().getState(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
     }

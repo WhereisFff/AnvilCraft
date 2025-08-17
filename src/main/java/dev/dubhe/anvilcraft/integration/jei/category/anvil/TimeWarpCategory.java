@@ -92,9 +92,9 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     public void setRecipe(
         IRecipeLayoutBuilder builder, RecipeHolder<TimeWarpRecipe> recipeHolder, IFocusGroup focuses) {
         TimeWarpRecipe recipe = recipeHolder.value();
-        JeiSlotUtil.addInputSlots(builder, recipe.getItemIngredients());
-        if (!recipe.getResults().isEmpty()) {
-            JeiSlotUtil.addOutputSlots(builder, recipe.getResults());
+        JeiSlotUtil.addInputSlots(builder, recipe.getInputItems());
+        if (!recipe.getResultItems().isEmpty()) {
+            JeiSlotUtil.addOutputSlots(builder, recipe.getResultItems());
         }
     }
 
@@ -138,9 +138,9 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
-        if (!recipe.getResults().isEmpty()) {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResults().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        if (!recipe.getResultItems().isEmpty()) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResultItems().size());
             if (recipe.isConsumeFluid()) {
                 PoseStack pose = guiGraphics.pose();
                 pose.pushPose();
@@ -213,7 +213,7 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
         if (mouseX >= 124 && mouseX <= 140) {
             if (mouseY >= 24 && mouseY <= 42) {
                 Component text;
-                if (recipe.getResults().isEmpty()) {
+                if (recipe.getResultItems().isEmpty()) {
                     if (recipe.isConsumeFluid() && CauldronUtil.maxLevel(recipe.getHasCauldron().getTransformCauldron()) <= 1) {
                         text = Blocks.CAULDRON.getName();
                     } else {
