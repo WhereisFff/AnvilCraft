@@ -1,12 +1,7 @@
 {
   "type": "anvilcraft:in_world_recipe",
   "compatible": true,
-  "conflicting": [],
-  "icon": {
-    "count": 1,
-    "id": "minecraft:anvil"
-  },
-  "non_conflicting": [
+  "conflicting": [
     {
       "type": "anvilcraft:has_item_ingredient",
       "item": {
@@ -26,13 +21,13 @@
       },
       "offset": [
         0.0,
-        0.0,
+        -0.375,
         0.0
       ],
       "range": [
-        1.0,
-        1.0,
-        1.0
+        0.75,
+        0.75,
+        0.75
       ]
     },
     {
@@ -43,20 +38,26 @@
       },
       "offset": [
         0.0,
-        0.0,
+        -0.375,
         0.0
       ],
       "range": [
-        1.0,
-        1.0,
-        1.0
+        0.75,
+        0.75,
+        0.75
       ]
-    },
+    }
+  ],
+  "icon": {
+    "count": 1,
+    "id": "anvilcraft:supercapacitor"
+  },
+  "non_conflicting": [
     {
       "type": "anvilcraft:has_cauldron",
       "offset": [
         0.0,
-        0.0,
+        -1.0,
         0.0
       ]
     }
@@ -67,7 +68,7 @@
       "item": "anvilcraft:supercapacitor",
       "offset": [
         0.0,
-        0.0,
+        -0.75,
         0.0
       ]
     }
