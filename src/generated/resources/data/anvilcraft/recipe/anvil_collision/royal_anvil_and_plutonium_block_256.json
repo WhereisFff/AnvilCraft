@@ -13,7 +13,7 @@
     {
       "chance": 1.0,
       "input": {
-        "tag": "anvilcraft:stickable_with_sliding_rails"
+        "tag": "anvilcraft:overheatable"
       },
       "max_count": 16,
       "output": {

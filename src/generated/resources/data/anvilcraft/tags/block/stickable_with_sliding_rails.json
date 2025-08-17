@@ -1,8 +1,6 @@
 {
   "values": [
     "#anvilcraft:sliding_rails",
-    "anvilcraft:sliding_rail_stop",
-    "anvilcraft:overheated_ember_metal_block",
-    "anvilcraft:ember_metal_block"
+    "anvilcraft:sliding_rail_stop"
   ]
 }
