@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -32,6 +31,7 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -39,8 +39,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -184,13 +182,13 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
         if (fromPos.equals(pos.above())
             && state.getValue(POWERED)
-            && !beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)
+            && !beOp.map(ActivatorSlidingRailBlockEntity::shouldPower).orElse(false)
             && !level.getBlockTicks().hasScheduledTick(pos, this)
             && !MOVING_PISTON_MAP.containsKey(fromPos)
             && block.equals(Blocks.MOVING_PISTON)
             && !level.getBlockEntity(pos.above(), BlockEntityType.PISTON).map(PistonMovingBlockEntity::isSourcePiston).orElse(true)
         ) {
-            beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
+            beOp.ifPresent(ActivatorSlidingRailBlockEntity::startPulse);
             level.scheduleTick(pos, this, 3);
             this.updateAbove(level, pos);
             return;
@@ -201,17 +199,24 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         Optional<ActivatorSlidingRailBlockEntity> beOp = level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get());
-        if (beOp.map(ActivatorSlidingRailBlockEntity::isShouldPower).orElse(false)) {
-            beOp.ifPresent(ActivatorSlidingRailBlockEntity::shouldNotPower);
-            level.scheduleTick(pos, this, 5);
-            this.updateAbove(level, pos);
-            return;
-        } else if (state.getValue(POWERED)) {
-            BlockPos fromPos = pos.above();
-            if (level.isEmptyBlock(fromPos)) return;
-            PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
-            ppi.extending = true;
-            MOVING_PISTON_MAP.put(pos, ppi);
+        switch (beOp.map(ActivatorSlidingRailBlockEntity::getShouldPower).orElse(TriState.DEFAULT)) {
+            case TRUE -> {
+                beOp.ifPresent(ActivatorSlidingRailBlockEntity::stopPulse);
+                level.scheduleTick(pos, this, 5);
+                this.updateAbove(level, pos);
+                return;
+            }
+            case FALSE -> {
+                beOp.ifPresent(ActivatorSlidingRailBlockEntity::backToDefault);
+                if (!state.getValue(POWERED)) return;
+                BlockPos fromPos = pos.above();
+                if (level.isEmptyBlock(fromPos)) return;
+                PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
+                ppi.extending = true;
+                MOVING_PISTON_MAP.put(pos, ppi);
+            }
+            case DEFAULT -> {
+            }
         }
         super.tick(state, level, pos, random);
     }
@@ -242,7 +247,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
         if (!state.getValue(POWERED)) return 0;
         if (!level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get())
-            .map(ActivatorSlidingRailBlockEntity::isShouldPower)
+            .map(ActivatorSlidingRailBlockEntity::shouldPower)
             .orElse(false)
         ) return 0;
         return direction == Direction.DOWN ? 15 : 0;
@@ -270,8 +275,9 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         if (entity.getStartPos().equals(pos.above())) return;
         level.setBlockAndUpdate(pos, state.setValue(FACING, entity.getMoveDirection()));
         if (!state.getValue(POWERED)) return;
-        level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get()).ifPresent(ActivatorSlidingRailBlockEntity::shouldPower);
+        level.getBlockEntity(pos, ModBlockEntities.ACTIVATOR_SLIDING_RAIL.get()).ifPresent(ActivatorSlidingRailBlockEntity::startPulse);
         ISlidingRail.stopSlidingBlock(entity);
+        if (level.getBlockTicks().hasScheduledTick(pos, this)) return;
         level.scheduleTick(pos, this, 3);
     }
 
