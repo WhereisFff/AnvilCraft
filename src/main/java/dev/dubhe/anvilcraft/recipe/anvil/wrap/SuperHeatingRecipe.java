@@ -31,20 +31,20 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         HasCauldronSimple hasCauldron
     ) {
         super(
-            new Vec3(0.0, -1.0, 0.0),
-            itemIngredients,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            new Vec3(0.0, -1.0, 0.0),
-            hasCauldron,
-            new Vec3(0.0, -2.0, 0.0),
-            List.of(),
-            List.of(
-                BlockStatePredicate.builder()
-                    .of(ModBlocks.HEATER.get())
-                    .with(HeaterBlock.OVERLOAD, false)
-                    .build()
-            )
+            new Property()
+                .setItemInputOffset(Vec3.ZERO)
+                .setInputItems(itemIngredients)
+                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultItems(results)
+                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setHasCauldron(hasCauldron)
+                .setBlockInputOffset(new Vec3(0.0, -2.0, 0.0))
+                .setInputBlocks(
+                    BlockStatePredicate.builder()
+                        .of(ModBlocks.HEATER.get())
+                        .with(HeaterBlock.OVERLOAD, false)
+                        .build()
+                )
         );
     }
 
@@ -66,19 +66,19 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         private static final MapCodec<SuperHeatingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemIngredientPredicate.CODEC.listOf()
                 .optionalFieldOf("ingredients", List.of())
-                .forGetter(SuperHeatingRecipe::getItemIngredients),
+                .forGetter(SuperHeatingRecipe::getInputItems),
             ChanceItemStack.CODEC.listOf()
                 .optionalFieldOf("results", List.of())
-                .forGetter(SuperHeatingRecipe::getResults),
+                .forGetter(SuperHeatingRecipe::getResultItems),
             HasCauldronSimple.CODEC
                 .forGetter(SuperHeatingRecipe::getHasCauldron)
         ).apply(instance, SuperHeatingRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, SuperHeatingRecipe> STREAM_CODEC = StreamCodec.composite(
             ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            SuperHeatingRecipe::getItemIngredients,
+            SuperHeatingRecipe::getInputItems,
             ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            SuperHeatingRecipe::getResults,
+            SuperHeatingRecipe::getResultItems,
             HasCauldronSimple.STREAM_CODEC,
             SuperHeatingRecipe::getHasCauldron,
             SuperHeatingRecipe::new

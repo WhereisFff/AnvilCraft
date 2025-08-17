@@ -32,148 +32,24 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Getter
 public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InWorldRecipe {
-    protected final Vec3 inputOffset;
-    protected final List<ItemIngredientPredicate> itemIngredients;
-    protected final Vec3 outputOffset;
-    protected final List<ChanceItemStack> results;
-    protected final Vec3 cauldronOffset;
-    protected final HasCauldronSimple hasCauldron;
-    protected final Vec3 blockOffset;
-    protected final List<BlockStatePredicate> blocks;
-    protected final List<ChanceBlockState> resultBlocks;
+    protected final Property property;
 
-    public AbstractProcessRecipe(
-        Vec3 inputOffset,
-        List<ItemIngredientPredicate> itemIngredients,
-        Vec3 outputOffset,
-        List<ChanceItemStack> results,
-        Vec3 cauldronOffset,
-        HasCauldronSimple hasCauldron,
-        Vec3 blockOffset,
-        List<ChanceBlockState> resultBlocks,
-        List<BlockStatePredicate> blocks
-    ) {
+    public AbstractProcessRecipe(@NotNull Property property) {
         super(
-            AbstractProcessRecipe.getIcon(results),
+            property.getIcon(),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            AbstractProcessRecipe.getPredicates(cauldronOffset, hasCauldron, blockOffset, blocks),
-            AbstractProcessRecipe.getPredicates(inputOffset, itemIngredients),
-            AbstractProcessRecipe.getOutcomes(outputOffset, results, resultBlocks),
-            AbstractProcessRecipe.getPriority(itemIngredients, results, hasCauldron, resultBlocks, blocks),
+            property.getConflictingPredicates(),
+            property.getNonConflictingPredicates(),
+            property.getOutcomes(),
+            property.getPriority(),
             false
         );
-        this.inputOffset = inputOffset;
-        this.itemIngredients = itemIngredients;
-        this.outputOffset = outputOffset;
-        this.results = results;
-        this.cauldronOffset = cauldronOffset;
-        this.hasCauldron = hasCauldron;
-        this.blockOffset = blockOffset;
-        this.blocks = blocks;
-        this.resultBlocks = resultBlocks;
-    }
-
-    public AbstractProcessRecipe(
-        Vec3 inputOffset,
-        List<ItemIngredientPredicate> itemIngredients,
-        Vec3 outputOffset,
-        List<ChanceItemStack> results,
-        Vec3 blockOffset,
-        HasCauldronSimple hasCauldron,
-        BlockStatePredicate... blocks
-    ) {
-        this(
-            inputOffset,
-            itemIngredients,
-            outputOffset,
-            results,
-            blockOffset,
-            hasCauldron,
-            blockOffset.subtract(0, hasCauldron == null ? 0 : 1, 0),
-            null,
-            List.of(blocks)
-        );
-    }
-
-    public AbstractProcessRecipe(
-        Vec3 inputOffset,
-        List<ItemIngredientPredicate> itemIngredients,
-        Vec3 outputOffset,
-        List<ChanceItemStack> results,
-        Vec3 blockOffset,
-        BlockStatePredicate... blocks
-    ) {
-        this(inputOffset, itemIngredients, outputOffset, results, blockOffset, null, blocks);
-    }
-
-    private static ItemStack getIcon(@NotNull List<ChanceItemStack> results) {
-        return results.isEmpty() ? Items.ANVIL.getDefaultInstance() : results.getFirst().getStack();
-    }
-
-    private static int getPriority(
-        List<ItemIngredientPredicate> itemIngredients,
-        List<ChanceItemStack> results,
-        HasCauldronSimple hasCauldron,
-        List<ChanceBlockState> resultBlocks,
-        List<BlockStatePredicate> blocks
-    ) {
-        return (itemIngredients == null ? 0 : itemIngredients.size())
-            + (results == null ? 0 : results.size())
-            + (hasCauldron != null ? 1 : 0)
-            + (resultBlocks == null ? 0 : resultBlocks.size())
-            + (blocks == null ? 0 : blocks.size() * 100);
-    }
-
-    private static @NotNull List<IRecipePredicate<?>> getPredicates(
-        Vec3 cauldronOffset,
-        HasCauldronSimple hasCauldron,
-        Vec3 blockOffset,
-        List<BlockStatePredicate> blocks
-    ) {
-        List<IRecipePredicate<?>> predicates = new ArrayList<>();
-        if (hasCauldron != null) {
-            predicates.add(hasCauldron.toHasCauldron(cauldronOffset));
-        }
-        if (blocks != null) {
-            for (int i = 0; i < blocks.size(); i++) {
-                BlockStatePredicate block = blocks.get(i);
-                predicates.add(new HasBlock(blockOffset.subtract(0, i, 0), block));
-            }
-        }
-        return predicates;
-    }
-
-    private static @NotNull List<IRecipePredicate<?>> getPredicates(
-        Vec3 inputOffset,
-        @NotNull List<ItemIngredientPredicate> ingredients
-    ) {
-        List<IRecipePredicate<?>> predicates = new ArrayList<>();
-        for (ItemIngredientPredicate ingredient : ingredients) {
-            predicates.add(ingredient.toHasItemIngredient(inputOffset, new Vec3(1, 1, 1)));
-        }
-        return predicates;
-    }
-
-    private static @NotNull List<IRecipeOutcome<?>> getOutcomes(
-        Vec3 outputOffset,
-        @NotNull List<ChanceItemStack> results,
-        List<ChanceBlockState> setBlocks
-    ) {
-        List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
-        for (ChanceItemStack chanceItemStack : results) {
-            outcomes.add(chanceItemStack.toSpawnItem(outputOffset));
-        }
-        if (setBlocks != null) {
-            for (int i = 0; i < setBlocks.size(); i++) {
-                ChanceBlockState chanceBlockState = setBlocks.get(i);
-                outcomes.add(chanceBlockState.toSetBlock(new Vec3(0, -i - 1, 0)));
-            }
-        }
-        return outcomes;
+        this.property = property;
     }
 
     @Override
@@ -182,21 +58,41 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
     @Override
     public abstract @NotNull RecipeType<T> getType();
 
+    public List<ItemIngredientPredicate> getInputItems() {
+        return this.property.getInputItems();
+    }
+
+    public List<ChanceItemStack> getResultItems() {
+        return this.property.getResultItems();
+    }
+
+    public List<BlockStatePredicate> getInputBlocks() {
+        return this.property.getInputBlocks();
+    }
+
+    public List<ChanceBlockState> getResultBlocks() {
+        return this.property.getResultBlocks();
+    }
+
+    public HasCauldronSimple getHasCauldron() {
+        return this.property.getHasCauldron();
+    }
+
     public abstract static class AbstractSerializer<T extends AbstractProcessRecipe<T>> implements RecipeSerializer<T> {
         protected final MapCodec<T> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemIngredientPredicate.CODEC.listOf()
                 .optionalFieldOf("ingredients", List.of())
-                .forGetter(T::getItemIngredients),
+                .forGetter(T::getInputItems),
             ChanceItemStack.CODEC.listOf()
                 .optionalFieldOf("results", List.of())
-                .forGetter(T::getResults)
+                .forGetter(T::getResultItems)
         ).apply(instance, this::of));
 
         protected final StreamCodec<RegistryFriendlyByteBuf, T> streamCodec = StreamCodec.composite(
             ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            T::getItemIngredients,
+            T::getInputItems,
             ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            T::getResults,
+            T::getResultItems,
             this::of
         );
 
@@ -309,6 +205,160 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             if (results.isEmpty()) {
                 throw new IllegalArgumentException("Recipe result must not be empty, RecipeId: " + pId);
             }
+        }
+    }
+
+    @Getter
+    public static class Property {
+        private Vec3 itemInputOffset = Vec3.ZERO;
+        private Vec3 itemInputRange = new Vec3(1, 1, 1);
+        private List<ItemIngredientPredicate> inputItems = null;
+        private Vec3 itemOutputOffset = Vec3.ZERO;
+        private List<ChanceItemStack> resultItems = null;
+        private Vec3 blockInputOffset = Vec3.ZERO;
+        private List<BlockStatePredicate> inputBlocks = null;
+        private Vec3 blockOutputOffset = Vec3.ZERO;
+        private List<ChanceBlockState> resultBlocks = null;
+        private Vec3 cauldronOffset = Vec3.ZERO;
+        private HasCauldronSimple hasCauldron = null;
+        private Integer priority = null;
+
+        public Property setItemInputOffset(Vec3 itemInputOffset) {
+            this.itemInputOffset = itemInputOffset;
+            return this;
+        }
+
+        public Property setItemInputRange(Vec3 itemInputRange) {
+            this.itemInputRange = itemInputRange;
+            return this;
+        }
+
+        public Property setInputItems(List<ItemIngredientPredicate> inputItems) {
+            this.inputItems = inputItems;
+            return this;
+        }
+
+        public Property setInputItems(ItemIngredientPredicate... inputItems) {
+            return this.setInputItems(Arrays.asList(inputItems));
+        }
+
+        public Property setItemOutputOffset(Vec3 itemOutputOffset) {
+            this.itemOutputOffset = itemOutputOffset;
+            return this;
+        }
+
+        public Property setResultItems(List<ChanceItemStack> resultItems) {
+            this.resultItems = resultItems;
+            return this;
+        }
+
+        public Property setResultItems(ChanceItemStack... resultItems) {
+            return this.setResultItems(Arrays.asList(resultItems));
+        }
+
+        public Property setBlockInputOffset(Vec3 blockInputOffset) {
+            this.blockInputOffset = blockInputOffset;
+            return this;
+        }
+
+        public Property setInputBlocks(List<BlockStatePredicate> inputBlocks) {
+            this.inputBlocks = inputBlocks;
+            return this;
+        }
+
+        public Property setInputBlocks(BlockStatePredicate... inputBlocks) {
+            return this.setInputBlocks(Arrays.asList(inputBlocks));
+        }
+
+        public Property setBlockOutputOffset(Vec3 blockOutputOffset) {
+            this.blockOutputOffset = blockOutputOffset;
+            return this;
+        }
+
+        public Property setResultBlocks(List<ChanceBlockState> resultBlocks) {
+            this.resultBlocks = resultBlocks;
+            return this;
+        }
+
+        public Property setResultBlocks(ChanceBlockState... resultBlocks) {
+            return this.setResultBlocks(Arrays.asList(resultBlocks));
+        }
+
+        public Property setCauldronOffset(Vec3 cauldronOffset) {
+            this.cauldronOffset = cauldronOffset;
+            return this;
+        }
+
+        public Property setHasCauldron(HasCauldronSimple hasCauldron) {
+            this.hasCauldron = hasCauldron;
+            return this;
+        }
+
+        public Property setPriority(int priority) {
+            this.priority = priority;
+            return this;
+        }
+
+        private @NotNull ItemStack getIcon() {
+            ItemStack icon = null;
+            if (this.resultItems != null && !this.resultItems.isEmpty()) {
+                icon = this.resultItems.getFirst().getStack();
+            }
+            if (icon == null && this.resultBlocks != null && !this.resultBlocks.isEmpty()) {
+                Item item = this.resultBlocks.getFirst().getState().getBlock().asItem();
+                if (item != Items.AIR) icon = item.getDefaultInstance();
+            }
+            if (icon == null) icon = Items.ANVIL.getDefaultInstance();
+            return icon;
+        }
+
+        private int getPriority() {
+            if (this.priority != null) return this.priority;
+            return (this.inputItems == null ? 0 : this.inputItems.size())
+                + (this.resultItems == null ? 0 : this.resultItems.size())
+                + (this.inputBlocks == null ? 0 : this.inputBlocks.size() * 100)
+                + (this.resultBlocks == null ? 0 : this.resultBlocks.size())
+                + (this.hasCauldron != null ? 1 : 0);
+        }
+
+        private @NotNull List<IRecipePredicate<?>> getNonConflictingPredicates() {
+            List<IRecipePredicate<?>> predicates = new ArrayList<>();
+            if (this.hasCauldron != null) {
+                predicates.add(this.hasCauldron.toHasCauldron(this.cauldronOffset));
+            }
+            if (this.inputBlocks != null) {
+                for (int i = 0; i < this.inputBlocks.size(); i++) {
+                    BlockStatePredicate block = this.inputBlocks.get(i);
+                    predicates.add(new HasBlock(this.blockInputOffset.subtract(0, i, 0), block));
+                }
+            }
+            return predicates;
+        }
+
+        private @NotNull List<IRecipePredicate<?>> getConflictingPredicates() {
+            List<IRecipePredicate<?>> predicates = new ArrayList<>();
+            if (this.inputItems != null) {
+                for (ItemIngredientPredicate ingredient : this.inputItems) {
+                    predicates.add(ingredient.toHasItemIngredient(this.itemInputOffset, this.itemInputRange));
+                }
+            }
+            return predicates;
+        }
+
+        private @NotNull List<IRecipeOutcome<?>> getOutcomes() {
+            List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
+            if (this.resultItems != null) {
+                for (ChanceItemStack chanceItemStack : this.resultItems) {
+                    outcomes.add(chanceItemStack.toSpawnItem(this.itemOutputOffset));
+                }
+            }
+            if (this.resultBlocks != null) {
+                for (int i = 0; i < this.resultBlocks.size(); i++) {
+                    ChanceBlockState chanceBlockState = this.resultBlocks.get(i);
+                    outcomes.add(chanceBlockState.toSetBlock(this.blockOutputOffset.subtract(0, i, 0)));
+                }
+            }
+            return outcomes;
         }
     }
 }

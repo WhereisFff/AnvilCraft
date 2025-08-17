@@ -2,9 +2,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
@@ -19,13 +17,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-public class BlockSmearRecipe extends InWorldRecipe {
+public class BlockSmearRecipe extends AbstractProcessRecipe<BlockSmearRecipe> {
     private final List<BlockStatePredicate> inputs;
     private final ChanceBlockState result;
 
@@ -34,13 +33,11 @@ public class BlockSmearRecipe extends InWorldRecipe {
         ChanceBlockState result
     ) {
         super(
-            WrapUtils.getItemStack(result),
-            ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
-            WrapUtils.getPredicates(inputs),
-            List.of(),
-            WrapUtils.getOutcomes(result, -2),
-            0,
-            true
+            new Property()
+                .setBlockInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setInputBlocks(inputs)
+                .setBlockOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultBlocks(result)
         );
         this.inputs = inputs;
         this.result = result;

@@ -69,9 +69,9 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
     }
 
     protected List<ChanceItemStack> getResults(T recipe) {
-        List<ChanceItemStack> results = new ArrayList<>(recipe.getResults());
+        List<ChanceItemStack> results = new ArrayList<>(recipe.getResultItems());
         Object2IntMap<Item> remains = new Object2IntArrayMap<>();
-        for (ItemIngredientPredicate ingredient : recipe.getItemIngredients()) {
+        for (ItemIngredientPredicate ingredient : recipe.getInputItems()) {
             for (ItemStack stack : ingredient.getItems()) {
                 if (stack.hasCraftingRemainingItem()) {
                     ItemStack remain = stack.getCraftingRemainingItem();
@@ -88,7 +88,7 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<T> recipeHolder, IFocusGroup focuses) {
         T recipe = recipeHolder.value();
-        JeiSlotUtil.addInputSlots(builder, recipe.getItemIngredients());
+        JeiSlotUtil.addInputSlots(builder, recipe.getInputItems());
         JeiSlotUtil.addOutputSlots(builder, this.getResults(recipe));
     }
 }

@@ -30,7 +30,7 @@ public record MeshRecipeGroup(ItemIngredientPredicate ingredient, List<Result> r
         Multimap<ItemIngredientPredicate, MeshRecipe> ingredientGrouper = ArrayListMultimap.create();
 
         for (MeshRecipe recipe : recipes) {
-            for (ItemIngredientPredicate ingredient : recipe.getItemIngredients()) {
+            for (ItemIngredientPredicate ingredient : recipe.getInputItems()) {
                 ingredientGrouper.put(ingredient, recipe);
             }
         }
@@ -44,7 +44,7 @@ public record MeshRecipeGroup(ItemIngredientPredicate ingredient, List<Result> r
             List<Result> results = new ArrayList<>(values.size());
 
             for (MeshRecipe recipe : values) {
-                for (ChanceItemStack stack : recipe.getResults()) {
+                for (ChanceItemStack stack : recipe.getResultItems()) {
                     int resultCount = stack.getCount() instanceof ConstantValue(float value)
                         ? Math.round(value)
                         : 1;

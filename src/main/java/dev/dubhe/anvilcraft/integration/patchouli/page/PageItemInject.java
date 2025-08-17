@@ -26,7 +26,7 @@ public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
     ) {
         PatchouliRenderHelper.render1x1(graphics, recipeX - 4, recipeY + 16);
 
-        List<ItemIngredientPredicate> ingredients = recipe.getItemIngredients();
+        List<ItemIngredientPredicate> ingredients = recipe.getInputItems();
         PatchouliRenderHelper.renderIngredient(parent, graphics, ingredients.getFirst(), recipeX, recipeY + 20, mouseX, mouseY);
 
         PatchouliRenderHelper.renderArray(graphics, recipeX + 25, recipeY + 20);

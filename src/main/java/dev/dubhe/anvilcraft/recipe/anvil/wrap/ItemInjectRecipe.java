@@ -35,15 +35,15 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
         ChanceBlockState blockResult
     ) {
         super(
-            Vec3.ZERO,
-            itemIngredients,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            new Vec3(0.0, -1.0, 0.0),
-            null,
-            new Vec3(0.0, -1.0, 0.0),
-            List.of(blockResult),
-            List.of(blockIngredient)
+            new Property()
+                .setItemInputOffset(Vec3.ZERO)
+                .setInputItems(itemIngredients)
+                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultItems(results)
+                .setBlockInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setInputBlocks(blockIngredient)
+                .setBlockOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultBlocks(blockResult)
         );
         this.blockIngredient = blockIngredient;
         this.blockResult = blockResult;
@@ -68,11 +68,11 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
             ItemIngredientPredicate.CODEC
                 .listOf()
                 .optionalFieldOf("ingredients", List.of())
-                .forGetter(ItemInjectRecipe::getItemIngredients),
+                .forGetter(ItemInjectRecipe::getInputItems),
             ChanceItemStack.CODEC
                 .listOf()
                 .optionalFieldOf("results", List.of())
-                .forGetter(ItemInjectRecipe::getResults),
+                .forGetter(ItemInjectRecipe::getResultItems),
             BlockStatePredicate.CODEC
                 .fieldOf("block_ingredient")
                 .forGetter(ItemInjectRecipe::getBlockIngredient),
@@ -83,9 +83,9 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
 
         private static final StreamCodec<RegistryFriendlyByteBuf, ItemInjectRecipe> STREAM_CODEC = StreamCodec.composite(
             ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            ItemInjectRecipe::getItemIngredients,
+            ItemInjectRecipe::getInputItems,
             ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            ItemInjectRecipe::getResults,
+            ItemInjectRecipe::getResultItems,
             BlockStatePredicate.STREAM_CODEC,
             ItemInjectRecipe::getBlockIngredient,
             ChanceBlockState.STREAM_CODEC,

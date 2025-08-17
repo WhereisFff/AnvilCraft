@@ -23,18 +23,24 @@ public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {
         List<ChanceItemStack> results
     ) {
         super(
-            new Vec3(0.0, -1.0, 0.0),
-            itemIngredients,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            new Vec3(0.0, -1.0, 0.0),
-            HasCauldronSimple
-                .fluid(ResourceLocation.withDefaultNamespace("water"))
-                .build(),
-            BlockStatePredicate.builder()
-                .of(Blocks.CAMPFIRE)
-                .with(CampfireBlock.LIT, true)
-                .build()
+            new Property()
+                .setItemInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setInputItems(itemIngredients)
+                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultItems(results)
+                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setHasCauldron(
+                    HasCauldronSimple
+                        .fluid(ResourceLocation.withDefaultNamespace("water"))
+                        .build()
+                )
+                .setBlockInputOffset(new Vec3(0.0, -2.0, 0.0))
+                .setInputBlocks(
+                    BlockStatePredicate.builder()
+                        .of(Blocks.CAMPFIRE)
+                        .with(CampfireBlock.LIT, true)
+                        .build()
+                )
         );
     }
 

@@ -35,20 +35,20 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         HasCauldronSimple hasCauldron
     ) {
         super(
-            new Vec3(0.0, -1.0, 0.0),
-            itemIngredients,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            new Vec3(0.0, -1.0, 0.0),
-            hasCauldron,
-            new Vec3(0.0, -2.0, 0.0),
-            List.of(),
-            List.of(
-                BlockStatePredicate.builder()
-                    .of(ModBlocks.CORRUPTED_BEACON.get())
-                    .with(CorruptedBeaconBlock.LIT, true)
-                    .build()
-            )
+            new Property()
+                .setItemInputOffset(Vec3.ZERO)
+                .setInputItems(itemIngredients)
+                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultItems(results)
+                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setHasCauldron(hasCauldron)
+                .setBlockInputOffset(new Vec3(0.0, -2.0, 0.0))
+                .setInputBlocks(
+                    BlockStatePredicate.builder()
+                        .of(ModBlocks.CORRUPTED_BEACON.get())
+                        .with(CorruptedBeaconBlock.LIT, true)
+                        .build()
+                )
         );
     }
 
@@ -67,30 +67,30 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
     }
 
     public boolean isConsumeFluid() {
-        return this.hasCauldron.getConsume() > 0;
+        return this.getHasCauldron().getConsume() > 0;
     }
 
     public boolean isProduceFluid() {
-        return this.hasCauldron.getConsume() < 0;
+        return this.getHasCauldron().getConsume() < 0;
     }
 
     public static class Serializer implements RecipeSerializer<TimeWarpRecipe> {
         private static final MapCodec<TimeWarpRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemIngredientPredicate.CODEC.listOf()
                 .optionalFieldOf("ingredients", List.of())
-                .forGetter(TimeWarpRecipe::getItemIngredients),
+                .forGetter(TimeWarpRecipe::getInputItems),
             ChanceItemStack.CODEC.listOf()
                 .optionalFieldOf("results", List.of())
-                .forGetter(TimeWarpRecipe::getResults),
+                .forGetter(TimeWarpRecipe::getResultItems),
             HasCauldronSimple.CODEC
                 .forGetter(TimeWarpRecipe::getHasCauldron)
         ).apply(instance, TimeWarpRecipe::new));
 
         private static final StreamCodec<RegistryFriendlyByteBuf, TimeWarpRecipe> STREAM_CODEC = StreamCodec.composite(
             ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            TimeWarpRecipe::getItemIngredients,
+            TimeWarpRecipe::getInputItems,
             ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            TimeWarpRecipe::getResults,
+            TimeWarpRecipe::getResultItems,
             HasCauldronSimple.STREAM_CODEC,
             TimeWarpRecipe::getHasCauldron,
             TimeWarpRecipe::new

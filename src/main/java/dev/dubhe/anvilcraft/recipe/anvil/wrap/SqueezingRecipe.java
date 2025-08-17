@@ -38,15 +38,13 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         HasCauldronSimple hasCauldron
     ) {
         super(
-            new Vec3(0.0, -1.0, 0.0),
-            List.of(),
-            new Vec3(0.0, -1.0, 0.0),
-            List.of(),
-            new Vec3(0.0, -2.0, 0.0),
-            hasCauldron,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            ingredients
+            new Property()
+                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setHasCauldron(hasCauldron)
+                .setBlockInputOffset(new Vec3(0.0, -2.0, 0.0))
+                .setInputBlocks(ingredients)
+                .setItemInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultBlocks(results)
         );
         this.hasCauldron = hasCauldron;
     }
@@ -84,7 +82,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
             BlockStatePredicate.CODEC
                 .listOf()
                 .fieldOf("ingredients")
-                .forGetter(SqueezingRecipe::getBlocks),
+                .forGetter(SqueezingRecipe::getInputBlocks),
             ChanceBlockState.CODEC
                 .codec()
                 .listOf()
@@ -96,7 +94,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
 
         public static final StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> STREAM_CODEC = StreamCodec.composite(
             BlockStatePredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            SqueezingRecipe::getBlocks,
+            SqueezingRecipe::getInputBlocks,
             ChanceBlockState.STREAM_CODEC.apply(ByteBufCodecs.list()),
             SqueezingRecipe::getResultBlocks,
             HasCauldronSimple.STREAM_CODEC,

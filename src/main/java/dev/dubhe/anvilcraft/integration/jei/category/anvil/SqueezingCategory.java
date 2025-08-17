@@ -89,12 +89,12 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
     public void setRecipe(
         IRecipeLayoutBuilder builder, RecipeHolder<SqueezingRecipe> recipeHolder, IFocusGroup focuses) {
         SqueezingRecipe recipe = recipeHolder.value();
-        for (BlockStatePredicate input : recipe.getBlocks()) {
+        for (BlockStatePredicate input : recipe.getInputBlocks()) {
             builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
                 .addIngredients(Ingredient.of(
                     input.getBlocks().stream().map(holder -> new ItemStack(holder.value())).toArray(ItemStack[]::new)));
         }
-        for (ChanceItemStack output : recipe.getResults()) {
+        for (ChanceItemStack output : recipe.getResultItems()) {
             builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
                 .addItemStack(output.getStack().copyWithCount(output.getMaxCount()));
         }
@@ -110,7 +110,7 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
         SqueezingRecipe recipe = recipeHolder.value();
         if (mouseX >= 40 && mouseX <= 58) {
             if (mouseY >= 24 && mouseY <= 42) {
-                tooltip.add(recipe.getBlocks().getFirst().constructStatesForRender().getFirst().getBlock().getName());
+                tooltip.add(recipe.getInputBlocks().getFirst().constructStatesForRender().getFirst().getBlock().getName());
             }
             if (mouseY >= 42 && mouseY <= 52) {
                 tooltip.add(Blocks.CAULDRON.getName());
@@ -144,25 +144,23 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
             12 + anvilYOffset,
             20,
             12,
-            RenderHelper.SINGLE_BLOCK);
+            RenderHelper.SINGLE_BLOCK
+        );
 
         List<BlockState> input = new ArrayList<>();
-        for (BlockStatePredicate predicate : recipe.getBlocks()) {
+        for (BlockStatePredicate predicate : recipe.getInputBlocks()) {
             input.addAll(predicate.constructStatesForRender());
         }
         if (input.isEmpty()) return;
         BlockState renderedState = input.get((int) ((System.currentTimeMillis() / 1000) % input.size()));
         if (renderedState == null) return;
         RenderHelper.renderBlock(guiGraphics, renderedState, 50, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
-        RenderHelper.renderBlock(
-            guiGraphics, Blocks.CAULDRON.defaultBlockState(), 50, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
+        RenderHelper.renderBlock(guiGraphics, Blocks.CAULDRON.defaultBlockState(), 50, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
 
         progress.draw(guiGraphics, 69, 30);
 
-        RenderHelper.renderBlock(
-            guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 20, 20, 12, RenderHelper.SINGLE_BLOCK);
-        RenderHelper.renderBlock(
-            guiGraphics, getCauldron(recipe), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
+        RenderHelper.renderBlock(guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 20, 20, 12, RenderHelper.SINGLE_BLOCK);
+        RenderHelper.renderBlock(guiGraphics, getCauldron(recipe), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
         List<ChanceBlockState> result = recipe.getResultBlocks();
         if (result.isEmpty()) return;
         renderedState = result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).getState();

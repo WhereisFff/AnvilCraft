@@ -44,11 +44,11 @@ public class PageMesh extends PageDoubleRecipeRegistry<MeshRecipe> {
         PatchouliRenderHelper.renderArray(graphics, 0, 0);
         pose.popPose();
 
-        ItemIngredientPredicate input = recipe.getItemIngredients().get((parent.ticksInBook / 20) % recipe.getItemIngredients().size());
+        ItemIngredientPredicate input = recipe.getInputItems().get((parent.ticksInBook / 20) % recipe.getInputItems().size());
         PatchouliRenderHelper.render1x1(graphics, recipeX - 1, recipeY + 2);
         PatchouliRenderHelper.renderIngredient(parent, graphics, input, recipeX + 3, recipeY + 6, mouseX, mouseY);
 
-        List<ChanceItemStack> results = recipe.getResults();
+        List<ChanceItemStack> results = recipe.getResultItems();
         if (results.size() <= 5) {
             PatchouliRenderHelper.render1x5(graphics, recipeX - 1, recipeY + 29);
             for (int i = 0; i < results.size(); i++) {
