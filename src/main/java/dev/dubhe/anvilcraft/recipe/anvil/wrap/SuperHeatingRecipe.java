@@ -145,6 +145,17 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         }
 
         /**
+         * 设置炼药锅方块
+         *
+         * @param cauldron 炼药锅方块
+         * @return 构建器实例
+         */
+        public @NotNull Builder fluid(Block cauldron) {
+            this.fluid(WrapUtils.cauldron2Fluid(cauldron));
+            return this;
+        }
+
+        /**
          * 设置转换后的流体
          *
          * @param transform 转换后的流体ID
@@ -174,6 +185,17 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
          */
         public Builder consume(int consume) {
             this.hasCauldron.consume(consume);
+            return this;
+        }
+
+        /**
+         * 设置产生量
+         *
+         * @param produce 产量
+         * @return 构建器实例
+         */
+        public Builder produce(int produce) {
+            this.consume(-produce);
             return this;
         }
 

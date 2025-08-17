@@ -110,6 +110,7 @@ public class SuperHeatingRecipeLoader {
 
         SuperHeatingRecipe.builder()
             .transform(ModBlocks.MELT_GEM_CAULDRON.get())
+            .produce(1)
             .requires(ModItemTags.GEM_BLOCKS)
             .save(provider, AnvilCraft.of("super_heating/melt_gem_cauldron"));
 

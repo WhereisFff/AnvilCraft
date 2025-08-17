@@ -78,19 +78,10 @@ public interface IItemStackPredicate extends Predicate<ItemStack> {
 
     /**
      * 测试忽略数量谓词的实现类
+     *
+     * @param self 物品堆栈谓词
      */
-    class TestIgnoreCountPredicate implements Predicate<ItemStack> {
-        private final IItemStackPredicate self;
-
-        /**
-         * 构造一个测试忽略数量谓词
-         *
-         * @param self 物品堆栈谓词
-         */
-        public TestIgnoreCountPredicate(IItemStackPredicate self) {
-            this.self = self;
-        }
-
+    record TestIgnoreCountPredicate(IItemStackPredicate self) implements Predicate<ItemStack> {
         @Override
         public boolean test(ItemStack stack) {
             return this.self.testIgnoreCount(stack);
@@ -98,7 +89,7 @@ public interface IItemStackPredicate extends Predicate<ItemStack> {
 
         @Override
         public boolean equals(Object obj) {
-            return this == obj || (obj instanceof TestIgnoreCountPredicate predicate && this.self.equals(predicate.self));
+            return this == obj || (obj instanceof TestIgnoreCountPredicate(IItemStackPredicate self1) && this.self.equals(self1));
         }
 
         @Override

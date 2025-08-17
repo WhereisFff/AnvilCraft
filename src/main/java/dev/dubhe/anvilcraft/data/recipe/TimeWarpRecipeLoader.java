@@ -167,20 +167,20 @@ public class TimeWarpRecipeLoader {
     private static void timeWarpToOilCauldron(RegistrateRecipeProvider provider, ItemLike input, int inputCount) {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
-            .consume(-1)
             .transform(ModBlocks.OIL_CAULDRON.get())
+            .produce(1)
             .save(
                 provider,
-                AnvilCraft.of("time_warp/oil_from_"
-                    + BuiltInRegistries.ITEM.getKey(input.asItem()).getPath()));
+                AnvilCraft.of("time_warp/oil_from_" + BuiltInRegistries.ITEM.getKey(input.asItem()).getPath())
+            );
     }
 
     @SuppressWarnings("SameParameterValue")
     private static void timeWarpToOilCauldron(RegistrateRecipeProvider provider, TagKey<Item> input, int inputCount) {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
-            .consume(-1)
             .transform(ModBlocks.OIL_CAULDRON.get())
+            .produce(1)
             .save(
                 provider,
                 AnvilCraft.of("time_warp/oil_from_" + input.location().getPath()));

@@ -42,11 +42,11 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
     ) {
         super(
             new Property()
-                .setCauldronOffset(new Vec3i(0, -2, 0))
-                .setHasCauldron(hasCauldron)
                 .setBlockInputOffset(new Vec3i(0, -1, 0))
                 .setConsumeInputBlocks(true)
                 .setInputBlocks(ingredient)
+                .setCauldronOffset(new Vec3i(0, -2, 0))
+                .setHasCauldron(hasCauldron)
                 .setBlockOutputOffset(new Vec3i(0, -1, 0))
                 .setResultBlocks(result)
         );

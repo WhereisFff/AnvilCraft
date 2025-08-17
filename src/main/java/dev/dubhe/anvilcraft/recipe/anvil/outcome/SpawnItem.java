@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.BlockCache;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.ItemCache;
+import dev.dubhe.anvilcraft.recipe.anvil.cache.item.ICacheOutput;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
@@ -107,7 +108,7 @@ public class SpawnItem implements IRecipeOutcome<SpawnItem> {
             Vec3 offset1 = block.getOffset(context.getLevel(), blockPos, state);
             offset = offset.add(offset1);
         }
-        ItemCache.ICacheOutput output = cache.getOutput(stack, offset);
+        ICacheOutput output = cache.getOutput(stack, offset);
         output.grow(stack, true);
         context.putAcceptor(ItemCache.ITEM_CACHE.location(), ItemCache.DEFAULT_ACCEPTOR);
     }
