@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
@@ -16,6 +17,7 @@ import dev.dubhe.anvilcraft.recipe.util.ItemSavedEntityPredicate;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressRecipeLoader {
@@ -85,6 +87,14 @@ public class ItemCompressRecipeLoader {
             )
             .hasCauldron(0, -1, 0)
             .spawnItem(new Vec3(0.0, -0.75, 0.0), ModItems.SUPER_CAPACITOR.asStack())
+            .out(
+                new ProduceExplosion(
+                    new Vec3(0.0, -0.75, 0.0),
+                    1f,
+                    true,
+                    Level.ExplosionInteraction.BLOCK,
+                    0.5f)
+            )
             .priority(superCapacitorEmptyRecipe.getPriority() + 1)
             .group("item_compress")
             .icon(ModItems.SUPER_CAPACITOR.asStack())

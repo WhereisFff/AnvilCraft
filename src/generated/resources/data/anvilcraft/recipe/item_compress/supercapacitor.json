@@ -71,6 +71,18 @@
         -0.75,
         0.0
       ]
+    },
+    {
+      "type": "anvilcraft:produce_explosion",
+      "chance": 0.5,
+      "fire": true,
+      "interact": "block",
+      "offset": [
+        0.0,
+        -0.75,
+        0.0
+      ],
+      "power": 1.0
     }
   ],
   "priority": 5,
