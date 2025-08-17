@@ -1,31 +1,21 @@
 {
-  "name": "Void Energy Collection",
+  "name": "虚空能量收集",
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:void_energy_collector",
   "sortnum": 12004,
   "entry_color": "004400",
   "pages": [
-    "虚空能收集器可以收集$(thing)非物质方块$()所蕴含的虚空能。$(br2)$(thing)非物质方块$()：包括$(item)空气$()、$(item)虚空$()、$(l:struct/mineral_fountain#void_matter)虚空物质块$()、$(item)虚空能收集器$()和$(item)负物质块$()(这个以后可以生产)",
+    "虚空能收集器可以收集$(thing)非物质方块$()所蕴含的虚空能。$(p)$(thing)非物质方块$()：包括$(item)空气$()、$(item)虚空$()、$(l:struct/mineral_fountain#void_matter)虚空物质块$()、$(item)虚空能收集器$()",
     {
       "type": "patchouli:crafting",
       "anchor": "void_energy_collector",
       "recipe": "anvilcraft:void_energy_collector",
-      "text": "$(item)虚空能收集器$()的默认发电功率为512KW。检测范围是以自己为中心5x5x5，范围内的$(thing)物质数$()决定了它的发电功率。周期默认为1秒。"
-    },
-    {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:void_energy_collector",
-      "text": "$(item)虚空能收集器$()的检测范围不可重叠。其$(thing)发电量$()由检测范围内每一个$(thing)方块$()决定:$(li)$(thing)物质方块$()使$(thing)物质数$()+1 $(li)$(item)负物质块$()使$(thing)物质数$()-1"
-    },
-    {
-      "type": "patchouli:text",
-      "title": "发电量-物质数关系",
-      "text": "$(thing)发电量$()和$(thing)物质数n$()关系如下:$(br)n≥21：0kW$(br)20≥n≥11：128kW$(br)10≥n≥3：256kW$(br)2≥n≥-10：512kW$(br)-11≥n≥-20：1024kW$(br)-21≥n≥-40：2048kW$(br)n<-40：4096kW"
+      "text": "$(item)虚空能收集器$()的默认发电功率为512KW。但是以自己为中心5x5x5范围内的$(thing)物质方块$()会影响自己的发电量：$(li)3个及以上：256kW $(li)11个及以上：128kW $(li)21个及以上：0kW"
     },
     {
       "type": "patchouli:text",
       "title": "产生物质方块",
-      "text": "每隔一段时间，$(item)虚空能收集器$()将检测范围内的空气中产生一个$(thing)物质方块$()，可能出现的方块与$(l:advanced/void_decay)虚空衰变$()一致。$(br2)这些$(thing)物质方块$()会影响$(item)虚空能收集器$()发电，对此可以采取以下手段：$(li)及时挖掘清理方块 $(li)使用$(thing)非物质方块$()填充检测范围内的空间，使用$(l:struct/mineral_fountain#void_matter)虚空物质块$()时需注意$(l:advanced/void_decay)虚空衰变$()特性"
+      "text": "每隔一段时间，$(item)虚空能收集器$()将检测范围内的空气中产生一个$(thing)物质方块$()，可能出现的方块与$(l:advanced/void_decay)虚空衰变$()一致。$(br2)这些$(thing)物质方块$()会影响$(item)虚空能收集器$()发电，对此可以采取以下手段：$(li)及时挖掘清理方块 $(li)使用$(l:struct/mineral_fountain#void_matter)虚空物质块$()填充检测范围内的空间，但需注意$(l:advanced/void_decay)虚空衰变$()特性"
     },
     {
       "type": "patchouli:multiblock",
