@@ -8,8 +8,8 @@ public class PageItemCompress extends PageAnvilItemProcess<ItemCompressRecipe> {
     public PageItemCompress() {
         super(
             ModRecipeTypes.ITEM_COMPRESS_TYPE.get(),
-            ItemCompressRecipe::getItemIngredients,
-            ItemCompressRecipe::getResults,
+            ItemCompressRecipe::getInputItems,
+            ItemCompressRecipe::getResultItems,
             recipe -> Blocks.CAULDRON.defaultBlockState(),
             null);
     }

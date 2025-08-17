@@ -32,12 +32,13 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         HasCauldronSimple hasCauldron
     ) {
         super(
-            new Vec3(0.0, -1.0, 0.0),
-            itemIngredients,
-            new Vec3(0.0, -1.0, 0.0),
-            results,
-            new Vec3(0.0, -1.0, 0.0),
-            hasCauldron
+            new Property()
+                .setItemInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setInputItems(itemIngredients)
+                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setResultItems(results)
+                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setHasCauldron(hasCauldron)
         );
         this.hasCauldron = hasCauldron;
     }
@@ -72,19 +73,19 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         public static final MapCodec<BulgingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             ItemIngredientPredicate.CODEC.listOf()
                 .fieldOf("ingredients")
-                .forGetter(BulgingRecipe::getItemIngredients),
+                .forGetter(BulgingRecipe::getInputItems),
             ChanceItemStack.CODEC.listOf()
                 .fieldOf("results")
-                .forGetter(BulgingRecipe::getResults),
+                .forGetter(BulgingRecipe::getResultItems),
             HasCauldronSimple.CODEC
                 .forGetter(BulgingRecipe::getHasCauldron)
         ).apply(instance, BulgingRecipe::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> STREAM_CODEC = StreamCodec.composite(
             ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            BulgingRecipe::getItemIngredients,
+            BulgingRecipe::getInputItems,
             ChanceItemStack.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            BulgingRecipe::getResults,
+            BulgingRecipe::getResultItems,
             HasCauldronSimple.STREAM_CODEC,
             BulgingRecipe::getHasCauldron,
             BulgingRecipe::new

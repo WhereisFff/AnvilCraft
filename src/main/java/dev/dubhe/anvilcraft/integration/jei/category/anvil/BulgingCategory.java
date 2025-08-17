@@ -95,9 +95,9 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BulgingRecipe> recipeHolder, IFocusGroup focuses) {
         BulgingRecipe recipe = recipeHolder.value();
-        JeiSlotUtil.addInputSlots(builder, recipe.getItemIngredients());
-        if (!recipe.getResults().isEmpty()) {
-            JeiSlotUtil.addOutputSlots(builder, recipe.getResults());
+        JeiSlotUtil.addInputSlots(builder, recipe.getInputItems());
+        if (!recipe.getResultItems().isEmpty()) {
+            JeiSlotUtil.addOutputSlots(builder, recipe.getResultItems());
         }
     }
 
@@ -131,9 +131,9 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getItemIngredients().size());
-        if (!recipe.getResults().isEmpty()) {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResults().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        if (!recipe.getResultItems().isEmpty()) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResultItems().size());
             HasCauldronSimple hasCauldron = recipe.getHasCauldron();
             if (recipe.isConsumeFluid()) {
                 PoseStack pose = guiGraphics.pose();
@@ -210,7 +210,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
             if (mouseY >= 24 && mouseY <= 42) {
                 Block result = recipe.getHasCauldron().getTransformCauldron();
                 Component text;
-                if (recipe.getResults().isEmpty()) {
+                if (recipe.getResultItems().isEmpty()) {
                     if (recipe.isConsumeFluid()) {
                         if (CauldronUtil.maxLevel(result) > 1) {
                             text = result.getName();

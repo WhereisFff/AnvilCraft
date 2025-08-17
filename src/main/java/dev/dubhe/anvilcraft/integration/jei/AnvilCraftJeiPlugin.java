@@ -1,6 +1,11 @@
 package dev.dubhe.anvilcraft.integration.jei;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.gui.screen.BaseChuteScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.BatchCrafterScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.FilterScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.ItemCollectorScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.ItemDetectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.JewelCraftingScreen;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
@@ -33,6 +38,7 @@ import dev.dubhe.anvilcraft.integration.jei.category.anvil.UnpackCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.extension.CanningFoodExtension;
 import dev.dubhe.anvilcraft.integration.jei.category.multiblock.MultiBlockConversionCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.multiblock.MultiBlockCraftingCategory;
+import dev.dubhe.anvilcraft.integration.jei.handlers.GhostIngredientHandler;
 import dev.dubhe.anvilcraft.integration.jei.recipe.BeaconConversionRecipe;
 import dev.dubhe.anvilcraft.integration.jei.recipe.CementStainingRecipe;
 import dev.dubhe.anvilcraft.integration.jei.recipe.ColoredConcreteRecipe;
@@ -287,6 +293,27 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
             30,
             13,
             JEWEL_CRAFTING
+        );
+
+        registration.addGhostIngredientHandler(
+            FilterScreen.class,
+            new GhostIngredientHandler<>()
+        );
+        registration.addGhostIngredientHandler(
+            BaseChuteScreen.class,
+            new GhostIngredientHandler<>()
+        );
+        registration.addGhostIngredientHandler(
+            BatchCrafterScreen.class,
+            new GhostIngredientHandler<>()
+        );
+        registration.addGhostIngredientHandler(
+            ItemDetectorScreen.class,
+            new GhostIngredientHandler<>()
+        );
+        registration.addGhostIngredientHandler(
+            ItemCollectorScreen.class,
+            new GhostIngredientHandler<>()
         );
     }
 

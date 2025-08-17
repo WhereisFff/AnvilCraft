@@ -6,7 +6,7 @@ InWorld 配方系统是 AnvilCraft 中用于处理世界内配方的核心系统
 
 ```json
 {
-  "type": "anvilcraft:in_world_crafting",
+  "type": "anvilcraft:in_world_recipe",
   "icon": {
     "item": "minecraft:anvil"
   },
@@ -21,7 +21,7 @@ InWorld 配方系统是 AnvilCraft 中用于处理世界内配方的核心系统
 
 ### 字段说明
 
-- `type`: 固定值 `anvilcraft:in_world_crafting`，标识这是一个 InWorld 配方
+- `type`: 固定值 `anvilcraft:in_world_recipe`，标识这是一个 InWorld 配方
 - `icon`: 配方图标，用于在配方界面中显示
 - `trigger`: 触发器类型，决定配方何时被触发
 - `conflicting`: 冲突谓词列表，这些谓词之间相互冲突
@@ -159,7 +159,7 @@ InWorld 配方系统是 AnvilCraft 中用于处理世界内配方的核心系统
 
 ```json
 {
-  "type": "anvilcraft:in_world_crafting",
+  "type": "anvilcraft:in_world_recipe",
   "icon": {
     "item": "minecraft:iron_nugget"
   },

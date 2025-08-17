@@ -8,8 +8,8 @@ public class PageCooking extends PageAnvilItemProcess<CookingRecipe> {
     public PageCooking() {
         super(
             ModRecipeTypes.COOKING_TYPE.get(),
-            CookingRecipe::getItemIngredients,
-            CookingRecipe::getResults,
+            CookingRecipe::getInputItems,
+            CookingRecipe::getResultItems,
             recipe -> Blocks.CAULDRON.defaultBlockState(),
             recipe -> Blocks.CAMPFIRE.defaultBlockState());
     }

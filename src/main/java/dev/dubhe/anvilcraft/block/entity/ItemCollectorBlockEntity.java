@@ -115,7 +115,7 @@ public class ItemCollectorBlockEntity extends BlockEntity
     }
 
     @Override
-    public FilteredItemStackHandler getFilteredItemDepository() {
+    public FilteredItemStackHandler getFilteredItemStackHandler() {
         return itemHandler;
     }
 

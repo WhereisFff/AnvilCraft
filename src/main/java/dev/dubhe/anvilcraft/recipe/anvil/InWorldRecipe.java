@@ -56,6 +56,42 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
         this.compatible = compatible;
     }
 
+    public InWorldRecipe(
+        @NotNull ItemStack icon,
+        IRecipeTrigger trigger,
+        @Unmodifiable List<IRecipePredicate<?>> conflicting,
+        @Unmodifiable List<IRecipePredicate<?>> nonConflicting,
+        @Unmodifiable List<IRecipeOutcome<?>> outcomes,
+        boolean compatible
+    ) {
+        this.icon = icon;
+        this.trigger = trigger;
+        this.conflicting = conflicting;
+        this.nonConflicting = nonConflicting;
+        this.outcomes = outcomes;
+        this.priority = InWorldRecipe.calcPriority(trigger, conflicting, nonConflicting, outcomes);
+        this.compatible = compatible;
+    }
+
+    public static int calcPriority(
+        @NotNull IRecipeTrigger trigger,
+        @Unmodifiable @NotNull List<IRecipePredicate<?>> conflicting,
+        @Unmodifiable @NotNull List<IRecipePredicate<?>> nonConflicting,
+        @Unmodifiable @NotNull List<IRecipeOutcome<?>> outcomes
+    ) {
+        int priority = trigger.getPriority();
+        for (IRecipePredicate<?> predicate : conflicting) {
+            priority += predicate.getPriority();
+        }
+        for (IRecipePredicate<?> predicate : nonConflicting) {
+            priority += predicate.getPriority();
+        }
+        for (IRecipeOutcome<?> outcome : outcomes) {
+            priority += outcome.getPriority();
+        }
+        return priority;
+    }
+
     @Override
     public boolean matches(@NotNull InWorldRecipeContext context, @NotNull Level level) {
         boolean nonConflicting = ShapelessMatcher.compatible(this.conflicting, context);
@@ -68,9 +104,7 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
         } else {
             flag = ShapelessMatcher.incompatible(this.nonConflicting, context);
         }
-        if (!flag) {
-            context.getStack().removeAll(this.conflicting);
-        }
+        if (!flag) context.getStack().clear();
         return flag;
     }
 

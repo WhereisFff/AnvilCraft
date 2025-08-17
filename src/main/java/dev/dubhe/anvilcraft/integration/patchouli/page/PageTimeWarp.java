@@ -20,8 +20,8 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
     public PageTimeWarp() {
         super(
             ModRecipeTypes.TIME_WARP_TYPE.get(),
-            TimeWarpRecipe::getItemIngredients,
-            TimeWarpRecipe::getResults,
+            TimeWarpRecipe::getInputItems,
+            TimeWarpRecipe::getResultItems,
             PageTimeWarp::getCauldron,
             recipe -> ModBlocks.CORRUPTED_BEACON.getDefaultState());
     }
@@ -30,7 +30,7 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
     protected void drawExtra(
         GuiGraphics graphics, TimeWarpRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second
     ) {
-        List<ItemIngredientPredicate> inputs = recipe.getItemIngredients();
+        List<ItemIngredientPredicate> inputs = recipe.getInputItems();
         if (inputs.size() > 4) return;
         PoseStack pose = graphics.pose();
         pose.pushPose();

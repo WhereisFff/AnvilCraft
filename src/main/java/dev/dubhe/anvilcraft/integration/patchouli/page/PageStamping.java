@@ -8,8 +8,8 @@ public class PageStamping extends PageAnvilItemProcess<StampingRecipe> {
     public PageStamping() {
         super(
             ModRecipeTypes.STAMPING_TYPE.get(),
-            StampingRecipe::getItemIngredients,
-            StampingRecipe::getResults,
+            StampingRecipe::getInputItems,
+            StampingRecipe::getResultItems,
             recipe -> ModBlocks.STAMPING_PLATFORM.getDefaultState(),
             null);
     }

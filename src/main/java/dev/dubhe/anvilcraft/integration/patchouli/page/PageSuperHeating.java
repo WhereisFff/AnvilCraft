@@ -18,8 +18,8 @@ public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
     public PageSuperHeating() {
         super(
             ModRecipeTypes.SUPER_HEATING_TYPE.get(),
-            SuperHeatingRecipe::getItemIngredients,
-            SuperHeatingRecipe::getResults,
+            SuperHeatingRecipe::getInputItems,
+            SuperHeatingRecipe::getResultItems,
             recipe -> Blocks.CAULDRON.defaultBlockState(),
             recipe -> ModBlocks.HEATER.getDefaultState().setValue(HeaterBlock.OVERLOAD, false)
         );
@@ -31,7 +31,7 @@ public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
         boolean second
     ) {
         List<ChanceBlockState> blockResults = recipe.getResultBlocks();
-        if (!recipe.getResults().isEmpty() || blockResults.isEmpty()) return;
+        if (!recipe.getResultItems().isEmpty() || blockResults.isEmpty()) return;
         BlockState state = blockResults.get((parent.ticksInBook / 20) % blockResults.size()).getState();
         RenderHelper.renderBlock(
             graphics,

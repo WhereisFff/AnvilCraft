@@ -8,8 +8,8 @@ public class PageUnpack extends PageAnvilItemProcess<UnpackRecipe> {
     public PageUnpack() {
         super(
             ModRecipeTypes.UNPACK_TYPE.get(),
-            UnpackRecipe::getItemIngredients,
-            UnpackRecipe::getResults,
+            UnpackRecipe::getInputItems,
+            UnpackRecipe::getResultItems,
             recipe -> Blocks.IRON_TRAPDOOR.defaultBlockState(),
             null);
     }

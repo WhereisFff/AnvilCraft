@@ -1,10 +1,12 @@
 # MENU
 
+- [前言](./index.md)
 - [附属开发](./addon/index.md)
     - [环境搭建与模组构建](./addon/01_environment.md)
     - [创建你的第一个物品](./addon/02_create_item.md)
+  - [创建你的第一个方块](./addon/03_create_block.md)
 - [数据包](./datapack/index.md)
-    - [InWorld 配方系统](./datapack/00_inworld_recipe.md)
+    - [InWorld 配方](./datapack/00_inworld_recipe.md)
     - [物品压缩配方](./datapack/01_item_compress_recipe.md)
     - [方块压缩配方](./datapack/02_block_compress_recipe.md)
     - [物品粉碎配方](./datapack/03_item_crush_recipe.md)

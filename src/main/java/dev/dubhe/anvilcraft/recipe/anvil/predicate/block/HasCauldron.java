@@ -118,6 +118,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
     }
 
     public static Block getDefaultCauldron(@NotNull ResourceLocation fluid) {
+        if (fluid.equals(HasCauldron.EMPTY) || fluid.equals(HasCauldron.NULL)) return Blocks.CAULDRON;
         String namespace = fluid.getNamespace();
         String path = fluid.getPath();
         ResourceLocation cauldron = ResourceLocation.fromNamespaceAndPath(namespace, "%s_cauldron".formatted(path));

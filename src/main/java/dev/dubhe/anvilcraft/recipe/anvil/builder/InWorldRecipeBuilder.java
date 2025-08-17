@@ -442,23 +442,13 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     }
 
     public InWorldRecipe build() {
-        int priority = trigger.getPriority();
-        for (IRecipePredicate<?> predicate : conflicting) {
-            priority += predicate.getPriority();
-        }
-        for (IRecipePredicate<?> predicate : nonConflicting) {
-            priority += predicate.getPriority();
-        }
-        for (IRecipeOutcome<?> outcome : outcomes) {
-            priority += outcome.getPriority();
-        }
         return new InWorldRecipe(
             icon.getFirst(),
             trigger,
             ImmutableList.copyOf(conflicting),
             ImmutableList.copyOf(nonConflicting),
             ImmutableList.copyOf(outcomes),
-            priority,
+            InWorldRecipe.calcPriority(trigger, conflicting, nonConflicting, outcomes),
             compatible
         );
     }
