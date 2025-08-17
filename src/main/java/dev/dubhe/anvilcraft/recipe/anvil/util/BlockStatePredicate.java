@@ -37,8 +37,17 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * 方块状态谓词
+ * <p>
+ * 用于定义和匹配特定方块状态的谓词，支持方块类型、属性和NBT数据的匹配
+ * </p>
+ */
 @Getter
 public class BlockStatePredicate {
+    /**
+     * 属性编解码器
+     */
     public static final Codec<List<PropertyMatcher>> PROPERTIES_CODEC = Codec.unboundedMap(
             Codec.STRING, ValueMatcher.CODEC
         )
@@ -50,6 +59,10 @@ public class BlockStatePredicate {
             list -> list.stream()
                 .collect(Collectors.toMap(PropertyMatcher::name, PropertyMatcher::valueMatcher))
         );
+
+    /**
+     * BlockStatePredicate编解码器
+     */
     public static final Codec<BlockStatePredicate> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
                 RegistryCodecs.homogeneousList(Registries.BLOCK)
@@ -65,6 +78,10 @@ public class BlockStatePredicate {
             )
             .apply(instance, BlockStatePredicate::new)
     );
+
+    /**
+     * BlockStatePredicate流编解码器
+     */
     public static final StreamCodec<RegistryFriendlyByteBuf, BlockStatePredicate> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.holderSet(Registries.BLOCK),
         BlockStatePredicate::getBlocks,
@@ -75,16 +92,42 @@ public class BlockStatePredicate {
         BlockStatePredicate::new
     );
 
+    /**
+     * 方块集合
+     */
     private final HolderSet<Block> blocks;
+
+    /**
+     * 属性匹配器列表
+     */
     private final List<List<PropertyMatcher>> properties;
+
+    /**
+     * NBT谓词列表
+     */
     private final List<NbtPredicate> nbts;
 
+    /**
+     * 构造一个方块状态谓词
+     *
+     * @param blocks     方块集合
+     * @param properties 属性匹配器列表
+     * @param nbts       NBT谓词列表
+     */
     private BlockStatePredicate(HolderSet<Block> blocks, List<List<PropertyMatcher>> properties, List<NbtPredicate> nbts) {
         this.blocks = blocks;
         this.properties = properties;
         this.nbts = nbts;
     }
 
+    /**
+     * 测试方块状态是否匹配此谓词
+     *
+     * @param level 世界等级
+     * @param cache 方块缓存
+     * @param pos   方块位置
+     * @return 是否匹配
+     */
     public boolean test(@NotNull LevelAccessor level, @NotNull BlockCache cache, BlockPos pos) {
         BlockState state = cache.getBlockState(pos);
         if (this.blocks.size() > 0 && !state.is(this.blocks)) return false;
@@ -117,6 +160,8 @@ public class BlockStatePredicate {
 
     /**
      * 此方法不应用于除渲染外的任何用法！
+     *
+     * @return 方块状态列表
      */
     public List<BlockState> constructStatesForRender() {
         if (this.statesCache != null) return this.statesCache;
@@ -143,10 +188,18 @@ public class BlockStatePredicate {
         return this.statesCache;
     }
 
+    /**
+     * 创建一个构建器
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 构建器类，用于构建BlockStatePredicate实例
+     */
     @SuppressWarnings({"deprecation", "UnusedReturnValue"})
     public static class Builder {
         private final List<List<PropertyMatcher>> properties = new ArrayList<>();
@@ -154,37 +207,87 @@ public class BlockStatePredicate {
         private HolderSet<Block> blocks = HolderSet.empty();
         private List<PropertyMatcher> and = new ArrayList<>();
 
+        /**
+         * 构造一个构建器
+         */
         private Builder() {
         }
 
+        /**
+         * 设置方块
+         *
+         * @param blocks 方块数组
+         * @return 构建器实例
+         */
         public Builder of(Block... blocks) {
             this.blocks = HolderSet.direct(Block::builtInRegistryHolder, blocks);
             return this;
         }
 
+        /**
+         * 设置方块集合
+         *
+         * @param blocks 方块集合
+         * @return 构建器实例
+         */
         public Builder of(Collection<Block> blocks) {
             this.blocks = HolderSet.direct(Block::builtInRegistryHolder, blocks);
             return this;
         }
 
+        /**
+         * 设置方块标签
+         *
+         * @param tag 方块标签
+         * @return 构建器实例
+         */
         public Builder of(TagKey<Block> tag) {
             this.blocks = BuiltInRegistries.BLOCK.getOrCreateTag(tag);
             return this;
         }
 
+        /**
+         * 设置方块属性
+         *
+         * @param property 属性
+         * @param value    属性值
+         * @return 构建器实例
+         */
         public Builder with(@NotNull Property<?> property, String value) {
             this.and.add(new PropertyMatcher(property.getName(), new ExactMatcher(value)));
             return this;
         }
 
+        /**
+         * 设置整数型方块属性
+         *
+         * @param property 属性
+         * @param value    属性值
+         * @return 构建器实例
+         */
         public Builder with(Property<Integer> property, int value) {
             return this.with(property, Integer.toString(value));
         }
 
+        /**
+         * 设置布尔型方块属性
+         *
+         * @param property 属性
+         * @param value    属性值
+         * @return 构建器实例
+         */
         public Builder with(Property<Boolean> property, boolean value) {
             return this.with(property, Boolean.toString(value));
         }
 
+        /**
+         * 设置方块属性
+         *
+         * @param property 属性
+         * @param value    属性值
+         * @param <T>      属性值类型
+         * @return 构建器实例
+         */
         public <T extends Comparable<T>> Builder with(Property<T> property, @NotNull T value) {
             if (value instanceof StringRepresentable stringRepresentable) {
                 return this.with(property, stringRepresentable.getSerializedName());
@@ -192,6 +295,15 @@ public class BlockStatePredicate {
             return this.with(property, String.valueOf(value));
         }
 
+        /**
+         * 设置方块属性范围
+         *
+         * @param property 属性
+         * @param minValue 最小值
+         * @param maxValue 最大值
+         * @param <T>      属性值类型
+         * @return 构建器实例
+         */
         public <T extends Comparable<T>> Builder with(
             @NotNull Property<T> property,
             @Nullable T minValue,
@@ -209,6 +321,14 @@ public class BlockStatePredicate {
             return this;
         }
 
+        /**
+         * 设置方块属性最小值
+         *
+         * @param property 属性
+         * @param minValue 最小值
+         * @param <T>      属性值类型
+         * @return 构建器实例
+         */
         public <T extends Comparable<T>> Builder withMin(
             @NotNull Property<T> property,
             T minValue
@@ -216,6 +336,14 @@ public class BlockStatePredicate {
             return this.with(property, minValue, null);
         }
 
+        /**
+         * 设置方块属性最大值
+         *
+         * @param property 属性
+         * @param maxValue 最大值
+         * @param <T>      属性值类型
+         * @return 构建器实例
+         */
         public <T extends Comparable<T>> Builder withMax(
             @NotNull Property<T> property,
             T maxValue
@@ -223,24 +351,46 @@ public class BlockStatePredicate {
             return this.with(property, null, maxValue);
         }
 
+        /**
+         * 添加OR条件
+         *
+         * @return 构建器实例
+         */
         public Builder or() {
             this.properties.add(this.and);
             this.and = new ArrayList<>();
             return this;
         }
 
+        /**
+         * 设置NBT谓词
+         *
+         * @param tag NBT标签
+         * @return 构建器实例
+         */
         public Builder nbt(@NotNull CompoundTag tag) {
             this.nbts.add(new NbtPredicate(tag));
             return this;
         }
 
+        /**
+         * 构建BlockStatePredicate实例
+         *
+         * @return BlockStatePredicate实例
+         */
         public BlockStatePredicate build() {
             if (!this.and.isEmpty()) this.or();
             return new BlockStatePredicate(this.blocks, Collections.unmodifiableList(this.properties), this.nbts);
         }
     }
 
+    /**
+     * 属性匹配器
+     */
     public record PropertyMatcher(String name, ValueMatcher valueMatcher) {
+        /**
+         * PropertyMatcher流编解码器
+         */
         public static final StreamCodec<ByteBuf, PropertyMatcher> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8,
             PropertyMatcher::name,
@@ -249,11 +399,27 @@ public class BlockStatePredicate {
             PropertyMatcher::new
         );
 
+        /**
+         * 测试属性是否匹配
+         *
+         * @param properties      状态定义
+         * @param propertyToMatch 属性持有者
+         * @param <S>             状态持有者类型
+         * @return 是否匹配
+         */
         public <S extends StateHolder<?, S>> boolean match(@NotNull StateDefinition<?, S> properties, S propertyToMatch) {
             Property<?> property = properties.getProperty(this.name);
             return property != null && this.valueMatcher.match(propertyToMatch, property);
         }
 
+        /**
+         * 应用于状态
+         *
+         * @param properties 状态定义
+         * @param state      状态
+         * @param <S>        状态持有者类型
+         * @return 状态列表
+         */
         public <S extends StateHolder<?, S>> List<S> applyToState(@NotNull StateDefinition<?, S> properties, S state) {
             Property<?> property = properties.getProperty(this.name);
             if (property == null) return List.of();
@@ -261,9 +427,19 @@ public class BlockStatePredicate {
         }
     }
 
+    /**
+     * 精确匹配器
+     */
     public record ExactMatcher(String value) implements ValueMatcher {
+        /**
+         * ExactMatcher编解码器
+         */
         public static final Codec<ExactMatcher> CODEC = Codec.STRING
             .xmap(ExactMatcher::new, ExactMatcher::value);
+
+        /**
+         * ExactMatcher流编解码器
+         */
         public static final StreamCodec<ByteBuf, ExactMatcher> STREAM_CODEC = ByteBufCodecs.STRING_UTF8
             .map(ExactMatcher::new, ExactMatcher::value);
 
@@ -283,7 +459,13 @@ public class BlockStatePredicate {
         }
     }
 
+    /**
+     * 范围匹配器
+     */
     public record RangedMatcher(Optional<String> minValue, Optional<String> maxValue) implements ValueMatcher {
+        /**
+         * RangedMatcher编解码器
+         */
         public static final Codec<RangedMatcher> CODEC = RecordCodecBuilder.create(
             instance -> instance.group(
                     Codec.STRING.optionalFieldOf("min").forGetter(RangedMatcher::minValue),
@@ -291,6 +473,10 @@ public class BlockStatePredicate {
                 )
                 .apply(instance, RangedMatcher::new)
         );
+
+        /**
+         * RangedMatcher流编解码器
+         */
         public static final StreamCodec<ByteBuf, RangedMatcher> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.optional(ByteBufCodecs.STRING_UTF8),
             RangedMatcher::minValue,
@@ -329,7 +515,13 @@ public class BlockStatePredicate {
         }
     }
 
+    /**
+     * 值匹配器接口
+     */
     public interface ValueMatcher {
+        /**
+         * ValueMatcher编解码器
+         */
         Codec<ValueMatcher> CODEC = Codec.either(
                 ExactMatcher.CODEC, RangedMatcher.CODEC
             )
@@ -342,6 +534,10 @@ public class BlockStatePredicate {
                     throw new UnsupportedOperationException();
                 }
             });
+
+        /**
+         * ValueMatcher流编解码器
+         */
         StreamCodec<ByteBuf, ValueMatcher> STREAM_CODEC = ByteBufCodecs.either(
                 ExactMatcher.STREAM_CODEC, RangedMatcher.STREAM_CODEC
             )
@@ -355,8 +551,25 @@ public class BlockStatePredicate {
                 }
             });
 
+        /**
+         * 测试值是否匹配
+         *
+         * @param stateHolder 状态持有者
+         * @param property    属性
+         * @param <T>         值类型
+         * @return 是否匹配
+         */
         <T extends Comparable<T>> boolean match(StateHolder<?, ?> stateHolder, Property<T> property);
 
+        /**
+         * 应用于状态
+         *
+         * @param state    状态
+         * @param property 属性
+         * @param <T>      值类型
+         * @param <S>      状态持有者类型
+         * @return 状态列表
+         */
         <T extends Comparable<T>, S extends StateHolder<?, S>> List<S> applyToState(S state, Property<T> property);
     }
 }

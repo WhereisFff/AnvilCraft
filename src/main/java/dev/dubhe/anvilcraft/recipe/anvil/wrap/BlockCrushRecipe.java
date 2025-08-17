@@ -19,11 +19,30 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * 方块粉碎配方类
+ * <p>
+ * 该配方用于在铁砧下落时粉碎方块，是方块级别的粉碎处理配方
+ * </p>
+ */
 @Getter
 public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
+    /**
+     * 输入方块谓词
+     */
     private final BlockStatePredicate input;
+
+    /**
+     * 结果方块
+     */
     private final ChanceBlockState result;
 
+    /**
+     * 构造一个方块粉碎配方
+     *
+     * @param input  输入方块谓词
+     * @param result 结果方块
+     */
     public BlockCrushRecipe(
         BlockStatePredicate input,
         ChanceBlockState result
@@ -49,11 +68,22 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
         return ModRecipeTypes.BLOCK_CRUSH_SERIALIZER.get();
     }
 
+    /**
+     * 创建一个构建器实例
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 方块粉碎配方序列化器
+     */
     public static class Serializer implements RecipeSerializer<BlockCrushRecipe> {
+        /**
+         * 编解码器
+         */
         private static final MapCodec<BlockCrushRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockStatePredicate.CODEC
                 .fieldOf("input")
@@ -63,6 +93,9 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
                 .forGetter(BlockCrushRecipe::getResult)
         ).apply(instance, BlockCrushRecipe::new));
 
+        /**
+         * 流编解码器
+         */
         private static final StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> STREAM_CODEC = StreamCodec.composite(
             BlockStatePredicate.STREAM_CODEC,
             BlockCrushRecipe::getInput,
@@ -82,30 +115,70 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
         }
     }
 
+    /**
+     * 方块粉碎配方构建器
+     */
     public static class Builder extends AbstractRecipeBuilder<BlockCrushRecipe> {
+        /**
+         * 输入方块谓词
+         */
         private BlockStatePredicate input = null;
+
+        /**
+         * 结果方块
+         */
         private ChanceBlockState result = null;
 
+        /**
+         * 设置输入方块
+         *
+         * @param input 输入方块谓词
+         * @return 构建器实例
+         */
         public Builder input(BlockStatePredicate input) {
             this.input = (input);
             return this;
         }
 
+        /**
+         * 设置输入方块（标签形式）
+         *
+         * @param input 输入方块标签
+         * @return 构建器实例
+         */
         public Builder input(TagKey<Block> input) {
             this.input = BlockStatePredicate.builder().of(input).build();
             return this;
         }
 
+        /**
+         * 设置输入方块
+         *
+         * @param input 输入方块
+         * @return 构建器实例
+         */
         public Builder input(Block input) {
             this.input = (BlockStatePredicate.builder().of(input).build());
             return this;
         }
 
+        /**
+         * 设置结果方块
+         *
+         * @param result 结果方块
+         * @return 构建器实例
+         */
         public Builder result(ChanceBlockState result) {
             this.result = (result);
             return this;
         }
 
+        /**
+         * 设置结果方块（默认概率为1.0f）
+         *
+         * @param result 结果方块
+         * @return 构建器实例
+         */
         public Builder result(@NotNull Block result) {
             this.result = (new ChanceBlockState(result.defaultBlockState(), 1.0f));
             return this;

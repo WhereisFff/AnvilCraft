@@ -15,9 +15,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * 解包配方类
+ * <p>
+ * 该配方用于在铁砧下落时将物品从容器中解包出来，需要在铁砧下方放置特定的铁活板门作为触发条件
+ * </p>
+ */
 @Getter
 public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
 
+    /**
+     * 构造一个解包配方
+     *
+     * @param itemIngredients 物品原料列表
+     * @param results         结果物品列表
+     */
     public UnpackRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results
@@ -49,10 +61,18 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
         return ModRecipeTypes.UNPACK_TYPE.get();
     }
 
+    /**
+     * 创建一个构建器实例
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 解包配方序列化器
+     */
     public static class Serializer extends AbstractSerializer<UnpackRecipe> {
         @Override
         protected UnpackRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
@@ -60,6 +80,9 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
         }
     }
 
+    /**
+     * 解包配方构建器
+     */
     public static class Builder extends SimpleAbstractBuilder<UnpackRecipe, Builder> {
         @Override
         public @NotNull String getType() {
