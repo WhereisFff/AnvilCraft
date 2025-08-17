@@ -212,7 +212,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    public FilteredItemStackHandler getFilteredItemDepository() {
+    public FilteredItemStackHandler getFilteredItemStackHandler() {
         return itemHandler;
     }
 

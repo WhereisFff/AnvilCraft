@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
+import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
@@ -33,6 +34,7 @@ import dev.dubhe.anvilcraft.network.SlidingEntitySyncPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
+import dev.dubhe.anvilcraft.network.SwitchMultitoolModePacket;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
 import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
@@ -203,6 +205,11 @@ public class ModNetworks {
             DragonRodDevourPacket.STREAM_CODEC,
             DragonRodDevourPacket.HANDLER
         );
+        registrar.playToServer(
+            FilterContentSyncPacket.TYPE,
+            FilterContentSyncPacket.STREAM_CODEC,
+            FilterContentSyncPacket.HANDLER
+        );
         registrar.playBidirectional(
             SilencerSyncPacket.TYPE,
             SilencerSyncPacket.STREAM_CODEC,
@@ -232,6 +239,11 @@ public class ModNetworks {
             ComparatorSyncPacket.TYPE,
             ComparatorSyncPacket.STREAM_CODEC,
             ComparatorSyncPacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchMultitoolModePacket.TYPE,
+            SwitchMultitoolModePacket.STREAM_CODEC,
+            SwitchMultitoolModePacket.HANDLER
         );
     }
 }

@@ -30,7 +30,6 @@ import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.conditions.ICondition;
 import org.jetbrains.annotations.Contract;
 
-import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;

@@ -24,11 +24,6 @@
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "anvilcraft:power_converter_big",
-      "text": "$(item)能量转换器$()根据大小，耗电功率分别为1KW，3KW，9KW，可以为其附着的方块提供FE/RF/AE能量，每KW功率产生80FE/t，但有10%损耗。（配置文件可以调整每KW功率转化的量以及损耗系数）"
-    },
-    {
-      "type": "patchouli:crafting",
       "anchor": "item_collector",
       "recipe": "anvilcraft:item_collector",
       "text": "$(item)物品收集器$()耗电功率随着手动设置的范围和冷却改变，可以收集大范围的掉落物，可以设置过滤。"
@@ -36,13 +31,34 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:induction_light",
-      "text": "照明，耗电功率为1kW$(br)使用$(item)红石粉$()右键该方块将其改为催熟模式$(br)使用$(item)荧石粉$()右键该方块将其改为防刷怪模式$(br)使用$(l:struct/mineral_fountain#void_matter)虚空物质$()右键该方块将其改为防刷动物模式$(br)以上三种模式耗电功率变为16kW"
+      "text": "$(item)电感灯$()默认仅可以照明，耗电功率为1kW。对其使用不同物品右键可以设置功能模式，详情见后文。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "",
+      "text": "$(li)$(item)红石粉$(): 催熟作物，工作范围5x5x5方块，催熟要求对象位置的方块光等级不小于$(thing)10$() $(li)$(item)荧石粉$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)怪物$()生成 $(li)$(l:struct/mineral_fountain#void_matter)虚空物质$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)动物$()生成$(br2)以上三种模式下，耗电功率变为16kW $(br)$(#666666)区段: 区块的一截，16x16x16大小$()"
+    },
+    {
+      "type": "patchouli:stonecutting",
+      "recipe": "anvilcraft:stonecutting/power_converter_middle",
+      "recipe2": "anvilcraft:stonecutting/power_converter_small_from_big",
+      "text": "$(item)能量转换器$()根据大小，耗电功率分别为1KW，3KW，9KW，可以为其附着的方块提供FE/RF/AE能量，每KW功率产生80FE/t，但有10%损耗。$(br)$(#666666)它是单向的，无法将其他能量转化为本模组的能量$()"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "anvilcraft:power_converter_big",
+      "recipe2": "anvilcraft:power_converter_big_from_small"
+    },
+    {
+      "type": "patchouli:crafting",
+      "recipe": "anvilcraft:power_converter_big_from_middle",
+      "recipe2": "anvilcraft:power_converter_middle_from_small"
     },
     {
       "type": "patchouli:crafting",
       "anchor": "charger",
       "recipe": "anvilcraft:charger",
-      "text": "对于不同配方消耗不同能量：$(li)铁锭→磁铁锭$(li)电容器（空）→电容器"
+      "text": "对于不同配方消耗不同能量：$(li)铁锭+4kW → 磁铁锭 $(li)电容器（空）+70kW $(br)→电容器 $(br)$(#880000)注意$()：只能使用漏斗等方块输入/输出"
     },
     {
       "type": "patchouli:crafting",

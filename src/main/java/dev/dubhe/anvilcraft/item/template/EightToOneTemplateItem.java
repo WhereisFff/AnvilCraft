@@ -61,6 +61,8 @@ public class EightToOneTemplateItem extends BaseMultipleToOneTemplateItem {
         }
     };
 
+    public static final Component MISSING_TOOLTIP = Component.translatable(
+        "screen.anvilcraft.ember_smithing.eight.missing");
     public static final List<ResourceLocation> EMPTY_SLOT_TEXTURES = List.of(
     );
 
@@ -70,7 +72,7 @@ public class EightToOneTemplateItem extends BaseMultipleToOneTemplateItem {
 
     @Override
     public Component getMaterialTooltip() {
-        return Component.empty();
+        return MISSING_TOOLTIP;
     }
 
     @Override

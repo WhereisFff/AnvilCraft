@@ -18,14 +18,16 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(EnchantedCountIncreaseFunction.class)
 public class EnchantedCountIncreaseFunctionMixin {
-    @Shadow @Final private Holder<Enchantment> enchantment;
+    @Shadow
+    @Final
+    private Holder<Enchantment> enchantment;
 
     @WrapOperation(
         method = "run",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;"
-                     + "getFloat(Lnet/minecraft/world/level/storage/loot/LootContext;)F"))
+                + "getFloat(Lnet/minecraft/world/level/storage/loot/LootContext;)F"))
     private float getMultipleForProvidence(NumberProvider instance, LootContext context, Operation<Float> original) {
         float result = original.call(instance, context);
         if (!(context.getParamOrNull(LootContextParams.TOOL) instanceof ItemStack stack)

@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.init;
 
-import dev.dubhe.anvilcraft.api.heat.HeaterInfo;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.api.heat.HeatTierLine;
+import dev.dubhe.anvilcraft.api.heat.HeaterInfo;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.entity.BaseLaserBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeaterBlockEntity;
@@ -19,7 +19,7 @@ import java.util.Set;
 public class ModHeaterInfos {
     public static final HeaterInfo<HeliostatsBlockEntity> HELIOSTATS = HeatRecorder.registerProducerInfo(HeaterInfo.blockEntity(
         ModBlockEntities.HELIOSTATS,
-        heliostats -> Set.of(heliostats.getIrritatePos()),
+        heliostats -> Set.of(heliostats.getIrritatePos(), heliostats.getIrritatePos().above()),
         HeatTierLine.builder()
             .addPoint(4, HeatTier.NORMAL)
             .addPoint(12, HeatTier.HEATED, 4)

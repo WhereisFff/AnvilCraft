@@ -73,7 +73,7 @@ public class MultiphaseScreen extends Screen {
             .sorted(Comparator.comparingInt(pair -> pair.getFirst().index()))
             .<Pair<Component, Consumer4<GuiGraphics, PoseStack, Integer, Integer>>>map(pair -> new Pair<>(
                 !hasMerciless ? pair.getFirst().phaseName().copy()
-                             : pair.getFirst().phaseName().copy()
+                    : pair.getFirst().phaseName().copy()
                     .append(Component.translatable("screen.anvilcraft.multiphase.merciless")),
                 pair.getSecond()))
             .collect(Collectors.toCollection(ArrayList::new));

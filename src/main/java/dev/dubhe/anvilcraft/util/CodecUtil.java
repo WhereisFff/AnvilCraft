@@ -1,12 +1,17 @@
 package dev.dubhe.anvilcraft.util;
 
-import com.mojang.datafixers.util.Function6;
+import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Function7;
+import com.mojang.datafixers.util.Function8;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.init.ModRegistries;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -28,6 +33,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProviders;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -35,11 +43,29 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Function;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CodecUtil {
+    public static final Codec<IRecipeTrigger> TRIGGER_CODEC = ModRegistries.TRIGGER_REGISTRY
+        .byNameCodec();
+
+    public static final Codec<IRecipePredicate<?>> PREDICATE_CODEC = ModRegistries.PREDICATE_TYPE_REGISTRY
+        .byNameCodec()
+        .dispatch(
+            IRecipePredicate::getType,
+            type -> Objects.requireNonNull(ModRegistries.PREDICATE_TYPE_REGISTRY.get(type.getId())).codec()
+        );
+
+    public static final Codec<IRecipeOutcome<?>> OUTCOME_CODEC = ModRegistries.OUTCOME_TYPE_REGISTRY
+        .byNameCodec()
+        .dispatch(
+            IRecipeOutcome::getType,
+            type -> Objects.requireNonNull(ModRegistries.OUTCOME_TYPE_REGISTRY.get(type.getId())).codec()
+        );
+
     public static <T> Codec<Optional<T>> createOptionalCodec(Codec<T> elementCodec) {
         return RecordCodecBuilder.create(ins -> ins.group(
                 Codec.BOOL.fieldOf("isPresent").forGetter(Optional::isPresent),
@@ -214,6 +240,16 @@ public class CodecUtil {
         }
     };
 
+    public static final Codec<NumberProvider> NUMBER_PROVIDER_CODEC = Codec.either(
+        Codec.INT.xmap(ConstantValue::new, value -> Math.round(value.value())),
+        NumberProviders.CODEC
+    ).xmap(Either::unwrap, provider -> {
+        if (!(provider instanceof ConstantValue(float value)) || value - Math.floor(value) >= 1E-5) {
+            return Either.right(provider);
+        }
+        return Either.left((ConstantValue) provider);
+    });
+
     public static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> composite(
         final StreamCodec<? super B, T1> codec1,
         final Function<C, T1> getter1,
@@ -253,6 +289,53 @@ public class CodecUtil {
                 codec5.encode(buffer, getter5.apply(value));
                 codec6.encode(buffer, getter6.apply(value));
                 codec7.encode(buffer, getter7.apply(value));
+            }
+        };
+    }
+
+    public static <B, C, T1, T2, T3, T4, T5, T6, T7, T8> StreamCodec<B, C> composite(
+        final StreamCodec<? super B, T1> codec1,
+        final Function<C, T1> getter1,
+        final StreamCodec<? super B, T2> codec2,
+        final Function<C, T2> getter2,
+        final StreamCodec<? super B, T3> codec3,
+        final Function<C, T3> getter3,
+        final StreamCodec<? super B, T4> codec4,
+        final Function<C, T4> getter4,
+        final StreamCodec<? super B, T5> codec5,
+        final Function<C, T5> getter5,
+        final StreamCodec<? super B, T6> codec6,
+        final Function<C, T6> getter6,
+        final StreamCodec<? super B, T7> codec7,
+        final Function<C, T7> getter7,
+        final StreamCodec<? super B, T8> codec8,
+        final Function<C, T8> getter8,
+        final Function8<T1, T2, T3, T4, T5, T6, T7, T8, C> factory
+    ) {
+        return new StreamCodec<>() {
+            @Override
+            public @NotNull C decode(@NotNull B buffer) {
+                T1 t1 = codec1.decode(buffer);
+                T2 t2 = codec2.decode(buffer);
+                T3 t3 = codec3.decode(buffer);
+                T4 t4 = codec4.decode(buffer);
+                T5 t5 = codec5.decode(buffer);
+                T6 t6 = codec6.decode(buffer);
+                T7 t7 = codec7.decode(buffer);
+                T8 t8 = codec8.decode(buffer);
+                return factory.apply(t1, t2, t3, t4, t5, t6, t7, t8);
+            }
+
+            @Override
+            public void encode(@NotNull B buffer, @NotNull C value) {
+                codec1.encode(buffer, getter1.apply(value));
+                codec2.encode(buffer, getter2.apply(value));
+                codec3.encode(buffer, getter3.apply(value));
+                codec4.encode(buffer, getter4.apply(value));
+                codec5.encode(buffer, getter5.apply(value));
+                codec6.encode(buffer, getter6.apply(value));
+                codec7.encode(buffer, getter7.apply(value));
+                codec8.encode(buffer, getter8.apply(value));
             }
         };
     }

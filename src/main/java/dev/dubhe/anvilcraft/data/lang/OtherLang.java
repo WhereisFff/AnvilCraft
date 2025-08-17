@@ -21,7 +21,9 @@ public class OtherLang {
         provider.add("entity.minecraft.villager.anvilcraft.jeweler", "Jeweler");
 
         provider.add("pack.anvilcraft.builtin_pack", "AnvilCraft Builtin ResourcePack");
+        provider.add("pack.anvilcraft.builtin_data_pack", "AnvilCraft Builtin DataPack");
         provider.add("pack.anvilcraft.transparent_cauldron.description", "Transparent Cauldron");
+        provider.add("pack.anvilcraft.first_ancient_debris.description", "First Ancient Debris");
 
         provider.add("message.anvilcraft.copied_to_clipboard", "Copied to clipboard");
         provider.add("message.anvilcraft.code_gen_filed", "Code generation failed");

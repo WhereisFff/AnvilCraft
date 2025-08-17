@@ -18,7 +18,6 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -66,7 +65,7 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
     @Override
     public void anvilCraft$gridTick() {
         ItemStack stack = IonoCraftBackpackItem.getByPlayer(this);
-        if (IonoCraftBackpackItem.canModify(stack, this.anvilCraft$component)) {
+        if (IonoCraftBackpackItem.canModify(stack, this.anvilCraft$component) && IonoCraftBackpackItem.getFlightTime(stack) < AnvilCraft.config.ionoCraftBackpackMaxFlightTime) {
             IonoCraftBackpackItem.addFlightTime(stack, AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 120);
         }
     }

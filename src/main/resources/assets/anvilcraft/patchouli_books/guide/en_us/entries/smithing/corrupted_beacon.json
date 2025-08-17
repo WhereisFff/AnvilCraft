@@ -2,7 +2,7 @@
   "name": "Corrupted Beacon",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:corrupted_beacon",
-  "sortnum": 3003,
+  "sortnum": 13004,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:corrupted_beacon": 1
@@ -18,7 +18,7 @@
       "item": "anvilcraft:corrupted_beacon",
       "text": "When you fully using $(l:smithing/tier_1_materials#cursed_gold_block)Cursed Gold Block$() as the base of beacons and use $(l:smithing/tier_1_materials#cursed_gold_ingot)Cursed Gold Ingot$() to activate it, the beacon will have chance to convert into $(item)Corrupted Beacon$(). The more layers of the base, the higher the conversion probability. Use Cursed Gold Ingot to activate beacons will make weather set to Thunder."
     },
-    "Mob Transform: $(br)$(thing)Pig$()→$(thing)Hoglin$()$(br)$(thing)Cow$()→$(thing)Ravager$()$(br)$(thing)Guardian$()→$(thing)Elder Guardian$()$(br)$(thing)Piglin$()→$(thing)Piglin Brute$()$(br)$(thing)Villager$()→30%$(thing)Pillager$()、60%$(thing)Vindicator$()、10%$(thing)Evoker$()$(br)$(thing)Allay$()→$(thing)Vex$()$(br)$(thing)Bat$()→$(thing)Phantom$()$(br)$(thing)Horse$()→10%$(thing)Zombie Horse$()、90%$(thing)Skeleton Horse$()$(br)$(thing)Silverfish$()→$(thing)Endermite$()",
+    "Mob Transform: $(br)$(thing)Pig$()→$(thing)Hoglin$()$(br)$(thing)Cow$()→$(thing)Ravager$()$(br)$(thing)Guardian$()→$(thing)Elder Guardian$()$(br)$(thing)Piglin$()→$(thing)Piglin Brute$()$(br)$(thing)Villager$()→30%$(thing)Pillager$()、60%$(thing)Vindicator$()、10%$(thing)Evoker$()$(br)$(thing)Allay$()→$(thing)Vex$()$(br)$(thing)Bat$()→$(thing)Phantom$()$(br)$(thing)Horse$()→10%$(thing)Zombie Horse$()、90%$(thing)Skeleton Horse$()$(br)$(thing)Silverfish$()→$(thing)Endermite$()$(br)$(thing)Skeleton$()→→20%$(thing)Wither Skeleton$()、80%$(thing)Stray$()",
     {
       "type": "patchouli:multiblock",
       "anchor": "time_warp",
@@ -71,8 +71,8 @@
     },
     {
       "type": "anvilcraft:time_warp",
-      "recipe": "anvilcraft:heat_produce_time_warp/raw_uranium_from_uranium_block",
-      "recipe2": "anvilcraft:heat_produce_time_warp/raw_uranium_from_plutonium_block"
+      "recipe": "anvilcraft:time_warp/raw_uranium_from_uranium_block",
+      "recipe2": "anvilcraft:time_warp/raw_uranium_from_plutonium_block"
     },
     {
       "type": "anvilcraft:time_warp",
