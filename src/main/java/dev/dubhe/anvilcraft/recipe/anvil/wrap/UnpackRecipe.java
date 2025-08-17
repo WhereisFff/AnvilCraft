@@ -38,6 +38,7 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
         super(
             new Property()
                 .setItemInputOffset(Vec3.ZERO)
+                .setItemInputRange(new Vec3(1.0, 0.25, 1.0))
                 .setInputItems(itemIngredients)
                 .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
                 .setResultItems(results)

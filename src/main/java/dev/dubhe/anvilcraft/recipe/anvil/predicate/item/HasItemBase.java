@@ -66,10 +66,11 @@ public abstract class HasItemBase<T extends HasItemBase<T, P>, P extends IItemSt
      * @return 物品缓存输入
      */
     public ItemCache.ICacheInput getItem(@NotNull InWorldRecipeContext context) {
+        context.computeIfAbsent(ItemCache.ITEM_CACHE);
         final InWorldRecipeData<ItemCache.ICacheInput> cacheInput = InWorldRecipeData.of(
             AnvilCraft.of("item_cache_input/%s".formatted(this.hashCode())),
             (ctx, key) -> {
-                ItemCache itemCache = ctx.computeIfAbsent(ItemCache.ITEM_CACHE);
+                ItemCache itemCache = ctx.get(ItemCache.ITEM_CACHE);
                 return itemCache.getInput(this.item.testIgnoreCount(), context.getPos().add(this.offset), this.range);
             }
         );

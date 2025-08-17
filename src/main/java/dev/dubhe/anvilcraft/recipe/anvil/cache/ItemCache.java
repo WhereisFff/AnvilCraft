@@ -463,6 +463,7 @@ public class ItemCache {
                 int newCount = Math.min(maxStackSize, count);
                 stack1.setCount(newCount);
                 ItemEntity entity = new ItemEntity(this.level, pos.x, pos.y, pos.z, stack1);
+                entity.anvilcraft$setIsAdsorbable(false);
                 this.level.addFreshEntity(entity);
                 count -= newCount;
             }

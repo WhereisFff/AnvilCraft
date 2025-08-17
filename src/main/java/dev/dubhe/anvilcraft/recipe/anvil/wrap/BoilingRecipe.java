@@ -37,9 +37,10 @@ public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {
     ) {
         super(
             new Property()
-                .setItemInputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setItemInputOffset(new Vec3(0.0, -0.375, 0.0))
+                .setItemInputRange(new Vec3(0.75, 0.75, 0.75))
                 .setInputItems(itemIngredients)
-                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setItemOutputOffset(new Vec3(0.0, -0.75, 0.0))
                 .setResultItems(results)
                 .setCauldronOffset(new Vec3i(0, -1, 0))
                 .setHasCauldron(
