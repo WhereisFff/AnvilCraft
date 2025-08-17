@@ -13,7 +13,7 @@
     {
       "chance": 1.0,
       "input": {
-        "id": "anvilcraft:ember_metal_block"
+        "tag": "anvilcraft:stickable_with_sliding_rails"
       },
       "max_count": 16,
       "output": {

@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
@@ -84,7 +85,7 @@ public class AnvilCollisionCraftRecipeLoader {
                             .anvil(it)
                             .consume(false)
                             .hitBlock(ModBlocks.URANIUM_BLOCK.get())
-                            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, uraniumHeatableData), 16)
+                            .transformBlock(InputBlock.of(ModBlockTags.OVERHEATABLE), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, uraniumHeatableData), 16)
                             .speed(256)
                             .save(provider);
                     CompoundTag plutoniumHeatableData = new CompoundTag();
@@ -93,7 +94,7 @@ public class AnvilCollisionCraftRecipeLoader {
                             .anvil(it )
                             .consume(false)
                             .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
-                            .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, plutoniumHeatableData), 16)
+                            .transformBlock(InputBlock.of(ModBlockTags.OVERHEATABLE), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, plutoniumHeatableData), 16)
                             .speed(256)
                             .save(provider);
                 },
