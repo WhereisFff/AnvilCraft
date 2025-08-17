@@ -166,7 +166,7 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
 
     public void tick() {
         if (level == null) return;
-        if (resetEntitySpeedTickCounter >= 40) updateLastEntitySpeed(0.0);
+        if (resetEntitySpeedTickCounter >= 40 && !level.isClientSide) updateLastEntitySpeed(0.0);
         else resetEntitySpeedTickCounter++;
         if (overSpeed && overSpeedTick > 1) {
             overSpeed = false;

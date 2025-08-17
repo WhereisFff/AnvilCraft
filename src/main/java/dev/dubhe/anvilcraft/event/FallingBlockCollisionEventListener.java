@@ -4,7 +4,6 @@ package dev.dubhe.anvilcraft.event;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.FallingBlockCollisionEvent;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
@@ -52,7 +51,7 @@ public class FallingBlockCollisionEventListener {
             if (!recipe.value().anvil().is(event.getFallingBlockEntity().blockState)) continue;
             if (!recipe.value().hitBlock().is(level.getBlockState(pos))) continue;
             if (event.getSpeed() < recipe.value().speed()) continue;
-            if (resultRecipe != null && resultRecipe.speed() < recipe.value().speed()) return;
+            if (resultRecipe != null && resultRecipe.speed() < recipe.value().speed()) continue;
             resultRecipe = recipe.value();
         }
         if (resultRecipe != null) {
@@ -64,15 +63,15 @@ public class FallingBlockCollisionEventListener {
                 removeBlock(level, pos);
             }
             level.explode(
-                null,
-                Explosion.getDefaultDamageSource(level, null),
-                null,
-                pos.getCenter().x,
-                pos.getCenter().y,
-                pos.getCenter().z,
-                4F,
-                true,
-                Level.ExplosionInteraction.TNT
+                    null,
+                    Explosion.getDefaultDamageSource(level, null),
+                    null,
+                    pos.getCenter().x,
+                    pos.getCenter().y,
+                    pos.getCenter().z,
+                    4F,
+                    true,
+                    Level.ExplosionInteraction.TNT
             );
         }
     }
@@ -94,23 +93,23 @@ public class FallingBlockCollisionEventListener {
         ParticleOptions largeExplosionParticles = ParticleTypes.EXPLOSION_EMITTER;
         Holder<SoundEvent> explosionSound = SoundEvents.GENERIC_EXPLODE;
         Explosion.BlockInteraction blockInteraction =
-            level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLOSION_DROP_DECAY)
-                ? Explosion.BlockInteraction.DESTROY_WITH_DECAY
-                : Explosion.BlockInteraction.DESTROY;
+                level.getGameRules().getBoolean(GameRules.RULE_TNT_EXPLOSION_DROP_DECAY)
+                        ? Explosion.BlockInteraction.DESTROY_WITH_DECAY
+                        : Explosion.BlockInteraction.DESTROY;
         Explosion explosion = new Explosion(
                 level,
-            null,
-            damageSource,
-            damageCalculator,
-            x,
-            y,
-            z,
-            radius,
-            fire,
-            blockInteraction,
-            smallExplosionParticles,
-            largeExplosionParticles,
-            explosionSound
+                null,
+                damageSource,
+                damageCalculator,
+                x,
+                y,
+                z,
+                radius,
+                fire,
+                blockInteraction,
+                smallExplosionParticles,
+                largeExplosionParticles,
+                explosionSound
         );
         ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.transformBlocks());
         explosion.explode();
@@ -119,20 +118,20 @@ public class FallingBlockCollisionEventListener {
             for (ServerPlayer serverplayer : serverLevel.players()) {
                 if (serverplayer.distanceToSqr(x, y, z) < 4096.0) {
                     serverplayer.connection
-                        .send(
-                            new ClientboundExplodePacket(
-                                x,
-                                y,
-                                z,
-                                radius,
-                                explosion.getToBlow(),
-                                explosion.getHitPlayers().get(serverplayer),
-                                explosion.getBlockInteraction(),
-                                explosion.getSmallExplosionParticles(),
-                                explosion.getLargeExplosionParticles(),
-                                explosion.getExplosionSound()
-                            )
-                        );
+                            .send(
+                                    new ClientboundExplodePacket(
+                                            x,
+                                            y,
+                                            z,
+                                            radius,
+                                            explosion.getToBlow(),
+                                            explosion.getHitPlayers().get(serverplayer),
+                                            explosion.getBlockInteraction(),
+                                            explosion.getSmallExplosionParticles(),
+                                            explosion.getLargeExplosionParticles(),
+                                            explosion.getExplosionSound()
+                                    )
+                            );
                 }
             }
         }
