@@ -207,7 +207,7 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
 
     private static ItemFrame getItemFrame(Level level, Direction facing, BlockPos pos) {
         List<ItemFrame> list = level.getEntitiesOfClass(ItemFrame.class, new AABB(
-            pos.getX(), pos.getY(), pos.getZ(), (pos.getX() + 1), (pos.getY() + 1), (pos.getZ() + 1)), (p_352876_) -> p_352876_ != null && p_352876_.getDirection() == facing);
+            pos.getX(), pos.getY(), pos.getZ(), (pos.getX() + 1), (pos.getY() + 1), (pos.getZ() + 1)), (frame) -> frame != null && frame.getDirection() == facing);
         return list.getFirst();
     }
 
