@@ -266,7 +266,11 @@ public abstract class ResonatorItem extends TieredItem implements IMultipleResul
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        return switch (context.getItemInHand().getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()) {
+        int mode = Math.clamp(
+            context.getItemInHand().getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value(),
+            0, 4
+        );
+        return switch (mode) {
             case AXE_MODE -> this.useOnAsAxe(context);
             case SHOVEL_MODE -> this.useOnAsShovel(context);
             case HOE_MODE -> this.useOnAsHoe(context);
