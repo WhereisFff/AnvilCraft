@@ -24,20 +24,62 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * 世界内配方类，定义了在世界中执行的配方
+ * 该类实现了 Minecraft 的 Recipe 接口，用于处理在世界中而非工作台中执行的配方
+ */
 @Getter
 public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized {
+    /**
+     * 配方图标物品堆
+     */
     @Unmodifiable
     private final ItemStack icon;
+
+    /**
+     * 配方触发器
+     */
     private final IRecipeTrigger trigger;
+
+    /**
+     * 冲突的配方谓词列表
+     */
     @Unmodifiable
     private final List<IRecipePredicate<?>> conflicting;
+
+    /**
+     * 非冲突的配方谓词列表
+     */
     @Unmodifiable
     private final List<IRecipePredicate<?>> nonConflicting;
+
+    /**
+     * 配方结果列表
+     */
     @Unmodifiable
     private final List<IRecipeOutcome<?>> outcomes;
+
+    /**
+     * 配方优先级
+     */
     private final int priority;
+
+    /**
+     * 是否兼容
+     */
     private final boolean compatible;
 
+    /**
+     * 构造一个新的世界内配方
+     *
+     * @param icon           配方图标
+     * @param trigger        配方触发器
+     * @param conflicting    冲突的配方谓词列表
+     * @param nonConflicting 非冲突的配方谓词列表
+     * @param outcomes       配方结果列表
+     * @param priority       配方优先级
+     * @param compatible     是否兼容
+     */
     public InWorldRecipe(
         @NotNull ItemStack icon,
         IRecipeTrigger trigger,
@@ -56,6 +98,16 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
         this.compatible = compatible;
     }
 
+    /**
+     * 构造一个新的世界内配方，自动计算优先级
+     *
+     * @param icon           配方图标
+     * @param trigger        配方触发器
+     * @param conflicting    冲突的配方谓词列表
+     * @param nonConflicting 非冲突的配方谓词列表
+     * @param outcomes       配方结果列表
+     * @param compatible     是否兼容
+     */
     public InWorldRecipe(
         @NotNull ItemStack icon,
         IRecipeTrigger trigger,
@@ -73,6 +125,15 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
         this.compatible = compatible;
     }
 
+    /**
+     * 计算配方优先级
+     *
+     * @param trigger        配方触发器
+     * @param conflicting    冲突的配方谓词列表
+     * @param nonConflicting 非冲突的配方谓词列表
+     * @param outcomes       配方结果列表
+     * @return 计算出的优先级值
+     */
     public static int calcPriority(
         @NotNull IRecipeTrigger trigger,
         @Unmodifiable @NotNull List<IRecipePredicate<?>> conflicting,
@@ -92,6 +153,13 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
         return priority;
     }
 
+    /**
+     * 判断配方是否匹配给定的上下文和世界
+     *
+     * @param context 配方上下文
+     * @param level 世界
+     * @return 是否匹配
+     */
     @Override
     public boolean matches(@NotNull InWorldRecipeContext context, @NotNull Level level) {
         boolean nonConflicting = ShapelessMatcher.compatible(this.conflicting, context);
@@ -108,6 +176,13 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
         return flag;
     }
 
+    /**
+     * 组装配方结果
+     *
+     * @param context 配方上下文
+     * @param provider 数据提供器
+     * @return 配方结果物品堆
+     */
     @Override
     public @NotNull ItemStack assemble(@NotNull InWorldRecipeContext context, @NotNull HolderLookup.Provider provider) {
         List<IRecipePredicate<?>> stack = context.getStack();
@@ -122,26 +197,52 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
         return this.icon.copy();
     }
 
+    /**
+     * 判断配方是否可以在指定尺寸的工作台中制作
+     *
+     * @param i 宽度
+     * @param i1 高度
+     * @return 是否可以制作
+     */
     @Override
     public boolean canCraftInDimensions(int i, int i1) {
         return true;
     }
 
+    /**
+     * 获取配方结果物品堆
+     *
+     * @param provider 数据提供器
+     * @return 配方结果物品堆
+     */
     @Override
     public @NotNull ItemStack getResultItem(@NotNull HolderLookup.Provider provider) {
         return this.icon.copy();
     }
 
+    /**
+     * 获取配方序列化器
+     *
+     * @return 配方序列化器
+     */
     @Override
     public @NotNull RecipeSerializer<? extends InWorldRecipe> getSerializer() {
         return ModRecipeTypes.IN_WORLD_RECIPE_SERIALIZER.get();
     }
 
+    /**
+     * 获取配方类型
+     *
+     * @return 配方类型
+     */
     @Override
     public @NotNull RecipeType<? extends InWorldRecipe> getType() {
         return ModRecipeTypes.IN_WORLD_RECIPE.get();
     }
 
+    /**
+     * 世界内配方序列化器
+     */
     public static class Serializer implements RecipeSerializer<InWorldRecipe> {
         private static final Codec<IRecipePredicate<?>> PREDICATE_CODEC = ModRegistries.PREDICATE_TYPE_REGISTRY
             .byNameCodec()
@@ -182,21 +283,42 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
             ).apply(instance, InWorldRecipe::new)
         );
 
+        /**
+         * 获取MapCodec编解码器
+         *
+         * @return MapCodec编解码器
+         */
         @Override
         public @NotNull MapCodec<InWorldRecipe> codec() {
             return Serializer.CODEC;
         }
 
+        /**
+         * 流编解码器
+         */
         public final StreamCodec<RegistryFriendlyByteBuf, InWorldRecipe> streamCodec = StreamCodec.of(
             Serializer::encode,
             Serializer::decode
         );
 
+        /**
+         * 获取流编解码器
+         *
+         * @return 流编解码器
+         */
         @Override
         public @NotNull StreamCodec<RegistryFriendlyByteBuf, InWorldRecipe> streamCodec() {
             return this.streamCodec;
         }
 
+        /**
+         * 编码配方到字节缓冲区
+         *
+         * @param buf 字节缓冲区
+         * @param recipe 要编码的配方
+         * @param <P> 配方谓词类型
+         * @param <O> 配方结果类型
+         */
         @SuppressWarnings("unchecked")
         private static <P extends IRecipePredicate<P>, O extends IRecipeOutcome<O>> void encode(
             RegistryFriendlyByteBuf buf, @NotNull InWorldRecipe recipe
@@ -222,6 +344,12 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
             buf.writeBoolean(recipe.compatible);
         }
 
+        /**
+         * 从字节缓冲区解码配方
+         *
+         * @param buf 字节缓冲区
+         * @return 解码出的配方
+         */
         private static @NotNull InWorldRecipe decode(RegistryFriendlyByteBuf buf) {
             ItemStack icon = ItemStack.STREAM_CODEC.decode(buf);
             IRecipeTrigger trigger = ModRegistries.TRIGGER_REGISTRY.get(buf.readResourceLocation());
@@ -247,6 +375,12 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
             );
         }
 
+        /**
+         * 从字节缓冲区解码配方谓词列表
+         *
+         * @param buf 字节缓冲区
+         * @return 解码出的配方谓词列表
+         */
         private static @NotNull List<IRecipePredicate<?>> decodeRecipePredicateList(
             @NotNull RegistryFriendlyByteBuf buf
         ) {

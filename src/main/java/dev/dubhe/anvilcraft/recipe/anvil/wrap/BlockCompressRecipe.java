@@ -23,11 +23,30 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 方块压缩配方类
+ * <p>
+ * 该配方用于在铁砧下落时压缩方块，是方块级别的压缩处理配方
+ * </p>
+ */
 @Getter
 public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressRecipe> {
+    /**
+     * 输入方块列表
+     */
     private final List<BlockStatePredicate> inputs;
+
+    /**
+     * 结果方块列表
+     */
     private final List<ChanceBlockState> results;
 
+    /**
+     * 构造一个方块压缩配方
+     *
+     * @param inputs  输入方块列表
+     * @param results 结果方块列表
+     */
     public BlockCompressRecipe(
         List<BlockStatePredicate> inputs,
         List<ChanceBlockState> results
@@ -53,11 +72,22 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
         return ModRecipeTypes.BLOCK_COMPRESS_TYPE.get();
     }
 
+    /**
+     * 创建一个构建器实例
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 方块压缩配方序列化器
+     */
     public static class Serializer implements RecipeSerializer<BlockCompressRecipe> {
+        /**
+         * 编解码器
+         */
         private static final MapCodec<BlockCompressRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockStatePredicate.CODEC
                 .listOf()
@@ -69,6 +99,9 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
                 .forGetter(BlockCompressRecipe::getResults)
         ).apply(instance, BlockCompressRecipe::new));
 
+        /**
+         * 流编解码器
+         */
         private static final StreamCodec<RegistryFriendlyByteBuf, BlockCompressRecipe> STREAM_CODEC = StreamCodec.composite(
             BlockStatePredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
             BlockCompressRecipe::getInputs,
@@ -88,30 +121,70 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
         }
     }
 
+    /**
+     * 方块压缩配方构建器
+     */
     public static class Builder extends AbstractRecipeBuilder<BlockCompressRecipe> {
+        /**
+         * 输入方块列表
+         */
         private final List<BlockStatePredicate> inputs = new ArrayList<>();
+
+        /**
+         * 结果方块列表
+         */
         private final List<ChanceBlockState> results = new ArrayList<>();
 
+        /**
+         * 添加输入方块
+         *
+         * @param input 输入方块谓词
+         * @return 构建器实例
+         */
         public Builder input(BlockStatePredicate input) {
             this.inputs.add(input);
             return this;
         }
 
+        /**
+         * 添加输入方块（标签形式）
+         *
+         * @param input 输入方块标签
+         * @return 构建器实例
+         */
         public Builder input(TagKey<Block> input) {
             this.inputs.add(BlockStatePredicate.builder().of(input).build());
             return this;
         }
 
+        /**
+         * 添加输入方块
+         *
+         * @param input 输入方块
+         * @return 构建器实例
+         */
         public Builder input(Block input) {
             this.inputs.add(BlockStatePredicate.builder().of(input).build());
             return this;
         }
 
+        /**
+         * 添加结果方块
+         *
+         * @param result 结果方块
+         * @return 构建器实例
+         */
         public Builder result(ChanceBlockState result) {
             this.results.add(result);
             return this;
         }
 
+        /**
+         * 添加结果方块（默认概率为1.0f）
+         *
+         * @param result 结果方块
+         * @return 构建器实例
+         */
         public Builder result(@NotNull Block result) {
             this.results.add(new ChanceBlockState(result.defaultBlockState(), 1.0f));
             return this;

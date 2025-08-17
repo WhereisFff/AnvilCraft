@@ -1,10 +1,6 @@
 {
   "values": [
     {
-      "id": "#anvilcraft:amulet_valid/emerald",
-      "required": false
-    },
-    {
       "id": "#anvilcraft:amulet_valid/topaz",
       "required": false
     },
@@ -21,27 +17,7 @@
       "required": false
     },
     {
-      "id": "#anvilcraft:amulet_valid/comrade",
-      "required": false
-    },
-    {
       "id": "#anvilcraft:amulet_valid/feather",
-      "required": false
-    },
-    {
-      "id": "#anvilcraft:amulet_valid/cat",
-      "required": false
-    },
-    {
-      "id": "#anvilcraft:amulet_valid/dog",
-      "required": false
-    },
-    {
-      "id": "#anvilcraft:amulet_valid/silence",
-      "required": false
-    },
-    {
-      "id": "#anvilcraft:amulet_valid/cogwheel",
       "required": false
     },
     {

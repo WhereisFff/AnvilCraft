@@ -68,12 +68,12 @@
       "type": "anvilcraft:multiple_to_one_smithing",
       "anchor": "amulet",
       "recipe": "anvilcraft:four_to_one_smithing/gem_amulet",
-      "text": "合成而来的护符同时具有四种护符的功能"
+      "text": "合成而来的护符同时具有四种护符的功能，占用护符盒的3*3个槽位"
     },
     {
       "type": "anvilcraft:multiple_to_one_smithing",
       "recipe": "anvilcraft:four_to_one_smithing/nature_amulet",
-      "text": "合成而来的护符同时具有四种护符的功能"
+      "text": "合成而来的护符同时具有四种护符的功能，占用护符盒的3*3个槽位"
     },
     {
       "type": "patchouli:relations",

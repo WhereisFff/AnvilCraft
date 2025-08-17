@@ -7,9 +7,7 @@ import dev.dubhe.anvilcraft.api.amulet.fromto.ImmuneDamage;
 import dev.dubhe.anvilcraft.api.amulet.fromto.InventoryTick;
 import dev.dubhe.anvilcraft.api.amulet.fromto.Obtain;
 import dev.dubhe.anvilcraft.init.ModRegistries;
-import dev.dubhe.anvilcraft.util.predicate.DamageSourcePredicate;
-import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import lombok.experimental.Accessors;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -17,17 +15,21 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.util.Lazy;
 
+import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
 import java.util.function.Supplier;
-import java.util.function.UnaryOperator;
 
 @Getter
 @Accessors(fluent = true, chain = false)
@@ -46,12 +48,8 @@ public class AmuletType {
         this.amulet = Lazy.of(amulet);
     }
 
-    public static Builder builder(ResourceLocation typeId) {
-        return new Builder(typeId);
-    }
-
-    public static Builder builderAnc(String type) {
-        return new Builder(type);
+    public static Builder builder() {
+        return new Builder();
     }
 
     public boolean canObtain(ServerPlayer player, DamageSource source) {
@@ -70,50 +68,188 @@ public class AmuletType {
         return this.effect.shouldImmuneDamage(player, source);
     }
 
+    @ParametersAreNonnullByDefault
     public static class Builder {
-        private DamageSourcePredicate.DamageSourceSubPredicate.Builder obtain;
-        private final Object2BooleanMap<Obtain> otherObtain = new Object2BooleanArrayMap<>();
-        private InventoryTick inventoryTick;
-        private ImmuneDamage immuneDamage;
+        private Obtain obtain = Obtain.NEVER;
+        private InventoryTick inventoryTick = InventoryTick.NOP;
+        private ImmuneDamage immuneDamage = ImmuneDamage.NEVER;
         private Supplier<ItemStack> amulet;
-        private boolean canObtainFromDeath = true;
-        private boolean isImmuneDamageFromObtain;
 
-        Builder(ResourceLocation typeId) {
-            this.obtain = defaultObtain(typeId);
+        Builder() {
         }
 
-        Builder(String type) {
-            this.obtain = defaultObtain(AnvilCraft.of("amulet_valid/" + type));
+        @SafeVarargs
+        public final Builder obtainByDamage(ResourceKey<DamageType>... damages) {
+            return this.obtain((player, source) -> {
+                for (ResourceKey<DamageType> type : damages) {
+                    if (source.typeHolder().is(type)) return true;
+                }
+                return false;
+            });
         }
 
-        private static DamageSourcePredicate.DamageSourceSubPredicate.Builder defaultObtain(
-            ResourceLocation typeId
-        ) {
-            return DamageSourcePredicate.Builder.builder()
-                .victim(EntityType.PLAYER)
-                .build().and().sub()
-                .type(TagKey.create(Registries.DAMAGE_TYPE, typeId))
-                .murder(TagKey.create(Registries.ENTITY_TYPE, typeId));
+        public Builder obtainByDamage(TagKey<DamageType> tag) {
+            return this.obtain((player, source) -> source.typeHolder().is(tag));
         }
 
-        public Builder obtain(UnaryOperator<DamageSourcePredicate.DamageSourceSubPredicate.Builder> builder) {
-            this.obtain = builder.apply(this.obtain);
-            return this;
+        public Builder obtainByDamage(ResourceLocation type) {
+            return this.obtainByDamage(TagKey.create(Registries.DAMAGE_TYPE, type));
+        }
+
+        public Builder obtainByDamage(String type) {
+            return this.obtainByDamage(TagKey.create(Registries.DAMAGE_TYPE, AnvilCraft.of("amulet_valid/" + type)));
+        }
+
+        public Builder obtainByMurder(EntityType<?>... entities) {
+            return this.obtain((player, source) -> Optional.ofNullable(source.getEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> {
+                    for (EntityType<?> type : entities) {
+                        if (e.getType().equals(type)) return true;
+                    }
+                    return false;
+                })
+                .orElse(false));
+        }
+
+        public Builder obtainByMurder(TagKey<EntityType<?>> tag) {
+            return this.obtain((player, source) -> Optional.ofNullable(source.getEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> e.getType().is(tag))
+                .orElse(false));
+        }
+
+        public Builder obtainByMurder(ResourceLocation type) {
+            return this.obtainByMurder(TagKey.create(Registries.ENTITY_TYPE, type));
+        }
+
+        public Builder obtainByMurder(String type) {
+            return this.obtainByMurder(TagKey.create(Registries.ENTITY_TYPE, AnvilCraft.of("amulet_valid/" + type)));
+        }
+
+        public Builder obtainByDirectMurder(EntityType<?>... entities) {
+            return this.obtain((player, source) -> Optional.ofNullable(source.getDirectEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> {
+                    for (EntityType<?> type : entities) {
+                        if (e.getType().equals(type)) return true;
+                    }
+                    return false;
+                })
+                .orElse(false));
+        }
+
+        public Builder obtainByDirectMurder(TagKey<EntityType<?>> tag) {
+            return this.obtain((player, source) -> Optional.ofNullable(source.getDirectEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> e.getType().is(tag))
+                .orElse(false));
+        }
+
+        public Builder obtainByDirectMurder(ResourceLocation type) {
+            return this.obtainByDirectMurder(TagKey.create(Registries.ENTITY_TYPE, type));
+        }
+
+        public Builder obtainByDirectMurder(String type) {
+            return this.obtainByDirectMurder(TagKey.create(Registries.ENTITY_TYPE, AnvilCraft.of("amulet_valid/" + type)));
         }
 
         public Builder obtain(Obtain obtain) {
-            this.otherObtain.put(obtain, true);
+            if (this.obtain == Obtain.NEVER) {
+                this.obtain = obtain;
+                return this;
+            }
+            this.obtain = this.obtain.and(obtain);
             return this;
         }
 
+        @SafeVarargs
+        public final Builder obtainByDamageOr(ResourceKey<DamageType>... damages) {
+            return this.obtainOr((player, source) -> {
+                for (ResourceKey<DamageType> type : damages) {
+                    if (source.typeHolder().is(type)) return true;
+                }
+                return false;
+            });
+        }
+
+        public Builder obtainByDamageOr(TagKey<DamageType> tag) {
+            return this.obtainOr((player, source) -> source.typeHolder().is(tag));
+        }
+
+        public Builder obtainByDamageOr(ResourceLocation type) {
+            return this.obtainByDamageOr(TagKey.create(Registries.DAMAGE_TYPE, type));
+        }
+
+        public Builder obtainByDamageOr(String type) {
+            return this.obtainByDamageOr(TagKey.create(Registries.DAMAGE_TYPE, AnvilCraft.of("amulet_valid/" + type)));
+        }
+
+        public Builder obtainByMurderOr(EntityType<?>... entities) {
+            return this.obtainOr((player, source) -> Optional.ofNullable(source.getEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> {
+                    for (EntityType<?> type : entities) {
+                        if (e.getType().equals(type)) return true;
+                    }
+                    return false;
+                })
+                .orElse(false));
+        }
+
+        public Builder obtainByMurderOr(TagKey<EntityType<?>> tag) {
+            return this.obtainOr((player, source) -> Optional.ofNullable(source.getEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> e.getType().is(tag))
+                .orElse(false));
+        }
+
+        public Builder obtainByMurderOr(ResourceLocation type) {
+            return this.obtainByMurderOr(TagKey.create(Registries.ENTITY_TYPE, type));
+        }
+
+        public Builder obtainByMurderOr(String type) {
+            return this.obtainByMurder(TagKey.create(Registries.ENTITY_TYPE, AnvilCraft.of("amulet_valid/" + type)));
+        }
+
+        public Builder obtainByDirectMurderOr(EntityType<?>... entities) {
+            return this.obtainOr((player, source) -> Optional.ofNullable(source.getDirectEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> {
+                    for (EntityType<?> type : entities) {
+                        if (e.getType().equals(type)) return true;
+                    }
+                    return false;
+                })
+                .orElse(false));
+        }
+
+        public Builder obtainByDirectMurderOr(TagKey<EntityType<?>> tag) {
+            return this.obtainOr((player, source) -> Optional.ofNullable(source.getDirectEntity())
+                .flatMap(e -> Util.castSafely(e, LivingEntity.class))
+                .map(e -> e.getType().is(tag))
+                .orElse(false));
+        }
+
+        public Builder obtainByDirectMurderOr(ResourceLocation type) {
+            return this.obtainByMurderOr(TagKey.create(Registries.ENTITY_TYPE, type));
+        }
+
+        public Builder obtainByDirectMurderOr(String type) {
+            return this.obtainByMurder(TagKey.create(Registries.ENTITY_TYPE, AnvilCraft.of("amulet_valid/" + type)));
+        }
+
         public Builder obtainOr(Obtain obtain) {
-            this.otherObtain.put(obtain, false);
+            if (this.obtain == Obtain.NEVER) {
+                this.obtain = obtain;
+                return this;
+            }
+            this.obtain = this.obtain.or(obtain);
             return this;
         }
 
         public Builder inventoryTick(InventoryTick inventoryTick) {
-            if (this.inventoryTick == null) {
+            if (this.inventoryTick == InventoryTick.NOP) {
                 this.inventoryTick = inventoryTick;
                 return this;
             }
@@ -122,7 +258,7 @@ public class AmuletType {
         }
 
         public Builder immuneDamage(ImmuneDamage immuneDamage) {
-            if (this.immuneDamage == null) {
+            if (this.immuneDamage == ImmuneDamage.NEVER) {
                 this.immuneDamage = immuneDamage;
                 return this;
             }
@@ -131,7 +267,7 @@ public class AmuletType {
         }
 
         public Builder immuneDamageOr(ImmuneDamage immuneDamage) {
-            if (this.immuneDamage == null) {
+            if (this.immuneDamage == ImmuneDamage.NEVER) {
                 this.immuneDamage = immuneDamage;
                 return this;
             }
@@ -140,12 +276,7 @@ public class AmuletType {
         }
 
         public Builder immuneDamageFromObtain() {
-            this.isImmuneDamageFromObtain = true;
-            return this;
-        }
-
-        public Builder cannotObtainFromDeath() {
-            this.canObtainFromDeath = false;
+            this.immuneDamage = this.obtain::canObtain;
             return this;
         }
 
@@ -163,27 +294,12 @@ public class AmuletType {
         }
 
         public AmuletType build() {
-            Obtain obtain = this.obtain.build().build()::matches;
-            for (var entry : this.otherObtain.object2BooleanEntrySet()) {
-                obtain = entry.getBooleanValue() ? obtain.and(entry.getKey()) : obtain.or(entry.getKey());
-            }
-            if (!this.canObtainFromDeath) {
-                obtain = (player, source) -> false;
-            }
-            InventoryTick inventoryTick = this.inventoryTick;
-            if (inventoryTick == null) {
-                inventoryTick = InventoryTick.NOP;
-            }
-            ImmuneDamage immuneDamage = this.immuneDamage;
-            if (this.isImmuneDamageFromObtain) {
-                immuneDamage = obtain::canObtain;
-            }
-            if (immuneDamage == null) {
-                immuneDamage = ImmuneDamage.NEVER;
-            }
             if (this.amulet == null) {
                 throw new IllegalArgumentException("The amulet of the amulet type cannot be null!");
             }
+            Obtain obtain = this.obtain;
+            InventoryTick inventoryTick = this.inventoryTick;
+            ImmuneDamage immuneDamage = this.immuneDamage;
             return new AmuletType(obtain, new Effect(inventoryTick, immuneDamage), this.amulet);
         }
     }

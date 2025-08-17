@@ -136,7 +136,7 @@ public class GiantAnvilShockEventListener {
                     hurtType.postApply(l.level(), l, it.unwrap().fallDistance());
                 } else {
                     if (l.getItemBySlot(EquipmentSlot.FEET).is(Items.AIR)) {
-                        l.hurt(it.unwrap().level().damageSources().fall(), it.unwrap().fallDistance() * 2);
+                        l.hurt(it.unwrap().level().damageSources().anvil(it.unwrap().fallingGiantAnvil()), it.unwrap().fallDistance() * 2);
                     }
                 }
             }

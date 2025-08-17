@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tterrag.registrate.Registrate;
+import dev.dubhe.anvilcraft.api.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.api.integration.IntegrationManager;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
@@ -51,6 +52,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.progress.StartupNotificationManager;
@@ -80,7 +82,7 @@ public class AnvilCraft {
 
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
 
-    public AnvilCraft(IEventBus modEventBus) {
+    public AnvilCraft(IEventBus modEventBus, ModContainer modContainer) {
         MOD_BUS = modEventBus;
         ModAttatchments.register(modEventBus);
         ModItemGroups.register(modEventBus);
@@ -112,6 +114,8 @@ public class AnvilCraft {
 
         registerEvents(modEventBus);
         StartupNotificationManager.addModMessage("[AnvilCraft] Loading Integrations");
+        IntegrationHook.setModEventBus(modEventBus);
+        IntegrationHook.setModContainer(modContainer);
         integrationManager.compileContent();
         integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");

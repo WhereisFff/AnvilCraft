@@ -45,7 +45,9 @@
       "text": "发射器使用水瓶、空瓶、熔岩桶、细雪桶、水桶、空桶交互炼药锅。"
     },
     {
-      "type": "patchouli:text",
+      "type": "patchouli:spotlight",
+      "item": "minecraft:dispenser",
+      "link_recipe": true,
       "text": "发射器交互生物：$(li)发射铁锭修$(item)铁傀儡$() $(li)对$(item)牛$()发射桶可以接奶 $(li)对$(item)哞菇$()发射碗可以接蘑菇 $(li)发射金苹果治愈$(item)虚弱的僵尸村民$()"
     }
   ]

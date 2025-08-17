@@ -33,18 +33,7 @@
     "item": {
       "count": 1,
       "id": "anvilcraft:multitool"
-    },
-    "modifiers": [
-      {
-        "type": "anvilcraft:copy_data",
-        "types": [
-          {
-            "type": "anvilcraft:multiphase",
-            "input_type": "eight"
-          }
-        ]
-      }
-    ]
+    }
   },
   "template": {
     "items": "anvilcraft:eight_to_one_smithing_template"
