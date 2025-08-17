@@ -40,7 +40,7 @@ public class ModBlockTags {
     public static final TagKey<Block> OVERHEATED_BLOCKS = bind("overheated_blocks");
     public static final TagKey<Block> SLIDING_RAILS = bind("sliding_rails");
     public static final TagKey<Block> STICKABLE_WITH_SLIDING_RAILS = bind("stickable_with_sliding_rails");
-    public static final TagKey<Block> OVERHEATABLE = bind("stickable_with_sliding_rails");
+    public static final TagKey<Block> OVERHEATABLE = bind("overheatable");
 
     // common tags
     public static final TagKey<Block> ORES_TUNGSTEN = bindC("ores/tungsten");
