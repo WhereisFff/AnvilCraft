@@ -56,6 +56,10 @@
       "text": "若没有搬运刷怪笼的手段，请提前规划好位置"
     },
     {
+      "type": "patchouli:text",
+      "text": "推荐配合$(l:basic/more_processing#spawner)强制刷怪$(/l)使用"
+    },
+    {
       "type": "patchouli:relations",
       "entries": [
         "anvilcraft:smithing/corrupted_beacon",

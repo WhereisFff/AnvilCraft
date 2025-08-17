@@ -48,9 +48,9 @@ public class GiantAnvilShockEventListener {
                 TreeNode.multiple(
                     TreeNode.<ShockContext>predicatedExecutable(it ->
                         (it.unwrap().testBorder(AnvilBlock.class) || it.unwrap().testBorder(ModBlocks.SPECTRAL_ANVIL))
-                        && !it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
-                        && !it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
-                        && !it.unwrap().testBorder(ModBlocks.TRANSCENDENCE_ANVIL)
+                            && !it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
+                            && !it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
+                            && !it.unwrap().testBorder(ModBlocks.TRANSCENDENCE_ANVIL)
                     ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.NORMAL)),
                     TreeNode.<ShockContext>predicatedExecutable(
                         it -> it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
@@ -136,7 +136,7 @@ public class GiantAnvilShockEventListener {
                     hurtType.postApply(l.level(), l, it.unwrap().fallDistance());
                 } else {
                     if (l.getItemBySlot(EquipmentSlot.FEET).is(Items.AIR)) {
-                        l.hurt(it.unwrap().level().damageSources().fall(), it.unwrap().fallDistance() * 2);
+                        l.hurt(it.unwrap().level().damageSources().anvil(it.unwrap().fallingGiantAnvil()), it.unwrap().fallDistance() * 2);
                     }
                 }
             }

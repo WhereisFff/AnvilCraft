@@ -59,15 +59,21 @@ public abstract class LivingEntityMixin extends Entity {
     @Unique
     private int anvilcraft$rageTick = 0;
 
-    @Shadow public abstract boolean hasEffect(Holder<MobEffect> effect);
+    @Shadow
+    public abstract boolean hasEffect(Holder<MobEffect> effect);
 
-    @Shadow public abstract ItemStack getItemInHand(InteractionHand hand);
+    @Shadow
+    public abstract ItemStack getItemInHand(InteractionHand hand);
 
-    @Shadow public abstract void kill();
+    @Shadow
+    public abstract void kill();
 
-    @Shadow @Nullable protected Player lastHurtByPlayer;
+    @Shadow
+    @Nullable
+    protected Player lastHurtByPlayer;
 
-    @Shadow protected int lastHurtByPlayerTime;
+    @Shadow
+    protected int lastHurtByPlayerTime;
 
     private LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -130,13 +136,16 @@ public abstract class LivingEntityMixin extends Entity {
         Map<Item, TotemHandler> totemMap = TotemManager.INSTANCE.getTotemMap();
         ItemStack totemItem = null;
         TotemHandler handler = null;
+        handLoop:
         for (InteractionHand hand : InteractionHand.values()) {
-            ItemStack itemStack = this.getItemInHand(hand);
+            ItemStack stack = this.getItemInHand(hand);
             for (Item item : totemMap.keySet()) {
-                if (itemStack.is(item) && CommonHooks.onLivingUseTotem(self, damageSource, itemStack, hand)) {
-                    totemItem = itemStack;
-                    handler = totemMap.get(item);
-                    break;
+                if (stack.is(item) && CommonHooks.onLivingUseTotem(self, damageSource, stack, hand)) {
+                    TotemHandler handler1 = totemMap.get(item);
+                    if (!handler1.canExecute(damageSource, self, stack)) continue;
+                    totemItem = stack;
+                    handler = handler1;
+                    break handLoop;
                 }
             }
         }
@@ -148,7 +157,6 @@ public abstract class LivingEntityMixin extends Entity {
             if (result && itemStack.is(ModItems.TOTEM_OF_RAGE)) {
                 this.anvilcraft$raged = true;
             } else if (result && itemStack.is(ModItems.AMULET_BOX)) {
-                AnvilCraft.LOGGER.info("is amulet box");
                 List<ItemStack> totems = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotems();
                 if (!totems.isEmpty()) {
                     if (totems.getFirst().is(ModItems.TOTEM_OF_RAGE)) {

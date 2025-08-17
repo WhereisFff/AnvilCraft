@@ -32,7 +32,7 @@ public class PlayerUtil {
             case OFF_HAND -> InteractionHand.MAIN_HAND;
         };
     }
-    
+
     public static Optional<InteractionHand> getHand(ServerPlayer player, Predicate<ItemStack> filter) {
         if (filter.test(player.getMainHandItem())) {
             return Optional.of(InteractionHand.MAIN_HAND);

@@ -98,7 +98,7 @@ public class ItemCollectorBlock extends BetterBaseEntityBlock implements IHammer
                 }
             }
             entity.setRemoved();
-            
+
             Vec3 vec3 = entity.getBlockPos().getCenter();
             FilteredItemStackHandler depository = entity.getItemHandler();
             for (int slot = 0; slot < depository.getSlots(); slot++) {

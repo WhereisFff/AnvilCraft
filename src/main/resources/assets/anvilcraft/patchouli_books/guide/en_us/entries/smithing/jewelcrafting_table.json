@@ -19,7 +19,7 @@
     {
       "type": "patchouli:text",
       "title": "Copying",
-      "text": "Players can use Jewelcrafting Table to $(thing)Copying$(). Only a few items can be copy. Put the item you want to copying and materials, you can produce an imitation with $(thing)Vanishing Curse$()."
+      "text": "Players can use Jewelcrafting Table to $(thing)Copying$(). Only a few items can be copy. Put the item you want to copying and materials, you can produce an imitation with $(#660000)Vanishing Curse$()."
     },
     {
       "type": "anvilcraft:jewel_crafting",

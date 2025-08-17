@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.client.gui.screen.ChuteScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberAnvilScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberGrindstoneScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberSmithingScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.FilterScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemCollectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemDetectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.JewelCraftingScreen;
@@ -25,6 +26,7 @@ import dev.dubhe.anvilcraft.inventory.ChuteMenu;
 import dev.dubhe.anvilcraft.inventory.EmberAnvilMenu;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import dev.dubhe.anvilcraft.inventory.EmberSmithingMenu;
+import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
 import dev.dubhe.anvilcraft.inventory.ItemDetectorMenu;
 import dev.dubhe.anvilcraft.inventory.JewelCraftingMenu;
@@ -85,6 +87,9 @@ public class ModMenuTypes {
         .register();
     public static final MenuEntry<ItemDetectorMenu> ITEM_DETECTOR = REGISTRATE
         .menu("item_detector", ItemDetectorMenu::new, () -> ItemDetectorScreen::new)
+        .register();
+    public static final MenuEntry<FilterMenu> FILTER = REGISTRATE
+        .menu("filter", FilterMenu::new, () -> FilterScreen::new)
         .register();
 
     public static final MenuEntry<ActiveSilencerMenu> ACTIVE_SILENCER = REGISTRATE

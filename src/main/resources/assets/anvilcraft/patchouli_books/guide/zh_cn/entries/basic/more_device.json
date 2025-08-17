@@ -32,8 +32,9 @@
     },
     {
       "type": "patchouli:crafting",
+      "anchor": "block_devourer",
       "recipe": "anvilcraft:block_devourer",
-      "text": "$(item)方块吞噬器$()在有红石信号或被铁砧砸时破坏前方方块。$(br2)红石激活时，破坏范围3x3，铁砧激活根据高度1-3分别为5x5，7x7到9x9。"
+      "text": "$(item)方块吞噬器$()在有红石信号或被铁砧砸时破坏前方方块。$(p)红石激活时，破坏范围3x3，铁砧激活根据高度1-3分别为5x5，7x7到9x9。$(p)属于$(l:advanced/anvil_destroy)铁砧挖掘$(/l)"
     },
     {
       "type": "patchouli:spotlight",

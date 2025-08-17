@@ -39,19 +39,19 @@ public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerCha
         Block.box(0, 6, 2, 16, 12, 5)
     ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     public static final VoxelShape AABB_Z = Stream.of(
-            Block.box(2, 6, 0, 5, 12, 16),
-            Block.box(0, 0, 0, 16, 6, 16),
-            Block.box(11, 12, 0, 16, 16, 16),
-            Block.box(0, 12, 0, 5, 16, 16),
-            Block.box(11, 6, 0, 14, 12, 16)
-        ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+        Block.box(2, 6, 0, 5, 12, 16),
+        Block.box(0, 0, 0, 16, 6, 16),
+        Block.box(11, 12, 0, 16, 16, 16),
+        Block.box(0, 12, 0, 5, 16, 16),
+        Block.box(11, 6, 0, 14, 12, 16)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     public static final VoxelShape AABB_Y = Stream.of(
-            Block.box(0, 0, 0, 16, 6, 16),
-            Block.box(11, 6, 11, 16, 16, 16),
-            Block.box(0, 6, 11, 5, 16, 16),
-            Block.box(0, 6, 0, 5, 16, 5),
-            Block.box(11, 6, 0, 16, 16, 5)
-        ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+        Block.box(0, 0, 0, 16, 6, 16),
+        Block.box(11, 6, 11, 16, 16, 16),
+        Block.box(0, 6, 11, 5, 16, 16),
+        Block.box(0, 6, 0, 5, 16, 5),
+        Block.box(11, 6, 0, 16, 16, 5)
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     public static final EnumProperty<Axis> AXIS = BlockStateProperties.AXIS;
 
     public SlidingRailBlock(Properties properties) {

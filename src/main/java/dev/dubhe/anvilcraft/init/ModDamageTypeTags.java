@@ -8,17 +8,11 @@ import net.minecraft.world.damagesource.DamageType;
 
 public class ModDamageTypeTags {
     public static final TagKey<DamageType> AMULET_VALID = bind("amulet_valid");
-    public static final TagKey<DamageType> EMERALD_AMULET_VALID = bind("amulet_valid/emerald");
     public static final TagKey<DamageType> TOPAZ_AMULET_VALID = bind("amulet_valid/topaz");
     public static final TagKey<DamageType> RUBY_AMULET_VALID = bind("amulet_valid/ruby");
     public static final TagKey<DamageType> SAPPHIRE_AMULET_VALID = bind("amulet_valid/sapphire");
     public static final TagKey<DamageType> ANVIL_AMULET_VALID = bind("amulet_valid/anvil");
-    public static final TagKey<DamageType> COMRADE_AMULET_VALID = bind("amulet_valid/comrade");
     public static final TagKey<DamageType> FEATHER_AMULET_VALID = bind("amulet_valid/feather");
-    public static final TagKey<DamageType> CAT_AMULET_VALID = bind("amulet_valid/cat");
-    public static final TagKey<DamageType> DOG_AMULET_VALID = bind("amulet_valid/dog");
-    public static final TagKey<DamageType> SILENCE_AMULET_VALID = bind("amulet_valid/silence");
-    public static final TagKey<DamageType> COGWHEEL_AMULET_VALID = bind("amulet_valid/cogwheel");
     public static final TagKey<DamageType> ABNORMAL_AMULET_VALID = bind("amulet_valid/abnormal");
 
     private static TagKey<DamageType> bindC(String id) {

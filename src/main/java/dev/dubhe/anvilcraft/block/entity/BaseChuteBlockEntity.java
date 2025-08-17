@@ -91,7 +91,7 @@ public abstract class BaseChuteBlockEntity
     protected abstract boolean isEnabled();
 
     @Override
-    public FilteredItemStackHandler getFilteredItemDepository() {
+    public FilteredItemStackHandler getFilteredItemStackHandler() {
         return itemHandler;
     }
 
