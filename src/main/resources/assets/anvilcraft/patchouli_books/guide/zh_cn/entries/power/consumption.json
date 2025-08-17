@@ -36,7 +36,7 @@
     {
       "type": "patchouli:text",
       "title": "",
-      "text": "$(li)$(item)红石粉$(): 催熟作物，工作范围5x5x5方块，催熟要求对象位置的方块光等级不小于$(thing)10$() $(li)$(item)荧石粉$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)怪物$()生成 $(li)$(l:struct/mineral_fountain#void_matter)虚空物质$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)动物$()生成$(br2)以上三种模式下，耗电功率变为16kW $(br)$(#666666)区段: 区块的一截，16x16x16大小$()"
+      "text": "$(li)$(item)红石粉$(): 催熟作物，工作范围5x5x5方块，催熟要求对象位置的方块光等级不小于$(thing)10$() $(li)$(item)荧石粉$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)怪物$()生成 $(li)$(l:smithing/tier_2_materials#void_matter)虚空物质$(): 抑制以其所在区段为中心，3x3x3区段范围内的$(thing)动物$()生成$(br2)以上三种模式下，耗电功率变为16kW $(br)$(#666666)区段: 区块的一截，16x16x16大小$()"
     },
     {
       "type": "patchouli:stonecutting",
