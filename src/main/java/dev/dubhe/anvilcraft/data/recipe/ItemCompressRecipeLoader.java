@@ -6,6 +6,9 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemSubPredicates;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
@@ -13,6 +16,7 @@ import dev.dubhe.anvilcraft.recipe.util.ItemSavedEntityPredicate;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
@@ -55,25 +59,31 @@ public class ItemCompressRecipeLoader {
         ItemCompressRecipe superCapacitorEmptyRecipe = superCapacitorEmptyRecipeBuilder.buildRecipe();
         superCapacitorEmptyRecipeBuilder.save(provider);
 
-        ItemIngredientPredicate chargedCreeperResinPredicate = ItemIngredientPredicate
-            .of(ModBlocks.RESIN_BLOCK.asItem())
-            .withSubPredicate(
-                ModItemSubPredicates.SAVED_ENTITY.get(),
-                ItemSavedEntityPredicate.of(EntityType.CREEPER)
-                    .predicate(b ->
-                        b.compare(NumericTagValuePredicate.ValueFunction.GREATER_OR_EQUAL)
-                            .lhs("powered")
-                            .rhs(1)
-                    )
+        InWorldRecipeBuilder.compatible(ModRecipeTriggers.ON_ANVIL_FALL_ON.get())
+            .with(HasItemIngredient.builder()
+                .of(ModBlocks.RESIN_BLOCK.asItem())
+                .with(
+                    ModItemSubPredicates.SAVED_ENTITY.get(),
+                    ItemSavedEntityPredicate.of(EntityType.CREEPER)
+                        .predicate(b ->
+                            b.compare(NumericTagValuePredicate.ValueFunction.GREATER_OR_EQUAL)
+                                .lhs("powered")
+                                .rhs(1)
+                        )
+                )
+                .build()
             )
-            .build();
-        ItemCompressRecipe.builder()
-            .requires(ModItemTags.IRON_PLATES, 2)
-            .requires(chargedCreeperResinPredicate)
-            .result(ModItems.SUPER_CAPACITOR)
-            //这里还需要加上.priority(superCapacitorEmptyRecipe.getPriority() + 1)
-            .save(provider);
-
+            .with(
+                HasItemIngredient.builder()
+                    .of(ModItemTags.IRON_PLATES)
+                    .count(2)
+                    .build()
+            )
+            .hasCauldron()
+            .spawnItem(Vec3.ZERO, ModItems.SUPER_CAPACITOR.asStack())
+            .priority(superCapacitorEmptyRecipe.getPriority() + 1)
+            .group("item_compress")
+            .save(provider, AnvilCraft.of("supercapacitor"));
 
         ItemCompressRecipe.builder()
             .requires(ModItems.NEUTRONIUM_INGOT)

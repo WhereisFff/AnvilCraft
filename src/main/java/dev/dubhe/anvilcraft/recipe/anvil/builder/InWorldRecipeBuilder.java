@@ -55,6 +55,7 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
     private final List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
     private final boolean compatible;
     private String group;
+    private Integer priority = null;
     private final Map<String, Criterion<?>> criteria = Maps.newLinkedHashMap();
 
     private InWorldRecipeBuilder(@NotNull IRecipeTrigger trigger, boolean compatible) {
@@ -441,14 +442,23 @@ public class InWorldRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
+    public InWorldRecipeBuilder priority(Integer priority) {
+        this.priority = priority;
+        return this;
+    }
+
     public InWorldRecipe build() {
+        int pri;
+        if (this.priority == null) pri = InWorldRecipe.calcPriority(trigger, conflicting, nonConflicting, outcomes);
+        else pri = this.priority;
+
         return new InWorldRecipe(
             icon.getFirst(),
             trigger,
             ImmutableList.copyOf(conflicting),
             ImmutableList.copyOf(nonConflicting),
             ImmutableList.copyOf(outcomes),
-            InWorldRecipe.calcPriority(trigger, conflicting, nonConflicting, outcomes),
+            pri,
             compatible
         );
     }
