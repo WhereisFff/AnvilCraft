@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.util.CollectionUtil;
+import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,19 +35,19 @@ public class AmuletManager {
 
     private AmuletManager() {
         this.registerAmulets(
-            () -> (AmuletItem) ModItems.EMERALD_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.TOPAZ_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.RUBY_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.SAPPHIRE_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.ANVIL_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.COMRADE_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.FEATHER_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.CAT_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.DOG_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.SILENCE_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.ABNORMAL_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.GEM_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.NATURE_AMULET.asItem()
+            ModItems.EMERALD_AMULET::get,
+            ModItems.TOPAZ_AMULET::get,
+            ModItems.RUBY_AMULET::get,
+            ModItems.SAPPHIRE_AMULET::get,
+            ModItems.ANVIL_AMULET::get,
+            ModItems.COMRADE_AMULET::get,
+            ModItems.FEATHER_AMULET::get,
+            ModItems.CAT_AMULET::get,
+            ModItems.DOG_AMULET::get,
+            ModItems.SILENCE_AMULET::get,
+            ModItems.ABNORMAL_AMULET::get,
+            ModItems.GEM_AMULET::get,
+            ModItems.NATURE_AMULET::get
         );
         this.registerFinders(
             (player, holders) -> processFoundStack(player.getWeaponItem(), holders),
@@ -100,13 +101,17 @@ public class AmuletManager {
     }
 
     public void startRaffle(ServerPlayer player, DamageSource source, boolean isConsumedInBox) {
+        Optional<AmuletType> typeOp = this.getTypeMatchedDamage(player, source, player.registryAccess()).map(Holder::value);
+        if (typeOp.isEmpty()) return;
+        AmuletType type = typeOp.get();
+        ItemStack amulet = type.amulet().get();
+        if (!InventoryUtil.getFirstItem(player.getInventory(), amulet.getItem()).isEmpty()) return;
+        if (!InventoryUtil.getItemInCompat(player, stack -> ItemStack.isSameItem(stack, amulet)).isEmpty()) return;
+
         RandomSource random = player.getRandom();
         int probability = Math.min(this.getRaffleProbability(player, source, isConsumedInBox), 100);
-
         if (probability > random.nextIntBetweenInclusive(0, 100)) {
-            Optional<AmuletType> type = this.getTypeMatchedDamage(player, source, player.registryAccess()).map(Holder::value);
-            type.ifPresent(amuletType -> player.getInventory().placeItemBackInInventory(amuletType.amulet().get().copy()));
-
+            player.getInventory().placeItemBackInInventory(amulet.copy());
             this.setRaffleProbability(player, source, 0);
         } else {
             this.setRaffleProbability(player, source, Math.min(probability + (isConsumedInBox ? 10 : 5), 100));
