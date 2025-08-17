@@ -1,15 +1,11 @@
 {
   "type": "anvilcraft:squeezing",
   "consume": -1,
-  "fluid": "minecraft:water",
-  "ingredients": [
-    {
-      "blocks": "minecraft:wet_sponge"
-    }
-  ],
-  "results": [
-    {
-      "block": "minecraft:sponge"
-    }
-  ]
+  "ingredients": {
+    "blocks": "minecraft:wet_sponge"
+  },
+  "results": {
+    "block": "minecraft:sponge"
+  },
+  "transform": "minecraft:water"
 }

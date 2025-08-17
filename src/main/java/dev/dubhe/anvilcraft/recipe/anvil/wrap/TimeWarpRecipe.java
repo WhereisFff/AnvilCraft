@@ -14,6 +14,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
 import lombok.Getter;
+import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -50,13 +51,14 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
     ) {
         super(
             new Property()
-                .setItemInputOffset(Vec3.ZERO)
+                .setItemInputOffset(new Vec3(0.0, -0.375, 0.0))
+                .setItemInputRange(new Vec3(0.75, 0.75, 0.75))
                 .setInputItems(itemIngredients)
-                .setItemOutputOffset(new Vec3(0.0, -1.0, 0.0))
+                .setItemOutputOffset(new Vec3(0.0, -0.75, 0.0))
                 .setResultItems(results)
-                .setCauldronOffset(new Vec3(0.0, -1.0, 0.0))
+                .setCauldronOffset(new Vec3i(0, -1, 0))
                 .setHasCauldron(hasCauldron)
-                .setBlockInputOffset(new Vec3(0.0, -2.0, 0.0))
+                .setBlockInputOffset(new Vec3i(0, -2, 0))
                 .setInputBlocks(
                     BlockStatePredicate.builder()
                         .of(ModBlocks.CORRUPTED_BEACON.get())
@@ -384,6 +386,17 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          */
         public Builder consume(int consume) {
             this.hasCauldron.consume(consume);
+            return this;
+        }
+
+        /**
+         * 设置产生量
+         *
+         * @param produce 产量
+         * @return 构建器实例
+         */
+        public Builder produce(int produce) {
+            this.consume(-produce);
             return this;
         }
 
