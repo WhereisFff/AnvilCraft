@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
+import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -12,16 +13,16 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.pathfinder.PathComputationType;
+import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @ParametersAreNonnullByDefault
@@ -50,11 +51,6 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
     }
 
     @Override
-    protected boolean isPathfindable(BlockState state, PathComputationType pathComputationType) {
-        return false;
-    }
-
-    @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         ISlidingRail.absorbEntity(pos, entity);
         if (entity.getType() != EntityType.ITEM) return;
@@ -72,25 +68,33 @@ public class SlidingRailStopBlock extends BaseSlidingRailBlock {
     }
 
     @Override
-    public void onSlidingAbove(Level level, BlockState state, SlidingBlockEntity entity) {
+    public void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity) {
         ISlidingRail.stopSlidingBlock(entity);
     }
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos fromPos, boolean isMoving) {
         super.neighborChanged(state, level, pos, neighborBlock, fromPos, isMoving);
-        Direction direction = null;
+        if (level.isEmptyBlock(pos.above())) return;
+        BlockState topBlock = level.getBlockState(pos.above());
+        if (topBlock.getPistonPushReaction() == PushReaction.BLOCK
+            || topBlock.getPistonPushReaction() == PushReaction.IGNORE
+            || (topBlock.getBlock() instanceof EntityBlock entityBlock && !(entityBlock instanceof IMoveableEntityBlock))
+        ) return;
+        BlockPos moveToPos = null;
         for (Direction side : Direction.values()) {
             if (side.getAxis() == Direction.Axis.Y) continue;
-            Optional<Direction> dirOp = Util.castSafely(level.getBlockState(pos.relative(side)).getBlock(), ISlidingRail.class)
-                .flatMap(rail -> rail.getSlidingDirection(level, level.getBlockState(pos.relative(side))));
-            if (dirOp.isEmpty()) continue;
-            direction = dirOp.get();
+            BlockPos railPos = pos.relative(side);
+            BlockState railState = level.getBlockState(railPos);
+            boolean canMove = Util.castSafely(railState.getBlock(), ISlidingRail.class)
+                .map(rail -> rail.canMoveBlockToTop(level, railPos, railState, topBlock, side.getOpposite()))
+                .orElse(false);
+            if (!canMove) continue;
+            moveToPos = railPos.above();
             break;
         }
-        if (direction == null) return;
-        Direction finalDirection = direction;
-        Optional.ofNullable(ISlidingRail.MOVING_PISTON_MAP.get(pos))
-            .ifPresent(info -> info.direction = finalDirection);
+        if (moveToPos == null) return;
+        level.removeBlock(pos.above(), true);
+        level.setBlock(moveToPos, topBlock, 0b1000011);
     }
 }

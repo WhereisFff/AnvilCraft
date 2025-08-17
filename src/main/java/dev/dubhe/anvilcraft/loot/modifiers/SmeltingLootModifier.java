@@ -57,8 +57,8 @@ public class SmeltingLootModifier extends LootModifier {
                         BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN)),
                         Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState()
                     )
-                .map(block -> block.asItem().getDefaultInstance())
-                .orElse(ItemStack.EMPTY));
+                    .map(block -> block.asItem().getDefaultInstance())
+                    .orElse(ItemStack.EMPTY));
         }
         ObjectArrayList<ItemStack> smeltList = new ObjectArrayList<>();
         for (ItemStack item : objectArrayList) {

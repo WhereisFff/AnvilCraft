@@ -2,7 +2,7 @@
   "name": "巨型蛋糕",
   "category": "anvilcraft:technology_application",
   "icon": "anvilcraft:large_cake",
-  "sortnum": 6005,
+  "sortnum": 16005,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:cake_block": 4,

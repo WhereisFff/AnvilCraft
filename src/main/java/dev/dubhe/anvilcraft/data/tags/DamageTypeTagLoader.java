@@ -27,7 +27,8 @@ public class DamageTypeTagLoader {
             .addOptionalTag(ModDamageTypeTags.CAT_AMULET_VALID)
             .addOptionalTag(ModDamageTypeTags.DOG_AMULET_VALID)
             .addOptionalTag(ModDamageTypeTags.SILENCE_AMULET_VALID)
-            .addOptionalTag(ModDamageTypeTags.COGWHEEL_AMULET_VALID);
+            .addOptionalTag(ModDamageTypeTags.COGWHEEL_AMULET_VALID)
+            .addOptionalTag(ModDamageTypeTags.ABNORMAL_AMULET_VALID);
 
         provider.addTag(ModDamageTypeTags.EMERALD_AMULET_VALID);
 
@@ -58,5 +59,7 @@ public class DamageTypeTagLoader {
         provider.addTag(ModDamageTypeTags.SILENCE_AMULET_VALID);
 
         provider.addTag(ModDamageTypeTags.COGWHEEL_AMULET_VALID);
+
+        provider.addTag(ModDamageTypeTags.ABNORMAL_AMULET_VALID);
     }
 }

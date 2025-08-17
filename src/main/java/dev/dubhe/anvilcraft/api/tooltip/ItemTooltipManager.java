@@ -23,7 +23,6 @@ import net.minecraft.world.item.ItemStack;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 
 public class ItemTooltipManager {
 
@@ -97,6 +96,7 @@ public class ItemTooltipManager {
         map.put(ModBlocks.EMBER_GRINDSTONE.asItem(), "Wither proof");
         map.put(ModBlocks.EMBER_SMITHING_TABLE.asItem(), "Wither proof");
         map.put(ModBlocks.EMBER_METAL_BLOCK.asItem(), "Wither proof");
+        map.put(ModBlocks.EMBER_GLASS.asItem(), "Wither proof, No tools required on collect");
         map.put(ModBlocks.CUT_EMBER_METAL_BLOCK.asItem(), "Wither proof");
         map.put(ModBlocks.CUT_EMBER_METAL_PILLAR.asItem(), "Wither proof");
         map.put(ModBlocks.CUT_EMBER_METAL_SLAB.asItem(), "Wither proof");
@@ -232,10 +232,10 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
-                    .map(TranslatableContents::getKey)
-                    .filter(key -> key.contains("enchantment"))
-                    .isEmpty()
+                .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                .map(TranslatableContents::getKey)
+                .filter(key -> key.contains("enchantment"))
+                .isEmpty()
             ) {
                 i = j;
                 break;
@@ -252,10 +252,10 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
-                    .map(TranslatableContents::getKey)
-                    .filter(key -> key.contains("enchantment"))
-                    .isEmpty()
+                .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                .map(TranslatableContents::getKey)
+                .filter(key -> key.contains("enchantment"))
+                .isEmpty()
             ) {
                 i = j;
                 break;
@@ -272,10 +272,10 @@ public class ItemTooltipManager {
         for (int j = 0; j < tooltip.size(); j++) {
             if (tooltip.get(j).getContents() instanceof TranslatableContents t && t.getKey().contains("enchantment")
                 && ListUtil.safelyGet(tooltip, j + 1)
-                    .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
-                    .map(TranslatableContents::getKey)
-                    .filter(key -> key.contains("enchantment"))
-                    .isEmpty()
+                .flatMap(tooltipI -> Util.castSafely(tooltipI.getContents(), TranslatableContents.class))
+                .map(TranslatableContents::getKey)
+                .filter(key -> key.contains("enchantment"))
+                .isEmpty()
             ) {
                 i = j;
                 break;

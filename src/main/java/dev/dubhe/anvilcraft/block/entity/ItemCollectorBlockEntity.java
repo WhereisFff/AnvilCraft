@@ -101,10 +101,10 @@ public class ItemCollectorBlockEntity extends BlockEntity
 
     private static final Map<Integer, Map<Integer, Integer>> powerConsumption =
         Map.of(
-            0, Map.of(1, 8,  2, 12, 4, 20, 8, 32),
-            2, Map.of(1, 5,  2, 8, 4, 12, 8, 20),
-            10, Map.of(1, 3,  2, 5, 4, 8, 8, 12),
-            60, Map.of(1, 2,  2, 3, 4, 5, 8, 8)
+            0, Map.of(1, 8, 2, 12, 4, 20, 8, 32),
+            2, Map.of(1, 5, 2, 8, 4, 12, 8, 20),
+            10, Map.of(1, 3, 2, 5, 4, 8, 8, 12),
+            60, Map.of(1, 2, 2, 3, 4, 5, 8, 8)
         );
 
     @Override
@@ -115,7 +115,7 @@ public class ItemCollectorBlockEntity extends BlockEntity
     }
 
     @Override
-    public FilteredItemStackHandler getFilteredItemDepository() {
+    public FilteredItemStackHandler getFilteredItemStackHandler() {
         return itemHandler;
     }
 
@@ -190,7 +190,8 @@ public class ItemCollectorBlockEntity extends BlockEntity
         for (ChunkPos chunkPos : chunkPosListMax) {
             if (cooldown.get() == 0 && chunkPosListReal.contains(chunkPos)) {
                 if (!PoachingCollectorMap.containsKey(level)) PoachingCollectorMap.put(level, new HashMap<>());
-                if (!PoachingCollectorMap.get(level).containsKey(chunkPos)) PoachingCollectorMap.get(level).put(chunkPos, new ArrayList<>());
+                if (!PoachingCollectorMap.get(level).containsKey(chunkPos))
+                    PoachingCollectorMap.get(level).put(chunkPos, new ArrayList<>());
                 List<ItemCollectorBlockEntity> list = PoachingCollectorMap.get(level).get(chunkPos);
                 if (!list.contains(this)) list.add(this);
             } else {

@@ -3,27 +3,12 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "minecraft:iron_ingot",
   "sortnum": 1002,
-  "extra_recipe_mappings": {
-    "anvilcraft:copper_pressure_plate": 2,
-    "anvilcraft:tungsten_pressure_plate": 2,
-    "anvilcraft:titanium_pressure_plate": 2,
-    "anvilcraft:zinc_pressure_plate": 2,
-    "anvilcraft:tin_pressure_plate": 2,
-    "anvilcraft:lead_pressure_plate": 2,
-    "anvilcraft:silver_pressure_plate": 2,
-    "anvilcraft:uranium_pressure_plate": 2,
-    "anvilcraft:bronze_pressure_plate": 2,
-    "anvilcraft:brass_pressure_plate": 2,
-    "minecraft:wet_sponge": 12,
-    "minecraft:sponge": 12
-  },
   "pages": [
     "Let $(item)Anvil$() fall on the specific blocks to process the items inside or on. Different specific blocks have different processing. The flowing pages of this entry will introduce relevant content in sequence. This mod adds a block that prevents hit items from flying around due to hitbox squeezing: $(item)Stamping Platform$().",
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:stamping_platform",
-      "recipe2": "anvilcraft:shaped_crushing_table_recipe",
-      "text": ""
+      "recipe2": "anvilcraft:shaped_crushing_table_recipe"
     },
     {
       "type": "patchouli:multiblock",
@@ -45,8 +30,26 @@
       "text": "When the stamping platform is below, the item stamping is performed, and both materials and products are on the stamping platform. Detailed instructions on the right."
     },
     {
-      "type": "patchouli:text",
-      "text": "$(li)Items can be stamped into slices, such as Iron Ingot→Iron Pressure Plate; Gold Ingot→Gold Pressure Plate; Snowball→Snow; Cherry Leaves→Pink Petals.$(li)It is also possible to separate the different components of some items, such as Wood fiber→paper. $(li)Batch processing $(l:basic/block_processing#crush)Block Crushing$() operation, but there is a $(thing)20%$() loss."
+      "type": "patchouli:spotlight",
+      "item": [
+        "anvilcraft:copper_pressure_plate",
+        "anvilcraft:tungsten_pressure_plate",
+        "anvilcraft:titanium_pressure_plate",
+        "anvilcraft:zinc_pressure_plate",
+        "anvilcraft:tin_pressure_plate",
+        "anvilcraft:lead_pressure_plate",
+        "anvilcraft:silver_pressure_plate",
+        "anvilcraft:uranium_pressure_plate",
+        "anvilcraft:plutonium_pressure_plate",
+        "anvilcraft:bronze_pressure_plate",
+        "anvilcraft:brass_pressure_plate",
+        "minecraft:snow",
+        "minecraft:paper",
+        "minecraft:pink_petals"
+      ],
+      "link_recipe": true,
+      "title": "冲压配方",
+      "text": "Items can be stamped into slices: $(li)Iron Ingot→Iron Pressure Plate $(li)Gold Ingot→Gold Pressure Plate $(li)Snowball→Snow $(li)Cherry Leaves→Pink Petals $(li)Wood fiber→paper"
     },
     {
       "type": "patchouli:multiblock",
@@ -69,7 +72,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Some equipment can be recycled by it. Chains, gold, iron and diamond tools, weapons and armors can be broken down into much more materials than they are smelted.It can also complete these recipes: Skeleton Skull→64*Bone Meal; Creeper Head→64*Gunpowder。"
+      "text": "Some equipment can be recycled by it. Chains, gold, iron and diamond tools, weapons and armors can be broken down into much more materials than they are smelted.It can also complete these recipes: Skeleton Skull→64*Bone Meal; Creeper Head→64*Gunpowder。 $(li)Batch processing $(l:basic/block_processing#crush)Block Crushing$() operation, but there is a $(thing)20%$() loss."
     },
     {
       "type": "patchouli:multiblock",
@@ -159,7 +162,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Remove rust from copper products$(br)Dirt→Clay$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)Spider Eye→ Fermented Spider Eye$(br)Coral→Corresponding Coral Block$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)海绵芽球$()→湿海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
+      "text": "$(li)Rusted copper blocks $(li)Dirt→Clay $(li)下界菌→对应疣块 $(li)蘑菇→对应蘑菇块 $(li)Spider Eye→ Fermented Spider Eye $(li)Coral→Corresponding Coral Block $(li)干海带→海带"
     },
     {
       "type": "patchouli:multiblock",

@@ -137,8 +137,8 @@ public class EmberAnvilMenu extends AnvilMenu {
                         Enchantment enchantment = holder.value();
                         enchantmentsOnRightLevel =
                             enchantmentsOnLeftLevel == enchantmentsOnRightLevel
-                            ? enchantmentsOnRightLevel + 1
-                            : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
+                                ? enchantmentsOnRightLevel + 1
+                                : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
 
                         if (!AnvilCraft.config.emberAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
                             enchantmentsOnRightLevel = enchantment.getMaxLevel();
@@ -150,9 +150,7 @@ public class EmberAnvilMenu extends AnvilMenu {
                             anvilCost = Math.max(1, anvilCost / 2);
                         }
 
-                        totalCost += Math.clamp(
-                            anvilCost * enchantmentsOnRightLevel * (repairCost == 0 ? 1 : repairCost),
-                            0, Integer.MAX_VALUE);
+                        totalCost += Math.clamp((long) anvilCost * enchantmentsOnRightLevel, 0, Integer.MAX_VALUE);
                         if (inputItemLeft.getCount() > 1) {
                             totalCost = 99999999;
                         }
@@ -162,11 +160,9 @@ public class EmberAnvilMenu extends AnvilMenu {
 
             if (extraFormat != null) {
                 repairCostT = 1;
-                Integer baseRepairCost = inputItemLeft.get(DataComponents.REPAIR_COST);
                 totalCost += repairCostT
                     * inputItemLeft.getCount()
-                    * inputItemRight.getCount()
-                    * (baseRepairCost == null || baseRepairCost == 0 ? 1 : baseRepairCost);
+                    * inputItemRight.getCount();
                 Component currentName = inputItemLeft.getHoverName();
                 if (!this.itemName.equals(currentName.getString())
                     && this.itemName != null

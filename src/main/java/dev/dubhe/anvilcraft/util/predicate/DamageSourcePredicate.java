@@ -33,10 +33,10 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
     public boolean matches(ServerLevel level, Entity victim, DamageSource source) {
         for (DamageSourceSubPredicate subPredicate : this.subPredicates) {
             if (subPredicate.matches(level, victim, source) == this.isOr) {
-                return this.isOr;
+                return this.isOr == !this.isInverted;
             }
         }
-        return this.isInverted;
+        return this.isOr == this.isInverted;
     }
 
     public record DamageSourceSubPredicate(
@@ -79,12 +79,12 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.murderPredicate.isPresent() && source.getEntity() != null
-                       && this.murderPredicate.get().matches(level, source.getEntity().position(), source.getEntity()) == this.isOr
+                && this.murderPredicate.get().matches(level, source.getEntity().position(), source.getEntity()) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.weaponPredicate.isPresent()
-                       && source.getWeaponItem() != null
-                       && this.weaponPredicate.get().test(source.getWeaponItem()) == this.isOr
+                && source.getWeaponItem() != null
+                && this.weaponPredicate.get().test(source.getWeaponItem()) == this.isOr
             ) {
                 return this.isOr == !this.isInverted;
             } else if (this.isDirect.isPresent() && this.isDirect.get() == source.isDirect() == this.isOr) {
@@ -129,7 +129,10 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
 
             @SafeVarargs
             public final Builder type(TagKey<DamageType>... tags) {
-                return this.type(TagPredicate.is(true, tags));
+                this.typePredicate = this.typePredicate
+                    .map(typeTagPredicate -> typeTagPredicate.sub().tags(tags).build())
+                    .or(() -> Optional.of(DamageTypePredicate.Builder.builder().tags(tags).build()));
+                return this;
             }
 
             public Builder type(String namespace) {
@@ -148,7 +151,7 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
 
             public Builder murder(EntityType<?>... entityTypes) {
                 for (EntityType<?> entityType : entityTypes) {
-                    this.murder(EntityPredicate.Builder.builder().entityType(EntityTypePredicate.of(entityType)).build());
+                    this.murder(EntityPredicate.Builder.builder().of(entityType).build());
                 }
                 return this;
             }
@@ -156,7 +159,7 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
             @SafeVarargs
             public final Builder murder(TagKey<EntityType<?>>... entityTypeTags) {
                 for (TagKey<EntityType<?>> entityTypeTag : entityTypeTags) {
-                    this.murder(EntityPredicate.Builder.builder().entityType(EntityTypePredicate.of(entityTypeTag)).build());
+                    this.murder(EntityPredicate.Builder.builder().of(entityTypeTag).build());
                 }
                 return this;
             }
@@ -170,7 +173,7 @@ public record DamageSourcePredicate(List<DamageSourceSubPredicate> subPredicates
 
             public Builder victim(EntityType<?>... entityTypes) {
                 for (EntityType<?> entityType : entityTypes) {
-                    this.victim(EntityPredicate.Builder.builder().entityType(EntityTypePredicate.of(entityType)).build());
+                    this.victim(EntityPredicate.Builder.builder().of(entityType).build());
                 }
                 return this;
             }

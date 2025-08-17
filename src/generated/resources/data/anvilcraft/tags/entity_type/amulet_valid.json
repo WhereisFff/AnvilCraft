@@ -43,6 +43,10 @@
     {
       "id": "#anvilcraft:amulet_valid/cogwheel",
       "required": false
+    },
+    {
+      "id": "#anvilcraft:amulet_valid/abnormal",
+      "required": false
     }
   ]
 }

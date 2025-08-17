@@ -22,7 +22,7 @@
         "anvilcraft:smithing/tier_2_materials",
         "anvilcraft:apply/oil",
         "anvilcraft:apply/spawner",
-        "anvilcraft:power/advanced_heat_collection"
+        "anvilcraft:power/heat_collection"
       ],
       "text": ""
     }
