@@ -7,7 +7,7 @@
     "$(item)护符$()是一系列有特殊作用的物品，需要手持生效。$(p)想要获取$(item)护符$()，需要手持含有$(n)$(item)不死图腾$()的$(item)护符盒$()受到特定类型的致命伤害。 $(p)$(#880000)注意$()：得到第一个护符后，才可以通过珠宝台复制$()",
     {
       "type":"anvilcraft:jewel_crafting",
-      "recipe":"anvilcraft:jewel_crafting/anvil_amulet",
+      "recipe":"anvilcraft:jewel_crafting/comrade_amulet",
       "text":"多人模式下，受到来自玩家的致命伤害概率获得。玩家可以右键为其签名。$(p)生效时，免疫来自签名玩家的伤害。"
     },
     {

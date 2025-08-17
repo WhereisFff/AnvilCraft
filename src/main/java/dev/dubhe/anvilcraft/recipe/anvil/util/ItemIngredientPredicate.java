@@ -33,12 +33,21 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 
+/**
+ * 物品原料谓词
+ * <p>
+ * 用于定义配方中物品原料的匹配规则，包括物品类型、数量、组件和子谓词
+ * </p>
+ */
 public record ItemIngredientPredicate(
-    Optional<HolderSet<Item>> items,
-    int count,
-    DataComponentPredicate components,
-    Map<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates
+    Optional<HolderSet<Item>> items, // 物品集合
+    int count, // 数量
+    DataComponentPredicate components, // 数据组件谓词
+    Map<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates // 子谓词映射
 ) implements IItemStackPredicate {
+    /**
+     * ItemIngredientPredicate编解码器
+     */
     public static final Codec<ItemIngredientPredicate> CODEC = RecordCodecBuilder.create(
         instance -> instance.group(
             RegistryCodecs
@@ -57,6 +66,9 @@ public record ItemIngredientPredicate(
         ).apply(instance, ItemIngredientPredicate::new)
     );
 
+    /**
+     * ItemIngredientPredicate流编解码器
+     */
     public static final StreamCodec<RegistryFriendlyByteBuf, ItemIngredientPredicate> STREAM_CODEC = StreamCodec.of(
         (buffer, value) -> {
             RegistryOps<Tag> ops = HolderLookup.Provider
@@ -74,10 +86,22 @@ public record ItemIngredientPredicate(
         }
     );
 
+    /**
+     * 创建一个物品构建器
+     *
+     * @param items 物品数组
+     * @return 构建器实例
+     */
     public static Builder of(ItemLike... items) {
         return new Builder().of(items);
     }
 
+    /**
+     * 创建一个标签构建器
+     *
+     * @param tag 物品标签
+     * @return 构建器实例
+     */
     public static Builder of(TagKey<Item> tag) {
         return new Builder().of(tag);
     }
@@ -92,12 +116,24 @@ public record ItemIngredientPredicate(
         return this.count <= count;
     }
 
+    /**
+     * 转换为HasItemIngredient谓词
+     *
+     * @param offset 偏移量
+     * @param range  范围
+     * @return HasItemIngredient谓词
+     */
     public @NotNull HasItemIngredient toHasItemIngredient(Vec3 offset, Vec3 range) {
         return new HasItemIngredient(offset, range, this);
     }
 
     private static final Int2ObjectMap<ItemStack[]> INGREDIENT_CACHE = new Int2ObjectArrayMap<>();
 
+    /**
+     * 获取物品数组
+     *
+     * @return 物品数组
+     */
     public ItemStack[] getItems() {
         int hash = this.hashCode();
         if (!INGREDIENT_CACHE.containsKey(hash)) {
@@ -114,6 +150,9 @@ public record ItemIngredientPredicate(
         return INGREDIENT_CACHE.get(hash);
     }
 
+    /**
+     * 构建器类，用于构建ItemIngredientPredicate实例
+     */
     @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
         @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -122,27 +161,53 @@ public record ItemIngredientPredicate(
         private DataComponentPredicate components;
         private final ImmutableMap.Builder<ItemSubPredicate.Type<?>, ItemSubPredicate> subPredicates;
 
+        /**
+         * 构造一个构建器
+         */
         private Builder() {
             this.count = 1;
             this.components = DataComponentPredicate.EMPTY;
             this.subPredicates = ImmutableMap.builder();
         }
 
+        /**
+         * 创建一个物品构建器
+         *
+         * @return 构建器实例
+         */
         public static @NotNull Builder item() {
             return new Builder();
         }
 
+        /**
+         * 设置物品
+         *
+         * @param items 物品数组
+         * @return 构建器实例
+         */
         public Builder of(ItemLike... items) {
             //noinspection deprecation
             this.items = Optional.of(HolderSet.direct((item) -> item.asItem().builtInRegistryHolder(), items));
             return this;
         }
 
+        /**
+         * 设置物品标签
+         *
+         * @param tag 物品标签
+         * @return 构建器实例
+         */
         public Builder of(TagKey<Item> tag) {
             this.items = Optional.of(BuiltInRegistries.ITEM.getOrCreateTag(tag));
             return this;
         }
 
+        /**
+         * 设置物品堆栈
+         *
+         * @param stack 物品堆栈
+         * @return 构建器实例
+         */
         public <D> Builder of(@NotNull ItemStack stack) {
             Item item = stack.getItem();
             ItemStack defaultInstance = item.getDefaultInstance();
@@ -160,21 +225,46 @@ public record ItemIngredientPredicate(
             return this;
         }
 
+        /**
+         * 设置数量
+         *
+         * @param count 数量
+         * @return 构建器实例
+         */
         public Builder withCount(int count) {
             this.count = count;
             return this;
         }
 
+        /**
+         * 添加子谓词
+         *
+         * @param type      子谓词类型
+         * @param predicate 子谓词
+         * @param <T>       子谓词类型
+         * @return 构建器实例
+         */
         public <T extends ItemSubPredicate> Builder withSubPredicate(ItemSubPredicate.Type<T> type, T predicate) {
             this.subPredicates.put(type, predicate);
             return this;
         }
 
+        /**
+         * 设置数据组件谓词
+         *
+         * @param components 数据组件谓词
+         * @return 构建器实例
+         */
         public Builder hasComponents(DataComponentPredicate components) {
             this.components = components;
             return this;
         }
 
+        /**
+         * 构建ItemIngredientPredicate实例
+         *
+         * @return ItemIngredientPredicate实例
+         */
         public ItemIngredientPredicate build() {
             return new ItemIngredientPredicate(this.items, this.count, this.components, this.subPredicates.build());
         }

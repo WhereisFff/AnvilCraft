@@ -73,6 +73,7 @@ import dev.dubhe.anvilcraft.item.abnormal.SuperHeavyItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletBoxItem;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.item.amulet.BigAmuletItem;
+import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import dev.dubhe.anvilcraft.item.template.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.EmberMetalUpgradeTemplateItem;
 import dev.dubhe.anvilcraft.item.template.FourToOneTemplateItem;
@@ -113,6 +114,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
@@ -913,6 +915,26 @@ public class ModItems {
             .register();
     }
 
+    private static <T extends AmuletItem> @NotNull ItemEntry<T> createAmuletItem(
+        String type, Function<Item.Properties, T> factory, Supplier<DeferredHolder<AmuletType, ?>> typeGetter,
+        NonNullConsumer<JewelCraftingRecipe.Builder> builderConsumer
+    ) {
+        return REGISTRATE
+            .item(type + "_amulet", factory::apply)
+            .properties(properties -> properties.stacksTo(1))
+            .tag(ModItemTags.AMULET)
+            .recipe((ctx, provider) -> {
+                JewelCraftingRecipe.Builder builder = JewelCraftingRecipe.builder()
+                    .requires(ModItems.SILVER_INGOT, 1)
+                    .result(new ItemStack(ctx.get()));
+
+                builderConsumer.accept(builder);
+
+                builder.save(provider);
+            })
+            .register();
+    }
+
     private static @NotNull ItemBuilder<? extends BigAmuletItem, Registrate> createBigAmuletItem(
         String type, Supplier<DeferredHolder<AmuletType, ?>> typeGetter
     ) {
@@ -952,9 +974,9 @@ public class ModItems {
             "anvil", () -> ModAmuletTypes.ANVIL,
             builder -> builder.requires(Items.ANVIL)
         );
-    public static final ItemEntry<? extends AmuletItem> COMRADE_AMULET =
+    public static final ItemEntry<ComradeAmuletItem> COMRADE_AMULET =
         createAmuletItem(
-            "comrade", () -> ModAmuletTypes.COMRADE,
+            "comrade", ComradeAmuletItem::new, () -> ModAmuletTypes.COMRADE,
             builder -> builder.requires(Items.NAME_TAG, 4)
         );
     public static final ItemEntry<? extends AmuletItem> FEATHER_AMULET =

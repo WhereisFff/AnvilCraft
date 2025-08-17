@@ -12,9 +12,21 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
+/**
+ * 物品压缩配方类
+ * <p>
+ * 该配方用于在铁砧下落时压缩物品，需要在铁砧下方放置炼药锅作为触发条件
+ * </p>
+ */
 @Getter
 public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe> {
 
+    /**
+     * 构造一个物品压缩配方
+     *
+     * @param itemIngredients 物品原料列表
+     * @param results         结果物品列表
+     */
     public ItemCompressRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results
@@ -40,10 +52,18 @@ public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe
         return ModRecipeTypes.ITEM_COMPRESS_TYPE.get();
     }
 
+    /**
+     * 创建一个构建器实例
+     *
+     * @return 构建器实例
+     */
     public static @NotNull Builder builder() {
         return new Builder();
     }
 
+    /**
+     * 物品压缩配方序列化器
+     */
     public static class Serializer extends AbstractSerializer<ItemCompressRecipe> {
         @Override
         protected ItemCompressRecipe of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results) {
@@ -51,6 +71,9 @@ public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe
         }
     }
 
+    /**
+     * 物品压缩配方构建器
+     */
     public static class Builder extends SimpleAbstractBuilder<ItemCompressRecipe, Builder> {
         @Override
         public @NotNull String getType() {
