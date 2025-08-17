@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,7 +64,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         CompoundTag data = this.constructDataNbt();
         data.putByte("State", this.state.index());
@@ -71,7 +72,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         CompoundTag data = tag.getCompound("ExtraData");
         this.readDataNbt(data);
@@ -122,9 +123,6 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     @Override
     public void applyDiskData(CompoundTag data) {
         this.readDataNbt(data.getCompound("Data"));
-        if (this.getLevel() == null) return;
-        Util.castSafely(this.getBlockState().getBlock(), PulseGeneratorBlock.class)
-            .ifPresent(block -> block.update(this.getLevel(), this.getBlockPos(), this.getBlockState()));
     }
 
     @ApiStatus.Internal
@@ -201,5 +199,51 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         public static Mode fromIndex(int index) {
             return Mode.values()[index];
         }
+    }
+
+    public CompoundTag exportMoveData() {
+        CompoundTag move = new CompoundTag();
+        move.put("Data", this.constructDataNbt());
+        move.putInt("RemainingWaitingTime", this.getWaitingTimeRemaining());
+        move.putInt("RemainingSignalDuration", this.getSignalDurationRemaining());
+        move.putByte("State", this.getState().index());
+        return move;
+    }
+
+    private int waitingTimeRemaining;
+    private int signalDurationRemaining;
+
+    public int getWaitingTimeRemaining() {
+        return waitingTimeRemaining;
+    }
+
+    public int getSignalDurationRemaining() {
+        return signalDurationRemaining;
+    }
+
+    public void applyMoveData(Level level, BlockPos pos, BlockState state, CompoundTag move) {
+        this.readDataNbt(move.getCompound("Data"));
+
+        int remWait = move.getInt("RemainingWaitingTime");
+        int remSig  = move.getInt("RemainingSignalDuration");
+
+        this.waitingTimeRemaining = remWait;
+        this.signalDurationRemaining = remSig;
+
+        if (remWait > 0) {
+            this.state = State.WAITING;
+            level.scheduleTick(pos, ModBlocks.PULSE_GENERATOR.get(), remWait);
+        } else if (remSig > 0) {
+            this.state = State.OUTPUTTING;
+            level.scheduleTick(pos, ModBlocks.PULSE_GENERATOR.get(), remSig);
+        } else {
+            this.state = State.DEFAULT;
+        }
+
+        this.setDeadlock(false);
+        Util.castSafely(state.getBlock(), PulseGeneratorBlock.class)
+            .ifPresent(block -> block.update(level, pos, state));
+
+        this.setChanged();
     }
 }
