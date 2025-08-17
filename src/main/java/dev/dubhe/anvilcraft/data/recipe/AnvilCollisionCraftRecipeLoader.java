@@ -31,7 +31,7 @@ public class AnvilCollisionCraftRecipeLoader {
                 .anvil(BlockTags.ANVIL)
                 .hitBlock(ModBlocks.CORRUPTED_BEACON.get())
                 .transformBlock(InputBlock.of(ModBlocks.CONFINEMENT_CHAMBER), OutputBlock.of(ModBlocks.CONFINED_ENERGY_ANVILON), 4)
-                .speed(64)
+                .speed(128)
                 .save(provider);
         AnvilCollisionCraftRecipe.builder()
                 .anvil(BlockTags.ANVIL)
@@ -42,7 +42,7 @@ public class AnvilCollisionCraftRecipeLoader {
                 .anvil(BlockTags.ANVIL)
                 .hitBlock(ModBlocks.SPACE_OVERCOMPRESSOR.get())
                 .transformBlock(InputBlock.of(ModBlocks.CONFINEMENT_CHAMBER), OutputBlock.of(ModBlocks.CONFINED_ENERGY_ANVILON), 4)
-                .speed(64)
+                .speed(128)
                 .save(provider);
         AnvilCollisionCraftRecipe.builder()
                 .anvil(BlockTags.ANVIL)
@@ -53,7 +53,7 @@ public class AnvilCollisionCraftRecipeLoader {
                 .anvil(BlockTags.ANVIL)
                 .hitBlock(ModBlocks.GIANT_ANVIL.get())
                 .transformBlock(InputBlock.of(ModBlocks.CONFINEMENT_CHAMBER), OutputBlock.of(ModBlocks.CONFINED_ENERGY_ANVILON), 8)
-                .speed(64)
+                .speed(128)
                 .save(provider);
         AnvilCollisionCraftRecipe.builder()
                 .anvil(ModBlocks.EMBER_ANVIL.get())
@@ -94,14 +94,14 @@ public class AnvilCollisionCraftRecipeLoader {
                 .consume(false)
                 .hitBlock(ModBlocks.URANIUM_BLOCK.get())
                 .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, heatableData), 16)
-                .speed(128)
+                .speed(256)
                 .save(provider);
         AnvilCollisionCraftRecipe.builder()
                 .anvil(BlockTags.ANVIL)
                 .consume(false)
                 .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
                 .transformBlock(InputBlock.of(ModBlocks.EMBER_METAL_BLOCK), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, heatableData), 16)
-                .speed(128)
+                .speed(256)
                 .save(provider);
     }
 }

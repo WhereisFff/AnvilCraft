@@ -8,7 +8,7 @@
     "id": "anvilcraft:uranium_block"
   },
   "output_items": [],
-  "speed": 128,
+  "speed": 256,
   "transform_blocks": [
     {
       "chance": 1.0,

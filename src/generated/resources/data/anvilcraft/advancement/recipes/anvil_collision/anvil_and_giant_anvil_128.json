@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/anvil_and_corrupted_beacon_64"
+        "recipe": "anvilcraft:anvil_collision/anvil_and_giant_anvil_128"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/anvil_and_corrupted_beacon_64"
+      "anvilcraft:anvil_collision/anvil_and_giant_anvil_128"
     ]
   }
 }

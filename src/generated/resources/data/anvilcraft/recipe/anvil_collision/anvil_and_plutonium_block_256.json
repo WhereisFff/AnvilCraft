@@ -3,22 +3,25 @@
   "anvil": {
     "tag": "minecraft:anvil"
   },
-  "consume": true,
+  "consume": false,
   "hitBlock": {
-    "id": "anvilcraft:corrupted_beacon"
+    "id": "anvilcraft:plutonium_block"
   },
   "output_items": [],
-  "speed": 64,
+  "speed": 256,
   "transform_blocks": [
     {
       "chance": 1.0,
       "input": {
-        "id": "anvilcraft:confinement_chamber"
+        "id": "anvilcraft:ember_metal_block"
       },
-      "max_count": 4,
+      "max_count": 16,
       "output": {
+        "beData": {
+          "duration": 200
+        },
         "chance": 1.0,
-        "id": "anvilcraft:confined_energy_anvilon"
+        "id": "anvilcraft:overheated_ember_metal_block"
       }
     }
   ]

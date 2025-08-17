@@ -5,10 +5,10 @@
   },
   "consume": true,
   "hitBlock": {
-    "id": "anvilcraft:space_overcompressor"
+    "id": "anvilcraft:corrupted_beacon"
   },
   "output_items": [],
-  "speed": 64,
+  "speed": 128,
   "transform_blocks": [
     {
       "chance": 1.0,
