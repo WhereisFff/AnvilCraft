@@ -13,6 +13,8 @@ import java.util.function.BiPredicate;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public interface Obtain extends BiPredicate<ServerPlayer, DamageSource> {
+    Obtain NEVER = (player, source) -> false;
+
     boolean canObtain(ServerPlayer player, DamageSource source);
 
     @Override
