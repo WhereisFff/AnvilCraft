@@ -58,7 +58,7 @@ public class AnvilCollisionCraftRecipeLoader {
                 .transformBlock(InputBlock.of(ModBlocks.CONFINEMENT_CHAMBER), OutputBlock.of(ModBlocks.CONFINED_ENERGY_ANVILON), 8)
                 .speed(128)
                 .save(provider);
-        forEachAnvil( it -> {
+        forEachAnvil(it -> {
                     AnvilCollisionCraftRecipe.builder()
                             .anvil(it)
                             .consume(false)
@@ -78,7 +78,7 @@ public class AnvilCollisionCraftRecipeLoader {
                 },
                 ModBlocks.EMBER_ANVIL.get(), ModBlocks.ROYAL_ANVIL.get(), ModBlocks.TRANSCENDENCE_ANVIL.get()
         );
-        forEachAnvil( it -> {
+        forEachAnvil(it -> {
                     CompoundTag uraniumHeatableData = new CompoundTag();
                     uraniumHeatableData.putInt("duration", 400);
                     AnvilCollisionCraftRecipe.builder()
@@ -91,7 +91,7 @@ public class AnvilCollisionCraftRecipeLoader {
                     CompoundTag plutoniumHeatableData = new CompoundTag();
                     plutoniumHeatableData.putInt("duration", 1200);
                     AnvilCollisionCraftRecipe.builder()
-                            .anvil(it )
+                            .anvil(it)
                             .consume(false)
                             .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
                             .transformBlock(InputBlock.of(ModBlockTags.OVERHEATABLE), OutputBlock.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, plutoniumHeatableData), 16)
