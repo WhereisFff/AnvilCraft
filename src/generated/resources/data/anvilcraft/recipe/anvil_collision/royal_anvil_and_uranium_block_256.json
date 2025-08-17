@@ -1,7 +1,7 @@
 {
   "type": "anvilcraft:anvil_collision",
   "anvil": {
-    "tag": "minecraft:anvil"
+    "id": "anvilcraft:royal_anvil"
   },
   "consume": false,
   "hitBlock": {

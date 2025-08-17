@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/anvil_and_uranium_block_256"
+        "recipe": "anvilcraft:anvil_collision/royal_anvil_and_plutonium_block_256"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/anvil_and_uranium_block_256"
+      "anvilcraft:anvil_collision/royal_anvil_and_plutonium_block_256"
     ]
   }
 }
