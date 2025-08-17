@@ -545,7 +545,7 @@ public class ModBlocks {
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(ItemTags.ANVIL)
+        .tag(ItemTags.ANVIL, ModItemTags.EXPLOSION_PROOF)
         .build()
         .register();
 
