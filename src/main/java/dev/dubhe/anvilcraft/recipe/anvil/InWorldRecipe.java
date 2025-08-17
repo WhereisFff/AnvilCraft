@@ -164,6 +164,7 @@ public class InWorldRecipe implements Recipe<InWorldRecipeContext>, IPrioritized
     public boolean matches(@NotNull InWorldRecipeContext context, @NotNull Level level) {
         boolean nonConflicting = ShapelessMatcher.compatible(this.nonConflicting, context);
         if (!nonConflicting) {
+            context.getStack().clear();
             return false;
         }
         boolean flag;

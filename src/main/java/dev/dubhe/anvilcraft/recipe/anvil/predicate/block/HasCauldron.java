@@ -132,7 +132,9 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
         BlockPos blockPos = BlockPos.containing(context.getPos().add(this.offset));
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState state = cache.getBlockState(blockPos);
+        boolean empty = false;
         if (state.is(Blocks.CAULDRON)) {
+            empty = true;
             Block block = this.getFluidCauldron();
             state = block.defaultBlockState();
         }
@@ -143,6 +145,7 @@ public class HasCauldron extends HasBlockBase<HasCauldron> {
             fluidLevel = state.getOptionalValue(property);
         }
         if (fluidLevel.isPresent()) {
+            if (empty) fluidLevel = Optional.of(0);
             fluidLevel = Optional.of(Math.clamp(fluidLevel.orElse(0) - this.consume, 0, property.max));
             if (fluidLevel.orElse(0) == 0) {
                 state = Blocks.CAULDRON.defaultBlockState();
