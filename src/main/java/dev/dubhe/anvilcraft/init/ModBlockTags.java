@@ -80,17 +80,23 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_RUBY = bindC("storage_blocks/ruby");
     public static final TagKey<Block> STORAGE_BLOCKS_AMBER = bindC("storage_blocks/amber");
     public static final TagKey<Block> STORAGE_BLOCKS_RESIN = bindC("storage_blocks/resin");
+    public static final TagKey<Block> STORAGE_BLOCKS_TRANSCENDIUM = bindC("storage_blocks/transcendium");
+    public static final TagKey<Block> STORAGE_BLOCKS_FROST_METAL = bindC("storage_blocks/frost_metal");
 
-    public static final TagKey<Block> INCORRECT_FOR_AMETHYST_TOOL = bind("incorrect_for_amethyst_tool");
+    public static final TagKey<Block> STORAGE_BLOCKS_SUGAR = bindC("storage_blocks/sugar");
+    public static final TagKey<Block> STORAGE_BLOCKS_GUNPOWDER = bindC("storage_blocks/gunpowder");
+    public static final TagKey<Block> STORAGE_BLOCKS_ROTTEN_FLESH = bindC("storage_blocks/rotten_flesh");
+    public static final TagKey<Block> STORAGE_BLOCKS_FLINT = bindC("storage_blocks/flint");
+
     public static final TagKey<Block> INCORRECT_FOR_EMBER_TOOL = bind("incorrect_for_ember_tool");
-    public static final TagKey<Block> INCORRECT_FOR_MULTIPHASE_TOOL = bind("incorrect_for_multiphase_tool");
-    public static final TagKey<Block> INCORRECT_FOR_FROST_METAL_TOOL = bind("incorrect_for_frost_metal_tool");
     public static final TagKey<Block> INCORRECT_FOR_TRANSCENDIUM_TOOL = bind("incorrect_for_transcendium_tool");
 
     public static final TagKey<Block> ANVIL_HAMMER_BLACKLIST = bind("anvil_hammer_blacklist");
 
     public static final TagKey<Block> FELLING_APPLICABLE = bind("felling_applicable");
     public static final TagKey<Block> CLEANING_APPLICABLE = bind("cleaning_applicable");
+
+    public static final TagKey<Block> COLLISION_IMMUNE = bind("collision_immune");
 
     //mekanism tags
     public static final TagKey<Block> MEKANISM_CARDBOARD_BOX_BLACKLIST = bindMekanism("cardboard_blacklist");

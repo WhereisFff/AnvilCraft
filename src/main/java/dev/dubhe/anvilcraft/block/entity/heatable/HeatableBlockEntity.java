@@ -8,6 +8,8 @@ import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -40,7 +42,10 @@ public abstract class HeatableBlockEntity extends BlockEntity {
         this.duration = duration;
         this.setChanged();
         if (this.level == null || this.level.getGameTime() % 10 != 0) return;
-        PacketDistributor.sendToAllPlayers(new HeatableSyncPacket(this.getBlockPos(), duration));
+        if (this.level instanceof ServerLevel serverLevel) {
+            PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(this.getBlockPos()),
+                new HeatableSyncPacket(this.getBlockPos(), duration));
+        }
     }
 
     public int getSignal() {

@@ -1,11 +1,14 @@
 {
-  "name": "铁砧加速撞击合成",
+  "name": "铁砧高速撞击合成",
   "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:acceleration_ring",
-  "sortnum": 5004,
-  "entry_color": "004400",
+  "sortnum": 25005,
+  "entry_color": "661100",
+  "extra_recipe_mappings": {
+    "anvilcraft:multiphase_matter": 5
+  },
   "pages": [
-    "铁砧被$(thing)加速装置$()加速撞击一些特定的物品时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(item)加速环$()和$(item)偏转环$()，并要提供至少2048kW的能量。",
+    "铁砧以高速撞击一些特定的方块时，会产生特定的物质。$(br2)搭建一套环形加速器，需要若干$(l:power/large_electromagnet#acceleration_ring)加速环$()和$(l:power/large_electromagnet#deflection_ring)偏转环$()，并要提供至少3072kW的能量。$(br2)$(#888888)通过原版的堆叠TNT加速，水流防爆等机制，可以制作不需要电的对撞机，但较有挑战性。$()",
     {
       "type": "patchouli:multiblock",
       "name": "建立环形加速器",
@@ -16,17 +19,17 @@
           "S": "anvilcraft:acceleration_ring[half=mid_center,facing=south,overload=false,switch=on]",
           "N": "anvilcraft:acceleration_ring[half=mid_center,facing=north,overload=false,switch=on]",
           "W": "anvilcraft:acceleration_ring[half=mid_center,facing=west,overload=false,switch=on]",
-          "B": "minecraft:iron_block"
+          "B": "minecraft:smooth_stone",
+          "0": "minecraft:smooth_stone"
         },
         "pattern": [
-          ["             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             "],
-          ["             "," u      N  u ","             ","             "," E           ","             ","             ","             ","           W ","             ","             "," u  S      u ","             "],
-          ["             "," 0           ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             ","             "],
-          ["BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB","BBBBBBBBBBBBB"]
+          ["                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       "],
+          ["                       "," u  N             N  u ","                       ","                       "," E                   W ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       "," E                  W  ","                       ","                       "," u  S             S  u ","                       "],
+          ["                       ","      BBBBBBBBBBB      ","                       ","                       ","                       ","                       "," B                   B "," B                   B "," B                   B "," B                   B "," B                   B "," 0                   B "," B                   B "," B                   B "," B                   B "," B                   B "," B                   B ","                       ","                       ","                       ","                       ","     BBBBBBBBBBBBB     ","                       "],
+          ["                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       ","                       "]
         ]
       },
-      "enable_visualize": false,
-      "text": "结构越大，加速越稳定也越快。"
+      "text": "结构越大，加速越稳定也越快。而过小的结构则无法加速到可撞击速度。"
     },
     {
       "type": "patchouli:multiblock",
@@ -58,17 +61,17 @@
       "type": "patchouli:spotlight",
       "item": "minecraft:anvil",
       "title": "撞击合成配方",
-      "text": "部分撞击配方需要一定等级及以上的铁砧，部分撞击不消耗铁砧，具体如下：$(br)红石块+皇家铁砧(不消耗)→$(item)铀粒$()$(br)飘浮粉块+皇家铁砧(不消耗)→$(item)负物质粒$()$(br)$(item)铀块$()+皇家铁砧(不消耗)→$(item)钚粒$()"
+      "text": "部分撞击配方需要一定等级及以上的铁砧，部分撞击不消耗铁砧，具体如下：$(li)红石块+皇家铁砧(不消耗)→$(item)铀粒$()$(li)飘浮粉块+皇家铁砧(不消耗)→$(item)负物质粒$()"
     },
     {
       "type": "patchouli:text",
       "title": "撞击合成配方",
-      "text": "$(item)浮霜金属块$()+余烬铁砧→$(item)多相物质$()$(br)$(item)负物质块$()+铁砧→$(item)虚空物质$()$(br2)更多配方会在介绍新材料的合成方式时提及。"
+      "text": "$(li)$(item)浮霜金属块$()+余烬铁砧→$(item)多相物质$()$(li)$(item)负物质块$()+铁砧→$(item)虚空物质$()$(br2)更多配方会在介绍新材料的合成方式时提及。"
     },
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:power/advanced_large_electromagnet"
+        "anvilcraft:power/large_electromagnet"
       ],
       "text": ""
     }

@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
 import lombok.Getter;
@@ -16,8 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
 public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer, IHasAffectRange {
     private static final int MAX_OUTPUT_POWER = 4096;
@@ -76,12 +75,14 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     @Override
     public void onLoad() {
         super.onLoad();
+        if (this.getCurrentLevel() == null) return;
         HeatCollectorManager.addHeatCollector(this.getPos(), this.getCurrentLevel());
     }
 
     @Override
     public void onChunkUnloaded() {
         super.onChunkUnloaded();
+        if (this.getCurrentLevel() == null) return;
         HeatCollectorManager.removeHeatCollector(this.getPos(), this.getCurrentLevel());
     }
 
@@ -98,7 +99,6 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
      * 向集热器添加热能
      *
      * @param num 添加至收集器的热能
-     *
      * @return 溢出的热能(即未被添加至该收集器的热能)
      */
     public int inputtingHeat(int num) {
@@ -113,8 +113,8 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
     }
 
     @Override
-    public Level getCurrentLevel() {
-        return Objects.requireNonNull(this.getLevel());
+    public @Nullable Level getCurrentLevel() {
+        return this.getLevel();
     }
 
     @Override

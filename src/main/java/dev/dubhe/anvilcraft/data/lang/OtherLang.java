@@ -21,7 +21,9 @@ public class OtherLang {
         provider.add("entity.minecraft.villager.anvilcraft.jeweler", "Jeweler");
 
         provider.add("pack.anvilcraft.builtin_pack", "AnvilCraft Builtin ResourcePack");
+        provider.add("pack.anvilcraft.builtin_data_pack", "AnvilCraft Builtin DataPack");
         provider.add("pack.anvilcraft.transparent_cauldron.description", "Transparent Cauldron");
+        provider.add("pack.anvilcraft.first_ancient_debris.description", "First Ancient Debris");
 
         provider.add("message.anvilcraft.copied_to_clipboard", "Copied to clipboard");
         provider.add("message.anvilcraft.code_gen_filed", "Code generation failed");
@@ -43,23 +45,6 @@ public class OtherLang {
         provider.add("enchantment.anvilcraft.smelting", "Smelting");
         provider.add("death.attack.anvilcraft.laser", "%1$s was pierced by laser");
         provider.add("death.attack.anvilcraft.lost_in_time", "%1$s was lost in the river of time");
-
-        provider.add("tooltip.anvilcraft.property.fire_reforging", "Reforging: mending in fire or lava");
-        provider.add("tooltip.anvilcraft.property.multiphase", "Multiphase: press [%s] to switch phases");
-        provider.add("tooltip.anvilcraft.property.multiphase.suffix.alpha", "-α");
-        provider.add("tooltip.anvilcraft.property.multiphase.suffix.beta", "-β");
-        provider.add("tooltip.anvilcraft.property.merciless", "Merciless: disable all enchantments except specific [Hold %s] "
-                                                              + "and convert them into attack damage and mining efficiency");
-        provider.add("tooltip.anvilcraft.property.merciless.shifting", "Merciless: disable all enchantments except specific (%s) "
-                                                                       + "and convert them into attack damage and mining efficiency");
-        provider.add("tooltip.anvilcraft.property.merciless.curse", "All curses");
-        provider.add(
-            "tooltip.anvilcraft.property.eternal",
-            "Eternal: unbreakable, immune fire, explode, cactus, even the time and the void");
-        provider.add("tooltip.anvilcraft.property.providence", "Providence: has chance to trigger [Hold %s] enchantments multiple times");
-        provider.add(
-            "tooltip.anvilcraft.property.providence.shifting",
-            "Providence: has chance to trigger (%s) enchantments multiple times");
 
         provider.add("key.categories.anvilcraft", "AnvilCraft");
         provider.add("key.anvilcraft.switch_phase", "Switch Phase");

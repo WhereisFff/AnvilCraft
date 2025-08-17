@@ -3,16 +3,23 @@ package dev.dubhe.anvilcraft.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
+import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
+import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModLootTables;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.Holder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.damagesource.DamageSource;
@@ -21,6 +28,7 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,9 +42,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -49,14 +59,51 @@ public abstract class LivingEntityMixin extends Entity {
     @Unique
     private int anvilcraft$rageTick = 0;
 
-    @Shadow public abstract boolean hasEffect(Holder<MobEffect> effect);
+    @Shadow
+    public abstract boolean hasEffect(Holder<MobEffect> effect);
 
-    @Shadow public abstract ItemStack getItemInHand(InteractionHand hand);
+    @Shadow
+    public abstract ItemStack getItemInHand(InteractionHand hand);
 
-    @Shadow public abstract void kill();
+    @Shadow
+    public abstract void kill();
+
+    @Shadow
+    @Nullable
+    protected Player lastHurtByPlayer;
+
+    @Shadow
+    protected int lastHurtByPlayerTime;
 
     private LivingEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
+    }
+
+    @ModifyVariable(method = "die", at = @At("HEAD"), argsOnly = true)
+    private DamageSource modifySource(DamageSource value, @Share("killer") LocalRef<ServerPlayer> killerRef) {
+        if (value.getEntity() instanceof FallingBlockEntity falling
+            && Util.instanceOfAny(falling.getBlockState().getBlock(), EmberAnvilBlock.class, TranscendenceAnvilBlock.class)
+            && !this.level().isClientSide
+        ) {
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer((ServerLevel) this.level());
+            this.lastHurtByPlayer = killer;
+            this.lastHurtByPlayerTime = 1;
+            killerRef.set(killer);
+            DamageSource source = new DamageSource(
+                this.level().damageSources().playerAttack(killer).typeHolder(),
+                falling, killer, value.getSourcePosition());
+            if (falling.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
+                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5((ServerLevel) this.level(), killer);
+            }
+            return source;
+        }
+        return value;
+    }
+
+    @Inject(method = "die", at = @At("RETURN"))
+    private void disableKiller(DamageSource cause, CallbackInfo ci, @Share("killer") LocalRef<ServerPlayer> killerRef) {
+        if (killerRef.get() == null) return;
+        AnvilCraftFakePlayers.anvilCraftKiller.disable(killerRef.get());
     }
 
     @Inject(

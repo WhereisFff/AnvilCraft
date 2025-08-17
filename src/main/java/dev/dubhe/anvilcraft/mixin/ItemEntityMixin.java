@@ -104,7 +104,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     private @NotNull Vec3 slowDown(ItemEntity instance) {
         Vec3 vec3 = instance.getDeltaMovement();
         double dy = 1;
-        if (this.getItem().is(ModItems.LEVITATION_POWDER)) dy *= -0.005;
+        if (this.getItem().is(ModItemTags.LEVITATIONALS)) dy *= -0.005;
         if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK)) dy *= 0.2;
         if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)
             || this.getItem().is(ModItems.NEGATIVE_MATTER)
@@ -179,9 +179,9 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     private void eternalProof(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.getItem().has(ModComponents.ETERNAL)
             && (source.is(DamageTypeTags.IS_EXPLOSION)
-                || source.is(DamageTypeTags.IS_FIRE)
-                || source.is(DamageTypes.CACTUS)
-                || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
+            || source.is(DamageTypeTags.IS_FIRE)
+            || source.is(DamageTypes.CACTUS)
+            || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
             cir.setReturnValue(false);
         }
     }
@@ -189,7 +189,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     @Inject(method = "getBlockPosBelowThatAffectsMyMovement", at = @At("HEAD"), cancellable = true)
     private void slidingRailProgress(CallbackInfoReturnable<BlockPos> cir) {
         BlockState blockState = this.level().getBlockState(this.getOnPos(0.1f));
-        if (blockState.is(ModBlocks.SLIDING_RAIL) || blockState.is(ModBlocks.SLIDING_RAIL_STOP)) {
+        if (blockState.is(ModBlockTags.SLIDING_RAILS)) {
             cir.setReturnValue(this.getOnPos(0.1f));
         }
     }
@@ -198,10 +198,10 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void anvilcraft$neutroniumTick(CallbackInfo ci) {
-        ItemEntity thiS = Util.cast(this);
+        ItemEntity thiz = Util.cast(this);
         ItemStack item = this.getItem();
         if (!item.is(ModItems.NEUTRONIUM_INGOT)) return;
-        if (item.onEntityItemUpdate(thiS)) {
+        if (item.onEntityItemUpdate(thiz)) {
             ci.cancel();
             return;
         }
@@ -266,7 +266,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         }
         item = this.getItem();
         if (!this.level().isClientSide && this.age >= this.lifespan) {
-            this.lifespan = Mth.clamp(this.lifespan + EventHooks.onItemExpire(thiS), 0, 32766);
+            this.lifespan = Mth.clamp(this.lifespan + EventHooks.onItemExpire(thiz), 0, 32766);
             if (this.age >= this.lifespan) {
                 this.discard();
             }
@@ -393,7 +393,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         ChunkPos chunkPos = this.chunkPosition();
         List<ItemCollectorBlockEntity> list = map.get(chunkPos);
         if (list == null || list.isEmpty()) return;
-        ItemStack itemStack = this.getItem();
+        ItemStack itemStack = this.getItem().copy();
         boolean flag = false;
         for (ItemCollectorBlockEntity collector : list) {
             if (collector.isGridWorking()
@@ -423,12 +423,12 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     }
 
     @Override
-    public void setIsAdsorbable(boolean value) {
+    public void anvilcraft$setIsAdsorbable(boolean value) {
         this.anvilCraft$isAdsorbable = value;
     }
 
     @Override
-    public boolean isAdsorbable() {
+    public boolean anvilcraft$isAdsorbable() {
         return this.anvilCraft$isAdsorbable;
     }
 }

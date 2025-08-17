@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.util;
 public class UnitUtil {
     public static String electricityUnit(int power, boolean original) {
         if (original) {
-            return power + "kW";
+            return power + " kW";
         }
         if (power < 1000) {
             return String.format("%d kW", power);

@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.recipe.generate;
 
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
@@ -13,7 +12,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.armortrim.TrimPatterns;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.entity.DecoratedPotPatterns;
 import org.slf4j.Logger;
 
@@ -42,7 +40,7 @@ public class JewelCraftingRecipeGeneratingCache extends BaseGeneratingCache<Jewe
                 this.musicDiscs.add(holder.value());
             } else if (
                 DecoratedPotPatterns.getPatternFromItem(holder.value()) != null
-                && !holder.value().equals(Items.BRICK)
+                    && !holder.value().equals(Items.BRICK)
             ) {
                 logger.debug(
                     "Add a pottery sherd {} for generating jewel crafting recipes", BuiltInRegistries.ITEM.getKey(holder.value()));
@@ -53,11 +51,6 @@ public class JewelCraftingRecipeGeneratingCache extends BaseGeneratingCache<Jewe
                 this.trimTemplates.add(holder.value());
             }
         }
-    }
-
-    @Override
-    public RecipeType<JewelCraftingRecipe> getType() {
-        return ModRecipeTypes.JEWEL_CRAFTING_TYPE.get();
     }
 
     @Override

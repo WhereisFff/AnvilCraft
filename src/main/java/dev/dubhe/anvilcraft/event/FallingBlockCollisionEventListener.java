@@ -4,6 +4,7 @@ package dev.dubhe.anvilcraft.event;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.FallingBlockCollisionEvent;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
+import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
@@ -47,11 +48,13 @@ public class FallingBlockCollisionEventListener {
         BlockPos pos = event.getPos();
         if (AnvilCraft.config.anvilCollisionCraftSpeed > event.getSpeed()) return;
         //if (level.isClientSide()) return;
-        for (RecipeHolder<AnvilCollisionCraftRecipe> recipe : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
-            if (!recipe.value().anvil().is(event.getFallingBlockEntity().blockState)) continue;
-            if (!recipe.value().hitBlock().is(level.getBlockState(pos))) continue;
+        BlockState blockState = level.getBlockState(pos);
+        for (RecipeHolder<AnvilCollisionCraftRecipe> recipeHolder : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
+            AnvilCollisionCraftRecipe recipe = recipeHolder.value();
+            if (!recipe.anvil().is(event.getFallingBlockEntity().blockState)) continue;
+            if (!recipe.hitBlock().is(blockState)) continue;
             removeBlock(level, pos);
-            if (recipe.value().consume())
+            if (recipe.consume())
                 event.getFallingBlockEntity().kill();
 
             //Entity source = event.getFallingBlockEntity();
@@ -85,7 +88,7 @@ public class FallingBlockCollisionEventListener {
                 largeExplosionParticles,
                 explosionSound
             );
-            ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.value().transformBlocks());
+            ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.transformBlocks());
             explosion.explode();
             explosion.finalizeExplosion(spawnParticles);
             if (level instanceof ServerLevel serverLevel) {
@@ -111,7 +114,7 @@ public class FallingBlockCollisionEventListener {
             }
 
             ArrayList<ItemStack> itemEntities = new ArrayList<>();
-            for (OutputItem outputItem : recipe.value().outputItems()) {
+            for (OutputItem outputItem : recipe.outputItems()) {
                 ItemStack itemStack;
                 if ((itemStack = outputItem.getResult(level.random)) == null) continue;
                 itemEntities.add(itemStack);
@@ -129,7 +132,16 @@ public class FallingBlockCollisionEventListener {
                 for (int i = 0; i < number; i++) {
                     Vec3 deltaMovementVec3 = new Vec3(deltaMovement);
                     Vec3 itemPos = originItemPos.add(deltaMovementVec3.scale(0.2));
-                    ItemEntity itemEntity = new ItemEntity(level, itemPos.x, itemPos.y, itemPos.z, new ItemStack(itemStack.getItem(), quotient + Math.max(Math.min(1, remainder), 0)));
+                    ItemEntity itemEntity = new ItemEntity(
+                        level,
+                        itemPos.x,
+                        itemPos.y,
+                        itemPos.z,
+                        new ItemStack(
+                            itemStack.getItem(),
+                            quotient + Math.clamp(remainder, 0, 1)
+                        )
+                    );
                     deltaMovement.rotateAxis(dRoute, (float) normal.x, (float) normal.y, (float) normal.z);
                     itemEntity.setDeltaMovement(new Vec3(deltaMovement));
                     MergeCooldownItemEntity.castFromItemEntity(itemEntity).setMergeCooldown(5);
@@ -140,7 +152,8 @@ public class FallingBlockCollisionEventListener {
             return;
         }
         if (event.getFallingBlockEntity().getBlockState().is(BlockTags.ANVIL)) {
-            if (level.getBlockState(pos).getDestroySpeed(level, pos) > 0) {
+            if (level.getBlockState(pos).getDestroySpeed(level, pos) > 0
+                && !level.getBlockState(pos).is(ModBlockTags.COLLISION_IMMUNE)) {
                 removeBlock(level, pos);
             }
             level.explode(

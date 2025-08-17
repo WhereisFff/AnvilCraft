@@ -3,9 +3,6 @@
   "category": "anvilcraft:basic_gameplay",
   "icon": "anvilcraft:block_placer",
   "sortnum": 1005,
-  "extra_recipe_mappings": {
-    "anvilcraft:crab_claw": 3
-  },
   "pages": [
     {
       "type": "patchouli:text",
@@ -14,13 +11,7 @@
     {
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:magnet",
-      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。$(br2)shift+右键，在方块上表面生成$(item)磁化节点$()。"
-    },
-    {
-      "type": "patchouli:entity",
-      "anchor": "trader",
-      "entity": "anvilcraft:magnetized_node",
-      "text": "吸引所有接触到其$(thing)附着方块$()的物品，且不会再次吸引加工后的产物，方便进行$(l:basic/item_processing)物品处理$()"
+      "text": "$(item)手持磁铁$()右键使用将附近物品吸引到脚下。$(br2)shift+右键，在方块上表面生成$(item)磁化节点$()。其可以吸引所有接触到其$(thing)附着方块$()的物品，且不会再次吸引加工后的产物，方便进行$(l:basic/item_processing)物品处理$()"
     },
     {
       "type": "patchouli:crafting",
@@ -30,6 +21,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:crab_claw",
+      "link_recipe": true,
       "text": "主手或副手手持时增加3格触及距离，右键可以强制撬开$(item)潜影贝$()，从$(item)蟹笼$()产出。"
     },
     {
@@ -71,7 +63,7 @@
         ]
       },
       "enable_visualize": "false",
-      "text": "溜槽成链时，被指向的溜槽变为简化溜槽，不再从世界吸取物品，不能过滤。"
+      "text": "溜槽成链时，被指向的溜槽变为简化溜槽，不再从世界吸取物品，不能过滤，不受红石信号控制。"
     },
     {
       "type": "patchouli:crafting",
@@ -80,32 +72,14 @@
     },
     {
       "type": "patchouli:crafting",
-      "anchor": "pulse_generator",
-      "recipe": "anvilcraft:pulse_generator",
-      "text": "通过$(item)脉冲发生器$()的gui可以设置其在什么时候、延迟多少时间发出多长时间的脉冲。"
-    },
-    "$(#aa2222)左上角$()的按钮控制三个模式：收到红石信号时工作/信号消失时工作/不受到信号时循环工作。$(br)在$(#aa2222)中间$()设置延时多久发出信号。$(br)在$(#aa2222)右边$()设置发出信号的持续时间。$(br)$(#aa2222)左下角$()的按钮控制输出信号符合正常模式/反转模式。",
-    {
-      "type": "patchouli:crafting",
       "recipe": "anvilcraft:active_silencer",
       "text": "$(item)主动消音器$()可以消除以其为中心31x31x31内的选定声音。打开gui可以搜索和屏蔽声音。"
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "anvilcraft:block_comparator",
-      "text": "$(item)方块比较器$()两侧的方块相同时，向前方发出红石信号，默认为普通模式，右键切换为精准模式。$(br)$(#aa2222)普通模式$()下，仅检查方块是否相同。$(br)$(#aa2222)精准模式$()下，会检查方块的状态是否完全相同。"
-    },
-    {
-      "type": "patchouli:crafting",
-      "anchor": "item_detector",
-      "recipe": "anvilcraft:item_detector",
-      "text": "$(item)物品探测器$()可检测身后最多8格的$(thing)掉落物$()。打开gui可以设置范围和过滤。$(br)$(#aa2222)不设置过滤$()时，输出$(thing)红石信号$()的强度随$(thing)掉落物$()的数量线性变化。$(br)$(#aa2222)设置过滤$()时，对每个过滤格根据$(thing)对应掉落物$()数量1-[$(thing)格内物品数n$()*64]，线性计算$(thing)红石信号$()后，输出除0值外的最小值。即过滤的$(thing)掉落物$()都不存在才不输出信号。"
-    },
-    {
-      "type": "patchouli:crafting",
-      "anchor": "resin_block",
-      "recipe": "anvilcraft:resin_block",
-      "text": "$(item)树脂块$()可以抓捕$(thing)碰撞箱$()的长宽小于1.5,高小于2的生物，但对于敌对和中立生物，额外要求其拥有虚弱状态。之后可以右键地面释放生物。$(br)举个例子，村民可以直接抓取，僵尸需要对其施加虚弱效果才能抓取。$(br)$(item)树脂$()通过$(l:basic/item_processing#item_crush)粉碎$()$(item)原木$()获得。"
+      "anchor": "disk",
+      "recipe": "anvilcraft:disk",
+      "text": "首次右键复制方块过滤栏，后续右键其他方块粘贴，潜行右键清空。 $(p)不会改变方块朝向等设置"
     }
   ]
 }

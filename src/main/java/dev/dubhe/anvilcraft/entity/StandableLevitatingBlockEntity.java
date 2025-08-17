@@ -52,8 +52,8 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
             pos.getY(),
             (double) pos.getZ() + 0.5,
             blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-            ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
-            : blockState
+                ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
+                : blockState
         );
         level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
         level.addFreshEntity(levitating);
@@ -76,7 +76,7 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
             this.discard();
         } else if (
             (this.time <= 1 || !this.getDeltaMovement().equals(Vec3.ZERO))
-            && StandableFallingBlockEntity.isFree(
+                && StandableFallingBlockEntity.isFree(
                 this.level(), new BlockPos(
                     this.getBlockX(), (int) Math.floor(blockPos.getCenter().y + 0.54), this.getBlockZ()))
         ) {
@@ -142,8 +142,8 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
             entity.setDeltaMovement(
                 entity.getDeltaMovement().x,
                 entity.getDeltaMovement().y + 0.04 > 0
-                ? motion.y - (entity.getBoundingBox().minY - this.getBoundingBox().maxY) + 0.0392
-                : motion.y * 1.5,
+                    ? motion.y - (entity.getBoundingBox().minY - this.getBoundingBox().maxY) + 0.0392
+                    : motion.y * 1.5,
                 entity.getDeltaMovement().z
             );
         }
@@ -151,12 +151,12 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
 
     @Override
     public void remove(RemovalReason reason) {
+        super.remove(reason);
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().expandTowards(0, 1.75F, 0),
             EntitySelector.pushableBy(this)
         );
-        if (list.isEmpty()) return;
         for (Entity entity : list) {
             if (entity instanceof FallingBlockEntity) continue;
             if (entity instanceof IonocraftEntity) continue;
@@ -166,7 +166,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
                 entity.getDeltaMovement().z
             );
         }
-        super.remove(reason);
     }
 
     @Override
@@ -177,6 +176,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
     @Override
     public boolean canCollideWith(Entity entity) {
         return super.canCollideWith(entity)
-               && !Util.instanceOfAny(entity, FallingBlockEntity.class, IonocraftEntity.class);
+            && !Util.instanceOfAny(entity, FallingBlockEntity.class, IonocraftEntity.class);
     }
 }
