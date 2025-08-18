@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.init;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.SetBlock;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.SpawnItem;
@@ -24,4 +25,7 @@ public class ModRecipeOutcomeTypes {
 
     public static final DeferredHolder<IRecipeOutcome.Type<?>, ProduceHeat.Type> PRODUCE_HEAT = OUTCOME_TYPE
         .register("produce_heat", ProduceHeat.Type::new);
+
+    public static final DeferredHolder<IRecipeOutcome.Type<?>, ProduceExplosion.Type> PRODUCE_EXPLOSION = OUTCOME_TYPE
+        .register("produce_explosion", ProduceExplosion.Type::new);
 }
