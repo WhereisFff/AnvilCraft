@@ -4,6 +4,7 @@ import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.CookingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
@@ -105,7 +106,7 @@ public class VanillaRecipesWrap {
             VanillaRecipesWrap.recipes.add(new RecipeHolder<>(location, unpackRecipe));
         }
         if (ingredients.size() != 4 && ingredients.size() != 9) return;
-        if (!result.is(Tags.Items.STORAGE_BLOCKS)) return;
+        if (!result.is(Tags.Items.STORAGE_BLOCKS) && !result.is(ModItemTags.COMPRESS_ITEM)) return;
         for (Ingredient ingredient : ingredients) {
             if (!ingredient.equals(first)) return;
         }
@@ -137,7 +138,7 @@ public class VanillaRecipesWrap {
         Ingredient first = ingredients.getFirst();
         if (ingredients.size() <= 1) return;
         ItemStack result = recipe.getResultItem(registries).copy();
-        if (!result.is(Tags.Items.STORAGE_BLOCKS)) return;
+        if (!result.is(Tags.Items.STORAGE_BLOCKS) && !result.is(ModItemTags.COMPRESS_ITEM)) return;
         for (Ingredient ingredient : ingredients) {
             if (!ingredient.equals(first)) return;
         }
