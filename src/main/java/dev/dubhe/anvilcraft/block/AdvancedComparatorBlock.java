@@ -7,10 +7,16 @@ import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity.Mode;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity.State;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
 import net.minecraft.world.entity.player.Player;
@@ -19,12 +25,11 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.SignalGetter;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -103,7 +108,7 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
-        this.update(level, pos, state);
+        level.scheduleTick(pos, this, 1);
     }
 
     @Override
@@ -118,13 +123,13 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
 
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        this.update(level, pos, state);
+        level.scheduleTick(pos, state.getBlock(), 1);
     }
 
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
-        this.update(level, pos, state);
+        level.scheduleTick(pos, state.getBlock(), 1);
     }
 
     @Override
@@ -171,7 +176,6 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
             }
         }
         comparator.setChanged();
-        comparator.setInputtingSignal(getInputSignal(level, pos, state));
         this.updateBlockAndNeighbours(level, pos, state, comparator);
     }
 
@@ -208,14 +212,16 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
             : Math.min(level.getSignal(pos.relative(right), right), level.getSignal(pos.relative(left), left));
     }
 
-//    @Override
-//    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-//        Optional<AdvancedComparatorBlockEntity> optional = level.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get());
-//        if (level.isClientSide || optional.isEmpty()) return;
-//        AdvancedComparatorBlockEntity blockEntity = optional.get();
-//        blockEntity.updateInputtingSignal(level, pos, state);
-//        this.updateBlockAndNeighbours(level, pos, state, blockEntity);
-//    }
+    @Override
+    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        Optional<AdvancedComparatorBlockEntity> optional = level.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get());
+        if (level.isClientSide || optional.isEmpty()) return;
+        AdvancedComparatorBlockEntity blockEntity = optional.get();
+        blockEntity.updateInputtingSignal(level, pos, state);
+        this.updateBlockAndNeighbours(level, pos, state, blockEntity);
+        this.update(level, pos, state);
+        level.scheduleTick(pos, this, 0);
+    }
 
     protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state, AdvancedComparatorBlockEntity blockEntity) {
         Direction direction = state.getValue(AdvancedComparatorBlock.FACING).getOpposite();
@@ -233,20 +239,15 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-        Level level, BlockState state,
-        BlockEntityType<T> type
-    ) {
-        if (level.isClientSide()) return null;
-        if (type != ModBlockEntities.ADVANCED_COMPARATOR.get()) return null;
-        return (level1, pos, state1, blockEntity1) -> {
-            Optional<AdvancedComparatorBlockEntity> optional = level1.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get());
-            if (level1.isClientSide || optional.isEmpty()) return;
-            AdvancedComparatorBlockEntity blockEntity = optional.get();
-            blockEntity.updateInputtingSignal(level1, pos, state);
-            this.updateBlockAndNeighbours(level1, pos, state, blockEntity);
-            this.update(level1, pos, state1);
-        };
+    public boolean getWeakChanges(BlockState state, LevelReader world, BlockPos pos) {
+        return true;
+    }
+
+    @Override
+    protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
+        super.triggerEvent(state, level, pos, id, param);
+        BlockEntity blockentity = level.getBlockEntity(pos);
+        return blockentity != null && blockentity.triggerEvent(id, param);
     }
 
     @Override
@@ -270,5 +271,25 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
             return InteractionResult.SUCCESS;
         }
         return InteractionResult.FAIL;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
+    ) {
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (level.getBlockEntity(pos) instanceof AdvancedComparatorBlockEntity be && player.getItemInHand(hand).is(ModItems.DISK)) {
+                return Util.interactionResultConverter()
+                    .apply(be.useDisk(level, serverPlayer, hand, serverPlayer.getItemInHand(hand), hitResult));
+            }
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 }

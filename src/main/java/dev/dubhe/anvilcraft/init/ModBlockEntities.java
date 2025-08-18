@@ -251,7 +251,7 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<AdvancedComparatorBlockEntity> ADVANCED_COMPARATOR = REGISTRATE
         .blockEntity("advanced_comparator", AdvancedComparatorBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.ADVANCED_COMPARATOR)
-        .renderer(()-> AdvancedComparatorBlockEntityRender::new)
+        .renderer(() -> AdvancedComparatorBlockEntityRender::new)
         .register();
 
     public static final BlockEntityEntry<HeatedBlockEntity> HEATED_BLOCK = REGISTRATE

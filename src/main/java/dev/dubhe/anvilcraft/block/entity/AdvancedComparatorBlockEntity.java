@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.block.entity;
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.block.AdvancedComparatorBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.AdvancedComparatorMenu;
 import dev.dubhe.anvilcraft.util.Util;
@@ -30,6 +31,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Optional;
 
 @Getter
 @Setter
@@ -62,9 +64,9 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries){
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag compoundTag = new CompoundTag();
-        this.saveAdditional(compoundTag,registries);
+        this.saveAdditional(compoundTag, registries);
         return compoundTag;
     }
 
@@ -78,7 +80,9 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.put("ExtraData", this.constructDataNbt());
+        CompoundTag data = this.constructDataNbt();
+        data.putInt("InputSignal", this.inputtingSignal);
+        tag.put("ExtraData", data);
     }
 
     @Override
@@ -90,6 +94,9 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
             || (this.compareMode == Mode.WINDOW && this.inputtingSignal <= this.highLimit)) {
             this.state = State.OUTPUT_HIGH;
         } else this.state = State.OUTPUT_LOW;
+        Optional.ofNullable(this.getLevel())
+            .ifPresent(level1 ->
+                level1.scheduleTick(this.getBlockPos(), ModBlocks.ADVANCED_COMPARATOR.get(), 1));
     }
 
     public CompoundTag constructDataNbt() {
@@ -99,7 +106,6 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
         data.putBoolean("RedstoneControl", this.redstoneControl);
         data.putInt("HighLimit", this.highLimit);
         data.putInt("LowLimit", this.lowLimit);
-        data.putInt("InputSignal", this.inputtingSignal);
         return data;
     }
 

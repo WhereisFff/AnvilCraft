@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableButton;
 import dev.dubhe.anvilcraft.inventory.AdvancedComparatorMenu;
 import dev.dubhe.anvilcraft.network.AdvancedComparatorUpdatePacket;
@@ -12,6 +13,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,14 +63,17 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
 
     @Override
     public void onClose() {
+        AdvancedComparatorBlockEntity comparator = this.menu.getBlockEntity();
         PacketDistributor.sendToServer(new AdvancedComparatorUpdatePacket(
-            this.menu.getBlockEntity().getCompareMode().index(),
-            this.menu.getBlockEntity().isOutputInvert(),
-            this.menu.getBlockEntity().isRedstoneControl(),
-            this.menu.getBlockEntity().getHighLimit(),
-            this.menu.getBlockEntity().getLowLimit(),
-            this.menu.getBlockEntity().getInputtingSignal()
+            comparator.getCompareMode().index(),
+            comparator.isOutputInvert(),
+            comparator.isRedstoneControl(),
+            comparator.getHighLimit(),
+            comparator.getLowLimit(),
+            comparator.getInputtingSignal()
         ));
+        Level level = comparator.getLevel();
+        if (level != null) level.scheduleTick(comparator.getBlockPos(), comparator.getBlockState().getBlock(), 1);
         super.onClose();
     }
 
