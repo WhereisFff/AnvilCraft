@@ -25,5 +25,6 @@ public class RegisterAdditionalEventListener {
         event.register(ModelResourceLocation.standalone(AnvilCraft.of("block/void_energy_collector_head")));
         event.register(ModelResourceLocation.standalone(AnvilCraft.of("block/laser")));
         event.register(ModelResourceLocation.standalone(AnvilCraft.of("block/axis")));
+        event.register(ModelResourceLocation.standalone(AnvilCraft.of("block/advanced_comparator_indicator")));
     }
 }
