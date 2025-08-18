@@ -32,6 +32,7 @@ import dev.dubhe.anvilcraft.item.EmberMetalResonatorItem;
 import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
+import dev.dubhe.anvilcraft.item.EmptySuperCapacitorItem;
 import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHeavyHalberdItem;
@@ -60,6 +61,7 @@ import dev.dubhe.anvilcraft.item.RoyalShovelItem;
 import dev.dubhe.anvilcraft.item.RoyalSwordItem;
 import dev.dubhe.anvilcraft.item.SeedsPackItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
+import dev.dubhe.anvilcraft.item.SuperCapacitorItem;
 import dev.dubhe.anvilcraft.item.TopazItem;
 import dev.dubhe.anvilcraft.item.TranscendenceAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.TranscendenceHeavyHalberdItem;
@@ -1030,6 +1032,14 @@ public class ModItems {
             .unlockedBy("has_copper_plates", RegistrateRecipeProvider.has(ModItemTags.COPPER_PLATES))
             .unlockedBy("has_resin", RegistrateRecipeProvider.has(ModItems.RESIN))
             .save(provider))
+        .register();
+    public static final ItemEntry<SuperCapacitorItem> SUPER_CAPACITOR = REGISTRATE
+        .item("supercapacitor", SuperCapacitorItem::new)
+        .model(DataGenUtil::noExtraModelOrState)
+        .register();
+    public static final ItemEntry<EmptySuperCapacitorItem> SUPER_CAPACITOR_EMPTY = REGISTRATE
+        .item("supercapacitor_empty", EmptySuperCapacitorItem::new)
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
     public static final ItemEntry<Item> CHOCOLATE = REGISTRATE
         .item("chocolate", properties -> new Item(properties.food(ModFoods.CHOCOLATE)))
