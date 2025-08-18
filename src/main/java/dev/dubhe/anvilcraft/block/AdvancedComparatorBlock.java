@@ -9,9 +9,7 @@ import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.decoration.ItemFrame;
@@ -32,6 +30,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
@@ -47,7 +46,7 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
     public static final MapCodec<AdvancedComparatorBlock> CODEC = simpleCodec(AdvancedComparatorBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final BooleanProperty INPUT = BooleanProperty.create("input");
+    public static final IntegerProperty INPUT = IntegerProperty.create("input",0,15);
     public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
     public static final EnumProperty<Mode> MODE = EnumProperty.create("mode", Mode.class);
 
@@ -58,7 +57,7 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
         this.registerDefaultState(
             this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(INPUT, false)
+                .setValue(INPUT, 0)
                 .setValue(OUTPUT, false)
                 .setValue(MODE, Mode.HYSTERESIS)
                 .setValue(POWERED, false)
@@ -150,38 +149,28 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
         int highLimit = comparator.getHighLimit();
         int lowLimit = comparator.getLowLimit();
         int inputtingSignal = comparator.getInputtingSignal();
-        if (mode == Mode.WINDOW && highLimit == lowLimit && inputtingSignal == highLimit) {
-            comparator.setState(State.OUTPUT_HIGH);
-            return;
-        }
+        if (mode == Mode.WINDOW && highLimit == lowLimit && inputtingSignal == highLimit) comparator.setState(State.OUTPUT_HIGH);
         switch (comparator.getState()) {
             case OUTPUT_LOW -> {
                 if (mode == Mode.HYSTERESIS) {
-                    if (inputtingSignal >= highLimit) {
+                    if (inputtingSignal >= highLimit)
                         comparator.setState(State.OUTPUT_HIGH);
-                        comparator.setChanged();
-                    }
                 } else if (mode == Mode.WINDOW) {
-                    if (inputtingSignal >= lowLimit && inputtingSignal <= highLimit) {
+                    if (inputtingSignal >= lowLimit && inputtingSignal <= highLimit)
                         comparator.setState(State.OUTPUT_HIGH);
-                        comparator.setChanged();
-                    }
                 }
             }
             case OUTPUT_HIGH -> {
                 if (mode == Mode.HYSTERESIS) {
-                    if (inputtingSignal < lowLimit) {
+                    if (inputtingSignal < lowLimit)
                         comparator.setState(State.OUTPUT_LOW);
-                        comparator.setChanged();
-                    }
                 } else if (mode == Mode.WINDOW) {
-                    if (inputtingSignal < lowLimit || inputtingSignal > highLimit) {
+                    if (inputtingSignal < lowLimit || inputtingSignal > highLimit)
                         comparator.setState(State.OUTPUT_LOW);
-                        comparator.setChanged();
-                    }
                 }
             }
         }
+        comparator.setChanged();
         comparator.setInputtingSignal(getInputSignal(level, pos, state));
         this.updateBlockAndNeighbours(level, pos, state, comparator);
     }
@@ -219,22 +208,26 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
             : Math.min(level.getSignal(pos.relative(right), right), level.getSignal(pos.relative(left), left));
     }
 
-    @Override
-    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        Optional<AdvancedComparatorBlockEntity> optional = level.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get());
-        if (level.isClientSide || optional.isEmpty()) return;
-        AdvancedComparatorBlockEntity blockEntity = optional.get();
-        blockEntity.updateInputtingSignal(level, pos, state);
-        this.updateBlockAndNeighbours(level, pos, state, blockEntity);
-    }
+//    @Override
+//    protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+//        Optional<AdvancedComparatorBlockEntity> optional = level.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get());
+//        if (level.isClientSide || optional.isEmpty()) return;
+//        AdvancedComparatorBlockEntity blockEntity = optional.get();
+//        blockEntity.updateInputtingSignal(level, pos, state);
+//        this.updateBlockAndNeighbours(level, pos, state, blockEntity);
+//    }
 
     protected void updateBlockAndNeighbours(Level level, BlockPos pos, BlockState state, AdvancedComparatorBlockEntity blockEntity) {
         Direction direction = state.getValue(AdvancedComparatorBlock.FACING).getOpposite();
         BlockPos neighbourPos = pos.relative(direction);
         boolean shouldPower = blockEntity.isOutputting();
-        boolean isInput = blockEntity.getInputtingSignal() > 0;
+        int inputtingSignal = blockEntity.getInputtingSignal();
         Mode mode = blockEntity.getCompareMode();
-        level.setBlockAndUpdate(pos, state.setValue(AdvancedComparatorBlock.POWERED, shouldPower).setValue(AdvancedComparatorBlock.INPUT, isInput).setValue(AdvancedComparatorBlock.OUTPUT, shouldPower).setValue(AdvancedComparatorBlock.MODE, mode));
+        level.setBlockAndUpdate(pos,
+            state.setValue(AdvancedComparatorBlock.POWERED, shouldPower)
+            .setValue(AdvancedComparatorBlock.INPUT, inputtingSignal)
+            .setValue(AdvancedComparatorBlock.OUTPUT, shouldPower)
+            .setValue(AdvancedComparatorBlock.MODE, mode));
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
     }
