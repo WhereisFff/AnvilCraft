@@ -39,8 +39,9 @@ public class ResourceEventListener {
         manager.anc$addRecipes(init);
         for (RecipeHolder<?> holder : manager.getRecipes()) {
             Recipe<?> value = holder.value();
-            if (!(value instanceof InWorldRecipe recipe)) continue;
-            manager1.register(recipe);
+            if (!(value instanceof InWorldRecipe)) continue;
+            //noinspection unchecked
+            manager1.register((RecipeHolder<InWorldRecipe>) holder);
         }
         manager.anc$setInWorldRecipeManager(manager1);
     }
