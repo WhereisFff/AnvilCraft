@@ -48,7 +48,7 @@ public class AdvancedComparatorBlockEntityRender implements BlockEntityRenderer<
                 0, 0, 0,
                 light,
                 overlay,
-                ModelData.EMPTY, (RenderType)null
+                ModelData.EMPTY, (RenderType) null
             );
         poseStack.popPose();
     }
