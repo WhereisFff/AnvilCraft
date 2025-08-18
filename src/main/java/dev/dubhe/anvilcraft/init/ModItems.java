@@ -1129,7 +1129,7 @@ public class ModItems {
         .item("tin_can", Item::new)
         .register();
     public static final ItemEntry<CannedFoodItem> CANNED_FOOD = REGISTRATE
-        .item("canned_food", p -> new CannedFoodItem(p, TIN_CAN))
+        .item("canned_food", CannedFoodItem::new)
         .tag(Tags.Items.FOODS)
         .register();
 
