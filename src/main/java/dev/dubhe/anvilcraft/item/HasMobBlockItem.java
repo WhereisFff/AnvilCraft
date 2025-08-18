@@ -64,7 +64,7 @@ public class HasMobBlockItem extends BlockItem {
             isMonster = true;
             id = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE);
         } else {
-            id = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIG);
+            id = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.MOOSHROOM);
         }
         CompoundTag tag = new CompoundTag();
         tag.putString("id", id.toString());
