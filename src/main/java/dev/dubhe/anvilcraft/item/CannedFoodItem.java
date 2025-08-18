@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModItems;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.Holder;
@@ -21,6 +22,14 @@ public class CannedFoodItem extends Item implements IExtraItemDisplay {
     public CannedFoodItem(Properties properties, Holder<Item> canItem) {
         super(properties);
         this.canItem = canItem;
+    }
+
+    @Override
+    public void verifyComponentsAfterLoad(ItemStack stack) {
+        if (!stack.has(ModComponents.DISPLAY_ITEM)) {
+            this.setFood(stack, ModItems.BEEF_MUSHROOM_STEW.asStack());
+        }
+        super.verifyComponentsAfterLoad(stack);
     }
 
     @Override
@@ -50,12 +59,12 @@ public class CannedFoodItem extends Item implements IExtraItemDisplay {
 
     @Override
     public int xOffset(ItemStack stack) {
-        return 4;
+        return 5;
     }
 
     @Override
     public int yOffset(ItemStack stack) {
-        return 6;
+        return 2;
     }
 
     @Override

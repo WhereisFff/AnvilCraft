@@ -3,16 +3,19 @@ package dev.dubhe.anvilcraft.item;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.block.entity.HasMobBlockEntity;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
@@ -33,7 +36,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -46,6 +48,28 @@ import java.util.Optional;
 public class HasMobBlockItem extends BlockItem {
     public HasMobBlockItem(Block block, Properties properties) {
         super(block, properties);
+    }
+
+    @Override
+    public void verifyComponentsAfterLoad(ItemStack stack) {
+        super.verifyComponentsAfterLoad(stack);
+        if (stack.has(ModComponents.SAVED_ENTITY)) return;
+        if (
+            !stack.is(ModBlocks.MOB_AMBER_BLOCK.asItem())
+                && !stack.is(ModBlocks.RESENTFUL_AMBER_BLOCK.asItem())
+        ) return;
+        ResourceLocation id;
+        boolean isMonster = false;
+        if (stack.is(ModBlocks.RESENTFUL_AMBER_BLOCK.asItem())) {
+            isMonster = true;
+            id = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.ZOMBIE);
+        } else {
+            id = BuiltInRegistries.ENTITY_TYPE.getKey(EntityType.PIG);
+        }
+        CompoundTag tag = new CompoundTag();
+        tag.putString("id", id.toString());
+        SavedEntity savedEntity = new SavedEntity(tag, isMonster);
+        stack.set(ModComponents.SAVED_ENTITY, savedEntity);
     }
 
     @Override
@@ -74,7 +98,7 @@ public class HasMobBlockItem extends BlockItem {
         return super.updateCustomBlockEntityTag(pos, level, player, stack, state);
     }
 
-    public static boolean hasMob(@NotNull ItemStack stack) {
+    public static boolean hasMob(ItemStack stack) {
         return stack.has(ModComponents.SAVED_ENTITY);
     }
 
