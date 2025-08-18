@@ -40,19 +40,19 @@ public class AdvancementLang {
 
         // region anvil crafting line
         provider.add("advancements.anvilcraft.dang.title", "Dang!");
-        provider.add("advancements.anvilcraft.dang.description", "Execute any anvil crafting");
+        provider.add("advancements.anvilcraft.dang.description", "Perform anything anvil crafting");
 
         provider.add("advancements.anvilcraft.stone_crusher.title", "Stone crusher");
-        provider.add("advancements.anvilcraft.stone_crusher.description", "Use an anvil to smash cobblestone and create gravel, then to smash gravel and create sand");
+        provider.add("advancements.anvilcraft.stone_crusher.description", "Use an anvil to cobblestone to obtain gravel, then smash gravel to obtain sand");
 
         provider.add("advancements.anvilcraft.fossick.title", "Fossick");
-        provider.add("advancements.anvilcraft.fossick.description", "Sift the sand on the scaffolding with an anvil to obtain gold nugget");
+        provider.add("advancements.anvilcraft.fossick.description", "Use an anvil to smash the sand on the scaffold to obtain gold nugget");
 
         provider.add("advancements.anvilcraft.ice_maker.title", "Ice maker");
         provider.add("advancements.anvilcraft.ice_maker.description", "Use an anvil to crush snow block on a medicine pot to make ice");
 
         provider.add("advancements.anvilcraft.four281.title", "4 to 81");
-        provider.add("advancements.anvilcraft.four281.description", "Use an anvil to smash two pieces of ice together to create packed ice, and then smash the two pieces of packed ice together to create blue ice");
+        provider.add("advancements.anvilcraft.four281.description", "Use an anvil to compress two pieces of ice to make packed ice, and then use an anvil to compress two pieces of packed ice to make blue ice");
         // endregion
 
         // region automation line

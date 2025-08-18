@@ -25,12 +25,16 @@
     }
   },
   "display": {
-    "description": "Use an anvil to compress two pieces of ice to make packed ice, and then use an anvil to compress two pieces of packed ice to make blue ice",
+    "description": {
+      "translate": "advancements.anvilcraft.four281.description"
+    },
     "icon": {
       "count": 1,
       "id": "minecraft:blue_ice"
     },
-    "title": "4 to 81"
+    "title": {
+      "translate": "advancements.anvilcraft.four281.title"
+    }
   },
   "requirements": [
     [

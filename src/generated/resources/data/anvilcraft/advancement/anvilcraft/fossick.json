@@ -14,12 +14,16 @@
     }
   },
   "display": {
-    "description": "Use an anvil to smash the sand on the scaffold to obtain gold nugget",
+    "description": {
+      "translate": "advancements.anvilcraft.fossick.description"
+    },
     "icon": {
       "count": 1,
       "id": "minecraft:gold_nugget"
     },
-    "title": "Fossick"
+    "title": {
+      "translate": "advancements.anvilcraft.fossick.title"
+    }
   },
   "requirements": [
     [

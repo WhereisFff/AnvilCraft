@@ -25,12 +25,16 @@
     }
   },
   "display": {
-    "description": "Use an anvil to cobblestone to obtain gravel, then smash gravel to obtain sand",
+    "description": {
+      "translate": "advancements.anvilcraft.stone_crusher.description"
+    },
     "icon": {
       "count": 1,
       "id": "minecraft:sand"
     },
-    "title": "Stone Crusher"
+    "title": {
+      "translate": "advancements.anvilcraft.stone_crusher.title"
+    }
   },
   "requirements": [
     [

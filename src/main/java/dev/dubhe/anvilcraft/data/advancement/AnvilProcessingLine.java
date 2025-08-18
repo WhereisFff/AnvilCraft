@@ -19,8 +19,8 @@ public class AnvilProcessingLine {
         .parent(AnvilCraftAdvancement.root)
         .display(
             Blocks.ANVIL,
-            Component.literal("Dang!"),
-            Component.literal("Perform anything anvil crafting"),
+            Component.translatable("advancements.anvilcraft.dang.title"),
+            Component.translatable("advancements.anvilcraft.dang.description"),
             null, AdvancementType.GOAL,
             true, true, false
         )
@@ -31,8 +31,8 @@ public class AnvilProcessingLine {
         .parent(dang)
         .display(
             Blocks.SAND,
-            Component.literal("Stone Crusher"),
-            Component.literal("Use an anvil to cobblestone to obtain gravel, then smash gravel to obtain sand"),
+            Component.translatable("advancements.anvilcraft.stone_crusher.title"),
+            Component.translatable("advancements.anvilcraft.stone_crusher.description"),
             null, AdvancementType.TASK,
             true, true, false
         )
@@ -44,8 +44,8 @@ public class AnvilProcessingLine {
         .parent(stoneCrusher)
         .display(
             Items.GOLD_NUGGET,
-            Component.literal("Fossick"),
-            Component.literal("Use an anvil to smash the sand on the scaffold to obtain gold nugget"),
+            Component.translatable("advancements.anvilcraft.fossick.title"),
+            Component.translatable("advancements.anvilcraft.fossick.description"),
             null, AdvancementType.TASK,
             true, true, false
         )
@@ -56,8 +56,8 @@ public class AnvilProcessingLine {
         .parent(dang)
         .display(
             Items.ICE,
-            Component.literal("Ice Maker"),
-            Component.literal("Use an anvil to smash snow blocks on a cauldron pot to make ice"),
+            Component.translatable("advancements.anvilcraft.ice_maker.title"),
+            Component.translatable("advancements.anvilcraft.ice_maker.description"),
             null, AdvancementType.TASK,
             true, true, false
         )
@@ -68,8 +68,8 @@ public class AnvilProcessingLine {
         .parent(iceMaker)
         .display(
             Items.BLUE_ICE,
-            Component.literal("4 to 81"),
-            Component.literal("Use an anvil to compress two pieces of ice to make packed ice, and then use an anvil to compress two pieces of packed ice to make blue ice"),
+            Component.translatable("advancements.anvilcraft.four281.title"),
+            Component.translatable("advancements.anvilcraft.four281.description"),
             null, AdvancementType.TASK,
             true, true, false
         )

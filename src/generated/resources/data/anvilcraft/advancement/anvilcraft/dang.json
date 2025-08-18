@@ -6,13 +6,17 @@
     }
   },
   "display": {
-    "description": "Perform anything anvil crafting",
+    "description": {
+      "translate": "advancements.anvilcraft.dang.description"
+    },
     "frame": "goal",
     "icon": {
       "count": 1,
       "id": "minecraft:anvil"
     },
-    "title": "Dang!"
+    "title": {
+      "translate": "advancements.anvilcraft.dang.title"
+    }
   },
   "requirements": [
     [

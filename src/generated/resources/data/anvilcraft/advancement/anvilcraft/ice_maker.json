@@ -14,12 +14,16 @@
     }
   },
   "display": {
-    "description": "Use an anvil to smash snow blocks on a cauldron pot to make ice",
+    "description": {
+      "translate": "advancements.anvilcraft.ice_maker.description"
+    },
     "icon": {
       "count": 1,
       "id": "minecraft:ice"
     },
-    "title": "Ice Maker"
+    "title": {
+      "translate": "advancements.anvilcraft.ice_maker.title"
+    }
   },
   "requirements": [
     [
