@@ -151,13 +151,13 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
         if (this.menu.getBlockEntity().isOutputInvert()) {
             guiGraphics.fill(min + 3, sliderY, min + 4, sliderY - 90, 0xFF990000);
             guiGraphics.fill(max + 3, sliderY, max + 4, sliderY - 90, 0xFFFF0000);
-            guiGraphics.fill(sliderMin, sliderY - 90, max + 4, sliderY - 91, 0xFFFF0000);
-            guiGraphics.fill(sliderMax + 3, sliderY, min + 3, sliderY - 1, 0xFF990000);
+            guiGraphics.fill(sliderMin + 3, sliderY - 90, max + 4, sliderY - 91, 0xFFFF0000);
+            guiGraphics.fill(sliderMax + 15, sliderY, min + 3, sliderY - 1, 0xFF990000);
         } else {
             guiGraphics.fill(min + 3, sliderY, min + 4, sliderY - 90, 0xFFFF0000);
             guiGraphics.fill(max + 3, sliderY, max + 4, sliderY - 90, 0xFF990000);
-            guiGraphics.fill(sliderMin, sliderY, max + 4, sliderY - 1, 0xFF990000);
-            guiGraphics.fill(sliderMax + 6, sliderY - 90, min + 3, sliderY - 91, 0xFFFF0000);
+            guiGraphics.fill(sliderMin - 4, sliderY, max + 4, sliderY - 1, 0xFF990000);
+            guiGraphics.fill(sliderMax + 5, sliderY - 90, min + 3, sliderY - 91, 0xFFFF0000);
         }
     }
 
