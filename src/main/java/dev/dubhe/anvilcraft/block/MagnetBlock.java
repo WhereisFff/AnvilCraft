@@ -4,12 +4,10 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
-import dev.dubhe.anvilcraft.util.PlayerUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
@@ -117,9 +115,7 @@ public class MagnetBlock extends Block implements IHammerRemovable {
                     break checkAnvil;
                 }
             }
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, magnetPos, 5)) {
-                ModCriterionTriggers.LIFTING_ANVIL.get().trigger(player);
-            }
+            TriggerUtil.liftingAnvil(level, currentPos);
             BlockState blockState = level.getBlockState(currentPos);
             if (level.isEmptyBlock(currentPos) || blockState.getBlock() instanceof LiquidBlock) {
                 continue;

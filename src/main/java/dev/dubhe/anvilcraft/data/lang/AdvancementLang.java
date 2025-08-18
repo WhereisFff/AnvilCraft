@@ -8,9 +8,12 @@ public class AdvancementLang {
      * @param provider 提供器
      */
     public static void init(@NotNull RegistrateLangProvider provider) {
+        // region root
         provider.add("advancements.anvilcraft.root.title", "Welcome to AnvilCraft");
         provider.add("advancements.anvilcraft.root.description", "Pick up the anvil, start from the vanilla, and enter the world of technology and magic");
+        // endregion
 
+        // region crab claw line
         provider.add("advancements.anvilcraft.crab_claw.title", "Win half of the resurrection race");
         provider.add("advancements.anvilcraft.crab_claw.description", "Obtain crab claws");
 
@@ -19,7 +22,9 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.devourer.title", "Too many tongue twisters");
         provider.add("advancements.anvilcraft.devourer.description", "Use the block devourer to devour the block devourer");
+        // endregion
 
+        // region geode line
         provider.add("advancements.anvilcraft.geode.title", "A better start");
         provider.add("advancements.anvilcraft.geode.description", "Obtain geode, exploring amethyst geode with geode");
 
@@ -31,7 +36,9 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.lifting_anvil.title", "Enjoyment from top to bottom");
         provider.add("advancements.anvilcraft.lifting_anvil.description", "Use a magnet block to lift and lower the anvil");
+        // endregion
 
+        // region anvil crafting line
         provider.add("advancements.anvilcraft.dang.title", "Dang!");
         provider.add("advancements.anvilcraft.dang.description", "Execute any anvil crafting");
 
@@ -46,8 +53,9 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.four281.title", "4 to 81");
         provider.add("advancements.anvilcraft.four281.description", "Use an anvil to smash two pieces of ice together to create packed ice, and then smash the two pieces of packed ice together to create blue ice");
+        // endregion
 
-
+        // region automation line
         provider.add("advancements.anvilcraft.redstone_milker.title", "Redstone milker");
         provider.add("advancements.anvilcraft.redstone_milker.description", "Using a dispenser to milk cows");
 
@@ -56,5 +64,6 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.iron_meter_reversal.title", "Iron meter reversal");
         provider.add("advancements.anvilcraft.iron_meter_reversal.description", "Use an anvil to smash the iron golem to obtain an iron ingot, and then use a dispenser to repair the iron golem");
+        // endregion
     }
 }
