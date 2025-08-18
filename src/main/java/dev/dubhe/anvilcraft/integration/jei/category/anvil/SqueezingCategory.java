@@ -123,7 +123,7 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
                 tooltip.add(result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).getState().getBlock().getName());
             }
             if (mouseY >= 42 && mouseY <= 52) {
-                tooltip.add(BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron")).getName());
+                tooltip.add(recipe.getHasCauldron().getTransformCauldron().getName());
             }
         }
     }
