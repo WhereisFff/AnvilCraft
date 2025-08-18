@@ -11,6 +11,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
 @MethodsReturnNonnullByDefault
@@ -35,25 +36,25 @@ public class AdvancedComparatorBlockEntityRender implements BlockEntityRenderer<
         poseStack.pushPose();
         float height = getHeight(blockEntity);
         poseStack.translate(0, height, 0);
-        poseStack.scale(1, .2f, 1);
+        poseStack.scale(1, 1f, 1);
         Minecraft.getInstance()
             .getBlockRenderer()
             .getModelRenderer()
             .renderModel(
                 poseStack.last(),
-                bufferSource.getBuffer(RenderType.CUTOUT),
+                bufferSource.getBuffer(RenderType.cutout()),
                 null,
                 Minecraft.getInstance().getModelManager().getModel(INDICATOR),
                 0, 0, 0,
                 light,
-                overlay
+                overlay,
+                ModelData.EMPTY, (RenderType)null
             );
         poseStack.popPose();
     }
 
     private float getHeight(AdvancedComparatorBlockEntity blockEntity) {
         int inputtingSignal = blockEntity.getInputtingSignal();
-        //if (inputtingSignal == 0) return -.1f;
-        return (inputtingSignal / 3f * .075f);
+        return (inputtingSignal / 3f * .0625f);
     }
 }

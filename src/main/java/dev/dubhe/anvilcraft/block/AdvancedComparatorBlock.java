@@ -46,8 +46,8 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
     public static final MapCodec<AdvancedComparatorBlock> CODEC = simpleCodec(AdvancedComparatorBlock::new);
 
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
-    public static final IntegerProperty INPUT = IntegerProperty.create("input",0,15);
-    public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
+    public static final BooleanProperty INPUT = BooleanProperty.create("input");
+    public static final IntegerProperty POWER = IntegerProperty.create("power", 0, 15);
     public static final EnumProperty<Mode> MODE = EnumProperty.create("mode", Mode.class);
 
     protected static final VoxelShape SHAPE = Block.box(0.0, 0.0, 0.0, 16.0, 4.0, 16.0);
@@ -57,8 +57,8 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
         this.registerDefaultState(
             this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(INPUT, 0)
-                .setValue(OUTPUT, false)
+                .setValue(INPUT, false)
+                .setValue(POWER, 0)
                 .setValue(MODE, Mode.HYSTERESIS)
                 .setValue(POWERED, false)
         );
@@ -66,7 +66,7 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING, INPUT, OUTPUT, MODE, POWERED);
+        builder.add(FACING, INPUT, POWER, MODE, POWERED);
     }
 
     @Override
@@ -225,9 +225,9 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
         Mode mode = blockEntity.getCompareMode();
         level.setBlockAndUpdate(pos,
             state.setValue(AdvancedComparatorBlock.POWERED, shouldPower)
-            .setValue(AdvancedComparatorBlock.INPUT, inputtingSignal)
-            .setValue(AdvancedComparatorBlock.OUTPUT, shouldPower)
-            .setValue(AdvancedComparatorBlock.MODE, mode));
+                .setValue(AdvancedComparatorBlock.INPUT, inputtingSignal > 0)
+                .setValue(AdvancedComparatorBlock.POWER, inputtingSignal)
+                .setValue(AdvancedComparatorBlock.MODE, mode));
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
     }
