@@ -1,27 +1,23 @@
 {
   "type": "anvilcraft:time_warp",
-  "cauldron": "minecraft:cauldron",
-  "consume_fluid": false,
-  "ingredients": [
+  "heat": [
     {
-      "item": "anvilcraft:plutonium_block"
+      "duration": 12000,
+      "tier": "incandescent"
     }
   ],
-  "produce_fluid": false,
+  "ingredients": [
+    {
+      "items": "anvilcraft:plutonium_block"
+    }
+  ],
   "results": [
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 3,
-        "id": "anvilcraft:raw_uranium"
-      }
+      "count": 3,
+      "id": "anvilcraft:raw_uranium"
     },
     {
-      "amount": 1.0,
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:raw_lead"
-      }
+      "id": "anvilcraft:raw_lead"
     }
   ]
 }

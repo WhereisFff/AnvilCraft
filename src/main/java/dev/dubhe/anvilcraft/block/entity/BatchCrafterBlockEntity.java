@@ -306,7 +306,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     }
 
     @Override
-    public FilteredItemStackHandler getFilteredItemDepository() {
+    public FilteredItemStackHandler getFilteredItemStackHandler() {
         return this.itemHandler;
     }
 

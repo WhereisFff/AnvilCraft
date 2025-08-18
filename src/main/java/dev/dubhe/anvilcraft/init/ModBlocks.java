@@ -47,12 +47,6 @@ import dev.dubhe.anvilcraft.block.FlintBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.GunpowderBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
-import dev.dubhe.anvilcraft.block.RottenFleshBlock;
-import dev.dubhe.anvilcraft.block.SimpleConfinementAnvilonBlock;
-import dev.dubhe.anvilcraft.block.SugarBlock;
-import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
-import dev.dubhe.anvilcraft.block.TranscendiumBlock;
-import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.block.HeavyIronBeamBlock;
 import dev.dubhe.anvilcraft.block.HeavyIronDoorBlock;
@@ -63,8 +57,6 @@ import dev.dubhe.anvilcraft.block.HeliostatsBlock;
 import dev.dubhe.anvilcraft.block.HollowMagnetBlock;
 import dev.dubhe.anvilcraft.block.HoneyCauldronBlock;
 import dev.dubhe.anvilcraft.block.ImpactPileBlock;
-import dev.dubhe.anvilcraft.block.heatable.HeatedBlock;
-import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
 import dev.dubhe.anvilcraft.block.InductionLightBlock;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
@@ -92,36 +84,39 @@ import dev.dubhe.anvilcraft.block.PowerConverterBigBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterMiddleBlock;
 import dev.dubhe.anvilcraft.block.PowerConverterSmallBlock;
 import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
-import dev.dubhe.anvilcraft.block.heatable.NormalBlock;
-import dev.dubhe.anvilcraft.block.heatable.OverheatedEmberMetalBlock;
-import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
 import dev.dubhe.anvilcraft.block.ReinforcedConcreteBlock;
 import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.ResentfulAmberBlock;
 import dev.dubhe.anvilcraft.block.ResinBlock;
+import dev.dubhe.anvilcraft.block.RottenFleshBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalGrindstone;
 import dev.dubhe.anvilcraft.block.RoyalSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.RubyLaserBlock;
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
-import dev.dubhe.anvilcraft.block.sliding.ActivatorSlidingRailBlock;
-import dev.dubhe.anvilcraft.block.sliding.DetectorSlidingRailBlock;
-import dev.dubhe.anvilcraft.block.sliding.PoweredSlidingRailBlock;
-import dev.dubhe.anvilcraft.block.sliding.SlidingRailBlock;
-import dev.dubhe.anvilcraft.block.sliding.SlidingRailStopBlock;
+import dev.dubhe.anvilcraft.block.SimpleConfinementAnvilonBlock;
 import dev.dubhe.anvilcraft.block.SpaceOvercompressorBlock;
 import dev.dubhe.anvilcraft.block.SpectralAnvilBlock;
 import dev.dubhe.anvilcraft.block.StampingPlatformBlock;
 import dev.dubhe.anvilcraft.block.StepEffectBlock;
 import dev.dubhe.anvilcraft.block.StepEffectSlabBlock;
 import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
+import dev.dubhe.anvilcraft.block.SugarBlock;
 import dev.dubhe.anvilcraft.block.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
+import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
+import dev.dubhe.anvilcraft.block.TranscendiumBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
 import dev.dubhe.anvilcraft.block.VoidEnergyCollectorBlock;
 import dev.dubhe.anvilcraft.block.VoidMatterBlock;
+import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
+import dev.dubhe.anvilcraft.block.heatable.HeatedBlock;
+import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
+import dev.dubhe.anvilcraft.block.heatable.NormalBlock;
+import dev.dubhe.anvilcraft.block.heatable.OverheatedEmberMetalBlock;
+import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityCountPressurePlateBlock;
@@ -134,6 +129,11 @@ import dev.dubhe.anvilcraft.block.plate.PlayerInHandItemDurabilityPressurePlateB
 import dev.dubhe.anvilcraft.block.plate.PlayerInventoryPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.PowerLevelPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.TimeCountedPressurePlateBlock;
+import dev.dubhe.anvilcraft.block.sliding.ActivatorSlidingRailBlock;
+import dev.dubhe.anvilcraft.block.sliding.DetectorSlidingRailBlock;
+import dev.dubhe.anvilcraft.block.sliding.PoweredSlidingRailBlock;
+import dev.dubhe.anvilcraft.block.sliding.SlidingRailBlock;
+import dev.dubhe.anvilcraft.block.sliding.SlidingRailStopBlock;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
@@ -142,16 +142,16 @@ import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.item.ChuteBlockItem;
-import dev.dubhe.anvilcraft.item.abnormal.CursedBlockItem;
 import dev.dubhe.anvilcraft.item.EndDustBlockItem;
 import dev.dubhe.anvilcraft.item.FlexibleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.item.HeliostatsItem;
-import dev.dubhe.anvilcraft.item.abnormal.LevitationBlockItem;
 import dev.dubhe.anvilcraft.item.PlaceInWaterBlockItem;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.item.SimpleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
+import dev.dubhe.anvilcraft.item.abnormal.CursedBlockItem;
+import dev.dubhe.anvilcraft.item.abnormal.LevitationBlockItem;
 import dev.dubhe.anvilcraft.item.abnormal.RadiationBlockItem;
 import dev.dubhe.anvilcraft.util.DangerUtil;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
@@ -293,7 +293,7 @@ public class ModBlocks {
     public static final BlockEntry<? extends Block> STAMPING_PLATFORM = REGISTRATE
         .block("stamping_platform", StampingPlatformBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
-        .blockstate(DataGenUtil::noExtraModelOrState)
+        .blockstate(DataGenUtil::horizontalFacingBlock)
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .recipe((ctx, provider) -> {
@@ -531,20 +531,22 @@ public class ModBlocks {
                 .save(provider, AnvilCraft.of("smithing/transcendence_anvil"));
         })
         .initialProperties(() -> Blocks.ANVIL)
-        .tag(BlockTags.WITHER_IMMUNE,
-             BlockTags.DRAGON_IMMUNE,
-             BlockTags.ANVIL,
-             ModBlockTags.CANT_BROKEN_ANVIL,
-             BlockTags.MINEABLE_WITH_PICKAXE,
-             BlockTags.NEEDS_DIAMOND_TOOL,
-            ModBlockTags.COLLISION_IMMUNE)
+        .tag(
+            BlockTags.WITHER_IMMUNE,
+            BlockTags.DRAGON_IMMUNE,
+            BlockTags.ANVIL,
+            ModBlockTags.CANT_BROKEN_ANVIL,
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_DIAMOND_TOOL,
+            ModBlockTags.COLLISION_IMMUNE
+        )
         .properties(properties -> properties.lightLevel(state -> 9)
             .noOcclusion()
             .strength(50.0f, 1200f))
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(ItemTags.ANVIL)
+        .tag(ItemTags.ANVIL, ModItemTags.EXPLOSION_PROOF)
         .build()
         .register();
 
@@ -2068,14 +2070,16 @@ public class ModBlocks {
         .properties(properties -> properties.lightLevel(state -> 7)
             .noOcclusion()
             .emissiveRendering(ModBlocks::always))
-        .tag(BlockTags.BEACON_BASE_BLOCKS,
+        .tag(
+            BlockTags.BEACON_BASE_BLOCKS,
             BlockTags.MINEABLE_WITH_PICKAXE,
             Tags.Blocks.NEEDS_NETHERITE_TOOL,
             BlockTags.WITHER_IMMUNE,
             BlockTags.DRAGON_IMMUNE,
             Tags.Blocks.STORAGE_BLOCKS,
             ModBlockTags.STORAGE_BLOCKS_TRANSCENDIUM,
-            ModBlockTags.COLLISION_IMMUNE)
+            ModBlockTags.COLLISION_IMMUNE
+        )
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/transcendium_block").get()))
@@ -2720,10 +2724,12 @@ public class ModBlocks {
         .block("plutonium_block", Block::new)
         .lang("Block of Plutonium")
         .initialProperties(() -> Blocks.IRON_BLOCK)
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.BEACON_BASE_BLOCKS,
             Tags.Blocks.STORAGE_BLOCKS,
-            ModBlockTags.STORAGE_BLOCKS_PLUTONIUM)
+            ModBlockTags.STORAGE_BLOCKS_PLUTONIUM
+        )
         .item(RadiationBlockItem::new)
         .tag(ModItemTags.STORAGE_BLOCKS_PLUTONIUM, Tags.Items.STORAGE_BLOCKS, ModItemTags.RADIATIONS)
         .build()
@@ -3029,15 +3035,15 @@ public class ModBlocks {
             .addModels(new ConfiguredModel(provider.models().getExistingFile(ctx.getId().withPrefix("block/")))))
         .simpleItem()
         .recipe((ctx, provider) ->
-                    ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
-                        .pattern("LRL")
-                        .pattern("RSR")
-                        .pattern("LRL")
-                        .define('L', ModItems.LEVITATION_POWDER)
-                        .define('R', Items.REDSTONE)
-                        .define('S', ItemTags.SAND)
-                        .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
-                        .save(provider)
+            ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, ctx.get())
+                .pattern("LRL")
+                .pattern("RSR")
+                .pattern("LRL")
+                .define('L', ModItems.LEVITATION_POWDER)
+                .define('R', Items.REDSTONE)
+                .define('S', ItemTags.SAND)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.LEVITATION_POWDER), AnvilCraftDatagen.has(ModItems.LEVITATION_POWDER))
+                .save(provider)
         )
         .tag(BlockTags.MINEABLE_WITH_SHOVEL, ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)
         .register();
@@ -3518,11 +3524,11 @@ public class ModBlocks {
         .build()
         .loot((tables, block) -> DataGenUtil.dropOtherAndSelfWhenSilkTouch(tables, block, ModBlocks.EMBER_METAL_BLOCK))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-             BlockTags.NEEDS_DIAMOND_TOOL,
-             BlockTags.WITHER_IMMUNE,
-             BlockTags.DRAGON_IMMUNE,
-             ModBlockTags.HEATABLE_BLOCKS,
-             ModBlockTags.OVERHEATED_BLOCKS)
+            BlockTags.NEEDS_DIAMOND_TOOL,
+            BlockTags.WITHER_IMMUNE,
+            BlockTags.DRAGON_IMMUNE,
+            ModBlockTags.HEATABLE_BLOCKS,
+            ModBlockTags.OVERHEATED_BLOCKS)
         .register();
 
     // raw blocks

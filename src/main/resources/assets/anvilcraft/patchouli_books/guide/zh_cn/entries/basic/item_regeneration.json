@@ -4,7 +4,6 @@
   "icon": "minecraft:quartz",
   "sortnum": 1009,
   "extra_recipe_mappings": {
-    "minecraft:echo_shard": 8,
     "minecraft:lava_bucket": 9
   },
   "pages": [
@@ -18,7 +17,8 @@
     {
       "type": "patchouli:spotlight",
       "anchor": "quartz",
-      "item": "minecraft:quartz",
+      "item": ["minecraft:quartz","anvilcraft:quartz_sand"],
+      "link_recipe": true,
       "text": "$(li)下界石英+圆石→$(item)闪长岩$()[合成]$(li)闪长岩→$(item)石英砂$()[$(l:basic/block_processing#crush)粉碎$()]$(li)石英砂→$(item)下界石英$()[$(l:basic/item_processing#mesh)筛选$()]"
     },
     {
@@ -51,6 +51,7 @@
     {
       "type": "patchouli:spotlight",
       "anchor": "echo_shard",
+      "link_recipe": true,
       "item": "minecraft:echo_shard",
       "text": "$(item)坚守者$()使用$(thing)声波攻击$()杀死任意生物，会生成1个$(item)回响碎片$()"
     },

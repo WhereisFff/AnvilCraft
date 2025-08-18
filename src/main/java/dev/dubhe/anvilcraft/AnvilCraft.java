@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tterrag.registrate.Registrate;
+import dev.dubhe.anvilcraft.api.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.api.integration.IntegrationManager;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
@@ -15,6 +16,7 @@ import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModCommands;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModCustomDataComponents;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
 import dev.dubhe.anvilcraft.init.ModDispenserBehavior;
 import dev.dubhe.anvilcraft.init.ModEnchantmentEffectComponents;
@@ -32,7 +34,11 @@ import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.init.ModNetworks;
 import dev.dubhe.anvilcraft.init.ModParticles;
+import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
+import dev.dubhe.anvilcraft.init.ModRecipePredicateTypes;
+import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.ModResultModifierTypes;
 import dev.dubhe.anvilcraft.init.ModVillagers;
 import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
@@ -41,19 +47,15 @@ import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import me.shedaniel.autoconfig.AutoConfig;
 import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.PackType;
-import net.minecraft.server.packs.repository.Pack;
-import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.fml.loading.progress.StartupNotificationManager;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
@@ -79,7 +81,7 @@ public class AnvilCraft {
 
     public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
 
-    public AnvilCraft(IEventBus modEventBus) {
+    public AnvilCraft(IEventBus modEventBus, ModContainer modContainer) {
         MOD_BUS = modEventBus;
         ModAttatchments.register(modEventBus);
         ModItemGroups.register(modEventBus);
@@ -110,12 +112,20 @@ public class AnvilCraft {
 
         registerEvents(modEventBus);
         StartupNotificationManager.addModMessage("[AnvilCraft] Loading Integrations");
+        IntegrationHook.setModEventBus(modEventBus);
+        IntegrationHook.setModContainer(modContainer);
         integrationManager.compileContent();
         integrationManager.loadAllIntegrations();
         StartupNotificationManager.addModMessage("[AnvilCraft] Ciallo~");
         AnvilCraftDfu.constructAndOptimize();
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
         LOGGER.info("let's 0721");
+
+        ModRecipeTriggers.TRIGGER.register(modEventBus);
+        ModRecipePredicateTypes.PREDICATE_TYPE.register(modEventBus);
+        ModRecipeOutcomeTypes.OUTCOME_TYPE.register(modEventBus);
+        ModResultModifierTypes.register(modEventBus);
+        ModCustomDataComponents.register(modEventBus);
     }
 
     private static void registerEvents(@NotNull IEventBus eventBus) {
@@ -125,7 +135,6 @@ public class AnvilCraft {
 
         eventBus.addListener(AnvilCraft::registerPayload);
         eventBus.addListener(AnvilCraft::loadComplete);
-        eventBus.addListener(AnvilCraft::packSetup);
         eventBus.addListener(ModFluids::registerFluidInteractions);
     }
 
@@ -171,24 +180,13 @@ public class AnvilCraft {
             }
             if (Util.isLoaded("apothic_enchanting")) {
                 LOGGER.info(
-                    "Apothic Enchanting found. Set "
-                    + "royalAnvilBeyondMaxLevel, "
-                    + "emberAnvilBeyondMaxLevel and "
-                    + "transcendenceAnvilBeyondMaxLevel to true.");
+                    "Apothic Enchanting found. Set royalAnvilBeyondMaxLevel, "
+                        + "emberAnvilBeyondMaxLevel and transcendenceAnvilBeyondMaxLevel to true."
+                );
                 config.royalAnvilBeyondMaxLevel = true;
                 config.emberAnvilBeyondMaxLevel = true;
                 config.transcendenceAnvilBeyondMaxLevel = true;
             }
         });
-    }
-
-    public static void packSetup(@NotNull AddPackFindersEvent event) {
-        event.addPackFinders(
-            of("resourcepacks/transparent_cauldron"),
-            PackType.CLIENT_RESOURCES,
-            Component.translatable("pack.anvilcraft.builtin_pack"),
-            PackSource.BUILT_IN,
-            false,
-            Pack.Position.TOP);
     }
 }

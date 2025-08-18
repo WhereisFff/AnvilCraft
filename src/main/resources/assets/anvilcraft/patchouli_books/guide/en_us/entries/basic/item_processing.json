@@ -162,7 +162,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Remove rust from copper products$(br)Dirt→Clay$(br)下界菌→对应疣块$(br)蘑菇→对应蘑菇块$(br)Spider Eye→ Fermented Spider Eye$(br)Coral→Corresponding Coral Block$(br)干海带→海带$(br)混凝土粉末→对应混凝土$(br)$(item)海绵芽球$()→湿海绵$(br)$(item)海心壳碎片$()→$(item)海晶簇$()"
+      "text": "$(li)Rusted copper blocks $(li)Dirt→Clay $(li)下界菌→对应疣块 $(li)蘑菇→对应蘑菇块 $(li)Spider Eye→ Fermented Spider Eye $(li)Coral→Corresponding Coral Block $(li)干海带→海带"
     },
     {
       "type": "patchouli:multiblock",

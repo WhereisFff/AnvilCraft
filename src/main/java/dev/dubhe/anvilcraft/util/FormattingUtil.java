@@ -66,7 +66,7 @@ public class FormattingUtil {
      *     <tr><td>1635gt</td><td>5</td><td>1'21"75</td></tr>
      * </table>
      *
-     * @param total 总tick数
+     * @param total          总tick数
      * @param thresholdInSec 切换显示格式的阈值（秒），小于该值时显示gt格式，否则显示分秒格式
      * @return 格式化后的时间字符串
      */

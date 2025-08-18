@@ -196,8 +196,8 @@ public class BlockTagLoader {
             .add(ModBlocks.DEEPSLATE_LEAD_ORE.getKey());
 
         provider.addTag(ModBlockTags.CRAFTING_MATRIX_ELEMENT)
-                .add(ModBlocks.SPACE_OVERCOMPRESSOR.getKey())
-                .addTag(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
+            .add(ModBlocks.SPACE_OVERCOMPRESSOR.getKey())
+            .addTag(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
 
         //mekanism integration
         provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
@@ -273,5 +273,9 @@ public class BlockTagLoader {
         provider.addTag(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)
             .addTag(ModBlockTags.SLIDING_RAILS)
             .add(ModBlocks.SLIDING_RAIL_STOP.getKey());
+
+        provider.addTag(ModBlockTags.OVERHEATABLE)
+            .add(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK.getKey())
+            .add(ModBlocks.EMBER_METAL_BLOCK.getKey());
     }
 }

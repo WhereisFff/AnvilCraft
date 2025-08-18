@@ -44,7 +44,7 @@
       "type": "patchouli:spotlight",
       "anchor": "heliostats",
       "item": "anvilcraft:heliostats",
-      "text": "When $(item)Heliostats$() irradiates to heatable blocks can heat it. When block has been irradiated by heliostats, determine Heat Tier based on the number of heliostats. The curve of association of count and Heat Tier is 4, 12, 32, 64. If the Heat Tier of the block is lower or equal than provided Heat Tier, raise the Tier to the provided Tier and add 4 seconds to duration every seconds. If the Heat Tier of the block is higher than the provided Tier, then do nothing."
+      "text": "手持$(item)定日镜$()右键绑定可加热方块后。不同数量的定日镜会将可加热方块$(n)及其之上$()的方块加热为不同等级并每秒增加4秒持续时间。 $(li)4个：高温  12个：红热 $(li)32个：炽热 64个：白炽"
     },
     {
       "type": "patchouli:spotlight",

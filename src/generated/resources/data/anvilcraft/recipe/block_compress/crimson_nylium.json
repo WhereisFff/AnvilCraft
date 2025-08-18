@@ -1,8 +1,14 @@
 {
   "type": "anvilcraft:block_compress",
   "inputs": [
-    "minecraft:nether_wart_block",
-    "minecraft:netherrack"
+    {
+      "blocks": "minecraft:nether_wart_block"
+    },
+    {
+      "blocks": "minecraft:netherrack"
+    }
   ],
-  "result": "minecraft:crimson_nylium"
+  "result": {
+    "block": "minecraft:crimson_nylium"
+  }
 }
