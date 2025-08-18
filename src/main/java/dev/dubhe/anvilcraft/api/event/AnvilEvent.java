@@ -1,5 +1,6 @@
-package dev.dubhe.anvilcraft.api.event.anvil;
+package dev.dubhe.anvilcraft.api.event;
 
+import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -39,6 +40,58 @@ public class AnvilEvent extends EntityEvent {
             this.level = level;
             this.pos = pos;
             this.fallDistance = fallDistance;
+        }
+    }
+
+    @Getter
+    public static class CollisionBlock extends AnvilEvent {
+        private final Level level;
+        private final BlockPos pos;
+        private final double speed;
+
+        @Setter
+        private boolean isAnvilDamage = false;
+
+        /**
+         * 铁砧落地事件
+         *
+         * @param level  世界
+         * @param pos    位置
+         * @param entity 铁砧
+         * @param speed  撞击速度
+         */
+        public CollisionBlock(Level level, BlockPos pos, FallingBlockEntity entity, double speed) {
+            super(entity);
+            this.level = level;
+            this.pos = pos;
+            this.speed = speed;
+        }
+    }
+
+    @Getter
+    public static class GiantOnLand extends AnvilEvent {
+        private final Level level;
+        private final BlockPos pos;
+        private final float fallDistance;
+        private final FallingGiantAnvilEntity entity;
+
+        @Setter
+        private boolean isAnvilDamage = false;
+
+        /**
+         * 铁砧落地事件
+         *
+         * @param level        世界
+         * @param pos          位置
+         * @param entity       铁砧
+         * @param fallDistance 下落距离
+         */
+        public GiantOnLand(Level level, BlockPos pos, FallingGiantAnvilEntity entity, float fallDistance) {
+            super(entity);
+            this.level = level;
+            this.pos = pos;
+            this.fallDistance = fallDistance;
+            this.entity = entity;
         }
     }
 
