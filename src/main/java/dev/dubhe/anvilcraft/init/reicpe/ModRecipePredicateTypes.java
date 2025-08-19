@@ -1,6 +1,7 @@
-package dev.dubhe.anvilcraft.init;
+package dev.dubhe.anvilcraft.init.reicpe;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.IRecipePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlockIngredient;
