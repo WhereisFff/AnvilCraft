@@ -52,10 +52,6 @@ public interface ItemProcessRecipeSchema {
             return this;
         }
 
-        public ItemProcessKubeRecipe requires(@NotNull ItemLike ingredient) {
-            return this.requires(ingredient, 1);
-        }
-
         public ItemProcessKubeRecipe result(@NotNull ItemStack result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
@@ -90,17 +86,13 @@ public interface ItemProcessRecipeSchema {
             return this.result(result, 1, chance);
         }
 
-        public ItemProcessKubeRecipe result(@NotNull ItemLike result) {
-            return this.result(result, ConstantValue.exactly(1.0f));
-        }
-
         @Override
         protected void validate() {
             if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Ingredients is Empty!").source(sourceLine);
             }
             if (computeIfAbsent(RESULTS, ArrayList::new).isEmpty()) {
-                throw new KubeRuntimeException("Ingredients is Empty!").source(sourceLine);
+                throw new KubeRuntimeException("Results is Empty!").source(sourceLine);
             }
         }
     }

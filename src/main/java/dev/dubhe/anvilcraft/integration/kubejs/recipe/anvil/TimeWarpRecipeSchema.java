@@ -139,9 +139,6 @@ public interface TimeWarpRecipeSchema {
             if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()) {
                 throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
             }
-            if (computeIfAbsent(RESULTS, ArrayList::new).isEmpty()) {
-                throw new KubeRuntimeException("Result is Empty!").source(sourceLine);
-            }
         }
     }
 

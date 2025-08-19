@@ -46,11 +46,12 @@ public interface BlockSmearRecipeSchema {
 
         @Override
         protected void validate() {
-            if (this.computeIfAbsent(INPUTS, ArrayList::new).isEmpty()) {
-                throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
+            List<BlockStatePredicate> inputs = this.computeIfAbsent(INPUTS, ArrayList::new);
+            if (inputs.size() != 2) {
+                throw new KubeRuntimeException("Inputs must have 2 elements!").source(sourceLine);
             }
             if (getValue(RESULT) == null) {
-                throw new KubeRuntimeException("Result is Empty!").source(sourceLine);
+                throw new KubeRuntimeException("Result is null!").source(sourceLine);
             }
         }
     }

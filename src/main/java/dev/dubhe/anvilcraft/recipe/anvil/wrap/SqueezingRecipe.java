@@ -91,11 +91,11 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          */
         public static final MapCodec<SqueezingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockStatePredicate.CODEC
-                .fieldOf("ingredients")
+                .fieldOf("ingredient")
                 .forGetter(SqueezingRecipe::getFirstInputBlock),
             ChanceBlockState.CODEC
                 .codec()
-                .fieldOf("results")
+                .fieldOf("result")
                 .forGetter(SqueezingRecipe::getFirstResultBlock),
             HasCauldronSimple.CODEC
                 .forGetter(SqueezingRecipe::getHasCauldron)

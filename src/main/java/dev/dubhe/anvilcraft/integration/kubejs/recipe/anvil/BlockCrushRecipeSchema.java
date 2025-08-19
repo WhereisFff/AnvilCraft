@@ -40,10 +40,10 @@ public interface BlockCrushRecipeSchema {
         @Override
         protected void validate() {
             if (getValue(INPUT) == null) {
-                throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
+                throw new KubeRuntimeException("Inputs is null!").source(sourceLine);
             }
             if (getValue(RESULT) == null) {
-                throw new KubeRuntimeException("Result is Empty!").source(sourceLine);
+                throw new KubeRuntimeException("Result is null!").source(sourceLine);
             }
         }
     }
