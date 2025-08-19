@@ -17,4 +17,8 @@ public record NotPredicate(Type<?> type, ItemSubPredicate subPredicate) implemen
     public boolean matches(ItemStack itemStack) {
         return !this.subPredicate.matches(itemStack);
     }
+
+    public static NotPredicate of(Type<?> type, ItemSubPredicate subPredicate) {
+        return new NotPredicate(type, subPredicate);
+    }
 }

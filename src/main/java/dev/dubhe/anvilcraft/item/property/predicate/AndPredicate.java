@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item.property.predicate;
 
+import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.util.CodecUtil;
@@ -23,6 +24,17 @@ public record AndPredicate(List<Map.Entry<Type<?>, ItemSubPredicate>> subPredica
 
     @Override
     public boolean matches(ItemStack itemStack) {
-        return subPredicates().stream().allMatch(it -> it.getValue().matches(itemStack));
+        return this.subPredicates().stream().allMatch(it -> it.getValue().matches(itemStack));
+    }
+
+    public static AndPredicate of(Type<?> type, ItemSubPredicate subPredicate) {
+        return new AndPredicate(List.of(Map.entry(type, subPredicate)));
+    }
+
+    public AndPredicate with(Type<?> type, ItemSubPredicate subPredicate) {
+        ImmutableList.Builder<Map.Entry<Type<?>, ItemSubPredicate>> builder = ImmutableList.builder();
+        builder.addAll(this.subPredicates());
+        builder.add(Map.entry(type, subPredicate));
+        return new AndPredicate(builder.build());
     }
 }
