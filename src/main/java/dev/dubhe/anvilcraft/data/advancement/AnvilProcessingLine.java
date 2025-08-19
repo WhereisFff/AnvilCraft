@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
-import static dev.dubhe.anvilcraft.AnvilCraft.*;
+import static dev.dubhe.anvilcraft.AnvilCraft.of;
 import static dev.dubhe.anvilcraft.AnvilCraft.advancementOf;
 
 public class AnvilProcessingLine {
