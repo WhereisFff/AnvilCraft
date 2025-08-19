@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.init;
 
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.util.ItemSavedEntityPredicate;
+import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.neoforged.bus.api.IEventBus;

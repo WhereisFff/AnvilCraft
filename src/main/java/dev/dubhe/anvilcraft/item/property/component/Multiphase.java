@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.item.property;
+package dev.dubhe.anvilcraft.item.property.component;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;

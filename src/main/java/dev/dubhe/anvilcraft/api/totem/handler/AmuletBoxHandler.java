@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.api.totem.handler;
 
-import dev.dubhe.anvilcraft.api.item.property.BoxContents;
 import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;

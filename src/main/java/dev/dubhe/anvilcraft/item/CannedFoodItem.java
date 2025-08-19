@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.item;
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.item.property.component.StoredItem;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.component.DataComponents;
@@ -65,7 +66,7 @@ public class CannedFoodItem extends Item implements IExtraItemDisplay {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        StoredItem foodInfo = stack.getOrDefault(ModComponents.DISPLAY_ITEM, new IExtraItemDisplay.StoredItem(ItemStack.EMPTY));
+        StoredItem foodInfo = stack.getOrDefault(ModComponents.DISPLAY_ITEM, new StoredItem(ItemStack.EMPTY));
         ItemStack food = foodInfo.stored();
         if (!food.isEmpty()) {
             if (food.getCount() == 1) {

@@ -1,9 +1,9 @@
-package dev.dubhe.anvilcraft.recipe.util;
+package dev.dubhe.anvilcraft.item.property.predicate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.item.HasMobBlockItem;
+import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
@@ -11,6 +11,7 @@ import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -19,7 +20,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ItemSavedEntityPredicate implements ItemSubPredicate {
-
     public final EntityType<?> entityType;
     private final List<NumericTagValuePredicate> predicates;
 
@@ -37,11 +37,13 @@ public class ItemSavedEntityPredicate implements ItemSubPredicate {
         this.predicates = predicates;
     }
 
-    public ItemSavedEntityPredicate(EntityType<?> entityType, Optional<List<NumericTagValuePredicate>> predicates) {
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    public ItemSavedEntityPredicate(EntityType<?> entityType, @NotNull Optional<List<NumericTagValuePredicate>> predicates) {
         this(entityType, predicates.orElseGet(ArrayList::new));
     }
 
-    public static ItemSavedEntityPredicate of(EntityType<?> entityType) {
+    @Contract("_ -> new")
+    public static @NotNull ItemSavedEntityPredicate of(EntityType<?> entityType) {
         return new ItemSavedEntityPredicate(entityType, new ArrayList<>());
     }
 
@@ -53,18 +55,15 @@ public class ItemSavedEntityPredicate implements ItemSubPredicate {
     }
 
     @Override
-    public boolean matches(ItemStack itemStack) {
+    public boolean matches(@NotNull ItemStack itemStack) {
         if (!itemStack.has(ModComponents.SAVED_ENTITY)) return false;
-        HasMobBlockItem.SavedEntity component = itemStack.get(ModComponents.SAVED_ENTITY);
+        SavedEntity component = itemStack.get(ModComponents.SAVED_ENTITY);
         if (component == null) return false;
-        CompoundTag tag = component.getTag();
+        CompoundTag tag = component.tag();
         Optional<EntityType<?>> optional = EntityType.by(tag);
         if (optional.isEmpty()) return false;
         EntityType<?> type = optional.get();
         if (!type.equals(this.entityType)) return false;
         return predicates.stream().allMatch(it -> it.test(tag));
     }
-
-
-
 }

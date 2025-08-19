@@ -1,12 +1,9 @@
-package dev.dubhe.anvilcraft.api.item.property;
+package dev.dubhe.anvilcraft.item.property.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModComponents;
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
@@ -25,52 +22,49 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Objects;
 
-@Getter
-@EqualsAndHashCode
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class FilterContent {
+public record FilterContent(NonNullList<ItemStack> list, boolean includeComponents, boolean blackList) {
     public static final MapCodec<FilterContent> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         ItemStack.OPTIONAL_CODEC
             .listOf()
             .fieldOf("list")
-            .forGetter(FilterContent::getList),
+            .forGetter(FilterContent::list),
         Codec.BOOL
             .fieldOf("include_components")
-            .forGetter(FilterContent::isIncludeComponents),
+            .forGetter(FilterContent::includeComponents),
         Codec.BOOL
             .fieldOf("black_list")
-            .forGetter(FilterContent::isBlackList)
+            .forGetter(FilterContent::blackList)
     ).apply(instance, FilterContent::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, FilterContent> STREAM_CODEC = StreamCodec.composite(
         ItemStack.OPTIONAL_STREAM_CODEC.apply(ByteBufCodecs.list()),
-        FilterContent::getList,
+        FilterContent::list,
         ByteBufCodecs.BOOL,
-        FilterContent::isIncludeComponents,
+        FilterContent::includeComponents,
         ByteBufCodecs.BOOL,
-        FilterContent::isBlackList,
+        FilterContent::blackList,
         FilterContent::new
     );
-    private final NonNullList<ItemStack> list;
-    @Setter
-    private boolean includeComponents;
-    @Setter
-    private boolean blackList;
-
-    public FilterContent(NonNullList<ItemStack> list, boolean includeComponents, boolean blackList) {
-        this.list = list;
-        this.includeComponents = includeComponents;
-        this.blackList = blackList;
-    }
 
     private FilterContent(List<ItemStack> list, boolean includeComponents, boolean blackList) {
         this(NonNullList.of(ItemStack.EMPTY, list.toArray(new ItemStack[0])), includeComponents, blackList);
     }
 
     public FilterContent() {
-        this.list = NonNullList.withSize(18, ItemStack.EMPTY);
-        this.includeComponents = false;
-        this.blackList = false;
+        this(NonNullList.withSize(18, ItemStack.EMPTY), false, false);
+    }
+
+    public FilterContent setList(NonNullList<ItemStack> list) {
+        return new FilterContent(list, this.includeComponents, this.blackList);
+    }
+
+    public FilterContent setIncludeComponents(boolean includeComponents) {
+        return new FilterContent(this.list, includeComponents, this.blackList);
+    }
+
+    public FilterContent setBlackList(boolean blackList) {
+        return new FilterContent(this.list, this.includeComponents, blackList);
     }
 
     public int getNestingLevel() {
@@ -104,9 +98,9 @@ public class FilterContent {
         }
         FilterContent content = filterStack.get(ModComponents.FILTER_CONTENT);
         if (content == null) return false;
-        for (ItemStack itemStack : content.getList()) {
+        for (ItemStack itemStack : content.list()) {
             if (itemStack.isEmpty()) continue;
-            if (FilterContent.filter(itemStack, stack, content.isIncludeComponents(), content.isBlackList())) {
+            if (FilterContent.filter(itemStack, stack, content.includeComponents(), content.blackList())) {
                 return !isBlackList;
             }
         }
