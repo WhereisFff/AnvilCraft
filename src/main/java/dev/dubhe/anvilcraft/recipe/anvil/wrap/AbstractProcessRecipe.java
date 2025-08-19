@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.IRecipeOutcome;

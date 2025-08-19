@@ -8,7 +8,7 @@ import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
-import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeManager;

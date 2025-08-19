@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.outcome;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import lombok.Getter;
 import net.minecraft.nbt.NbtOps;

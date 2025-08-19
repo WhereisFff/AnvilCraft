@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.recipe.anvil.predicate.item;
 
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipePredicateTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipePredicateTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.ItemCache;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.item.ICacheInput;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.IRecipePredicate;

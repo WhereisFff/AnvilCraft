@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemSubPredicates;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;

@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.outcome;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.block.IRecipeResultOffsetBlock;
-import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.BlockCache;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.ItemCache;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.item.ICacheOutput;

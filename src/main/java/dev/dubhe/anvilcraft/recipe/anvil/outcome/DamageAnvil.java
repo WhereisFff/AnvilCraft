@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.outcome;
 
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeData;
 import net.minecraft.network.RegistryFriendlyByteBuf;

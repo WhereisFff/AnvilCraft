@@ -7,7 +7,7 @@ import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.Distance;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.util.Util;

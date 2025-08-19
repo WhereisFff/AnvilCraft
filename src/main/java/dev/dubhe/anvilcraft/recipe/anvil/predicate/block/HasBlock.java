@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.recipe.anvil.predicate.block;
 
-import dev.dubhe.anvilcraft.init.ModRecipePredicateTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipePredicateTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.component.BlockStatePredicate;
 import lombok.Getter;
 import net.minecraft.tags.TagKey;
