@@ -36,7 +36,6 @@ public class AdvancedComparatorBlockEntityRender implements BlockEntityRenderer<
         poseStack.pushPose();
         float height = getHeight(blockEntity);
         poseStack.translate(0, height, 0);
-        poseStack.scale(1, 1f, 1);
         Minecraft.getInstance()
             .getBlockRenderer()
             .getModelRenderer()

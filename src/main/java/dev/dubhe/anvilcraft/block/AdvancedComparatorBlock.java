@@ -248,13 +248,6 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
     }
 
     @Override
-    protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
-        super.triggerEvent(state, level, pos, id, param);
-        BlockEntity blockentity = level.getBlockEntity(pos);
-        return blockentity != null && blockentity.triggerEvent(id, param);
-    }
-
-    @Override
     protected InteractionResult useWithoutItem(
         BlockState pState,
         Level pLevel,
