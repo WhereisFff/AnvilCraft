@@ -43,7 +43,7 @@ public class FilterContainer implements Container {
 
     @Override
     public int getContainerSize() {
-        return content.getList().size();
+        return content.list().size();
     }
 
     @Override
@@ -53,7 +53,7 @@ public class FilterContainer implements Container {
 
     @Override
     public ItemStack getItem(int slot) {
-        return content.getList().get(slot);
+        return content.list().get(slot);
     }
 
     @Override
@@ -68,7 +68,7 @@ public class FilterContainer implements Container {
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        content.getList().set(slot, stack);
+        content.list().set(slot, stack);
     }
 
     @Override

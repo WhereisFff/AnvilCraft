@@ -13,17 +13,16 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ItemSavedEntityPredicate implements SingleComponentItemPredicate<SavedEntity> {
-    public final EntityType<?> entityType;
-    private final List<NumericTagValuePredicate> predicates;
-
+public record ItemSavedEntityPredicate(
+    EntityType<?> entityType,
+    List<NumericTagValuePredicate> predicates
+) implements SingleComponentItemPredicate<SavedEntity> {
     public static final Codec<ItemSavedEntityPredicate> CODEC = RecordCodecBuilder.create(ins -> ins.group(
             CodecUtil.ENTITY_CODEC.fieldOf("entityType").forGetter(o -> o.entityType),
             NumericTagValuePredicate.CODEC
@@ -33,22 +32,17 @@ public class ItemSavedEntityPredicate implements SingleComponentItemPredicate<Sa
         )
         .apply(ins, ItemSavedEntityPredicate::new));
 
-    public ItemSavedEntityPredicate(EntityType<?> entityType, List<NumericTagValuePredicate> predicates) {
-        this.entityType = entityType;
-        this.predicates = predicates;
-    }
-
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public ItemSavedEntityPredicate(EntityType<?> entityType, @NotNull Optional<List<NumericTagValuePredicate>> predicates) {
+    public ItemSavedEntityPredicate(EntityType<?> entityType, Optional<List<NumericTagValuePredicate>> predicates) {
         this(entityType, predicates.orElseGet(ArrayList::new));
     }
 
     @Contract("_ -> new")
-    public static @NotNull ItemSavedEntityPredicate of(EntityType<?> entityType) {
+    public static ItemSavedEntityPredicate of(EntityType<?> entityType) {
         return new ItemSavedEntityPredicate(entityType, new ArrayList<>());
     }
 
-    public ItemSavedEntityPredicate predicate(@NotNull Consumer<NumericTagValuePredicate.Builder> predicateBuilder) {
+    public ItemSavedEntityPredicate predicate(Consumer<NumericTagValuePredicate.Builder> predicateBuilder) {
         NumericTagValuePredicate.Builder builder = NumericTagValuePredicate.builder();
         predicateBuilder.accept(builder);
         predicates.add(builder.build());
@@ -56,7 +50,7 @@ public class ItemSavedEntityPredicate implements SingleComponentItemPredicate<Sa
     }
 
     @Override
-    public boolean matches(@NotNull ItemStack itemStack) {
+    public boolean matches(ItemStack itemStack) {
         if (!itemStack.has(ModComponents.SAVED_ENTITY)) return false;
         SavedEntity component = itemStack.get(ModComponents.SAVED_ENTITY);
         if (component == null) return false;
@@ -69,12 +63,12 @@ public class ItemSavedEntityPredicate implements SingleComponentItemPredicate<Sa
     }
 
     @Override
-    public @NotNull DataComponentType<SavedEntity> componentType() {
+    public DataComponentType<SavedEntity> componentType() {
         return ModComponents.SAVED_ENTITY;
     }
 
     @Override
-    public boolean matches(@NotNull ItemStack itemStack, @NotNull SavedEntity savedEntity) {
+    public boolean matches(ItemStack itemStack, SavedEntity savedEntity) {
         return false;
     }
 }
