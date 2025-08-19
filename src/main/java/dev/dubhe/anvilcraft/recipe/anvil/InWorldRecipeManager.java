@@ -1,17 +1,14 @@
 package dev.dubhe.anvilcraft.recipe.anvil;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
-import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.Items;
+import dev.dubhe.anvilcraft.api.event.InWorldRecipeEvent;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.Comparator;
 
 /**
  * 世界内配方管理器类，用于管理和触发世界内配方
@@ -21,19 +18,14 @@ public class InWorldRecipeManager {
     /**
      * 存储配方的映射表，键为配方触发器，值为配方集合
      */
-    public final Map<IRecipeTrigger, Set<InWorldRecipe>> recipes = new ConcurrentHashMap<>();
+    public final Multimap<IRecipeTrigger, @NotNull RecipeHolder<InWorldRecipe>> recipeHolders = MultimapBuilder.hashKeys()
+        .<RecipeHolder<InWorldRecipe>>treeSetValues(Comparator.comparing(RecipeHolder::value))
+        .build();
 
     /**
      * 构造一个新的世界内配方管理器，并注册一个默认配方
      */
     public InWorldRecipeManager() {
-        InWorldRecipe recipe = InWorldRecipeBuilder
-            .incompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON.get())
-            .hasItemIngredient(ItemTags.LOGS)
-            .hasItemIngredient(Items.BIRCH_LOG)
-            .damageAnvil()
-            .build();
-        this.register(recipe);
     }
 
     /**
@@ -41,12 +33,8 @@ public class InWorldRecipeManager {
      *
      * @param recipe 要注册的配方
      */
-    public void register(@NotNull InWorldRecipe recipe) {
-        Set<InWorldRecipe> recipeSet = this.recipes.computeIfAbsent(
-            recipe.getTrigger(),
-            k -> Collections.synchronizedSet(new TreeSet<>())
-        );
-        recipeSet.add(recipe);
+    public void register(@NotNull RecipeHolder<InWorldRecipe> recipe) {
+        recipeHolders.put(recipe.value().getTrigger(), recipe);
     }
 
     /**
@@ -57,8 +45,8 @@ public class InWorldRecipeManager {
      */
     public void trigger(IRecipeTrigger trigger, @NotNull InWorldRecipeContext ctx) {
         if (ctx.getLevel().isClientSide()) return;
-        Set<InWorldRecipe> recipeSet = recipes.getOrDefault(trigger, Collections.emptySet());
-        for (InWorldRecipe recipe : recipeSet) {
+        for (RecipeHolder<InWorldRecipe> holder : recipeHolders.get(trigger)) {
+            InWorldRecipe recipe = holder.value();
             boolean accept = false;
             for (int i = 0; i < AnvilCraft.config.anvilEfficiency; i++) {
                 if (!recipe.matches(ctx, ctx.getLevel())) {
@@ -67,6 +55,7 @@ public class InWorldRecipeManager {
                 }
                 accept = true;
                 recipe.assemble(ctx, ctx.getLevel().registryAccess());
+                NeoForge.EVENT_BUS.post(new InWorldRecipeEvent(recipe.getType(), holder.id(), recipe, ctx));
             }
             if (accept) break;
         }

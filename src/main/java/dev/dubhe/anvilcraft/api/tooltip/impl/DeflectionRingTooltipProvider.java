@@ -9,6 +9,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class DeflectionRingTooltipProvider extends PowerComponentTooltipProvider {
@@ -25,7 +26,7 @@ public class DeflectionRingTooltipProvider extends PowerComponentTooltipProvider
 
     @Override
     public List<Component> tooltip(BlockEntity blockEntity) {
-        final List<Component> lines = super.tooltip(blockEntity);
+        final List<Component> lines = new ArrayList<>();
         if (!(blockEntity.getBlockState().getBlock() instanceof DeflectionRingBlock deflectionRingBlock)) return lines;
         BlockPos center = deflectionRingBlock.getMainPartPos(blockEntity.getBlockPos(), blockEntity.getBlockState());
         Level level = blockEntity.getLevel();

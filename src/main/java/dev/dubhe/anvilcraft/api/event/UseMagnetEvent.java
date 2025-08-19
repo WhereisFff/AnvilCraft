@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.api.event.item;
+package dev.dubhe.anvilcraft.api.event;
 
 import lombok.Getter;
 import lombok.Setter;

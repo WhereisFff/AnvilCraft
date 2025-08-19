@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.event;
 
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.event.FallingBlockCollisionEvent;
+import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
@@ -37,19 +37,22 @@ import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class FallingBlockCollisionEventListener {
 
     @SubscribeEvent
-    public static void anvilCollisionCraft(FallingBlockCollisionEvent event) {
-        Vec3 entityPos = event.getFallingBlockEntity().position();
+    public static void anvilCollisionCraft(@NotNull AnvilEvent.CollisionBlock event) {
+        Vec3 entityPos = event.getEntity().position();
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
         if (AnvilCraft.config.anvilCollisionCraftSpeed > event.getSpeed()) return;
         AnvilCollisionCraftRecipe resultRecipe = null;
-        for (RecipeHolder<AnvilCollisionCraftRecipe> recipe : level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get())) {
-            if (!recipe.value().anvil().is(event.getFallingBlockEntity().blockState)) continue;
+        List<RecipeHolder<AnvilCollisionCraftRecipe>> recipes = level.getRecipeManager()
+            .getAllRecipesFor(ModRecipeTypes.ANVIL_COLLISION_CRAFT.get());
+        for (RecipeHolder<AnvilCollisionCraftRecipe> recipe : recipes) {
+            if (!recipe.value().anvil().is(event.getEntity().blockState)) continue;
             if (!recipe.value().hitBlock().is(level.getBlockState(pos))) continue;
             if (event.getSpeed() < recipe.value().speed()) continue;
             if (resultRecipe != null && resultRecipe.speed() > recipe.value().speed()) continue;
@@ -59,7 +62,7 @@ public class FallingBlockCollisionEventListener {
             executeRecipe(event, resultRecipe, level, pos, entityPos);
             return;
         }
-        if (event.getFallingBlockEntity().getBlockState().is(BlockTags.ANVIL)) {
+        if (event.getEntity().getBlockState().is(BlockTags.ANVIL)) {
             if (level.getBlockState(pos).getDestroySpeed(level, pos) > 0) {
                 removeBlock(level, pos);
             }
@@ -77,10 +80,16 @@ public class FallingBlockCollisionEventListener {
         }
     }
 
-    private static void executeRecipe(FallingBlockCollisionEvent event, AnvilCollisionCraftRecipe recipe, Level level, BlockPos pos, Vec3 entityPos) {
+    private static void executeRecipe(
+        AnvilEvent.CollisionBlock event,
+        @NotNull AnvilCollisionCraftRecipe recipe,
+        Level level,
+        BlockPos pos,
+        Vec3 entityPos
+    ) {
         removeBlock(level, pos);
         if (recipe.consume())
-            event.getFallingBlockEntity().kill();
+            event.getEntity().kill();
 
         DamageSource damageSource = Explosion.getDefaultDamageSource(level, null);
         ExplosionDamageCalculator damageCalculator = new ItemImmuneExplosionDamage();
@@ -186,7 +195,7 @@ public class FallingBlockCollisionEventListener {
     }
 
     @SuppressWarnings("rawtypes")
-    private static void removeBlock(Level level, BlockPos pos) {
+    private static void removeBlock(@NotNull Level level, BlockPos pos) {
         BlockState blockState = level.getBlockState(pos);
         if (blockState.is(ModBlockTags.COLLISION_IMMUNE)) return;
         if (blockState.getBlock() instanceof AbstractMultiPartBlock multiPartBlock) {
