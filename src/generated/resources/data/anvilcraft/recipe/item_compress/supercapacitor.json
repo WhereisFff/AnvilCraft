@@ -64,25 +64,37 @@
   ],
   "outcomes": [
     {
-      "type": "anvilcraft:spawn_item",
-      "item": "anvilcraft:supercapacitor",
-      "offset": [
-        0.0,
-        -0.75,
-        0.0
+      "type": "anvilcraft:choose_one",
+      "chance": 1.0,
+      "choices": [
+        {
+          "outcome": {
+            "type": "anvilcraft:produce_explosion",
+            "chance": 0.5,
+            "fire": true,
+            "interact": "block",
+            "offset": [
+              0.0,
+              -0.75,
+              0.0
+            ],
+            "power": 1.0
+          },
+          "weight": 0.5
+        },
+        {
+          "outcome": {
+            "type": "anvilcraft:spawn_item",
+            "item": "anvilcraft:supercapacitor",
+            "offset": [
+              0.0,
+              -0.75,
+              0.0
+            ]
+          },
+          "weight": 0.5
+        }
       ]
-    },
-    {
-      "type": "anvilcraft:produce_explosion",
-      "chance": 0.5,
-      "fire": true,
-      "interact": "block",
-      "offset": [
-        0.0,
-        -0.75,
-        0.0
-      ],
-      "power": 1.0
     }
   ],
   "priority": 5,
