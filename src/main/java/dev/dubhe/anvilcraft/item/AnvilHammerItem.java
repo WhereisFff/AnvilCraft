@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.mixin.invoker.BlockBehaviourInvoker;
 import dev.dubhe.anvilcraft.network.RocketJumpPacket;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -140,6 +141,7 @@ public class AnvilHammerItem extends Item implements Equipable {
         NeoForge.EVENT_BUS.post(event);
         level.playSound(null, blockPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1f, 1f);
         itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
+        TriggerUtil.anvilHammerLeftClickBlock(level, blockPos);
         return true;
     }
 
@@ -150,9 +152,11 @@ public class AnvilHammerItem extends Item implements Equipable {
         if (rocketJump(player, level, blockPos)) return;
         if (!player.getAbilities().mayBuild) return;
         if (player.isShiftKeyDown()) {
+            TriggerUtil.anvilHammerShiftRightClickBlock(level, blockPos);
             breakBlock(player, blockPos, level, anvilHammer);
             return;
         }
+        TriggerUtil.anvilHammerRightClickBlock(level, blockPos);
         BlockState state = level.getBlockState(blockPos);
         Block block = state.getBlock();
         MenuProvider provider = ((BlockBehaviourInvoker) block).invokeGetMenuProvider(state, level, blockPos);
@@ -254,6 +258,12 @@ public class AnvilHammerItem extends Item implements Equipable {
         if (attacker.fallDistance >= 3) {
             attacker.level().playSound(null, BlockPos.containing(attacker.position()), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1f, attacker.fallDistance > 17 ? (float) 0.5 : 1 - attacker.fallDistance / 35);
         }
+        if (level instanceof ServerLevel serverLevel) {
+            if (target.killedEntity(serverLevel, attacker)) {
+                TriggerUtil.killedEntityByAnvilHammer(serverLevel, BlockPos.containing(target.position()), target);
+            }
+        }
+        TriggerUtil.anvilHammerHurtEntity(level, BlockPos.containing(target.position()), damageBonus);
         return true;
     }
 

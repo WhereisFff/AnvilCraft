@@ -1,6 +1,11 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerLeftClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerRightClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerShiftRightClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
@@ -11,6 +16,7 @@ import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
@@ -54,6 +60,24 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, InWorldRecipeTrigger> IN_WORLD_RECIPE =
         CT.register("in_world_recipe", InWorldRecipeTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerLeftClickBlockTrigger> ANVIL_HAMMER_LIFT_CLICK =
+        CT.register("anvil_hammer_left_click_block", AnvilHammerLeftClickBlockTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerRightClickBlockTrigger> ANVIL_HAMMER_RIGHT_CLICK =
+        CT.register("anvil_hammer_right_click_block", AnvilHammerRightClickBlockTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerShiftRightClickBlockTrigger> ANVIL_HAMMER_SHIFT_RIGHT_CLICK =
+        CT.register("anvil_hammer_shift_right_click_block", AnvilHammerShiftRightClickBlockTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerHurtEntityTrigger> ANVIL_HAMMER_HURT_ENTITY =
+        CT.register("anvil_hammer_hurt_entity", AnvilHammerHurtEntityTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerKilledEntityByAnvilHammerTrigger> PLAYER_KILLED_ENTITY_BY_ANVIL_HAMMER =
+        CT.register("player_killed_entity_by_anvil_hammer", PlayerKilledEntityByAnvilHammerTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHitPiezoelectricCrystalTrigger> ANVIL_HIT_PIEZOELECTRIC_CRYSTAL =
+        CT.register("anvil_hit_piezoelectric_crystal", AnvilHitPiezoelectricCrystalTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);

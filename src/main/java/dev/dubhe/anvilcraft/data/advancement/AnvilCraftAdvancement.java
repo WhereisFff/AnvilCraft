@@ -45,5 +45,11 @@ public class AnvilCraftAdvancement {
         provider.accept(AnvilProcessingLine.four281);
         provider.accept(AnvilProcessingLine.vanillaIronPlate);
         provider.accept(AnvilProcessingLine.recyclingDiamonds);
+        provider.accept(AnvilProcessingLine.allInOne);
+        provider.accept(AnvilProcessingLine.hammer);
+        provider.accept(AnvilProcessingLine.superKill);
+        provider.accept(AnvilProcessingLine.heartsOfIron);
+        provider.accept(AnvilProcessingLine.notABeacon);
+        provider.accept(AnvilProcessingLine.lighter);
     }
 }

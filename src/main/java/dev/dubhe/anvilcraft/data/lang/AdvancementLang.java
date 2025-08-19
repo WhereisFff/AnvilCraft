@@ -59,6 +59,24 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.recycling_diamonds.title", "Recycling diamonds");
         provider.add("advancements.anvilcraft.recycling_diamonds.description", "Tools and equipment for smashing diamonds on the crushing platform");
+
+        provider.add("advancements.anvilcraft.all_in_one.title", "All in one");
+        provider.add("advancements.anvilcraft.all_in_one.description", "Craft a hammer and try its various functions");
+
+        provider.add("advancements.anvilcraft.hearts_of_iron.title", "Hearts of Iron");
+        provider.add("advancements.anvilcraft.hearts_of_iron.description", "Craft a magnetoelectric core");
+
+        provider.add("advancements.anvilcraft.not_beacon.title", "This is not a beacon");
+        provider.add("advancements.anvilcraft.not_beacon.description", "Craft and place a charge collector");
+
+        provider.add("advancements.anvilcraft.lighter.title", "Have you ever dismantled a lighter");
+        provider.add("advancements.anvilcraft.lighter.description", "Use an anvil to smash a piezoelectric crystal and generate electricity");
+
+        provider.add("advancements.anvilcraft.hammer.title", "When you have a hammer, you see everyone wants a nail");
+        provider.add("advancements.anvilcraft.hammer.description", "Use an anvil hammer to kill mobs");
+
+        provider.add("advancements.anvilcraft.super_kill.title", "Super kill... almost");
+        provider.add("advancements.anvilcraft.super_kill.description", "Using a royal anvil hammer to deal 80 damage with one strike");
         // endregion
 
         // region automation line

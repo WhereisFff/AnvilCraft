@@ -1,0 +1,26 @@
+{
+  "parent": "anvilcraft:anvilcraft/not_beacon",
+  "criteria": {
+    "hit_piezoelectric_crystal": {
+      "trigger": "anvilcraft:anvil_hit_piezoelectric_crystal"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.lifting_anvil.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:piezoelectric_crystal"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.lifting_anvil.title"
+    }
+  },
+  "requirements": [
+    [
+      "hit_piezoelectric_crystal"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

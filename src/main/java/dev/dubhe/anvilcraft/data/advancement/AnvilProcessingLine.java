@@ -1,14 +1,27 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerLeftClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerRightClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerShiftRightClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnythingAnvilCraftingTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+
+import java.util.List;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.of;
 import static dev.dubhe.anvilcraft.AnvilCraft.advancementOf;
@@ -109,4 +122,98 @@ public class AnvilProcessingLine {
         .addCriterion("diamond_boots", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/armor/diamond_boots_2_diamond")))
         .addCriterion("diamond_horse_armor", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/armor/diamond_horse_armor_2_diamond")))
         .build(advancementOf("recycling_diamonds"));
+
+    public static final AdvancementHolder allInOne = Advancement.Builder.advancement()
+        .parent(dang)
+        .display(
+            ModItems.ANVIL_HAMMER,
+            Component.translatable("advancements.anvilcraft.all_in_one.title"),
+            Component.translatable("advancements.anvilcraft.all_in_one.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("anvil_hammer")))
+        .addCriterion("royal_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_anvil_hammer")))
+        .addCriterion("ember_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/ember_anvil_hammer")))
+        .addCriterion("transcendence_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/transcendence_anvil_hammer")))
+        .addCriterion("left_click", AnvilHammerLeftClickBlockTrigger.TriggerInstance.clickBlock())
+        .addCriterion("right_click", AnvilHammerRightClickBlockTrigger.TriggerInstance.clickBlock())
+        .addCriterion("shift_right_click", AnvilHammerShiftRightClickBlockTrigger.TriggerInstance.clickBlock())
+        .addCriterion("hurt_entity", AnvilHammerHurtEntityTrigger.TriggerInstance.hurtEntity())
+        .requirements(new AdvancementRequirements(List.of(
+            List.of("anvil_hammer", "royal_anvil_hammer", "ember_anvil_hammer", "transcendence_anvil_hammer"),
+            List.of("left_click"),
+            List.of("right_click"),
+            List.of("shift_right_click"),
+            List.of("hurt_entity")
+        )))
+        .build(advancementOf("all_in_one"));
+
+    public static final AdvancementHolder heartsOfIron = Advancement.Builder.advancement()
+        .parent(allInOne)
+        .display(
+            ModBlocks.MAGNETO_ELECTRIC_CORE_BLOCK,
+            Component.translatable("advancements.anvilcraft.hearts_of_iron.title"),
+            Component.translatable("advancements.anvilcraft.hearts_of_iron.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("craft_magnetoelectric_core", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("magnetoelectric_core")))
+        .build(advancementOf("hearts_of_iron"));
+
+    public static final AdvancementHolder notABeacon = Advancement.Builder.advancement()
+        .parent(heartsOfIron)
+        .display(
+            ModBlocks.CHARGE_COLLECTOR,
+            Component.translatable("advancements.anvilcraft.not_beacon.title"),
+            Component.translatable("advancements.anvilcraft.not_beacon.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("craft_charge_collector", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("charge_collector")))
+        .addCriterion("place_charge_collector", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(ModBlocks.CHARGE_COLLECTOR.get()))
+        .build(advancementOf("not_beacon"));
+
+    public static final AdvancementHolder lighter = Advancement.Builder.advancement()
+        .parent(notABeacon)
+        .display(
+            ModBlocks.PIEZOELECTRIC_CRYSTAL,
+            Component.translatable("advancements.anvilcraft.lifting_anvil.title"),
+            Component.translatable("advancements.anvilcraft.lifting_anvil.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("hit_piezoelectric_crystal", AnvilHitPiezoelectricCrystalTrigger.TriggerInstance.hit())
+        .build(advancementOf("lighter"));
+
+    public static final AdvancementHolder hammer = Advancement.Builder.advancement()
+        .parent(allInOne)
+        .display(
+            ModItems.ANVIL_HAMMER,
+            Component.translatable("advancements.anvilcraft.hammer.title"),
+            Component.translatable("advancements.anvilcraft.hammer.description"),
+            null, AdvancementType.CHALLENGE,
+            true, true, false
+        )
+        .addCriterion("kill_zombie", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.ZOMBIE))
+        .addCriterion("kill_skeleton", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.SKELETON))
+        .addCriterion("kill_creeper", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.CREEPER))
+        .addCriterion("kill_spider", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.SPIDER))
+        .addCriterion("kill_pig", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.PIG))
+        .addCriterion("kill_cow", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.COW))
+        .addCriterion("kill_sheep", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.SHEEP))
+        .addCriterion("kill_chicken", PlayerKilledEntityByAnvilHammerTrigger.TriggerInstance.killedEntity(EntityType.CHICKEN))
+        .build(advancementOf("hammer"));
+
+    public static final AdvancementHolder superKill = Advancement.Builder.advancement()
+        .parent(hammer)
+        .display(
+            ModItems.ROYAL_ANVIL_HAMMER,
+            Component.translatable("advancements.anvilcraft.super_kill.title"),
+            Component.translatable("advancements.anvilcraft.super_kill.description"),
+            null, AdvancementType.CHALLENGE,
+            true, true, false
+        )
+        .addCriterion("super_kill", AnvilHammerHurtEntityTrigger.TriggerInstance.hurtEntity(80))
+        .build(advancementOf("super_kill"));
 }
