@@ -47,7 +47,7 @@ create = { group = "com.simibubi.create", name = "create-1.21.1", version.ref = 
 ponder = { group = "net.createmod.ponder", name = "Ponder-NeoForge-1.21.1", version.ref = "ponder" }
 flywheelApi = { group = "dev.engine-room.flywheel", name = "flywheel-neoforge-api-1.21.1", version.ref = "flywheel" }
 flywheel = { group = "dev.engine-room.flywheel", name = "flywheel-neoforge-1.21.1", version.ref = "flywheel" }
-ae2 = {group = "org.appliedenergistics", name = "appliedenergistics2", version.ref = "ae2"}
+ae2 = { group = "org.appliedenergistics", name = "appliedenergistics2", version.ref = "ae2" }
 cerbonsApi = { group = "maven.modrinth", name = "cerbons-api", version.ref = "cerbonsApi" }
 cerbonsBetterBeacons = { group = "maven.modrinth", name = "cerbons-better-beacons", version.ref = "cerbonsBetterBeacons" }
 
