@@ -90,10 +90,7 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
             Blocks.BEACON
                 .defaultBlockState()
                 .trySetValue(BlockStateProperties.WATERLOGGED, false),
-            ModBlocks.CORRUPTED_BEACON
-                .get()
-                .defaultBlockState()
-                .trySetValue(BlockStateProperties.WATERLOGGED, false)
+            ModBlocks.CURSED_GOLD_BLOCK.getDefaultState()
         );
     }
 
