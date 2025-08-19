@@ -4,16 +4,13 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.BlockCompressingRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.BlockCrushingRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnythingAnvilCraftingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DispenserRepairIronGolem;
+import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.MeshRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.SqueezingRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
@@ -55,17 +52,8 @@ public class ModCriterionTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, AnythingAnvilCraftingTrigger> ANYTHING_ANVIL_CRAFTING =
         CT.register("anything_anvil_crafting", AnythingAnvilCraftingTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, BlockCrushingRecipeTrigger> BLOCK_CRUSHING =
-        CT.register("block_crushing", BlockCrushingRecipeTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, MeshRecipeTrigger> MESH =
-        CT.register("mesh", MeshRecipeTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, SqueezingRecipeTrigger> SQUEEZING =
-        CT.register("squeezing", SqueezingRecipeTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, BlockCompressingRecipeTrigger> BLOCK_COMPRESSING =
-        CT.register("block_compressing", BlockCompressingRecipeTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, InWorldRecipeTrigger> IN_WORLD_RECIPE =
+        CT.register("in_world_recipe", InWorldRecipeTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);

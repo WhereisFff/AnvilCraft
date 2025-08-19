@@ -38,7 +38,7 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.lifting_anvil.description", "Use a magnet block to lift and lower the anvil");
         // endregion
 
-        // region anvil crafting line
+        // region anvil processing line
         provider.add("advancements.anvilcraft.dang.title", "Dang!");
         provider.add("advancements.anvilcraft.dang.description", "Perform anything anvil crafting");
 
@@ -53,6 +53,12 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.four281.title", "4 to 81");
         provider.add("advancements.anvilcraft.four281.description", "Use an anvil to compress two pieces of ice to make packed ice, and then use an anvil to compress two pieces of packed ice to make blue ice");
+
+        provider.add("advancements.anvilcraft.vanilla_iron_plate.title", "Vanilla iron plate");
+        provider.add("advancements.anvilcraft.vanilla_iron_plate.description", "Smash iron ingots on the stamping platform to obtain heavy weighted pressure plate");
+
+        provider.add("advancements.anvilcraft.recycling_diamonds.title", "Recycling diamonds");
+        provider.add("advancements.anvilcraft.recycling_diamonds.description", "Tools and equipment for smashing diamonds on the crushing platform");
         // endregion
 
         // region automation line

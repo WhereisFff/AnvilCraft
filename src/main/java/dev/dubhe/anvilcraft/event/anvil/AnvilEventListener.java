@@ -75,7 +75,6 @@ public class AnvilEventListener {
         handleNeoAnvilRecipe(event);
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
-                TriggerUtil.anythingAnvilCrafting(level, pos);
                 return;
             }
         }
@@ -92,7 +91,6 @@ public class AnvilEventListener {
         boolean damageAnvil = context.get(DamageAnvil.DAMAGE_ANVIL);
         if (!event.isAnvilDamage()) event.setAnvilDamage(damageAnvil);
         context.accept();
-        TriggerUtil.anythingAnvilCrafting(level, pos);
     }
 
     private static void brokeBlock(@NotNull Level level, BlockPos pos, AnvilEvent.OnLand event) {

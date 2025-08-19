@@ -3,14 +3,9 @@
   "criteria": {
     "mesh": {
       "conditions": {
-        "input": {
-          "items": "minecraft:sand"
-        },
-        "output": {
-          "items": "minecraft:gold_nugget"
-        }
+        "id": "anvilcraft:mesh/sand"
       },
-      "trigger": "anvilcraft:mesh"
+      "trigger": "anvilcraft:in_world_recipe"
     }
   },
   "display": {

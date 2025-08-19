@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 
@@ -64,34 +64,10 @@ public class TriggerUtil {
         }
     }
 
-    public static void blockCrushing(Level level, BlockPos pos, Item input, Item output) {
+    public static void inWorldRecipe(Level level, BlockPos pos, ResourceLocation id) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.BLOCK_CRUSHING.get().trigger(player, input, output);
-            }
-        }
-    }
-
-    public static void mesh(Level level, BlockPos pos, Item input, Item output) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.MESH.get().trigger(player, input, output);
-            }
-        }
-    }
-
-    public static void squeezing(Level level, BlockPos pos, Item input, Item output) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.SQUEEZING.get().trigger(player, input, output);
-            }
-        }
-    }
-
-    public static void blockCompressing(Level level, BlockPos pos, Item input, Item output) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.BLOCK_COMPRESSING.get().trigger(player, input, output);
+                ModCriterionTriggers.IN_WORLD_RECIPE.get().trigger(player, id);
             }
         }
     }

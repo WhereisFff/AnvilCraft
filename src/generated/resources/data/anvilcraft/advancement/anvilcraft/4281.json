@@ -3,25 +3,15 @@
   "criteria": {
     "blue_ice": {
       "conditions": {
-        "input": {
-          "items": "minecraft:packed_ice"
-        },
-        "output": {
-          "items": "minecraft:blue_ice"
-        }
+        "id": "anvilcraft:block_compress/blue_ice"
       },
-      "trigger": "anvilcraft:block_compressing"
+      "trigger": "anvilcraft:in_world_recipe"
     },
     "packed_ice": {
       "conditions": {
-        "input": {
-          "items": "minecraft:ice"
-        },
-        "output": {
-          "items": "minecraft:packed_ice"
-        }
+        "id": "anvilcraft:block_compress/packed_ice"
       },
-      "trigger": "anvilcraft:block_compressing"
+      "trigger": "anvilcraft:in_world_recipe"
     }
   },
   "display": {

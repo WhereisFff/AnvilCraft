@@ -3,14 +3,9 @@
   "criteria": {
     "make_ice": {
       "conditions": {
-        "input": {
-          "items": "minecraft:snow_block"
-        },
-        "output": {
-          "items": "minecraft:ice"
-        }
+        "id": "anvilcraft:squeezing/power_snow_from_ice"
       },
-      "trigger": "anvilcraft:squeezing"
+      "trigger": "anvilcraft:in_world_recipe"
     }
   },
   "display": {

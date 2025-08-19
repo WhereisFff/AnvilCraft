@@ -3,25 +3,15 @@
   "criteria": {
     "crush_cobblestone": {
       "conditions": {
-        "input": {
-          "items": "minecraft:cobblestone"
-        },
-        "output": {
-          "items": "minecraft:gravel"
-        }
+        "id": "anvilcraft:block_crush/gravel"
       },
-      "trigger": "anvilcraft:block_crushing"
+      "trigger": "anvilcraft:in_world_recipe"
     },
     "crush_gravel": {
       "conditions": {
-        "input": {
-          "items": "minecraft:gravel"
-        },
-        "output": {
-          "items": "minecraft:sand"
-        }
+        "id": "anvilcraft:block_crush/sand"
       },
-      "trigger": "anvilcraft:block_crushing"
+      "trigger": "anvilcraft:in_world_recipe"
     }
   },
   "display": {

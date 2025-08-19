@@ -43,5 +43,7 @@ public class AnvilCraftAdvancement {
         provider.accept(AnvilProcessingLine.fossick);
         provider.accept(AnvilProcessingLine.iceMaker);
         provider.accept(AnvilProcessingLine.four281);
+        provider.accept(AnvilProcessingLine.vanillaIronPlate);
+        provider.accept(AnvilProcessingLine.recyclingDiamonds);
     }
 }
