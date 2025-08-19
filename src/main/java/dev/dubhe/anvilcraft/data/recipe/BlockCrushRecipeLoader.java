@@ -8,7 +8,6 @@ import net.minecraft.world.level.block.Blocks;
 
 public class BlockCrushRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
-        blockCrush(provider, Blocks.STONE, Blocks.COBBLESTONE);
         blockCrush(provider, Blocks.COBBLESTONE, Blocks.GRAVEL);
         blockCrush(provider, Blocks.GRAVEL, Blocks.SAND);
         blockCrush(provider, Blocks.POLISHED_GRANITE, Blocks.GRANITE);
