@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:item_compress/supercapacitor"
+        "recipe": "anvilcraft:supercapacitor"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:item_compress/supercapacitor"
+      "anvilcraft:supercapacitor"
     ]
   }
 }
