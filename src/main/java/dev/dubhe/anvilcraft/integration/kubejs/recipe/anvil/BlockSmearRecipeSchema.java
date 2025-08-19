@@ -66,7 +66,7 @@ public interface BlockSmearRecipeSchema {
         .defaultOptional();
 
     RecipeSchema SCHEMA = new RecipeSchema(INPUTS, RESULT)
-        .factory(new KubeRecipeFactory(AnvilCraft.of("block_crush"), BlockSmearKubeRecipe.class, BlockSmearKubeRecipe::new))
+        .factory(new KubeRecipeFactory(AnvilCraft.of("block_smear"), BlockSmearKubeRecipe.class, BlockSmearKubeRecipe::new))
         .constructor(INPUTS, RESULT)
         .constructor(new IDRecipeConstructor())
         .constructor();

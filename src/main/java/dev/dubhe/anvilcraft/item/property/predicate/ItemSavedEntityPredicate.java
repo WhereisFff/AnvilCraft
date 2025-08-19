@@ -50,10 +50,7 @@ public record ItemSavedEntityPredicate(
     }
 
     @Override
-    public boolean matches(ItemStack itemStack) {
-        if (!itemStack.has(ModComponents.SAVED_ENTITY)) return false;
-        SavedEntity component = itemStack.get(ModComponents.SAVED_ENTITY);
-        if (component == null) return false;
+    public boolean matches(ItemStack itemStack, SavedEntity component) {
         CompoundTag tag = component.tag();
         Optional<EntityType<?>> optional = EntityType.by(tag);
         if (optional.isEmpty()) return false;
@@ -65,10 +62,5 @@ public record ItemSavedEntityPredicate(
     @Override
     public DataComponentType<SavedEntity> componentType() {
         return ModComponents.SAVED_ENTITY;
-    }
-
-    @Override
-    public boolean matches(ItemStack itemStack, SavedEntity savedEntity) {
-        return false;
     }
 }
