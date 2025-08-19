@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ChooseOneOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
@@ -28,4 +29,7 @@ public class ModRecipeOutcomeTypes {
 
     public static final DeferredHolder<IRecipeOutcome.Type<?>, ProduceExplosion.Type> PRODUCE_EXPLOSION = OUTCOME_TYPE
         .register("produce_explosion", ProduceExplosion.Type::new);
+
+    public static final DeferredHolder<IRecipeOutcome.Type<?>, ChooseOneOutcome.Type> CHOOSE_ONE = OUTCOME_TYPE
+        .register("choose_one", ChooseOneOutcome.Type::new);
 }

@@ -8,7 +8,9 @@ import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ChooseOneOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
@@ -18,6 +20,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressRecipeLoader {
@@ -86,14 +89,25 @@ public class ItemCompressRecipeLoader {
                     .build()
             )
             .hasCauldron(0, -1, 0)
-            .spawnItem(new Vec3(0.0, -0.75, 0.0), ModItems.SUPER_CAPACITOR.asStack())
             .out(
-                new ProduceExplosion(
-                    new Vec3(0.0, -0.75, 0.0),
-                    1f,
-                    true,
-                    Level.ExplosionInteraction.BLOCK,
-                    0.5f)
+                ChooseOneOutcome.builder()
+                    .choice(
+                        new ProduceExplosion(
+                            new Vec3(0.0, -0.75, 0.0),
+                            1f,
+                            true,
+                            Level.ExplosionInteraction.BLOCK,
+                            0.5f),
+                        0.5f
+                    )
+                    .choice(
+                        SpawnItem.builder()
+                            .item(ModItems.SUPER_CAPACITOR.asStack())
+                            .offset(new Vec3(0.0, -0.75, 0.0))
+                            .build(),
+                        0.5f
+                    )
+                    .build()
             )
             .priority(superCapacitorEmptyRecipe.getPriority() + 1)
             .group("item_compress")
