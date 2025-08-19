@@ -136,8 +136,10 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(CONTAINER_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
-        guiGraphics.blit(SLIDER, slider1X, sliderY, 0, 0, 7, 11, 7, 22);
-        guiGraphics.blit(SLIDER, slider2X, sliderY, 0, 0, 7, 11, 7, 22);
+        int vOffset1 = MathUtil.isInRange(mouseX, slider1X, slider1X + 7) ? 11 : 0;
+        int vOffset2 = MathUtil.isInRange(mouseX, slider2X, slider2X + 7) ? 11 : 0;
+        guiGraphics.blit(SLIDER, slider1X, sliderY, 0, vOffset1, 7, 11, 7, 22);
+        guiGraphics.blit(SLIDER, slider2X, sliderY, 0, vOffset2, 7, 11, 7, 22);
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.scale(0.5F, 0.5F, 1);
