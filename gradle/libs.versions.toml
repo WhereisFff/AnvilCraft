@@ -7,6 +7,7 @@ jei = "19.21.0.247"
 rei = "16.0.762"
 emi = "1.1.13+1.21.1"
 jade = "15.3.4+neoforge"
+appleskin = "3.0.7+mc1.21"
 theoneprobe = "1.21_neo-12.0.3-5"
 kubejs = "2101.7.1-build.181"
 patchouli = "1.21-87-NEOFORGE"
@@ -36,6 +37,7 @@ reiApi = { group = "me.shedaniel", name = "RoughlyEnoughItems-api-neoforge", ver
 reiForge = { group = "me.shedaniel", name = "RoughlyEnoughItems-neoforge", version.ref = "rei" }
 emi = { group = "dev.emi", name = "emi-neoforge", version.ref = "emi" }
 jade = { group = "maven.modrinth", name = "jade", version.ref = "jade" }
+appleskin = { group = "maven.modrinth", name = "appleskin", version.ref = "appleskin" }
 theoneprobe = { group = "mcjty.theoneprobe", name = "theoneprobe", version.ref = "theoneprobe" }
 kubejs = { group = "dev.latvian.mods", name = "kubejs-neoforge", version.ref = "kubejs" }
 patchouli = { group = "vazkii.patchouli", name = "Patchouli", version.ref = "patchouli" }
