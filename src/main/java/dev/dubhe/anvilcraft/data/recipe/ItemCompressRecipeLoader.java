@@ -6,14 +6,22 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemSubPredicates;
 import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
 import dev.dubhe.anvilcraft.item.property.predicate.NotPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ChooseOneOutcome;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.SpawnItem;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
@@ -84,12 +92,11 @@ public class ItemCompressRecipeLoader {
             .result(ModItems.SUPER_CAPACITOR_EMPTY)
             .save(provider);
 
-        ItemCompressRecipe.builder()
-            .requires(ModItemTags.IRON_PLATES, 2)
-            .requires(
-                ItemIngredientPredicate
+        InWorldRecipeBuilder.compatible(ModRecipeTriggers.ON_ANVIL_FALL_ON.get())
+            .with(
+                HasItemIngredient.builder()
                     .of(ModBlocks.RESIN_BLOCK.asItem())
-                    .withSubPredicate(
+                    .with(
                         ModItemSubPredicates.SAVED_ENTITY.get(),
                         ItemSavedEntityPredicate.of(EntityType.CREEPER)
                             .predicate(b ->
@@ -98,9 +105,42 @@ public class ItemCompressRecipeLoader {
                                     .rhs(1)
                             )
                     )
+                    .offset(0.0, -0.375, 0.0)
+                    .range(0.75, 0.75, 0.75)
                     .build()
             )
-            .result(ModItems.SUPER_CAPACITOR)
-            .save(provider);
+            .with(
+                HasItemIngredient.builder()
+                    .of(ModItemTags.IRON_PLATES)
+                    .count(2)
+                    .offset(0.0, -0.375, 0.0)
+                    .range(0.75, 0.75, 0.75)
+                    .build()
+            )
+            .hasCauldron(0, -1, 0)
+            .out(
+                ChooseOneOutcome.builder()
+                    .choice(
+                        new ProduceExplosion(
+                            new Vec3(0.0, -0.75, 0.0),
+                            1f,
+                            true,
+                            Level.ExplosionInteraction.BLOCK,
+                            0.5f
+                        ),
+                        0.5f
+                    )
+                    .choice(
+                        SpawnItem.builder()
+                            .item(ModItems.SUPER_CAPACITOR.asStack())
+                            .offset(new Vec3(0.0, -0.75, 0.0))
+                            .build(),
+                        0.5f
+                    )
+                    .build()
+            )
+            .group("item_compress")
+            .icon(ModItems.SUPER_CAPACITOR.asStack())
+            .save(provider, AnvilCraft.of("supercapacitor"));
     }
 }

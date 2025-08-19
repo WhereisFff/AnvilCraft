@@ -53,4 +53,7 @@ dependencies {
     // CERBON's Better Beacons
     compileOnly(libs.cerbonsApi)
     compileOnly(libs.cerbonsBetterBeacons)
+
+    // Apple Skin
+    implementation(libs.appleskin)
 }
