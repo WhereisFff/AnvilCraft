@@ -14,6 +14,8 @@ public class AnvilCraftPonderTags {
     public static final ResourceLocation ANVIL = AnvilCraft.of("anvil");
     public static final ResourceLocation MAGNET_BLOCK = AnvilCraft.of("magnet_block");
 
+    public static final ResourceLocation REDSTONE_COMPONENTS = AnvilCraft.of("redstone_components");
+
     public static void register(@NotNull PonderTagRegistrationHelper<ResourceLocation> helper) {
         PonderTagRegistrationHelper<RegistryEntry<?, ?>> registryTagHelper = helper.withKeyFunction(RegistryEntry::getId);
         PonderTagRegistrationHelper<Item> itemTagHelper = helper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
@@ -30,6 +32,13 @@ public class AnvilCraftPonderTags {
             .item(ModBlocks.MAGNET_BLOCK, true, false)
             .title("Magnet")
             .description("Use magnet to attract the anvil")
+            .register();
+
+        helper.registerTag(REDSTONE_COMPONENTS)
+            .addToIndex()
+            .item(ModBlocks.BLOCK_COMPARATOR, true, false)
+            .title("Redstone components")
+            .description("New redstone components")
             .register();
 
 
@@ -49,5 +58,11 @@ public class AnvilCraftPonderTags {
             .add(ModBlocks.MAGNET_BLOCK)
             .add(ModBlocks.HOLLOW_MAGNET_BLOCK)
             .add(ModBlocks.FERRITE_CORE_MAGNET_BLOCK);
+
+        registryTagHelper.addToTag(REDSTONE_COMPONENTS)
+            .add(ModBlocks.LOAD_MONITOR)
+            .add(ModBlocks.BLOCK_COMPARATOR)
+            .add(ModBlocks.ITEM_DETECTOR)
+            .add(ModBlocks.PULSE_GENERATOR);
     }
 }
