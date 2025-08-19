@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
+import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -27,6 +28,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,10 +87,18 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
 
     @Override
     public @Nullable IDrawable getIcon() {
+        BlockState block = ModBlocks.CORRUPTED_BEACON
+            .get()
+            .defaultBlockState()
+            .trySetValue(BlockStateProperties.WATERLOGGED, false);
         return new DrawableBlockStateIcon(
-            Blocks.BEACON.defaultBlockState()
-                .setValue(BlockStateProperties.WATERLOGGED, false),
-            ModBlocks.CURSED_GOLD_BLOCK.getDefaultState()
+            Blocks.BEACON
+                .defaultBlockState()
+                .trySetValue(BlockStateProperties.WATERLOGGED, false),
+            ModBlocks.CORRUPTED_BEACON
+                .get()
+                .defaultBlockState()
+                .trySetValue(BlockStateProperties.WATERLOGGED, false)
         );
     }
 
@@ -133,8 +143,14 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
                     }
                 }
             }
-            beaconBase.setBlockState(new BlockPos(layers, layers, layers),
-                Blocks.BEACON.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
+
+            BlockState block = ModBlocks.CORRUPTED_BEACON
+                .get()
+                .defaultBlockState()
+                .trySetValue(BlockStateProperties.WATERLOGGED, false);
+
+            System.out.println(block);
+            beaconBase.setBlockState(new BlockPos(layers, layers, layers), block);
             cache.put(recipe, beaconBase);
             level = beaconBase;
         }

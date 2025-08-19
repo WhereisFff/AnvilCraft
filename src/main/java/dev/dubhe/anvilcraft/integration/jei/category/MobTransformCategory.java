@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -29,6 +30,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -136,12 +138,14 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
         double mouseY) {
         MobTransformRecipe recipe = recipeHolder.value();
 
+        BlockState block = ModBlocks.CORRUPTED_BEACON
+            .get()
+            .defaultBlockState()
+            .trySetValue(BlockStateProperties.WATERLOGGED, false);
+
         RenderHelper.renderBlock(
             guiGraphics,
-            ModBlocks.CORRUPTED_BEACON
-                .get()
-                .defaultBlockState()
-                .setValue(BlockStateProperties.WATERLOGGED, false),
+            block,
             81,
             40,
             10,

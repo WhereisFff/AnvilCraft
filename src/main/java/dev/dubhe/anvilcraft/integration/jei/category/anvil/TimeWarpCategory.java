@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -45,7 +46,6 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable icon;
     private final IDrawable slot;
     private final Component title;
     private final ITickTimer timer;
@@ -54,10 +54,6 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     private final IDrawable arrowOut;
 
     public TimeWarpCategory(IGuiHelper helper) {
-        icon = new DrawableBlockStateIcon(
-            Blocks.CAULDRON.defaultBlockState(),
-            ModBlocks.CORRUPTED_BEACON.getDefaultState()
-                .setValue(BlockStateProperties.WATERLOGGED, false));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.time_warp");
         timer = helper.createTickTimer(30, 60, true);
@@ -88,7 +84,13 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
 
     @Override
     public @Nullable IDrawable getIcon() {
-        return icon;
+        return new DrawableBlockStateIcon(
+            Blocks.CAULDRON.defaultBlockState(),
+            ModBlocks.CORRUPTED_BEACON
+                .get()
+                .defaultBlockState()
+                .trySetValue(BlockStateProperties.WATERLOGGED, false)
+        );
     }
 
     @Override
@@ -128,10 +130,15 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             12,
             RenderHelper.SINGLE_BLOCK
         );
+
+        BlockState block = ModBlocks.CORRUPTED_BEACON
+            .get()
+            .defaultBlockState()
+            .trySetValue(BlockStateProperties.WATERLOGGED, false);
+
         RenderHelper.renderBlock(
             guiGraphics,
-            ModBlocks.CORRUPTED_BEACON.getDefaultState()
-                .setValue(BlockStateProperties.WATERLOGGED, false),
+            block,
             81,
             40,
             0,
