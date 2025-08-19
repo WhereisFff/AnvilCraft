@@ -18,6 +18,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -93,11 +94,12 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
         BlockPos blockPos = BlockPos.containing(pos);
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState curState = cache.getBlockState(blockPos);
-        Block fluidCauldron = HasCauldron.getDefaultCauldron(this.fluid);
+        if (!curState.is(BlockTags.CAULDRONS)) return false;
+        Block fluidCauldron = this.getFluidCauldron();
         if (curState.is(fluidCauldron)) return true;
         if (HasCauldron.isNotEmpty(this.fluid)) return false;
         if (!HasCauldron.isNotEmpty(this.transform)) return false;
-        Block targetCauldron = HasCauldron.getDefaultCauldron(this.transform);
+        Block targetCauldron = this.getTransformCauldron();
         BlockState targetState = targetCauldron.defaultBlockState();
         Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
         int max = optionalTarget.map(tuple -> tuple.getA().max).orElse(0);
@@ -113,13 +115,18 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState curState = cache.getBlockState(blockPos);
         Block emptyCauldron = Blocks.CAULDRON;
-        Block fluidCauldron = HasCauldron.getDefaultCauldron(this.fluid);
-        Block transformCauldron = HasCauldron.getDefaultCauldron(this.transform);
+        Block fluidCauldron = this.getFluidCauldron();
+        Block transformCauldron = this.getTransformCauldron();
         Block targetCauldron = HasCauldron.isNotEmpty(this.transform) ? transformCauldron : fluidCauldron;
         BlockState targetState = targetCauldron.defaultBlockState();
         Optional<Tuple<IntegerProperty, Integer>> optionalCur = getFluidLevel(curState);
         Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
-        int cur = optionalCur.map(Tuple::getB).orElse(0);
+        int cur;
+        if (!curState.is(emptyCauldron) && (curState.is(fluidCauldron) || curState.is(transformCauldron))) {
+            cur = optionalCur.map(Tuple::getB).orElse(0);
+        } else {
+            cur = 0;
+        }
         int target = cur - this.consume;
         if (target <= 0) {
             targetState = emptyCauldron.defaultBlockState();

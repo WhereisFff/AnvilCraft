@@ -5,23 +5,21 @@ import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.init.ModItems;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 
+import java.util.List;
 import java.util.Optional;
 
 @Getter
 @MethodsReturnNonnullByDefault
 public class CannedFoodItem extends Item implements IExtraItemDisplay {
-
-    private final Holder<Item> canItem;
-
-    public CannedFoodItem(Properties properties, Holder<Item> canItem) {
+    public CannedFoodItem(Properties properties) {
         super(properties);
-        this.canItem = canItem;
     }
 
     @Override
@@ -47,14 +45,35 @@ public class CannedFoodItem extends Item implements IExtraItemDisplay {
         canStack.set(ModComponents.DISPLAY_ITEM, new StoredItem(displayStack));
         FoodProperties copiedFood = displayStack.getFoodProperties(null);
         if (copiedFood != null) {
+            int nutrition = copiedFood.nutrition();
+            int foodNutrition = switch (foodStack.getCount()) {
+                case 1 -> nutrition;
+                case 2 -> (int) (nutrition * 1.8);
+                case 3 -> (int) (nutrition * 2.4);
+                case 4 -> (int) (nutrition * 2.8);
+                case 5 -> nutrition * 3;
+                default -> throw new IndexOutOfBoundsException(foodStack.getCount());
+            };
             canStack.set(DataComponents.FOOD, new FoodProperties.Builder()
-                .nutrition(copiedFood.nutrition())
-                .saturationModifier(copiedFood.saturation() / (copiedFood.nutrition() * 2.0f))
-                .usingConvertsTo(this.canItem.value())
+                .nutrition(foodNutrition)
+                .saturationModifier(copiedFood.saturation() / (foodNutrition * 2.0f))
                 .fast()
                 .build());
         }
         return canStack;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        StoredItem foodInfo = stack.getOrDefault(ModComponents.DISPLAY_ITEM, new IExtraItemDisplay.StoredItem(ItemStack.EMPTY));
+        ItemStack food = foodInfo.stored();
+        if (!food.isEmpty()) {
+            if (food.getCount() == 1) {
+                tooltipComponents.add(food.getHoverName());
+            } else {
+                tooltipComponents.add(food.getHoverName().copy().append(" x").append(String.valueOf(food.getCount())));
+            }
+        }
     }
 
     @Override

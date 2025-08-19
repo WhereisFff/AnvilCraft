@@ -3,10 +3,22 @@ package dev.dubhe.anvilcraft.data.recipe;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModItemSubPredicates;
+import dev.dubhe.anvilcraft.init.ModItemTags;
 import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
+import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
+import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
+import dev.dubhe.anvilcraft.recipe.util.ItemSavedEntityPredicate;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
@@ -34,6 +46,59 @@ public class ItemCompressRecipeLoader {
             .requires(ModItems.CHOCOLATE)
             .result(new ItemStack(ModBlocks.CHOCOLATE_CREAM_BLOCK))
             .save(provider);
+
+        ItemIngredientPredicate creeperResinPredicate = ItemIngredientPredicate
+            .of(ModBlocks.RESIN_BLOCK.asItem())
+            .withSubPredicate(
+                ModItemSubPredicates.SAVED_ENTITY.get(),
+                ItemSavedEntityPredicate.of(EntityType.CREEPER)
+            )
+            .build();
+        ItemCompressRecipe.Builder superCapacitorEmptyRecipeBuilder = ItemCompressRecipe.builder()
+            .requires(ModItemTags.IRON_PLATES, 2)
+            .requires(creeperResinPredicate)
+            .result(ModItems.SUPER_CAPACITOR_EMPTY);
+        ItemCompressRecipe superCapacitorEmptyRecipe = superCapacitorEmptyRecipeBuilder.buildRecipe();
+        superCapacitorEmptyRecipeBuilder.save(provider);
+
+        InWorldRecipeBuilder.compatible(ModRecipeTriggers.ON_ANVIL_FALL_ON.get())
+            .with(HasItemIngredient.builder()
+                .of(ModBlocks.RESIN_BLOCK.asItem())
+                .with(
+                    ModItemSubPredicates.SAVED_ENTITY.get(),
+                    ItemSavedEntityPredicate.of(EntityType.CREEPER)
+                        .predicate(b ->
+                            b.compare(NumericTagValuePredicate.ValueFunction.GREATER_OR_EQUAL)
+                                .lhs("powered")
+                                .rhs(1)
+                        )
+                )
+                .offset(0.0, -0.375, 0.0)
+                .range(0.75, 0.75, 0.75)
+                .build()
+            )
+            .with(
+                HasItemIngredient.builder()
+                    .of(ModItemTags.IRON_PLATES)
+                    .count(2)
+                    .offset(0.0, -0.375, 0.0)
+                    .range(0.75, 0.75, 0.75)
+                    .build()
+            )
+            .hasCauldron(0, -1, 0)
+            .spawnItem(new Vec3(0.0, -0.75, 0.0), ModItems.SUPER_CAPACITOR.asStack())
+            .out(
+                new ProduceExplosion(
+                    new Vec3(0.0, -0.75, 0.0),
+                    1f,
+                    true,
+                    Level.ExplosionInteraction.BLOCK,
+                    0.5f)
+            )
+            .priority(superCapacitorEmptyRecipe.getPriority() + 1)
+            .group("item_compress")
+            .icon(ModItems.SUPER_CAPACITOR.asStack())
+            .save(provider, AnvilCraft.of("supercapacitor"));
 
         ItemCompressRecipe.builder()
             .requires(ModItems.NEUTRONIUM_INGOT)

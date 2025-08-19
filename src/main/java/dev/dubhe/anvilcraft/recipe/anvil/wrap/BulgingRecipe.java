@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
@@ -80,7 +81,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果消耗流体返回true，否则返回false
      */
     public boolean isConsumeFluid() {
-        return this.getHasCauldron().getConsume() > 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getFluid()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -89,7 +91,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果产生流体返回true，否则返回false
      */
     public boolean isProduceFluid() {
-        return this.getHasCauldron().getConsume() < 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**

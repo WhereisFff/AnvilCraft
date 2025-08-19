@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.Distance;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
@@ -94,7 +95,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
      * @return 如果消耗流体返回true，否则返回false
      */
     public boolean isConsumeFluid() {
-        return this.getHasCauldron().getConsume() > 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getFluid()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -103,7 +105,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
      * @return 如果产生流体返回true，否则返回false
      */
     public boolean isProduceFluid() {
-        return this.getHasCauldron().getConsume() < 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() < 0;
     }
 
     /**

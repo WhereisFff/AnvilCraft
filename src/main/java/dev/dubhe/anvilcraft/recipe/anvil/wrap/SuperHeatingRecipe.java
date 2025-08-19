@@ -5,6 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
@@ -80,6 +81,26 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
      */
     public static @NotNull Builder builder() {
         return new Builder();
+    }
+
+    /**
+     * 是否消耗流体
+     *
+     * @return 如果消耗流体返回true，否则返回false
+     */
+    public boolean isConsumeFluid() {
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getFluid()) && this.getHasCauldron().getConsume() > 0;
+    }
+
+    /**
+     * 是否产生流体
+     *
+     * @return 如果产生流体返回true，否则返回false
+     */
+    public boolean isProduceFluid() {
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
