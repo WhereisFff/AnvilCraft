@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
-import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -87,10 +86,6 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
 
     @Override
     public @Nullable IDrawable getIcon() {
-        BlockState block = ModBlocks.CORRUPTED_BEACON
-            .get()
-            .defaultBlockState()
-            .trySetValue(BlockStateProperties.WATERLOGGED, false);
         return new DrawableBlockStateIcon(
             Blocks.BEACON
                 .defaultBlockState()
@@ -148,8 +143,6 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
                 .get()
                 .defaultBlockState()
                 .trySetValue(BlockStateProperties.WATERLOGGED, false);
-
-            System.out.println(block);
             beaconBase.setBlockState(new BlockPos(layers, layers, layers), block);
             cache.put(recipe, beaconBase);
             level = beaconBase;
