@@ -359,6 +359,7 @@
   "gui.anvilcraft.category.beacon_conversion.beacon_base": "Use this block as beacon base",
   "gui.anvilcraft.category.block_compress": "Block Compress",
   "gui.anvilcraft.category.block_crush": "Block Crush",
+  "gui.anvilcraft.category.block_smear": "Block Smear",
   "gui.anvilcraft.category.boiling": "Boiling",
   "gui.anvilcraft.category.bulging": "Bulging",
   "gui.anvilcraft.category.bulging.consume_fluid": "Consume: %d layer of %s",
