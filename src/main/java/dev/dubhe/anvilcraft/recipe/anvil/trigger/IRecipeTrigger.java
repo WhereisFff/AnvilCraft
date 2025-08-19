@@ -1,6 +1,7 @@
-package dev.dubhe.anvilcraft.recipe.anvil;
+package dev.dubhe.anvilcraft.recipe.anvil.trigger;
 
 import dev.dubhe.anvilcraft.init.ModRegistries;
+import dev.dubhe.anvilcraft.recipe.anvil.util.IPrioritized;
 import net.minecraft.resources.ResourceLocation;
 
 /**

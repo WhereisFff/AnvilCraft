@@ -1,6 +1,9 @@
-package dev.dubhe.anvilcraft.recipe.anvil;
+package dev.dubhe.anvilcraft.recipe.anvil.outcome;
 
 import dev.dubhe.anvilcraft.init.ModRegistries;
+import dev.dubhe.anvilcraft.recipe.anvil.util.IPrioritized;
+import dev.dubhe.anvilcraft.recipe.anvil.util.ISerializer;
+import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;

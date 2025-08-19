@@ -1,6 +1,9 @@
-package dev.dubhe.anvilcraft.recipe.anvil;
+package dev.dubhe.anvilcraft.recipe.anvil.predicate;
 
 import dev.dubhe.anvilcraft.init.ModRegistries;
+import dev.dubhe.anvilcraft.recipe.anvil.util.IPrioritized;
+import dev.dubhe.anvilcraft.recipe.anvil.util.ISerializer;
+import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Consumer;

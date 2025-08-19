@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.recipe.anvil;
+package dev.dubhe.anvilcraft.recipe.anvil.util;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.RegistryFriendlyByteBuf;

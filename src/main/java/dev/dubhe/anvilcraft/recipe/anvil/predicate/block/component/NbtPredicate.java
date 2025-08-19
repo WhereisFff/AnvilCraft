@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.recipe.anvil.util;
+package dev.dubhe.anvilcraft.recipe.anvil.predicate.block.component;
 
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;

@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.recipe.anvil.util;
+package dev.dubhe.anvilcraft.recipe.anvil.predicate.block.component;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;

@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.SetBlock;

@@ -11,7 +11,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeManager;
+import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeManager;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.generate.JewelCraftingRecipeGeneratingCache;
 import dev.dubhe.anvilcraft.recipe.generate.MeshRecipeGeneratingCache;

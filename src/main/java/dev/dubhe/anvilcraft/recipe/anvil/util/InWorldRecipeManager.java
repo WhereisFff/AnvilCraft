@@ -1,9 +1,11 @@
-package dev.dubhe.anvilcraft.recipe.anvil;
+package dev.dubhe.anvilcraft.recipe.anvil.util;
 
 import com.google.common.collect.Multimap;
 import com.google.common.collect.MultimapBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.InWorldRecipeEvent;
+import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.trigger.IRecipeTrigger;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.neoforged.neoforge.common.NeoForge;
 import org.jetbrains.annotations.NotNull;

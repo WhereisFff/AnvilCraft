@@ -1,5 +1,6 @@
-package dev.dubhe.anvilcraft.recipe.anvil;
+package dev.dubhe.anvilcraft.recipe.anvil.util;
 
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.IRecipePredicate;
 import lombok.Getter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;

@@ -1,15 +1,12 @@
-package dev.dubhe.anvilcraft.recipe.anvil;
+package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.CookingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.SuperHeatingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.UnpackRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.component.ItemIngredientPredicate;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
