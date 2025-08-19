@@ -34,6 +34,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -53,8 +54,10 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     private final IDrawable arrowOut;
 
     public TimeWarpCategory(IGuiHelper helper) {
-        icon = new DrawableBlockStateIcon(Blocks.CAULDRON.defaultBlockState(),
-            ModBlocks.CORRUPTED_BEACON.getDefaultState());
+        icon = new DrawableBlockStateIcon(
+            Blocks.CAULDRON.defaultBlockState(),
+            ModBlocks.CORRUPTED_BEACON.getDefaultState()
+                .setValue(BlockStateProperties.WATERLOGGED, false));
         slot = helper.getSlotDrawable();
         title = Component.translatable("gui.anvilcraft.category.time_warp");
         timer = helper.createTickTimer(30, 60, true);
@@ -127,7 +130,8 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
         );
         RenderHelper.renderBlock(
             guiGraphics,
-            ModBlocks.CORRUPTED_BEACON.getDefaultState(),
+            ModBlocks.CORRUPTED_BEACON.getDefaultState()
+                .setValue(BlockStateProperties.WATERLOGGED, false),
             81,
             40,
             0,

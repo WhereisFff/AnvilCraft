@@ -27,6 +27,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -85,7 +86,8 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     @Override
     public @Nullable IDrawable getIcon() {
         return new DrawableBlockStateIcon(
-            Blocks.BEACON.defaultBlockState(),
+            Blocks.BEACON.defaultBlockState()
+                .setValue(BlockStateProperties.WATERLOGGED, false),
             ModBlocks.CURSED_GOLD_BLOCK.getDefaultState()
         );
     }
@@ -131,7 +133,8 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
                     }
                 }
             }
-            beaconBase.setBlockState(new BlockPos(layers, layers, layers), Blocks.BEACON.defaultBlockState());
+            beaconBase.setBlockState(new BlockPos(layers, layers, layers),
+                Blocks.BEACON.defaultBlockState().setValue(BlockStateProperties.WATERLOGGED, false));
             cache.put(recipe, beaconBase);
             level = beaconBase;
         }
