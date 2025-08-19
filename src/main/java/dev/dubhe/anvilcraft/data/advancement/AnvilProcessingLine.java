@@ -178,8 +178,8 @@ public class AnvilProcessingLine {
         .parent(notABeacon)
         .display(
             ModBlocks.PIEZOELECTRIC_CRYSTAL,
-            Component.translatable("advancements.anvilcraft.lifting_anvil.title"),
-            Component.translatable("advancements.anvilcraft.lifting_anvil.description"),
+            Component.translatable("advancements.anvilcraft.lighter.title"),
+            Component.translatable("advancements.anvilcraft.lighter.description"),
             null, AdvancementType.TASK,
             true, true, false
         )

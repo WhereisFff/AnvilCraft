@@ -7,14 +7,14 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.anvilcraft.lifting_anvil.description"
+      "translate": "advancements.anvilcraft.lighter.description"
     },
     "icon": {
       "count": 1,
       "id": "anvilcraft:piezoelectric_crystal"
     },
     "title": {
-      "translate": "advancements.anvilcraft.lifting_anvil.title"
+      "translate": "advancements.anvilcraft.lighter.title"
     }
   },
   "requirements": [
