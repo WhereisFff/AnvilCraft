@@ -72,7 +72,6 @@ public record Merciless(boolean enabled) {
             stack.set(DataComponents.ENCHANTMENTS, enchantmentsMutable.toImmutable());
             stack.set(DataComponents.STORED_ENCHANTMENTS, storedEnchantmentsMutable.toImmutable());
 
-            //noinspection ConstantValue
             if ((attackDamage != 0 || miningEfficiency != 0) && isEnabled) {
                 ItemAttributeModifiers attributeModifiers = stack.getAttributeModifiers()
                     .withModifierAdded(

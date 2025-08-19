@@ -19,7 +19,9 @@ public record Eternal() {
 
     public static void tick(ServerPlayer player) {
         List<ItemStack> eternalItems = InventoryUtil.getItems(
-            player.getInventory(), stack -> stack.has(ModComponents.ETERNAL));
+            player.getInventory(),
+            stack -> stack.has(ModComponents.ETERNAL)
+        );
 
         for (ItemStack stack : eternalItems) {
             if (stack.has(DataComponents.DAMAGE)) {

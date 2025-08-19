@@ -69,7 +69,7 @@ public class AmuletManager {
         if (found.is(ModItems.AMULET_BOX)) {
             BoxContents contents = found.get(ModComponents.BOX_CONTENTS);
             if (contents == null) return;
-            for (ItemStack stack : contents.getAmulets()) {
+            for (ItemStack stack : contents.amulets()) {
                 if (stack.getItem() instanceof AmuletItem) {
                     holders.add(stack.copy());
                 }

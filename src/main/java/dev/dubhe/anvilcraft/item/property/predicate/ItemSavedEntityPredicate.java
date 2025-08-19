@@ -7,7 +7,8 @@ import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
-import net.minecraft.advancements.critereon.ItemSubPredicate;
+import net.minecraft.advancements.critereon.SingleComponentItemPredicate;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-public class ItemSavedEntityPredicate implements ItemSubPredicate {
+public class ItemSavedEntityPredicate implements SingleComponentItemPredicate<SavedEntity> {
     public final EntityType<?> entityType;
     private final List<NumericTagValuePredicate> predicates;
 
@@ -65,5 +66,15 @@ public class ItemSavedEntityPredicate implements ItemSubPredicate {
         EntityType<?> type = optional.get();
         if (!type.equals(this.entityType)) return false;
         return predicates.stream().allMatch(it -> it.test(tag));
+    }
+
+    @Override
+    public @NotNull DataComponentType<SavedEntity> componentType() {
+        return ModComponents.SAVED_ENTITY;
+    }
+
+    @Override
+    public boolean matches(@NotNull ItemStack itemStack, @NotNull SavedEntity savedEntity) {
+        return false;
     }
 }

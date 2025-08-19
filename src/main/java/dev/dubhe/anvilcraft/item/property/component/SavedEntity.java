@@ -11,8 +11,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -46,8 +44,7 @@ public record SavedEntity(CompoundTag tag, boolean isMonster) {
         return entity;
     }
 
-    @Contract("_ -> new")
-    public static @NotNull SavedEntity fromMob(@NotNull Mob entity) {
+    public static SavedEntity fromMob(Mob entity) {
         CompoundTag entityTag = new CompoundTag();
         entity.saveAsPassenger(entityTag);
         entityTag.remove(Entity.UUID_TAG);

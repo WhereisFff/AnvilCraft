@@ -6,7 +6,6 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
 
 public record StructureData(
     int minX, int minY, int minZ,
@@ -38,11 +37,11 @@ public record StructureData(
     );
 
 
-    public StructureData(@NotNull BlockPos initPos) {
+    public StructureData(BlockPos initPos) {
         this(initPos.getX(), initPos.getY(), initPos.getZ(), initPos.getX(), initPos.getY(), initPos.getZ());
     }
 
-    public @NotNull StructureData addPos(@NotNull BlockPos pos) {
+    public StructureData addPos(BlockPos pos) {
         int newMinX, newMinY, newMinZ;
         int newMaxX, newMaxY, newMaxZ;
         newMinX = Math.min(minX, pos.getX());
@@ -54,11 +53,11 @@ public record StructureData(
         return new StructureData(newMinX, newMinY, newMinZ, newMaxX, newMaxY, newMaxZ);
     }
 
-    public @NotNull BlockPos minPos() {
+    public BlockPos minPos() {
         return new BlockPos(minX, minY, minZ);
     }
 
-    public @NotNull BlockPos maxPos() {
+    public BlockPos maxPos() {
         return new BlockPos(maxX, maxY, maxZ);
     }
 
@@ -78,6 +77,7 @@ public record StructureData(
         return this.getSizeX() == this.getSizeY() && this.getSizeY() == this.getSizeZ();
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean isOddCubeWithinSize(int maxSize) {
         return this.isCube() && this.getSizeX() % 2 == 1 && this.getSizeX() <= maxSize;
     }

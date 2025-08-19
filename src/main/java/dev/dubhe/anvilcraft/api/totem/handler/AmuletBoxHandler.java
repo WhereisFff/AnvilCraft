@@ -15,13 +15,13 @@ import java.util.Map;
 public class AmuletBoxHandler implements TotemHandler {
     @Override
     public boolean canExecute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
-        return !totemItem.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotems().isEmpty();
+        return !totemItem.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).totems().isEmpty();
     }
 
     @Override
     public boolean execute(DamageSource damageSource, LivingEntity entity, ItemStack totemItem) {
         Map<Item, TotemHandler> totemMap = TotemManager.INSTANCE.getTotemMap();
-        List<ItemStack> totems = totemItem.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotems();
+        List<ItemStack> totems = totemItem.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).totems();
         if (!totems.isEmpty()) {
             for (Item item : totemMap.keySet()) {
                 if (totems.getFirst().is(item)) {

@@ -156,7 +156,7 @@ public abstract class LivingEntityMixin extends Entity {
             if (result && itemStack.is(ModItems.TOTEM_OF_RAGE)) {
                 this.anvilcraft$raged = true;
             } else if (result && itemStack.is(ModItems.AMULET_BOX)) {
-                List<ItemStack> totems = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).getTotems();
+                List<ItemStack> totems = itemStack.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).totems();
                 if (!totems.isEmpty()) {
                     if (totems.getFirst().is(ModItems.TOTEM_OF_RAGE)) {
                         this.anvilcraft$raged = true;

@@ -96,7 +96,7 @@ public class PlayerEventListener {
         ) {
             ItemStack availableItem = player.getItemInHand(event.getHandHolding());
             BoxContents boxContents = availableItem.get(ModComponents.BOX_CONTENTS);
-            AmuletManager.INSTANCE.startRaffle(player, event.getSource(), !boxContents.getTotems().isEmpty());
+            AmuletManager.INSTANCE.startRaffle(player, event.getSource(), !boxContents.totems().isEmpty());
         }
     }
 
