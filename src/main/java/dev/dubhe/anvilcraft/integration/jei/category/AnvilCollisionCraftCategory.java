@@ -48,7 +48,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
 
     public AnvilCollisionCraftCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
-        this.timer = helper.createTickTimer(30, 30, false);
+        this.timer = helper.createTickTimer(30, 100, true);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
     }
 
@@ -94,16 +94,9 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
             OutputItem outputItem = recipe.outputItems().get(i);
             ItemStack itemStack = outputItem.getItemStack();
             if (itemStack != null) {
-                IRecipeSlotBuilder slot = builder.addOutputSlot
-                    (110 + 18 * i, 20)
-                    .addItemStack(itemStack);
-                slot.addRichTooltipCallback(
-                    (recipeSlotView, tooltip) ->
-                        tooltip.add
-                            (Component.translatable
-                                ("gui.anvilcraft.category.chance", outputItem.getChance() * 100).withStyle(ChatFormatting.GRAY)
-                            )
-                );
+                IRecipeSlotBuilder slot = builder.addOutputSlot(110 + 18 * i, 20).addItemStack(itemStack);
+                slot.addRichTooltipCallback((recipeSlotView, tooltip) ->
+                    tooltip.add(Component.translatable("gui.anvilcraft.category.chance", outputItem.getChance() * 100).withStyle(ChatFormatting.GRAY)));
             }
         }
 
