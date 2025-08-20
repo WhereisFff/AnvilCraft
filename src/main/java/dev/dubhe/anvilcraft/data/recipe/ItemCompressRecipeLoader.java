@@ -21,6 +21,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressRecipeLoader {
@@ -127,7 +128,7 @@ public class ItemCompressRecipeLoader {
                             true,
                             Level.ExplosionInteraction.BLOCK,
                             //同权重二选一已经包含50%概率了，这里的概率要填1.0
-                            1f
+                            ConstantValue.exactly(1f)
                         ),
                         0.5f
                     )
