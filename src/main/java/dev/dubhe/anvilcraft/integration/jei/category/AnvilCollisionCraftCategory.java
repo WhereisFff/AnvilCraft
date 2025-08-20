@@ -6,8 +6,6 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
-import dev.dubhe.anvilcraft.recipe.elements.InputBlock;
-import dev.dubhe.anvilcraft.recipe.elements.OutputBlock;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -23,6 +21,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -32,6 +31,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -48,7 +48,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
 
     public AnvilCollisionCraftCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
-        this.timer = helper.createTickTimer(1, 60, false);
+        this.timer = helper.createTickTimer(30, 30, false);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
     }
 
@@ -84,18 +84,30 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         IFocusGroup focuses) {
         AnvilCollisionCraftRecipe recipe = recipeHolder.value();
 
+        // 将被撞击的方块加入addInvisibleIngredients中
         if (recipe.hitBlock().getBlock() != null)
-            builder.addOutputSlot(0, 0).addItemLike(recipe.hitBlock().getBlock().asItem());
+            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
+                .addItemLike(recipe.hitBlock().getBlock().asItem());
 
+        // 如果有输出物品则添加到输出且加上tooltip显示概率
         for (int i = 0; i < recipe.outputItems().size(); i++) {
             OutputItem outputItem = recipe.outputItems().get(i);
             ItemStack itemStack = outputItem.getItemStack();
             if (itemStack != null) {
-                IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT,
-                    1 + (i % 9) * 18, 1 + 44 + 18 * (i / 9)).addItemStack(itemStack);
+                IRecipeSlotBuilder slot = builder.addOutputSlot
+                    (110 + 18 * i, 20)
+                    .addItemStack(itemStack);
+                slot.addRichTooltipCallback(
+                    (recipeSlotView, tooltip) ->
+                        tooltip.add
+                            (Component.translatable
+                                ("gui.anvilcraft.category.chance", outputItem.getChance() * 100).withStyle(ChatFormatting.GRAY)
+                            )
+                );
             }
         }
 
+        // 如果有转换或被转换的方块 则加入addInvisibleIngredients中
         for (int i = 0; i < recipe.transformBlocks().size(); i++) {
             Block inputBlock = recipe.transformBlocks()
                 .get(i).inputBlock().getBlock();
@@ -104,16 +116,11 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
 
             if (inputBlock != null) {
                 Item inputItem = inputBlock.asItem();
-                ItemStack inputItemStack = new ItemStack(inputItem);
-                IRecipeSlotBuilder outputSlot = builder.addOutputSlot(20, 0).addItemStack(inputItemStack);
+                builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemLike(inputItem);
             }
 
-            if (outputBlock != null) {
-                Item outputItem = outputBlock.asItem();
-                ItemStack outputItemStack = new ItemStack(outputItem);
-                IRecipeSlotBuilder inputSlot = builder.addSlot(RecipeIngredientRole.OUTPUT,
-                    1 + (i % 9) * 18, 1 + 44 + 18 * (i / 9)).addItemStack(outputItemStack);
-            }
+            Item outputItem = outputBlock.asItem();
+            builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemLike(outputItem);
         }
     }
 
@@ -125,19 +132,36 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         double mouseX,
         double mouseY) {
         AnvilCollisionCraftRecipe recipe = recipeHolder.value();
-        float anvilXOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
+        float anvilXOffset = JeiRenderHelper.getAnvilAnimationOffset(timer) * 4;
 
         Block anvil = recipe.anvil().getBlock();
         if (anvil == null) anvil = Blocks.ANVIL;
         RenderHelper.renderBlock(
             guiGraphics,
             anvil.defaultBlockState(),
-            50 + anvilXOffset,
-            12,
+            70 + anvilXOffset,
+            25,
             20,
             12,
             RenderHelper.SINGLE_BLOCK
         );
+
+        if (recipe.hitBlock().getBlock() != null) {
+            BlockState blockState = recipe.hitBlock().getBlock().defaultBlockState();
+            RenderHelper.renderBlock(
+                guiGraphics,
+                blockState,
+                20,
+                25,
+                20,
+                12,
+                RenderHelper.SINGLE_BLOCK
+            );
+        }
+
+        if (!recipe.transformBlocks().isEmpty()) {
+
+        }
     }
 
     @Override
