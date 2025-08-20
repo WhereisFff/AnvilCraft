@@ -43,7 +43,7 @@ public class ItemHandlerUtil {
             if (sourceStack.isEmpty() || !predicate.test(sourceStack)) continue;
             if (filterStack == null) {
                 filterStack = sourceStack.copy();
-               maxAmount = (int) (maxAmountWeight / 64f * sourceStack.getMaxStackSize());
+                maxAmount = (int) (maxAmountWeight / 64f * sourceStack.getMaxStackSize());
             } else if (!ItemStack.isSameItemSameComponents(filterStack, sourceStack)) continue;
             for (int i = 0; i < maxAmount; i++) {
                 ItemStack remainder = ItemHandlerHelper.insertItem(target, sourceStack, true);
@@ -244,10 +244,11 @@ public class ItemHandlerUtil {
     }
 
     public static boolean isEmptyContainer(IItemHandler handler) {
-        if (handler != null)
+        if (handler != null) {
             for (int i = 0; i < handler.getSlots(); i++) {
                 if (!handler.getStackInSlot(i).isEmpty()) return true;
             }
+        }
         return false;
     }
 
