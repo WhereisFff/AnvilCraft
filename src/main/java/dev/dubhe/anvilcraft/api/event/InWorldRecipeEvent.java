@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.api.event;
 
 import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeContext;
+import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.ToString;

@@ -5,7 +5,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
@@ -91,11 +91,11 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          */
         public static final MapCodec<SqueezingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockStatePredicate.CODEC
-                .fieldOf("ingredients")
+                .fieldOf("ingredient")
                 .forGetter(SqueezingRecipe::getFirstInputBlock),
             ChanceBlockState.CODEC
                 .codec()
-                .fieldOf("results")
+                .fieldOf("result")
                 .forGetter(SqueezingRecipe::getFirstResultBlock),
             HasCauldronSimple.CODEC
                 .forGetter(SqueezingRecipe::getHasCauldron)

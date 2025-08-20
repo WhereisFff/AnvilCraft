@@ -36,12 +36,10 @@ import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.init.ModNetworks;
 import dev.dubhe.anvilcraft.init.ModParticles;
-import dev.dubhe.anvilcraft.init.ModRecipeOutcomeTypes;
-import dev.dubhe.anvilcraft.init.ModRecipePredicateTypes;
-import dev.dubhe.anvilcraft.init.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.init.ModResultModifierTypes;
 import dev.dubhe.anvilcraft.init.ModVillagers;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeInits;
 import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.ModInteractionMap;
@@ -125,9 +123,8 @@ public class AnvilCraft {
         LOGGER.info("Ciallo～(∠・ω< )⌒★");
         LOGGER.info("let's 0721");
 
-        ModRecipeTriggers.TRIGGER.register(modEventBus);
-        ModRecipePredicateTypes.PREDICATE_TYPE.register(modEventBus);
-        ModRecipeOutcomeTypes.OUTCOME_TYPE.register(modEventBus);
+        ModRecipeInits.init(modEventBus);
+
         ModResultModifierTypes.register(modEventBus);
         ModCustomDataComponents.register(modEventBus);
     }
