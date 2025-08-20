@@ -92,7 +92,7 @@ public class ItemCompressRecipeLoader {
             .result(ModItems.SUPER_CAPACITOR_EMPTY)
             .save(provider);
 
-        InWorldRecipeBuilder.compatible(ModRecipeTriggers.ON_ANVIL_FALL_ON.get())
+        InWorldRecipeBuilder.compatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
             .with(
                 HasItemIngredient.builder()
                     .of(ModBlocks.RESIN_BLOCK.asItem())
