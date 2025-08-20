@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.recipe.anvil.cache;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeContext;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipeData;
+import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
+import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;

@@ -134,7 +134,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         this.startMode = Mode.fromIndex(mode % 3);
         if (this.startMode.equals(Mode.LOOP) && !this.isInputtingSignal && this.level != null) {
             Util.castSafely(this.getBlockState().getBlock(), PulseGeneratorBlock.class)
-                .ifPresent(block -> block.startWaiting(this.level, this.getBlockPos(), this.getBlockState(), this));
+                .ifPresent(block -> block.update(this.level, this.getBlockPos(), this::getBlockState));
         }
         this.setChanged();
     }
@@ -161,7 +161,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     public boolean isOutputting() {
         if (this.isDeadlock) return this.outputInvert;
-        return this.state == State.OUTPUTTING != this.outputInvert;
+        return (this.state == State.OUTPUTTING) != this.outputInvert;
     }
 
     @Override
@@ -175,6 +175,43 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         if (player.level().getBlockEntity(getBlockPos()) instanceof PulseGeneratorBlockEntity blockEntity)
             return new PulseGeneratorMenu(ModMenuTypes.PULSE_GENERATOR.get(), containerId, inventory, blockEntity);
         return null;
+    }
+
+    public CompoundTag exportMoveData() {
+        CompoundTag move = new CompoundTag();
+        move.put("Data", this.constructDataNbt());
+        move.putInt("RemainingWaitingTime", this.getWaitingTimeRemaining());
+        move.putInt("RemainingSignalDuration", this.getSignalDurationRemaining());
+        return move;
+    }
+
+    private int waitingTimeRemaining;
+    private int signalDurationRemaining;
+
+    public void applyMoveData(Level level, BlockPos pos, BlockState state, CompoundTag move) {
+        this.readDataNbt(move.getCompound("Data"));
+
+        int remWait = move.getInt("RemainingWaitingTime");
+        int remSig  = move.getInt("RemainingSignalDuration");
+
+        this.waitingTimeRemaining = remWait;
+        this.signalDurationRemaining = remSig;
+
+        if (remWait > 0) {
+            this.state = State.WAITING;
+            level.scheduleTick(pos, ModBlocks.PULSE_GENERATOR.get(), remWait);
+        } else if (remSig > 0) {
+            this.state = State.OUTPUTTING;
+            level.scheduleTick(pos, ModBlocks.PULSE_GENERATOR.get(), remSig);
+        } else {
+            this.state = State.DEFAULT;
+        }
+
+        this.setDeadlock(false);
+        Util.castSafely(state.getBlock(), PulseGeneratorBlock.class)
+            .ifPresent(block -> block.update(level, pos, () -> state));
+
+        this.setChanged();
     }
 
     public enum State {
@@ -199,51 +236,5 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         public static Mode fromIndex(int index) {
             return Mode.values()[index];
         }
-    }
-
-    public CompoundTag exportMoveData() {
-        CompoundTag move = new CompoundTag();
-        move.put("Data", this.constructDataNbt());
-        move.putInt("RemainingWaitingTime", this.getWaitingTimeRemaining());
-        move.putInt("RemainingSignalDuration", this.getSignalDurationRemaining());
-        move.putByte("State", this.getState().index());
-        return move;
-    }
-
-    private int waitingTimeRemaining;
-    private int signalDurationRemaining;
-
-    public int getWaitingTimeRemaining() {
-        return waitingTimeRemaining;
-    }
-
-    public int getSignalDurationRemaining() {
-        return signalDurationRemaining;
-    }
-
-    public void applyMoveData(Level level, BlockPos pos, BlockState state, CompoundTag move) {
-        this.readDataNbt(move.getCompound("Data"));
-
-        int remWait = move.getInt("RemainingWaitingTime");
-        int remSig  = move.getInt("RemainingSignalDuration");
-
-        this.waitingTimeRemaining = remWait;
-        this.signalDurationRemaining = remSig;
-
-        if (remWait > 0) {
-            this.state = State.WAITING;
-            level.scheduleTick(pos, ModBlocks.PULSE_GENERATOR.get(), remWait);
-        } else if (remSig > 0) {
-            this.state = State.OUTPUTTING;
-            level.scheduleTick(pos, ModBlocks.PULSE_GENERATOR.get(), remSig);
-        } else {
-            this.state = State.DEFAULT;
-        }
-
-        this.setDeadlock(false);
-        Util.castSafely(state.getBlock(), PulseGeneratorBlock.class)
-            .ifPresent(block -> block.update(level, pos, state));
-
-        this.setChanged();
     }
 }
