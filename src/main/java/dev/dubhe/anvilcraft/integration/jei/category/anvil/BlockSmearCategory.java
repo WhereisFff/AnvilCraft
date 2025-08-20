@@ -152,7 +152,7 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
                 tooltip.addAll(BlockTagUtil.getTooltipsForInput(recipe.getInputBlocks().getLast()));
             }
         }
-        if (mouseX >= 100 && mouseX <= 115) {
+        if (mouseX >= 100 && mouseX <= 118) {
             if (mouseY >= 42 && mouseY <= 52) {
                 tooltip.add(recipe.getFirstResultBlock().getState().getBlock().getName());
             }

@@ -134,8 +134,6 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         createRecipeHolderType("multiblock");
     public static final RecipeType<RecipeHolder<MultiblockConversionRecipe>> MULTIBLOCK_CONVERSION =
         createRecipeHolderType("multiblock_conversion");
-    public static final RecipeType<RecipeHolder<AnvilCollisionCraftRecipe>> ANVIL_COLLISION =
-        createRecipeHolderType("anvil_collision");
 
     public static final RecipeType<RecipeHolder<JewelCraftingRecipe>> JEWEL_CRAFTING =
         createRecipeHolderType("jewel_crafting");
@@ -148,6 +146,9 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         createRecipeHolderType("mob_transform");
     public static final RecipeType<RecipeHolder<MobTransformWithItemRecipe>> MOB_TRANSFORM_WITH_ITEM =
         createRecipeHolderType("mob_transform_with_item");
+
+    public static final RecipeType<RecipeHolder<AnvilCollisionCraftRecipe>> ANVIL_COLLISION =
+        createRecipeHolderType("anvil_collision");
 
 
     @Override
