@@ -1,7 +1,7 @@
 {
   "type": "anvilcraft:anvil_collision",
   "anvil": {
-    "id": "anvilcraft:transcendence_anvil"
+    "tag": "anvilcraft:anvil_tier_1"
   },
   "consume": false,
   "hitBlock": {
