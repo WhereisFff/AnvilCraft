@@ -105,5 +105,7 @@ public class JeiLang {
         provider.add("jei.anvilcraft.info.end_dust", "Any falling block, except for anvils and Dragon Egg, will be converted into End Dust when fall through end portal.");
 
         provider.add("jei.anvilcraft.info.mob_transform_with_item", "Right-clicking mobs with the corresponding item in its Mob-Transform-with-Held-Item recipes can force the mob to hold it.");
+
+        provider.add("gui.anvilcraft.category.anvil_collision", "Anvil Collision");
     }
 }
