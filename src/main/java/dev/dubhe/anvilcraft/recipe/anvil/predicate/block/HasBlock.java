@@ -282,8 +282,8 @@ public class HasBlock extends HasBlockBase<HasBlock> {
          *
          * @return HasBlockIngredient实例
          */
-        public HasBlockIngredient build() {
-            return new HasBlockIngredient(offset, predicate.build());
+        public HasBlock build() {
+            return new HasBlock(offset, predicate.build());
         }
     }
 }

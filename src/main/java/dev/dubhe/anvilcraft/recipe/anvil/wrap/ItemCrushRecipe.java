@@ -22,7 +22,6 @@ import java.util.List;
  */
 @Getter
 public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
-
     /**
      * 构造一个物品粉碎配方
      *
@@ -38,7 +37,7 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
                 .setItemInputOffset(new Vec3(0.0, -0.125, 0.0))
                 .setItemInputRange(new Vec3(0.75, 0.25, 0.75))
                 .setInputItems(itemIngredients)
-                .setItemOutputOffset(new Vec3(0.0, -0.5, 0.0))
+                .setItemOutputOffset(new Vec3(0.0, -0.6875, 0.0))
                 .setResultItems(results)
                 .setBlockInputOffset(new Vec3i(0, -1, 0))
                 .setInputBlocks(
