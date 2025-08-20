@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
+import dev.dubhe.anvilcraft.recipe.elements.InputBlock;
 import dev.dubhe.anvilcraft.recipe.elements.OutputBlock;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -47,7 +48,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
 
     public AnvilCollisionCraftCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
-        this.timer = helper.createTickTimer(0, 60, false);
+        this.timer = helper.createTickTimer(1, 60, false);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
     }
 
@@ -83,24 +84,36 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         IFocusGroup focuses) {
         AnvilCollisionCraftRecipe recipe = recipeHolder.value();
 
-        if (recipe.anvil().getBlock() != null)
-            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemLike(recipe.anvil().getBlock().asItem());
         if (recipe.hitBlock().getBlock() != null)
             builder.addOutputSlot(0, 0).addItemLike(recipe.hitBlock().getBlock().asItem());
 
         for (int i = 0; i < recipe.outputItems().size(); i++) {
             OutputItem outputItem = recipe.outputItems().get(i);
             ItemStack itemStack = outputItem.getItemStack();
-            IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT,
-                1 + (i % 9) * 18, 1 + 44 + 18 * (i / 9)).addItemStack(itemStack);
+            if (itemStack != null) {
+                IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT,
+                    1 + (i % 9) * 18, 1 + 44 + 18 * (i / 9)).addItemStack(itemStack);
+            }
         }
 
         for (int i = 0; i < recipe.transformBlocks().size(); i++) {
-            OutputBlock outputBlock = recipe.transformBlocks().get(i).outputBlock();
-            Item item = outputBlock.getBlockState().getBlock().asItem();
-            ItemStack itemStack = new ItemStack(item);
-            IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT,
-                1 + (i % 9) * 18, 1 + 44 + 18 * (i / 9)).addItemStack(itemStack);
+            Block inputBlock = recipe.transformBlocks()
+                .get(i).inputBlock().getBlock();
+            Block outputBlock = recipe.transformBlocks()
+                .get(i).outputBlock().getBlockState().getBlock();
+
+            if (inputBlock != null) {
+                Item inputItem = inputBlock.asItem();
+                ItemStack inputItemStack = new ItemStack(inputItem);
+                IRecipeSlotBuilder outputSlot = builder.addOutputSlot(20, 0).addItemStack(inputItemStack);
+            }
+
+            if (outputBlock != null) {
+                Item outputItem = outputBlock.asItem();
+                ItemStack outputItemStack = new ItemStack(outputItem);
+                IRecipeSlotBuilder inputSlot = builder.addSlot(RecipeIngredientRole.OUTPUT,
+                    1 + (i % 9) * 18, 1 + 44 + 18 * (i / 9)).addItemStack(outputItemStack);
+            }
         }
     }
 
@@ -116,7 +129,6 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
 
         Block anvil = recipe.anvil().getBlock();
         if (anvil == null) anvil = Blocks.ANVIL;
-        System.out.println(anvil);
         RenderHelper.renderBlock(
             guiGraphics,
             anvil.defaultBlockState(),
