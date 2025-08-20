@@ -70,7 +70,7 @@
         {
           "outcome": {
             "type": "anvilcraft:produce_explosion",
-            "chance": 0.5,
+            "chance": 1.0,
             "fire": true,
             "interact": "block",
             "offset": [

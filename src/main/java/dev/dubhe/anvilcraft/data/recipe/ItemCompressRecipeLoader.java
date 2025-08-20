@@ -126,7 +126,8 @@ public class ItemCompressRecipeLoader {
                             1f,
                             true,
                             Level.ExplosionInteraction.BLOCK,
-                            0.5f
+                            //同权重二选一已经包含50%概率了，这里的概率要填1.0
+                            1f
                         ),
                         0.5f
                     )
