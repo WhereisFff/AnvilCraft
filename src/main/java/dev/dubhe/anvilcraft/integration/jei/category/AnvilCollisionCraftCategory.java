@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
+import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
+import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
+import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -141,19 +144,34 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
 
         if (recipe.hitBlock().getBlock() != null) {
             BlockState blockState = recipe.hitBlock().getBlock().defaultBlockState();
+            // 特判: 如果是大铁砧 则将BlockState改为cube=center,half=mid_center 并修改scale使其大小合理
+            // 建议下次写类似大铁砧的方块的时候 把registerDefaultState注册成有材质的中心位置
+            // 当然也可以不RenderHelper.renderBlock 直接加进setRecipe的输入输出槽当物品看
+            int scale = 12;
+            if (blockState.is(ModBlocks.GIANT_ANVIL)) {
+                scale = 6;
+                blockState.trySetValue(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER);
+                blockState.trySetValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER);
+            }
+
             RenderHelper.renderBlock(
                 guiGraphics,
                 blockState,
                 20,
                 25,
                 20,
-                12,
+                scale,
                 RenderHelper.SINGLE_BLOCK
             );
         }
 
         if (!recipe.transformBlocks().isEmpty()) {
-
+            for (int i = 0; i < recipe.transformBlocks().size(); i++) {
+                Block inputBlock = recipe.transformBlocks()
+                    .get(i).inputBlock().getBlock();
+                Block outputBlock = recipe.transformBlocks()
+                    .get(i).outputBlock().getBlockState().getBlock();
+            }
         }
     }
 
