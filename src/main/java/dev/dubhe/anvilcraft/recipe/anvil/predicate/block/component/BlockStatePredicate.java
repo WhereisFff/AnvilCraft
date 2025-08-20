@@ -130,6 +130,11 @@ public class BlockStatePredicate {
      */
     public boolean test(@NotNull LevelAccessor level, @NotNull BlockCache cache, BlockPos pos) {
         BlockState state = cache.getBlockState(pos);
+        BlockEntity entity = cache.getBlockEntity(pos);
+        return this.test(level, state, entity);
+    }
+
+    public boolean test(LevelAccessor level, BlockState state, BlockEntity entity) {
         if (this.blocks.size() > 0 && !state.is(this.blocks)) return false;
         if (this.properties.isEmpty()) return true;
         boolean flag = false;
@@ -148,7 +153,6 @@ public class BlockStatePredicate {
         if (!flag) return false;
         if (this.nbts.isEmpty()) return true;
         if (!state.hasBlockEntity() && !this.nbts.isEmpty()) return false;
-        BlockEntity entity = cache.getBlockEntity(pos);
         if (entity == null) return false;
         for (NbtPredicate nbt : this.nbts) {
             if (nbt.test(entity.saveWithFullMetadata(level.registryAccess()))) return true;
@@ -200,7 +204,12 @@ public class BlockStatePredicate {
     /**
      * 构建器类，用于构建BlockStatePredicate实例
      */
-    @SuppressWarnings({"deprecation", "UnusedReturnValue"})
+    @SuppressWarnings(
+        {
+            "deprecation",
+            "UnusedReturnValue"
+        }
+    )
     public static class Builder {
         private final List<List<PropertyMatcher>> properties = new ArrayList<>();
         private final List<NbtPredicate> nbts = new ArrayList<>();
@@ -508,8 +517,10 @@ public class BlockStatePredicate {
             if (!state.hasProperty(property)) return List.of(state);
             List<S> states = new ArrayList<>();
             property.getAllValues()
-                .filter(value -> this.minValue.isEmpty() || this.minValue.flatMap(property::getValue).map(minValue -> value.value().compareTo(minValue) < 0).orElse(false))
-                .filter(value -> this.maxValue.isEmpty() || this.maxValue.flatMap(property::getValue).map(maxValue -> value.value().compareTo(maxValue) > 0).orElse(false))
+                .filter(value -> this.minValue.isEmpty() || this.minValue.flatMap(property::getValue)
+                    .map(minValue -> value.value().compareTo(minValue) < 0).orElse(false))
+                .filter(value -> this.maxValue.isEmpty() || this.maxValue.flatMap(property::getValue)
+                    .map(maxValue -> value.value().compareTo(maxValue) > 0).orElse(false))
                 .forEachOrdered(value -> states.add(state.setValue(property, value.value())));
             return List.copyOf(states);
         }
@@ -525,15 +536,17 @@ public class BlockStatePredicate {
         Codec<ValueMatcher> CODEC = Codec.either(
                 ExactMatcher.CODEC, RangedMatcher.CODEC
             )
-            .xmap(Either::unwrap, matcher -> {
-                if (matcher instanceof ExactMatcher exactMatcher) {
-                    return Either.left(exactMatcher);
-                } else if (matcher instanceof RangedMatcher rangedMatcher) {
-                    return Either.right(rangedMatcher);
-                } else {
-                    throw new UnsupportedOperationException();
+            .xmap(
+                Either::unwrap, matcher -> {
+                    if (matcher instanceof ExactMatcher exactMatcher) {
+                        return Either.left(exactMatcher);
+                    } else if (matcher instanceof RangedMatcher rangedMatcher) {
+                        return Either.right(rangedMatcher);
+                    } else {
+                        throw new UnsupportedOperationException();
+                    }
                 }
-            });
+            );
 
         /**
          * ValueMatcher流编解码器
@@ -541,15 +554,17 @@ public class BlockStatePredicate {
         StreamCodec<ByteBuf, ValueMatcher> STREAM_CODEC = ByteBufCodecs.either(
                 ExactMatcher.STREAM_CODEC, RangedMatcher.STREAM_CODEC
             )
-            .map(Either::unwrap, matcher -> {
-                if (matcher instanceof ExactMatcher exactMatcher) {
-                    return Either.left(exactMatcher);
-                } else if (matcher instanceof RangedMatcher rangedMatcher) {
-                    return Either.right(rangedMatcher);
-                } else {
-                    throw new UnsupportedOperationException();
+            .map(
+                Either::unwrap, matcher -> {
+                    if (matcher instanceof ExactMatcher exactMatcher) {
+                        return Either.left(exactMatcher);
+                    } else if (matcher instanceof RangedMatcher rangedMatcher) {
+                        return Either.right(rangedMatcher);
+                    } else {
+                        throw new UnsupportedOperationException();
+                    }
                 }
-            });
+            );
 
         /**
          * 测试值是否匹配

@@ -33,26 +33,26 @@ public class ItemCompressRecipeLoader {
         ItemCompressRecipe.builder()
             .requires(ModItems.CREAM, 4)
             .requires(Items.SUGAR)
-            .result(new ItemStack(ModBlocks.CREAM_BLOCK))
+            .result(ModBlocks.CREAM_BLOCK)
             .save(provider);
 
         ItemCompressRecipe.builder()
-            .requires(ModItems.CREAM, 4)
+            .requires(ModItemTags.CREAM, 4)
             .requires(Items.SUGAR)
             .requires(Items.SWEET_BERRIES)
-            .result(new ItemStack(ModBlocks.BERRY_CREAM_BLOCK))
+            .result(ModBlocks.BERRY_CREAM_BLOCK)
             .save(provider);
 
         ItemCompressRecipe.builder()
-            .requires(ModItems.CREAM, 4)
+            .requires(ModItemTags.CREAM, 4)
             .requires(Items.SUGAR)
             .requires(ModItems.CHOCOLATE)
-            .result(new ItemStack(ModBlocks.CHOCOLATE_CREAM_BLOCK))
+            .result(ModBlocks.CHOCOLATE_CREAM_BLOCK)
             .save(provider);
 
         ItemCompressRecipe.builder()
             .requires(ModItems.NEUTRONIUM_INGOT)
-            .requires(ModItems.URANIUM_INGOT)
+            .requires(ModItemTags.URANIUM_INGOTS)
             .result(ModItems.PLUTONIUM_NUGGET, 6)
             .result(ModItems.LIME_POWDER)
             .result(ModItems.NEUTRONIUM_INGOT)
@@ -60,7 +60,7 @@ public class ItemCompressRecipeLoader {
 
         ItemCompressRecipe.builder()
             .requires(ModItems.STABLE_NEUTRONIUM_INGOT)
-            .requires(ModItems.URANIUM_INGOT)
+            .requires(ModItemTags.URANIUM_INGOTS)
             .result(ModItems.PLUTONIUM_NUGGET, 6)
             .result(ModItems.LIME_POWDER)
             .result(ModItems.STABLE_NEUTRONIUM_INGOT)
