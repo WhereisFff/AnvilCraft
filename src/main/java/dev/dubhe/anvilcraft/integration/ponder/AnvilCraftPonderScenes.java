@@ -1,7 +1,8 @@
 package dev.dubhe.anvilcraft.integration.ponder;
 
 import dev.dubhe.anvilcraft.integration.ponder.scene.AnvilScene;
-import dev.dubhe.anvilcraft.integration.ponder.scene.MagnetScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockComparatorScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.MagnetScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.SpaceOvercompressorScene;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -12,5 +13,6 @@ public class AnvilCraftPonderScenes {
         AnvilScene.register(helper);
         MagnetScene.register(helper);
         SpaceOvercompressorScene.register(helper);
+        BlockComparatorScene.register(helper);
     }
 }

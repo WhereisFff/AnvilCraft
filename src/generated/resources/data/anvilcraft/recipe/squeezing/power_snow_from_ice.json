@@ -1,10 +1,10 @@
 {
   "type": "anvilcraft:squeezing",
   "consume": -1,
-  "ingredients": {
+  "ingredient": {
     "blocks": "minecraft:snow_block"
   },
-  "results": {
+  "result": {
     "block": "minecraft:ice"
   },
   "transform": "minecraft:powder_snow"
