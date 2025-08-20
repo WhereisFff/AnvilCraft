@@ -162,6 +162,11 @@ public class BlockStatePredicate {
 
     private List<BlockState> statesCache;
 
+    public List<BlockState> getStatesCache() {
+        if (this.statesCache != null) return this.statesCache;
+        return this.constructStatesForRender();
+    }
+
     /**
      * 此方法不应用于除渲染外的任何用法！
      *
