@@ -135,7 +135,7 @@ public class VanillaRecipesWrap {
         Ingredient first = ingredients.getFirst();
         if (ingredients.size() <= 1) return;
         ItemStack result = recipe.getResultItem(registries).copy();
-        if (!result.is(Tags.Items.STORAGE_BLOCKS) && !result.is(ModItemTags.COMPRESS_ITEM)) return;
+        if (!result.is(ModItemTags.COMPRESS_ITEM)) return;
         for (Ingredient ingredient : ingredients) {
             if (!ingredient.equals(first)) return;
         }

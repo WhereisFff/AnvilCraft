@@ -17,9 +17,7 @@ import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.Registry;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.NbtOps;
@@ -52,7 +50,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.function.Function;
-import java.util.stream.Stream;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class CodecUtil {
@@ -76,7 +73,8 @@ public class CodecUtil {
     public static <T> Codec<Optional<T>> createOptionalCodec(Codec<T> elementCodec) {
         return RecordCodecBuilder.create(ins -> ins.group(
                 Codec.BOOL.fieldOf("isPresent").forGetter(Optional::isPresent),
-                elementCodec.optionalFieldOf("content").forGetter(o -> o))
+                elementCodec.optionalFieldOf("content").forGetter(o -> o)
+            )
             .apply(ins, (isPresent, content) -> isPresent && content.isPresent() ? content : Optional.empty()));
     }
 
@@ -92,13 +90,14 @@ public class CodecUtil {
                         return DataResult.error(() -> "No ingredients for %s recipe".formatted(recipeType));
                     } else {
                         return ingredients.length > size
-                            ? DataResult.error(
+                               ? DataResult.error(
                             () -> "Too many ingredients for %s recipe. The maximum is: %d"
                                 .formatted(recipeType, size))
-                            : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
+                               : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
                     }
                 },
-                DataResult::success);
+                DataResult::success
+            );
     }
 
     public static final Codec<Item> ITEM_CODEC = Codec.STRING.flatXmap(
@@ -126,7 +125,8 @@ public class CodecUtil {
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Item> ITEM_STREAM_CODEC = StreamCodec.of(
         (buf, item) -> buf.writeUtf(BuiltInRegistries.ITEM.getKey(item).toString()),
-        buf -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(buf.readUtf())));
+        buf -> BuiltInRegistries.ITEM.get(ResourceLocation.parse(buf.readUtf()))
+    );
 
     public static final Codec<Block> BLOCK_CODEC = Codec.STRING.flatXmap(
         s -> {
@@ -148,17 +148,19 @@ public class CodecUtil {
             } else {
                 return DataResult.success(key.toString());
             }
-        });
+        }
+    );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Block> BLOCK_STREAM_CODEC = StreamCodec.of(
         (buf, block) -> buf.writeUtf(BuiltInRegistries.BLOCK.getKey(block).toString()),
-        buf -> BuiltInRegistries.BLOCK.get(ResourceLocation.parse(buf.readUtf())));
+        buf -> BuiltInRegistries.BLOCK.get(ResourceLocation.parse(buf.readUtf()))
+    );
 
     public static final Codec<EntityType<?>> ENTITY_CODEC = ResourceLocation.CODEC.flatXmap(
         id -> {
             if (!BuiltInRegistries.ENTITY_TYPE.containsKey(id)) {
                 return DataResult.error(() ->
-                    "Could not find entity type " + id + " as it does not exist in ENTITY_TYPE registry.");
+                                            "Could not find entity type " + id + " as it does not exist in ENTITY_TYPE registry.");
             }
             EntityType<?> e = BuiltInRegistries.ENTITY_TYPE.get(id);
             return DataResult.success(e);
@@ -167,11 +169,12 @@ public class CodecUtil {
             ResourceLocation key = BuiltInRegistries.ENTITY_TYPE.getKey(b);
             if (!BuiltInRegistries.ENTITY_TYPE.containsValue(b)) {
                 return DataResult.error(() -> "Could not find key of entity type " + key
-                    + " as it does not exist in ENTITY_TYPE registry.");
+                                              + " as it does not exist in ENTITY_TYPE registry.");
             } else {
                 return DataResult.success(key);
             }
-        });
+        }
+    );
 
     public static final StreamCodec<RegistryFriendlyByteBuf, EntityType<?>> ENTITY_STREAM_CODEC = StreamCodec.of(
         (buf, e) -> buf.writeResourceLocation(BuiltInRegistries.ENTITY_TYPE.getKey(e)),
@@ -182,8 +185,10 @@ public class CodecUtil {
         Codec.STRING.flatXmap(s -> DataResult.success(s.charAt(0)), c -> DataResult.success(c.toString()));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, Character> CHAR_STREAM_CODEC =
-        StreamCodec.of((buf, character) -> buf.writeUtf(character.toString()), buf -> buf.readUtf()
-            .charAt(0));
+        StreamCodec.of(
+            (buf, character) -> buf.writeUtf(character.toString()), buf -> buf.readUtf()
+                .charAt(0)
+        );
 
     public static <T> StreamCodec<? super FriendlyByteBuf, T> nbtWrapped(Codec<T> codec) {
 
@@ -217,7 +222,8 @@ public class CodecUtil {
     public static <T extends Enum<T>> Codec<T> enumCodecInLowerName(Class<T> clazz) {
         return Codec.STRING.xmap(
             name -> Enum.valueOf(clazz, name.toUpperCase(Locale.ROOT)),
-            value -> value.name().toLowerCase(Locale.ROOT));
+            value -> value.name().toLowerCase(Locale.ROOT)
+        );
     }
 
     public static <B extends ByteBuf, T extends Enum<T>> StreamCodec<B, T> enumStreamCodec(Class<T> clazz) {
@@ -252,12 +258,14 @@ public class CodecUtil {
     public static final Codec<NumberProvider> NUMBER_PROVIDER_CODEC = Codec.either(
         Codec.INT.xmap(ConstantValue::new, value -> Math.round(value.value())),
         NumberProviders.CODEC
-    ).xmap(Either::unwrap, provider -> {
-        if (!(provider instanceof ConstantValue(float value)) || value - Math.floor(value) >= 1E-5) {
-            return Either.right(provider);
+    ).xmap(
+        Either::unwrap, provider -> {
+            if (!(provider instanceof ConstantValue(float value)) || value - Math.floor(value) >= 1E-5) {
+                return Either.right(provider);
+            }
+            return Either.left((ConstantValue) provider);
         }
-        return Either.left((ConstantValue) provider);
-    });
+    );
 
     public static <B, C, T1, T2, T3, T4, T5, T6, T7> StreamCodec<B, C> composite(
         final StreamCodec<? super B, T1> codec1,
@@ -366,21 +374,16 @@ public class CodecUtil {
         );
     }
 
-    public static <T> @NotNull StreamCodec<RegistryFriendlyByteBuf, T> byCodec(Registry<?> registry, Codec<T> codec) {
+    public static <T> @NotNull StreamCodec<RegistryFriendlyByteBuf, T> byCodec(Codec<T> codec) {
         return StreamCodec.of(
             (buffer, value) -> {
-                RegistryOps<Tag> ops = HolderLookup.Provider
-                    .create(Stream.of(registry.asLookup()))
-                    .createSerializationContext(NbtOps.INSTANCE);
-                DataResult<Tag> encode = codec.encode(value, ops, ops.empty());
-                Tag tag = encode.getOrThrow();
+                RegistryOps<Tag> context = buffer.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+                Tag tag = codec.encodeStart(context, value).getOrThrow();
                 buffer.writeNbt(tag);
             },
             buffer -> {
-                RegistryOps<Tag> ops = HolderLookup.Provider
-                    .create(Stream.of(registry.asLookup()))
-                    .createSerializationContext(NbtOps.INSTANCE);
-                return codec.decode(ops, buffer.readNbt()).getOrThrow().getFirst();
+                RegistryOps<Tag> context = buffer.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+                return codec.decode(context, buffer.readNbt()).getOrThrow().getFirst();
             }
         );
     }
