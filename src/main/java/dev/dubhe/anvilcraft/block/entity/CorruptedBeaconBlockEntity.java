@@ -4,6 +4,7 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformInput;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
@@ -183,10 +184,12 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         // 每 80 tick 检查一次信标光柱状态是否正确
         if (level.getGameTime() % 80L != 0L) return;
 
-        if (level.getBlockState(pos).getValue(CorruptedBeaconBlock.LIT) && blockEntity.levels <= 0) {
-            level.setBlockAndUpdate(pos, level.getBlockState(pos).setValue(CorruptedBeaconBlock.LIT, false));
+        BlockState blockState = level.getBlockState(pos);
+        if (!blockState.is(ModBlocks.CORRUPTED_BEACON)) return;
+        if (blockState.getValue(CorruptedBeaconBlock.LIT) && blockEntity.levels <= 0) {
+            level.setBlockAndUpdate(pos, blockState.setValue(CorruptedBeaconBlock.LIT, false));
         } else if (!level.getBlockState(pos).getValue(CorruptedBeaconBlock.LIT) && blockEntity.levels > 0) {
-            level.setBlockAndUpdate(pos, level.getBlockState(pos).setValue(CorruptedBeaconBlock.LIT, true));
+            level.setBlockAndUpdate(pos, blockState.setValue(CorruptedBeaconBlock.LIT, true));
         }
     }
 
@@ -194,12 +197,14 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         int k;
         int i = 0;
         int j = 1;
+        BlockPos.MutableBlockPos mpos = new BlockPos.MutableBlockPos();
         while (j <= 4 && (k = y - j) >= level.getMinBuildHeight()) {
             boolean bl = true;
             block1:
             for (int l = x - j; l <= x + j && bl; ++l) {
                 for (int m = z - j; m <= z + j; ++m) {
-                    if (level.getBlockState(new BlockPos(l, k, m)).is(BlockTags.BEACON_BASE_BLOCKS)) continue;
+                    mpos.set(l, k, m);
+                    if (level.getBlockState(mpos).is(BlockTags.BEACON_BASE_BLOCKS)) continue;
                     bl = false;
                     continue block1;
                 }

@@ -341,13 +341,15 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
 
     @Override
     public void removePartsAndUpdate(Level level, BlockPos pos) {
+        BlockState blockState = level.getBlockState(pos);
+        if (!blockState.is(this)) return;
+        BlockPos bottomCenterPos = this.getMainPartPos(pos, blockState).below();
         for (Cube3x3PartHalf part : getParts()) {
-            BlockPos bp = pos.offset(part.getOffset());
-            BlockState blockState = level.getBlockState(bp);
-            level.setBlock(bp, blockState.getFluidState().createLegacyBlock(), 3, 0);
+            BlockPos bp = bottomCenterPos.offset(part.getOffset());
+            level.setBlock(bp, level.getBlockState(bp).getFluidState().createLegacyBlock(), 3, 0);
         }
         UPDATE_OFFSET.forEach((direction, offsetList) -> offsetList.forEach(offset -> {
-            BlockPos updatedPos = pos.offset(offset);
+            BlockPos updatedPos = bottomCenterPos.offset(offset);
             BlockPos fromPos = updatedPos.relative(direction);
             level.neighborShapeChanged(direction,
                 level.getBlockState(fromPos),
