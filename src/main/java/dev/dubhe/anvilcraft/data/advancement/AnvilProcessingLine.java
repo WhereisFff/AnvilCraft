@@ -5,15 +5,20 @@ import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerLeftClickBlockTrigg
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerRightClickBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerShiftRightClickBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnythingAnvilCraftingTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.InWorldSuperHeatingRecipeTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.InWorldTimewarpRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.PlayerWearAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItems;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
 import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
 import net.minecraft.network.chat.Component;
@@ -185,6 +190,134 @@ public class AnvilProcessingLine {
         )
         .addCriterion("hit_piezoelectric_crystal", AnvilHitPiezoelectricCrystalTrigger.TriggerInstance.hit())
         .build(advancementOf("lighter"));
+
+    public static final AdvancementHolder networking = Advancement.Builder.advancement()
+        .parent(heartsOfIron)
+        .display(
+            ModBlocks.TRANSMISSION_POLE,
+            Component.translatable("advancements.anvilcraft.networking.title"),
+            Component.translatable("advancements.anvilcraft.networking.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("craft_transmission_pole", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("transmission_pole")))
+        .addCriterion("place_transmission_pole", ItemUsedOnLocationTrigger.TriggerInstance.placedBlock(ModBlocks.TRANSMISSION_POLE.get()))
+        .build(advancementOf("networking"));
+
+    public static final AdvancementHolder electricFiledRhythm = Advancement.Builder.advancement()
+        .parent(networking)
+        .display(
+            ModItems.ANVIL_HAMMER,
+            Component.translatable("advancements.anvilcraft.electric_filed_rhythm.title"),
+            Component.translatable("advancements.anvilcraft.electric_filed_rhythm.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("wear_anvil_hammer", PlayerWearAnvilHammerTrigger.TriggerInstance.wearAnvilHammer())
+        .build(advancementOf("electric_filed_rhythm"));
+
+    public static final AdvancementHolder industrialGradeSmelting = Advancement.Builder.advancement()
+        .parent(electricFiledRhythm)
+        .display(
+            ModBlocks.HEATER,
+            Component.translatable("advancements.anvilcraft.industrial_grade_smelting.title"),
+            Component.translatable("advancements.anvilcraft.industrial_grade_smelting.description"),
+            null, AdvancementType.GOAL,
+            true, true, false
+        )
+        .addCriterion("super_heating", InWorldSuperHeatingRecipeTrigger.TriggerInstance.superHeating())
+        .build(advancementOf("industrial_grade_smelting"));
+
+    public static final AdvancementHolder nobleMetal = Advancement.Builder.advancement()
+        .parent(industrialGradeSmelting)
+        .display(
+            ModItems.ROYAL_STEEL_INGOT,
+            Component.translatable("advancements.anvilcraft.noble_metal.title"),
+            Component.translatable("advancements.anvilcraft.noble_metal.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("royal_metal", InWorldSuperHeatingRecipeTrigger.TriggerInstance.superHeating(of("super_heating/royal_steel_ingot")))
+        .build(advancementOf("noble_metal"));
+
+    public static final AdvancementHolder smithingTale = Advancement.Builder.advancement()
+        .parent(nobleMetal)
+        .display(
+            ModBlocks.ROYAL_SMITHING_TABLE,
+            Component.translatable("advancements.anvilcraft.smithing_table.title"),
+            Component.translatable("advancements.anvilcraft.smithing_table.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("craft_smithing",  RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_smithing_table")))
+        .build(advancementOf("smithing_table"));
+
+    public static final AdvancementHolder overseer = Advancement.Builder.advancement()
+        .parent(nobleMetal)
+        .display(
+            ModBlocks.OVERSEER_BLOCK,
+            Component.translatable("advancements.anvilcraft.overseer.title"),
+            Component.translatable("advancements.anvilcraft.overseer.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("craft_overseer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("overseer")))
+        .build(advancementOf("overseer"));
+
+    public static final AdvancementHolder durableGoods = Advancement.Builder.advancement()
+        .parent(smithingTale)
+        .display(
+            ModItems.ROYAL_STEEL_PICKAXE,
+            Component.translatable("advancements.anvilcraft.durable_goods.title"),
+            Component.translatable("advancements.anvilcraft.durable_goods.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("royal_steel_pickaxe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_steel_pickaxe")))
+        .addCriterion("royal_steel_axe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_steel_axe")))
+        .addCriterion("royal_steel_shovel", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_steel_shovel")))
+        .addCriterion("royal_steel_hoe", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_steel_hoe")))
+        .addCriterion("royal_steel_sword", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_steel_sword")))
+        .requirements(AdvancementRequirements.Strategy.OR)
+        .build(advancementOf("durable_goods"));
+
+    public static final AdvancementHolder royalBlacksmith = Advancement.Builder.advancement()
+        .parent(smithingTale)
+        .display(
+            ModBlocks.ROYAL_ANVIL,
+            Component.translatable("advancements.anvilcraft.royal_blacksmith.title"),
+            Component.translatable("advancements.anvilcraft.royal_blacksmith.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("royal_anvil", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.ROYAL_ANVIL))
+        .addCriterion("royal_smithing_table", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.ROYAL_SMITHING_TABLE))
+        .addCriterion("royal_grindstone", InventoryChangeTrigger.TriggerInstance.hasItems(ModBlocks.ROYAL_GRINDSTONE))
+        .build(advancementOf("royal_blacksmith"));
+
+    public static final AdvancementHolder wither = Advancement.Builder.advancement()
+        .parent(royalBlacksmith)
+        .display(
+            ModBlocks.CORRUPTED_BEACON,
+            Component.translatable("advancements.anvilcraft.wither.title"),
+            Component.translatable("advancements.anvilcraft.wither.description"),
+            null, AdvancementType.TASK,
+            true, true, false
+        )
+        .addCriterion("convert_beacon", ConvertBeaconTrigger.TriggerInstance.convertBeacon())
+        .build(advancementOf("wither"));
+
+    public static final AdvancementHolder ripVanWinkle = Advancement.Builder.advancement()
+        .parent(wither)
+        .display(
+            ModBlocks.CORRUPTED_BEACON,
+            Component.translatable("advancements.anvilcraft.ripVanWinkle.title"),
+            Component.translatable("advancements.anvilcraft.ripVanWinkle.description"),
+            null, AdvancementType.GOAL,
+            true, true, false
+        )
+        .addCriterion("timewarp_recipe", InWorldTimewarpRecipeTrigger.TriggerInstance.timeWrap())
+        .build(advancementOf("rip_van_winkle"));
 
     public static final AdvancementHolder hammer = Advancement.Builder.advancement()
         .parent(allInOne)

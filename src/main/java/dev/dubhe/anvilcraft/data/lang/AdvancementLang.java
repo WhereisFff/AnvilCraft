@@ -72,6 +72,36 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.lighter.title", "Have you ever dismantled a lighter");
         provider.add("advancements.anvilcraft.lighter.description", "Use an anvil to smash a piezoelectric crystal and generate electricity");
 
+        provider.add("advancements.anvilcraft.networking.title", "Networking");
+        provider.add("advancements.anvilcraft.networking.description", "Craft and place transmission pole");
+
+        provider.add("advancements.anvilcraft.electric_filed_rhythm.title", "Feel the rhythm of the electric field");
+        provider.add("advancements.anvilcraft.electric_filed_rhythm.description", "Wear an anvil hammer on the head within the scope of the power grid");
+
+        provider.add("advancements.anvilcraft.industrial_grade_smelting.title", "Industrial grade smelting");
+        provider.add("advancements.anvilcraft.industrial_grade_smelting.description", "Use super heating to melt any item");
+
+        provider.add("advancements.anvilcraft.noble_metal.title", "Noble metal");
+        provider.add("advancements.anvilcraft.noble_metal.description", "Smelting royal steel");
+
+        provider.add("advancements.anvilcraft.smithing_table.title", "Smithing on the smithing table");
+        provider.add("advancements.anvilcraft.smithing_table.description", "Upgrade your smithing table with Royal steel and no longer consume smithing templates from now on");
+
+        provider.add("advancements.anvilcraft.overseer.title", "The foreman shouted loudly");
+        provider.add("advancements.anvilcraft.overseer.description", "Craft overseer helps you load chunks");
+
+        provider.add("advancements.anvilcraft.durable_goods.title", "Durable goods");
+        provider.add("advancements.anvilcraft.durable_goods.description", "Upgrade any tool to Royal steel grade");
+
+        provider.add("advancements.anvilcraft.royal_blacksmith.title", "Royal blacksmith");
+        provider.add("advancements.anvilcraft.royal_blacksmith.description", "Obtain the royal anvil, royal smithing table, and royal grindstone");
+
+        provider.add("advancements.anvilcraft.wither.title", "Liberate the power of wither");
+        provider.add("advancements.anvilcraft.wither.description", "Use curse gold to convert a beacon");
+
+        provider.add("advancements.anvilcraft.ripVanWinkle.title", "Rip Van Winkle");
+        provider.add("advancements.anvilcraft.ripVanWinkle.description", "Perform any time warp operation");
+
         provider.add("advancements.anvilcraft.hammer.title", "When you have a hammer, you see everyone wants a nail");
         provider.add("advancements.anvilcraft.hammer.description", "Use an anvil hammer to kill mobs");
 

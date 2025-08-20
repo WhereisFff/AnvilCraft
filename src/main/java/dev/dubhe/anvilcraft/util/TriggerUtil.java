@@ -73,6 +73,22 @@ public class TriggerUtil {
         }
     }
 
+    public static void inWorldSuperHeatingRecipe(Level level, BlockPos pos, ResourceLocation id) {
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.IN_WORLD_SUPER_HEATING_RECIPE.get().trigger(player, id);
+            }
+        }
+    }
+
+    public static void inWorldTimeWrapRecipe(Level level, BlockPos pos, ResourceLocation id) {
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.IN_WORLD_TIME_WARP_RECIPE.get().trigger(player, id);
+            }
+        }
+    }
+
     public static void anvilHammerLeftClickBlock(Level level, BlockPos pos) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
@@ -117,6 +133,22 @@ public class TriggerUtil {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
                 ModCriterionTriggers.ANVIL_HIT_PIEZOELECTRIC_CRYSTAL.get().trigger(player);
+            }
+        }
+    }
+
+    public static void playerWearAnvilHammer(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.PLAYER_WEAR_ANVIL_HAMMER.get().trigger(player);
+            }
+        }
+    }
+
+    public static void convertBeacon(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.CONVERT_BEACON.get().trigger(player);
             }
         }
     }

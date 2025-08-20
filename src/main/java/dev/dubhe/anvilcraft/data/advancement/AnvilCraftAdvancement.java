@@ -46,10 +46,20 @@ public class AnvilCraftAdvancement {
         provider.accept(AnvilProcessingLine.vanillaIronPlate);
         provider.accept(AnvilProcessingLine.recyclingDiamonds);
         provider.accept(AnvilProcessingLine.allInOne);
-        provider.accept(AnvilProcessingLine.hammer);
-        provider.accept(AnvilProcessingLine.superKill);
         provider.accept(AnvilProcessingLine.heartsOfIron);
         provider.accept(AnvilProcessingLine.notABeacon);
         provider.accept(AnvilProcessingLine.lighter);
+        provider.accept(AnvilProcessingLine.networking);
+        provider.accept(AnvilProcessingLine.electricFiledRhythm);
+        provider.accept(AnvilProcessingLine.industrialGradeSmelting);
+        provider.accept(AnvilProcessingLine.nobleMetal);
+        provider.accept(AnvilProcessingLine.smithingTale);
+        provider.accept(AnvilProcessingLine.overseer);
+        provider.accept(AnvilProcessingLine.durableGoods);
+        provider.accept(AnvilProcessingLine.royalBlacksmith);
+        provider.accept(AnvilProcessingLine.wither);
+        provider.accept(AnvilProcessingLine.ripVanWinkle);
+        provider.accept(AnvilProcessingLine.hammer);
+        provider.accept(AnvilProcessingLine.superKill);
     }
 }

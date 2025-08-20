@@ -10,13 +10,17 @@ import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnythingAnvilCraftingTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DispenserRepairIronGolem;
 import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.InWorldSuperHeatingRecipeTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.InWorldTimewarpRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.PlayerWearAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
@@ -61,6 +65,12 @@ public class ModCriterionTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, InWorldRecipeTrigger> IN_WORLD_RECIPE =
         CT.register("in_world_recipe", InWorldRecipeTrigger::new);
 
+    public static final DeferredHolder<CriterionTrigger<?>, InWorldSuperHeatingRecipeTrigger> IN_WORLD_SUPER_HEATING_RECIPE =
+        CT.register("in_world_super_heating_recipe", InWorldSuperHeatingRecipeTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, InWorldTimewarpRecipeTrigger> IN_WORLD_TIME_WARP_RECIPE =
+        CT.register("in_world_time_warp_recipe", InWorldTimewarpRecipeTrigger::new);
+
     public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerLeftClickBlockTrigger> ANVIL_HAMMER_LIFT_CLICK =
         CT.register("anvil_hammer_left_click_block", AnvilHammerLeftClickBlockTrigger::new);
 
@@ -78,6 +88,12 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, AnvilHitPiezoelectricCrystalTrigger> ANVIL_HIT_PIEZOELECTRIC_CRYSTAL =
         CT.register("anvil_hit_piezoelectric_crystal", AnvilHitPiezoelectricCrystalTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, PlayerWearAnvilHammerTrigger> PLAYER_WEAR_ANVIL_HAMMER =
+        CT.register("player_wear_anvil_hammer", PlayerWearAnvilHammerTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, ConvertBeaconTrigger> CONVERT_BEACON =
+        CT.register("convert_beacon", ConvertBeaconTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);
