@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.renderer.blockentity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.block.entity.CorruptedBeaconBlockEntity;
 import dev.dubhe.anvilcraft.client.init.ModRenderTypes;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -18,6 +19,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
@@ -46,26 +48,10 @@ public class CorruptedBeaconRenderer implements BlockEntityRenderer<CorruptedBea
         int packedLight,
         int packedOverlay
     ) {
-        poseStack.pushPose();
-        if (blockEntity.getLevel() == null) return;
-        long l = blockEntity.getLevel().getGameTime();
-        List<CorruptedBeaconBlockEntity.BeaconBeamSection> list = blockEntity.getBeamSections();
-        int i = 0;
-        for (int j = 0; j < list.size(); ++j) {
-            CorruptedBeaconBlockEntity.BeaconBeamSection beaconBeamSection = list.get(j);
-            CorruptedBeaconRenderer.renderBeaconBeam(
-                poseStack,
-                buffer,
-                partialTick,
-                l,
-                i,
-                j == list.size() - 1 ? MAX_RENDER_Y : beaconBeamSection.getHeight(),
-                beaconBeamSection.getColor()
-            );
-            i += beaconBeamSection.getHeight();
-        }
-
+        Level level = blockEntity.getLevel();
+        if (level == null) return;
         BakedModel model = blockRenderer.getBlockModel(defaultLightState);
+        poseStack.pushPose();
         poseStack.translate(0.005f, 0.005f, 0.005f);
         poseStack.scale(0.99f, 0.99f, 0.99f);
         VertexConsumer vertexConsumer = buffer.getBuffer(ModRenderTypes.BEACON_GLASS);
@@ -73,7 +59,7 @@ public class CorruptedBeaconRenderer implements BlockEntityRenderer<CorruptedBea
             List<BakedQuad> quads = model.getQuads(
                 null,
                 value,
-                blockEntity.getLevel().random,
+                level.random,
                 ModelData.EMPTY,
                 null
             );
@@ -89,6 +75,28 @@ public class CorruptedBeaconRenderer implements BlockEntityRenderer<CorruptedBea
                     packedOverlay
                 );
             }
+        }
+
+        BlockState state = level.getBlockState(blockEntity.getBlockPos());
+        if (!state.hasProperty(CorruptedBeaconBlock.LIT) || !state.getValue(CorruptedBeaconBlock.LIT)) {
+            poseStack.popPose();
+            return;
+        }
+        long l = level.getGameTime();
+        List<CorruptedBeaconBlockEntity.BeaconBeamSection> list = blockEntity.getBeamSections();
+        int i = 0;
+        for (int j = 0; j < list.size(); ++j) {
+            CorruptedBeaconBlockEntity.BeaconBeamSection beaconBeamSection = list.get(j);
+            CorruptedBeaconRenderer.renderBeaconBeam(
+                poseStack,
+                buffer,
+                partialTick,
+                l,
+                i,
+                j == list.size() - 1 ? MAX_RENDER_Y : beaconBeamSection.getHeight(),
+                beaconBeamSection.getColor()
+            );
+            i += beaconBeamSection.getHeight();
         }
         poseStack.popPose();
     }
