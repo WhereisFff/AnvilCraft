@@ -118,12 +118,15 @@ public class AnvilCraftConfig implements ConfigData {
     @ConfigEntry.Gui.CollapsibleObject(startExpanded = true)
     public PowerConverter powerConverter = new PowerConverter();
 
+    @Comment("Is laser do impact checking")
     @ConfigEntry.Gui.Tooltip()
     public boolean isLaserDoImpactChecking = true;
 
+    @Comment("Induction light block ripening cooldown")
     @ConfigEntry.Gui.Tooltip
     public int inductionLightBlockRipeningCooldown = 400;
 
+    @Comment("Induction light block ripening range")
     @ConfigEntry.Gui.Tooltip
     @ConfigEntry.BoundedDiscrete(min = 0, max = 100)
     public int inductionLightBlockRipeningRange = 5;

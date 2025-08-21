@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -304,6 +305,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         if (!(devourBlockState.getBlock() instanceof DoublePlantBlock))
             devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
         level.destroyBlock(devourBlockPos, false);
+        TriggerUtil.devourerDevourBlock(level, devourBlockPos, devourBlockState.getBlock());
     }
 
     /**

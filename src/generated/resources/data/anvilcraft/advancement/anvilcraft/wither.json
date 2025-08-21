@@ -1,0 +1,26 @@
+{
+  "parent": "anvilcraft:anvilcraft/royal_blacksmith",
+  "criteria": {
+    "convert_beacon": {
+      "trigger": "anvilcraft:convert_beacon"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.wither.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:corrupted_beacon"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.wither.title"
+    }
+  },
+  "requirements": [
+    [
+      "convert_beacon"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

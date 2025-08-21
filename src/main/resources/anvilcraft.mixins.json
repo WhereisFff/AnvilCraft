@@ -29,6 +29,7 @@
     "IdDispatchCodecMixin",
     "InventoryMixin",
     "ItemEntityMixin",
+    "ItemMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
