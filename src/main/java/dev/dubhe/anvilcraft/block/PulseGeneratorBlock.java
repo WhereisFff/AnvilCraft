@@ -34,6 +34,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.ticks.TickPriority;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -178,7 +179,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
     public void startWaiting(Level level, BlockPos pos, Supplier<BlockState> stateGetter, PulseGeneratorBlockEntity generator) {
         generator.setState(PulseGeneratorBlockEntity.State.WAITING);
         if (generator.getWaitingTime() != 0) {
-            level.scheduleTick(pos, this, generator.getWaitingTime());
+            level.scheduleTick(pos, this, generator.getWaitingTime(), TickPriority.LOW);
         } else {
             this.startOutputting(level, pos, stateGetter, generator);
         }
@@ -187,7 +188,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
     protected void startOutputting(Level level, BlockPos pos, Supplier<BlockState> stateGetter, PulseGeneratorBlockEntity generator) {
         generator.setState(PulseGeneratorBlockEntity.State.OUTPUTTING);
         if (generator.getSignalDuration() != 0) {
-            level.scheduleTick(pos, this, generator.getSignalDuration());
+            level.scheduleTick(pos, this, generator.getSignalDuration(), TickPriority.LOW);
             this.updateBlockAndNeighbours(level, pos, stateGetter, generator);
         } else {
             this.updateBlockAndNeighbours(level, pos, generator::getBlockState, generator);
@@ -218,7 +219,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
         if (generator.getSignalDuration() == 0 && shouldPower) {
-            level.scheduleTick(pos, this, 1);
+            level.scheduleTick(pos, this, 1, TickPriority.LOW);
         }
     }
 
