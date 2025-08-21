@@ -156,6 +156,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
         if (!generator.isDeadlock()) switch (generator.getState()) {
             case WAITING -> this.startOutputting(level, pos, () -> state, generator);
             case OUTPUTTING -> this.checkOnSignalEnd(level, pos, () -> state, generator);
+            case DEFAULT -> this.updateBlockAndNeighbours(level, pos, () -> state, generator);
         }
     }
 
@@ -216,6 +217,9 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
         generator.setBlockState(newState);
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
+        if (generator.getSignalDuration() == 0 && shouldPower) {
+            level.scheduleTick(pos, this, 1);
+        }
     }
 
     @Override
