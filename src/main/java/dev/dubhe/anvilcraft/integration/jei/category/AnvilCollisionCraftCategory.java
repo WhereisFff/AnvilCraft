@@ -58,18 +58,10 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
     private final Component title;
 
     public AnvilCollisionCraftCategory(IGuiHelper helper) {
-        this.arrowDefault = helper.drawableBuilder(TextureConstants.ARROW_DEFAULT, 0,0,16,10)
-            .setTextureSize(16,10)
-            .build();
-        this.blockConversion = helper.drawableBuilder(TextureConstants.ARROW_BLOCK_CONVERSION, 0,0,14,22)
-            .setTextureSize(14,22)
-            .build();
-        this.explosion = helper.drawableBuilder(TextureConstants.EXPLOSION, 0,0,32,32)
-            .setTextureSize(32,32)
-            .build();
-        this.slot = helper.drawableBuilder(TextureConstants.SLOT_DEFAULT, 0,0,18,18)
-            .setTextureSize(18,18)
-            .build();
+        this.arrowDefault = helper.drawableBuilder(TextureConstants.ARROW_DEFAULT,0,0,16,10).setTextureSize(16,10).build();
+        this.blockConversion = helper.drawableBuilder(TextureConstants.ARROW_BLOCK_CONVERSION, 0,0,14,22).setTextureSize(14,22).build();
+        this.explosion = helper.drawableBuilder(TextureConstants.EXPLOSION,0,0,32,32).setTextureSize(32,32).build();
+        this.slot = helper.drawableBuilder(TextureConstants.SLOT_DEFAULT,0,0,18,18).setTextureSize(18,18).build();
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
         this.timer = helper.createTickTimer(30, 100, true);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
