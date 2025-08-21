@@ -68,7 +68,7 @@ public class ChanceBlockState {
      * @param chance 出现概率（固定值）
      */
     public ChanceBlockState(BlockState state, NumberProvider chance) {
-        this(state, null, chance);
+        this(state, new CompoundTag(), chance);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ChanceBlockState {
     }
 
     public static @NotNull ChanceBlockState of(@NotNull Supplier<? extends Block> block) {
-        return ChanceBlockState.of(block, null);
+        return ChanceBlockState.of(block, new CompoundTag());
     }
 
     /**
@@ -97,7 +97,7 @@ public class ChanceBlockState {
             IBlockStateExtension.MAP_CODEC
                 .forGetter(ChanceBlockState::getState),
             CompoundTag.CODEC
-                .optionalFieldOf("nbt", null)
+                .optionalFieldOf("nbt", new CompoundTag())
                 .forGetter(ChanceBlockState::getNbt),
             CodecUtil.NUMBER_PROVIDER_CODEC
                 .optionalFieldOf("chance", ConstantValue.exactly(1.0f))
