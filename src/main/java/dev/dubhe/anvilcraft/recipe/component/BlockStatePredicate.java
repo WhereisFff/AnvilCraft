@@ -1,8 +1,9 @@
-package dev.dubhe.anvilcraft.recipe.anvil.predicate.block.component;
+package dev.dubhe.anvilcraft.recipe.component;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.BlockCache;
 import io.netty.buffer.ByteBuf;
 import lombok.Getter;
@@ -16,6 +17,8 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.LevelAccessor;
@@ -35,6 +38,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 /**
@@ -45,6 +49,11 @@ import java.util.stream.Collectors;
  */
 @Getter
 public class BlockStatePredicate {
+    /**
+     * 空 ResourceLocation
+     */
+    public static final ResourceLocation EMPTY = AnvilCraft.of("empty");
+
     /**
      * 属性编解码器
      */
@@ -198,6 +207,22 @@ public class BlockStatePredicate {
     }
 
     /**
+     * 获取此谓词的键
+     *
+     * @return 键
+     */
+    public ResourceLocation getKey() {
+        Either<TagKey<Block>, List<Holder<Block>>> unwrap = this.getBlocks().unwrap();
+        if (unwrap.left().isPresent()) {
+            return unwrap.left().get().location();
+        } else if (unwrap.right().isPresent()) {
+            List<Holder<Block>> holders = unwrap.right().get();
+            return holders.isEmpty() ? EMPTY : holders.getFirst().unwrapKey().map(ResourceKey::location).orElse(EMPTY);
+        }
+        return EMPTY;
+    }
+
+    /**
      * 创建一个构建器
      *
      * @return 构建器实例
@@ -225,6 +250,18 @@ public class BlockStatePredicate {
          * 构造一个构建器
          */
         private Builder() {
+        }
+
+        /**
+         * 设置方块
+         *
+         * @param blocks 方块数组
+         * @return 构建器实例
+         */
+        @SafeVarargs
+        public final Builder of(Supplier<? extends Block>... blocks) {
+            this.blocks = HolderSet.direct(bl -> bl.get().builtInRegistryHolder(), blocks);
+            return this;
         }
 
         /**
@@ -465,7 +502,7 @@ public class BlockStatePredicate {
         }
 
         @Override
-        public <T extends Comparable<T>, S extends StateHolder<?, S>> List<S> applyToState(S state, Property<T> property) {
+        public <T extends Comparable<T>, S extends StateHolder<?, S>> List<S> applyToState(@NotNull S state, Property<T> property) {
             if (!state.hasProperty(property)) return List.of(state);
             return property.getValue(this.value)
                 .map(value -> List.of(state.setValue(property, value)))
