@@ -1,7 +1,7 @@
 {
   "type": "anvilcraft:anvil_collision",
   "anvil": {
-    "blocks": "anvilcraft:ember_anvil"
+    "blocks": "#anvilcraft:anvil_tier_1"
   },
   "consume": false,
   "hitBlock": {

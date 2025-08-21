@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:anvil_collision/anvil_tier_0_and_space_overcompressor_128"
+        "recipe": "anvilcraft:anvil_collision/anvil_and_corrupted_beacon_32"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:anvil_collision/anvil_tier_0_and_space_overcompressor_128"
+      "anvilcraft:anvil_collision/anvil_and_corrupted_beacon_32"
     ]
   }
 }
