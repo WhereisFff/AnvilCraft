@@ -36,6 +36,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
@@ -48,20 +49,27 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable progress;
-    protected final IDrawable arrowOut;
+    private final IDrawable arrowDefault;
+    protected final IDrawable blockConversion;
+    protected final IDrawable explosion;
     protected final IDrawable slot;
     private final IDrawable icon;
     private final ITickTimer timer;
     private final Component title;
 
     public AnvilCollisionCraftCategory(IGuiHelper helper) {
-        progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
+        this.arrowDefault = helper.drawableBuilder(TextureConstants.ARROW_DEFAULT, 0,0,16,10)
+            .setTextureSize(16,10)
             .build();
-        this.arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
-
-        this.slot = helper.getSlotDrawable();
+        this.blockConversion = helper.drawableBuilder(TextureConstants.ARROW_BLOCK_CONVERSION, 0,0,14,22)
+            .setTextureSize(14,22)
+            .build();
+        this.explosion = helper.drawableBuilder(TextureConstants.EXPLOSION, 0,0,32,32)
+            .setTextureSize(32,32)
+            .build();
+        this.slot = helper.drawableBuilder(TextureConstants.SLOT_DEFAULT, 0,0,18,18)
+            .setTextureSize(18,18)
+            .build();
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
         this.timer = helper.createTickTimer(30, 100, true);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
@@ -148,22 +156,19 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         AnvilCollisionCraftRecipe recipe = recipeHolder.value();
         float anvilXOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
 
+        // explosion
+        explosion.draw(guiGraphics,72,16);
+
         // 铁砧左右移动模拟碰撞
-        for (int i = recipe.anvil().getBlocks().size() - 1; i >= 0; i--) {
-            List<BlockState> inputAnvil = recipe.anvil().constructStatesForRender();
-            if (inputAnvil.isEmpty()) continue;
-            BlockState renderedState = inputAnvil.get((int) ((System.currentTimeMillis() / 1000) % inputAnvil.size()));
-            if (renderedState == null) continue;
-            RenderHelper.renderBlock(
-                guiGraphics,
-                renderedState,
-                55 - anvilXOffset,
-                28,
-                20,
-                12,
-                RenderHelper.SINGLE_BLOCK
-            );
-        }
+        RenderHelper.renderBlock(
+            guiGraphics,
+            Blocks.ANVIL.defaultBlockState(),
+            55 - anvilXOffset,
+            28,
+            20,
+            12,
+            RenderHelper.SINGLE_BLOCK
+        );
 
         for (int i = recipe.hitBlock().getBlocks().size() - 1; i >= 0; i--) {
             List<BlockState> input = recipe.hitBlock().constructStatesForRender();
@@ -203,9 +208,9 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                         guiGraphics,
                         inputBlockRenderedState,
                         120,
-                        10,
+                        5,
                         20,
-                        15,
+                        12,
                         RenderHelper.SINGLE_BLOCK
                     );
 
@@ -215,22 +220,24 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                         guiGraphics,
                         outputBlockState,
                         120,
-                        40,
+                        48,
                         20,
-                        15,
+                        12,
                         RenderHelper.SINGLE_BLOCK
                     );
-                    arrowOut.draw(guiGraphics, 86, 7);
+
+                    blockConversion.draw(guiGraphics, 113, 19);
 
                     PoseStack pose = guiGraphics.pose();
                     pose.pushPose();
                     pose.scale(0.8f, 0.8f, 1.0f);
                     guiGraphics.drawString(Minecraft.getInstance().font,
                         Component.translatable("gui.anvilcraft.category.anvil_collision.maxcount", blockTransform.maxCount()),
-                        140, 75, 0xFF000000, false);
+                        135, 75, 0xFF000000, false);
                     pose.popPose();
                 }
             }
+
             if (!recipe.transformBlocks().isEmpty() && !recipe.outputItems().isEmpty()) {
                 List<BlockTransform> blockTransforms = recipe.transformBlocks();
                 for (BlockTransform blockTransform : blockTransforms) {
@@ -258,19 +265,19 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                         8,
                         RenderHelper.SINGLE_BLOCK
                     );
-                    arrowOut.draw(guiGraphics, 86, 7);
-
+                    blockConversion.draw(guiGraphics, 86, 6);
+                    arrowDefault.draw(guiGraphics, 98, 26);
                     PoseStack pose = guiGraphics.pose();
                     pose.pushPose();
                     pose.scale(0.8f, 0.8f, 1.0f);
                     guiGraphics.drawString(Minecraft.getInstance().font,
                         Component.translatable("gui.anvilcraft.category.anvil_collision.maxcount", blockTransform.maxCount()),
-                        140, 75, 0xFF000000, false);
+                        135, 75, 0xFF000000, false);
                     pose.popPose();
                 }
             }
             if (!recipe.outputItems().isEmpty() && recipe.transformBlocks().isEmpty()) {
-                progress.draw(guiGraphics, 91, 24);
+                arrowDefault.draw(guiGraphics, 98, 27);
             }
         }
 
