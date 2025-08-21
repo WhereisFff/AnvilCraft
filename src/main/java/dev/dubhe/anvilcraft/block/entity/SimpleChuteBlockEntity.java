@@ -65,8 +65,9 @@ public class SimpleChuteBlockEntity extends BlockEntity implements IItemHandlerH
         if (level == null) return;
         if (cooldown > 0) cooldown--;
         tickedGameTime = level.getGameTime();
-        if (cooldown == 0 && !this.itemHandler.getStackInSlot(0).isEmpty())
-            cooldown = AnvilCraft.config.chuteMaxCooldown + 1;
+        if (cooldown == 0 && !this.itemHandler.getStackInSlot(0).isEmpty()) {
+            cooldown = AnvilCraft.CONFIG.chuteMaxCooldown + 1;
+        }
         if (cooldown == 1) {
             BlockPos targetPos = getBlockPos().relative(getOutputDirection());
             BlockEntity targetBE = level.getBlockEntity(targetPos);
@@ -147,12 +148,12 @@ public class SimpleChuteBlockEntity extends BlockEntity implements IItemHandlerH
         if (targetBE instanceof BaseChuteBlockEntity chute) {
             int k = 0;
             if (chute.getTickedGameTime() >= this.tickedGameTime) k++;
-            chute.setCooldown(AnvilCraft.config.chuteMaxCooldown - k);
+            chute.setCooldown(AnvilCraft.CONFIG.chuteMaxCooldown - k);
         }
         if (targetBE instanceof SimpleChuteBlockEntity chute) {
             int k = 0;
             if (chute.getTickedGameTime() >= this.tickedGameTime) k++;
-            chute.setCooldown(AnvilCraft.config.chuteMaxCooldown - k);
+            chute.setCooldown(AnvilCraft.CONFIG.chuteMaxCooldown - k);
         }
     }
 

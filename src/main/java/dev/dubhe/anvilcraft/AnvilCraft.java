@@ -3,11 +3,13 @@ package dev.dubhe.anvilcraft;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.tterrag.registrate.Registrate;
+import dev.anvilcraft.lib.config.ConfigManager;
 import dev.dubhe.anvilcraft.api.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.api.integration.IntegrationManager;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
-import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
+import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
+import dev.dubhe.anvilcraft.config.AnvilCraftServerConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.dfu.AnvilCraftDfu;
 import dev.dubhe.anvilcraft.init.ModAmuletTypes;
@@ -44,8 +46,6 @@ import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.ModInteractionMap;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
-import me.shedaniel.autoconfig.AutoConfig;
-import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -72,8 +72,9 @@ public class AnvilCraft {
     public static final Gson GSON =
         new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
     public static IEventBus MOD_BUS = null;
-    public static AnvilCraftConfig config = AutoConfig.register(AnvilCraftConfig.class, JanksonConfigSerializer::new)
-        .getConfig();
+    public static final ConfigManager CONFIG_MANAGER = new ConfigManager();
+    public static final AnvilCraftServerConfig CONFIG = CONFIG_MANAGER.register(new AnvilCraftServerConfig());
+    public static final AnvilCraftClientConfig CLIENT_CONFIG = CONFIG_MANAGER.register(new AnvilCraftClientConfig());
 
     @Getter
     private static final IntegrationManager integrationManager = new IntegrationManager();
@@ -82,6 +83,7 @@ public class AnvilCraft {
 
     public AnvilCraft(IEventBus modEventBus, ModContainer modContainer) {
         MOD_BUS = modEventBus;
+        CONFIG_MANAGER.register(modEventBus, modContainer);
         ModAttatchments.register(modEventBus);
         ModItemGroups.register(modEventBus);
         ModBlocks.register();
@@ -180,11 +182,11 @@ public class AnvilCraft {
             if (Util.isLoaded("apothic_enchanting")) {
                 LOGGER.info(
                     "Apothic Enchanting found. Set royalAnvilBeyondMaxLevel, "
-                        + "emberAnvilBeyondMaxLevel and transcendenceAnvilBeyondMaxLevel to true."
+                    + "emberAnvilBeyondMaxLevel and transcendenceAnvilBeyondMaxLevel to true."
                 );
-                config.royalAnvilBeyondMaxLevel = true;
-                config.emberAnvilBeyondMaxLevel = true;
-                config.transcendenceAnvilBeyondMaxLevel = true;
+                CONFIG.royalAnvilBeyondMaxLevel = true;
+                CONFIG.emberAnvilBeyondMaxLevel = true;
+                CONFIG.transcendenceAnvilBeyondMaxLevel = true;
             }
         });
     }

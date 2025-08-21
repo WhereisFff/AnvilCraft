@@ -79,7 +79,7 @@ public class RenderEventListener {
         if (!(entity instanceof Player player)) return;
         Optional<BlockHitResult> hitResult = Util.castSafely(Minecraft.getInstance().hitResult, BlockHitResult.class);
         hitResult.ifPresent(hit -> renderDragonRodOutline(pose, hit, vertexConsumer3, camX, camY, camZ, handItem));
-        if (!AnvilHammerItem.isWearing(player)) return;
+        if (!AnvilHammerItem.shouldRenderEffect(player)) return;
         PowerGridSupport.render(pose, bufferSource, vec3);
         hitResult.ifPresent(hit -> renderAffectRange(pose, hit, vertexConsumer3, camX, camY, camZ));
     }

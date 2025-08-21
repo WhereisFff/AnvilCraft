@@ -37,14 +37,12 @@ public class IntegrationManager {
                     if (version == null) version = "*";
                     List<IntegrationType> type = List.of(IntegrationType.DEDICATED_SERVER, IntegrationType.CLIENT);
                     if (typeHolders != null) {
-                        type = typeHolders.stream().map(
-                            holder -> switch (holder.value()) {
-                                case "DEDICATED_SERVER" -> IntegrationType.DEDICATED_SERVER;
-                                case "CLIENT" -> IntegrationType.CLIENT;
-                                case "DATA" -> IntegrationType.DATA;
-                                default -> throw new IllegalArgumentException("Unknown integration type: " + holder.value());
-                            }
-                        ).toList();
+                        type = typeHolders.stream().map(holder -> switch (holder.value()) {
+                            case "DEDICATED_SERVER" -> IntegrationType.DEDICATED_SERVER;
+                            case "CLIENT" -> IntegrationType.CLIENT;
+                            case "DATA" -> IntegrationType.DATA;
+                            default -> throw new IllegalArgumentException("Unknown integration type: " + holder.value());
+                        }).toList();
                     }
                     log.info("Considering integration {} for {id:{}, version:{}}", annotation.memberName(), modid, version);
                     IntegrationInstance instance = new IntegrationInstance(

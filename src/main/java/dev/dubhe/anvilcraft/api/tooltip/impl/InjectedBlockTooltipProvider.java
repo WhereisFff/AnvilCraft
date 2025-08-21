@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.api.tooltip.impl;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProvider;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
+import dev.dubhe.anvilcraft.client.AnvilCraftClient;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
@@ -22,9 +22,10 @@ public class InjectedBlockTooltipProvider extends ITooltipProvider.BlockTooltipP
 
     @Override
     public List<Component> tooltip(Level level, BlockPos pos, BlockState state) {
-        if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
+        if (Util.jadePresent.get() && AnvilCraftClient.CONFIG.doNotShowTooltipWhenJadePresent) return null;
         return Util.castSafely(state.getBlock(), IInjectedTooltipProvider.class)
-            .map(provider -> provider.anvilcraft$getTooltip(state)).orElse(null);
+            .map(provider -> provider.anvilcraft$getTooltip(state))
+            .orElse(null);
     }
 
     @Override
