@@ -6,10 +6,14 @@ import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
+import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
+import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
+import dev.dubhe.anvilcraft.recipe.elements.InputBlock;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
+import dev.dubhe.anvilcraft.util.BlockStateUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -24,13 +28,18 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.common.util.RegistryUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -38,6 +47,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -45,11 +57,19 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
+    private final IDrawable progress;
+    protected final IDrawable arrowOut;
+
     private final IDrawable icon;
     private final ITickTimer timer;
     private final Component title;
 
     public AnvilCollisionCraftCategory(IGuiHelper helper) {
+        progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
+            .setTextureSize(24, 16)
+            .build();
+        this.arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
+
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
         this.timer = helper.createTickTimer(30, 100, true);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
@@ -97,7 +117,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
             OutputItem outputItem = recipe.outputItems().get(i);
             ItemStack itemStack = outputItem.getItemStack();
             if (itemStack != null) {
-                IRecipeSlotBuilder slot = builder.addOutputSlot(110 + 18 * i, 20).addItemStack(itemStack);
+                IRecipeSlotBuilder slot = builder.addOutputSlot(107 + 18 * i, 21).addItemStack(itemStack);
                 slot.addRichTooltipCallback((recipeSlotView, tooltip) ->
                     tooltip.add(Component.translatable("gui.anvilcraft.category.chance", outputItem.getChance() * 100).withStyle(ChatFormatting.GRAY)));
             }
@@ -118,6 +138,27 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
             Item outputItem = outputBlock.asItem();
             builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemLike(outputItem);
         }
+
+        // 将此配方需要的铁砧加入输入槽
+        if (recipe.anvil().getTag() != null) {
+            AtomicInteger slotId = new AtomicInteger(0);
+            builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
+                .addIngredients(BlockTagUtil.toIngredient(recipe.anvil().getTag()));
+            RegistryUtil.getRegistry(Registries.BLOCK)
+                .getTag(recipe.anvil().getTag())
+                .stream()
+                .flatMap(HolderSet.ListBacked::stream)
+                .map(h -> h.value().asItem().getDefaultInstance())
+                .forEach(stack -> {
+                    int id = slotId.getAndAdd(1);
+                    builder.addSlot(RecipeIngredientRole.RENDER_ONLY,
+                            (id % 9) * 18 + 66,
+                            40)
+                        .addItemStack(stack);
+                });
+        } else {
+            builder.addInputSlot(10, 20).addItemLike(recipe.anvil().getBlock().asItem());
+        }
     }
 
     @Override
@@ -128,14 +169,15 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         double mouseX,
         double mouseY) {
         AnvilCollisionCraftRecipe recipe = recipeHolder.value();
-        float anvilXOffset = JeiRenderHelper.getAnvilAnimationOffset(timer) * 4;
+        float anvilXOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
 
+        // 铁砧左右移动模拟碰撞
         Block anvil = recipe.anvil().getBlock();
         if (anvil == null) anvil = Blocks.ANVIL;
         RenderHelper.renderBlock(
             guiGraphics,
             anvil.defaultBlockState(),
-            70 + anvilXOffset,
+            45 - anvilXOffset,
             25,
             20,
             12,
@@ -150,14 +192,15 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
             int scale = 12;
             if (blockState.is(ModBlocks.GIANT_ANVIL)) {
                 scale = 6;
-                blockState.trySetValue(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER);
-                blockState.trySetValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER);
+                blockState = ModBlocks.GIANT_ANVIL.getDefaultState()
+                    .trySetValue(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER)
+                    .trySetValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER);
             }
 
             RenderHelper.renderBlock(
                 guiGraphics,
                 blockState,
-                20,
+                70,
                 25,
                 20,
                 scale,
@@ -165,13 +208,42 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
             );
         }
 
-        if (!recipe.transformBlocks().isEmpty()) {
+        if (!recipe.transformBlocks().isEmpty() && recipe.outputItems().isEmpty()) {
+            // 渲染转换与被转换的方块
             for (int i = 0; i < recipe.transformBlocks().size(); i++) {
                 Block inputBlock = recipe.transformBlocks()
                     .get(i).inputBlock().getBlock();
                 Block outputBlock = recipe.transformBlocks()
                     .get(i).outputBlock().getBlockState().getBlock();
+                if (inputBlock != null) {
+                    BlockState inputBlockState = inputBlock.defaultBlockState();
+                    RenderHelper.renderBlock(
+                        guiGraphics,
+                        inputBlockState,
+                        95,
+                        25,
+                        10,
+                        14,
+                        RenderHelper.SINGLE_BLOCK
+                    );
+
+                    progress.draw(guiGraphics, 107, 21);
+
+                    BlockState outputBlockState = outputBlock.defaultBlockState();
+                    RenderHelper.renderBlock(
+                        guiGraphics,
+                        outputBlockState,
+                        143,
+                        25,
+                        10,
+                        14,
+                        RenderHelper.SINGLE_BLOCK
+                    );
+                }
             }
+        } else {
+            // 如果没有转换与被转换的方块 则添加箭头并指向输出物品
+            progress.draw(guiGraphics, 82, 21);
         }
     }
 
@@ -198,7 +270,6 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         registration.addRecipeCatalyst(new ItemStack(Items.ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROYAL_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.EMBER_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GIANT_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.TRANSCENDENCE_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
     }
 }
