@@ -22,6 +22,7 @@
     "EnchantmentPredicateMixin",
     "EndPortalBlockMixin",
     "EntityMixin",
+    "EntityTypeBuilderMixin",
     "ExplosionMixin",
     "FlyingHitEntityMixin",
     "HolderReferenceMixin",
