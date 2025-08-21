@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.client.gui.component.SwitchableImageButton;
 import dev.dubhe.anvilcraft.init.ModComponents;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.component.FilterSlot;
+import dev.dubhe.anvilcraft.inventory.container.FilterContainer;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -46,15 +47,15 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements
     protected void init() {
         super.init();
 
-        FilterContent content = this.getMenu().getContainer().getContent();
+        FilterContainer container = this.getMenu().getContainer();
 
         this.addRenderableWidget(
             new SwitchableImageButton(
                 this.leftPos + 25,
                 this.topPos + 25,
                 INCLUDE_COMPONENTS,
-                content::includeComponents,
-                flag -> this.getMenu().getContainer().setContent(content.setIncludeComponents(flag)),
+                container::includeComponents,
+                container::setIncludeComponents,
                 this::sync
             )
         );
@@ -63,8 +64,8 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements
                 this.leftPos + 25,
                 this.topPos + 43,
                 BLACK_LIST,
-                content::blackList,
-                flag -> this.getMenu().getContainer().setContent(content.setBlackList(flag)),
+                container::blackList,
+                container::setBlackList,
                 this::sync
             )
         );
@@ -81,10 +82,10 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements
     protected void slotClicked(Slot slot, int slotId, int button, ClickType type) {
         if (
             type == ClickType.PICKUP
-                && slot instanceof FilterSlot filterSlot
-                && (
+            && slot instanceof FilterSlot filterSlot
+            && (
                 button == InputConstants.MOUSE_BUTTON_LEFT
-                    || button == InputConstants.MOUSE_BUTTON_RIGHT
+                || button == InputConstants.MOUSE_BUTTON_RIGHT
             )
         ) {
             ItemStack filterStack = this.menu.getCarried();
