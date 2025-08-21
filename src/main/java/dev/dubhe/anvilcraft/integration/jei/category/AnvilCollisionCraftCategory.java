@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
@@ -11,9 +12,7 @@ import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
-import dev.dubhe.anvilcraft.recipe.elements.InputBlock;
 import dev.dubhe.anvilcraft.recipe.elements.OutputItem;
-import dev.dubhe.anvilcraft.util.BlockStateUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -31,15 +30,14 @@ import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.common.util.RegistryUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -47,8 +45,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
 @MethodsReturnNonnullByDefault
@@ -239,12 +235,31 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                         14,
                         RenderHelper.SINGLE_BLOCK
                     );
+
+                    guiGraphics.drawString(Minecraft.getInstance().font,
+                        Component.translatable(
+                            "gui.anvilcraft.category.anvil_collision.maxcount",
+                            recipe.transformBlocks().get(i).maxCount()
+                        ),
+                        95, 58, 0xFF000000, false);
                 }
             }
         } else {
             // 如果没有转换与被转换的方块 则添加箭头并指向输出物品
             progress.draw(guiGraphics, 82, 21);
         }
+
+        // 添加消耗/速度的信息
+        PoseStack pose = guiGraphics.pose();
+        pose.pushPose();
+        pose.scale(0.8f, 0.8f, 1.0f);
+        guiGraphics.drawString(Minecraft.getInstance().font,
+            Component.translatable("gui.anvilcraft.category.anvil_collision.consume", recipe.consume()),
+            0, 65, 0xFF000000, false);
+        guiGraphics.drawString(Minecraft.getInstance().font,
+            Component.translatable("gui.anvilcraft.category.anvil_collision.speed", recipe.speed()),
+            0, 75, 0xFF000000, false);
+        pose.popPose();
     }
 
     @Override

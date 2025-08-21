@@ -107,5 +107,8 @@ public class JeiLang {
         provider.add("jei.anvilcraft.info.mob_transform_with_item", "Right-clicking mobs with the corresponding item in its Mob-Transform-with-Held-Item recipes can force the mob to hold it.");
 
         provider.add("gui.anvilcraft.category.anvil_collision", "Anvil Collision");
+        provider.add("gui.anvilcraft.category.anvil_collision.maxcount", "Max Count: %s");
+        provider.add("gui.anvilcraft.category.anvil_collision.consume", "Consume Anvil: %d");
+        provider.add("gui.anvilcraft.category.anvil_collision.speed", "Need Speed: %s");
     }
 }
