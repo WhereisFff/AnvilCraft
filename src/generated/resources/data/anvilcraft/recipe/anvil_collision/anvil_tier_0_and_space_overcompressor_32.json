@@ -1,11 +1,11 @@
 {
   "type": "anvilcraft:anvil_collision",
   "anvil": {
-    "blocks": "#minecraft:anvil"
+    "blocks": "#anvilcraft:anvil_tier_0"
   },
   "consume": true,
   "hitBlock": {
-    "blocks": "anvilcraft:corrupted_beacon"
+    "blocks": "anvilcraft:space_overcompressor"
   },
   "output_items": [],
   "speed": 32,
@@ -16,7 +16,7 @@
       },
       "max_count": 8,
       "output": {
-        "block": "anvilcraft:confined_time_anvilon"
+        "block": "anvilcraft:confined_space_anvilon"
       }
     }
   ]

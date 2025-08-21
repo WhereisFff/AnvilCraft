@@ -1,7 +1,7 @@
 {
   "type": "anvilcraft:anvil_collision",
   "anvil": {
-    "blocks": "#minecraft:anvil"
+    "blocks": "#anvilcraft:anvil_tier_0"
   },
   "consume": true,
   "hitBlock": {

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class AnvilCollisionCraftRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.NEGATIVE_MATTER_BLOCK.get())
             .outputItem(ModBlocks.VOID_MATTER_BLOCK.asItem(), 8)
             .save(provider);
@@ -27,7 +27,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .outputItem(ModItems.MULTIPHASE_MATTER.get(), 4)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.CORRUPTED_BEACON.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -36,7 +36,7 @@ public class AnvilCollisionCraftRecipeLoader {
             )
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.CORRUPTED_BEACON.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -46,7 +46,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .speed(128)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.SPACE_OVERCOMPRESSOR.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -55,7 +55,7 @@ public class AnvilCollisionCraftRecipeLoader {
             )
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.SPACE_OVERCOMPRESSOR.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -65,7 +65,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .speed(128)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.GIANT_ANVIL.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -74,7 +74,7 @@ public class AnvilCollisionCraftRecipeLoader {
             )
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.GIANT_ANVIL.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),

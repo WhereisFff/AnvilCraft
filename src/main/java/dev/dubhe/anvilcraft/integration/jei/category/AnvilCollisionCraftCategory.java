@@ -6,8 +6,10 @@ import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
+import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -25,7 +27,9 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -85,6 +89,13 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         RecipeHolder<AnvilCollisionCraftRecipe> recipeHolder,
         IFocusGroup focuses) {
         AnvilCollisionCraftRecipe recipe = recipeHolder.value();
+        builder.addInputSlot().addIngredients(
+            Ingredient.of(
+                recipe.anvil().getBlocks().stream().map(
+                    blockHolder -> new ItemStack(blockHolder.value())
+                )
+            )
+        );
 
         // 将被撞击的方块加入addInvisibleIngredients中
 

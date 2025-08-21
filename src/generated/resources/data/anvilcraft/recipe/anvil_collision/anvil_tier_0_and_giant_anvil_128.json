@@ -1,11 +1,11 @@
 {
   "type": "anvilcraft:anvil_collision",
   "anvil": {
-    "blocks": "#minecraft:anvil"
+    "blocks": "#anvilcraft:anvil_tier_0"
   },
   "consume": true,
   "hitBlock": {
-    "blocks": "anvilcraft:space_overcompressor"
+    "blocks": "anvilcraft:giant_anvil"
   },
   "output_items": [],
   "speed": 128,
@@ -14,7 +14,7 @@
       "input": {
         "blocks": "anvilcraft:confinement_chamber"
       },
-      "max_count": 4,
+      "max_count": 8,
       "output": {
         "block": "anvilcraft:confined_energy_anvilon"
       }
