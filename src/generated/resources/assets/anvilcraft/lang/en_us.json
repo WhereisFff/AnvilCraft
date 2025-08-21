@@ -367,6 +367,7 @@
   "entity.anvilcraft.thrown_frost_metal_heavy_halberd": "Thrown Frost Metal Heavy Halberd",
   "entity.anvilcraft.thrown_transcendence_heavy_halberd": "Thrown Transcendence Heavy Halberd",
   "entity.minecraft.villager.anvilcraft.jeweler": "Jeweler",
+  "gui.anvilcraft.category.anvil_collision_craft_speed": "Speed: %d m/tick",
   "gui.anvilcraft.category.average_output": "Average: %s",
   "gui.anvilcraft.category.beacon_conversion": "Beacon Conversion",
   "gui.anvilcraft.category.beacon_conversion.activate": "Use this item to activate beacon",

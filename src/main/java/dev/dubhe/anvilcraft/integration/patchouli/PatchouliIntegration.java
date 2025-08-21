@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.integration.patchouli;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.integration.Integration;
+import dev.dubhe.anvilcraft.integration.patchouli.page.PageAnvilCollisionCraft;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageBlockCompress;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageBulging;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageBoiling;
@@ -39,5 +40,6 @@ public class PatchouliIntegration {
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("cooking"), PageCooking.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("unpack"), PageUnpack.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("mesh"), PageMesh.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("anvil_collision"), PageAnvilCollisionCraft.class);
     }
 }
