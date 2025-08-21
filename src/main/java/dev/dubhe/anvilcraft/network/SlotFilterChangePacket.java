@@ -53,12 +53,11 @@ public class SlotFilterChangePacket implements CustomPacketPayload {
     }
 
     @Override
-    @NotNull
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public static void serverHandler(SlotFilterChangePacket data, IPayloadContext context) {
+    public static void serverHandler(SlotFilterChangePacket data, @NotNull IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {
             if (!player.hasContainerOpen()) return;
@@ -69,7 +68,7 @@ public class SlotFilterChangePacket implements CustomPacketPayload {
         });
     }
 
-    public static void clientHandler(SlotFilterChangePacket data, IPayloadContext context) {
+    public static void clientHandler(SlotFilterChangePacket data, @NotNull IPayloadContext context) {
         Minecraft client = Minecraft.getInstance();
         context.enqueueWork(() -> {
             if (!(client.screen instanceof IFilterScreen<?> screen)) return;
