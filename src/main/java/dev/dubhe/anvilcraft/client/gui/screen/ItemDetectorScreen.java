@@ -14,6 +14,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -156,15 +157,9 @@ public class ItemDetectorScreen extends AbstractContainerScreen<ItemDetectorMenu
 
     @Override
     protected void slotClicked(Slot slot, int slotId, int button, ClickType type) {
-        if (
-            type == ClickType.PICKUP
-            && slot instanceof FilterOnlySlot filterSlot
-            && (
-                button == InputConstants.MOUSE_BUTTON_LEFT
-                || button == InputConstants.MOUSE_BUTTON_RIGHT
-            )
-        ) {
+        if (slot instanceof FilterOnlySlot filterSlot) {
             ItemStack filterStack = this.menu.getCarried();
+            if (filterStack.isEmpty() && !Screen.hasShiftDown()) return;
             int id = slot.getContainerSlot();
             if (!filterStack.isEmpty() && button == InputConstants.MOUSE_BUTTON_RIGHT) {
                 filterStack = filterStack.copyWithCount(1);
@@ -179,7 +174,7 @@ public class ItemDetectorScreen extends AbstractContainerScreen<ItemDetectorMenu
     }
 
     private int getScrollSpeed() {
-        return hasShiftDown() ? 5 : 1;
+        return Screen.hasShiftDown() ? 5 : 1;
     }
 
     @Override

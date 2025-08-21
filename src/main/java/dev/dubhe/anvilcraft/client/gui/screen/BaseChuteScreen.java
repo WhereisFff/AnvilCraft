@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -98,7 +99,7 @@ public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends 
         if (slot instanceof SlotItemHandlerWithFilter && slot.getItem().isEmpty()) {
             ItemStack carriedItem = this.menu.getCarried().copy();
             int realSlotId = slot.getContainerSlot();
-            if (this.menu.isFilterEnabled()) {
+            if (!carriedItem.isEmpty() && this.menu.isFilterEnabled()) {
                 ItemStack filter = this.menu.getFilter(realSlotId);
                 if (this.menu.isSlotDisabled(realSlotId)) {
                     PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
@@ -108,7 +109,7 @@ public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends 
                 this.menu.setFilter(realSlotId, carriedItem);
                 if (carriedItem.is(ModItems.FILTER) && (filter.isEmpty() || !FilterItem.filter(filter, carriedItem))) return;
                 slot.set(carriedItem);
-            } else {
+            } else if (Screen.hasShiftDown()) {
                 PacketDistributor.sendToServer(new SlotDisableChangePacket(
                     realSlotId,
                     carriedItem.isEmpty() && !this.menu.isSlotDisabled(realSlotId)
