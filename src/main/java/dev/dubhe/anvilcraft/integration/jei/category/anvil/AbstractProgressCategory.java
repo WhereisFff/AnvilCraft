@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.AbstractProcessRecipe;
@@ -18,6 +19,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,7 +35,8 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
     public static final int HEIGHT = 64;
 
     protected final IDrawable icon;
-    protected final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotProbability;
     protected final Component title;
     protected final ITickTimer timer;
 
@@ -40,7 +45,8 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
 
     public AbstractProgressCategory(IGuiHelper helper, IDrawable icon, Component title) {
         this.icon = icon;
-        this.slot = helper.getSlotDrawable();
+        this.slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        this.slotProbability = JeiRenderHelper.getSlotProbability(helper);
         this.title = title;
         this.timer = helper.createTickTimer(30, 60, true);
 
@@ -83,6 +89,18 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
             results.add(ChanceItemStack.of(new ItemStack(entry.getKey(), entry.getIntValue()), 1))
         );
         return results;
+    }
+
+    protected boolean isChance(List<ChanceItemStack> list) {
+        for (ChanceItemStack chanceItemStack : list) {
+            NumberProvider provider = chanceItemStack.getCount();
+            if (provider instanceof BinomialDistributionGenerator) {
+                return true;
+            } else if (provider.getClass() != ConstantValue.class) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

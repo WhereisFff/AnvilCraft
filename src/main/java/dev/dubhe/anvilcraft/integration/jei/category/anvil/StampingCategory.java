@@ -69,10 +69,14 @@ public class StampingCategory extends AbstractProgressCategory<StampingRecipe> {
 //                .getItems()[(int) System.currentTimeMillis() / 1000 % recipe.getItemIngredients().size()];
 //            JeiSlotUtil.drawInputSlots(guiGraphics, slot, input.getCount());
 //        } else {
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
 //        }
 
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
+        if (isChance(this.getResults(recipe))) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());
+        }
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
