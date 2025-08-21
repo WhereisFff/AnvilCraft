@@ -5,7 +5,9 @@ import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
 import dev.dubhe.anvilcraft.client.gui.component.ItemCollectorButton;
 import dev.dubhe.anvilcraft.client.gui.component.TextWidget;
+import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
+import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import lombok.Getter;
@@ -19,16 +21,12 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
-public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorMenu>
-    implements IFilterScreen<ItemCollectorMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/item_collector.png");
-    BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier =
-        this.getEnableFilterButtonSupplier(75, 54);
+public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorMenu> implements IFilterScreen<ItemCollectorMenu> {
+    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/machine/background/item_collector.png");
+    BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier = this.getEnableFilterButtonSupplier(75, 54);
 
     @Getter
     private EnableFilterButton enableFilterButton = null;
@@ -47,74 +45,84 @@ public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorMe
     @Override
     protected void init() {
         super.init();
-        this.enableFilterButton = enableFilterButtonSupplier.apply(this.leftPos, this.topPos);
+        this.enableFilterButton = this.enableFilterButtonSupplier.apply(this.leftPos, this.topPos);
         this.addRenderableWidget(this.enableFilterButton);
+        if (this.minecraft == null) return;
         // range
         this.addRenderableWidget(new TextWidget(
-            leftPos + 57,
-            topPos + 24,
+            this.leftPos + 57,
+            this.topPos + 24,
             20,
             8,
-            minecraft.font,
-            () -> Component.literal(
-                menu.getBlockEntity().getRangeRadius().get().toString())));
+            this.minecraft.font,
+            () -> Component.literal(this.menu.getBlockEntity().getRangeRadius().get().toString())
+        ));
         // cooldown
         this.addRenderableWidget(new TextWidget(
-            leftPos + 57,
-            topPos + 38,
+            this.leftPos + 57,
+            this.topPos + 38,
             20,
             8,
-            minecraft.font,
-            () -> Component.literal(
-                menu.getBlockEntity().getCooldown().get().toString())));
+            this.minecraft.font,
+            () -> Component.literal(this.menu.getBlockEntity().getCooldown().get().toString())
+        ));
         // power cost
         this.addRenderableWidget(new TextWidget(
-            leftPos + 43,
-            topPos + 51,
+            this.leftPos + 43,
+            this.topPos + 51,
             20,
             8,
-            minecraft.font,
-            () -> Component.literal(Integer.toString(menu.getBlockEntity().getInputPower()))));
+            this.minecraft.font,
+            () -> Component.literal(Integer.toString(this.menu.getBlockEntity().getInputPower()))
+        ));
         // range - +
-        this.addRenderableWidget(new ItemCollectorButton(leftPos + 43, topPos + 23, "minus", (b) -> {
-            menu.getBlockEntity().getRangeRadius().previous();
-            menu.getBlockEntity().getRangeRadius().notifyServer();
-        }));
-        this.addRenderableWidget(new ItemCollectorButton(leftPos + 81, topPos + 23, "add", (b) -> {
-            menu.getBlockEntity().getRangeRadius().next();
-            menu.getBlockEntity().getRangeRadius().notifyServer();
-        }));
+        this.addRenderableWidget(new ItemCollectorButton(
+            this.leftPos + 43, this.topPos + 23, "minus", (b) -> {
+            this.menu.getBlockEntity().getRangeRadius().previous();
+            this.menu.getBlockEntity().getRangeRadius().notifyServer();
+        }
+        ));
+        this.addRenderableWidget(new ItemCollectorButton(
+            this.leftPos + 81, this.topPos + 23, "add", (b) -> {
+            this.menu.getBlockEntity().getRangeRadius().next();
+            this.menu.getBlockEntity().getRangeRadius().notifyServer();
+        }
+        ));
         // cooldown - +
-        this.addRenderableWidget(new ItemCollectorButton(leftPos + 43, topPos + 37, "minus", (b) -> {
-            menu.getBlockEntity().getCooldown().previous();
-            menu.getBlockEntity().getCooldown().notifyServer();
-        }));
-        this.addRenderableWidget(new ItemCollectorButton(leftPos + 81, topPos + 37, "add", (b) -> {
-            menu.getBlockEntity().getCooldown().next();
-            menu.getBlockEntity().getCooldown().notifyServer();
-        }));
+        this.addRenderableWidget(new ItemCollectorButton(
+            this.leftPos + 43, this.topPos + 37, "minus", (b) -> {
+            this.menu.getBlockEntity().getCooldown().previous();
+            this.menu.getBlockEntity().getCooldown().notifyServer();
+        }
+        ));
+        this.addRenderableWidget(new ItemCollectorButton(
+            leftPos + 81, topPos + 37, "add", (b) -> {
+            this.menu.getBlockEntity().getCooldown().next();
+            this.menu.getBlockEntity().getCooldown().notifyServer();
+        }
+        ));
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
+    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
         super.renderSlot(guiGraphics, slot);
         IFilterScreen.super.renderSlot(guiGraphics, slot);
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         super.renderTooltip(guiGraphics, x, y);
         this.renderSlotTooltip(guiGraphics, x, y);
     }
 
-    protected void renderSlotTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void renderSlotTooltip(GuiGraphics guiGraphics, int x, int y) {
         if (this.hoveredSlot == null) return;
         if (!(this.hoveredSlot instanceof SlotItemHandlerWithFilter)) return;
         if (!((SlotItemHandlerWithFilter) this.hoveredSlot).isFilter()) return;
@@ -124,7 +132,7 @@ public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorMe
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
     }
@@ -139,25 +147,27 @@ public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorMe
         this.enableFilterButton.flush();
     }
 
-    protected void slotClicked(@NotNull Slot slot, int slotId, int mouseButton, @NotNull ClickType type) {
-            if (slot instanceof SlotItemHandlerWithFilter && slot.getItem().isEmpty()) {
-                ItemStack carriedItem = this.menu.getCarried();
-                int realSlotId = slot.getContainerSlot();
-                if (this.menu.isFilterEnabled()) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+        if (slot instanceof SlotItemHandlerWithFilter && slot.getItem().isEmpty()) {
+            ItemStack carriedItem = this.menu.getCarried().copy();
+            int realSlotId = slot.getContainerSlot();
+            if (this.menu.isFilterEnabled()) {
+                ItemStack filter = this.menu.getFilter(realSlotId);
+                if (this.menu.isSlotDisabled(realSlotId)) {
                     PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
-                    PacketDistributor.sendToServer(new SlotFilterChangePacket(realSlotId, carriedItem.copy()));
-                    menu.setSlotDisabled(realSlotId, false);
-                    menu.setFilter(realSlotId, carriedItem.copy());
-                    slot.set(carriedItem);
-                } else {
-                    if (carriedItem.isEmpty()) {
-                        PacketDistributor.sendToServer(
-                            new SlotDisableChangePacket(realSlotId, !this.menu.isSlotDisabled(realSlotId)));
-                    } else {
-                        PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
-                    }
+                    this.menu.setSlotDisabled(realSlotId, false);
                 }
+                PacketDistributor.sendToServer(new SlotFilterChangePacket(realSlotId, carriedItem));
+                this.menu.setFilter(realSlotId, carriedItem);
+                if (carriedItem.is(ModItems.FILTER) && (filter.isEmpty() || !FilterItem.filter(filter, carriedItem))) return;
+                slot.set(carriedItem);
+            } else {
+                PacketDistributor.sendToServer(new SlotDisableChangePacket(
+                    realSlotId,
+                    carriedItem.isEmpty() && !this.menu.isSlotDisabled(realSlotId)
+                ));
             }
+        }
         super.slotClicked(slot, slotId, mouseButton, type);
     }
 

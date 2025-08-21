@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableImageButton;
 import dev.dubhe.anvilcraft.init.ModComponents;
@@ -49,26 +48,22 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements
 
         FilterContainer container = this.getMenu().getContainer();
 
-        this.addRenderableWidget(
-            new SwitchableImageButton(
-                this.leftPos + 25,
-                this.topPos + 25,
-                INCLUDE_COMPONENTS,
-                container::includeComponents,
-                container::setIncludeComponents,
-                this::sync
-            )
-        );
-        this.addRenderableWidget(
-            new SwitchableImageButton(
-                this.leftPos + 25,
-                this.topPos + 43,
-                BLACK_LIST,
-                container::blackList,
-                container::setBlackList,
-                this::sync
-            )
-        );
+        this.addRenderableWidget(new SwitchableImageButton(
+            this.leftPos + 26,
+            this.topPos + 26,
+            INCLUDE_COMPONENTS,
+            container::includeComponents,
+            container::setIncludeComponents,
+            this::sync
+        ));
+        this.addRenderableWidget(new SwitchableImageButton(
+            this.leftPos + 26,
+            this.topPos + 44,
+            BLACK_LIST,
+            container::blackList,
+            container::setBlackList,
+            this::sync
+        ));
     }
 
     @Override
@@ -80,14 +75,7 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements
 
     @Override
     protected void slotClicked(Slot slot, int slotId, int button, ClickType type) {
-        if (
-            type == ClickType.PICKUP
-            && slot instanceof FilterSlot filterSlot
-            && (
-                button == InputConstants.MOUSE_BUTTON_LEFT
-                || button == InputConstants.MOUSE_BUTTON_RIGHT
-            )
-        ) {
+        if (slot instanceof FilterSlot filterSlot) {
             ItemStack filterStack = this.menu.getCarried();
             if (!filterStack.isEmpty()) {
                 if (filterStack.has(ModComponents.FILTER_CONTENT)) {

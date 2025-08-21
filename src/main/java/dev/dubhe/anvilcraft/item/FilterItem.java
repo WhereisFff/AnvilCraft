@@ -25,8 +25,8 @@ public class FilterItem extends Item {
         super(properties);
     }
 
-    public static boolean filter(ItemStack filterStack, ItemStack stack) {
-        return FilterContent.filter(filterStack, stack, false, false);
+    public static boolean filter(ItemStack filter, ItemStack stack) {
+        return filter.isEmpty() || ItemStack.isSameItem(filter, stack) || FilterContent.filter(filter, stack, false, false);
     }
 
     @Override
