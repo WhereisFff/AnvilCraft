@@ -187,7 +187,7 @@ public class ChargerBlockEntity extends BlockEntity
 
     @Override
     public int getInputPower() {
-        return isCharger ? -powerValue : 0;
+        return isCharger && !this.getBlockState().getValue(ChargerBlock.POWERED) ? -powerValue : 0;
     }
 
     @Override
@@ -197,7 +197,7 @@ public class ChargerBlockEntity extends BlockEntity
 
     @Override
     public int getOutputPower() {
-        return !isCharger ? powerValue : 0;
+        return !isCharger && !this.getBlockState().getValue(ChargerBlock.POWERED) ? powerValue : 0;
     }
 
     public double getProgress() {
