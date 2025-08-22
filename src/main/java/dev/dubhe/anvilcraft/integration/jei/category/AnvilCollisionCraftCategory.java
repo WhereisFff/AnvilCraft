@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
+import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
@@ -14,6 +15,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
 import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
+import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -37,9 +39,13 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
+import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.ArrayList;
 import java.util.List;
 
 @MethodsReturnNonnullByDefault
@@ -51,7 +57,8 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
     private final IDrawable arrowDefault;
     protected final IDrawable blockConversion;
     protected final IDrawable explosion;
-    protected final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotProbability;
     private final IDrawable icon;
     private final ITickTimer timer;
     private final Component title;
@@ -60,7 +67,8 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         this.arrowDefault = JeiRenderHelper.getArrowDefault(helper);
         this.blockConversion = JeiRenderHelper.getArrowBlockConversion(helper);
         this.explosion = JeiRenderHelper.getExplosion(helper);
-        this.slot = JeiRenderHelper.getSlotDefault(helper);
+        this.slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        this.slotProbability = JeiRenderHelper.getSlotProbability(helper);
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
         this.timer = helper.createTickTimer(30, 100, true);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
@@ -106,8 +114,20 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
             )
         );
 
-        // 输出物品则添加到输出
-        JeiSlotUtil.addOutputSlots(builder, recipe.outputItems());
+        // 如果有输出物品则添加到输出
+        if (!recipe.outputItems().isEmpty()) {
+            List<ChanceItemStack> chanceItemStacks = new ArrayList<>();
+            for (ChanceItemStack outputItem : recipe.outputItems()) {
+                if (outputItem.getCount() instanceof BinomialDistributionGenerator(NumberProvider n, NumberProvider p)) {
+                    if (p instanceof ConstantValue(float value) && value < 1 && n instanceof ConstantValue(float count)) {
+                        chanceItemStacks.add(ChanceItemStack.of(outputItem.getStack(), (int) count, value));
+                    } else {
+                        chanceItemStacks.add(ChanceItemStack.of(outputItem.getStack(), outputItem.getMaxCount()));
+                    }
+                }
+            }
+            JeiSlotUtil.addOutputSlots(builder, chanceItemStacks);
+        }
 
         // 将被撞击的方块加入addInvisibleIngredients中
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addIngredients(
@@ -273,8 +293,14 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         }
 
         // 绘制输入输出槽
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, 1);
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.outputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
+        if (!recipe.outputItems().isEmpty()) {
+            if (JeiRecipeUtil.isChance(recipe.outputItems())) {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.outputItems().size());
+            } else {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, recipe.outputItems().size());
+            }
+        }
 
         // 添加消耗/速度的信息
         PoseStack pose = guiGraphics.pose();
@@ -292,11 +318,32 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
     @Override
     public void getTooltip(
         ITooltipBuilder tooltip,
-        RecipeHolder<AnvilCollisionCraftRecipe> recipe,
+        RecipeHolder<AnvilCollisionCraftRecipe> recipeHolder,
         IRecipeSlotsView recipeSlotsView,
         double mouseX,
         double mouseY) {
+        IRecipeCategory.super.getTooltip(tooltip, recipeHolder, recipeSlotsView, mouseX, mouseY);
+        AnvilCollisionCraftRecipe recipe = recipeHolder.value();
 
+        if (mouseX >= 70 && mouseX <= 88) {
+            if (mouseY >= 24 && mouseY < 42) {
+                tooltip.addAll(BlockTagUtil.getTooltipsForInput(recipe.hitBlock()));
+            }
+        }
+
+        if (!recipe.transformBlocks().isEmpty()) {
+            List<BlockTransform> blockTransforms = recipe.transformBlocks();
+            for (BlockTransform blockTransform : blockTransforms) {
+                if (mouseX >= 110 && mouseX <= 128) {
+                    if (mouseY >= 0 && mouseY < 18) {
+                        tooltip.addAll(BlockTagUtil.getTooltipsForInput(blockTransform.inputBlock()));
+                    }
+                    if (mouseY >= 43 && mouseY < 61) {
+                        tooltip.add(blockTransform.outputBlock().getState().getBlock().getName());
+                    }
+                }
+            }
+        }
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
@@ -313,5 +360,9 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROYAL_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.EMBER_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.TRANSCENDENCE_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
+    }
+
+    private boolean isChance() {
+        return false;
     }
 }

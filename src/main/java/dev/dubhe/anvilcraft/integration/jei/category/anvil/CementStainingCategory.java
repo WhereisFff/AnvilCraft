@@ -37,7 +37,7 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer anvilTimer;
     private final ITickTimer colorTimer;
@@ -49,7 +49,7 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
         icon = new DrawableBlockStateIcon(
             Blocks.ANVIL.defaultBlockState(),
             ModBlocks.CEMENT_CAULDRONS.get(Color.PINK).getDefaultState());
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.cement_staining");
         anvilTimer = helper.createTickTimer(30, 60, true);
         colorTimer = helper.createTickTimer(20 * Color.values().length, Color.values().length - 1, false);
@@ -116,7 +116,7 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.ingredients().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.ingredients().size());
 
         RenderHelper.renderBlock(guiGraphics, recipe.resultBlock().defaultBlockState(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
     }

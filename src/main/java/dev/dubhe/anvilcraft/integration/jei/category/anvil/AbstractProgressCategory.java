@@ -19,9 +19,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -89,18 +86,6 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
             results.add(ChanceItemStack.of(new ItemStack(entry.getKey(), entry.getIntValue()), 1))
         );
         return results;
-    }
-
-    protected boolean isChance(List<ChanceItemStack> list) {
-        for (ChanceItemStack chanceItemStack : list) {
-            NumberProvider provider = chanceItemStack.getCount();
-            if (provider instanceof BinomialDistributionGenerator) {
-                return true;
-            } else if (provider.getClass() != ConstantValue.class) {
-                return true;
-            }
-        }
-        return false;
     }
 
     @Override

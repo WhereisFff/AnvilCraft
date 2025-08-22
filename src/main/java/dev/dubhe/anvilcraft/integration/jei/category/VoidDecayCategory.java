@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.recipe.VoidDecayRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -66,7 +67,7 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
     private static final BlockPos CENTER_POS = new BlockPos(1, 1, 1);
 
     public VoidDecayCategory(IGuiHelper helper) {
-        slot = helper.getSlotDrawable();
+        slot = JeiRenderHelper.getSlotChoice(helper);
         title = Component.translatable("gui.anvilcraft.category.void_decay");
         randomTickTooltip = Component.translatable("gui.anvilcraft.category.void_decay.random_tick");
         centerTooltip = Component.translatable("gui.anvilcraft.category.void_decay.center")

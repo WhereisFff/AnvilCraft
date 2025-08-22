@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -35,7 +36,7 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
 
     private final IDrawable progress;
     private final IDrawable icon;
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
     private final Component title;
 
     public JewelCraftingCategory(IGuiHelper helper) {
@@ -43,7 +44,7 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
             .setTextureSize(24, 16)
             .build();
         icon = helper.createDrawableItemStack(new ItemStack(ModBlocks.JEWEL_CRAFTING_TABLE));
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.jewel_crafting");
     }
 
@@ -89,12 +90,12 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
     @Override
     public void draw(RecipeHolder<JewelCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         // source
-        slot.draw(guiGraphics, 58, 10);
+        slotDefault.draw(guiGraphics, 58, 10);
         // result
-        slot.draw(guiGraphics, 134, 23);
+        slotDefault.draw(guiGraphics, 134, 23);
         // input
         for (int i = 0; i < 4; i++) {
-            slot.draw(guiGraphics, 4 + i * 18, 36);
+            slotDefault.draw(guiGraphics, 4 + i * 18, 36);
         }
         progress.draw(guiGraphics, 95, 24);
     }

@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.integration.jei.util;
 
 import com.google.common.collect.ImmutableList;
+import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import net.minecraft.ChatFormatting;
@@ -67,6 +68,18 @@ public class JeiRecipeUtil {
         }
 
         slot.addRichTooltipCallback((slotView, tooltip) -> tooltip.addAll(tooltipLines.build()));
+    }
+
+    public static boolean isChance(List<ChanceItemStack> chanceItemStacks) {
+        for (ChanceItemStack chanceItemStack : chanceItemStacks) {
+            NumberProvider provider = chanceItemStack.getCount();
+            if (provider instanceof BinomialDistributionGenerator) {
+                return true;
+            } else if (provider.getClass() != ConstantValue.class) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static double getMin(NumberProvider provider) {

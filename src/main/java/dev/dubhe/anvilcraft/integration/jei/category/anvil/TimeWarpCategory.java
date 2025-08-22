@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
@@ -46,7 +45,8 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotProbability;
     private final Component title;
     private final ITickTimer timer;
 
@@ -54,7 +54,8 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     private final IDrawable arrowOut;
 
     public TimeWarpCategory(IGuiHelper helper) {
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable("gui.anvilcraft.category.time_warp");
         timer = helper.createTickTimer(30, 60, true);
 
@@ -149,9 +150,13 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (!recipe.getResultItems().isEmpty()) {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResultItems().size());
+            if (JeiRecipeUtil.isChance(recipe.getResultItems())) {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.getResultItems().size());
+            } else {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
+            }
             if (recipe.isConsumeFluid()) {
                 PoseStack pose = guiGraphics.pose();
                 pose.pushPose();

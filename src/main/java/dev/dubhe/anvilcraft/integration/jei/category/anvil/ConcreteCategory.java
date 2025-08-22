@@ -38,7 +38,7 @@ public class ConcreteCategory implements IRecipeCategory<ColoredConcreteRecipe> 
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer timer;
 
@@ -49,7 +49,7 @@ public class ConcreteCategory implements IRecipeCategory<ColoredConcreteRecipe> 
         icon = new DrawableBlockStateIcon(
             Blocks.ANVIL.defaultBlockState(),
             ModBlocks.CEMENT_CAULDRONS.get(Color.PINK).getDefaultState());
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.concrete");
         timer = helper.createTickTimer(30, 60, true);
 
@@ -116,8 +116,8 @@ public class ConcreteCategory implements IRecipeCategory<ColoredConcreteRecipe> 
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.ingredients().size());
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, 1);
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.ingredients().size());
+        JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, 1);
     }
 
     @Override

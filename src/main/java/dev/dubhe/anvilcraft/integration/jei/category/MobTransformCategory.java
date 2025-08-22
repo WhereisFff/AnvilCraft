@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
@@ -43,7 +43,9 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotChoice;
+    protected final IDrawable slotProbability;
     private final Component title;
 
     private final IDrawable arrowIn;
@@ -52,7 +54,9 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
 
     public MobTransformCategory(IGuiHelper helper) {
         icon = helper.createDrawableItemStack(ModBlocks.CORRUPTED_BEACON.asStack());
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotChoice = JeiRenderHelper.getSlotChoice(helper);
+        slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable(KEY_CATEGORY);
 
         arrowIn = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
@@ -154,12 +158,23 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
 
         arrowIn.draw(guiGraphics, 69, 15);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, 1);
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResults().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
+        if (isChance(recipe.getResults())) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotChoice, recipe.getResults().size());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.getResults().size());
+        }
 
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.scale(0.8f, 0.8f, 1.0f);
         pose.popPose();
+    }
+
+    private boolean isChance(List<TransformResult> results) {
+        for (TransformResult result : results) {
+            return result.probability() != 1.0;
+        }
+        return false;
     }
 }

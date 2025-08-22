@@ -51,7 +51,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
     private static final String KEY_ITEMS_NEEDED = "gui.anvilcraft.category.mass_inject.items_needed";
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer timer;
 
@@ -61,7 +61,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
     public MassInjectCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(Blocks.ANVIL.defaultBlockState(),
             ModBlocks.SPACE_OVERCOMPRESSOR.getDefaultState());
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.mass_inject");
         timer = helper.createTickTimer(30, 60, true);
 
@@ -102,9 +102,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
             .addIngredients(recipe.getIngredient());
         builder.addSlot(RecipeIngredientRole.OUTPUT, 125, 24)
             .addItemStack(ModItems.NEUTRONIUM_INGOT.asStack())
-            .addRichTooltipCallback((recipeSlotView, tooltip) -> {
-                tooltip.add(Component.translatable(KEY_MASS_NEEDED, DISPLAYED_MASS).withStyle(ChatFormatting.GOLD));
-            });
+            .addRichTooltipCallback((recipeSlotView, tooltip) -> tooltip.add(Component.translatable(KEY_MASS_NEEDED, DISPLAYED_MASS).withStyle(ChatFormatting.GOLD)));
     }
 
     @Override
@@ -130,8 +128,8 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, 1);
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, 1);
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
+        JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, 1);
 
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();

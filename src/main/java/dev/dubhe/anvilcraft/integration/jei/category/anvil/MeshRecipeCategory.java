@@ -39,7 +39,8 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
     public static final int WIDTH = 162;
     public static final int ROW_START = 44;
 
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotProbability;
     private final IDrawable icon;
     private final Component title;
     private final ITickTimer timer;
@@ -47,7 +48,8 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
     private final IDrawable arrowIn;
 
     public MeshRecipeCategory(IGuiHelper helper) {
-        this.slot = helper.getSlotDrawable();
+        this.slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        this.slotProbability = JeiRenderHelper.getSlotProbability(helper);
         this.icon =
             new DrawableBlockStateIcon(Blocks.ANVIL.defaultBlockState(), Blocks.SCAFFOLDING.defaultBlockState());
         this.title = Component.translatable("gui.anvilcraft.category.mesh");
@@ -113,11 +115,11 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
             guiGraphics, Blocks.SCAFFOLDING.defaultBlockState(), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 22);
-        slot.draw(guiGraphics, 36, 13);
+        slotDefault.draw(guiGraphics, 36, 13);
 
         for (int row = 0; row < MeshRecipeGroup.maxRows; row++) {
             for (int column = 0; column < 9; column++) {
-                slot.draw(guiGraphics, column * 18, ROW_START + row * 18);
+                slotProbability.draw(guiGraphics, column * 18, ROW_START + row * 18);
             }
         }
     }

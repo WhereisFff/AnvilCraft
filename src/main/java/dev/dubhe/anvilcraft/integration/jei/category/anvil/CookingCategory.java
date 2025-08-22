@@ -74,7 +74,7 @@ public class CookingCategory extends AbstractProgressCategory<CookingRecipe> {
         arrowOut.draw(guiGraphics, 92, 31);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
-        if (isChance(this.getResults(recipe))) {
+        if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
             JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
         } else {
             JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());

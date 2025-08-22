@@ -41,7 +41,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer timer;
 
@@ -50,7 +50,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
 
     public ItemInjectCategory(IGuiHelper helper) {
         icon = helper.createDrawableItemStack(new ItemStack(Items.ANVIL));
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.item_inject");
         timer = helper.createTickTimer(30, 60, true);
 
@@ -122,7 +122,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         RenderHelper.renderBlock(
             guiGraphics, recipe.getFirstResultBlock().getState(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
     }

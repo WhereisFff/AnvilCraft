@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.recipe.BeaconConversionRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -42,7 +43,8 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     public static final int WIDTH = 162;
     public static final int HEIGHT = 128;
 
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotChoice;
     private final IDrawable progressArrow;
     private final Component title;
     private final Component activateTooltip;
@@ -52,7 +54,8 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     private final Map<BeaconConversionRecipe, LevelLike> cache = new HashMap<>();
 
     public BeaconConversionCategory(IGuiHelper helper) {
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotChoice = JeiRenderHelper.getSlotChoice(helper);
         title = Component.translatable("gui.anvilcraft.category.beacon_conversion");
         activateTooltip = Component.translatable("gui.anvilcraft.category.beacon_conversion.activate")
             .withStyle(ChatFormatting.GOLD);
@@ -147,11 +150,11 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
 
         RenderHelper.renderLevelLike(level, guiGraphics, 84, 54, 90);
 
-        slot.draw(guiGraphics, 47, 7);
-        slot.draw(guiGraphics, 9, 109);
-        slot.draw(guiGraphics, 9, 91);
-        if (recipe.chance < 1.0f) slot.draw(guiGraphics, 111, 95);
-        slot.draw(guiGraphics, 129, 95);
+        slotDefault.draw(guiGraphics, 47, 7);
+        slotDefault.draw(guiGraphics, 9, 109);
+        slotDefault.draw(guiGraphics, 9, 91);
+        if (recipe.chance < 1.0f) slotChoice.draw(guiGraphics, 111, 95);
+        slotChoice.draw(guiGraphics, 129, 95);
 
         arrowIn.draw(guiGraphics, 66, 14);
         progressArrow.draw(guiGraphics, 60, 96);

@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.integration.jei.category;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.recipe.EndPortalConversionRecipe;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -30,7 +31,8 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotChoice;
     private final IDrawable preRenderedEndPortal;
     private final Component title;
     private final Component fallThroughTooltip;
@@ -39,7 +41,8 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
     private final IDrawable arrowOut;
 
     public EndPortalConversionCategory(IGuiHelper helper) {
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotChoice = JeiRenderHelper.getSlotChoice(helper);
         preRenderedEndPortal = helper.drawableBuilder(TextureConstants.PRE_RENDERED_END_PORTAL,
             0, 0, 400, 300).setTextureSize(400, 300).build();
         title = Component.translatable("gui.anvilcraft.category.end_portal_conversion");
@@ -96,8 +99,8 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.ingredients.size());
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.results.size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.ingredients.size());
+        JeiSlotUtil.drawOutputSlots(guiGraphics, slotChoice, recipe.results.size());
     }
 
     @Override

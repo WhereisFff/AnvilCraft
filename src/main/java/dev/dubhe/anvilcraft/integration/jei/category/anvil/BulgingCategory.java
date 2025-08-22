@@ -46,7 +46,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotProbability;
     private final Component title;
     private final ITickTimer timer;
 
@@ -58,7 +59,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
             Blocks.ANVIL.defaultBlockState(),
             CauldronUtil.fullState(Blocks.WATER_CAULDRON)
         );
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable("gui.anvilcraft.category.bulging");
         timer = helper.createTickTimer(30, 60, true);
 
@@ -130,9 +132,13 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         arrowIn.draw(guiGraphics, 54, 32);
         arrowOut.draw(guiGraphics, 92, 31);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (!recipe.getResultItems().isEmpty()) {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResultItems().size());
+            if (JeiRecipeUtil.isChance(recipe.getResultItems())) {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.getResultItems().size());
+            } else {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, recipe.getResultItems().size());
+            }
             HasCauldronSimple hasCauldron = recipe.getHasCauldron();
             if (recipe.isConsumeFluid()) {
                 PoseStack pose = guiGraphics.pose();
