@@ -34,16 +34,46 @@ public class MagnetItem extends Item implements IChargerChargeable {
 
     @Override
     public @NotNull InteractionResultHolder<ItemStack> use(
-            @NotNull Level level,
-            @NotNull Player player,
-            @NotNull InteractionHand usedHand
+        @NotNull Level level,
+        @NotNull Player player,
+        @NotNull InteractionHand usedHand
     ) {
-        return magnetizeItems(this, level, player, usedHand);
+        if (player.isShiftKeyDown()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
+        ItemStack item = player.getItemInHand(usedHand);
+        double radius = AnvilCraft.CONFIG.magnetItemAttractsRadius;
+        UseMagnetEvent event = new UseMagnetEvent(level, player, radius);
+        ModLoader.postEvent(event);
+        if (event.isCanceled()) return InteractionResultHolder.pass(item);
+        radius = event.getAttractRadius();
+        AABB aabb = new AABB(
+            player.position().add(-radius, -radius, -radius),
+            player.position().add(radius, radius, radius));
+        level.getEntities(EntityTypeTest.forClass(ItemEntity.class), aabb, Entity::isAlive)
+            .forEach(e -> e.moveTo(player.position()));
+        item.hurtAndBreak(1, player, LivingEntity.getSlotForHand(usedHand));
+        player.getCooldowns().addCooldown(this, 5);
+        return InteractionResultHolder.sidedSuccess(item, level.isClientSide());
     }
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        return placeMagnetizedNode(this, context);
+        Player player = context.getPlayer();
+        Level level = context.getLevel();
+        if (player == null) return InteractionResult.PASS;
+        if (!player.isShiftKeyDown()) return InteractionResult.PASS;
+        BlockPos pos = context.getClickedPos();
+        BlockState blockState = level.getBlockState(pos);
+        if (blockState.isAir()) return InteractionResult.PASS;
+        double maxY = blockState.getCollisionShape(level, pos).max(Direction.Axis.Y, 0.5, 0.5);
+        if (!blockState.getBlock().properties().hasCollision && maxY == 0) return InteractionResult.PASS;
+        for (MagnetizedNodeEntity entity : level.getEntities(ModEntities.MAGNETIZED_NODE.get(), new AABB(pos).setMaxY(pos.getY() + 1.1), EntitySelector.NO_SPECTATORS)) {
+            if (entity.blockPos.equals(pos)) return InteractionResult.PASS;
+        }
+        Vec3 nodePos = pos.getBottomCenter().add(0, maxY, 0);
+        MagnetizedNodeEntity magnetizedNodeEntity = new MagnetizedNodeEntity(level, nodePos, pos);
+        level.addFreshEntity(magnetizedNodeEntity);
+        player.getCooldowns().addCooldown(this, 5);
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override
@@ -59,52 +89,5 @@ public class MagnetItem extends Item implements IChargerChargeable {
     @Override
     public ItemStack charge(ItemStack input) {
         return ModItems.MAGNET.asStack(1);
-    }
-
-    public static InteractionResult placeMagnetizedNode(Item item, UseOnContext context) {
-        Player player = context.getPlayer();
-        Level level = context.getLevel();
-        if (player == null) return InteractionResult.PASS;
-        if (!player.isShiftKeyDown()) return InteractionResult.PASS;
-        BlockPos pos = context.getClickedPos();
-        BlockState blockState = level.getBlockState(pos);
-        if (blockState.isAir()) return InteractionResult.PASS;
-        double maxY = blockState.getCollisionShape(level, pos).max(Direction.Axis.Y, 0.5, 0.5);
-        if (!blockState.getBlock().properties().hasCollision && maxY == 0) return InteractionResult.PASS;
-        for (MagnetizedNodeEntity entity : level.getEntities(ModEntities.MAGNETIZED_NODE.get(), new AABB(pos).setMaxY(pos.getY() + 1.1), EntitySelector.NO_SPECTATORS)) {
-            if (entity.blockPos.equals(pos)) {
-                entity.discard();
-                player.getCooldowns().addCooldown(item, 5);
-                return InteractionResult.sidedSuccess(level.isClientSide());
-            }
-        }
-        Vec3 nodePos = pos.getBottomCenter().add(0, maxY, 0);
-        MagnetizedNodeEntity magnetizedNodeEntity = new MagnetizedNodeEntity(level, nodePos, pos);
-        level.addFreshEntity(magnetizedNodeEntity);
-        player.getCooldowns().addCooldown(item, 5);
-        return InteractionResult.sidedSuccess(level.isClientSide());
-    }
-
-    public static @NotNull InteractionResultHolder<ItemStack> magnetizeItems(
-            Item item,
-            @NotNull Level level,
-            @NotNull Player player,
-            @NotNull InteractionHand usedHand
-    ) {
-        if (player.isShiftKeyDown()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
-        ItemStack itemStack = player.getItemInHand(usedHand);
-        double radius = AnvilCraft.config.magnetItemAttractsRadius;
-        UseMagnetEvent event = new UseMagnetEvent(level, player, radius);
-        ModLoader.postEvent(event);
-        if (event.isCanceled()) return InteractionResultHolder.pass(itemStack);
-        radius = event.getAttractRadius();
-        AABB aabb = new AABB(
-                player.position().add(-radius, -radius, -radius),
-                player.position().add(radius, radius, radius));
-        level.getEntities(EntityTypeTest.forClass(ItemEntity.class), aabb, Entity::isAlive)
-                .forEach(e -> e.moveTo(player.position()));
-        itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(usedHand));
-        player.getCooldowns().addCooldown(item, 5);
-        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 }

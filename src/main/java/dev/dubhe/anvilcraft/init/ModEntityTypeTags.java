@@ -13,6 +13,7 @@ public class ModEntityTypeTags {
     public static final TagKey<EntityType<?>> CAT_AMULET_VALID = bind("amulet_valid/cat");
     public static final TagKey<EntityType<?>> DOG_AMULET_VALID = bind("amulet_valid/dog");
     public static final TagKey<EntityType<?>> SILENCE_AMULET_VALID = bind("amulet_valid/silence");
+    public static final TagKey<EntityType<?>> ITEM_CACHE = bind("item_cache");
 
     @SuppressWarnings("unused")
     private static TagKey<EntityType<?>> bindC(String id) {

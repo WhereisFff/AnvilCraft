@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.entity.ai.goal.GenericZombieAttackGoal;
+import dev.dubhe.anvilcraft.init.ModDataAttachments;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import dev.dubhe.anvilcraft.util.Util;
@@ -44,8 +45,6 @@ import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import java.util.List;
 import java.util.Objects;
 
-import static dev.dubhe.anvilcraft.init.ModDataAttachments.SCARE_ENTITIES;
-
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class LivingEntityEventListener {
     @SubscribeEvent
@@ -54,9 +53,9 @@ public class LivingEntityEventListener {
         if (entity == null) return;
         if (!(event.getNewAboutToBeSetTarget() instanceof Player player)) return;
         EntityType<?> type = entity.getType();
-        if ((type.is(EntityTypeTags.SKELETONS) && player.getData(SCARE_ENTITIES).getBoolean("skeletons"))
-            || (entity instanceof Creeper && player.getData(SCARE_ENTITIES).getBoolean("creepers"))
-            || (entity instanceof Phantom && player.getData(SCARE_ENTITIES).getBoolean("phantoms"))
+        if ((type.is(EntityTypeTags.SKELETONS) && player.getData(ModDataAttachments.SCARE_SKELETONS))
+            || (entity instanceof Creeper && player.getData(ModDataAttachments.SCARE_CREEPERS))
+            || (entity instanceof Phantom && player.getData(ModDataAttachments.SCARE_PHANTOMS))
         ) {
             event.setCanceled(true);
         }
@@ -68,9 +67,9 @@ public class LivingEntityEventListener {
         if (entity == null) return;
         if (!(entity.getTarget() instanceof Player player)) return;
         EntityType<?> type = entity.getType();
-        if ((type.is(EntityTypeTags.SKELETONS) && player.getData(SCARE_ENTITIES).getBoolean("skeletons"))
-            || (entity instanceof Creeper && player.getData(SCARE_ENTITIES).getBoolean("creepers"))
-            || (entity instanceof Phantom && player.getData(SCARE_ENTITIES).getBoolean("phantoms"))
+        if ((type.is(EntityTypeTags.SKELETONS) && player.getData(ModDataAttachments.SCARE_SKELETONS))
+            || (entity instanceof Creeper && player.getData(ModDataAttachments.SCARE_CREEPERS))
+            || (entity instanceof Phantom && player.getData(ModDataAttachments.SCARE_PHANTOMS))
         ) {
             entity.setTarget(null);
         }
@@ -97,7 +96,8 @@ public class LivingEntityEventListener {
             giant.targetSelector.addGoal(2, new NearestAttackableTargetGoal<>(giant, Player.class, true));
             giant.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(giant, AbstractVillager.class, false));
             giant.targetSelector.addGoal(3, new NearestAttackableTargetGoal<>(giant, IronGolem.class, true));
-            giant.targetSelector.addGoal(5, new NearestAttackableTargetGoal<>(giant, Turtle.class, 10, true, false, Turtle.BABY_ON_LAND_SELECTOR));
+            giant.targetSelector.addGoal(
+                5, new NearestAttackableTargetGoal<>(giant, Turtle.class, 10, true, false, Turtle.BABY_ON_LAND_SELECTOR));
             giant.goalSelector.addGoal(8, new LookAtPlayerGoal(giant, Player.class, 8.0F));
             giant.goalSelector.addGoal(8, new RandomLookAroundGoal(giant));
         }

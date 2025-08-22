@@ -1,6 +1,10 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.event.UseMagnetEvent;
 import dev.dubhe.anvilcraft.api.item.IMultipleResult;
+import dev.dubhe.anvilcraft.entity.MagnetizedNodeEntity;
+import dev.dubhe.anvilcraft.init.ModEntities;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -31,11 +35,13 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.ItemSteerable;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -58,10 +64,13 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -93,19 +102,19 @@ public class MultitoolItem extends Item implements IMultipleResult {
     @Override
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         ItemProperties.register(
-                this, ResourceLocation.withDefaultNamespace("cast"), (itemStack, level, entity, value) -> {
-                    if (entity == null) {
-                        return 0.0f;
-                    } else {
-                        boolean flag = itemStack.is(entity.getMainHandItem().getItem());
-                        boolean flag1 = itemStack.is(entity.getOffhandItem().getItem());
-                        if (entity.getMainHandItem().getItem() instanceof MultitoolItem
-                                && getMode(entity.getMainHandItem()) == FISHING_ROD_MODE) {
-                            flag1 = false;
-                        }
-                        return (flag || flag1) && entity instanceof Player && ((Player) entity).fishing != null ? 1.0f : 0.0f;
+            this, ResourceLocation.withDefaultNamespace("cast"), (itemStack, level, entity, value) -> {
+                if (entity == null) {
+                    return 0.0f;
+                } else {
+                    boolean flag = itemStack.is(entity.getMainHandItem().getItem());
+                    boolean flag1 = itemStack.is(entity.getOffhandItem().getItem());
+                    if (entity.getMainHandItem().getItem() instanceof MultitoolItem
+                    && getMode(entity.getMainHandItem()) == FISHING_ROD_MODE) {
+                        flag1 = false;
                     }
-                });
+                    return (flag || flag1) && entity instanceof Player && ((Player) entity).fishing != null ? 1.0f : 0.0f;
+                }
+            });
     }
 
     @Override
@@ -242,7 +251,21 @@ public class MultitoolItem extends Item implements IMultipleResult {
     }
 
     private InteractionResultHolder<ItemStack> useAsMagnet(Level level, Player player, InteractionHand usedHand) {
-        return MagnetItem.magnetizeItems(this, level, player, usedHand);
+        if (player.isShiftKeyDown()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
+        ItemStack item = player.getItemInHand(usedHand);
+        double radius = AnvilCraft.CONFIG.magnetItemAttractsRadius;
+        UseMagnetEvent event = new UseMagnetEvent(level, player, radius);
+        ModLoader.postEvent(event);
+        if (event.isCanceled()) return InteractionResultHolder.pass(item);
+        radius = event.getAttractRadius();
+        AABB aabb = new AABB(
+            player.position().add(-radius, -radius, -radius),
+            player.position().add(radius, radius, radius));
+        level.getEntities(EntityTypeTest.forClass(ItemEntity.class), aabb, Entity::isAlive)
+            .forEach(e -> e.moveTo(player.position()));
+        item.hurtAndBreak(1, player, LivingEntity.getSlotForHand(usedHand));
+        player.getCooldowns().addCooldown(this, 5);
+        return InteractionResultHolder.sidedSuccess(item, level.isClientSide());
     }
 
     private InteractionResultHolder<ItemStack> useAsFishingRod(Level level, Player player, InteractionHand usedHand) {
@@ -258,26 +281,26 @@ public class MultitoolItem extends Item implements IMultipleResult {
             }
 
             level.playSound(
-                    null,
-                    player.getX(),
-                    player.getY(),
-                    player.getZ(),
-                    SoundEvents.FISHING_BOBBER_RETRIEVE,
-                    SoundSource.NEUTRAL,
-                    1.0F,
-                    0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
+                null,
+                player.getX(),
+                player.getY(),
+                player.getZ(),
+                SoundEvents.FISHING_BOBBER_RETRIEVE,
+                SoundSource.NEUTRAL,
+                1.0F,
+                0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
             );
             player.gameEvent(GameEvent.ITEM_INTERACT_FINISH);
         } else {
             level.playSound(
-                    null,
-                    player.getX(),
-                    player.getY(),
-                    player.getZ(),
-                    SoundEvents.FISHING_BOBBER_THROW,
-                    SoundSource.NEUTRAL,
-                    0.5F,
-                    0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
+                null,
+                player.getX(),
+                player.getY(),
+                player.getZ(),
+                SoundEvents.FISHING_BOBBER_THROW,
+                SoundSource.NEUTRAL,
+                0.5F,
+                0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F)
             );
             if (level instanceof ServerLevel serverlevel) {
                 int j = (int) (EnchantmentHelper.getFishingTimeReduction(serverlevel, itemstack, player) * 20.0F);
@@ -398,13 +421,29 @@ public class MultitoolItem extends Item implements IMultipleResult {
     }
 
     public InteractionResult useOnAsMagnet(UseOnContext context) {
-        return MagnetItem.placeMagnetizedNode(this, context);
+        Player player = context.getPlayer();
+        Level level = context.getLevel();
+        if (player == null) return InteractionResult.PASS;
+        if (!player.isShiftKeyDown()) return InteractionResult.PASS;
+        BlockPos pos = context.getClickedPos();
+        BlockState blockState = level.getBlockState(pos);
+        if (blockState.isAir()) return InteractionResult.PASS;
+        double maxY = blockState.getCollisionShape(level, pos).max(Direction.Axis.Y, 0.5, 0.5);
+        if (!blockState.getBlock().properties().hasCollision && maxY == 0) return InteractionResult.PASS;
+        for (MagnetizedNodeEntity entity : level.getEntities(ModEntities.MAGNETIZED_NODE.get(), new AABB(pos).setMaxY(pos.getY() + 1.1), EntitySelector.NO_SPECTATORS)) {
+            if (entity.blockPos.equals(pos)) return InteractionResult.PASS;
+        }
+        Vec3 nodePos = pos.getBottomCenter().add(0, maxY, 0);
+        MagnetizedNodeEntity magnetizedNodeEntity = new MagnetizedNodeEntity(level, nodePos, pos);
+        level.addFreshEntity(magnetizedNodeEntity);
+        player.getCooldowns().addCooldown(this, 5);
+        return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
     private HitResult calculateHitResult(Player player) {
         return ProjectileUtil.getHitResultOnViewVector(player,
-                (entity) -> !entity.isSpectator() && player.isPickable(),
-                player.blockInteractionRange());
+            (entity) -> !entity.isSpectator() && player.isPickable(),
+            player.blockInteractionRange());
     }
 
     private void spawnDustParticles(Level level, BlockHitResult hitResult, BlockState state, Vec3 pos, HumanoidArm arm) {
@@ -469,14 +508,14 @@ public class MultitoolItem extends Item implements IMultipleResult {
             stack.hurtAndBreak(1, miningEntity, EquipmentSlot.MAINHAND);
         }
         return state.is(BlockTags.LEAVES)
-                || state.is(Blocks.COBWEB)
-                || state.is(Blocks.SHORT_GRASS)
-                || state.is(Blocks.FERN)
-                || state.is(Blocks.DEAD_BUSH)
-                || state.is(Blocks.HANGING_ROOTS)
-                || state.is(Blocks.VINE)
-                || state.is(Blocks.TRIPWIRE)
-                || state.is(BlockTags.WOOL);
+            || state.is(Blocks.COBWEB)
+            || state.is(Blocks.SHORT_GRASS)
+            || state.is(Blocks.FERN)
+            || state.is(Blocks.DEAD_BUSH)
+            || state.is(Blocks.HANGING_ROOTS)
+            || state.is(Blocks.VINE)
+            || state.is(Blocks.TRIPWIRE)
+            || state.is(BlockTags.WOOL);
     }
 
     private InteractionResult interactLivingEntityAsShears(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {

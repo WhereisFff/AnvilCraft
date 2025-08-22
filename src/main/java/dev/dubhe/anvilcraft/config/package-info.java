@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.recipe.component.sub;
+package dev.dubhe.anvilcraft.config;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

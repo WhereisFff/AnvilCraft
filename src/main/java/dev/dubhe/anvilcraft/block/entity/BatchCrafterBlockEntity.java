@@ -116,7 +116,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
         boolean powered = state.getValue(BatchCrafterBlock.POWERED);
         this.cooldown = Math.max(0, this.cooldown - 1);
         if (powered && !poweredBefore && !level.isClientSide && this.cooldown == 0) {
-            if (this.craft(level)) this.cooldown = AnvilCraft.config.batchCrafterCooldown;
+            if (this.craft(level)) this.cooldown = AnvilCraft.CONFIG.batchCrafterCooldown;
         }
         poweredBefore = powered;
     }

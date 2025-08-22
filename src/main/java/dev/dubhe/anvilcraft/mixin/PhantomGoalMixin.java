@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.monster.Phantom;
 import net.minecraft.world.entity.player.Player;
@@ -33,8 +34,12 @@ public abstract class PhantomGoalMixin {
     private void addAvoidPlayerGoal(Phantom.PhantomSweepAttackGoal instance, boolean value) {
         List<Player> players = this.this$0.level()
             .getEntitiesOfClass(Player.class, this.this$0.getBoundingBox().inflate(16.0), EntitySelector.NO_SPECTATORS.and(
-                player -> player.getData(ModDataAttachments.SCARE_ENTITIES).getBoolean("phantoms")
+                player -> player.getData(ModDataAttachments.SCARE_PHANTOMS)
             ));
+
+        for (Player player : players) {
+            player.makeSound(SoundEvents.CAT_HISS);
+        }
 
         instance.isScaredOfCat = value || !players.isEmpty();
     }

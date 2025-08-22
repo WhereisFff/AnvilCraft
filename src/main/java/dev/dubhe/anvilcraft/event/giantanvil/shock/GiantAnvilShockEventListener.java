@@ -121,7 +121,7 @@ public class GiantAnvilShockEventListener {
                 it.putAttachment(NO_HURT, true);
             })
         ).executes(it -> {
-            int radius = (int) Math.min(Math.ceil(it.unwrap().fallDistance()), AnvilCraft.config.giantAnvilMaxShockRadius);
+            int radius = (int) Math.min(Math.ceil(it.unwrap().fallDistance()), AnvilCraft.CONFIG.giantAnvilMaxShockRadius);
             AABB aabb = AABB.ofSize(
                 Vec3.atCenterOf(it.unwrap().centerPos().above()),
                 radius * 2 + 1,
