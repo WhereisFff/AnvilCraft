@@ -6,6 +6,8 @@ import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +16,9 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -34,6 +38,7 @@ import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.world.ticks.TickPriority;
 import net.neoforged.neoforge.event.EventHooks;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -156,6 +161,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
         if (!generator.isDeadlock()) switch (generator.getState()) {
             case WAITING -> this.startOutputting(level, pos, () -> state, generator);
             case OUTPUTTING -> this.checkOnSignalEnd(level, pos, () -> state, generator);
+            case DEFAULT -> this.updateBlockAndNeighbours(level, pos, () -> state, generator);
         }
     }
 
@@ -177,7 +183,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
     public void startWaiting(Level level, BlockPos pos, Supplier<BlockState> stateGetter, PulseGeneratorBlockEntity generator) {
         generator.setState(PulseGeneratorBlockEntity.State.WAITING);
         if (generator.getWaitingTime() != 0) {
-            level.scheduleTick(pos, this, generator.getWaitingTime());
+            level.scheduleTick(pos, this, generator.getWaitingTime(), TickPriority.LOW);
         } else {
             this.startOutputting(level, pos, stateGetter, generator);
         }
@@ -186,7 +192,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
     protected void startOutputting(Level level, BlockPos pos, Supplier<BlockState> stateGetter, PulseGeneratorBlockEntity generator) {
         generator.setState(PulseGeneratorBlockEntity.State.OUTPUTTING);
         if (generator.getSignalDuration() != 0) {
-            level.scheduleTick(pos, this, generator.getSignalDuration());
+            level.scheduleTick(pos, this, generator.getSignalDuration(), TickPriority.LOW);
             this.updateBlockAndNeighbours(level, pos, stateGetter, generator);
         } else {
             this.updateBlockAndNeighbours(level, pos, generator::getBlockState, generator);
@@ -216,6 +222,9 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
         generator.setBlockState(newState);
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
+        if (generator.getSignalDuration() == 0 && shouldPower) {
+            level.scheduleTick(pos, this, 1, TickPriority.LOW);
+        }
     }
 
     @Override
@@ -268,15 +277,33 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
     }
 
     @Override
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
+    ) {
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity be && player.getItemInHand(hand).is(ModItems.DISK)) {
+                return Util.interactionResultConverter()
+                    .apply(be.useDisk(level, serverPlayer, hand, serverPlayer.getItemInHand(hand), hitResult));
+            }
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED);
     }
 
     @Override
     public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
-        BlockState bs = level.getBlockState(blockPos);
-        level.setBlockAndUpdate(blockPos, bs.cycle(FACING));
-        return true;
+        return level.setBlockAndUpdate(blockPos, level.getBlockState(blockPos).cycle(FACING));
     }
 
     @Override
@@ -286,20 +313,16 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
 
     @Override
     public @NotNull CompoundTag clearData(@NotNull Level level, @NotNull BlockPos pos) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PulseGeneratorBlockEntity gen) {
-            return gen.exportMoveData();
-        }
-        return new CompoundTag();
+        CompoundTag data = new CompoundTag();
+        level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
+            .ifPresent(be -> be.saveAdditional(data, level.registryAccess()));
+        return data;
     }
 
     @Override
     public void setData(@NotNull Level level, @NotNull BlockPos pos, @NotNull CompoundTag tag) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PulseGeneratorBlockEntity gen) {
-            BlockState state = level.getBlockState(pos);
-            gen.applyMoveData(level, pos, state, tag);
-        }
+        level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
+            .ifPresent(be -> be.loadAdditional(tag, level.registryAccess()));
     }
 }
 

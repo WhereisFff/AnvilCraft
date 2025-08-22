@@ -20,6 +20,7 @@ import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.ThrownEmberMetalHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownFrostMetalHeavyHalberdEntity;
+import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownTranscendenceHeavyHalberdEntity;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
 import net.minecraft.world.entity.MobCategory;
@@ -70,7 +71,10 @@ public class ModEntities {
         .register();
 
     public static final EntityEntry<? extends ThrownFrostMetalHeavyHalberdEntity> THROWN_FROST_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRATE
-        .<ThrownFrostMetalHeavyHalberdEntity>entity("thrown_frost_metal_heavy_halberd", ThrownFrostMetalHeavyHalberdEntity::new, MobCategory.MISC)
+        .entity(
+            "thrown_frost_metal_heavy_halberd",
+            (ThrownHeavyHalberdEntity.Factory<ThrownFrostMetalHeavyHalberdEntity>) ThrownFrostMetalHeavyHalberdEntity::new,
+            MobCategory.MISC)
         .properties(it -> it.sized(0.5F, 0.5F)
             .eyeHeight(0.13F)
             .clientTrackingRange(4)
@@ -79,7 +83,10 @@ public class ModEntities {
         .register();
 
     public static final EntityEntry<? extends ThrownEmberMetalHeavyHalberdEntity> THROWN_EMBER_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRATE
-        .<ThrownEmberMetalHeavyHalberdEntity>entity("thrown_ember_metal_heavy_halberd", ThrownEmberMetalHeavyHalberdEntity::new, MobCategory.MISC)
+        .entity(
+            "thrown_ember_metal_heavy_halberd",
+            (ThrownHeavyHalberdEntity.Factory<ThrownEmberMetalHeavyHalberdEntity>) ThrownEmberMetalHeavyHalberdEntity::new,
+            MobCategory.MISC)
         .properties(it -> it.sized(0.5F, 0.5F)
             .eyeHeight(0.13F)
             .clientTrackingRange(4)
@@ -88,8 +95,10 @@ public class ModEntities {
         .register();
 
     public static final EntityEntry<? extends ThrownTranscendenceHeavyHalberdEntity> THROWN_TRANSCENDENCE_HEAVY_HALBERD = AnvilCraft.REGISTRATE
-        .<ThrownTranscendenceHeavyHalberdEntity>entity(
-            "thrown_transcendence_heavy_halberd", ThrownTranscendenceHeavyHalberdEntity::new, MobCategory.MISC)
+        .entity(
+            "thrown_transcendence_heavy_halberd",
+            (ThrownHeavyHalberdEntity.Factory<ThrownTranscendenceHeavyHalberdEntity>) ThrownTranscendenceHeavyHalberdEntity::new,
+            MobCategory.MISC)
         .properties(it -> it.sized(0.5F, 0.5F)
             .eyeHeight(0.13F)
             .clientTrackingRange(4)

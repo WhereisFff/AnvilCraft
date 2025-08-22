@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import dev.dubhe.anvilcraft.init.ModBlockTags;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -103,11 +104,13 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     }
 
     @Override
-    protected void onPlace(BlockState state,
-                           Level level,
-                           BlockPos pos,
-                           BlockState oldState,
-                           boolean movedByPiston) {
+    protected void onPlace(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        BlockState oldState,
+        boolean movedByPiston
+    ) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
         }
@@ -118,7 +121,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockState state,
         ServerLevel level,
         BlockPos pos,
-        RandomSource random) {
+        RandomSource random
+    ) {
         super.tick(state, level, pos, random);
         if (!state.getValue(TRIGGERED)) return;
         if (!BlockPlacerBlock.hasNeighborSignal(level, pos, state.getValue(FACING))) {
@@ -133,7 +137,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockPos pos,
         Block neighborBlock,
         BlockPos neighborPos,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (!level.isClientSide) {
             checkIfTriggered(level, state, pos);
         }
@@ -160,7 +165,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockState state,
         BlockGetter level,
         BlockPos pos,
-        CollisionContext context) {
+        CollisionContext context
+    ) {
         return switch (state.getValue(FACING)) {
             case DOWN -> DOWN_SHAPE;
             case UP -> UP_SHAPE;
@@ -195,7 +201,8 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         BlockPos devourerPos,
         Direction devourerDirection,
         int range,
-        @Nullable Block anvil) {
+        @Nullable Block anvil
+    ) {
         BlockPos outputPos = devourerPos.relative(devourerDirection.getOpposite());
         BlockPos devourCenterPos = devourerPos.relative(devourerDirection);
         final List<IItemHandler> itemHandlerList = getTargetItemHandlerList(
@@ -210,19 +217,22 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             case DOWN, UP -> {
                 devourBlockPosList = BlockPos.betweenClosed(
                     devourCenterPos.relative(Direction.NORTH, range).relative(Direction.WEST, range),
-                    devourCenterPos.relative(Direction.SOUTH, range).relative(Direction.EAST, range));
+                    devourCenterPos.relative(Direction.SOUTH, range).relative(Direction.EAST, range)
+                );
                 maxY = devourCenterPos.getY();
             }
             case NORTH, SOUTH -> {
                 devourBlockPosList = BlockPos.betweenClosed(
                     devourCenterPos.relative(Direction.UP, range).relative(Direction.WEST, range),
-                    devourCenterPos.relative(Direction.DOWN, range).relative(Direction.EAST, range));
+                    devourCenterPos.relative(Direction.DOWN, range).relative(Direction.EAST, range)
+                );
                 maxY = devourCenterPos.relative(Direction.UP, range).getY();
             }
             case WEST, EAST -> {
                 devourBlockPosList = BlockPos.betweenClosed(
                     devourCenterPos.relative(Direction.UP, range).relative(Direction.NORTH, range),
-                    devourCenterPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range));
+                    devourCenterPos.relative(Direction.DOWN, range).relative(Direction.SOUTH, range)
+                );
                 maxY = devourCenterPos.relative(Direction.UP, range).getY();
             }
             default -> {
@@ -304,6 +314,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         if (!(devourBlockState.getBlock() instanceof DoublePlantBlock))
             devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
         level.destroyBlock(devourBlockPos, false);
+        TriggerUtil.devourerDevourBlock(level, devourBlockPos, devourBlockState.getBlock());
     }
 
     /**

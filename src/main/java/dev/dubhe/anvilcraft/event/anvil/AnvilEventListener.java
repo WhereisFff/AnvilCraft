@@ -13,6 +13,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeManager;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
@@ -21,6 +22,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -61,6 +63,7 @@ public class AnvilEventListener {
         BlockPos pos = event.getPos();
         MinecraftServer server = level.getServer();
         if (null == server) return;
+        TriggerUtil.anvilOnGround(level, pos);
         final BlockPos hitBlockPos = pos.below();
         final BlockState hitBlockState = level.getBlockState(hitBlockPos);
         BlockPos belowPos = hitBlockPos.below();
@@ -170,5 +173,9 @@ public class AnvilEventListener {
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
+        if (hurtedEntity instanceof IronGolem) {
+            TriggerUtil.anvilLootingIronGolem(serverLevel, BlockPos.containing(pos));
+        }
+        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos));
     }
 }

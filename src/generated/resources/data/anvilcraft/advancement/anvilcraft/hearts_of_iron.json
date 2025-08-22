@@ -1,0 +1,29 @@
+{
+  "parent": "anvilcraft:anvilcraft/all_in_one",
+  "criteria": {
+    "craft_magnetoelectric_core": {
+      "conditions": {
+        "recipe_id": "anvilcraft:magnetoelectric_core"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.hearts_of_iron.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:magnetoelectric_core"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.hearts_of_iron.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_magnetoelectric_core"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
