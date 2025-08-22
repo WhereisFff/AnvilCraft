@@ -33,6 +33,7 @@
     "ItemStackMixin",
     "LivingEntityMixin",
     "MinecraftServerMixin",
+    "NearestAttackableTargetGoalMixin",
     "PhantomGoalMixin",
     "PigMixin",
     "PistonBaseBlockMixin",
