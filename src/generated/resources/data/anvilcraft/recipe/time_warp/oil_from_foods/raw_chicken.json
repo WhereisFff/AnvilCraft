@@ -3,8 +3,8 @@
   "consume": -1,
   "ingredients": [
     {
-      "count": 16,
-      "items": "minecraft:beef"
+      "count": 64,
+      "items": "#c:foods/raw_chicken"
     }
   ],
   "transform": "anvilcraft:oil"

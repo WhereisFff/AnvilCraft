@@ -216,6 +216,26 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.WHITE_WOOL))
             .addTag(Tags.Items.INGOTS)
             .addTag(Tags.Items.STORAGE_BLOCKS);
+
+        provider.addTag(ModItemTags.COMPRESS_ITEM)
+            .add(findResourceKey(Items.SNOW_BLOCK))
+            .add(findResourceKey(Items.WHITE_WOOL))
+            .addTag(Tags.Items.INGOTS)
+            .addTag(Tags.Items.STORAGE_BLOCKS);
+
+
+        provider.addTag(ModItemTags.SUPER_HEATING_BOOST_PRODUCTION)
+            .addTag(Tags.Items.RAW_MATERIALS)
+            .addTag(Tags.Items.ORES);
+
+        provider.addTag(ModItemTags.RAW_MUTTON)
+            .add(findResourceKey(Items.MUTTON));
+
+        provider.addTag(ModItemTags.RAW_BEEF)
+            .add(findResourceKey(Items.BEEF));
+
+        provider.addTag(ModItemTags.RAW_CHICKEN)
+            .add(findResourceKey(Items.CHICKEN));
     }
 
     private static @NotNull ResourceKey<Item> findResourceKey(Item item) {
