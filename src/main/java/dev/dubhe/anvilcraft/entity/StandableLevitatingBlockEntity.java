@@ -129,7 +129,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
     @Override
     public void move(MoverType type, Vec3 motion) {
         super.move(type, motion);
-        if (motion.equals(Vec3.ZERO)) return;
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().expandTowards(0, 0.5F, 0),
@@ -176,6 +175,6 @@ public class StandableLevitatingBlockEntity extends LevitatingBlockEntity {
     @Override
     public boolean canCollideWith(Entity entity) {
         return super.canCollideWith(entity)
-            && !Util.instanceOfAny(entity, FallingBlockEntity.class, IonocraftEntity.class);
+               && !Util.instanceOfAny(entity, FallingBlockEntity.class, IonocraftEntity.class);
     }
 }
