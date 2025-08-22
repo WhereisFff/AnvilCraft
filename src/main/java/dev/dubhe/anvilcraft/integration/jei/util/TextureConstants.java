@@ -29,4 +29,7 @@ public class TextureConstants {
 
     public static final ResourceLocation PRE_RENDERED_END_PORTAL =
         AnvilCraft.of(BASE_PATH + "pre_rendered_end_portal.png");
+
+    public static final ResourceLocation BLOCK_CONVERSION = AnvilCraft.of(BASE_PATH + "block_conversion.png");
+    public static final ResourceLocation BLOCK_CRAFTING = AnvilCraft.of(BASE_PATH + "block_craft.png");
 }

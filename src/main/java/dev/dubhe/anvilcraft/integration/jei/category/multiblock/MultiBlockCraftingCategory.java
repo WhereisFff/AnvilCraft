@@ -5,16 +5,22 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
+import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
+import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.JeiButton;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
+import dev.dubhe.anvilcraft.util.RenderHelper;
 import dev.dubhe.anvilcraft.util.VertexConsumerWithPose;
+import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -79,11 +85,17 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
     private final IDrawable renderSwitchOn;
     private final IDrawable renderSwitchOff;
     private final IDrawable arrowOut;
+    private final IDrawable conversion;
+    private final ITickTimer timer;
 
     public MultiBlockCraftingCategory(IGuiHelper helper) {
         icon = helper.createDrawableItemStack(new ItemStack(ModBlocks.GIANT_ANVIL));
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        slot = helper.getSlotDrawable();
+        arrowOut = JeiRenderHelper.getArrowInput(helper);
+        slot = JeiRenderHelper.getSlotDefault(helper);
+        timer = helper.createTickTimer(30, 60, true);
+        conversion = helper.drawableBuilder(TextureConstants.BLOCK_CRAFTING, 0, 0, 594, 418)
+            .setTextureSize(594, 418)
+            .build();
         layerUp = helper.drawableBuilder(
                 AnvilCraft.of("textures/gui/container/insight/insight_layer_up.png"), 0, 0, 10, 10)
             .setTextureSize(10, 20)
@@ -244,9 +256,29 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
             this.layerDownButton(mouseX, mouseY).draw(guiGraphics, 149, 10);
         }
         pose.pushPose();
+        pose.scale(0.03f, 0.03f, 1.0f);
+        conversion.draw(guiGraphics, 4300, 1700);
+        pose.popPose();
+        float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer) / 3;
+        RenderHelper.renderBlock(
+            guiGraphics,
+            ModBlocks.GIANT_ANVIL.getDefaultState()
+                .trySetValue(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER)
+                .trySetValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER),
+            138,
+            44.8f + anvilYOffset,
+            20,
+            5,
+            RenderHelper.SINGLE_BLOCK
+        );
+        pose.pushPose();
         pose.scale(0.8f, 0.8f, 0.8f);
         int textX = Math.round(WIDTH / 0.8f - minecraft.font.width(component) - 5);
         guiGraphics.drawString(minecraft.font, component, textX, 0, 0xFF000000, false);
+        int size = recipe.value().pattern.getSize();
+        guiGraphics.drawString(minecraft.font,
+            Component.translatable("gui.anvilcraft.category.multiblock.size", size, size),
+            85, 115, 0xFF000000, false);
         pose.popPose();
         arrowOut.draw(guiGraphics, 110, 60);
         slot.draw(guiGraphics, 129, 69);

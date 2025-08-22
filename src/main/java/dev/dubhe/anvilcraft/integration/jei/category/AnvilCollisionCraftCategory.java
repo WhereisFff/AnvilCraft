@@ -148,7 +148,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         float anvilXOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
 
         // explosion
-        explosion.draw(guiGraphics,72,16);
+        explosion.draw(guiGraphics, 72, 16);
 
         // 铁砧左右移动模拟碰撞
         RenderHelper.renderBlock(
