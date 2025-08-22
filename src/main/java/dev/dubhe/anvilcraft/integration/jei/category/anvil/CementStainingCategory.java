@@ -15,6 +15,7 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
@@ -25,6 +26,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.fluids.CauldronFluidContent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -85,6 +88,16 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CementStainingRecipe recipe, IFocusGroup focuses) {
         JeiSlotUtil.addInputSlots(builder, recipe.ingredients());
+
+        // 将水泥锅里面的流体加入输入输出(在别处写CauldronFluidContent不保证能正常运行
+        // TODO: 等流体系统出来后可能要重写
+        if (recipe.resultBlock() != null) {
+            CauldronFluidContent cauldronFluidContent = CauldronFluidContent.getForBlock(recipe.resultBlock());
+            if (cauldronFluidContent == null) return;
+            Fluid fluid = cauldronFluidContent.fluid;
+            builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addFluidStack(fluid);
+            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addFluidStack(fluid);
+        }
     }
 
     @Override
