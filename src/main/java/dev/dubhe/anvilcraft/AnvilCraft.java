@@ -18,6 +18,7 @@ import dev.dubhe.anvilcraft.init.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModCommands;
 import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.init.ModCustomDataComponents;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
 import dev.dubhe.anvilcraft.init.ModDispenserBehavior;
@@ -101,6 +102,7 @@ public class AnvilCraft {
         ModInspections.initialize();
         ModItemSubPredicates.initialize(modEventBus);
 
+        ModCriterionTriggers.register(modEventBus);
         ModLootContextParamSets.registerAll();
         ModEnchantmentEffectComponents.register(modEventBus);
         ModEnchantmentEffects.register(modEventBus);
@@ -141,6 +143,10 @@ public class AnvilCraft {
 
     public static @NotNull ResourceLocation of(String path) {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    public static @NotNull ResourceLocation advancementOf(String path) {
+        return of("anvilcraft/" + path);
     }
 
     public static void registerCommand(@NotNull RegisterCommandsEvent event) {

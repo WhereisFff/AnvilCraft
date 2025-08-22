@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -8,6 +9,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.effect.MobEffects;
@@ -127,6 +129,9 @@ public class ModDispenserBehavior {
         ironGolem.playSound(SoundEvents.IRON_GOLEM_REPAIR, 1.0f, g);
         ItemStack stack1 = stack.copy();
         stack1.shrink(1);
+        for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, blockPos, 5)) {
+            ModCriterionTriggers.REPAIR_IRON_GOLEM.get().trigger(player);
+        }
         return stack1;
     }
 }

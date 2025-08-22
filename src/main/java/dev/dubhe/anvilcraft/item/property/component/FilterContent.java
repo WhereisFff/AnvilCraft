@@ -21,6 +21,7 @@ import net.minecraft.world.item.Items;
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -85,14 +86,18 @@ public record FilterContent(NonNullList<ItemStack> list, boolean includeComponen
             if (filterStack.is(Items.NAME_TAG) && filterStack.has(DataComponents.CUSTOM_NAME)) {
                 Component name = filterStack.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
                 String string = name.getString();
-                if (string.startsWith("#")) {
+                Pattern pattern = Pattern.compile("^#(([a-z0-9._-]*:[a-z0-9/._-]*)|[a-z0-9/._-]*)$");
+                if (pattern.matcher(string).matches()) {
                     TagKey<Item> tag = TagKey.create(Registries.ITEM, ResourceLocation.parse(string.substring(1)));
                     if (stack.is(tag)) return !isBlackList;
                 }
             }
             boolean flag = false;
-            if (!isIncludeComponents && ItemStack.isSameItem(filterStack, stack)) flag = true;
-            else if (isIncludeComponents && ItemStack.isSameItemSameComponents(filterStack, stack)) flag = true;
+            if (!isIncludeComponents && ItemStack.isSameItem(filterStack, stack)) {
+                flag = true;
+            } else if (isIncludeComponents && ItemStack.isSameItemSameComponents(filterStack, stack)) {
+                flag = true;
+            }
             if (flag) return !isBlackList;
             return isBlackList;
         }

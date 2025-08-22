@@ -1,0 +1,38 @@
+{
+  "parent": "anvilcraft:anvilcraft/dang",
+  "criteria": {
+    "crush_cobblestone": {
+      "conditions": {
+        "id": "anvilcraft:block_crush/gravel"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "crush_gravel": {
+      "conditions": {
+        "id": "anvilcraft:block_crush/sand"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.stone_crusher.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:sand"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.stone_crusher.title"
+    }
+  },
+  "requirements": [
+    [
+      "crush_cobblestone"
+    ],
+    [
+      "crush_gravel"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

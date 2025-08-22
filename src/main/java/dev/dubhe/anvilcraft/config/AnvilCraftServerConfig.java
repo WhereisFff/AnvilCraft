@@ -94,11 +94,13 @@ public class AnvilCraftServerConfig {
     @CollapsibleObject
     public PowerConverter powerConverter = new PowerConverter();
 
-    @Comment("Does the laser check for block collision boxes")
+    @Comment("Is laser do impact checking")
     public boolean isLaserDoImpactChecking = true;
 
+    @Comment("Induction light block ripening cooldown")
     public int inductionLightBlockRipeningCooldown = 400;
 
+    @Comment("Induction light block ripening range")
     @BoundedDiscrete(min = 0, max = 100)
     public int inductionLightBlockRipeningRange = 5;
 

@@ -4,11 +4,14 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.block.entity.BaseChuteBlockEntity;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
+import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.inventory.BaseChuteMenu;
+import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -17,20 +20,17 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
 /**
  * 溜槽屏幕基类
  */
-public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends BaseChuteMenu<T>>
-    extends BaseMachineScreen<M> implements IFilterScreen<M> {
-    private static final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/chute.png");
+public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends BaseChuteMenu<T>> extends BaseMachineScreen<M>
+    implements IFilterScreen<M> {
+    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/machine/background/chute.png");
 
-    BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier =
-        this.getEnableFilterButtonSupplier(134, 36);
+    BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier = this.getEnableFilterButtonSupplier(134, 36);
 
     @Getter
     private EnableFilterButton enableFilterButton = null;
@@ -57,25 +57,25 @@ public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends 
     abstract boolean shouldSkipDirection(Direction direction);
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
+    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
         super.renderSlot(guiGraphics, slot);
         IFilterScreen.super.renderSlot(guiGraphics, slot);
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         super.renderTooltip(guiGraphics, x, y);
         this.renderSlotTooltip(guiGraphics, x, y);
     }
 
-    protected void renderSlotTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void renderSlotTooltip(GuiGraphics guiGraphics, int x, int y) {
         if (this.hoveredSlot == null) return;
         if (!(this.hoveredSlot instanceof SlotItemHandlerWithFilter)) return;
         if (!((SlotItemHandlerWithFilter) this.hoveredSlot).isFilter()) return;
@@ -95,25 +95,27 @@ public abstract class BaseChuteScreen<T extends BaseChuteBlockEntity, M extends 
     }
 
     @Override
-    protected void slotClicked(@NotNull Slot slot, int slotId, int mouseButton, @NotNull ClickType type) {
-            if (slot instanceof SlotItemHandlerWithFilter && slot.getItem().isEmpty()) {
-                ItemStack carriedItem = this.menu.getCarried();
-                int realSlotId = slot.getContainerSlot();
-                if (this.menu.isFilterEnabled()) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+        if (slot instanceof SlotItemHandlerWithFilter && slot.getItem().isEmpty()) {
+            ItemStack carriedItem = this.menu.getCarried().copy();
+            int realSlotId = slot.getContainerSlot();
+            if (!carriedItem.isEmpty() && this.menu.isFilterEnabled()) {
+                ItemStack filter = this.menu.getFilter(realSlotId);
+                if (this.menu.isSlotDisabled(realSlotId)) {
                     PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
-                    PacketDistributor.sendToServer(new SlotFilterChangePacket(realSlotId, carriedItem.copy()));
-                    menu.setSlotDisabled(realSlotId, false);
-                    menu.setFilter(realSlotId, carriedItem.copy());
-                    slot.set(carriedItem);
-                } else {
-                    if (carriedItem.isEmpty()) {
-                        PacketDistributor.sendToServer(
-                            new SlotDisableChangePacket(realSlotId, !this.menu.isSlotDisabled(realSlotId)));
-                    } else {
-                        PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
-                    }
+                    this.menu.setSlotDisabled(realSlotId, false);
                 }
+                PacketDistributor.sendToServer(new SlotFilterChangePacket(realSlotId, carriedItem));
+                this.menu.setFilter(realSlotId, carriedItem);
+                if (carriedItem.is(ModItems.FILTER) && (filter.isEmpty() || !FilterItem.filter(filter, carriedItem))) return;
+                slot.set(carriedItem);
+            } else if (Screen.hasShiftDown()) {
+                PacketDistributor.sendToServer(new SlotDisableChangePacket(
+                    realSlotId,
+                    carriedItem.isEmpty() && !this.menu.isSlotDisabled(realSlotId)
+                ));
             }
+        }
         super.slotClicked(slot, slotId, mouseButton, type);
     }
 

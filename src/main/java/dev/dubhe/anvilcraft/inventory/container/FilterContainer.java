@@ -89,4 +89,20 @@ public class FilterContainer implements Container {
     public void sync() {
         PacketDistributor.sendToServer(new FilterContentSyncPacket(position, content));
     }
+
+    public boolean includeComponents() {
+        return this.getContent().includeComponents();
+    }
+
+    public boolean blackList() {
+        return this.getContent().blackList();
+    }
+
+    public void setIncludeComponents(boolean includeComponents) {
+        this.setContent(this.getContent().setIncludeComponents(includeComponents));
+    }
+
+    public void setBlackList(boolean blackList) {
+        this.setContent(this.getContent().setBlackList(blackList));
+    }
 }

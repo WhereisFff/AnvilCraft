@@ -1,0 +1,157 @@
+{
+  "parent": "anvilcraft:anvilcraft/all_in_one",
+  "criteria": {
+    "kill_chicken": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:chicken"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    },
+    "kill_cow": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:cow"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    },
+    "kill_creeper": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:creeper"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    },
+    "kill_pig": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:pig"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    },
+    "kill_sheep": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:sheep"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    },
+    "kill_skeleton": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:skeleton"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    },
+    "kill_spider": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:spider"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    },
+    "kill_zombie": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "minecraft:zombie"
+            }
+          }
+        ]
+      },
+      "trigger": "anvilcraft:player_killed_entity_by_anvil_hammer"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.hammer.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:anvil_hammer"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.hammer.title"
+    }
+  },
+  "requirements": [
+    [
+      "kill_zombie"
+    ],
+    [
+      "kill_skeleton"
+    ],
+    [
+      "kill_creeper"
+    ],
+    [
+      "kill_spider"
+    ],
+    [
+      "kill_pig"
+    ],
+    [
+      "kill_cow"
+    ],
+    [
+      "kill_sheep"
+    ],
+    [
+      "kill_chicken"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
