@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -41,7 +40,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
+    private final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer timer;
 
@@ -54,8 +53,8 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
         title = Component.translatable("gui.anvilcraft.category.item_inject");
         timer = helper.createTickTimer(30, 60, true);
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -119,8 +118,8 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
         if (renderedState == null) return;
         RenderHelper.renderBlock(guiGraphics, renderedState, 81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         RenderHelper.renderBlock(

@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
@@ -46,8 +45,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
-    protected final IDrawable slotProbability;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final Component title;
     private final ITickTimer timer;
 
@@ -64,8 +63,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         title = Component.translatable("gui.anvilcraft.category.bulging");
         timer = helper.createTickTimer(30, 60, true);
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -129,8 +128,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         }
         RenderHelper.renderBlock(guiGraphics, state, 81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (!recipe.getResultItems().isEmpty()) {

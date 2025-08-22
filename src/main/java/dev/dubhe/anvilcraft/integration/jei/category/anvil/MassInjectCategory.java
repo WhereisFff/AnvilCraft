@@ -9,7 +9,6 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -51,7 +50,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
     private static final String KEY_ITEMS_NEEDED = "gui.anvilcraft.category.mass_inject.items_needed";
 
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
+    private final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer timer;
 
@@ -65,8 +64,8 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
         title = Component.translatable("gui.anvilcraft.category.mass_inject");
         timer = helper.createTickTimer(30, 60, true);
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -125,8 +124,8 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
         RenderHelper.renderBlock(guiGraphics, ModBlocks.SPACE_OVERCOMPRESSOR.getDefaultState(),
             81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
         JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, 1);

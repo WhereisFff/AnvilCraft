@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -45,22 +44,18 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    protected final IDrawable slotDefault;
-    protected final IDrawable slotProbability;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final Component title;
     private final ITickTimer timer;
-
-    private final IDrawable arrowIn;
-    private final IDrawable arrowOut;
+    protected final IDrawable arrowDefault;
 
     public TimeWarpCategory(IGuiHelper helper) {
         slotDefault = JeiRenderHelper.getSlotDefault(helper);
         slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable("gui.anvilcraft.category.time_warp");
         timer = helper.createTickTimer(30, 60, true);
-
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
     }
 
     @Override
@@ -147,15 +142,15 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             RenderHelper.SINGLE_BLOCK
         );
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowDefault.draw(guiGraphics, 54, 28);
+        arrowDefault.draw(guiGraphics, 92, 28);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (!recipe.getResultItems().isEmpty()) {
             if (JeiRecipeUtil.isChance(recipe.getResultItems())) {
                 JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.getResultItems().size());
             } else {
-                JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, recipe.getResultItems().size());
             }
             if (recipe.isConsumeFluid()) {
                 PoseStack pose = guiGraphics.pose();

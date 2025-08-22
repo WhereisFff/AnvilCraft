@@ -66,8 +66,8 @@ public class ItemCrushCategory extends AbstractProgressCategory<ItemCrushRecipe>
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (JeiRecipeUtil.isChance(this.getResults(recipe))) {

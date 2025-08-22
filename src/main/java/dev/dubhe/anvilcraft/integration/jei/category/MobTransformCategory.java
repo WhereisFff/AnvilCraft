@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.TransformResult;
@@ -43,12 +42,12 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
-    protected final IDrawable slotChoice;
-    protected final IDrawable slotProbability;
+    private final IDrawable slotDefault;
+    private final IDrawable slotChoice;
+    private final IDrawable slotProbability;
     private final Component title;
 
-    private final IDrawable arrowIn;
+    private final IDrawable arrowDefault;
 
     private static final String KEY_CATEGORY = "gui.anvilcraft.category.mob_transform";
 
@@ -59,9 +58,7 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
         slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable(KEY_CATEGORY);
 
-        arrowIn = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
     }
 
     @Override
@@ -156,7 +153,7 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 69, 15);
+        arrowDefault.draw(guiGraphics, 74, 22);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
         if (isChance(recipe.getResults())) {

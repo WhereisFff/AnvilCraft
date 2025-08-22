@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -34,15 +33,13 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable progress;
+    private final IDrawable arrowDefault;
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
+    private final IDrawable slotDefault;
     private final Component title;
 
     public JewelCraftingCategory(IGuiHelper helper) {
-        progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
         icon = helper.createDrawableItemStack(new ItemStack(ModBlocks.JEWEL_CRAFTING_TABLE));
         slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.jewel_crafting");
@@ -97,7 +94,7 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
         for (int i = 0; i < 4; i++) {
             slotDefault.draw(guiGraphics, 4 + i * 18, 36);
         }
-        progress.draw(guiGraphics, 95, 24);
+        arrowDefault.draw(guiGraphics, 100, 27);
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {

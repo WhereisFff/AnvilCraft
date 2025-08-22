@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.recipe.BeaconConversionRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -43,13 +42,13 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     public static final int WIDTH = 162;
     public static final int HEIGHT = 128;
 
-    protected final IDrawable slotDefault;
-    protected final IDrawable slotChoice;
-    private final IDrawable progressArrow;
+    private final IDrawable slotDefault;
+    private final IDrawable slotChoice;
     private final Component title;
     private final Component activateTooltip;
     private final Component beaconBaseTooltip;
-    private final IDrawable arrowIn;
+    protected final IDrawable arrowIn;
+    protected final IDrawable arrowDefault;
 
     private final Map<BeaconConversionRecipe, LevelLike> cache = new HashMap<>();
 
@@ -61,10 +60,8 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
             .withStyle(ChatFormatting.GOLD);
         beaconBaseTooltip = Component.translatable("gui.anvilcraft.category.beacon_conversion.beacon_base")
             .withStyle(ChatFormatting.GOLD);
-        progressArrow = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
     }
 
     @Override
@@ -157,7 +154,7 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
         slotChoice.draw(guiGraphics, 129, 95);
 
         arrowIn.draw(guiGraphics, 66, 14);
-        progressArrow.draw(guiGraphics, 60, 96);
+        arrowDefault.draw(guiGraphics, 60, 96);
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {

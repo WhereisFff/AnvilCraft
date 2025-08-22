@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.recipe.CementStainingRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -37,7 +36,7 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
+    private final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer anvilTimer;
     private final ITickTimer colorTimer;
@@ -54,8 +53,8 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
         anvilTimer = helper.createTickTimer(30, 60, true);
         colorTimer = helper.createTickTimer(20 * Color.values().length, Color.values().length - 1, false);
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -113,8 +112,8 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
             10,
             12,
             RenderHelper.SINGLE_BLOCK);
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.ingredients().size());
 

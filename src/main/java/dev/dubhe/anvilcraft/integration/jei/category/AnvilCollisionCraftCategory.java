@@ -55,10 +55,10 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
     public static final int HEIGHT = 64;
 
     private final IDrawable arrowDefault;
-    protected final IDrawable blockConversion;
-    protected final IDrawable explosion;
-    protected final IDrawable slotDefault;
-    protected final IDrawable slotProbability;
+    private final IDrawable blockConversion;
+    private final IDrawable explosion;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final IDrawable icon;
     private final ITickTimer timer;
     private final Component title;
@@ -360,9 +360,5 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROYAL_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.EMBER_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.TRANSCENDENCE_ANVIL), AnvilCraftJeiPlugin.ANVIL_COLLISION);
-    }
-
-    private boolean isChance() {
-        return false;
     }
 }

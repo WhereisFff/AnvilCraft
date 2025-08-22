@@ -56,7 +56,7 @@ public class BoilingCategory extends AbstractProgressCategory<BoilingRecipe> {
             guiGraphics,
             Blocks.ANVIL.defaultBlockState(),
             81,
-            12 + anvilYOffset,
+            16 + anvilYOffset,
             20,
             12,
             RenderHelper.SINGLE_BLOCK);
@@ -64,7 +64,7 @@ public class BoilingCategory extends AbstractProgressCategory<BoilingRecipe> {
             guiGraphics,
             CauldronUtil.fullState(Blocks.WATER_CAULDRON),
             81,
-            30,
+            34,
             10,
             12,
             RenderHelper.SINGLE_BLOCK);
@@ -72,13 +72,13 @@ public class BoilingCategory extends AbstractProgressCategory<BoilingRecipe> {
             guiGraphics,
             Blocks.CAMPFIRE.defaultBlockState().setValue(CampfireBlock.LIT, true),
             81,
-            40,
+            44,
             0,
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowDefault.draw(guiGraphics, 54, 28);
+        arrowDefault.draw(guiGraphics, 92, 28);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (JeiRecipeUtil.isChance(this.getResults(recipe))) {

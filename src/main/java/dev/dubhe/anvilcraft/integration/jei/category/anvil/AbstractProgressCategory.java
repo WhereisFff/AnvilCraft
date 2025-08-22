@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.AbstractProcessRecipe;
 import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
@@ -39,6 +38,7 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
 
     protected final IDrawable arrowIn;
     protected final IDrawable arrowOut;
+    protected final IDrawable arrowDefault;
 
     public AbstractProgressCategory(IGuiHelper helper, IDrawable icon, Component title) {
         this.icon = icon;
@@ -47,8 +47,9 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
         this.title = title;
         this.timer = helper.createTickTimer(30, 60, true);
 
-        this.arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        this.arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        this.arrowIn = JeiRenderHelper.getArrowInput(helper);
+        this.arrowOut = JeiRenderHelper.getArrowOutput(helper);
+        this.arrowDefault = JeiRenderHelper.getArrowDefault(helper);
     }
 
     @Override

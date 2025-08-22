@@ -6,8 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 public class TextureConstants {
     public static final String BASE_PATH = "textures/gui/";
 
-    public static final ResourceLocation PROGRESS =
-        ResourceLocation.parse(BASE_PATH + "sprites/container/furnace/burn_progress.png");
+    public static final ResourceLocation PROGRESS = ResourceLocation.parse(BASE_PATH + "sprites/container/furnace/burn_progress.png");
 
     public static final ResourceLocation ANVIL_CRAFT_SPRITES = AnvilCraft.of(BASE_PATH + "sprites/jei.png");
 
@@ -25,11 +24,7 @@ public class TextureConstants {
 
     // Other
     public static final ResourceLocation EXPLOSION = AnvilCraft.of(BASE_PATH + "sprites/jei/explosion.png");
-
-
-    public static final ResourceLocation PRE_RENDERED_END_PORTAL =
-        AnvilCraft.of(BASE_PATH + "pre_rendered_end_portal.png");
-
+    public static final ResourceLocation PRE_RENDERED_END_PORTAL = AnvilCraft.of(BASE_PATH + "pre_rendered_end_portal.png");
     public static final ResourceLocation BLOCK_CONVERSION = AnvilCraft.of(BASE_PATH + "block_conversion.png");
     public static final ResourceLocation BLOCK_CRAFTING = AnvilCraft.of(BASE_PATH + "block_craft.png");
 }

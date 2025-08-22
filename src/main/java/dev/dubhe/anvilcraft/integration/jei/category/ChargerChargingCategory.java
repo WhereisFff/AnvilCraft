@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -37,7 +36,7 @@ public class ChargerChargingCategory implements IRecipeCategory<RecipeHolder<Cha
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
+    private final IDrawable slotDefault;
     private final Component title;
 
     private final IDrawable arrowIn;
@@ -53,8 +52,8 @@ public class ChargerChargingCategory implements IRecipeCategory<RecipeHolder<Cha
         slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.charger_charging");
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -111,8 +110,8 @@ public class ChargerChargingCategory implements IRecipeCategory<RecipeHolder<Cha
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
         JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, 1);

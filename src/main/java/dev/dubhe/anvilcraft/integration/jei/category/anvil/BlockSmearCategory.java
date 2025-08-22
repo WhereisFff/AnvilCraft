@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockSmearRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -40,15 +39,13 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable progress;
+    private final IDrawable arrowDefault;
     private final IDrawable icon;
     private final Component title;
     private final ITickTimer timer;
 
     public BlockSmearCategory(IGuiHelper helper) {
-        this.progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        this.arrowDefault = JeiRenderHelper.getArrowDefault(helper);
         this.icon = helper.createDrawableItemStack(new ItemStack(Items.ANVIL));
         this.title = Component.translatable("gui.anvilcraft.category.block_smear");
         this.timer = helper.createTickTimer(30, 60, true);
@@ -82,8 +79,13 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BlockSmearRecipe> recipeHolder, IFocusGroup focuses) {
         BlockSmearRecipe recipe = recipeHolder.value();
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
-            .addItemStacks(recipe.getFirstInputBlock().getBlocks().stream().map(holder -> new ItemStack(holder.value())).toList());
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStacks(
+            recipe.getInputBlocks().stream().flatMap(
+                blockStatePredicate -> blockStatePredicate.getBlocks().stream().map(
+                    blockHolder -> new ItemStack(blockHolder.value())
+                )
+            ).toList()
+        );
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
             .addItemStack(new ItemStack(recipe.getFirstResultBlock().getState().getBlock()));
     }
@@ -98,7 +100,7 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
         BlockSmearRecipe recipe = recipeHolder.value();
 
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
-        progress.draw(guiGraphics, 69, 30);
+        arrowDefault.draw(guiGraphics, 73, 35);
 
         RenderHelper.renderBlock(
             guiGraphics,

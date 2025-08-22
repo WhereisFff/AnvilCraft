@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
@@ -44,11 +43,11 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    protected final IDrawable slotDefault;
-    protected final IDrawable slotProbability;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final Component title;
 
-    private final IDrawable arrowIn;
+    private final IDrawable arrowDefault;
 
     private static final String KEY_CATEGORY = "gui.anvilcraft.category.mob_transform_with_item";
     private static final String KEY_CHANCE = "gui.anvilcraft.category.mob_transform_with_item.chance_per_item";
@@ -59,9 +58,7 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
         slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable(KEY_CATEGORY);
 
-        arrowIn = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
     }
 
     @Override
@@ -157,7 +154,7 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 69, 15);
+        arrowDefault.draw(guiGraphics, 74, 22);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 2);
         if (recipe.chancePercentPerItem == 0) {

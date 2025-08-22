@@ -31,8 +31,8 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    protected final IDrawable slotDefault;
-    protected final IDrawable slotChoice;
+    private final IDrawable slotDefault;
+    private final IDrawable slotChoice;
     private final IDrawable preRenderedEndPortal;
     private final Component title;
     private final Component fallThroughTooltip;
@@ -48,8 +48,8 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
         title = Component.translatable("gui.anvilcraft.category.end_portal_conversion");
         fallThroughTooltip = Component.translatable("gui.anvilcraft.category.end_portal_conversion.fall_through");
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -96,8 +96,8 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
         pose.scale(0.1f, 0.1f, 1.0f);
         preRenderedEndPortal.draw(guiGraphics, 600, 350);
         pose.popPose();
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.ingredients.size());
         JeiSlotUtil.drawOutputSlots(guiGraphics, slotChoice, recipe.results.size());
