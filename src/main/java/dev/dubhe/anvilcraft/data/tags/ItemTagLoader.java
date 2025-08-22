@@ -192,8 +192,11 @@ public class ItemTagLoader {
         provider.addTag(ModItemTags.TOTEM)
             .add(findResourceKey(Items.TOTEM_OF_UNDYING));
 
+        provider.addTag(ItemTags.SWORDS)
+            .addTag(ModItemTags.HEAVY_HALBERD);
         provider.addTag(ItemTags.AXES)
-            .addTag(ModItemTags.RESONATOR);
+            .addTag(ModItemTags.RESONATOR)
+            .addTag(ModItemTags.HEAVY_HALBERD);
         provider.addTag(ItemTags.SHOVELS)
             .addTag(ModItemTags.RESONATOR);
         provider.addTag(ItemTags.HOES)

@@ -11,7 +11,6 @@ import dev.dubhe.anvilcraft.item.abnormal.IRadiation;
 import dev.dubhe.anvilcraft.item.abnormal.ISuperHeavy;
 import dev.dubhe.anvilcraft.item.amulet.ComradeAmuletItem;
 import dev.dubhe.anvilcraft.util.Util;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -148,10 +147,8 @@ public class ModAmuletTypes {
         type -> AmuletType.builder()
             .obtainByMurder(type)
             .inventoryTick((player, amulet, isEnabled) -> {
-                CompoundTag root = player.getData(ModDataAttachments.SCARE_ENTITIES);
-                root.putBoolean("creepers", isEnabled);
-                root.putBoolean("phantoms", isEnabled);
-                player.setData(ModDataAttachments.SCARE_ENTITIES, root);
+                player.setData(ModDataAttachments.SCARE_CREEPERS, isEnabled);
+                player.setData(ModDataAttachments.SCARE_PHANTOMS, isEnabled);
             })
             .amulet(ModItems.CAT_AMULET)
     );
@@ -159,11 +156,7 @@ public class ModAmuletTypes {
         "dog",
         type -> AmuletType.builder()
             .obtainByMurder(type)
-            .inventoryTick((player, amulet, isEnabled) -> {
-                CompoundTag root = player.getData(ModDataAttachments.SCARE_ENTITIES);
-                root.putBoolean("skeletons", isEnabled);
-                player.setData(ModDataAttachments.SCARE_ENTITIES, root);
-            })
+            .inventoryTick((player, amulet, isEnabled) -> player.setData(ModDataAttachments.SCARE_SKELETONS, isEnabled))
             .amulet(ModItems.DOG_AMULET)
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> SILENCE = register(

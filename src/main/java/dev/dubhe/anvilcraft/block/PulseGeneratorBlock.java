@@ -6,6 +6,8 @@ import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
@@ -14,7 +16,9 @@ import net.minecraft.core.particles.DustParticleOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -268,15 +272,33 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
     }
 
     @Override
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
+    ) {
+        if (level.isClientSide) return ItemInteractionResult.SUCCESS;
+        if (player instanceof ServerPlayer serverPlayer) {
+            if (level.getBlockEntity(pos) instanceof PulseGeneratorBlockEntity be && player.getItemInHand(hand).is(ModItems.DISK)) {
+                return Util.interactionResultConverter()
+                    .apply(be.useDisk(level, serverPlayer, hand, serverPlayer.getItemInHand(hand), hitResult));
+            }
+        }
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED);
     }
 
     @Override
     public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
-        BlockState bs = level.getBlockState(blockPos);
-        level.setBlockAndUpdate(blockPos, bs.cycle(FACING));
-        return true;
+        return level.setBlockAndUpdate(blockPos, level.getBlockState(blockPos).cycle(FACING));
     }
 
     @Override
@@ -286,20 +308,16 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
 
     @Override
     public @NotNull CompoundTag clearData(@NotNull Level level, @NotNull BlockPos pos) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PulseGeneratorBlockEntity gen) {
-            return gen.exportMoveData();
-        }
-        return new CompoundTag();
+        CompoundTag data = new CompoundTag();
+        level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
+            .ifPresent(be -> be.saveAdditional(data, level.registryAccess()));
+        return data;
     }
 
     @Override
     public void setData(@NotNull Level level, @NotNull BlockPos pos, @NotNull CompoundTag tag) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof PulseGeneratorBlockEntity gen) {
-            BlockState state = level.getBlockState(pos);
-            gen.applyMoveData(level, pos, state, tag);
-        }
+        level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
+            .ifPresent(be -> be.loadAdditional(tag, level.registryAccess()));
     }
 }
 

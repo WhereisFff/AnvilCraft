@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.recipe.anvil.cache;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlockEntityTags;
-import dev.dubhe.anvilcraft.init.ModEntityTags;
+import dev.dubhe.anvilcraft.init.ModEntityTypeTags;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.item.ICacheElement;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.item.ICacheInput;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.item.ICacheInputOutputImpl;
@@ -225,7 +225,7 @@ public class ItemCache {
         Vec3 elementRange = new Vec3(minRange, minRange, minRange);
         if (entity instanceof IItemHandlerCache cache) {
             ItemCache.toElement(itemCache, cache, input, output, elementPos, elementRange);
-        } else if (entity instanceof IItemHandler handler && entity.getType().is(ModEntityTags.ITEM_CACHE)) {
+        } else if (entity instanceof IItemHandler handler && entity.getType().is(ModEntityTypeTags.ITEM_CACHE)) {
             ItemCache.toElement(itemCache, handler, input, output, elementPos, elementRange);
         }
         return Map.entry(input, output);

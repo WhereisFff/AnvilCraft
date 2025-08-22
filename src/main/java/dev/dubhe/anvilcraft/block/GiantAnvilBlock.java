@@ -298,7 +298,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
                 BlockPos pos1 = belowPos.offset(new Vec3i(dx, 0, dz));
-                NeoForge.EVENT_BUS.post(new AnvilEvent.OnLand(level, pos1, fallingBlock, fallingBlock.fallDistance));
+                NeoForge.EVENT_BUS.post(new AnvilEvent.OnLand(level, pos1, fallingBlock, fallDistance));
             }
         }
 
