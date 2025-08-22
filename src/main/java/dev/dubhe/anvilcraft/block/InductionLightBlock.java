@@ -110,7 +110,8 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         BlockState state,
         BlockGetter level,
         BlockPos pos,
-        CollisionContext context) {
+        CollisionContext context
+    ) {
         return switch (state.getValue(AXIS)) {
             case Y -> SHAPE_Y;
             case Z -> SHAPE_Z;
@@ -166,7 +167,8 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         BlockPos pos,
         Player player,
         InteractionHand hand,
-        BlockHitResult hit) {
+        BlockHitResult hit
+    ) {
         if (level instanceof ClientLevel) return InteractionResult.SUCCESS;
         ItemStack itemInHand = player.getItemInHand(hand);
         if (itemInHand.is(ModBlocks.INDUCTION_LIGHT.asItem())) {
@@ -189,9 +191,11 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
             return InteractionResult.SUCCESS;
         } else if (itemInHand.is(ItemTags.AXES)) {
             level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PRIMARY));
-            itemInHand.hurtAndBreak(1, (ServerLevel) level, (ServerPlayer) player, item -> {
-                player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand));
-            });
+            itemInHand.hurtAndBreak(
+                1, (ServerLevel) level, (ServerPlayer) player, item -> {
+                    player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand));
+                }
+            );
             return InteractionResult.CONSUME_PARTIAL;
         } else if (itemInHand.is(ModItems.VOID_MATTER.asItem())) {
             level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.DARK));
@@ -209,7 +213,8 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         return createTickerHelper(
             type,
             ModBlockEntities.INDUCTION_LIGHT.get(),
-            (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1));
+            (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1)
+        );
     }
 
     @Override
@@ -219,7 +224,8 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         BlockPos pos,
         Block neighborBlock,
         BlockPos neighborPos,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (level.isClientSide) return;
         if (state.getValue(WATERLOGGED)) level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         if (state.getValue(OVERLOAD)) return;

@@ -103,10 +103,10 @@ public class RipeningManager {
      */
     private void tick() {
         cooldown--;
-        if (cooldown <= 0 && !lightBlocks.isEmpty()) {
+        if (cooldown == 1 && !lightBlocks.isEmpty()) {
             MinecraftServer server = level.getServer();
             if (server == null) return;
-            server.tell(new TickTask(server.getTickCount(), () -> {
+            server.tell(new TickTask(server.getTickCount() + 1, () -> {
                 HashSet<BlockPos> ripenedBlocks = new HashSet<>();
                 Iterator<BlockPos> it = lightBlocks.iterator();
                 while (it.hasNext()) {
