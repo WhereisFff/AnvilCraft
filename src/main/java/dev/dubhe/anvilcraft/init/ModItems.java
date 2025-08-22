@@ -839,6 +839,25 @@ public class ModItems {
 
     public static final ItemEntry<FilterItem> FILTER = REGISTRATE
         .item("filter", FilterItem::new)
+        .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
+            RecipeCategory.TOOLS, ctx.get())
+                .pattern("ACA")
+                .pattern("ABA")
+                .pattern("AAA")
+                .define('A', ModItems.HARDEND_RESIN)
+                .define('B', Items.HOPPER)
+                .define('C', ModItems.CIRCUIT_BOARD)
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.HARDEND_RESIN),
+                    RegistrateRecipeProvider.has(ModItems.HARDEND_RESIN)
+                )
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.HOPPER), RegistrateRecipeProvider.has(Items.HOPPER))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModItems.CIRCUIT_BOARD),
+                    RegistrateRecipeProvider.has(ModItems.CIRCUIT_BOARD)
+                )
+                .save(provider)
+        )
         .properties((properties) -> properties.stacksTo(16))
         .register();
 
