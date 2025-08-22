@@ -70,8 +70,7 @@ public class AnvilCraft {
     public static final String MOD_ID = "anvilcraft";
     public static final String MOD_NAME = "AnvilCraft";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
-    public static final Gson GSON =
-        new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
+    public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
     public static IEventBus MOD_BUS = null;
     public static final ConfigManager CONFIG_MANAGER = new ConfigManager();
     public static final AnvilCraftServerConfig CONFIG = CONFIG_MANAGER.register(new AnvilCraftServerConfig());
@@ -164,17 +163,15 @@ public class AnvilCraft {
 
     public static void addReloadListeners(@NotNull AddReloadListenerEvent event) {
         RecipeManager recipeManager = event.getServerResources().getRecipeManager();
-        event.addListener(
-            (
-                prepBarrier,
-                resourceManager,
-                prepProfiler, reloadProfiler,
-                backgroundExecutor,
-                gameExecutor
-            ) -> prepBarrier
-                .wait(Unit.INSTANCE)
-                .thenRunAsync(() -> RecipeCaches.reload(recipeManager), gameExecutor)
-        );
+        event.addListener((
+            prepBarrier,
+            resourceManager,
+            prepProfiler,
+            reloadProfiler,
+            backgroundExecutor,
+            gameExecutor
+        ) -> prepBarrier.wait(Unit.INSTANCE)
+            .thenRunAsync(() -> RecipeCaches.reload(recipeManager), gameExecutor));
     }
 
     public static void loadComplete(@NotNull FMLLoadCompleteEvent event) {
