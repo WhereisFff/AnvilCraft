@@ -63,7 +63,7 @@
       "type": "patchouli:relations",
       "entries": [
         "anvilcraft:struct/multiblock",
-        "anvilcraft:struct/high_speed_impact"
+        "anvilcraft:struct/collision"
       ],
       "text": ""
     }

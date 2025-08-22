@@ -130,7 +130,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "Using $(item)Ember anvil$()[speed>32m/t]$(l:struct/high_speed_impact)to Collide $()$(l:smithing/tier_2_materials#frost_metal_block_and_nugget)Frost Metal Block$(/l), you will get four $(item)Multiphase Matter$()"
+      "text": "Using $(item)Ember anvil$()[speed>32m/t]$(l:struct/collision)to Collide $()$(l:smithing/tier_2_materials#frost_metal_block_and_nugget)Frost Metal Block$(/l), you will get four $(item)Multiphase Matter$()"
     },
     {
       "type": "patchouli:crafting",
