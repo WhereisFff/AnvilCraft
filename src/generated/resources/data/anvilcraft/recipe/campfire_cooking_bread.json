@@ -4,7 +4,7 @@
   "cookingtime": 600,
   "experience": 0.35,
   "ingredient": {
-    "tag": "c:dough"
+    "tag": "c:foods/dough"
   },
   "result": {
     "count": 1,

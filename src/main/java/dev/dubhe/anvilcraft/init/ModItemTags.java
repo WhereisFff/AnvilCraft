@@ -13,11 +13,14 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("unused")
 public class ModItemTags {
     public static final TagKey<Item> RESIN = bindC("resin");
-    public static final TagKey<Item> CREAM = bindC("cream");
-    public static final TagKey<Item> FLOUR = bindC("flour");
+    public static final TagKey<Item> CREAM = bindC("foods/cream");
+    public static final TagKey<Item> FLOUR = bindC("foods/flour");
     public static final TagKey<Item> WHEAT_FLOUR = bindC("flour/wheat");
-    public static final TagKey<Item> DOUGH = bindC("dough");
+    public static final TagKey<Item> DOUGH = bindC("foods/dough");
     public static final TagKey<Item> WHEAT_DOUGH = bindC("dough/wheat");
+    public static final TagKey<Item> RAW_MUTTON = bindC("foods/raw_mutton");
+    public static final TagKey<Item> RAW_BEEF = bindC("foods/raw_beef");
+    public static final TagKey<Item> RAW_CHICKEN = bindC("foods/raw_chicken");
 
     public static final TagKey<Item> PLATES = bindC("plates");
     public static final TagKey<Item> GOLD_PLATES = bindC("plates/gold");
@@ -169,7 +172,9 @@ public class ModItemTags {
     public static final TagKey<Item> HEATABLE_BLOCKS = bind("heatable_blocks");
     public static final TagKey<Item> LEVITATIONALS = bind("levitationals");
     public static final TagKey<Item> RADIATIONS = bind("radiations");
+
     public static final TagKey<Item> COMPRESS_ITEM = bind("compress_item");
+    public static final TagKey<Item> SUPER_HEATING_BOOST_PRODUCTION = bind("super_heating_boost_production");
 
     public static final TagKey<Item> CURIOS_HEAD = bindCurios("head");
     public static final TagKey<Item> CURIOS_IONOCRAFT_BACKPACK = bindCurios("ionocraft_backpack");

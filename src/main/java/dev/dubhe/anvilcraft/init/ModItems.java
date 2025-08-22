@@ -1181,7 +1181,9 @@ public class ModItems {
     }
 
     public static final ItemEntry<Item> CREAM =
-        REGISTRATE.item("cream", Item::new).register();
+        REGISTRATE.item("cream", Item::new)
+            .tag(ModItemTags.CREAM)
+            .register();
     public static final ItemEntry<Item> FLOUR = REGISTRATE
         .item("flour", Item::new)
         .tag(ModItemTags.FLOUR, ModItemTags.WHEAT_FLOUR)
@@ -1454,6 +1456,7 @@ public class ModItems {
         .register();
     public static final ItemEntry<Item> RESIN = REGISTRATE
         .item("resin", Item::new)
+        .tag(ModItemTags.RESIN)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.RESIN_BLOCK)
