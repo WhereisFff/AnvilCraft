@@ -51,7 +51,7 @@ public class InWorldRecipeManager {
         for (RecipeHolder<InWorldRecipe> holder : recipeHolders.get(trigger)) {
             InWorldRecipe recipe = holder.value();
             boolean accept = false;
-            for (int i = 0; i < AnvilCraft.config.anvilEfficiency; i++) {
+            for (int i = 0; i < AnvilCraft.CONFIG.anvilEfficiency; i++) {
                 if (!recipe.matches(ctx, ctx.getLevel())) {
                     if (!accept) break;
                     return;

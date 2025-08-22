@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.data;
 
 import com.tterrag.registrate.providers.ProviderType;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.data.advancement.AdvancementHandler;
 import dev.dubhe.anvilcraft.data.lang.LangHandler;
 import dev.dubhe.anvilcraft.data.provider.ModDamageTypeProvider;
@@ -55,7 +55,7 @@ public class AnvilCraftDatagen {
         generator.addProvider(event.includeClient(), new ModParticleDescriptionProvider(packOutput, existingFileHelper));
 
         IntegrationHook.setEvent(event);
-        AnvilCraft.getIntegrationManager().loadAllDataIntegrations();
+        AnvilCraft.getINTEGRATION_MANAGER().loadAllDataIntegrations();
     }
 
     /**

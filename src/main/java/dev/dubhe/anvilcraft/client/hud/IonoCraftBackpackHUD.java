@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.client.hud;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.AnvilCraftClient;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import net.minecraft.client.DeltaTracker;
@@ -18,7 +19,7 @@ public class IonoCraftBackpackHUD {
     private static final ResourceLocation BATTERY_FULL = AnvilCraft.of("widget/battery_display/battery_full");
 
     public static void render(GuiGraphics guiGraphics, DeltaTracker partialTick) {
-        if (!AnvilCraft.config.ionoCraftBackpackHud.enabled) {
+        if (!AnvilCraftClient.CONFIG.ionoCraftBackpackHud.enabled) {
             return;
         }
         Minecraft mc = Minecraft.getInstance();
@@ -32,15 +33,15 @@ public class IonoCraftBackpackHUD {
             return;
         }
         int flightTime = IonoCraftBackpackItem.getFlightTime(itemStack);
-        int percent = Math.round((float) flightTime / AnvilCraft.config.ionoCraftBackpackMaxFlightTime * 100);
+        int percent = Math.round((float) flightTime / AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime * 100);
 
         Font font = mc.font;
         PoseStack poseStack = guiGraphics.pose();
         poseStack.pushPose();
 
-        int x = AnvilCraft.config.ionoCraftBackpackHud.hudX;
-        int y = AnvilCraft.config.ionoCraftBackpackHud.hudY;
-        float scale = AnvilCraft.config.ionoCraftBackpackHud.hudScale;
+        int x = AnvilCraftClient.CONFIG.ionoCraftBackpackHud.hudX;
+        int y = AnvilCraftClient.CONFIG.ionoCraftBackpackHud.hudY;
+        float scale = AnvilCraftClient.CONFIG.ionoCraftBackpackHud.hudScale;
 
         poseStack.scale(scale, scale, scale);
         poseStack.translate(x, y, 0);

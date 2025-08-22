@@ -1,10 +1,9 @@
 package dev.dubhe.anvilcraft.integration.curios;
 
 import com.simibubi.create.content.equipment.goggles.GogglesItem;
+import dev.anvilcraft.lib.integration.Integration;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletManager;
-import dev.dubhe.anvilcraft.api.integration.Integration;
-import dev.dubhe.anvilcraft.config.AnvilCraftConfig.GoggleMode;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.integration.curios.renderer.GogglesCurioRenderer;
 import dev.dubhe.anvilcraft.integration.curios.renderer.IonoCraftBackpackCurioRenderer;
@@ -81,8 +80,8 @@ public class CuriosIntegration {
     }
 
     private boolean isAnvilHammerWearing(ICuriosItemHandler itemHandler) {
-        if (AnvilCraft.config.goggleMode != GoggleMode.WEARING_HAMMER) return false;
-        else return !itemHandler.findCurios(it -> it.getItem() instanceof AnvilHammerItem).isEmpty();
+//        if (AnvilCraft.config.goggleMode != GoggleMode.WEARING_HAMMER) return false;
+        return !itemHandler.findCurios(it -> it.getItem() instanceof AnvilHammerItem).isEmpty();
     }
 
     private ItemStack getIonoCraftBackpackWearing(ICuriosItemHandler itemHandler) {

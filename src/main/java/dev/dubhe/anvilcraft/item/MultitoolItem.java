@@ -253,7 +253,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
     private InteractionResultHolder<ItemStack> useAsMagnet(Level level, Player player, InteractionHand usedHand) {
         if (player.isShiftKeyDown()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
         ItemStack item = player.getItemInHand(usedHand);
-        double radius = AnvilCraft.config.magnetItemAttractsRadius;
+        double radius = AnvilCraft.CONFIG.magnetItemAttractsRadius;
         UseMagnetEvent event = new UseMagnetEvent(level, player, radius);
         ModLoader.postEvent(event);
         if (event.isCanceled()) return InteractionResultHolder.pass(item);

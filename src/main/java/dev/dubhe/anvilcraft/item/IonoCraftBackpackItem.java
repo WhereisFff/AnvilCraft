@@ -130,7 +130,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
     }
 
     public static void addFlightTime(ItemStack stack, int time) {
-        stack.set(ModComponents.FLIGHT_TIME, Math.clamp(getFlightTime(stack) + time, 0, AnvilCraft.config.ionoCraftBackpackMaxFlightTime));
+        stack.set(ModComponents.FLIGHT_TIME, Math.clamp(getFlightTime(stack) + time, 0, AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime));
     }
 
     public static boolean canModify(ItemStack stack, DynamicPowerComponent component) {
@@ -168,7 +168,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
                 instance.removeModifier(CREATIVE_FLIGHT);
             }
             return;
-        } else if (getFlightTime(equipped) >= AnvilCraft.config.ionoCraftBackpackMaxFlightTime && !player.getAbilities().flying) {
+        } else if (getFlightTime(equipped) >= AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime && !player.getAbilities().flying) {
             powerComponent.getPowerConsumptions().remove(CONSUMPTION);
             return;
         }
@@ -217,7 +217,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
     }
 
     private static void capacitorTick(IDynamicPowerComponentHolder holder, ItemStack backpack, AtomicInteger flightTime) {
-        if (getFlightTime(backpack) > AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2) return;
+        if (getFlightTime(backpack) > AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime / 2) return;
 
         if (!(holder instanceof ServerPlayer player)) return;
         Inventory inventory = player.getInventory();
@@ -226,7 +226,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
 
         inventory.removeItem(slot, 1);
         inventory.placeItemBackInInventory(ModItems.CAPACITOR_EMPTY.asStack());
-        flightTime.addAndGet(AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 2);
+        flightTime.addAndGet(AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime / 2);
     }
 
     @Override

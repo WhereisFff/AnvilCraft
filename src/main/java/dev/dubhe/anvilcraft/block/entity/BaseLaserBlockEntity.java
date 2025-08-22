@@ -65,7 +65,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
             || blockState.is(Tags.Blocks.GLASS_BLOCKS)
             || blockState.is(Tags.Blocks.GLASS_PANES)
             || blockState.is(BlockTags.REPLACEABLE)) return true;
-        if (!AnvilCraft.config.isLaserDoImpactChecking) return false;
+        if (!AnvilCraft.CONFIG.isLaserDoImpactChecking) return false;
         AABB laseBoundingBox =
             switch (direction.getAxis()) {
                 case X -> Block.box(0, 7, 7, 16, 9, 9).bounds();
