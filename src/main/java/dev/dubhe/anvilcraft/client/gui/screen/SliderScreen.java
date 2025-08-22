@@ -40,8 +40,8 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int offsetX = (this.width - this.imageWidth) / 2;
         int offsetY = (this.height - this.imageHeight) / 2;
-        this.slider = new Slider(8 + offsetX, 31 + offsetY, 0, 16, 160, this::update);
         this.value = new EditBox(this.font, offsetX + 50, offsetY + 47, 76, 8, Component.literal("value"));
+        this.slider = new Slider(8 + offsetX, 31 + offsetY, -8192, 8192, 160 - 16, this::update);
         this.value.setCanLoseFocus(false);
         this.value.setTextColor(-1);
         this.value.setTextColorUneditable(-1);
@@ -119,7 +119,7 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
             this.value.setValue("" + this.slider.getValue());
             return;
         }
-        this.slider.setValueWithUpdate(v);
+        this.slider.setValue(v);
     }
 
     public void setMin(int min) {
@@ -137,6 +137,27 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
     @Override
     protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0x404040, false);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            slider.onClick(mouseX, mouseY);
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        this.slider.onDrag(mouseX, mouseY, dragX, dragY);
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.slider.onReleased();
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override

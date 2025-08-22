@@ -15,6 +15,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.function.Function;
+
 public class Slider extends AbstractWidget {
     public static final ResourceLocation SLIDER = AnvilCraft.of("textures/gui/container/slider/slider.png");
 
@@ -26,16 +28,18 @@ public class Slider extends AbstractWidget {
     @Getter
     private int max;
 
-    @Getter
-    private int value;
-
+    private double proportion;
     private final int posX;
     private final int posY;
     private final int length;
+    private final Function<Double, Double> valueFunction;
+    private final Function<Integer, Double> argFunction;
     public final Callback<Integer> callback;
-    private int tooltipMsDelay;
+    protected final int tooltipMsDelay = 1;
     private long hoverOrFocusedStartTime;
     private boolean wasHoveredOrFocused;
+    private boolean scroll = false;
+    public static boolean scrolling = false;
 
     /**
      * @param x        X
@@ -45,94 +49,121 @@ public class Slider extends AbstractWidget {
      * @param length   长度
      * @param callback 更新回调
      */
-    public Slider(int x, int y, int min, int max, int length, Callback<Integer> callback) {
+    public Slider(
+        int x,
+        int y,
+        int min,
+        int max,
+        int length,
+        Function<Double, Double> valueFunction,
+        Function<Integer, Double> argFunction,
+        Callback<Integer> callback
+    ) {
         super(x, y, length, 8, Component.literal("Slider"));
         this.posX = x;
         this.posY = y;
         this.min = min;
         this.max = max;
         this.length = length;
+        this.valueFunction = valueFunction;
+        this.argFunction = argFunction;
         this.callback = callback;
     }
 
+    public Slider(int x, int y, int min, int max, int length, Callback<Integer> callback) {
+        this(
+            x,
+            y,
+            min,
+            max,
+            length,
+            i -> Slider.defaultValueFunction(i, min, max),
+            i -> Slider.defaultArgFunction(i, min, max),
+            callback
+        );
+    }
+
     public double getProportion() {
-        return Math.max(0.0, Math.min(1.0, (double) (value - this.min) / (this.max - this.min)));
+        return Math.clamp(this.proportion, 0.0, 1.0);
     }
 
     public void setProportion(double proportion) {
-        this.value = (int) ((max - min) * proportion + min);
+        this.proportion = Math.clamp(proportion, 0.0, 1.0);
+    }
+
+    public static double defaultValueFunction(double proportion, int min, int max) {
+        return (max - min) * proportion + min;
+    }
+
+    public static double defaultArgFunction(int value, int min, int max) {
+        return Math.clamp(((double) value - min) / (max - min), 0.0, 1.0);
     }
 
     public void setValue(int value) {
-        this.value = Math.max(this.min, Math.min(this.max, value));
+        this.proportion = this.argFunction.apply(value);
+    }
+
+    public int getValue() {
+        return (int) Math.round(this.valueFunction.apply(this.proportion));
     }
 
     /**
      * @param value 设置 Value 并更新
      */
     public void setValueWithUpdate(int value) {
-        if (this.value == value) return;
         this.setValue(value);
         this.update();
     }
 
     private void update() {
-        if (this.callback != null) this.callback.onValueChange(this.value);
+        if (this.callback != null) this.callback.onValueChange(this.getValue());
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (button == 0) {
-            this.onDrag(mouseX, mouseY, dragX, dragY);
-            return true;
-        }
-        return false;
-    }
-
-    @Override
+    @SuppressWarnings("deprecation")
     public void onClick(double mouseX, double mouseY) {
         super.onClick(mouseX, mouseY);
-        if (!isInRange(mouseX, mouseY)) return;
-        if (isInSlider(mouseX, mouseY)) {
-            super.onClick(mouseX, mouseY);
+        if (this.isInSlider(mouseX, mouseY)) {
+            scrolling = true;
             return;
         }
-        double offset = 16.0 / this.length;
-        int offsetX = posX + (int) ((length - 16) * this.getProportion());
-        if (mouseX < offsetX) this.setProportion(Math.max(0.0, this.getProportion() - offset));
-        else this.setProportion(Math.min(1.0, this.getProportion() + offset));
-        this.update();
+        scrolling = false;
     }
 
-    @Override
-    protected void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
+    public void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
         super.onDrag(mouseX, mouseY, dragX, dragY);
-        if (!isInSlider(mouseX, mouseY)) return;
-        double offset = dragX - mouseX / this.length;
-        this.setProportion(Math.max(0.0, Math.min(1.0, this.getProportion() + offset)));
+        if (scrolling || this.scroll) {
+            if (scrolling) {
+                this.scroll = true;
+                scrolling = false;
+            }
+            double offset = (mouseX - 8 - this.posX) / this.length;
+            this.setProportion(offset);
+        }
+    }
+
+    public void onReleased() {
         this.update();
+        this.scroll = false;
+        scrolling = false;
     }
 
     protected boolean isInSlider(double mouseX, double mouseY) {
-        int offsetX = posX + (int) ((length - 16) * this.getProportion());
+        int offsetX = posX + (int) (length * this.getProportion());
         return mouseX > offsetX && mouseX < offsetX + 16 && mouseY > posY && mouseY < posY + 8;
-    }
-
-    protected boolean isInRange(double mouseX, double mouseY) {
-        return mouseX > posX && mouseX < posX + length && mouseY > posY && mouseY < posY + 8;
     }
 
     @Override
     public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (!this.visible) return;
-        this.isHovered = this.isInRange(mouseX, mouseY);
+        this.isHovered = this.isInSlider(mouseX, mouseY);
         this.renderWidget(guiGraphics, mouseX, mouseY, partialTick);
         this.updateTooltip();
     }
 
     @Override
     protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        int offsetX = posX + (int) ((length - 16) * this.getProportion());
+        double prop = this.getProportion();
+        int offsetX = posX + (int) ((length) * prop);
         guiGraphics.blit(SLIDER, offsetX, posY, 0, this.isHovered ? 8 : 0, 16, 8, 16, 16);
     }
 
