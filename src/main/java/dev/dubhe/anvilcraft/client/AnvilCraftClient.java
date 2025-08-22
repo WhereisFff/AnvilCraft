@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client;
 
+import dev.anvilcraft.lib.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.client.event.GuiLayerRegistrationEventListener;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.client.init.ModModelLayers;
@@ -58,7 +58,7 @@ public class AnvilCraftClient {
     public static void clientSetup(FMLClientSetupEvent event) {
         IntegrationHook.setModEventBus(modEventBus);
         IntegrationHook.setModContainer(modContainer);
-        AnvilCraft.getIntegrationManager().loadAllClientIntegrations();
+        AnvilCraft.getINTEGRATION_MANAGER().loadAllClientIntegrations();
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent e) {

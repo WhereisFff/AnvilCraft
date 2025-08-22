@@ -7,6 +7,9 @@ dependencies {
     implementation(libs.anvillib)
     jarJar(libs.anvillib)
 
+    // Cloth Config
+    runtimeOnly(libs.clothConfig)
+
     // Curios API
     implementation(libs.curios)
 

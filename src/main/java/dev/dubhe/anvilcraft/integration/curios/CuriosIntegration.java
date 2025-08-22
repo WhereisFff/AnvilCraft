@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.integration.curios;
 
 import com.simibubi.create.content.equipment.goggles.GogglesItem;
+import dev.anvilcraft.lib.integration.Integration;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.AmuletManager;
-import dev.dubhe.anvilcraft.api.integration.Integration;
 import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.integration.curios.renderer.GogglesCurioRenderer;
 import dev.dubhe.anvilcraft.integration.curios.renderer.IonoCraftBackpackCurioRenderer;
