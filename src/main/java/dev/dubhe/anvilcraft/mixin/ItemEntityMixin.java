@@ -118,7 +118,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
             value = "INVOKE",
             target =
                 "Lnet/minecraft/world/entity/item/ItemEntity;"
-                    + "getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
+                + "getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
         )
     )
     private @NotNull Vec3 slowDown(ItemEntity instance) {
@@ -199,9 +199,10 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     private void eternalProof(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.getItem().has(ModComponents.ETERNAL)
             && (source.is(DamageTypeTags.IS_EXPLOSION)
-            || source.is(DamageTypeTags.IS_FIRE)
-            || source.is(DamageTypes.CACTUS)
-            || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
+                || source.is(DamageTypeTags.IS_LIGHTNING)
+                || source.is(DamageTypeTags.IS_FIRE)
+                || source.is(DamageTypes.CACTUS)
+                || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
             cir.setReturnValue(false);
         }
     }
@@ -254,7 +255,8 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         Vec3 vec3 = this.getDeltaMovement();
         this.applyGravity();
         this.noPhysics = false;
-        if (!this.onGround() || this.getDeltaMovement().horizontalDistanceSqr() > (double) 1.0E-5F || (this.tickCount + this.getId()) % 4 == 0) {
+        if (!this.onGround() || this.getDeltaMovement().horizontalDistanceSqr() > (double) 1.0E-5F
+            || (this.tickCount + this.getId()) % 4 == 0) {
             this.anvilCraft$neutroniumMove(MoverType.SELF, this.getDeltaMovement());
             float f = 0.98F;
             if (this.onGround()) {
@@ -269,7 +271,9 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
                 }
             }
         }
-        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX()) || Mth.floor(this.yo) != Mth.floor(this.getY()) || Mth.floor(this.zo) != Mth.floor(this.getZ());
+        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX()) || Mth.floor(this.yo) != Mth.floor(this.getY()) || Mth.floor(this.zo)
+                                                                                                                       != Mth.floor(
+            this.getZ());
         int i = flag ? 2 : 40;
         if (this.tickCount % i == 0 && !this.level().isClientSide && this.isMergable()) {
             this.mergeWithNeighbours();
