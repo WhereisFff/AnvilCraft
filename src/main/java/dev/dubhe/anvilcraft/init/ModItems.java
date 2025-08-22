@@ -1245,7 +1245,7 @@ public class ModItems {
 
     public static final ItemEntry<? extends Item> FROST_METAL_INGOT = REGISTRATE
         .item("frost_metal_ingot", Item::new)
-        .tag(Tags.Items.INGOTS, ModItemTags.FROST_METAL_NUGGETS)
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS, Tags.Items.INGOTS, ModItemTags.FROST_METAL_INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.FROST_METAL_BLOCK)
@@ -1283,7 +1283,7 @@ public class ModItems {
     public static final ItemEntry<? extends Item> EMBER_METAL_INGOT = REGISTRATE
         .item("ember_metal_ingot", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(Tags.Items.INGOTS)
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS, Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.EMBER_METAL_BLOCK)
@@ -1322,7 +1322,7 @@ public class ModItems {
     public static final ItemEntry<? extends Item> TRANSCENDIUM_INGOT = REGISTRATE
         .item("transcendium_ingot", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(Tags.Items.INGOTS, ModItemTags.EXPLOSION_PROOF, ModItemTags.TRANSCENDIUM_INGOTS)
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS, Tags.Items.INGOTS, ModItemTags.EXPLOSION_PROOF, ModItemTags.TRANSCENDIUM_INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.TRANSCENDIUM_BLOCK)
@@ -1499,7 +1499,8 @@ public class ModItems {
     public static final ItemEntry<Item> TUNGSTEN_INGOT = REGISTRATE
         .item("tungsten_ingot", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
-        .tag(ModItemTags.TUNGSTEN_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.TUNGSTEN_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -1572,7 +1573,8 @@ public class ModItems {
         .register();
     public static final ItemEntry<Item> TITANIUM_INGOT = REGISTRATE
         .item("titanium_ingot", Item::new)
-        .tag(ModItemTags.TITANIUM_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.TITANIUM_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -1645,7 +1647,8 @@ public class ModItems {
         .register();
     public static final ItemEntry<Item> ZINC_INGOT = REGISTRATE
         .item("zinc_ingot", Item::new)
-        .tag(ModItemTags.ZINC_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.ZINC_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -1718,7 +1721,8 @@ public class ModItems {
         .register();
     public static final ItemEntry<Item> TIN_INGOT = REGISTRATE
         .item("tin_ingot", Item::new)
-        .tag(ModItemTags.TIN_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.TIN_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -1791,7 +1795,8 @@ public class ModItems {
         .register();
     public static final ItemEntry<Item> LEAD_INGOT = REGISTRATE
         .item("lead_ingot", Item::new)
-        .tag(ModItemTags.LEAD_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.LEAD_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -1864,7 +1869,8 @@ public class ModItems {
         .register();
     public static final ItemEntry<Item> SILVER_INGOT = REGISTRATE
         .item("silver_ingot", Item::new)
-        .tag(ModItemTags.SILVER_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.SILVER_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -1937,7 +1943,7 @@ public class ModItems {
         .register();
     public static final ItemEntry<RadiationItem> URANIUM_INGOT = REGISTRATE
         .item("uranium_ingot", RadiationItem::new)
-        .tag(ModItemTags.URANIUM_INGOTS, Tags.Items.INGOTS, ModItemTags.RADIATIONS)
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS, ModItemTags.URANIUM_INGOTS, Tags.Items.INGOTS, ModItemTags.RADIATIONS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.URANIUM_BLOCK)
@@ -2008,7 +2014,7 @@ public class ModItems {
         .register();
     public static final ItemEntry<RadiationItem> PLUTONIUM_INGOT = REGISTRATE
         .item("plutonium_ingot", RadiationItem::new)
-        .tag(ModItemTags.PLUTONIUM_INGOTS, Tags.Items.INGOTS, ModItemTags.RADIATIONS)
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS, ModItemTags.PLUTONIUM_INGOTS, Tags.Items.INGOTS, ModItemTags.RADIATIONS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.PLUTONIUM_BLOCK)
@@ -2051,7 +2057,8 @@ public class ModItems {
 
     public static final ItemEntry<Item> BRONZE_INGOT = REGISTRATE
         .item("bronze_ingot", Item::new)
-        .tag(ModItemTags.BRONZE_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.BRONZE_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
@@ -2090,7 +2097,8 @@ public class ModItems {
 
     public static final ItemEntry<Item> BRASS_INGOT = REGISTRATE
         .item("brass_ingot", Item::new)
-        .tag(ModItemTags.BRASS_INGOTS,
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS,
+            ModItemTags.BRASS_INGOTS,
             Tags.Items.INGOTS)
         .recipe((ctx, provider) -> {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)

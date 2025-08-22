@@ -1,9 +1,22 @@
 {
   "values": [
     "anvilcraft:royal_steel_ingot",
+    "anvilcraft:frost_metal_ingot",
+    "anvilcraft:ember_metal_ingot",
+    "anvilcraft:transcendium_ingot",
     "anvilcraft:cursed_gold_ingot",
     "anvilcraft:topaz",
     "anvilcraft:ruby",
-    "anvilcraft:sapphire"
+    "anvilcraft:sapphire",
+    "anvilcraft:tungsten_ingot",
+    "anvilcraft:titanium_ingot",
+    "anvilcraft:zinc_ingot",
+    "anvilcraft:tin_ingot",
+    "anvilcraft:lead_ingot",
+    "anvilcraft:silver_ingot",
+    "anvilcraft:uranium_ingot",
+    "anvilcraft:plutonium_ingot",
+    "anvilcraft:bronze_ingot",
+    "anvilcraft:brass_ingot"
   ]
 }
