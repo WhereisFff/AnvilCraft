@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.api.tooltip.impl;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.PowerComponentInfo;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
@@ -9,6 +8,7 @@ import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
 import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
+import dev.dubhe.anvilcraft.client.AnvilCraftClient;
 import dev.dubhe.anvilcraft.util.UnitUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
@@ -40,7 +40,7 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
         if (player != null && player.isShiftKeyDown()) {
             original = true;
         }
-        if (Util.jadePresent.get() && AnvilCraft.config.doNotShowTooltipWhenJadePresent) return null;
+        if (Util.jadePresent.get() && AnvilCraftClient.CONFIG.doNotShowTooltipWhenJadePresent) return null;
         boolean overloaded = false;
         BlockPos pos;
         BlockState blockState = e.getBlockState();
@@ -53,10 +53,7 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
             }
         } else if (e instanceof IPowerComponent) {
             if (e.getBlockState().hasProperty(IPowerComponent.OVERLOAD)) {
-                overloaded = e.getBlockState()
-                    .getValues()
-                    .getOrDefault(IPowerComponent.OVERLOAD, true)
-                    .equals(Boolean.TRUE);
+                overloaded = e.getBlockState().getValues().getOrDefault(IPowerComponent.OVERLOAD, true).equals(Boolean.TRUE);
             }
             pos = e.getBlockPos();
         } else {
@@ -78,37 +75,36 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
             }
         }
         if (type == PowerComponentType.PRODUCER) {
-            lines.add(
-                Component.translatable("tooltip.anvilcraft.grid_information.producer_stats")
-                    .setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE))
-            );
-            lines.add(
-                Component.translatable(
+            lines.add(Component.translatable("tooltip.anvilcraft.grid_information.producer_stats")
+                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE)));
+            lines.add(Component.translatable(
                     "tooltip.anvilcraft.grid_information.output_power",
                     UnitUtil.electricityUnit(componentInfo.produces(), original)
-                ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY))
-            );
+                )
+                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         } else if (type == PowerComponentType.CONSUMER) {
-            lines.add(
-                Component.translatable("tooltip.anvilcraft.grid_information.consumer_stats")
-                    .setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE))
-            );
-            lines.add(
-                Component.translatable(
+            lines.add(Component.translatable("tooltip.anvilcraft.grid_information.consumer_stats")
+                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE)));
+            lines.add(Component.translatable(
                     "tooltip.anvilcraft.grid_information.input_power",
                     UnitUtil.electricityUnit(componentInfo.consumes(), original)
-                ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+                )
+                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
         }
 
         List<Component> tooltipLines = List.of(
-            Component.translatable("tooltip.anvilcraft.grid_information.title")
-                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE)),
-            Component.translatable("tooltip.anvilcraft.grid_information.total_consumed",
-                UnitUtil.electricityUnit(grid.getConsume(), original)
-            ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)),
-            Component.translatable("tooltip.anvilcraft.grid_information.total_generated",
-                UnitUtil.electricityUnit(grid.getGenerate(), original)
-            ).setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)));
+            Component.translatable("tooltip.anvilcraft.grid_information.title").setStyle(Style.EMPTY.applyFormat(ChatFormatting.BLUE)),
+            Component.translatable(
+                    "tooltip.anvilcraft.grid_information.total_consumed",
+                    UnitUtil.electricityUnit(grid.getConsume(), original)
+                )
+                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY)),
+            Component.translatable(
+                    "tooltip.anvilcraft.grid_information.total_generated",
+                    UnitUtil.electricityUnit(grid.getGenerate(), original)
+                )
+                .setStyle(Style.EMPTY.applyFormat(ChatFormatting.GRAY))
+        );
         lines.addAll(tooltipLines);
         return lines;
     }

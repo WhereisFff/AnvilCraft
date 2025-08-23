@@ -10,7 +10,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
-import dev.dubhe.anvilcraft.util.BlockTransformExplosion;
+import dev.dubhe.anvilcraft.api.injection.IExplosionExtension;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,7 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Mixin(Explosion.class)
-abstract class ExplosionMixin implements BlockTransformExplosion {
+abstract class ExplosionMixin implements IExplosionExtension {
 
     @Unique
 //    public HashMap<Block, ArrayList<BlockTransform>> anvilcraft$blockTransformMap = new HashMap<>();
@@ -125,14 +124,14 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         BlockState state,
         float power,
         Operation<Boolean> original,
-        @Share("isExplosionBlockTransformed") @NotNull LocalBooleanRef isExplosionBlockTransformed
+        @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed
     ) {
         return !isExplosionBlockTransformed.get() && original.call(instance, explosion, reader, pos, state, power);
     }
 
     @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public void setBlockTransformExplosion(@NotNull Collection<BlockTransform> blockTransformExplosions) {
+    public void anvilcraft$setBlockTransformExplosion(Collection<BlockTransform> blockTransformExplosions) {
         for (BlockTransform blockTransform : blockTransformExplosions) {
             for (BlockState state : blockTransform.inputBlock().getStatesCache()) {
                 Block block = state.getBlock();

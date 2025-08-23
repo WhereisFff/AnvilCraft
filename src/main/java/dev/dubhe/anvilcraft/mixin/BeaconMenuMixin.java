@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;

@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.api.totem.handler;
 
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.RecoveryPearl;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;

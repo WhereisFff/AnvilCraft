@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.block.entity.RemoteTransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;

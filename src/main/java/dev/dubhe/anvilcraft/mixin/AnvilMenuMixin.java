@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.level.block.state.BlockState;

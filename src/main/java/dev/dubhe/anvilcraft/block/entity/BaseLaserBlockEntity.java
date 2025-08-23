@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.block.entity;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.api.rendering.CacheableBERenderingPipeline;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModDamageTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.entity.ModDamageTypes;
 import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.network.LaserEmitPacket;
 import lombok.Getter;
@@ -65,7 +65,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
             || blockState.is(Tags.Blocks.GLASS_BLOCKS)
             || blockState.is(Tags.Blocks.GLASS_PANES)
             || blockState.is(BlockTags.REPLACEABLE)) return true;
-        if (!AnvilCraft.config.isLaserDoImpactChecking) return false;
+        if (!AnvilCraft.CONFIG.isLaserDoImpactChecking) return false;
         AABB laseBoundingBox =
             switch (direction.getAxis()) {
                 case X -> Block.box(0, 7, 7, 16, 9, 9).bounds();

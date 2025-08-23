@@ -1,13 +1,13 @@
 package dev.dubhe.anvilcraft.integration.jei.recipe;
 
 import com.google.common.collect.ImmutableList;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.block.state.Color;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
 
 import java.util.List;

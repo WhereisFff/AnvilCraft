@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceItemStackComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ItemIngredientPredicateComponent;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
@@ -17,7 +17,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,39 +24,39 @@ import java.util.List;
 public interface ItemProcessRecipeSchema {
     @SuppressWarnings({"unused"})
     class ItemProcessKubeRecipe extends AnvilCraftKubeRecipe {
-        public ItemProcessKubeRecipe requires(@NotNull TagKey<Item> ingredient, int count) {
+        public ItemProcessKubeRecipe requires(TagKey<Item> ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public ItemProcessKubeRecipe requires(@NotNull TagKey<Item> ingredient) {
+        public ItemProcessKubeRecipe requires(TagKey<Item> ingredient) {
             return this.requires(ingredient, 1);
         }
 
-        public ItemProcessKubeRecipe requires(@NotNull ItemStack ingredient) {
+        public ItemProcessKubeRecipe requires(ItemStack ingredient) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
             this.save();
             return this;
         }
 
-        public ItemProcessKubeRecipe requires(@NotNull ItemLike ingredient, int count) {
+        public ItemProcessKubeRecipe requires(ItemLike ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public ItemProcessKubeRecipe result(@NotNull ItemStack result, NumberProvider count) {
+        public ItemProcessKubeRecipe result(ItemStack result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
             this.save();
             return this;
         }
 
-        public ItemProcessKubeRecipe result(@NotNull ItemStack result) {
+        public ItemProcessKubeRecipe result(ItemStack result) {
             return this.result(result, ConstantValue.exactly(result.getCount()));
         }
 

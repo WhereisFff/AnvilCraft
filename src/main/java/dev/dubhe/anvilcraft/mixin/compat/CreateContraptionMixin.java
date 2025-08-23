@@ -19,7 +19,7 @@ public abstract class CreateContraptionMixin {
     private boolean useEnhancedCheck0(
         BlockState instance, BlockState state, @Local(ordinal = 0) BlockPos pos, @Local(ordinal = 1) BlockPos otherPos
     ) {
-        return instance.canStickTo(pos, otherPos, state);
+        return instance.anvilcraft$canStickTo(pos, otherPos, state);
     }
 
     @Redirect(
@@ -31,6 +31,6 @@ public abstract class CreateContraptionMixin {
     private boolean useEnhancedCheck1(
         BlockState instance, BlockState state, @Local(ordinal = 0) BlockPos otherPos, @Local(ordinal = 1) BlockPos pos
     ) {
-        return instance.canStickTo(pos, otherPos, state);
+        return instance.anvilcraft$canStickTo(pos, otherPos, state);
     }
 }

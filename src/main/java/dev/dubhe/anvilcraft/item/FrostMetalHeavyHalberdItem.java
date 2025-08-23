@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.entity.ThrownFrostMetalHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;

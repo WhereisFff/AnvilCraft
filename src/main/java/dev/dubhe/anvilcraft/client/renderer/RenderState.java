@@ -1,18 +1,15 @@
 package dev.dubhe.anvilcraft.client.renderer;
 
-import com.mojang.logging.LogUtils;
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.AnvilCraftClient;
 import dev.dubhe.anvilcraft.integration.iris.IrisState;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
-import org.slf4j.Logger;
 
 public class RenderState {
-    private static boolean IRIS_PRESENT;
+    private static final boolean IRIS_PRESENT;
     @Getter
     private static boolean bloomRenderStage;
-    private static final Logger logger = LogUtils.getLogger();
 
     static {
         IRIS_PRESENT = Util.isLoaded("iris") || Util.isLoaded("oculus");
@@ -35,6 +32,6 @@ public class RenderState {
     }
 
     public static boolean isBloomEffectEnabled() {
-        return AnvilCraft.config.renderBloomEffect;
+        return AnvilCraftClient.CONFIG.renderBloomEffect;
     }
 }

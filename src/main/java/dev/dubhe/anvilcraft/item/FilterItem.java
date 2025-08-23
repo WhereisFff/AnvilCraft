@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.container.FilterContainer;

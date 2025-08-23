@@ -1,13 +1,13 @@
 package dev.dubhe.anvilcraft.recipe.anvil.outcome;
 
 import com.mojang.serialization.MapCodec;
+import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
+import dev.anvilcraft.lib.recipe.util.InWorldRecipeData;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeOutcomeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
-import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeData;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 损坏铁砧配方结果类，用于定义使铁砧损坏的配方结果
@@ -35,7 +35,7 @@ public class DamageAnvil implements IRecipeOutcome<DamageAnvil> {
      * @param context 配方上下文
      */
     @Override
-    public void accept(@NotNull InWorldRecipeContext context) {
+    public void accept(InWorldRecipeContext context) {
         context.put(DAMAGE_ANVIL, true);
     }
 
@@ -49,7 +49,7 @@ public class DamageAnvil implements IRecipeOutcome<DamageAnvil> {
          * @return MapCodec编解码器
          */
         @Override
-        public @NotNull MapCodec<DamageAnvil> codec() {
+        public MapCodec<DamageAnvil> codec() {
             return MapCodec.unit(new DamageAnvil());
         }
 
@@ -59,7 +59,7 @@ public class DamageAnvil implements IRecipeOutcome<DamageAnvil> {
          * @return StreamCodec编解码器
          */
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, DamageAnvil> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, DamageAnvil> streamCodec() {
             return StreamCodec.unit(new DamageAnvil());
         }
     }

@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.property.component.DiskData;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;

@@ -12,8 +12,8 @@ import dev.dubhe.anvilcraft.advancements.criteron.InWorldSuperHeatingRecipeTrigg
 import dev.dubhe.anvilcraft.advancements.criteron.InWorldTimewarpRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlayerWearAnvilHammerTrigger;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementRequirements;

@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
@@ -82,11 +82,15 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
             RenderHelper.SINGLE_BLOCK
         );
 
-        arrowIn.draw(guiGraphics, 54, 30);
-        arrowOut.draw(guiGraphics, 92, 29);
+        arrowIn.draw(guiGraphics, 54, 20);
+        arrowOut.draw(guiGraphics, 92, 19);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
+        if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());
+        }
 
         HasCauldronSimple hasCauldron = recipe.getHasCauldron();
         if (!HasCauldron.isNotEmpty(hasCauldron.getTransform())) return;

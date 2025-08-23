@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
 import dev.dubhe.anvilcraft.api.tooltip.TooltipRenderHelper;
 import dev.dubhe.anvilcraft.client.support.InspectionSupport;
 import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.client.DeltaTracker;
@@ -79,7 +79,7 @@ public class RenderEventListener {
         if (!(entity instanceof Player player)) return;
         Optional<BlockHitResult> hitResult = Util.castSafely(Minecraft.getInstance().hitResult, BlockHitResult.class);
         hitResult.ifPresent(hit -> renderDragonRodOutline(pose, hit, vertexConsumer3, camX, camY, camZ, handItem));
-        if (!AnvilHammerItem.isWearing(player)) return;
+        if (!AnvilHammerItem.shouldRenderEffect(player)) return;
         PowerGridSupport.render(pose, bufferSource, vec3);
         hitResult.ifPresent(hit -> renderAffectRange(pose, hit, vertexConsumer3, camX, camY, camZ));
     }

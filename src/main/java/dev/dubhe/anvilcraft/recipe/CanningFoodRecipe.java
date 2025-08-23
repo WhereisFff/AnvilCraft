@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.recipe;
 
-import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;

@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
@@ -246,10 +246,10 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         final List<BlockPos> filteredBlockPosList = new ArrayList<>();
         for (BlockPos devourBlockPos : devourBlockPosList) {
             if (
-                AnvilCraft.config.blockDevourerUpwardChainDevouring && devourBlockPos.getY() == maxY
+                AnvilCraft.CONFIG.blockDevourerUpwardChainDevouring && devourBlockPos.getY() == maxY
             ) {
                 for (BlockPos chainDevourBlockPos : BlockPos.betweenClosed(
-                    devourBlockPos.above(), devourBlockPos.above(AnvilCraft.config.blockDevourerUpwardChainDevouringDistance)
+                    devourBlockPos.above(), devourBlockPos.above(AnvilCraft.CONFIG.blockDevourerUpwardChainDevouringDistance)
                 )) {
                     if (!level.getBlockState(chainDevourBlockPos).is(ModBlockTags.BLOCK_DEVOURER_CHAIN_DEVOURING)) break;
                     chainDevourBlockPosList.add(chainDevourBlockPos.immutable());

@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

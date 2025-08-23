@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.item;
 import com.mojang.datafixers.util.Unit;
 import dev.dubhe.anvilcraft.entity.ThrownEmberMetalHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;

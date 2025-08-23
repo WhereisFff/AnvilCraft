@@ -3,13 +3,14 @@ package dev.dubhe.anvilcraft.recipe.anvil.outcome;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatableBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.Distance;
-import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.util.Util;
 import io.netty.buffer.ByteBuf;
 import lombok.AccessLevel;
@@ -25,7 +26,6 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -148,7 +148,7 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
          * @return MapCodec编解码器
          */
         @Override
-        public @NotNull MapCodec<ProduceHeat> codec() {
+        public MapCodec<ProduceHeat> codec() {
             return Type.MAP_CODEC;
         }
 
@@ -158,7 +158,7 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
          * @return StreamCodec编解码器
          */
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ProduceHeat> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, ProduceHeat> streamCodec() {
             return Type.STREAM_CODEC;
         }
     }
@@ -191,6 +191,7 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
     /**
      * 产生热量配方结果构建器类
      */
+    @SuppressWarnings("UnusedReturnValue")
     public static class Builder {
         /**
          * 可达到的热量数据列表

@@ -3,13 +3,13 @@ package dev.dubhe.anvilcraft.recipe.anvil.predicate.block;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.cache.BlockCache;
+import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
+import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipePredicateTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.cache.BlockCache;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
-import dev.dubhe.anvilcraft.util.RecipeUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -25,7 +25,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -84,12 +83,12 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
      * @param offset 偏移量
      * @return HasCauldron实例
      */
-    public static @NotNull HasCauldron empty(Vec3 offset) {
+    public static HasCauldron empty(Vec3 offset) {
         return new HasCauldron(offset, EMPTY, 0, NULL);
     }
 
     @Override
-    public boolean test(@NotNull InWorldRecipeContext context) {
+    public boolean test(InWorldRecipeContext context) {
         Vec3 pos = context.getPos().add(this.offset);
         BlockPos blockPos = BlockPos.containing(pos);
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
@@ -109,7 +108,7 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
     }
 
     @Override
-    public void accept(@NotNull InWorldRecipeContext context) {
+    public void accept(InWorldRecipeContext context) {
         if (this.fluid.equals(EMPTY) && !HasCauldron.isNotEmpty(this.transform)) return;
         BlockPos blockPos = BlockPos.containing(context.getPos().add(this.offset));
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
@@ -145,7 +144,7 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -155,7 +154,7 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
      * @param fluid 流体ID
      * @return 炼药锅方块
      */
-    public static Block getDefaultCauldron(@NotNull ResourceLocation fluid) {
+    public static Block getDefaultCauldron(ResourceLocation fluid) {
         if (fluid.equals(HasCauldron.EMPTY) || fluid.equals(HasCauldron.NULL)) return Blocks.CAULDRON;
         String namespace = fluid.getNamespace();
         String path = fluid.getPath();
@@ -166,11 +165,11 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
         return block;
     }
 
-    public static boolean isNotEmpty(@NotNull ResourceLocation fluid) {
+    public static boolean isNotEmpty(ResourceLocation fluid) {
         return !fluid.equals(HasCauldron.NULL) && !fluid.equals(HasCauldron.EMPTY);
     }
 
-    public static @NotNull Optional<Tuple<IntegerProperty, Integer>> getFluidLevel(@NotNull BlockState state) {
+    public static Optional<Tuple<IntegerProperty, Integer>> getFluidLevel(BlockState state) {
         IntegerProperty property = CauldronUtil.LEVEL_4;
         Optional<Integer> value = state.getOptionalValue(property);
         if (value.isEmpty()) {
@@ -222,7 +221,7 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
          * 流编解码器
          */
         public final StreamCodec<RegistryFriendlyByteBuf, HasCauldron> mapCodec = StreamCodec.composite(
-            RecipeUtil.VEC3_STREAM_CODEC,
+            CodecUtil.VEC3_STREAM_CODEC,
             HasCauldron::getOffset,
             ResourceLocation.STREAM_CODEC,
             HasCauldron::getFluid,
@@ -234,12 +233,12 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
         );
 
         @Override
-        public @NotNull MapCodec<HasCauldron> codec() {
+        public MapCodec<HasCauldron> codec() {
             return this.codec;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, HasCauldron> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, HasCauldron> streamCodec() {
             return this.mapCodec;
         }
     }
