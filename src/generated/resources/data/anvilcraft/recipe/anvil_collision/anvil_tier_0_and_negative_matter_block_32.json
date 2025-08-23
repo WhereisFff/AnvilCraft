@@ -1,0 +1,22 @@
+{
+  "type": "anvilcraft:anvil_collision",
+  "anvil": {
+    "blocks": "#anvilcraft:anvil_tier_0"
+  },
+  "consume": true,
+  "hitBlock": {
+    "blocks": "anvilcraft:negative_matter_block"
+  },
+  "output_items": [
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 8.0,
+        "p": 1.0
+      },
+      "id": "anvilcraft:void_matter_block"
+    }
+  ],
+  "speed": 32,
+  "transform_blocks": []
+}

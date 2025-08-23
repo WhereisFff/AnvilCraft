@@ -277,5 +277,31 @@ public class BlockTagLoader {
         provider.addTag(ModBlockTags.OVERHEATABLE)
             .add(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK.getKey())
             .add(ModBlocks.EMBER_METAL_BLOCK.getKey());
+
+        /*
+        tier 0：原版三种铁砧以及下列所有;
+        tier 1：皇家铁砧以及下列所有;
+        tier 2：余烬铁砧以及下列所有;
+        tier 3：超限铁砧
+         */
+        provider.addTag(ModBlockTags.ANVIL_TIER_0)
+            .add(findResourceKey(Blocks.ANVIL))
+            .add(findResourceKey(Blocks.CHIPPED_ANVIL))
+            .add(findResourceKey(Blocks.DAMAGED_ANVIL))
+            .add(ModBlocks.ROYAL_ANVIL.getKey())
+            .add(ModBlocks.EMBER_ANVIL.getKey())
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
+
+        provider.addTag(ModBlockTags.ANVIL_TIER_1)
+            .add(ModBlocks.ROYAL_ANVIL.getKey())
+            .add(ModBlocks.EMBER_ANVIL.getKey())
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
+
+        provider.addTag(ModBlockTags.ANVIL_TIER_2)
+            .add(ModBlocks.EMBER_ANVIL.getKey())
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
+
+        provider.addTag(ModBlockTags.ANVIL_TIER_3)
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
     }
 }

@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -34,6 +33,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -44,23 +44,20 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable icon;
-    private final IDrawable slot;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final Component title;
     private final ITickTimer timer;
-
     private final IDrawable arrowIn;
     private final IDrawable arrowOut;
 
     public TimeWarpCategory(IGuiHelper helper) {
-        icon = new DrawableBlockStateIcon(Blocks.CAULDRON.defaultBlockState(),
-            ModBlocks.CORRUPTED_BEACON.getDefaultState());
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable("gui.anvilcraft.category.time_warp");
         timer = helper.createTickTimer(30, 60, true);
-
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -85,7 +82,13 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
 
     @Override
     public @Nullable IDrawable getIcon() {
-        return icon;
+        return new DrawableBlockStateIcon(
+            Blocks.CAULDRON.defaultBlockState(),
+            ModBlocks.CORRUPTED_BEACON
+                .get()
+                .defaultBlockState()
+                .trySetValue(BlockStateProperties.WATERLOGGED, false)
+        );
     }
 
     @Override
@@ -125,9 +128,15 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             12,
             RenderHelper.SINGLE_BLOCK
         );
+
+        BlockState block = ModBlocks.CORRUPTED_BEACON
+            .get()
+            .defaultBlockState()
+            .trySetValue(BlockStateProperties.WATERLOGGED, false);
+
         RenderHelper.renderBlock(
             guiGraphics,
-            ModBlocks.CORRUPTED_BEACON.getDefaultState(),
+            block,
             81,
             40,
             0,
@@ -135,12 +144,16 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             RenderHelper.SINGLE_BLOCK
         );
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 20);
+        arrowOut.draw(guiGraphics, 92, 19);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (!recipe.getResultItems().isEmpty()) {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResultItems().size());
+            if (JeiRecipeUtil.isChance(recipe.getResultItems())) {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.getResultItems().size());
+            } else {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, recipe.getResultItems().size());
+            }
             if (recipe.isConsumeFluid()) {
                 PoseStack pose = guiGraphics.pose();
                 pose.pushPose();

@@ -60,8 +60,8 @@ public class StampingCategory extends AbstractProgressCategory<StampingRecipe> {
         RenderHelper.renderBlock(
             guiGraphics, ModBlocks.STAMPING_PLATFORM.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOutputFromBelow.draw(guiGraphics, 92, 29);
 
         // TODO: 等待重构StampingUniqueItemsRecipe（目前仅多合一模板使用），重构后直接取消注释并修复import即可
 //        if (recipe instanceof StampingUniqueItemsRecipe) {
@@ -69,10 +69,14 @@ public class StampingCategory extends AbstractProgressCategory<StampingRecipe> {
 //                .getItems()[(int) System.currentTimeMillis() / 1000 % recipe.getItemIngredients().size()];
 //            JeiSlotUtil.drawInputSlots(guiGraphics, slot, input.getCount());
 //        } else {
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
 //        }
 
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
+        if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());
+        }
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {

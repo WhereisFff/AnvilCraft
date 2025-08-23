@@ -3,13 +3,12 @@ package dev.dubhe.anvilcraft.integration.jei.category;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -43,22 +42,22 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final Component title;
 
-    private final IDrawable arrowIn;
+    private final IDrawable arrowDefault;
 
     private static final String KEY_CATEGORY = "gui.anvilcraft.category.mob_transform_with_item";
     private static final String KEY_CHANCE = "gui.anvilcraft.category.mob_transform_with_item.chance_per_item";
 
     public MobTransformWithItemCategory(IGuiHelper helper) {
         icon = helper.createDrawableItemStack(ModBlocks.CORRUPTED_BEACON.asStack());
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable(KEY_CATEGORY);
 
-        arrowIn = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
     }
 
     @Override
@@ -147,11 +146,10 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
     ) {
         MobTransformWithItemRecipe recipe = recipeHolder.value();
 
-        BlockState block = ModBlocks.CORRUPTED_BEACON.get().defaultBlockState();
-        block.setValue(CorruptedBeaconBlock.LIT, true);
-        if (block.hasProperty(BlockStateProperties.WATERLOGGED)) {
-            block.setValue(BlockStateProperties.WATERLOGGED, false);
-        }
+        BlockState block = ModBlocks.CORRUPTED_BEACON
+            .get()
+            .defaultBlockState()
+            .trySetValue(BlockStateProperties.WATERLOGGED, false);
 
         RenderHelper.renderBlock(
             guiGraphics,
@@ -163,10 +161,14 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
             RenderHelper.SINGLE_BLOCK
         );
 
-        arrowIn.draw(guiGraphics, 69, 15);
+        arrowDefault.draw(guiGraphics, 74, 22);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, 2);
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, 2);
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 2);
+        if (recipe.chancePercentPerItem == 0) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, 2);
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, 2);
+        }
 
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();

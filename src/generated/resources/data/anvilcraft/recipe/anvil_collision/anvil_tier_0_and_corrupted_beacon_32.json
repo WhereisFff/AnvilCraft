@@ -1,0 +1,23 @@
+{
+  "type": "anvilcraft:anvil_collision",
+  "anvil": {
+    "blocks": "#anvilcraft:anvil_tier_0"
+  },
+  "consume": true,
+  "hitBlock": {
+    "blocks": "anvilcraft:corrupted_beacon"
+  },
+  "output_items": [],
+  "speed": 32,
+  "transform_blocks": [
+    {
+      "input": {
+        "blocks": "anvilcraft:confinement_chamber"
+      },
+      "max_count": 8,
+      "output": {
+        "block": "anvilcraft:confined_time_anvilon"
+      }
+    }
+  ]
+}

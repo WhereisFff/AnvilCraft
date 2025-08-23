@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.client.gui.screen.JewelCraftingScreen;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.integration.jei.category.AnvilCollisionCraftCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.BeaconConversionCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.ChargerChargingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.EndPortalConversionCategory;
@@ -20,6 +21,7 @@ import dev.dubhe.anvilcraft.integration.jei.category.MultipleToOneSmithingCatego
 import dev.dubhe.anvilcraft.integration.jei.category.VoidDecayCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.BlockCompressCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.BlockCrushCategory;
+import dev.dubhe.anvilcraft.integration.jei.category.anvil.BlockSmearCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.BoilingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.BulgingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.CementStainingCategory;
@@ -50,8 +52,10 @@ import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCrushRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockSmearRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BoilingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.CookingRecipe;
@@ -110,6 +114,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
     public static final RecipeType<RecipeHolder<BlockCompressRecipe>> BLOCK_COMPRESS =
         createRecipeHolderType("block_compress");
     public static final RecipeType<RecipeHolder<BlockCrushRecipe>> BLOCK_CRUSH = createRecipeHolderType("block_crush");
+    public static final RecipeType<RecipeHolder<BlockSmearRecipe>> BLOCK_SMEAR = createRecipeHolderType("block_smear");
     public static final RecipeType<RecipeHolder<ItemCrushRecipe>> ITEM_CRUSH = createRecipeHolderType("item_crush");
     public static final RecipeType<RecipeHolder<ItemInjectRecipe>> ITEM_INJECT = createRecipeHolderType("item_inject");
     public static final RecipeType<RecipeHolder<MassInjectRecipe>> MASS_INJECT = createRecipeHolderType("mass_inject");
@@ -142,6 +147,9 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
     public static final RecipeType<RecipeHolder<MobTransformWithItemRecipe>> MOB_TRANSFORM_WITH_ITEM =
         createRecipeHolderType("mob_transform_with_item");
 
+    public static final RecipeType<RecipeHolder<AnvilCollisionCraftRecipe>> ANVIL_COLLISION =
+        createRecipeHolderType("anvil_collision");
+
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -153,6 +161,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         MeshRecipeCategory.registerRecipes(registration);
         BlockCompressCategory.registerRecipes(registration);
         BlockCrushCategory.registerRecipes(registration);
+        BlockSmearCategory.registerRecipes(registration);
         ItemCrushCategory.registerRecipes(registration);
         SqueezingCategory.registerRecipes(registration);
         ItemInjectCategory.registerRecipes(registration);
@@ -177,6 +186,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         MultipleToOneSmithingCategory.registerRecipes(registration);
         MobTransformCategory.registerRecipes(registration);
         MobTransformWithItemCategory.registerRecipes(registration);
+        AnvilCollisionCraftCategory.registerRecipes(registration);
 
         registration.addItemStackInfo(
             new ItemStack(ModItems.GEODE.get()),
@@ -207,6 +217,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         MeshRecipeCategory.registerRecipeCatalysts(registration);
         BlockCompressCategory.registerRecipeCatalysts(registration);
         BlockCrushCategory.registerRecipeCatalysts(registration);
+        BlockSmearCategory.registerRecipeCatalysts(registration);
         ItemCrushCategory.registerRecipeCatalysts(registration);
         SqueezingCategory.registerRecipeCatalysts(registration);
         ItemInjectCategory.registerRecipeCatalysts(registration);
@@ -231,6 +242,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         MultipleToOneSmithingCategory.registerRecipeCatalysts(registration);
         MobTransformCategory.registerRecipeCatalysts(registration);
         MobTransformWithItemCategory.registerRecipeCatalysts(registration);
+        AnvilCollisionCraftCategory.registerRecipeCatalysts(registration);
 
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.BATCH_CRAFTER), RecipeTypes.CRAFTING);
 
@@ -250,6 +262,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new MeshRecipeCategory(guiHelper));
         registration.addRecipeCategories(new BlockCompressCategory(guiHelper));
         registration.addRecipeCategories(new BlockCrushCategory(guiHelper));
+        registration.addRecipeCategories(new BlockSmearCategory(guiHelper));
         registration.addRecipeCategories(new ItemCrushCategory(guiHelper));
         registration.addRecipeCategories(new SqueezingCategory(guiHelper));
         registration.addRecipeCategories(new ItemInjectCategory(guiHelper));
@@ -274,6 +287,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new MultipleToOneSmithingCategory(guiHelper));
         registration.addRecipeCategories(new MobTransformCategory(guiHelper));
         registration.addRecipeCategories(new MobTransformWithItemCategory(guiHelper));
+        registration.addRecipeCategories(new AnvilCollisionCraftCategory(guiHelper));
     }
 
     @Override

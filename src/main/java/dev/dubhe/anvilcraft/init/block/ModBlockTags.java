@@ -41,6 +41,10 @@ public class ModBlockTags {
     public static final TagKey<Block> SLIDING_RAILS = bind("sliding_rails");
     public static final TagKey<Block> STICKABLE_WITH_SLIDING_RAILS = bind("stickable_with_sliding_rails");
     public static final TagKey<Block> OVERHEATABLE = bind("overheatable");
+    public static final TagKey<Block> ANVIL_TIER_0 = bind("anvil_tier_0");
+    public static final TagKey<Block> ANVIL_TIER_1 = bind("anvil_tier_1");
+    public static final TagKey<Block> ANVIL_TIER_2 = bind("anvil_tier_2");
+    public static final TagKey<Block> ANVIL_TIER_3 = bind("anvil_tier_3");
 
     // common tags
     public static final TagKey<Block> ORES_TUNGSTEN = bindC("ores/tungsten");

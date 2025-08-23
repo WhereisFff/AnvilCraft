@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.AbstractProcessRecipe;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -31,21 +31,27 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
     public static final int HEIGHT = 64;
 
     protected final IDrawable icon;
-    protected final IDrawable slot;
+    protected final IDrawable slotDefault;
+    protected final IDrawable slotProbability;
     protected final Component title;
     protected final ITickTimer timer;
 
     protected final IDrawable arrowIn;
     protected final IDrawable arrowOut;
+    protected final IDrawable arrowDefault;
+    protected final IDrawable arrowOutputFromBelow;
 
     public AbstractProgressCategory(IGuiHelper helper, IDrawable icon, Component title) {
         this.icon = icon;
-        this.slot = helper.getSlotDrawable();
+        this.slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        this.slotProbability = JeiRenderHelper.getSlotProbability(helper);
         this.title = title;
         this.timer = helper.createTickTimer(30, 60, true);
 
-        this.arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        this.arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        this.arrowIn = JeiRenderHelper.getArrowInput(helper);
+        this.arrowOut = JeiRenderHelper.getArrowOutput(helper);
+        this.arrowDefault = JeiRenderHelper.getArrowDefault(helper);
+        this.arrowOutputFromBelow = JeiRenderHelper.getArrowOutputFromBelow(helper);
     }
 
     @Override

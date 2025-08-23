@@ -2,16 +2,21 @@ package dev.dubhe.anvilcraft.integration.jei.category.multiblock;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
+import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
+import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.JeiButton;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockConversionRecipe;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
+import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotDrawable;
@@ -71,13 +76,19 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
     private final IDrawable renderSwitchOn;
     private final IDrawable renderSwitchOff;
     private final IDrawable arrowOut;
+    private final IDrawable conversion;
+    private final ITickTimer timer;
 
     private DisplayMode displayMode = DisplayMode.OVERVIEW;
 
     public MultiBlockConversionCategory(IGuiHelper helper) {
         icon = helper.createDrawableItemStack(new ItemStack(ModBlocks.GIANT_ANVIL));
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        slot = helper.getSlotDrawable();
+        arrowOut = JeiRenderHelper.getArrowDefault(helper);
+        slot = JeiRenderHelper.getSlotDefault(helper);
+        timer = helper.createTickTimer(30, 60, true);
+        conversion = helper.drawableBuilder(TextureConstants.BLOCK_CONVERSION, 0, 0, 594, 418)
+            .setTextureSize(594, 418)
+            .build();
         layerUp = helper.drawableBuilder(
                 AnvilCraft.of("textures/gui/container/insight/insight_layer_up.png"), 0, 0, 10, 10)
             .setTextureSize(10, 20)
@@ -131,7 +142,8 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
             AnvilCraftJeiPlugin.MULTIBLOCK_CONVERSION,
-            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MULTIBLOCK_CONVERSION_TYPE.get()));
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MULTIBLOCK_CONVERSION_TYPE.get())
+        );
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
@@ -169,11 +181,16 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
     public void setRecipe(
         IRecipeLayoutBuilder builder,
         RecipeHolder<MultiblockConversionRecipe> recipe,
-        IFocusGroup focuses) {
-        cacheInput.computeIfAbsent(recipe,
-            it -> RecipeUtil.asLevelLike(it.value().getInputPattern()));
-        cacheOutput.computeIfAbsent(recipe,
-            it -> RecipeUtil.asLevelLike(it.value().getOutputPattern()));
+        IFocusGroup focuses
+    ) {
+        cacheInput.computeIfAbsent(
+            recipe,
+            it -> RecipeUtil.asLevelLike(it.value().getInputPattern())
+        );
+        cacheOutput.computeIfAbsent(
+            recipe,
+            it -> RecipeUtil.asLevelLike(it.value().getOutputPattern())
+        );
 
         List<ItemStack> inputItems = recipe.value().getInputPattern().toIngredientList();
         inputItems.sort(BY_COUNT_DECREASING);
@@ -200,12 +217,15 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
         IRecipeSlotsView recipeSlotsView,
         GuiGraphics guiGraphics,
         double mouseX,
-        double mouseY) {
+        double mouseY
+    ) {
         Minecraft minecraft = Minecraft.getInstance();
         PoseStack pose = guiGraphics.pose();
         Component currentModeTooltip =
-            Component.translatable("gui.anvilcraft.category.multiblock_conversion.current_mode",
-                this.displayMode.getDiscription());
+            Component.translatable(
+                "gui.anvilcraft.category.multiblock_conversion.current_mode",
+                this.displayMode.getDiscription()
+            );
         pose.pushPose();
         pose.scale(0.8f, 0.8f, 0.8f);
         int textX = Math.round(WIDTH / 0.8f - minecraft.font.width(currentModeTooltip) - 5);
@@ -213,10 +233,14 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
         pose.popPose();
         this.displayModeButton(mouseX, mouseY).draw(guiGraphics, 149, 10);
 
-        LevelLike input = cacheInput.computeIfAbsent(recipe,
-            it -> RecipeUtil.asLevelLike(it.value().getInputPattern()));
-        LevelLike output = cacheOutput.computeIfAbsent(recipe,
-            it -> RecipeUtil.asLevelLike(it.value().getOutputPattern()));
+        LevelLike input = cacheInput.computeIfAbsent(
+            recipe,
+            it -> RecipeUtil.asLevelLike(it.value().getInputPattern())
+        );
+        LevelLike output = cacheOutput.computeIfAbsent(
+            recipe,
+            it -> RecipeUtil.asLevelLike(it.value().getOutputPattern())
+        );
         LevelLike rendered = input;
         switch (this.displayMode) {
             case OVERVIEW:
@@ -248,7 +272,32 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
                     slot.draw(guiGraphics, this.inputSlotPosX(i), this.slotPosY(i));
                     slot.draw(guiGraphics, this.outputSlotPosX(i), this.slotPosY(i));
                 }
-                arrowOut.draw(guiGraphics, 68, 30);
+                arrowOut.draw(guiGraphics, 73, 40);
+                pose.pushPose();
+                pose.scale(0.03f, 0.03f, 1.0f);
+                conversion.draw(guiGraphics, 2375, 875);
+                pose.popPose();
+                float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer) / 3;
+                RenderHelper.renderBlock(
+                    guiGraphics,
+                    ModBlocks.GIANT_ANVIL.getDefaultState()
+                        .trySetValue(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER)
+                        .trySetValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER),
+                    80,
+                    19.8f + anvilYOffset,
+                    20,
+                    5,
+                    RenderHelper.SINGLE_BLOCK
+                );
+                pose.pushPose();
+                pose.scale(0.8f, 0.8f, 1.0f);
+                int size = recipe.value().getSize();
+                guiGraphics.drawString(
+                    minecraft.font,
+                    Component.translatable("gui.anvilcraft.category.multiblock.size", size, size),
+                    85, 92, 0xFF000000, false
+                );
+                pose.popPose();
                 break;
             case INPUT:
                 break;
@@ -300,9 +349,11 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
 
     private Component layerTooltip(LevelLike level) {
         if (level.isAllLayersVisible()) return ALL_LAYERS;
-        return Component.translatable("gui.anvilcraft.category.multiblock.single_layer",
+        return Component.translatable(
+            "gui.anvilcraft.category.multiblock.single_layer",
             level.getCurrentVisibleLayer() + 1,
-            level.verticalSize());
+            level.verticalSize()
+        );
     }
 
     private int inputSlotPosX(int i) {
@@ -327,18 +378,23 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
             it -> {
                 switch (this.displayMode) {
                     case INPUT:
-                        LevelLike inputLevel = this.cacheInput.computeIfAbsent(it,
-                            a -> RecipeUtil.asLevelLike(a.value().getInputPattern()));
+                        LevelLike inputLevel = this.cacheInput.computeIfAbsent(
+                            it,
+                            a -> RecipeUtil.asLevelLike(a.value().getInputPattern())
+                        );
                         inputLevel.setAllLayersVisible(!inputLevel.isAllLayersVisible());
                         break;
                     case OUTPUT:
-                        LevelLike outputLevel = this.cacheOutput.computeIfAbsent(it,
-                            a -> RecipeUtil.asLevelLike(a.value().getOutputPattern()));
+                        LevelLike outputLevel = this.cacheOutput.computeIfAbsent(
+                            it,
+                            a -> RecipeUtil.asLevelLike(a.value().getOutputPattern())
+                        );
                         outputLevel.setAllLayersVisible(!outputLevel.isAllLayersVisible());
                         break;
                 }
             },
-            recipe));
+            recipe
+        ));
 
         builder.addGuiEventListener(new JeiButton<>(
             137,
@@ -347,18 +403,23 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
             it -> {
                 switch (this.displayMode) {
                     case INPUT:
-                        LevelLike inputLevel = this.cacheInput.computeIfAbsent(it,
-                            a -> RecipeUtil.asLevelLike(a.value().getInputPattern()));
+                        LevelLike inputLevel = this.cacheInput.computeIfAbsent(
+                            it,
+                            a -> RecipeUtil.asLevelLike(a.value().getInputPattern())
+                        );
                         if (!inputLevel.isAllLayersVisible()) inputLevel.nextLayer();
                         break;
                     case OUTPUT:
-                        LevelLike outputLevel = this.cacheOutput.computeIfAbsent(it,
-                            a -> RecipeUtil.asLevelLike(a.value().getOutputPattern()));
+                        LevelLike outputLevel = this.cacheOutput.computeIfAbsent(
+                            it,
+                            a -> RecipeUtil.asLevelLike(a.value().getOutputPattern())
+                        );
                         if (!outputLevel.isAllLayersVisible()) outputLevel.nextLayer();
                         break;
                 }
             },
-            recipe));
+            recipe
+        ));
 
         builder.addGuiEventListener(new JeiButton<>(
             149,
@@ -367,25 +428,31 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
             it -> {
                 switch (this.displayMode) {
                     case INPUT:
-                        LevelLike inputLevel = this.cacheInput.computeIfAbsent(it,
-                            a -> RecipeUtil.asLevelLike(a.value().getInputPattern()));
+                        LevelLike inputLevel = this.cacheInput.computeIfAbsent(
+                            it,
+                            a -> RecipeUtil.asLevelLike(a.value().getInputPattern())
+                        );
                         if (!inputLevel.isAllLayersVisible()) inputLevel.previousLayer();
                         break;
                     case OUTPUT:
-                        LevelLike outputLevel = this.cacheOutput.computeIfAbsent(it,
-                            a -> RecipeUtil.asLevelLike(a.value().getOutputPattern()));
+                        LevelLike outputLevel = this.cacheOutput.computeIfAbsent(
+                            it,
+                            a -> RecipeUtil.asLevelLike(a.value().getOutputPattern())
+                        );
                         if (!outputLevel.isAllLayersVisible()) outputLevel.previousLayer();
                         break;
                 }
             },
-            recipe));
+            recipe
+        ));
 
         builder.addGuiEventListener(new JeiButton<>(
             149,
             10,
             10,
             MultiBlockConversionCategory::cycleDisplayMode,
-            this));
+            this
+        ));
     }
 
     private void cycleDisplayMode() {
@@ -413,7 +480,7 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
 
         Component getDiscription() {
             return Component.translatable("gui.anvilcraft.category.multiblock_conversion.display_mode."
-                + this.translationKey);
+                                          + this.translationKey);
         }
     }
 }

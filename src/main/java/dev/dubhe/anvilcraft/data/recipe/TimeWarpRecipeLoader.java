@@ -73,9 +73,9 @@ public class TimeWarpRecipeLoader {
         timeWarpToOilCauldron(provider, ModItemTags.RAW_CHICKEN, 64);
         timeWarpToOilCauldron(provider, Tags.Items.FOODS_RAW_FISH, 64);
         timeWarpToOilCauldron(provider, ModItemTags.RAW_BEEF, 16);
-        timeWarpToOilCauldron(provider, Items.PORKCHOP, 16);
+        timeWarpToOilCauldron(provider, ModItemTags.RAW_PORKCHOP, 16);
         timeWarpToOilCauldron(provider, ModItemTags.RAW_MUTTON, 16);
-        timeWarpToOilCauldron(provider, Items.RABBIT, 16);
+        timeWarpToOilCauldron(provider, ModItemTags.RAW_RABBIT, 16);
 
         timeWarpToOilCauldron(provider, Items.ZOMBIE_HEAD, 1);
         timeWarpToOilCauldron(provider, Items.PIGLIN_HEAD, 1);

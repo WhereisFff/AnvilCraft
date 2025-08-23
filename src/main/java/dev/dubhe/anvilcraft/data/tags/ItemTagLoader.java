@@ -12,7 +12,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.NotNull;
 
 public class ItemTagLoader {
     /**
@@ -20,7 +19,7 @@ public class ItemTagLoader {
      *
      * @param provider 提供器
      */
-    public static void init(@NotNull RegistrateTagsProvider<Item> provider) {
+    public static void init(RegistrateTagsProvider<Item> provider) {
         provider.addTag(ModItemTags.PLATES)
             .add(findResourceKey(Items.HEAVY_WEIGHTED_PRESSURE_PLATE))
             .add(findResourceKey(Items.LIGHT_WEIGHTED_PRESSURE_PLATE));
@@ -236,9 +235,15 @@ public class ItemTagLoader {
 
         provider.addTag(ModItemTags.RAW_CHICKEN)
             .add(findResourceKey(Items.CHICKEN));
+
+        provider.addTag(ModItemTags.RAW_PORKCHOP)
+            .add(findResourceKey(Items.PORKCHOP));
+
+        provider.addTag(ModItemTags.RAW_RABBIT)
+            .add(findResourceKey(Items.RABBIT));
     }
 
-    private static @NotNull ResourceKey<Item> findResourceKey(Item item) {
+    private static ResourceKey<Item> findResourceKey(Item item) {
         return ResourceKey.create(Registries.ITEM, BuiltInRegistries.ITEM.getKey(item));
     }
 }

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 public class AnvilCollisionCraftRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.NEGATIVE_MATTER_BLOCK.get())
             .outputItem(ModBlocks.VOID_MATTER_BLOCK.asItem(), 8)
             .save(provider);
@@ -27,7 +27,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .outputItem(ModItems.MULTIPHASE_MATTER.get(), 4)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.CORRUPTED_BEACON.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -36,7 +36,7 @@ public class AnvilCollisionCraftRecipeLoader {
             )
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.CORRUPTED_BEACON.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -46,7 +46,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .speed(128)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.SPACE_OVERCOMPRESSOR.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -55,7 +55,7 @@ public class AnvilCollisionCraftRecipeLoader {
             )
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.SPACE_OVERCOMPRESSOR.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -65,7 +65,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .speed(128)
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.GIANT_ANVIL.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -74,7 +74,7 @@ public class AnvilCollisionCraftRecipeLoader {
             )
             .save(provider);
         AnvilCollisionCraftRecipe.builder()
-            .anvil(BlockTags.ANVIL)
+            .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.GIANT_ANVIL.get())
             .transformBlock(
                 BlockStatePredicate.builder().of(ModBlocks.CONFINEMENT_CHAMBER).build(),
@@ -83,58 +83,50 @@ public class AnvilCollisionCraftRecipeLoader {
             )
             .speed(128)
             .save(provider);
-        forEachAnvil(
-            it -> {
-                AnvilCollisionCraftRecipe.builder()
-                    .anvil(it)
-                    .consume(false)
-                    .hitBlock(Blocks.REDSTONE_BLOCK)
-                    .outputItem(ModItems.URANIUM_NUGGET.get(), 6)
-                    .outputItem(ModItems.URANIUM_NUGGET.get(), 4, 0.5f)
-                    .outputItem(ModItems.URANIUM_NUGGET.get(), 2, 0.25f)
-                    .save(provider);
-                AnvilCollisionCraftRecipe.builder()
-                    .anvil(it)
-                    .consume(false)
-                    .hitBlock(ModBlocks.LEVITATION_POWDER_BLOCK.get())
-                    .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 6)
-                    .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.5f)
-                    .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.25f)
-                    .save(provider);
-            },
-            ModBlocks.EMBER_ANVIL.get(), ModBlocks.ROYAL_ANVIL.get(), ModBlocks.TRANSCENDENCE_ANVIL.get()
-        );
-        forEachAnvil(
-            it -> {
-                CompoundTag uraniumHeatableData = new CompoundTag();
-                uraniumHeatableData.putInt("duration", 400);
-                AnvilCollisionCraftRecipe.builder()
-                    .anvil(it)
-                    .consume(false)
-                    .hitBlock(ModBlocks.URANIUM_BLOCK.get())
-                    .transformBlock(
-                        BlockStatePredicate.builder().of(ModBlockTags.OVERHEATABLE).build(),
-                        ChanceBlockState.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, uraniumHeatableData),
-                        16
-                    )
-                    .speed(256)
-                    .save(provider);
-                CompoundTag plutoniumHeatableData = new CompoundTag();
-                plutoniumHeatableData.putInt("duration", 1200);
-                AnvilCollisionCraftRecipe.builder()
-                    .anvil(it)
-                    .consume(false)
-                    .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
-                    .transformBlock(
-                        BlockStatePredicate.builder().of(ModBlockTags.OVERHEATABLE).build(),
-                        ChanceBlockState.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, plutoniumHeatableData),
-                        16
-                    )
-                    .speed(256)
-                    .save(provider);
-            },
-            ModBlocks.EMBER_ANVIL.get(), ModBlocks.TRANSCENDENCE_ANVIL.get()
-        );
+
+        AnvilCollisionCraftRecipe.builder()
+            .anvil(ModBlockTags.ANVIL_TIER_1)
+            .consume(false)
+            .hitBlock(Blocks.REDSTONE_BLOCK)
+            .outputItem(ModItems.URANIUM_NUGGET.get(), 6)
+            .outputItem(ModItems.URANIUM_NUGGET.get(), 4, 0.5f)
+            .outputItem(ModItems.URANIUM_NUGGET.get(), 2, 0.25f)
+            .save(provider);
+        AnvilCollisionCraftRecipe.builder()
+            .anvil(ModBlockTags.ANVIL_TIER_1)
+            .consume(false)
+            .hitBlock(ModBlocks.LEVITATION_POWDER_BLOCK.get())
+            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 6)
+            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.5f)
+            .outputItem(ModItems.NEGATIVE_MATTER_NUGGET.get(), 2, 0.25f)
+            .save(provider);
+
+        CompoundTag uraniumHeatableData = new CompoundTag();
+        uraniumHeatableData.putInt("duration", 400);
+        AnvilCollisionCraftRecipe.builder()
+            .anvil(ModBlockTags.ANVIL_TIER_2)
+            .consume(false)
+            .hitBlock(ModBlocks.URANIUM_BLOCK.get())
+            .transformBlock(
+                BlockStatePredicate.builder().of(ModBlockTags.OVERHEATABLE).build(),
+                ChanceBlockState.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, uraniumHeatableData),
+                16
+            )
+            .speed(256)
+            .save(provider);
+        CompoundTag plutoniumHeatableData = new CompoundTag();
+        plutoniumHeatableData.putInt("duration", 1200);
+        AnvilCollisionCraftRecipe.builder()
+            .anvil(ModBlockTags.ANVIL_TIER_2)
+            .consume(false)
+            .hitBlock(ModBlocks.PLUTONIUM_BLOCK.get())
+            .transformBlock(
+                BlockStatePredicate.builder().of(ModBlockTags.OVERHEATABLE).build(),
+                ChanceBlockState.of(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK, plutoniumHeatableData),
+                16
+            )
+            .speed(256)
+            .save(provider);
     }
 
     private static void forEachAnvil(Function<Block> block, Block @NotNull ... anvils) {

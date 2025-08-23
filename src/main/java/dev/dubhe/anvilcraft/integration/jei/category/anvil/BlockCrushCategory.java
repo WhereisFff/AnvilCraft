@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -39,15 +38,13 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable progress;
+    private final IDrawable arrowDefault;
     private final IDrawable icon;
     private final Component title;
     private final ITickTimer timer;
 
     public BlockCrushCategory(IGuiHelper helper) {
-        progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
         icon = helper.createDrawableItemStack(new ItemStack(Items.ANVIL));
         title = Component.translatable("gui.anvilcraft.category.block_crush");
         timer = helper.createTickTimer(30, 60, true);
@@ -95,7 +92,7 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
         double mouseX,
         double mouseY) {
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
-        progress.draw(guiGraphics, 69, 30);
+        arrowDefault.draw(guiGraphics, 73, 35);
 
         RenderHelper.renderBlock(
             guiGraphics,
