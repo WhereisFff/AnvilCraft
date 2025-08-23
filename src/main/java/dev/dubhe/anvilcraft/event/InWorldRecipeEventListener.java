@@ -46,8 +46,6 @@ public class InWorldRecipeEventListener {
     public static void inWorldRecipe(InWorldRecipeEvent event) {
         RecipeType<? extends InWorldRecipe> recipeType = event.getRecipeType();
         ResourceLocation id = event.getId();
-        AnvilCraft.LOGGER.debug("recipe type: {}", recipeType);
-        AnvilCraft.LOGGER.debug("recipe id: {}", id);
         InWorldRecipeContext context = event.getContext();
         ServerLevel level = context.getLevel();
         BlockPos pos = BlockPos.containing(context.getPos());
