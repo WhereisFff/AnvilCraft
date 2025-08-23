@@ -129,8 +129,21 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
         }
 
         RenderHelper.renderBlock(
-            guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK
+            guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 20, 20, 12, RenderHelper.SINGLE_BLOCK
         );
+        if (recipe.getFirstInputBlock() != null) {
+            List<BlockState> input = recipe.getFirstInputBlock().constructStatesForRender();
+            BlockState renderedState = input.get((int) ((System.currentTimeMillis() / 1000) % input.size()));
+            RenderHelper.renderBlock(
+                guiGraphics,
+                renderedState,
+                110,
+                30,
+                10,
+                12,
+                RenderHelper.SINGLE_BLOCK
+            );
+        }
         RenderHelper.renderBlock(
             guiGraphics, recipe.getFirstResultBlock().getState(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK
         );
@@ -155,6 +168,9 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
             }
         }
         if (mouseX >= 100 && mouseX <= 118) {
+            if (mouseY >= 24 && mouseY < 42) {
+                tooltip.addAll(BlockTagUtil.getTooltipsForInput(recipe.getInputBlocks().getFirst()));
+            }
             if (mouseY >= 42 && mouseY <= 52) {
                 tooltip.add(recipe.getFirstResultBlock().getState().getBlock().getName());
             }
