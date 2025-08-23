@@ -65,26 +65,10 @@ public class TriggerUtil {
         }
     }
 
-    public static void anvilHammerLeftClickBlock(Level level, BlockPos pos) {
+    public static void anvilHammerClickBlock(Level level, BlockPos pos, String type) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_HAMMER_LIFT_CLICK.get().trigger(player);
-            }
-        }
-    }
-
-    public static void anvilHammerRightClickBlock(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_HAMMER_RIGHT_CLICK.get().trigger(player);
-            }
-        }
-    }
-
-    public static void anvilHammerShiftRightClickBlock(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_HAMMER_SHIFT_RIGHT_CLICK.get().trigger(player);
+                ModCriterionTriggers.ANVIL_HAMMER_CLICK_BLOCK.get().trigger(player, type);
             }
         }
     }

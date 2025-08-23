@@ -158,7 +158,7 @@ public class AnvilHammerItem extends Item implements Equipable {
         NeoForge.EVENT_BUS.post(event);
         level.playSound(null, blockPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1f, 1f);
         itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
-        TriggerUtil.anvilHammerLeftClickBlock(level, blockPos);
+        TriggerUtil.anvilHammerClickBlock(level, blockPos, "left_click");
         return true;
     }
 
@@ -169,11 +169,11 @@ public class AnvilHammerItem extends Item implements Equipable {
         if (rocketJump(player, level, blockPos)) return;
         if (!player.getAbilities().mayBuild) return;
         if (player.isShiftKeyDown()) {
-            TriggerUtil.anvilHammerShiftRightClickBlock(level, blockPos);
+            TriggerUtil.anvilHammerClickBlock(level, blockPos, "right_click");
             breakBlock(player, blockPos, level, anvilHammer);
             return;
         }
-        TriggerUtil.anvilHammerRightClickBlock(level, blockPos);
+        TriggerUtil.anvilHammerClickBlock(level, blockPos, "shift_right_click");
         BlockState state = level.getBlockState(blockPos);
         Block block = state.getBlock();
         MenuProvider provider = ((BlockBehaviourInvoker) block).invokeGetMenuProvider(state, level, blockPos);

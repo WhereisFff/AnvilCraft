@@ -1,9 +1,7 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerLeftClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerRightClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerShiftRightClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerClickBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
@@ -138,9 +136,9 @@ public class AnvilProcessingLine {
         .addCriterion("royal_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_anvil_hammer")))
         .addCriterion("ember_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/ember_anvil_hammer")))
         .addCriterion("transcendence_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/transcendence_anvil_hammer")))
-        .addCriterion("left_click", AnvilHammerLeftClickBlockTrigger.TriggerInstance.clickBlock())
-        .addCriterion("right_click", AnvilHammerRightClickBlockTrigger.TriggerInstance.clickBlock())
-        .addCriterion("shift_right_click", AnvilHammerShiftRightClickBlockTrigger.TriggerInstance.clickBlock())
+        .addCriterion("left_click", AnvilHammerClickBlockTrigger.TriggerInstance.leftClickBlock())
+        .addCriterion("right_click", AnvilHammerClickBlockTrigger.TriggerInstance.rightClickBlock())
+        .addCriterion("shift_right_click", AnvilHammerClickBlockTrigger.TriggerInstance.shiftRightClickBlock())
         .addCriterion("hurt_entity", AnvilHammerHurtEntityTrigger.TriggerInstance.hurtEntity())
         .requirements(new AdvancementRequirements(List.of(
             List.of("anvil_hammer", "royal_anvil_hammer", "ember_anvil_hammer", "transcendence_anvil_hammer"),

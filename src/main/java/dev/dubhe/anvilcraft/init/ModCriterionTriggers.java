@@ -2,9 +2,7 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerLeftClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerRightClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerShiftRightClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerClickBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
@@ -59,14 +57,8 @@ public class ModCriterionTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, InWorldRecipeTrigger> IN_WORLD_RECIPE =
         CT.register("in_world_recipe", InWorldRecipeTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerLeftClickBlockTrigger> ANVIL_HAMMER_LIFT_CLICK =
-        CT.register("anvil_hammer_left_click_block", AnvilHammerLeftClickBlockTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerRightClickBlockTrigger> ANVIL_HAMMER_RIGHT_CLICK =
-        CT.register("anvil_hammer_right_click_block", AnvilHammerRightClickBlockTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerShiftRightClickBlockTrigger> ANVIL_HAMMER_SHIFT_RIGHT_CLICK =
-        CT.register("anvil_hammer_shift_right_click_block", AnvilHammerShiftRightClickBlockTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerClickBlockTrigger> ANVIL_HAMMER_CLICK_BLOCK =
+        CT.register("anvil_hammer_click_block", AnvilHammerClickBlockTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerHurtEntityTrigger> ANVIL_HAMMER_HURT_ENTITY =
         CT.register("anvil_hammer_hurt_entity", AnvilHammerHurtEntityTrigger::new);
