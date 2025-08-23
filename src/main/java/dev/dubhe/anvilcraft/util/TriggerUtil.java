@@ -57,34 +57,10 @@ public class TriggerUtil {
         }
     }
 
-    public static void anythingAnvilCrafting(Level level, BlockPos pos) {
+    public static void inWorldRecipe(Level level, BlockPos pos, ResourceLocation recipeType, ResourceLocation id) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANYTHING_ANVIL_CRAFTING.get().trigger(player);
-            }
-        }
-    }
-
-    public static void inWorldRecipe(Level level, BlockPos pos, ResourceLocation id) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.IN_WORLD_RECIPE.get().trigger(player, id);
-            }
-        }
-    }
-
-    public static void inWorldSuperHeatingRecipe(Level level, BlockPos pos, ResourceLocation id) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.IN_WORLD_SUPER_HEATING_RECIPE.get().trigger(player, id);
-            }
-        }
-    }
-
-    public static void inWorldTimeWrapRecipe(Level level, BlockPos pos, ResourceLocation id) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.IN_WORLD_TIME_WARP_RECIPE.get().trigger(player, id);
+                ModCriterionTriggers.IN_WORLD_RECIPE.get().trigger(player, recipeType, id);
             }
         }
     }

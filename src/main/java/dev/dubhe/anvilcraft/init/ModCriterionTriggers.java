@@ -9,13 +9,10 @@ import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTr
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnythingAnvilCraftingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DispenserRepairIronGolem;
 import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldSuperHeatingRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldTimewarpRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceTrigger;
@@ -59,17 +56,8 @@ public class ModCriterionTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, DispenserRepairIronGolem> REPAIR_IRON_GOLEM =
         CT.register("repair_iron_golem", DispenserRepairIronGolem::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, AnythingAnvilCraftingTrigger> ANYTHING_ANVIL_CRAFTING =
-        CT.register("anything_anvil_crafting", AnythingAnvilCraftingTrigger::new);
-
     public static final DeferredHolder<CriterionTrigger<?>, InWorldRecipeTrigger> IN_WORLD_RECIPE =
         CT.register("in_world_recipe", InWorldRecipeTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, InWorldSuperHeatingRecipeTrigger> IN_WORLD_SUPER_HEATING_RECIPE =
-        CT.register("in_world_super_heating_recipe", InWorldSuperHeatingRecipeTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, InWorldTimewarpRecipeTrigger> IN_WORLD_TIME_WARP_RECIPE =
-        CT.register("in_world_time_warp_recipe", InWorldTimewarpRecipeTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerLeftClickBlockTrigger> ANVIL_HAMMER_LIFT_CLICK =
         CT.register("anvil_hammer_left_click_block", AnvilHammerLeftClickBlockTrigger::new);
