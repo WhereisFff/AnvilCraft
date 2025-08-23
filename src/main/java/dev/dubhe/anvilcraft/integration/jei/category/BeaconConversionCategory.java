@@ -150,8 +150,12 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
         slotDefault.draw(guiGraphics, 47, 7);
         slotDefault.draw(guiGraphics, 9, 109);
         slotDefault.draw(guiGraphics, 9, 91);
-        if (recipe.chance < 1.0f) slotChoice.draw(guiGraphics, 111, 95);
-        slotChoice.draw(guiGraphics, 129, 95);
+        if (recipe.chance < 1.0f) {
+            slotChoice.draw(guiGraphics, 111, 95);
+            slotChoice.draw(guiGraphics, 129, 95);
+        } else {
+            slotDefault.draw(guiGraphics, 129, 95);
+        }
 
         arrowIn.draw(guiGraphics, 66, 14);
         arrowDefault.draw(guiGraphics, 60, 96);

@@ -48,14 +48,16 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
     private final IDrawable slotProbability;
     private final Component title;
     private final ITickTimer timer;
-    protected final IDrawable arrowDefault;
+    private final IDrawable arrowIn;
+    private final IDrawable arrowOut;
 
     public TimeWarpCategory(IGuiHelper helper) {
         slotDefault = JeiRenderHelper.getSlotDefault(helper);
         slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable("gui.anvilcraft.category.time_warp");
         timer = helper.createTickTimer(30, 60, true);
-        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -142,8 +144,8 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             RenderHelper.SINGLE_BLOCK
         );
 
-        arrowDefault.draw(guiGraphics, 54, 28);
-        arrowDefault.draw(guiGraphics, 92, 28);
+        arrowIn.draw(guiGraphics, 54, 20);
+        arrowOut.draw(guiGraphics, 92, 19);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (!recipe.getResultItems().isEmpty()) {

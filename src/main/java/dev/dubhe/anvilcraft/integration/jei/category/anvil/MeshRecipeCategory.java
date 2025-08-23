@@ -44,7 +44,7 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
     private final Component title;
     private final ITickTimer timer;
 
-    protected final IDrawable arrowDefault;
+    private final IDrawable arrowIn;
 
     public MeshRecipeCategory(IGuiHelper helper) {
         this.slotDefault = JeiRenderHelper.getSlotDefault(helper);
@@ -54,7 +54,7 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
         this.title = Component.translatable("gui.anvilcraft.category.mesh");
         this.timer = helper.createTickTimer(30, 60, true);
 
-        this.arrowDefault = JeiRenderHelper.getArrowDefault(helper);
+        this.arrowIn = JeiRenderHelper.getArrowInput(helper);
     }
 
     @Override
@@ -113,7 +113,7 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
         RenderHelper.renderBlock(
             guiGraphics, Blocks.SCAFFOLDING.defaultBlockState(), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowDefault.draw(guiGraphics, 55, 17);
+        arrowIn.draw(guiGraphics, 55, 17);
         slotDefault.draw(guiGraphics, 36, 13);
 
         for (int row = 0; row < MeshRecipeGroup.maxRows; row++) {

@@ -82,8 +82,8 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
             RenderHelper.SINGLE_BLOCK
         );
 
-        arrowDefault.draw(guiGraphics, 54, 28);
-        arrowDefault.draw(guiGraphics, 92, 28);
+        arrowIn.draw(guiGraphics, 54, 20);
+        arrowOut.draw(guiGraphics, 92, 19);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
