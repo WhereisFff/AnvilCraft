@@ -3,8 +3,11 @@ package dev.dubhe.anvilcraft.anvil;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.GunpowderBlock;
+import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
+import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -25,9 +28,12 @@ public class GunpowderBlockBehavior implements IAnvilBehavior {
             }
         }
         above = above.below();
-        level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-        AnimateAscendingBlockEntity.animate(level, pos, blockState, above);
-        level.setBlockAndUpdate(above, blockState);
+        if (blockState.is(BlockTags.ANVIL) && !(blockState.getBlock() instanceof AbstractMultiPartBlock<?>)
+            && !blockState.is(ModBlocks.SPECTRAL_ANVIL)) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            AnimateAscendingBlockEntity.animate(level, pos, blockState, above);
+            level.setBlockAndUpdate(above, blockState);
+        }
         return true;
     }
 }
