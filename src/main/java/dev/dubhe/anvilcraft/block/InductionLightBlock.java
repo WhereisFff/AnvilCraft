@@ -166,38 +166,37 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         BlockPos pos,
         Player player,
         InteractionHand hand,
-        BlockHitResult hit) {
-        if (level instanceof ClientLevel) return InteractionResult.SUCCESS;
+        BlockHitResult hit
+    ) {
         ItemStack itemInHand = player.getItemInHand(hand);
-        if (itemInHand.is(ModBlocks.INDUCTION_LIGHT.asItem())) {
-            return BlockPlaceAssist.tryPlace(
-                state,
-                level,
-                pos,
-                player,
-                hand,
-                hit,
-                ModBlocks.INDUCTION_LIGHT.asItem(),
-                AXIS,
-                ModBlocks.INDUCTION_LIGHT.getDefaultState()
-            );
-        } else if (itemInHand.is(Items.REDSTONE)) {
-            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PINK));
-            return InteractionResult.SUCCESS;
-        } else if (itemInHand.is(Items.GLOWSTONE_DUST)) {
-            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.YELLOW));
-            return InteractionResult.SUCCESS;
-        } else if (itemInHand.is(ItemTags.AXES)) {
-            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PRIMARY));
-            itemInHand.hurtAndBreak(1, (ServerLevel) level, (ServerPlayer) player, item -> {
-                player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand));
-            });
-            return InteractionResult.CONSUME_PARTIAL;
-        } else if (itemInHand.is(ModItems.VOID_MATTER.asItem())) {
-            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.DARK));
+        if (!level.isClientSide) {
+            if (itemInHand.is(ModBlocks.INDUCTION_LIGHT.asItem())) {
+                return BlockPlaceAssist.tryPlace(
+                    state, level, pos, player, hand, hit,
+                    ModBlocks.INDUCTION_LIGHT.asItem(),
+                    AXIS,
+                    ModBlocks.INDUCTION_LIGHT.getDefaultState()
+                );
+            } else if (itemInHand.is(Items.REDSTONE)) {
+                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PINK));
+                return InteractionResult.SUCCESS;
+            } else if (itemInHand.is(Items.GLOWSTONE_DUST)) {
+                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.YELLOW));
+                return InteractionResult.SUCCESS;
+            } else if (itemInHand.is(ItemTags.AXES)) {
+                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PRIMARY));
+                itemInHand.hurtAndBreak(1, (ServerLevel) level, (ServerPlayer) player,
+                    item -> player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand))
+                );
+                return InteractionResult.CONSUME_PARTIAL;
+            } else if (itemInHand.is(ModItems.VOID_MATTER.asItem())) {
+                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.DARK));
+                return InteractionResult.SUCCESS;
+            }
         }
-        return InteractionResult.PASS;
+        return InteractionResult.SUCCESS;
     }
+
 
     @Nullable
     @Override
