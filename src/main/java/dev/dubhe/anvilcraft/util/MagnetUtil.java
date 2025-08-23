@@ -25,14 +25,12 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.fml.ModLoader;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class MagnetUtil {
-    public static boolean hasMagnetism(@NotNull Level level, @NotNull BlockPos pos) {
+    public static boolean hasMagnetism(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos.above());
-        return (state.is(ModBlockTags.MAGNET) || state.getBlock() instanceof MagnetBlock)
-            && state.hasProperty(MagnetBlock.LIT)
-            && !state.getValue(MagnetBlock.LIT);
+        return (state.is(ModBlockTags.MAGNET) || state.getBlock() instanceof MagnetBlock) && state.hasProperty(MagnetBlock.LIT) && !state.getValue(
+            MagnetBlock.LIT);
     }
 
     public static InteractionResult placeMagnetizedNode(Item item, UseOnContext context) {
@@ -45,7 +43,11 @@ public abstract class MagnetUtil {
         if (blockState.isAir()) return InteractionResult.PASS;
         double maxY = blockState.getCollisionShape(level, pos).max(Direction.Axis.Y, 0.5, 0.5);
         if (!blockState.getBlock().properties().hasCollision && maxY == 0) return InteractionResult.PASS;
-        for (MagnetizedNodeEntity entity : level.getEntities(ModEntities.MAGNETIZED_NODE.get(), new AABB(pos).setMaxY(pos.getY() + 1.1), EntitySelector.NO_SPECTATORS)) {
+        for (MagnetizedNodeEntity entity : level.getEntities(
+            ModEntities.MAGNETIZED_NODE.get(),
+            new AABB(pos).setMaxY(pos.getY() + 1.1),
+            EntitySelector.NO_SPECTATORS
+        )) {
             if (entity.blockPos.equals(pos)) {
                 entity.discard();
                 player.getCooldowns().addCooldown(item, 5);
@@ -59,11 +61,11 @@ public abstract class MagnetUtil {
         return InteractionResult.sidedSuccess(level.isClientSide());
     }
 
-    public static @NotNull InteractionResultHolder<ItemStack> magnetizeItems(
+    public static InteractionResultHolder<ItemStack> magnetizeItems(
         Item item,
-        @NotNull Level level,
-        @NotNull Player player,
-        @NotNull InteractionHand usedHand
+        Level level,
+        Player player,
+        InteractionHand usedHand
     ) {
         if (player.isShiftKeyDown()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
         ItemStack itemStack = player.getItemInHand(usedHand);
@@ -72,11 +74,8 @@ public abstract class MagnetUtil {
         ModLoader.postEvent(event);
         if (event.isCanceled()) return InteractionResultHolder.pass(itemStack);
         radius = event.getAttractRadius();
-        AABB aabb = new AABB(
-            player.position().add(-radius, -radius, -radius),
-            player.position().add(radius, radius, radius));
-        level.getEntities(EntityTypeTest.forClass(ItemEntity.class), aabb, Entity::isAlive)
-            .forEach(e -> e.moveTo(player.position()));
+        AABB aabb = new AABB(player.position().add(-radius, -radius, -radius), player.position().add(radius, radius, radius));
+        level.getEntities(EntityTypeTest.forClass(ItemEntity.class), aabb, Entity::isAlive).forEach(e -> e.moveTo(player.position()));
         itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(usedHand));
         player.getCooldowns().addCooldown(item, 5);
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());

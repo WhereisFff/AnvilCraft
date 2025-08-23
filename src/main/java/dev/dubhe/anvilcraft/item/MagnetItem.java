@@ -10,7 +10,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
 import static dev.dubhe.anvilcraft.util.MagnetUtil.magnetizeItems;
 import static dev.dubhe.anvilcraft.util.MagnetUtil.placeMagnetizedNode;
@@ -21,10 +20,10 @@ public class MagnetItem extends Item implements IChargerChargeable {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(
-            @NotNull Level level,
-            @NotNull Player player,
-            @NotNull InteractionHand usedHand
+    public InteractionResultHolder<ItemStack> use(
+        Level level,
+        Player player,
+        InteractionHand usedHand
     ) {
         return magnetizeItems(this, level, player, usedHand);
     }

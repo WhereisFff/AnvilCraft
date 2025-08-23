@@ -1,5 +1,5 @@
-@ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
+@ParametersAreNonnullByDefault
 package dev.dubhe.anvilcraft.advancements.criteron;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
