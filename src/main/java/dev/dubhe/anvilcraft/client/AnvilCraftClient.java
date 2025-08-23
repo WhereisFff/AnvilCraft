@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client;
 
+import dev.anvilcraft.lib.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.client.event.GuiLayerRegistrationEventListener;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.client.init.ModModelLayers;
@@ -10,11 +10,10 @@ import dev.dubhe.anvilcraft.client.init.ModTooltipComponents;
 import dev.dubhe.anvilcraft.client.particle.PlasmaJetsParticle;
 import dev.dubhe.anvilcraft.client.renderer.item.decoration.IonoCraftBackpackDecoration;
 import dev.dubhe.anvilcraft.client.support.InspectionSupport;
-import dev.dubhe.anvilcraft.config.AnvilCraftConfig;
-import dev.dubhe.anvilcraft.init.ModFluids;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
+import dev.dubhe.anvilcraft.init.block.ModFluids;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModParticles;
-import me.shedaniel.autoconfig.AutoConfig;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -29,7 +28,6 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -38,15 +36,13 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class AnvilCraftClient {
     public static IEventBus modEventBus = null;
     public static ModContainer modContainer = null;
+    public static final AnvilCraftClientConfig CONFIG = AnvilCraft.CLIENT_CONFIG;
 
     public AnvilCraftClient(@NotNull IEventBus modBus, @NotNull ModContainer container) {
         modEventBus = modBus;
         modContainer = container;
+        AnvilCraft.CONFIG_MANAGER.registerScreen(container);
         modBus.addListener(GuiLayerRegistrationEventListener::onRegister);
-        container.registerExtensionPoint(
-            IConfigScreenFactory.class,
-            (c, s) -> AutoConfig.getConfigScreen(AnvilCraftConfig.class, s).get()
-        );
         modBus.addListener(ModKeyMappings::register);
         modBus.addListener(AnvilCraftClient::registerClientExtensions);
         modBus.addListener(AnvilCraftClient::registerCustomItemDecorations);
@@ -62,7 +58,7 @@ public class AnvilCraftClient {
     public static void clientSetup(FMLClientSetupEvent event) {
         IntegrationHook.setModEventBus(modEventBus);
         IntegrationHook.setModContainer(modContainer);
-        AnvilCraft.getIntegrationManager().loadAllClientIntegrations();
+        AnvilCraft.getINTEGRATION_MANAGER().loadAllClientIntegrations();
     }
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent e) {

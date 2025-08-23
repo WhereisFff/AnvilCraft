@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.init;
 
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.api.amulet.AmuletRaffleProbability;
-import net.minecraft.nbt.CompoundTag;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -26,8 +25,14 @@ public class ModDataAttachments {
         "amulet_raffle_probability", () -> AttachmentType.builder(() -> AmuletRaffleProbability.EMPTY)
             .serialize(AmuletRaffleProbability.CODEC).copyOnDeath().build());
 
-    public static final Supplier<AttachmentType<CompoundTag>> SCARE_ENTITIES = ATTACHMENT_TYPES.register(
-        "scare_entities", () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build());
+    public static final Supplier<AttachmentType<Boolean>> SCARE_SKELETONS = ATTACHMENT_TYPES.register(
+        "scare_skeletons", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+
+    public static final Supplier<AttachmentType<Boolean>> SCARE_CREEPERS = ATTACHMENT_TYPES.register(
+        "scare_creepers", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+
+    public static final Supplier<AttachmentType<Boolean>> SCARE_PHANTOMS = ATTACHMENT_TYPES.register(
+        "scare_phantoms", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
 
     public static void register(IEventBus eventBus) {
         ATTACHMENT_TYPES.register(eventBus);

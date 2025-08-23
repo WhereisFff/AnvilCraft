@@ -1,0 +1,29 @@
+{
+  "parent": "anvilcraft:anvilcraft/noble_metal",
+  "criteria": {
+    "craft_smithing": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/royal_smithing_table"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.smithing_table.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:royal_smithing_table"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.smithing_table.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_smithing"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

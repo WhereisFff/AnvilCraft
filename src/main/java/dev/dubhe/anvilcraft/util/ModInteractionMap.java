@@ -5,8 +5,8 @@ import dev.dubhe.anvilcraft.block.HoneyCauldronBlock;
 import dev.dubhe.anvilcraft.block.Layered4LevelCauldronBlock;
 import dev.dubhe.anvilcraft.block.OilCauldronBlock;
 import dev.dubhe.anvilcraft.block.state.Color;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -17,6 +17,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ModInteractionMap {
@@ -155,15 +157,51 @@ public class ModInteractionMap {
         );
         emptyInteractionMap.put(
             ModItems.OIL_BUCKET.get(),
-            (state, level, pos, player, hand, stack) -> CauldronInteraction.emptyBucket(
-                level,
-                pos,
-                player,
-                hand,
-                stack,
-                ModBlocks.OIL_CAULDRON.get().fullFilled(),
-                SoundEvents.BUCKET_EMPTY
-            )
+            (state, level, pos, player, hand, stack) -> switch (state) {
+                case BlockState it when it.is(ModBlocks.OIL_CAULDRON) -> CauldronInteraction.emptyBucket(
+                    level,
+                    pos,
+                    player,
+                    hand,
+                    stack,
+                    ModBlocks.OIL_CAULDRON.get().fullFilled(),
+                    SoundEvents.BUCKET_EMPTY
+                );
+                case BlockState it when it.is(ModBlocks.FIRE_CAULDRON) -> CauldronInteraction.emptyBucket(
+                    level,
+                    pos,
+                    player,
+                    hand,
+                    stack,
+                    ModBlocks.FIRE_CAULDRON.get().fullFilled(),
+                    SoundEvents.BUCKET_EMPTY
+                );
+                case BlockState it when it.is(Blocks.CAULDRON) -> {
+                    for (int i = 0; i < 6; i++) {
+                        if (level.getBlockState(pos.offset(0, i, 0).immutable()).is(ModBlocks.PLASMA_JETS)) {
+                            yield CauldronInteraction.emptyBucket(
+                                level,
+                                pos,
+                                player,
+                                hand,
+                                stack,
+                                ModBlocks.FIRE_CAULDRON.get().fullFilled(),
+                                SoundEvents.BUCKET_EMPTY
+                            );
+                        }
+                    }
+                    yield CauldronInteraction.emptyBucket(
+                        level,
+                        pos,
+                        player,
+                        hand,
+                        stack,
+                        ModBlocks.OIL_CAULDRON.get().fullFilled(),
+                        SoundEvents.BUCKET_EMPTY
+                    );
+                }
+                default -> ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+            }
         );
         emptyInteractionMap.put(
             Items.HONEY_BOTTLE,

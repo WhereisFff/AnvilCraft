@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
-import dev.dubhe.anvilcraft.init.ModFluidTags;
-import dev.dubhe.anvilcraft.init.ModFluids;
+import dev.dubhe.anvilcraft.init.block.ModFluidTags;
+import dev.dubhe.anvilcraft.init.block.ModFluids;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.tags.TagsProvider;

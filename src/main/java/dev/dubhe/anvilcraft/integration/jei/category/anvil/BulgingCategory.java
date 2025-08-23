@@ -1,16 +1,15 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -46,7 +45,8 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final Component title;
     private final ITickTimer timer;
 
@@ -58,12 +58,13 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
             Blocks.ANVIL.defaultBlockState(),
             CauldronUtil.fullState(Blocks.WATER_CAULDRON)
         );
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotProbability = JeiRenderHelper.getSlotProbability(helper);
         title = Component.translatable("gui.anvilcraft.category.bulging");
         timer = helper.createTickTimer(30, 60, true);
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -127,12 +128,16 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
         }
         RenderHelper.renderBlock(guiGraphics, state, 81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         if (!recipe.getResultItems().isEmpty()) {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, recipe.getResultItems().size());
+            if (JeiRecipeUtil.isChance(recipe.getResultItems())) {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.getResultItems().size());
+            } else {
+                JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, recipe.getResultItems().size());
+            }
             HasCauldronSimple hasCauldron = recipe.getHasCauldron();
             if (recipe.isConsumeFluid()) {
                 PoseStack pose = guiGraphics.pose();
@@ -143,7 +148,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
                     Component.translatable(
                         "gui.anvilcraft.category.bulging.consume_fluid",
                         hasCauldron.getConsume(),
-                        Component.translatable("block." + hasCauldron.getFluid().toString().replace(':', '.'))
+                        hasCauldron.getFluidCauldron().getName()
                     ),
                     0,
                     70,
@@ -159,8 +164,9 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
                     Minecraft.getInstance().font,
                     Component.translatable(
                         "gui.anvilcraft.category.bulging.produce_fluid",
-                        -hasCauldron.getConsume(),
-                        Component.translatable("block." + hasCauldron.getTransform().toString().replace(':', '.'))),
+                        hasCauldron.getConsume(),
+                        hasCauldron.getTransformCauldron().getName()
+                    ),
                     0,
                     70,
                     0xFF000000,

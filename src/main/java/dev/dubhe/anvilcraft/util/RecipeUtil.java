@@ -14,9 +14,6 @@ import lombok.NoArgsConstructor;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -24,11 +21,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootContext;
 import net.minecraft.world.level.storage.loot.LootParams;
-import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
@@ -43,65 +35,8 @@ import java.util.Optional;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class RecipeUtil {
-    private static final byte CONSTANT_TYPE = 1;
-    private static final byte UNIFORM_TYPE = 2;
-    private static final byte BINOMIAL_TYPE = 3;
-    private static final byte UNKNOWN_TYPE = -1;
-
-    public static StreamCodec<FriendlyByteBuf, Vec3> VEC3_STREAM_CODEC = StreamCodec.of(
-        FriendlyByteBuf::writeVec3,
-        FriendlyByteBuf::readVec3
-    );
-
-    public static StreamCodec<RegistryFriendlyByteBuf, NumberProvider> NUMBER_PROVIDER_STREAM_CODEC = StreamCodec.of(
-        RecipeUtil::toNetwork,
-        RecipeUtil::fromNetwork
-    );
-
-    public static void toNetwork(RegistryFriendlyByteBuf buf, NumberProvider numberProvider) {
-        switch (numberProvider) {
-            case ConstantValue constantValue -> {
-                buf.writeByte(CONSTANT_TYPE);
-                buf.writeFloat(constantValue.value());
-            }
-            case UniformGenerator uniformGenerator -> {
-                buf.writeByte(UNIFORM_TYPE);
-                toNetwork(buf, uniformGenerator.min());
-                toNetwork(buf, uniformGenerator.max());
-            }
-            case BinomialDistributionGenerator binomialDistributionGenerator -> {
-                buf.writeByte(BINOMIAL_TYPE);
-                toNetwork(buf, binomialDistributionGenerator.n());
-                toNetwork(buf, binomialDistributionGenerator.p());
-            }
-            default -> buf.writeByte(UNKNOWN_TYPE);
-        }
-    }
-
-    public static NumberProvider fromNetwork(RegistryFriendlyByteBuf buf) {
-        return switch (buf.readByte()) {
-            case CONSTANT_TYPE -> ConstantValue.exactly(buf.readFloat());
-            case UNIFORM_TYPE -> new UniformGenerator(fromNetwork(buf), fromNetwork(buf));
-            case BINOMIAL_TYPE -> new BinomialDistributionGenerator(fromNetwork(buf), fromNetwork(buf));
-            default -> ConstantValue.exactly(1);
-        };
-    }
-
     public static LootContext emptyLootContext(ServerLevel level) {
         return new LootContext.Builder(new LootParams(level, Map.of(), Map.of(), 0)).create(Optional.empty());
-    }
-
-    public static double getExpectedValue(NumberProvider numberProvider) {
-        return switch (numberProvider) {
-            case ConstantValue constantValue -> constantValue.value();
-            case UniformGenerator uniformGenerator -> (getExpectedValue(uniformGenerator.min())
-                + getExpectedValue(uniformGenerator.max()))
-                / 2;
-            case BinomialDistributionGenerator binomialDistributionGenerator -> getExpectedValue(
-                binomialDistributionGenerator.n())
-                * getExpectedValue(binomialDistributionGenerator.p());
-            default -> -1;
-        };
     }
 
     public static boolean isIngredientsEqual(Ingredient first, Ingredient second) {

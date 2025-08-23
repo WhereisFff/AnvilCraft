@@ -2,11 +2,12 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,7 +20,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -56,12 +56,12 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<BulgingRecipe> getSerializer() {
+    public RecipeSerializer<BulgingRecipe> getSerializer() {
         return ModRecipeTypes.BULGING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<BulgingRecipe> getType() {
+    public RecipeType<BulgingRecipe> getType() {
         return ModRecipeTypes.BULGING_TYPE.get();
     }
 
@@ -70,7 +70,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -80,7 +80,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果消耗流体返回true，否则返回false
      */
     public boolean isConsumeFluid() {
-        return this.getHasCauldron().getConsume() > 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getFluid()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -89,7 +90,8 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果产生流体返回true，否则返回false
      */
     public boolean isProduceFluid() {
-        return this.getHasCauldron().getConsume() < 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -133,12 +135,12 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         );
 
         @Override
-        public @NotNull MapCodec<BulgingRecipe> codec() {
+        public MapCodec<BulgingRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, BulgingRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -226,11 +228,11 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "bulging";
         }
 

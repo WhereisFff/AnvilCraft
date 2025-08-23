@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.loot.conditions;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModLootItemConditions;
+import dev.dubhe.anvilcraft.init.loot.ModLootItemConditions;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.world.item.ItemStack;

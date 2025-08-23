@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.init.ModDamageTypes;
+import dev.dubhe.anvilcraft.init.entity.ModDamageTypes;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;

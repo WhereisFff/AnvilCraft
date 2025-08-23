@@ -21,8 +21,8 @@ public class GhostIngredientHandler<
     > implements IGhostIngredientHandler<T> {
     @Override
     public <X> @NotNull List<Target<X>> getTargetsTyped(
-        @NotNull T screen,
-        @NotNull ITypedIngredient<X> ingredient,
+        T screen,
+        ITypedIngredient<X> ingredient,
         boolean doStart
     ) {
         List<Target<X>> targets = new LinkedList<>();
@@ -52,7 +52,7 @@ public class GhostIngredientHandler<
         private final T screen;
         private final int slotIndex;
 
-        public GhostTarget(@NotNull T screen, int slotIndex, IGhostIngredientScreen.@NotNull Vec2i size) {
+        public GhostTarget(T screen, int slotIndex, IGhostIngredientScreen.@NotNull Vec2i size) {
             this.screen = screen;
             this.slotIndex = slotIndex;
             Slot slot = screen.getMenu().slots.get(slotIndex);
@@ -60,7 +60,7 @@ public class GhostIngredientHandler<
         }
 
         @Override
-        public void accept(@NotNull I ingredient) {
+        public void accept(I ingredient) {
             if (!(ingredient instanceof ItemStack stack)) return;
             screen.acceptGhost(screen.getMenu().getSlot(slotIndex), stack);
         }

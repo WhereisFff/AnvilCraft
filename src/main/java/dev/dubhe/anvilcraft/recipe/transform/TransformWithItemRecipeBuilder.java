@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.recipe.transform;
 
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
@@ -12,7 +12,6 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -65,7 +64,7 @@ public class TransformWithItemRecipeBuilder {
     /**
      *
      */
-    public TransformWithItemRecipeBuilder predicate(@NotNull Consumer<NumericTagValuePredicate.Builder> predicateBuilder) {
+    public TransformWithItemRecipeBuilder predicate(Consumer<NumericTagValuePredicate.Builder> predicateBuilder) {
         NumericTagValuePredicate.Builder builder = NumericTagValuePredicate.builder();
         predicateBuilder.accept(builder);
         predicates.add(builder.build());
@@ -75,7 +74,7 @@ public class TransformWithItemRecipeBuilder {
     /**
      * 修改生物nbt
      */
-    public TransformWithItemRecipeBuilder tagModification(@NotNull Consumer<TagModification.Builder> predicateBuilder) {
+    public TransformWithItemRecipeBuilder tagModification(Consumer<TagModification.Builder> predicateBuilder) {
         TagModification.Builder builder = TagModification.builder();
         predicateBuilder.accept(builder);
         tagModifications.add(builder.build());

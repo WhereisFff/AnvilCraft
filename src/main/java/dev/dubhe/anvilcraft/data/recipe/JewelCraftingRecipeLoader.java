@@ -1,8 +1,9 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -54,7 +55,7 @@ public class JewelCraftingRecipeLoader {
 
         JewelCraftingRecipe.builder()
             .requires(ModBlocks.HEAVY_IRON_BLOCK, 64)
-            .requires(ModBlocks.LEAD_BLOCK, 64)
+            .requires(ModItemTags.STORAGE_BLOCKS_LEAD, 64)
             .requires(ModBlocks.SPACE_OVERCOMPRESSOR)
             .result(new ItemStack(Items.HEAVY_CORE))
             .save(provider);

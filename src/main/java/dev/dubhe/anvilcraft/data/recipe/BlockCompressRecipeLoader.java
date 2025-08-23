@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCompressRecipe;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.tags.TagKey;
@@ -39,6 +39,7 @@ public class BlockCompressRecipeLoader {
         BlockCompressRecipe.builder().input(block1).input(block2).result(result).save(provider);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void blockCompress(RegistrateRecipeProvider provider, TagKey<Block> tag1, Block block2, Block result) {
         BlockCompressRecipe.builder().input(tag1).input(block2).result(result).save(provider);
     }

@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.event;
 
 import com.google.common.collect.ImmutableList;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.loot.functions.CurseLootItemFunction;
 import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.NbtPredicate;

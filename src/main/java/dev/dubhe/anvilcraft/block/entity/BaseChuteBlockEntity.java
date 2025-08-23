@@ -223,7 +223,7 @@ public abstract class BaseChuteBlockEntity
 
         }
         level.updateNeighbourForOutputSignal(getBlockPos(), getBlockState().getBlock());
-        if (resetCD) cooldown = AnvilCraft.config.chuteMaxCooldown;
+        if (resetCD) cooldown = AnvilCraft.CONFIG.chuteMaxCooldown;
     }
 
     private boolean isTargetEmpty(BlockEntity blockEntity) {
@@ -240,12 +240,12 @@ public abstract class BaseChuteBlockEntity
         if (targetBE instanceof BaseChuteBlockEntity chute) {
             int k = 0;
             if (chute.getTickedGameTime() >= this.tickedGameTime) k++;
-            chute.setCooldown(AnvilCraft.config.chuteMaxCooldown - k);
+            chute.setCooldown(AnvilCraft.CONFIG.chuteMaxCooldown - k);
         }
         if (targetBE instanceof SimpleChuteBlockEntity chute) {
             int k = 0;
             if (chute.getTickedGameTime() >= this.tickedGameTime) k++;
-            chute.setCooldown(AnvilCraft.config.chuteMaxCooldown - k);
+            chute.setCooldown(AnvilCraft.CONFIG.chuteMaxCooldown - k);
         }
     }
 

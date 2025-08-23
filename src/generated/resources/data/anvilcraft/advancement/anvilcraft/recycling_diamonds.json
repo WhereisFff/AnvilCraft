@@ -1,0 +1,92 @@
+{
+  "parent": "anvilcraft:anvilcraft/vanilla_iron_plate",
+  "criteria": {
+    "diamond_axe": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/tool/diamond_axe_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_boots": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/armor/diamond_boots_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_chestplate": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/armor/diamond_chestplate_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_helmet": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/armor/diamond_helmet_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_hoe": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/tool/diamond_hoe_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_horse_armor": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/armor/diamond_horse_armor_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_leggings": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/armor/diamond_leggings_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_pickaxe": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/tool/diamond_pickaxe_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_shovel": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/tool/diamond_shovel_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    },
+    "diamond_sword": {
+      "conditions": {
+        "id": "anvilcraft:item_crush/tool/diamond_sword_2_diamond"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.recycling_diamonds.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:diamond"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.recycling_diamonds.title"
+    }
+  },
+  "requirements": [
+    [
+      "diamond_pickaxe",
+      "diamond_axe",
+      "diamond_sword",
+      "diamond_hoe",
+      "diamond_shovel",
+      "diamond_helmet",
+      "diamond_chestplate",
+      "diamond_leggings",
+      "diamond_boots",
+      "diamond_horse_armor"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -15,7 +15,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.List;
@@ -72,6 +71,7 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> ex
      * @param slot   槽位
      * @param filter 过滤
      */
+    @SuppressWarnings("UnusedReturnValue")
     default boolean setFilter(int slot, ItemStack filter) {
         return this.getFilterMenu().setFilter(slot, filter);
     }
@@ -136,7 +136,7 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> ex
      * @param guiGraphics 画布
      * @param crafterSlot 槽位
      */
-    default void renderDisabledSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot crafterSlot) {
+    default void renderDisabledSlot(GuiGraphics guiGraphics, Slot crafterSlot) {
         RenderSystem.enableDepthTest();
         guiGraphics.blit(DISABLED_SLOT, crafterSlot.x, crafterSlot.y, 0, 0, 16, 16, 16, 16);
     }
@@ -148,7 +148,7 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> ex
      * @param slot        槽位
      * @param stack       物品堆叠
      */
-    default void renderFilterItem(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot, @NotNull ItemStack stack) {
+    default void renderFilterItem(GuiGraphics guiGraphics, Slot slot, ItemStack stack) {
         int i = slot.x;
         int j = slot.y;
         RenderHelper.renderItemWithTransparency(stack, guiGraphics.pose(), i, j, 0.52f);

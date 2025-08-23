@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
@@ -13,7 +13,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -59,12 +58,12 @@ public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<BoilingRecipe> getSerializer() {
+    public RecipeSerializer<BoilingRecipe> getSerializer() {
         return ModRecipeTypes.BOILING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<BoilingRecipe> getType() {
+    public RecipeType<BoilingRecipe> getType() {
         return ModRecipeTypes.BOILING_TYPE.get();
     }
 
@@ -73,7 +72,7 @@ public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -92,7 +91,7 @@ public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {
      */
     public static class Builder extends SimpleAbstractBuilder<BoilingRecipe, Builder> {
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "boiling";
         }
 

@@ -1,0 +1,74 @@
+{
+  "parent": "anvilcraft:anvilcraft/dang",
+  "criteria": {
+    "anvil_hammer": {
+      "conditions": {
+        "recipe_id": "anvilcraft:anvil_hammer"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "ember_anvil_hammer": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/ember_anvil_hammer"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "hurt_entity": {
+      "trigger": "anvilcraft:anvil_hammer_hurt_entity"
+    },
+    "left_click": {
+      "trigger": "anvilcraft:anvil_hammer_left_click_block"
+    },
+    "right_click": {
+      "trigger": "anvilcraft:anvil_hammer_right_click_block"
+    },
+    "royal_anvil_hammer": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/royal_anvil_hammer"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "shift_right_click": {
+      "trigger": "anvilcraft:anvil_hammer_shift_right_click_block"
+    },
+    "transcendence_anvil_hammer": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/transcendence_anvil_hammer"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.all_in_one.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:anvil_hammer"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.all_in_one.title"
+    }
+  },
+  "requirements": [
+    [
+      "anvil_hammer",
+      "royal_anvil_hammer",
+      "ember_anvil_hammer",
+      "transcendence_anvil_hammer"
+    ],
+    [
+      "left_click"
+    ],
+    [
+      "right_click"
+    ],
+    [
+      "shift_right_click"
+    ],
+    [
+      "hurt_entity"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

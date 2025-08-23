@@ -1,15 +1,15 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe;
 
 import com.mojang.serialization.Codec;
-import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
-import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.IRecipeTrigger;
+import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.recipe.trigger.IRecipeTrigger;
+import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.recipe.multiblock.BlockPattern;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.dubhe.anvilcraft.recipe.transform.TagModification;
 import dev.dubhe.anvilcraft.recipe.transform.TransformOptions;
 import dev.dubhe.anvilcraft.recipe.transform.TransformResult;
-import dev.dubhe.anvilcraft.util.CodecUtil;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.rhino.type.TypeInfo;
 import net.minecraft.resources.ResourceLocation;
@@ -38,7 +38,7 @@ public class AnvilCraftRecipeComponents {
     public static final RecipeComponent<IRecipeTrigger> TRIGGER = new RecipeComponent<>() {
         @Override
         public Codec<IRecipeTrigger> codec() {
-            return CodecUtil.TRIGGER_CODEC;
+            return IRecipeTrigger.CODEC;
         }
 
         @Override
@@ -55,7 +55,7 @@ public class AnvilCraftRecipeComponents {
     public static final RecipeComponent<IRecipePredicate<?>> RECIPE_PREDICATE = new RecipeComponent<>() {
         @Override
         public Codec<IRecipePredicate<?>> codec() {
-            return CodecUtil.PREDICATE_CODEC;
+            return IRecipePredicate.CODEC;
         }
 
         @Override
@@ -72,7 +72,7 @@ public class AnvilCraftRecipeComponents {
     public static final RecipeComponent<IRecipeOutcome<?>> RECIPE_OUTCOME = new RecipeComponent<>() {
         @Override
         public Codec<IRecipeOutcome<?>> codec() {
-            return CodecUtil.OUTCOME_CODEC;
+            return IRecipeOutcome.CODEC;
         }
 
         @Override

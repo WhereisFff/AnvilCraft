@@ -1,0 +1,30 @@
+{
+  "parent": "anvilcraft:anvilcraft/hammer",
+  "criteria": {
+    "super_kill": {
+      "conditions": {
+        "damage": 80.0
+      },
+      "trigger": "anvilcraft:anvil_hammer_hurt_entity"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.super_kill.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:royal_anvil_hammer"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.super_kill.title"
+    }
+  },
+  "requirements": [
+    [
+      "super_kill"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

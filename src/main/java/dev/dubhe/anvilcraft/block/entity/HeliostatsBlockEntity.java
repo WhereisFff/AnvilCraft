@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.block.entity;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
 import lombok.Getter;
@@ -174,7 +174,7 @@ public class HeliostatsBlockEntity extends BlockEntity {
      */
     public void tick() {
         if (level == null) return;
-        if (level.getGameTime() % (AnvilCraft.config.heliostatsDetectionInterval + 1) != 0) return;
+        if (level.getGameTime() % (AnvilCraft.CONFIG.heliostatsDetectionInterval + 1) != 0) return;
         if (irritatePos == null && level.isClientSide)
             PacketDistributor.sendToServer(new HeliostatsIrradiationPacket(getBlockPos(), irritatePos));
         workResult = validatePos(irritatePos);

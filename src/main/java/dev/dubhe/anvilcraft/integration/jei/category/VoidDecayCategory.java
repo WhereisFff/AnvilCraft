@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
 import com.google.common.collect.ImmutableList;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.recipe.VoidDecayRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -48,7 +48,7 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
 
     private final IDrawable slot;
     private final Component title;
-    private final IDrawable progressArrow;
+    private final IDrawable arrowDefault;
     private final Component randomTickTooltip;
     private final Component centerTooltip;
     private final Component aroundTooltip;
@@ -66,7 +66,7 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
     private static final BlockPos CENTER_POS = new BlockPos(1, 1, 1);
 
     public VoidDecayCategory(IGuiHelper helper) {
-        slot = helper.getSlotDrawable();
+        slot = JeiRenderHelper.getSlotChoice(helper);
         title = Component.translatable("gui.anvilcraft.category.void_decay");
         randomTickTooltip = Component.translatable("gui.anvilcraft.category.void_decay.random_tick");
         centerTooltip = Component.translatable("gui.anvilcraft.category.void_decay.center")
@@ -75,9 +75,7 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
             .withStyle(ChatFormatting.GOLD);
         notConsumedTooltip = Component.translatable("gui.anvilcraft.category.void_decay.not_consumed")
             .withStyle(ChatFormatting.GOLD);
-        progressArrow = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
     }
 
     @Override
@@ -162,7 +160,7 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
             }
         }
 
-        progressArrow.draw(guiGraphics, 26, 84);
+        arrowDefault.draw(guiGraphics, 35, 87);
     }
 
     @Override

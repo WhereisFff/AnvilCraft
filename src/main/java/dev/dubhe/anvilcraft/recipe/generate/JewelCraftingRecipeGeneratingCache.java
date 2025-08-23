@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.recipe.generate;
 
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;

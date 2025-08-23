@@ -4,7 +4,8 @@ import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager.Entry;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.FallingBlockEntity;
@@ -78,6 +79,7 @@ public class PiezoelectricCrystalBlock extends Block implements IHammerRemovable
         int chargeNum = chargeNums.get(distance);
         this.charge(chargeNum, level, blockPos);
         pressureConduction(level, blockPos, chargeNum / 2);
+        TriggerUtil.anvilHitPiezoelectricCrystal(level, blockPos);
     }
 
     private void charge(int chargeNum, Level level, BlockPos blockPos) {

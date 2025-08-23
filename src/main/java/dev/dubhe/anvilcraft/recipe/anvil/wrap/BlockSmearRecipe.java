@@ -2,11 +2,11 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,12 +48,12 @@ public class BlockSmearRecipe extends AbstractProcessRecipe<BlockSmearRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<BlockSmearRecipe> getSerializer() {
+    public RecipeSerializer<BlockSmearRecipe> getSerializer() {
         return ModRecipeTypes.BLOCK_SMEAR_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<BlockSmearRecipe> getType() {
+    public RecipeType<BlockSmearRecipe> getType() {
         return ModRecipeTypes.BLOCK_SMEAR_TYPE.get();
     }
 
@@ -63,7 +62,7 @@ public class BlockSmearRecipe extends AbstractProcessRecipe<BlockSmearRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -96,12 +95,12 @@ public class BlockSmearRecipe extends AbstractProcessRecipe<BlockSmearRecipe> {
         );
 
         @Override
-        public @NotNull MapCodec<BlockSmearRecipe> codec() {
+        public MapCodec<BlockSmearRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockSmearRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, BlockSmearRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -170,18 +169,18 @@ public class BlockSmearRecipe extends AbstractProcessRecipe<BlockSmearRecipe> {
          * @param result 结果方块
          * @return 构建器实例
          */
-        public Builder result(@NotNull Block result) {
+        public Builder result(Block result) {
             this.result = new ChanceBlockState(result.defaultBlockState(), 1.0f);
             return this;
         }
 
         @Override
-        public @NotNull BlockSmearRecipe buildRecipe() {
+        public BlockSmearRecipe buildRecipe() {
             return new BlockSmearRecipe(this.inputs, this.result);
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
             if (inputs.isEmpty()) {
                 throw new IllegalArgumentException("Recipe inputs must not be empty, RecipeId: " + pId);
             }
@@ -191,12 +190,12 @@ public class BlockSmearRecipe extends AbstractProcessRecipe<BlockSmearRecipe> {
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "block_smear";
         }
 
         @Override
-        public @NotNull Item getResult() {
+        public Item getResult() {
             return WrapUtils.getItem(result);
         }
     }

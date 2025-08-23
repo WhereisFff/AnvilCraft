@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftRecipeComponents;
@@ -7,10 +9,7 @@ import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceItemStackComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ItemIngredientPredicateComponent;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.latvian.mods.kubejs.error.KubeRuntimeException;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
@@ -25,7 +24,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,81 +65,75 @@ public interface SuperHeatingRecipeSchema {
             return this;
         }
 
-        public SuperHeatingKubeRecipe requires(@NotNull TagKey<Item> ingredient, int count) {
+        public SuperHeatingKubeRecipe requires(TagKey<Item> ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public SuperHeatingKubeRecipe requires(@NotNull TagKey<Item> ingredient) {
+        public SuperHeatingKubeRecipe requires(TagKey<Item> ingredient) {
             return this.requires(ingredient, 1);
         }
 
-        public SuperHeatingKubeRecipe requires(@NotNull ItemStack ingredient) {
+        public SuperHeatingKubeRecipe requires(ItemStack ingredient) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
             this.save();
             return this;
         }
 
-        public SuperHeatingKubeRecipe requires(@NotNull ItemLike ingredient, int count) {
+        public SuperHeatingKubeRecipe requires(ItemLike ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public SuperHeatingKubeRecipe requires(@NotNull ItemLike ingredient) {
+        public SuperHeatingKubeRecipe requires(ItemLike ingredient) {
             return this.requires(ingredient, 1);
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemStack result, NumberProvider count) {
+        public SuperHeatingKubeRecipe result(ItemStack result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
             this.save();
             return this;
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemStack result, float chance) {
+        public SuperHeatingKubeRecipe result(ItemStack result, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(result.getCount(), chance));
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemStack result) {
+        public SuperHeatingKubeRecipe result(ItemStack result) {
             return this.result(result, ConstantValue.exactly(result.getCount()));
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemLike result, NumberProvider count) {
+        public SuperHeatingKubeRecipe result(ItemLike result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
             this.save();
             return this;
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemLike result, int count, float chance) {
+        public SuperHeatingKubeRecipe result(ItemLike result, int count, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(count, chance));
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemLike result, int count) {
+        public SuperHeatingKubeRecipe result(ItemLike result, int count) {
             return this.result(result, ConstantValue.exactly(count));
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemLike result, float chance) {
+        public SuperHeatingKubeRecipe result(ItemLike result, float chance) {
             return this.result(result, 1, chance);
         }
 
-        public SuperHeatingKubeRecipe result(@NotNull ItemLike result) {
+        public SuperHeatingKubeRecipe result(ItemLike result) {
             return this.result(result, ConstantValue.exactly(1.0f));
         }
 
         @Override
         protected void validate() {
-            if (computeIfAbsent(INGREDIENTS, ArrayList::new).isEmpty()) {
-                throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
-            }
-            if (computeIfAbsent(RESULTS, ArrayList::new).isEmpty()) {
-                throw new KubeRuntimeException("Result is Empty!").source(sourceLine);
-            }
         }
     }
 

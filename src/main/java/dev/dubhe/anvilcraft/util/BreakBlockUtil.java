@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
-import dev.dubhe.anvilcraft.init.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;

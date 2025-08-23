@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import lombok.Getter;

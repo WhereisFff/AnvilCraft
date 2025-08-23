@@ -2,12 +2,13 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -18,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 压榨配方类
@@ -53,12 +53,12 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<SqueezingRecipe> getSerializer() {
+    public RecipeSerializer<SqueezingRecipe> getSerializer() {
         return ModRecipeTypes.SQUEEZING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<SqueezingRecipe> getType() {
+    public RecipeType<SqueezingRecipe> getType() {
         return ModRecipeTypes.SQUEEZING_TYPE.get();
     }
 
@@ -67,7 +67,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -77,7 +77,8 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
      * @return 如果产生流体返回true，否则返回false
      */
     public boolean isProduceFluid() {
-        return this.getHasCauldron().getConsume() < 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -89,11 +90,11 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          */
         public static final MapCodec<SqueezingRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BlockStatePredicate.CODEC
-                .fieldOf("ingredients")
+                .fieldOf("ingredient")
                 .forGetter(SqueezingRecipe::getFirstInputBlock),
             ChanceBlockState.CODEC
                 .codec()
-                .fieldOf("results")
+                .fieldOf("result")
                 .forGetter(SqueezingRecipe::getFirstResultBlock),
             HasCauldronSimple.CODEC
                 .forGetter(SqueezingRecipe::getHasCauldron)
@@ -113,12 +114,12 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         );
 
         @Override
-        public @NotNull MapCodec<SqueezingRecipe> codec() {
+        public MapCodec<SqueezingRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, SqueezingRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -191,7 +192,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          * @param chance 概率
          * @return 构建器实例
          */
-        public Builder result(@NotNull Block result, float chance) {
+        public Builder result(Block result, float chance) {
             return this.result(new ChanceBlockState(result.defaultBlockState(), chance));
         }
 
@@ -274,21 +275,21 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         }
 
         @Override
-        public @NotNull SqueezingRecipe buildRecipe() {
+        public SqueezingRecipe buildRecipe() {
             return new SqueezingRecipe(this.ingredient, this.result, hasCauldron.build());
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "bulging";
         }
 
         @Override
-        public @NotNull Item getResult() {
+        public Item getResult() {
             return WrapUtils.getItem(this.result);
         }
     }

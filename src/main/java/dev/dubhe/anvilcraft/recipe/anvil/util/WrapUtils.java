@@ -1,10 +1,11 @@
 package dev.dubhe.anvilcraft.recipe.anvil.util;
 
-import dev.dubhe.anvilcraft.recipe.anvil.IRecipeOutcome;
-import dev.dubhe.anvilcraft.recipe.anvil.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlockIngredient;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.recipe.predicate.block.HasBlock;
+import dev.anvilcraft.lib.recipe.predicate.block.HasBlockIngredient;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -13,7 +14,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
@@ -32,8 +32,8 @@ public class WrapUtils {
      * @param results 方块状态谓词列表
      * @return HasBlock谓词列表
      */
-    public static @NotNull List<IRecipePredicate<?>> getPredicates(
-        @NotNull List<BlockStatePredicate> results
+    public static List<IRecipePredicate<?>> getPredicates(
+        List<BlockStatePredicate> results
     ) {
         List<IRecipePredicate<?>> predicates = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
@@ -49,8 +49,8 @@ public class WrapUtils {
      * @param block 方块状态谓词
      * @return HasBlockIngredient谓词
      */
-    public static @NotNull IRecipePredicate<?> getIngredientPredicate(
-        @NotNull BlockStatePredicate block
+    public static IRecipePredicate<?> getIngredientPredicate(
+        BlockStatePredicate block
     ) {
         return new HasBlockIngredient(new Vec3(0, -1, 0), block);
     }
@@ -61,8 +61,8 @@ public class WrapUtils {
      * @param block 方块状态谓词
      * @return HasBlockIngredient谓词列表
      */
-    public static @NotNull @Unmodifiable List<IRecipePredicate<?>> getIngredientPredicates(
-        @NotNull BlockStatePredicate block
+    public static @Unmodifiable List<IRecipePredicate<?>> getIngredientPredicates(
+        BlockStatePredicate block
     ) {
         return List.of(getIngredientPredicate(block));
     }
@@ -73,8 +73,8 @@ public class WrapUtils {
      * @param results 方块状态谓词列表
      * @return HasBlockIngredient谓词列表
      */
-    public static @NotNull List<IRecipePredicate<?>> getIngredientPredicates(
-        @NotNull List<BlockStatePredicate> results
+    public static List<IRecipePredicate<?>> getIngredientPredicates(
+        List<BlockStatePredicate> results
     ) {
         List<IRecipePredicate<?>> predicates = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
@@ -91,8 +91,8 @@ public class WrapUtils {
      * @param yOffset Y轴偏移
      * @return 结果列表
      */
-    public static @NotNull @Unmodifiable List<IRecipeOutcome<?>> getOutcomes(
-        @NotNull ChanceBlockState result,
+    public static @Unmodifiable List<IRecipeOutcome<?>> getOutcomes(
+        ChanceBlockState result,
         int yOffset
     ) {
         return List.of(result.toSetBlock(new Vec3(0, yOffset, 0)));
@@ -104,8 +104,8 @@ public class WrapUtils {
      * @param result ChanceBlockState
      * @return 结果列表
      */
-    public static @NotNull @Unmodifiable List<IRecipeOutcome<?>> getOutcomes(
-        @NotNull ChanceBlockState result
+    public static @Unmodifiable List<IRecipeOutcome<?>> getOutcomes(
+        ChanceBlockState result
     ) {
         return WrapUtils.getOutcomes(result, -1);
     }
@@ -116,8 +116,8 @@ public class WrapUtils {
      * @param results ChanceBlockState列表
      * @return 结果列表
      */
-    public static @NotNull List<IRecipeOutcome<?>> getOutcomes(
-        @NotNull List<ChanceBlockState> results
+    public static List<IRecipeOutcome<?>> getOutcomes(
+        List<ChanceBlockState> results
     ) {
         List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
         for (int i = 0; i < results.size(); i++) {
@@ -133,7 +133,7 @@ public class WrapUtils {
      * @param result ChanceBlockState
      * @return 物品
      */
-    public static @NotNull Item getItem(@NotNull ChanceBlockState result) {
+    public static Item getItem(ChanceBlockState result) {
         BlockState state = result.getState();
         if (state.isEmpty() || state.isAir()) return Items.ANVIL;
         Item item = state.getBlock().asItem();
@@ -147,7 +147,7 @@ public class WrapUtils {
      * @param results ChanceBlockState列表
      * @return 物品
      */
-    public static @NotNull Item getItem(@NotNull List<ChanceBlockState> results) {
+    public static Item getItem(List<ChanceBlockState> results) {
         if (results.isEmpty()) return Items.ANVIL;
         return WrapUtils.getItem(results.getFirst());
     }
@@ -158,7 +158,7 @@ public class WrapUtils {
      * @param result ChanceBlockState
      * @return 物品堆栈
      */
-    public static @NotNull ItemStack getItemStack(@NotNull ChanceBlockState result) {
+    public static ItemStack getItemStack(ChanceBlockState result) {
         return WrapUtils.getItem(result).getDefaultInstance();
     }
 
@@ -168,7 +168,7 @@ public class WrapUtils {
      * @param results ChanceBlockState列表
      * @return 物品堆栈
      */
-    public static @NotNull ItemStack getItemStack(@NotNull List<ChanceBlockState> results) {
+    public static ItemStack getItemStack(List<ChanceBlockState> results) {
         if (results.isEmpty()) return Items.ANVIL.getDefaultInstance();
         return WrapUtils.getItem(results.getFirst()).getDefaultInstance();
     }
@@ -179,7 +179,7 @@ public class WrapUtils {
      * @param cauldron 炼药锅方块
      * @return 流体ID
      */
-    public static @NotNull ResourceLocation cauldron2Fluid(Block cauldron) {
+    public static ResourceLocation cauldron2Fluid(Block cauldron) {
         ResourceLocation key = BuiltInRegistries.BLOCK.getKey(cauldron);
         String namespace = key.getNamespace();
         String path = key.getPath();

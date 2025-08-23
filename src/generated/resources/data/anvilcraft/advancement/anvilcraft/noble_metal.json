@@ -1,0 +1,29 @@
+{
+  "parent": "anvilcraft:anvilcraft/industrial_grade_smelting",
+  "criteria": {
+    "royal_metal": {
+      "conditions": {
+        "id": "anvilcraft:super_heating/royal_steel_ingot"
+      },
+      "trigger": "anvilcraft:in_world_super_heating_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.noble_metal.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:royal_steel_ingot"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.noble_metal.title"
+    }
+  },
+  "requirements": [
+    [
+      "royal_metal"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

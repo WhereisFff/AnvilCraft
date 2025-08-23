@@ -1,16 +1,15 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -22,7 +21,6 @@ import java.util.List;
  */
 @Getter
 public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
-
     /**
      * 构造一个物品粉碎配方
      *
@@ -38,7 +36,7 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
                 .setItemInputOffset(new Vec3(0.0, -0.125, 0.0))
                 .setItemInputRange(new Vec3(0.75, 0.25, 0.75))
                 .setInputItems(itemIngredients)
-                .setItemOutputOffset(new Vec3(0.0, -0.5, 0.0))
+                .setItemOutputOffset(new Vec3(0.0, -0.6875, 0.0))
                 .setResultItems(results)
                 .setBlockInputOffset(new Vec3i(0, -1, 0))
                 .setInputBlocks(
@@ -50,12 +48,12 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<ItemCrushRecipe> getSerializer() {
+    public RecipeSerializer<ItemCrushRecipe> getSerializer() {
         return ModRecipeTypes.ITEM_CRUSH_SERIALIZERS.get();
     }
 
     @Override
-    public @NotNull RecipeType<ItemCrushRecipe> getType() {
+    public RecipeType<ItemCrushRecipe> getType() {
         return ModRecipeTypes.ITEM_CRUSH_TYPE.get();
     }
 
@@ -64,7 +62,7 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -83,7 +81,7 @@ public class ItemCrushRecipe extends AbstractProcessRecipe<ItemCrushRecipe> {
      */
     public static class Builder extends SimpleAbstractBuilder<ItemCrushRecipe, Builder> {
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "item_crush";
         }
 

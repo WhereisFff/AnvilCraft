@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;

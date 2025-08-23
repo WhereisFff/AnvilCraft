@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.util.dummy;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.player.Player;
@@ -14,7 +15,7 @@ public class DummyCat extends Cat {
         super(EntityType.CAT, level);
     }
 
-    public static DummyCat fromPlayer(Level level, @Nullable Player player) {
+    public static @Nullable DummyCat fromPlayer(Level level, @Nullable Player player) {
         if (player == null) return null;
         DummyCat cat = new DummyCat(level);
         cat.setPos(player.position());
@@ -33,6 +34,21 @@ public class DummyCat extends Cat {
 
     @Override
     public boolean shouldRenderAtSqrDistance(double distance) {
+        return false;
+    }
+
+    @Override
+    public boolean shouldBeSaved() {
+        return false;
+    }
+
+    @Override
+    public boolean shouldShowName() {
+        return false;
+    }
+
+    @Override
+    public boolean mayInteract(Level level, BlockPos pos) {
         return false;
     }
 }
