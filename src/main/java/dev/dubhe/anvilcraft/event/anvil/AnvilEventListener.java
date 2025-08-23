@@ -23,7 +23,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -138,7 +137,6 @@ public class AnvilEventListener {
      * @param event 铁砧伤害实体事件
      */
     @SubscribeEvent
-    @SuppressWarnings("resource")
     public static void onAnvilHurtEntity(AnvilEvent.HurtEntity event) {
         Entity hurtedEntity = event.getHurtedEntity();
         if (!(hurtedEntity instanceof LivingEntity entity)) return;
@@ -174,9 +172,6 @@ public class AnvilEventListener {
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
-        if (hurtedEntity instanceof IronGolem) {
-            TriggerUtil.anvilLootingIronGolem(serverLevel, BlockPos.containing(pos));
-        }
-        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos));
+        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos), entity);
     }
 }

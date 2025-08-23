@@ -25,18 +25,10 @@ public class TriggerUtil {
         }
     }
 
-    public static void anvilLooting(Level level, BlockPos pos) {
+    public static void anvilLooting(Level level, BlockPos pos, Entity entity) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_LOOTING.get().trigger(player);
-            }
-        }
-    }
-
-    public static void anvilLootingIronGolem(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger(player);
+                ModCriterionTriggers.ANVIL_LOOTING.get().trigger(player, entity);
             }
         }
     }

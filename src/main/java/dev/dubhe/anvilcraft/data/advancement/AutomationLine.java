@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.DispenserRepairIronGolem;
 import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
@@ -9,6 +8,7 @@ import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.Blocks;
 
 public class AutomationLine {
@@ -45,7 +45,7 @@ public class AutomationLine {
             null, AdvancementType.GOAL,
             true, true, false
         )
-        .addCriterion("anvil_looting_iron_golem", AnvilLootingIronGolemTrigger.TriggerInstance.looting())
+        .addCriterion("anvil_looting_iron_golem", AnvilLootingTrigger.TriggerInstance.looting(EntityType.IRON_GOLEM))
         .addCriterion("repair_iron_golem", DispenserRepairIronGolem.TriggerInstance.repair())
         .build(AnvilCraft.advancementOf("iron_meter_reversal"));
 }

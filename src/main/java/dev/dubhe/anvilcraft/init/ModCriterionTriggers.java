@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerClickBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
 import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
@@ -47,9 +46,6 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, AnvilLootingTrigger> ANVIL_LOOTING =
         CT.register("anvil_looting", AnvilLootingTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilLootingIronGolemTrigger> ANVIL_LOOTING_IRON_GOLEM =
-        CT.register("anvil_looting_iron_golem", AnvilLootingIronGolemTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, DispenserRepairIronGolem> REPAIR_IRON_GOLEM =
         CT.register("repair_iron_golem", DispenserRepairIronGolem::new);
