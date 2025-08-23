@@ -61,7 +61,7 @@ public class StampingCategory extends AbstractProgressCategory<StampingRecipe> {
             guiGraphics, ModBlocks.STAMPING_PLATFORM.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 30);
-        arrowOut.draw(guiGraphics, 92, 29);
+        arrowOutputFromBelow.draw(guiGraphics, 92, 29);
 
         // TODO: 等待重构StampingUniqueItemsRecipe（目前仅多合一模板使用），重构后直接取消注释并修复import即可
 //        if (recipe instanceof StampingUniqueItemsRecipe) {

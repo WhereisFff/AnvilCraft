@@ -55,7 +55,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
     private final ITickTimer timer;
 
     private final IDrawable arrowIn;
-    private final IDrawable arrowOut;
+    private final IDrawable arrowOutputFromBelow;
 
     public MassInjectCategory(IGuiHelper helper) {
         icon = new DrawableBlockStateIcon(Blocks.ANVIL.defaultBlockState(),
@@ -65,7 +65,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
         timer = helper.createTickTimer(30, 60, true);
 
         arrowIn = JeiRenderHelper.getArrowInput(helper);
-        arrowOut = JeiRenderHelper.getArrowOutput(helper);
+        arrowOutputFromBelow = JeiRenderHelper.getArrowOutputFromBelow(helper);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
             81, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 30);
-        arrowOut.draw(guiGraphics, 92, 29);
+        arrowOutputFromBelow.draw(guiGraphics, 92, 29);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
         JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, 1);

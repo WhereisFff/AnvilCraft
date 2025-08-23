@@ -39,6 +39,7 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
     protected final IDrawable arrowIn;
     protected final IDrawable arrowOut;
     protected final IDrawable arrowDefault;
+    protected final IDrawable arrowOutputFromBelow;
 
     public AbstractProgressCategory(IGuiHelper helper, IDrawable icon, Component title) {
         this.icon = icon;
@@ -50,6 +51,7 @@ public abstract class AbstractProgressCategory<T extends AbstractProcessRecipe<?
         this.arrowIn = JeiRenderHelper.getArrowInput(helper);
         this.arrowOut = JeiRenderHelper.getArrowOutput(helper);
         this.arrowDefault = JeiRenderHelper.getArrowDefault(helper);
+        this.arrowOutputFromBelow = JeiRenderHelper.getArrowOutputFromBelow(helper);
     }
 
     @Override
