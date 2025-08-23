@@ -2,9 +2,9 @@ package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -192,8 +192,11 @@ public class ItemTagLoader {
         provider.addTag(ModItemTags.TOTEM)
             .add(findResourceKey(Items.TOTEM_OF_UNDYING));
 
+        provider.addTag(ItemTags.SWORDS)
+            .addTag(ModItemTags.HEAVY_HALBERD);
         provider.addTag(ItemTags.AXES)
-            .addTag(ModItemTags.RESONATOR);
+            .addTag(ModItemTags.RESONATOR)
+            .addTag(ModItemTags.HEAVY_HALBERD);
         provider.addTag(ItemTags.SHOVELS)
             .addTag(ModItemTags.RESONATOR);
         provider.addTag(ItemTags.HOES)
@@ -213,6 +216,26 @@ public class ItemTagLoader {
             .add(findResourceKey(Items.WHITE_WOOL))
             .addTag(Tags.Items.INGOTS)
             .addTag(Tags.Items.STORAGE_BLOCKS);
+
+        provider.addTag(ModItemTags.COMPRESS_ITEM)
+            .add(findResourceKey(Items.SNOW_BLOCK))
+            .add(findResourceKey(Items.WHITE_WOOL))
+            .addTag(Tags.Items.INGOTS)
+            .addTag(Tags.Items.STORAGE_BLOCKS);
+
+
+        provider.addTag(ModItemTags.SUPER_HEATING_BOOST_PRODUCTION)
+            .addTag(Tags.Items.RAW_MATERIALS)
+            .addTag(Tags.Items.ORES);
+
+        provider.addTag(ModItemTags.RAW_MUTTON)
+            .add(findResourceKey(Items.MUTTON));
+
+        provider.addTag(ModItemTags.RAW_BEEF)
+            .add(findResourceKey(Items.BEEF));
+
+        provider.addTag(ModItemTags.RAW_CHICKEN)
+            .add(findResourceKey(Items.CHICKEN));
     }
 
     private static @NotNull ResourceKey<Item> findResourceKey(Item item) {

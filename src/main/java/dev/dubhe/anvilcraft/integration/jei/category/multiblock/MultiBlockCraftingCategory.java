@@ -8,8 +8,8 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.JeiButton;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
@@ -171,7 +171,8 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
         IRecipeSlotsView recipeSlotsView,
         GuiGraphics guiGraphics,
         double mouseX,
-        double mouseY) {
+        double mouseY
+    ) {
         LevelLike level = cache.get(recipe);
         if (level == null) {
             level = RecipeUtil.asLevelLike(recipe.value().pattern);
@@ -276,9 +277,11 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
         int textX = Math.round(WIDTH / 0.8f - minecraft.font.width(component) - 5);
         guiGraphics.drawString(minecraft.font, component, textX, 0, 0xFF000000, false);
         int size = recipe.value().pattern.getSize();
-        guiGraphics.drawString(minecraft.font,
+        guiGraphics.drawString(
+            minecraft.font,
             Component.translatable("gui.anvilcraft.category.multiblock.size", size, size),
-            85, 115, 0xFF000000, false);
+            85, 115, 0xFF000000, false
+        );
         pose.popPose();
         arrowOut.draw(guiGraphics, 110, 60);
         slot.draw(guiGraphics, 129, 69);
@@ -309,7 +312,8 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
                 LevelLike level = this.cache.computeIfAbsent(it, a -> RecipeUtil.asLevelLike(a.value().pattern));
                 level.setAllLayersVisible(!level.isAllLayersVisible());
             },
-            recipe));
+            recipe
+        ));
 
         builder.addGuiEventListener(new JeiButton<>(
             137,
@@ -320,7 +324,8 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
                 if (level.isAllLayersVisible()) return;
                 level.nextLayer();
             },
-            recipe));
+            recipe
+        ));
 
         builder.addGuiEventListener(new JeiButton<>(
             149,
@@ -331,13 +336,15 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
                 if (level.isAllLayersVisible()) return;
                 level.previousLayer();
             },
-            recipe));
+            recipe
+        ));
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
             AnvilCraftJeiPlugin.MULTIBLOCK_CRAFTING,
-            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MULTIBLOCK_TYPE.get()));
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MULTIBLOCK_TYPE.get())
+        );
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

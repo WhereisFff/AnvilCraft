@@ -140,7 +140,7 @@ public class EmberAnvilMenu extends AnvilMenu {
                                 ? enchantmentsOnRightLevel + 1
                                 : Math.max(enchantmentsOnRightLevel, enchantmentsOnLeftLevel);
 
-                        if (!AnvilCraft.config.emberAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
+                        if (!AnvilCraft.CONFIG.emberAnvilBeyondMaxLevel && enchantmentsOnRightLevel > enchantment.getMaxLevel()) {
                             enchantmentsOnRightLevel = enchantment.getMaxLevel();
                         }
 

@@ -1,0 +1,11 @@
+{
+  "type": "anvilcraft:time_warp",
+  "consume": -1,
+  "ingredients": [
+    {
+      "count": 16,
+      "items": "#c:foods/raw_beef"
+    }
+  ],
+  "transform": "anvilcraft:oil"
+}

@@ -3,17 +3,15 @@ package dev.dubhe.anvilcraft.mixin;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.dubhe.anvilcraft.api.event.ItemEntityEvent;
+import dev.dubhe.anvilcraft.api.injection.entity.IItemEntityExtension;
 import dev.dubhe.anvilcraft.block.HollowMagnetBlock;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.util.AdsorbableItemEntity;
-import dev.dubhe.anvilcraft.util.IDiscardableItemEntity;
-import dev.dubhe.anvilcraft.util.MergeCooldownItemEntity;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -38,7 +36,6 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.EventHooks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -58,7 +55,8 @@ import java.util.Objects;
 import static dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity.PoachingCollectorMap;
 
 @Mixin(ItemEntity.class)
-abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity, IDiscardableItemEntity, AdsorbableItemEntity {
+@SuppressWarnings("resource")
+abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
     @Shadow
     public abstract ItemStack getItem();
 
@@ -118,10 +116,10 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
             value = "INVOKE",
             target =
                 "Lnet/minecraft/world/entity/item/ItemEntity;"
-                    + "getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
+                + "getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
         )
     )
-    private @NotNull Vec3 slowDown(ItemEntity instance) {
+    private Vec3 slowDown(ItemEntity instance) {
         Vec3 vec3 = instance.getDeltaMovement();
         double dy = 1;
         if (this.getItem().is(ModItemTags.LEVITATIONALS)) dy *= -0.005;
@@ -129,8 +127,9 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)
             || this.getItem().is(ModItems.NEGATIVE_MATTER)
             || this.getItem().is(ModBlocks.NEGATIVE_MATTER_BLOCK.asItem())) {
-            if (this.position().y <= this.level().getMaxBuildHeight())
+            if (this.position().y <= this.level().getMaxBuildHeight()) {
                 if (vec3.y < 0) dy *= -1;
+            }
         }
         return new Vec3(vec3.x, vec3.y * dy, vec3.z);
     }
@@ -198,10 +197,12 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     @Inject(method = "hurt", at = @At("HEAD"), cancellable = true)
     private void eternalProof(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
         if (this.getItem().has(ModComponents.ETERNAL)
-            && (source.is(DamageTypeTags.IS_EXPLOSION)
-            || source.is(DamageTypeTags.IS_FIRE)
-            || source.is(DamageTypes.CACTUS)
-            || source.is(DamageTypes.FELL_OUT_OF_WORLD))) {
+            && (
+                source.is(DamageTypeTags.IS_EXPLOSION)
+                || source.is(DamageTypeTags.IS_FIRE)
+                || source.is(DamageTypes.CACTUS)
+                || source.is(DamageTypes.FELL_OUT_OF_WORLD)
+            )) {
             cir.setReturnValue(false);
         }
     }
@@ -254,7 +255,8 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
         Vec3 vec3 = this.getDeltaMovement();
         this.applyGravity();
         this.noPhysics = false;
-        if (!this.onGround() || this.getDeltaMovement().horizontalDistanceSqr() > (double) 1.0E-5F || (this.tickCount + this.getId()) % 4 == 0) {
+        if (!this.onGround() || this.getDeltaMovement()
+                                    .horizontalDistanceSqr() > (double) 1.0E-5F || (this.tickCount + this.getId()) % 4 == 0) {
             this.anvilCraft$neutroniumMove(MoverType.SELF, this.getDeltaMovement());
             float f = 0.98F;
             if (this.onGround()) {
@@ -269,7 +271,8 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
                 }
             }
         }
-        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX()) || Mth.floor(this.yo) != Mth.floor(this.getY()) || Mth.floor(this.zo) != Mth.floor(this.getZ());
+        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX()) || Mth.floor(this.yo) != Mth.floor(this.getY()) || Mth.floor(this.zo) != Mth.floor(
+            this.getZ());
         int i = flag ? 2 : 40;
         if (this.tickCount % i == 0 && !this.level().isClientSide && this.isMergable()) {
             this.mergeWithNeighbours();
@@ -297,13 +300,19 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
     }
 
     @Override
-    @NotNull
     public PushReaction getPistonPushReaction() {
         if (this.getItem().is(ModItems.NEUTRONIUM_INGOT)) return PushReaction.IGNORE;
         return super.getPistonPushReaction();
     }
 
-    @SuppressWarnings({"unused", "SameParameterValue", "SuspiciousNameCombination", "deprecation"})
+    @SuppressWarnings(
+        {
+            "unused",
+            "SameParameterValue",
+            "SuspiciousNameCombination",
+            "deprecation"
+        }
+    )
     @Unique
     private void anvilCraft$neutroniumMove(MoverType moverType, Vec3 motion) {
 
@@ -372,7 +381,7 @@ abstract class ItemEntityMixin extends Entity implements MergeCooldownItemEntity
 
     @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public void setMergeCooldown(int cooldown) {
+    public void anvilcraft$setMergeCooldown(int cooldown) {
         anvilCraft$mergeCooldown = cooldown;
     }
 

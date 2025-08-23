@@ -1,0 +1,32 @@
+{
+  "parent": "anvilcraft:anvilcraft/block_placer",
+  "criteria": {
+    "devourer_devour_devourer": {
+      "conditions": {
+        "block": {
+          "block": "anvilcraft:block_devourer"
+        }
+      },
+      "trigger": "anvilcraft:devourer_devour_block"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.devourer.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:block_devourer"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.devourer.title"
+    }
+  },
+  "requirements": [
+    [
+      "devourer_devour_devourer"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

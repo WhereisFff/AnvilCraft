@@ -77,7 +77,7 @@ public class LoadMonitorBlockEntity extends BlockEntity implements IPowerConsume
                 : 0;
             BlockState state = getBlockState().setValue(LoadMonitorBlock.LOAD, load);
             getLevel().setBlockAndUpdate(getBlockPos(), state);
-            cooldown = AnvilCraft.config.loadMonitor;
+            cooldown = AnvilCraft.CONFIG.loadMonitor;
             getLevel().updateNeighbourForOutputSignal(getBlockPos(), state.getBlock());
         }
     }

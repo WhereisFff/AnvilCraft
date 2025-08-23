@@ -1,0 +1,57 @@
+{
+  "parent": "anvilcraft:anvilcraft/smithing_table",
+  "criteria": {
+    "royal_steel_axe": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/royal_steel_axe"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "royal_steel_hoe": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/royal_steel_hoe"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "royal_steel_pickaxe": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/royal_steel_pickaxe"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "royal_steel_shovel": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/royal_steel_shovel"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "royal_steel_sword": {
+      "conditions": {
+        "recipe_id": "anvilcraft:smithing/royal_steel_sword"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.durable_goods.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:royal_steel_pickaxe"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.durable_goods.title"
+    }
+  },
+  "requirements": [
+    [
+      "royal_steel_pickaxe",
+      "royal_steel_axe",
+      "royal_steel_shovel",
+      "royal_steel_hoe",
+      "royal_steel_sword"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

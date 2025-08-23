@@ -19,7 +19,7 @@ public class BlockDevourerBehavior implements IAnvilBehavior {
         level.setBlock(hitBlockPos, hitBlockState.setValue(BlockDevourerBlock.TRIGGERED, true), 2);
         if (
             hitBlockState.getValue(BlockDevourerBlock.FACING) == Direction.DOWN
-                && level.isOutsideBuildHeight(hitBlockPos.below())
+            && level.isOutsideBuildHeight(hitBlockPos.below())
         ) {
             level.scheduleTick(hitBlockPos, block, 4);
             return true;
@@ -33,7 +33,7 @@ public class BlockDevourerBehavior implements IAnvilBehavior {
         );
         if (
             hitBlockState.getValue(BlockDevourerBlock.FACING) == Direction.DOWN
-                && level.getBlockState(hitBlockPos.below()).getBlock().defaultDestroyTime() >= 0
+            && level.getBlockState(hitBlockPos.below()).getBlock().defaultDestroyTime() >= 0
         ) {
             level.setBlock(hitBlockPos, Blocks.AIR.defaultBlockState(), 2);
             level.setBlock(hitBlockPos.below(), hitBlockState.setValue(BlockDevourerBlock.TRIGGERED, true), 2);

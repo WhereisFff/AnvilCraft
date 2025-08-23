@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.mixin.compat;
 
 import com.cerbon.better_beacons.menu.custom.NewBeaconMenu;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;

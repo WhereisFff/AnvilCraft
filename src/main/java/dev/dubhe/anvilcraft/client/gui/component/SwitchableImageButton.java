@@ -53,7 +53,7 @@ public class SwitchableImageButton extends ImageButton {
         Consumer<Boolean> changeStatus,
         OnPress onPress
     ) {
-        this(x, y, 18, 18, sprites, status, changeStatus, onPress);
+        this(x, y, 16, 16, sprites, status, changeStatus, onPress);
     }
 
     @Override

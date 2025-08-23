@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.recipe.anvil.collision;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -11,7 +11,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 import java.util.Optional;
@@ -47,7 +46,7 @@ public record BlockTransform(
      * @param buf            字节缓冲区
      * @param blockTransform 方块转换
      */
-    private static void encode(RegistryFriendlyByteBuf buf, @NotNull BlockTransform blockTransform) {
+    private static void encode(RegistryFriendlyByteBuf buf, BlockTransform blockTransform) {
         BlockStatePredicate.STREAM_CODEC.encode(buf, blockTransform.inputBlock);
         ChanceBlockState.STREAM_CODEC.encode(buf, blockTransform.outputBlock);
         buf.writeVarInt(blockTransform.maxCount);
@@ -59,7 +58,7 @@ public record BlockTransform(
      * @param buf 字节缓冲区
      * @return 方块转换
      */
-    private static @NotNull BlockTransform decode(RegistryFriendlyByteBuf buf) {
+    private static BlockTransform decode(RegistryFriendlyByteBuf buf) {
         return new BlockTransform(
             BlockStatePredicate.STREAM_CODEC.decode(buf),
             ChanceBlockState.STREAM_CODEC.decode(buf),
@@ -74,7 +73,7 @@ public record BlockTransform(
      * @param pos   方块位置
      * @return 是否成功转换
      */
-    public @NotNull Boolean progress(@NotNull Level level, BlockPos pos) {
+    public Boolean progress(Level level, BlockPos pos) {
         if (!(level instanceof ServerLevel serverLevel)) return false;
         Map.Entry<BlockState, CompoundTag> output;
         if (

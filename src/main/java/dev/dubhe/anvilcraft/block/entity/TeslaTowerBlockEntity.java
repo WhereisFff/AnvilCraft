@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
+import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
@@ -12,8 +13,8 @@ import dev.dubhe.anvilcraft.api.taslatower.IsPlayerIdFilter;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.TeslaTowerMenu;
 import dev.dubhe.anvilcraft.util.DistanceComparator;
@@ -24,6 +25,8 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.EntityType;
@@ -48,7 +51,7 @@ import java.util.Optional;
 
 @Slf4j
 public class TeslaTowerBlockEntity extends BlockEntity
-    implements IPowerConsumer, MenuProvider {
+    implements IPowerConsumer, MenuProvider, IDiskCloneable {
     private final ArrayList<Pair<TeslaFilter, String>> whiteList = new ArrayList<>();
     private int tickCount = 0;
     @Setter
@@ -224,5 +227,27 @@ public class TeslaTowerBlockEntity extends BlockEntity
         if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity)
             return teslaTowerBlockEntity.whiteList;
         return List.of();
+    }
+
+    @Override
+    public void storeDiskData(CompoundTag tag) {
+        ListTag filters = new ListTag();
+        for (var entry : this.whiteList) {
+            CompoundTag entryTag = new CompoundTag();
+            entryTag.putString("id", entry.first().getId());
+            entryTag.putString("arg", entry.right());
+            filters.add(entryTag);
+        }
+        tag.put("Filters", filters);
+    }
+
+    @Override
+    public void applyDiskData(CompoundTag data) {
+        ArrayList<Pair<TeslaFilter, String>> filters = new ArrayList<>();
+        for (Tag tag : data.getList("Filters", Tag.TAG_COMPOUND)) {
+            if (!(tag instanceof CompoundTag filter)) continue;
+            filters.add(Pair.of(TeslaFilter.getFilter(filter.getString("id")), filter.getString("arg")));
+        }
+        this.handleSync(filters);
     }
 }

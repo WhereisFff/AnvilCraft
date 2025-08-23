@@ -9,10 +9,13 @@ import java.util.function.Supplier;
 public abstract class AnvilCraftKubeRecipe extends KubeRecipe {
     @HideFromJS
     public <T> T computeIfAbsent(RecipeKey<T> key, Supplier<T> supplier) {
-        if (getValue(key) == null) {
-            setValue(key, supplier.get());
+        T value = getValue(key);
+        if (value == null) {
+            T t = supplier.get();
+            setValue(key, t);
+            return t;
         }
-        return getValue(key);
+        return value;
     }
 
     protected abstract void validate();

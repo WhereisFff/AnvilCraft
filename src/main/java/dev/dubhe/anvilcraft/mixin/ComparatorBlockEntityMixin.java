@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProvider;
+import dev.dubhe.anvilcraft.api.injection.tooltip.ITooltipProviderExtension;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -28,7 +28,7 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 @Mixin(ComparatorBlockEntity.class)
-public abstract class ComparatorBlockEntityMixin extends BlockEntity implements IInjectedTooltipProvider {
+public abstract class ComparatorBlockEntityMixin extends BlockEntity implements ITooltipProviderExtension {
     public ComparatorBlockEntityMixin(
         BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);

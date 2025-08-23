@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.inventory;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.block.entity.IFilterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.item.FilterItem;
 import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;
@@ -17,7 +17,6 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterMenu, ContainerListener {
@@ -28,8 +27,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
     /**
      * 物品收集器 ScreenHandler
      */
-    public ItemCollectorMenu(
-        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull BlockEntity machine) {
+    public ItemCollectorMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, BlockEntity machine) {
         super(menuType, containerId);
         ItemCollectorMenu.checkContainerSize(inventory, 9);
 
@@ -41,8 +39,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
 
         for (int i = 0; i < 3; ++i) {
             for (int j = 0; j < 3; ++j) {
-                this.addSlot(new SlotItemHandlerWithFilter(
-                    this.blockEntity.getItemHandler(), i * 3 + j, 98 + j * 18, 18 + i * 18));
+                this.addSlot(new SlotItemHandlerWithFilter(this.blockEntity.getItemHandler(), i * 3 + j, 98 + j * 18, 18 + i * 18));
             }
         }
 
@@ -50,8 +47,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
         this.addSlotListener(this);
     }
 
-    public ItemCollectorMenu(
-        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
+    public ItemCollectorMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, FriendlyByteBuf extraData) {
         this(menuType, containerId, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
@@ -78,7 +74,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
     }
 
     @Override
-    public void setItem(int slotId, int stateId, @NotNull ItemStack stack) {
+    public void setItem(int slotId, int stateId, ItemStack stack) {
         super.setItem(slotId, stateId, stack);
         this.onChanged();
     }
@@ -95,7 +91,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
     private static final int TE_INVENTORY_SLOT_COUNT = 9; // must be the number of slots you have!
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player playerIn, int index) {
+    public ItemStack quickMoveStack(Player playerIn, int index) {
         Slot sourceSlot = slots.get(index);
         //noinspection ConstantValue
         if (sourceSlot == null || !sourceSlot.hasItem()) {
@@ -112,12 +108,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
             }
         } else if (index < TE_INVENTORY_FIRST_SLOT_INDEX + TE_INVENTORY_SLOT_COUNT) {
             // This is a TE slot so merge the stack into the players inventory
-            if (!moveItemStackTo(
-                sourceStack,
-                VANILLA_FIRST_SLOT_INDEX,
-                VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT,
-                false
-            )) {
+            if (!moveItemStackTo(sourceStack, VANILLA_FIRST_SLOT_INDEX, VANILLA_FIRST_SLOT_INDEX + VANILLA_SLOT_COUNT, false)) {
                 return ItemStack.EMPTY;
             }
         } else {
@@ -158,26 +149,23 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
             }
             // 当前槽位没有禁用，并且要放入的物品就是当前槽位的过滤器要过滤的物品，返回true
             // 如果未设置保留物品过滤，即所有槽位都没有被禁用，此时过滤器不会过滤任何物品，所以当前过滤器要过滤的物品为空时也应该返回true
-            ItemStack filterItem = depositorySlot.getFilterItem(9 - (45 - index));
-            return filterItem.isEmpty() || ItemStack.isSameItem(filterItem, stack) || FilterItem.filter(filterItem, stack);
+            return FilterItem.filter(depositorySlot.getFilterItem(9 - (45 - index)), stack);
         }
         return true;
     }
 
     @Override
-    public boolean stillValid(@NotNull Player player) {
-        return stillValid(
-            ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, ModBlocks.ITEM_COLLECTOR.get());
+    public boolean stillValid(Player player) {
+        return stillValid(ContainerLevelAccess.create(level, blockEntity.getBlockPos()), player, ModBlocks.ITEM_COLLECTOR.get());
     }
 
     @Override
-    public void slotChanged(
-        @NotNull AbstractContainerMenu containerToSend, int dataSlotIndex, @NotNull ItemStack stack) {
+    public void slotChanged(AbstractContainerMenu containerToSend, int dataSlotIndex, ItemStack stack) {
         onChanged();
     }
 
     @Override
-    public void dataChanged(@NotNull AbstractContainerMenu containerMenu, int dataSlotIndex, int value) {
+    public void dataChanged(AbstractContainerMenu containerMenu, int dataSlotIndex, int value) {
     }
 
     @Override
@@ -199,7 +187,7 @@ public class ItemCollectorMenu extends AbstractContainerMenu implements IFilterM
     }
 
     @Override
-    public int getFilterSlotIndex(@NotNull Slot slot) {
+    public int getFilterSlotIndex(Slot slot) {
         return slot.index - 36;
     }
 }

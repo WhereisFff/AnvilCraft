@@ -1,0 +1,29 @@
+{
+  "parent": "anvilcraft:anvilcraft/dang",
+  "criteria": {
+    "make_ice": {
+      "conditions": {
+        "id": "anvilcraft:squeezing/power_snow_from_ice"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.ice_maker.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:ice"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.ice_maker.title"
+    }
+  },
+  "requirements": [
+    [
+      "make_ice"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,16 +1,15 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCompressRecipe;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import vazkii.patchouli.client.book.gui.GuiBook;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 
@@ -23,7 +22,7 @@ public class PageBlockCompress extends PageDoubleRecipeRegistry<BlockCompressRec
 
     @Override
     protected void drawRecipe(
-        GuiGraphics graphics, @NotNull BlockCompressRecipe recipe,
+        GuiGraphics graphics, BlockCompressRecipe recipe,
         int recipeX, int recipeY, int mouseX, int mouseY, boolean second
     ) {
         PatchouliRenderHelper.renderAnvilWithAnimation(parent, graphics, recipeX + 20, recipeY + 10);
@@ -52,7 +51,7 @@ public class PageBlockCompress extends PageDoubleRecipeRegistry<BlockCompressRec
     }
 
     @Override
-    protected ItemStack getRecipeOutput(@NotNull Level level, @NotNull BlockCompressRecipe recipe) {
+    protected ItemStack getRecipeOutput(Level level, BlockCompressRecipe recipe) {
         return recipe.getResultItem(level.registryAccess());
     }
 

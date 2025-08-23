@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.inventory.container;
 
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
 import lombok.Getter;
@@ -88,5 +88,21 @@ public class FilterContainer implements Container {
     @OnlyIn(Dist.CLIENT)
     public void sync() {
         PacketDistributor.sendToServer(new FilterContentSyncPacket(position, content));
+    }
+
+    public boolean includeComponents() {
+        return this.getContent().includeComponents();
+    }
+
+    public boolean blackList() {
+        return this.getContent().blackList();
+    }
+
+    public void setIncludeComponents(boolean includeComponents) {
+        this.setContent(this.getContent().setIncludeComponents(includeComponents));
+    }
+
+    public void setBlackList(boolean blackList) {
+        this.setContent(this.getContent().setBlackList(blackList));
     }
 }

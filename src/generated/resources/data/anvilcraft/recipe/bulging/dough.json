@@ -3,7 +3,7 @@
   "fluid": "minecraft:water",
   "ingredients": [
     {
-      "items": "#c:flour"
+      "items": "#c:foods/flour"
     }
   ],
   "results": [
