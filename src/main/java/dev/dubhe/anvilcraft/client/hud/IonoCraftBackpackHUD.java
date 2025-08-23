@@ -41,7 +41,7 @@ public class IonoCraftBackpackHUD {
 
         int x = AnvilCraftClient.CONFIG.ionoCraftBackpackHud.hudX;
         int y = AnvilCraftClient.CONFIG.ionoCraftBackpackHud.hudY;
-        float scale = AnvilCraftClient.CONFIG.ionoCraftBackpackHud.hudScale;
+        float scale = (float) AnvilCraftClient.CONFIG.ionoCraftBackpackHud.hudScale;
 
         poseStack.scale(scale, scale, scale);
         poseStack.translate(x, y, 0);

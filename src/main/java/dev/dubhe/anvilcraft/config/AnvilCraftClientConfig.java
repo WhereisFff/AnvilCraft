@@ -33,7 +33,7 @@ public class AnvilCraftClientConfig {
 
         @Comment("The Gui Hud Scale")
         @BoundedDiscrete(min = 0, max = 8)
-        public float hudScale = 0.75f;
+        public double hudScale = 0.75f;
 
         @Comment("The gui hud x position")
         public int hudX = 8;
