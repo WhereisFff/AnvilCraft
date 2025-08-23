@@ -17,7 +17,6 @@ import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.RenderHelper;
-import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -60,7 +59,6 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
     private final IDrawable slotDefault;
     private final IDrawable slotProbability;
     private final IDrawable icon;
-    private final ITickTimer timer;
     private final Component title;
 
     public AnvilCollisionCraftCategory(IGuiHelper helper) {
@@ -70,7 +68,6 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         this.slotDefault = JeiRenderHelper.getSlotDefault(helper);
         this.slotProbability = JeiRenderHelper.getSlotProbability(helper);
         this.icon = helper.createDrawableItemStack(ModBlocks.ACCELERATION_RING.asStack());
-        this.timer = helper.createTickTimer(30, 100, true);
         this.title = Component.translatable("gui.anvilcraft.category.anvil_collision");
     }
 
@@ -165,21 +162,9 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         double mouseX,
         double mouseY) {
         AnvilCollisionCraftRecipe recipe = recipeHolder.value();
-        float anvilXOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
 
         // explosion
         explosion.draw(guiGraphics, 72, 16);
-
-        // 铁砧左右移动模拟碰撞
-        RenderHelper.renderBlock(
-            guiGraphics,
-            Blocks.ANVIL.defaultBlockState(),
-            55 - anvilXOffset,
-            28,
-            20,
-            12,
-            RenderHelper.SINGLE_BLOCK
-        );
 
         for (int i = recipe.hitBlock().getBlocks().size() - 1; i >= 0; i--) {
             List<BlockState> input = recipe.hitBlock().constructStatesForRender();
@@ -304,6 +289,15 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
 
         // 添加消耗/速度的信息
         PoseStack pose = guiGraphics.pose();
+        for (int i = 0; i < 7; i++) {
+            RenderHelper.renderItemWithTransparency(
+                new ItemStack(Blocks.ANVIL),
+                pose,
+                55 - i * 3,
+                24,
+                1f - (float) i / 10
+            );
+        }
         pose.pushPose();
         pose.scale(0.8f, 0.8f, 1.0f);
         guiGraphics.drawString(Minecraft.getInstance().font,
