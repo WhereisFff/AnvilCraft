@@ -4,7 +4,7 @@
   "ingredients": [
     {
       "count": 16,
-      "items": "minecraft:porkchop"
+      "items": "#c:foods/raw_porkchop"
     }
   ],
   "transform": "anvilcraft:oil"

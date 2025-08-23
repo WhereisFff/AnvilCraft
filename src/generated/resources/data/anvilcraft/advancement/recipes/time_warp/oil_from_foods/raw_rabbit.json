@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:time_warp/oil_from_porkchop"
+        "recipe": "anvilcraft:time_warp/oil_from_foods/raw_rabbit"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:time_warp/oil_from_porkchop"
+      "anvilcraft:time_warp/oil_from_foods/raw_rabbit"
     ]
   }
 }
