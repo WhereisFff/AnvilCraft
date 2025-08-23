@@ -2,17 +2,17 @@ package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -46,6 +46,9 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             BlockState state = anvils.get((parent.ticksInBook / COLLISION_TIME) % anvils.size());
             renderAnvil(parent, graphics, state, recipe.consume());
         }
+        for (int i = 0; i < anvils.size(); i++) {
+            RenderHelper.renderBlock(graphics, anvils.get(i), 14 * i, 26, 0, 12, RenderHelper.SINGLE_BLOCK);
+        }
 
         // 撞击方块
         List<BlockState> hitBlocks = recipe.hitBlock().constructStatesForRender();
@@ -53,13 +56,12 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             int scale = 12;
             BlockState state = hitBlocks.get((parent.ticksInBook / COLLISION_TIME) % hitBlocks.size());
             if (state.is(ModBlocks.GIANT_ANVIL)) {
-                scale = 6;
+                scale = 5;
                 state = ModBlocks.GIANT_ANVIL.getDefaultState()
                     .trySetValue(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER)
                     .trySetValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER);
             }
             RenderHelper.renderBlock(graphics, state, COLLISION_LENGTH + 5, 0, 0, scale, RenderHelper.SINGLE_BLOCK);
-
         }
 
         PatchouliRenderHelper.renderArray(graphics, COLLISION_LENGTH + 16, 0);
@@ -91,8 +93,9 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             PatchouliRenderHelper.render2x2(graphics, recipeX + COLLISION_LENGTH + 12, recipeY);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 2 && i * 2 + j < results.size(); j++) {
+                    ItemStack itemStack = results.get(i * 2 + j).getStack();
                     parent.renderItemStack(graphics, recipeX + COLLISION_LENGTH + 16 + j * 19, recipeY + 4 + i * 19,
-                        mouseX, mouseY, results.get(i * 2 + j).getStack());
+                        mouseX, mouseY, itemStack);
                 }
             }
         }
@@ -109,11 +112,9 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
 
                 // 被转化方块
                 BlockStatePredicate inputBlock = transformBlock.inputBlock();
-                if (inputBlock != null) {
-                    List<BlockState> states = inputBlock.constructStatesForRender();
-                    BlockState state = states.get((parent.ticksInBook / COLLISION_TIME) % states.size());
-                    RenderHelper.renderBlock(graphics, state, 0, 0, 0, 12, RenderHelper.SINGLE_BLOCK);
-                }
+                List<BlockState> states = inputBlock.constructStatesForRender();
+                BlockState state = states.get((parent.ticksInBook / COLLISION_TIME) % states.size());
+                RenderHelper.renderBlock(graphics, state, 0, 0, 0, 12, RenderHelper.SINGLE_BLOCK);
 
                 // 转化出方块
                 BlockState outputBlockState = transformBlock.outputBlock().getState();

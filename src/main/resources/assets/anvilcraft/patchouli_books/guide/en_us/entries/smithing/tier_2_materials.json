@@ -123,18 +123,15 @@
       "text": "Use $(item)Ember Metal Ingot$() to upgrade your tools. They will include $(l:advanced/tool_properties#reforging)Fire Reforging$(/l) property."
     },
     {
-      "type": "patchouli:spotlight",
+      "type": "anvilcraft:anvil_collision",
       "anchor": "multiphase_matter",
-      "item": "anvilcraft:multiphase_matter",
-      "text": "$(item)Multiphase Matter$() is an artificial matter."
-    },
-    {
-      "type": "patchouli:text",
-      "text": "Using $(item)Ember anvil$()[speed>32m/t]$(l:struct/collision)to Collide $()$(l:smithing/tier_2_materials#frost_metal_block_and_nugget)Frost Metal Block$(/l), you will get four $(item)Multiphase Matter$()"
+      "recipe": "anvilcraft:anvil_collision/ember_anvil_and_frost_metal_block_32",
+      "text": "一次撞击获得4个$(item)多相物质$() $(p)用于在$(item)余烬锻造台$()上参与多合一锻造"
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "anvilcraft:multiphase_matter_block"
+      "recipe": "anvilcraft:multiphase_matter_block",
+      "text": "$(#888888)把极冷与极热的物质掺和在一起是一件令人激动的事情，然后它就这么诞生了！ ——氙氪博士$()"
     },
     {
       "type": "patchouli:spotlight",
@@ -143,6 +140,16 @@
       "title": "Multiple to One Smithing Template",
       "link_recipe": true,
       "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template. $(br2)It is used to participate in multiple_to_one smithing on the $(item)Embers smithing table$()"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:struct/mineral_fountain",
+        "anvilcraft:struct/collision",
+        "anvilcraft:advanced/tool_properties",
+        "anvilcraft:apply/oil"
+      ],
+      "text": ""
     }
   ]
 }
