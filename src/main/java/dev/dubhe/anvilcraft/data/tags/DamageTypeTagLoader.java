@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
-import dev.dubhe.anvilcraft.init.ModDamageTypeTags;
-import dev.dubhe.anvilcraft.init.ModDamageTypes;
+import dev.dubhe.anvilcraft.init.entity.ModDamageTypeTags;
+import dev.dubhe.anvilcraft.init.entity.ModDamageTypes;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageType;

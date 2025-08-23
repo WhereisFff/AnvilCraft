@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.inventory.container;
 
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
 import lombok.Getter;

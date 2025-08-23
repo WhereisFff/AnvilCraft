@@ -1,14 +1,14 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.TransformResult;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -32,7 +32,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -61,12 +60,12 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
     }
 
     @Override
-    public @NotNull RecipeType<RecipeHolder<MobTransformRecipe>> getRecipeType() {
+    public RecipeType<RecipeHolder<MobTransformRecipe>> getRecipeType() {
         return AnvilCraftJeiPlugin.MOB_TRANSFORM;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return title;
     }
 
@@ -87,9 +86,9 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
 
     @Override
     public void setRecipe(
-        @NotNull IRecipeLayoutBuilder builder,
-        @NotNull RecipeHolder<MobTransformRecipe> recipe,
-        @NotNull IFocusGroup focuses) {
+        IRecipeLayoutBuilder builder,
+        RecipeHolder<MobTransformRecipe> recipe,
+        IFocusGroup focuses) {
 
         Ingredient inputIngredient;
         SpawnEggItem spawnEggItemInput = SpawnEggItem.byId(recipe.value().getInput());
@@ -132,8 +131,8 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
     @Override
     public void draw(
         RecipeHolder<MobTransformRecipe> recipeHolder,
-        @NotNull IRecipeSlotsView recipeSlotsView,
-        @NotNull GuiGraphics guiGraphics,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
         double mouseX,
         double mouseY) {
         MobTransformRecipe recipe = recipeHolder.value();

@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.block;
 import com.mojang.math.MethodsReturnNonnullByDefault;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.entity.FallingSpectralBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.util.MagnetUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

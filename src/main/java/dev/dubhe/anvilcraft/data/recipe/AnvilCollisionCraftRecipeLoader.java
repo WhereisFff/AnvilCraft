@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.util.function.Function;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.BlockTags;

@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.util.IDiscardableItemEntity;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -19,9 +18,10 @@ public class ServerLevelMixin {
     @Unique
     boolean anvilcraft$shouldCheckDiscarded;
 
-    @Inject(method = "addEntity", at = @At(
-        value = "INVOKE",
-        target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V")
+    @Inject(
+        method = "addEntity", at = @At(
+        value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V"
+    )
     )
     public void recordAddedItemEntity(Entity entity, CallbackInfoReturnable<Boolean> cir) {
         if (entity instanceof ItemEntity e1) {
@@ -30,14 +30,13 @@ public class ServerLevelMixin {
         }
     }
 
-    @Redirect(method = "addEntity", at = @At(
-        value = "INVOKE",
-        target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V")
+    @Redirect(
+        method = "addEntity", at = @At(
+        value = "INVOKE", target = "Lorg/slf4j/Logger;warn(Ljava/lang/String;Ljava/lang/Object;)V"
+    )
     )
     public void cancelItemDiscardedWarn(Logger instance, String s, Object o) {
-        if (anvilcraft$shouldCheckDiscarded
-            && IDiscardableItemEntity
-            .castFromItemEntity(anvilcraft$addedEntity).anvilcraft$getDiscarded()) {
+        if (anvilcraft$shouldCheckDiscarded && anvilcraft$addedEntity.anvilcraft$getDiscarded()) {
             anvilcraft$shouldCheckDiscarded = false;
             return;
         }

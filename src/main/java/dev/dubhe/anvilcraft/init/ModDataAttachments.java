@@ -2,8 +2,6 @@ package dev.dubhe.anvilcraft.init;
 
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.api.amulet.AmuletRaffleProbability;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.util.Unit;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;

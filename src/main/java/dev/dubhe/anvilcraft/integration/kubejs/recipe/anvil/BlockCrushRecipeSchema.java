@@ -1,19 +1,18 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.BlockStatePredicateComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceBlockStateComponent;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 public interface BlockCrushRecipeSchema {
     @SuppressWarnings("unused")
@@ -30,7 +29,7 @@ public interface BlockCrushRecipeSchema {
             return this;
         }
 
-        public BlockCrushKubeRecipe result(@NotNull Block block) {
+        public BlockCrushKubeRecipe result(Block block) {
             this.setValue(RESULT, new ChanceBlockState(block.defaultBlockState(), 1.0f));
             this.save();
             return this;

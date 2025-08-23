@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.provider;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModVillagers;
+import dev.dubhe.anvilcraft.init.entity.ModVillagers;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;

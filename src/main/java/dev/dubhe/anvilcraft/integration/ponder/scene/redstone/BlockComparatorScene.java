@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.integration.ponder.scene.redstone;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.dubhe.anvilcraft.block.BlockComparatorBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;

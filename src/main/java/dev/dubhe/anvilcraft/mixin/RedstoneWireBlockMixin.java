@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProvider;
+import dev.dubhe.anvilcraft.api.injection.tooltip.ITooltipProviderExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
@@ -16,7 +16,7 @@ import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @Mixin(RedStoneWireBlock.class)
-public abstract class RedstoneWireBlockMixin implements IInjectedTooltipProvider {
+public abstract class RedstoneWireBlockMixin implements ITooltipProviderExtension {
     @Shadow
     @Final
     public static IntegerProperty POWER;

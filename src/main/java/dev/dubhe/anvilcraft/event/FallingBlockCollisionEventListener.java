@@ -1,15 +1,13 @@
 package dev.dubhe.anvilcraft.event;
 
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.util.BlockTransformExplosion;
-import dev.dubhe.anvilcraft.util.MergeCooldownItemEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.ParticleOptions;
@@ -34,7 +32,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Vector3f;
 
 import java.util.ArrayList;
@@ -44,7 +41,7 @@ import java.util.List;
 public class FallingBlockCollisionEventListener {
 
     @SubscribeEvent
-    public static void anvilCollisionCraft(@NotNull AnvilEvent.CollisionBlock event) {
+    public static void anvilCollisionCraft(AnvilEvent.CollisionBlock event) {
         Vec3 entityPos = event.getEntity().position();
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
@@ -85,7 +82,7 @@ public class FallingBlockCollisionEventListener {
 
     private static void executeRecipe(
         AnvilEvent.CollisionBlock event,
-        @NotNull AnvilCollisionCraftRecipe recipe,
+        AnvilCollisionCraftRecipe recipe,
         Level level,
         BlockPos pos,
         Vec3 entityPos
@@ -126,7 +123,7 @@ public class FallingBlockCollisionEventListener {
             largeExplosionParticles,
             explosionSound
         );
-        ((BlockTransformExplosion) explosion).setBlockTransformExplosion(recipe.transformBlocks());
+        explosion.anvilcraft$setBlockTransformExplosion(recipe.transformBlocks());
         explosion.explode();
         explosion.finalizeExplosion(spawnParticles);
         for (ServerPlayer serverplayer : serverLevel.players()) {
@@ -183,7 +180,7 @@ public class FallingBlockCollisionEventListener {
                 );
                 deltaMovement.rotateAxis(dRoute, (float) normal.x, (float) normal.y, (float) normal.z);
                 itemEntity.setDeltaMovement(new Vec3(deltaMovement));
-                MergeCooldownItemEntity.castFromItemEntity(itemEntity).setMergeCooldown(5);
+                itemEntity.anvilcraft$setMergeCooldown(5);
                 level.addFreshEntity(itemEntity);
                 remainder--;
             }
@@ -192,7 +189,7 @@ public class FallingBlockCollisionEventListener {
 
     public static class ItemImmuneExplosionDamage extends ExplosionDamageCalculator {
         @Override
-        public boolean shouldDamageEntity(@NotNull Explosion explosion, @NotNull Entity entity) {
+        public boolean shouldDamageEntity(Explosion explosion, Entity entity) {
             if (entity instanceof ItemEntity) {
                 return false;
             }
@@ -201,7 +198,7 @@ public class FallingBlockCollisionEventListener {
     }
 
     @SuppressWarnings("rawtypes")
-    private static void removeBlock(@NotNull Level level, BlockPos pos) {
+    private static void removeBlock(Level level, BlockPos pos) {
         BlockState blockState = level.getBlockState(pos);
         if (blockState.is(ModBlockTags.COLLISION_IMMUNE)) return;
         if (blockState.getBlock() instanceof AbstractMultiPartBlock multiPartBlock) {

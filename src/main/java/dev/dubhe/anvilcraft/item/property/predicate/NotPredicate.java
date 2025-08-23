@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.item.property.predicate;
 
 import com.mojang.serialization.Codec;
-import dev.dubhe.anvilcraft.util.CodecUtil;
+import dev.anvilcraft.lib.util.CodecUtil;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.world.item.ItemStack;
 

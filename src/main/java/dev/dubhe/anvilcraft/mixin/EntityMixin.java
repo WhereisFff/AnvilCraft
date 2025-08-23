@@ -7,7 +7,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
-import dev.dubhe.anvilcraft.util.DeflectionEntity;
+import dev.dubhe.anvilcraft.api.injection.entity.IEntityExtension;
 import dev.dubhe.anvilcraft.util.Util;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
@@ -33,7 +33,7 @@ import java.util.ArrayList;
 import java.util.Optional;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements DeflectionEntity {
+public abstract class EntityMixin implements IEntityExtension {
     @Unique
     public Vec3 anvil$fixedDeltaMovement;
     @Unique
@@ -83,13 +83,13 @@ public abstract class EntityMixin implements DeflectionEntity {
 
     @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public boolean isDeflected() {
+    public boolean anvilcraft$isDeflected() {
         return anvil$isDeflected;
     }
 
     @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public Vec3 getFixedDeltaMovement() {
+    public Vec3 anvilcraft$getFixedDeltaMovement() {
         return anvil$fixedDeltaMovement;
     }
 
