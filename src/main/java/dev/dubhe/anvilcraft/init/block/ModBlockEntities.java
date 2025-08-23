@@ -4,6 +4,7 @@ import com.tterrag.registrate.util.entry.BlockEntityEntry;
 import dev.dubhe.anvilcraft.block.entity.AccelerationRingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActivatorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActiveSilencerBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargerBlockEntity;
@@ -43,6 +44,7 @@ import dev.dubhe.anvilcraft.block.entity.heatable.IncandescentBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.OverheatedBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.RedhotBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.plate.TimeCountedPressurePlateBlockEntity;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.AdvancedComparatorBlockEntityRender;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.BatchCrafterRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.ChargeCollectorRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.ConfinementChamberRenderer;
@@ -244,6 +246,12 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<PulseGeneratorBlockEntity> PULSE_GENERATOR = REGISTRATE
         .blockEntity("pulse_generator", PulseGeneratorBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.PULSE_GENERATOR)
+        .register();
+
+    public static final BlockEntityEntry<AdvancedComparatorBlockEntity> ADVANCED_COMPARATOR = REGISTRATE
+        .blockEntity("advanced_comparator", AdvancedComparatorBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.ADVANCED_COMPARATOR)
+        .renderer(() -> AdvancedComparatorBlockEntityRender::new)
         .register();
 
     public static final BlockEntityEntry<HeatedBlockEntity> HEATED_BLOCK = REGISTRATE
