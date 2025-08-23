@@ -1,16 +1,15 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -49,12 +48,12 @@ public class MeshRecipe extends AbstractProcessRecipe<MeshRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<MeshRecipe> getSerializer() {
+    public RecipeSerializer<MeshRecipe> getSerializer() {
         return ModRecipeTypes.MESH_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<MeshRecipe> getType() {
+    public RecipeType<MeshRecipe> getType() {
         return ModRecipeTypes.MESH_TYPE.get();
     }
 
@@ -63,7 +62,7 @@ public class MeshRecipe extends AbstractProcessRecipe<MeshRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -82,7 +81,7 @@ public class MeshRecipe extends AbstractProcessRecipe<MeshRecipe> {
      */
     public static class Builder extends SimpleAbstractBuilder<MeshRecipe, Builder> {
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "mesh";
         }
 

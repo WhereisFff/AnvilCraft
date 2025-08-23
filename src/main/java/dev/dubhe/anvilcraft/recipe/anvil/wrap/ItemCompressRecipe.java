@@ -1,15 +1,14 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -45,12 +44,12 @@ public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe
     }
 
     @Override
-    public @NotNull RecipeSerializer<ItemCompressRecipe> getSerializer() {
+    public RecipeSerializer<ItemCompressRecipe> getSerializer() {
         return ModRecipeTypes.ITEM_COMPRESS_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<ItemCompressRecipe> getType() {
+    public RecipeType<ItemCompressRecipe> getType() {
         return ModRecipeTypes.ITEM_COMPRESS_TYPE.get();
     }
 
@@ -59,7 +58,7 @@ public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -78,7 +77,7 @@ public class ItemCompressRecipe extends AbstractProcessRecipe<ItemCompressRecipe
      */
     public static class Builder extends SimpleAbstractBuilder<ItemCompressRecipe, Builder> {
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "item_compress";
         }
 

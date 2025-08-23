@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.init.ModEntities;
-import dev.dubhe.anvilcraft.util.AdsorbableItemEntity;
+import dev.dubhe.anvilcraft.api.injection.entity.IItemEntityExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -71,7 +71,7 @@ public class MagnetizedNodeEntity extends Entity {
             blockPos.getZ() + 1.01
         );
         level()
-            .getEntities(EntityType.ITEM, aabb, AdsorbableItemEntity::anvilcraft$isAdsorbable)
+            .getEntities(EntityType.ITEM, aabb, IItemEntityExtension::anvilcraft$isAdsorbable)
             .forEach(entity -> {
                 entity.teleportTo(position().x, position().y, position().z);
                 entity.setDeltaMovement(Vec3.ZERO);

@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.mixin.piston;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.dubhe.anvilcraft.api.injection.block.entity.IPistonMovingBlockEntityExtension;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
-import dev.dubhe.anvilcraft.util.mixin.magic.PistonMovingBlockEntityInjector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -72,7 +72,7 @@ abstract class PistonBaseBlockMixin {
         boolean isSourcePiston
     ) {
         BlockEntity blockEntity = MovingPistonBlock.newMovingBlockEntity(pos, blockState, movedState, direction, extending, isSourcePiston);
-        if (blockEntity instanceof PistonMovingBlockEntityInjector entity)
+        if (blockEntity instanceof IPistonMovingBlockEntityExtension entity)
             entity.anvilcraft$setData(this.anvilcraft$nbt);
         return blockEntity;
     }

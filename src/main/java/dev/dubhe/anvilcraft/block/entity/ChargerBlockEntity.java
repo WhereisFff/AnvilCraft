@@ -11,7 +11,7 @@ import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
-import dev.dubhe.anvilcraft.util.StateListener;
+import dev.dubhe.anvilcraft.util.IStateListener;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Optional;
 
 public class ChargerBlockEntity extends BlockEntity
-    implements IPowerConsumer, IPowerProducer, IFilterBlockEntity, StateListener<Boolean>, IItemHandlerHolder {
+    implements IPowerConsumer, IPowerProducer, IFilterBlockEntity, IStateListener<Boolean>, IItemHandlerHolder {
 
     @Setter
     private boolean isCharger;
@@ -49,7 +49,7 @@ public class ChargerBlockEntity extends BlockEntity
     private final FilteredItemStackHandler itemHandler = new FilteredItemStackHandler(3) {
 
         @Override
-        public @NotNull ItemStack insertItem(int slot, @NotNull ItemStack stack, boolean simulate) {
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
             if (slot == 0 && itemHandler.getStackInSlot(0).isEmpty()) {
                 ItemStack original = stack.copy();
                 original.shrink(1);
@@ -70,7 +70,7 @@ public class ChargerBlockEntity extends BlockEntity
         }
 
         @Override
-        public @NotNull ItemStack extractItem(int slot, int amount, boolean simulate) {
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
             return slot == 2 ? super.extractItem(2, amount, simulate) : ItemStack.EMPTY;
         }
     };
@@ -160,7 +160,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    public @NotNull BlockPos getPos() {
+    public BlockPos getPos() {
         return getBlockPos();
     }
 
@@ -170,7 +170,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         super.saveAdditional(tag, provider);
         tag.putInt("TimeLeft", timeLeft);
         tag.put("Depository", itemHandler.serializeNBT(provider));
@@ -178,7 +178,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
         super.loadAdditional(tag, provider);
         timeLeft = tag.getInt("TimeLeft");
         itemHandler.deserializeNBT(provider, tag.getCompound("Depository"));
@@ -191,7 +191,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    public @NotNull PowerComponentType getComponentType() {
+    public PowerComponentType getComponentType() {
         return isCharger ? PowerComponentType.CONSUMER : PowerComponentType.PRODUCER;
     }
 

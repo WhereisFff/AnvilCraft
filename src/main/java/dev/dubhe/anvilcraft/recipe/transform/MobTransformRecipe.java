@@ -4,7 +4,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.util.CodecUtil;
+import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -57,7 +57,7 @@ public class MobTransformRecipe implements Recipe<MobTransformInput> {
             .forGetter(o -> Util.intoOptional(o.options))
     ).apply(ins, MobTransformRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, MobTransformRecipe> STREAM_CODEC = CodecUtil.byCodec(
+    public static final StreamCodec<RegistryFriendlyByteBuf, MobTransformRecipe> STREAM_CODEC = CodecUtil.codec2Stream(
         MobTransformRecipe.CODEC
     );
 

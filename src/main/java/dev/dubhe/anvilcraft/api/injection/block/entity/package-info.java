@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.recipe.anvil.cache.item;
+package dev.dubhe.anvilcraft.api.injection.block.entity;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

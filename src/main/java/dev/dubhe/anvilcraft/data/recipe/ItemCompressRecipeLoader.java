@@ -1,6 +1,11 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.outcome.ChooseOneOutcome;
+import dev.anvilcraft.lib.recipe.outcome.ProduceExplosion;
+import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
+import dev.anvilcraft.lib.recipe.predicate.item.HasItemIngredient;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModItemSubPredicates;
@@ -9,13 +14,8 @@ import dev.dubhe.anvilcraft.init.ModItems;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
 import dev.dubhe.anvilcraft.item.property.predicate.NotPredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.builder.InWorldRecipeBuilder;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.ChooseOneOutcome;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceExplosion;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.SpawnItem;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.ExtendInWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -93,7 +93,7 @@ public class ItemCompressRecipeLoader {
             .result(ModItems.SUPER_CAPACITOR_EMPTY)
             .save(provider);
 
-        InWorldRecipeBuilder.compatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
+        ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
             .with(
                 HasItemIngredient.builder()
                     .of(ModBlocks.RESIN_BLOCK.asItem())

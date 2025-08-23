@@ -2,19 +2,19 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.InWorldRecipe;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.recipe.predicate.block.HasBlock;
+import dev.anvilcraft.lib.recipe.predicate.block.HasBlockIngredient;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.IRecipeOutcome;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlockIngredient;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -33,7 +33,6 @@ import net.minecraft.world.level.storage.loot.providers.number.BinomialDistribut
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,7 +57,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
      *
      * @param property 配方属性
      */
-    public AbstractProcessRecipe(@NotNull Property property) {
+    public AbstractProcessRecipe(Property property) {
         super(
             property.getIcon(),
             ModRecipeTriggers.ON_ANVIL_FALL_ON.get(),
@@ -72,10 +71,10 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
     }
 
     @Override
-    public abstract @NotNull RecipeSerializer<T> getSerializer();
+    public abstract RecipeSerializer<T> getSerializer();
 
     @Override
-    public abstract @NotNull RecipeType<T> getType();
+    public abstract RecipeType<T> getType();
 
     /**
      * 获取输入物品列表
@@ -194,12 +193,12 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         protected abstract T of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results);
 
         @Override
-        public @NotNull MapCodec<T> codec() {
+        public MapCodec<T> codec() {
             return this.codec;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, T> streamCodec() {
             return this.streamCodec;
         }
     }
@@ -238,7 +237,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param ingredient 原料
          * @return 构建器实例
          */
-        public B requires(@NotNull ItemIngredientPredicate ingredient) {
+        public B requires(ItemIngredientPredicate ingredient) {
             this.itemIngredients.add(ingredient);
             return this.getThis();
         }
@@ -250,7 +249,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param count      数量
          * @return 构建器实例
          */
-        public B requires(@NotNull TagKey<Item> ingredient, int count) {
+        public B requires(TagKey<Item> ingredient, int count) {
             this.itemIngredients.add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             return this.getThis();
         }
@@ -261,7 +260,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param ingredient 原料标签
          * @return 构建器实例
          */
-        public B requires(@NotNull TagKey<Item> ingredient) {
+        public B requires(TagKey<Item> ingredient) {
             return this.requires(ingredient, 1);
         }
 
@@ -271,7 +270,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param ingredient 原料物品堆栈
          * @return 构建器实例
          */
-        public B requires(@NotNull ItemStack ingredient) {
+        public B requires(ItemStack ingredient) {
             this.itemIngredients.add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
             return this.getThis();
         }
@@ -283,7 +282,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param count      数量
          * @return 构建器实例
          */
-        public B requires(@NotNull ItemLike ingredient, int count) {
+        public B requires(ItemLike ingredient, int count) {
             return this.requires(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
         }
 
@@ -293,7 +292,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param ingredient 原料物品
          * @return 构建器实例
          */
-        public B requires(@NotNull ItemLike ingredient) {
+        public B requires(ItemLike ingredient) {
             return this.requires(ingredient, 1);
         }
 
@@ -304,7 +303,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param count  数量提供器
          * @return 构建器实例
          */
-        public B result(@NotNull ItemStack result, NumberProvider count) {
+        public B result(ItemStack result, NumberProvider count) {
             this.results.add(ChanceItemStack.of(result, count));
             return this.getThis();
         }
@@ -316,7 +315,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param chance 概率
          * @return 构建器实例
          */
-        public B result(@NotNull ItemStack result, float chance) {
+        public B result(ItemStack result, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(result.getCount(), chance));
         }
 
@@ -326,7 +325,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param result 结果物品堆栈
          * @return 构建器实例
          */
-        public B result(@NotNull ItemStack result) {
+        public B result(ItemStack result) {
             return this.result(result, ConstantValue.exactly(result.getCount()));
         }
 
@@ -337,7 +336,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param count  数量提供器
          * @return 构建器实例
          */
-        public B result(@NotNull ItemLike result, NumberProvider count) {
+        public B result(ItemLike result, NumberProvider count) {
             this.results.add(ChanceItemStack.of(result, count));
             return this.getThis();
         }
@@ -350,7 +349,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param chance 概率
          * @return 构建器实例
          */
-        public B result(@NotNull ItemLike result, int count, float chance) {
+        public B result(ItemLike result, int count, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(count, chance));
         }
 
@@ -361,7 +360,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param count  数量
          * @return 构建器实例
          */
-        public B result(@NotNull ItemLike result, int count) {
+        public B result(ItemLike result, int count) {
             return this.result(result, ConstantValue.exactly(count));
         }
 
@@ -372,7 +371,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param chance 概率
          * @return 构建器实例
          */
-        public B result(@NotNull ItemLike result, float chance) {
+        public B result(ItemLike result, float chance) {
             return this.result(result, 1, chance);
         }
 
@@ -382,12 +381,12 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          * @param result 结果物品
          * @return 构建器实例
          */
-        public B result(@NotNull ItemLike result) {
+        public B result(ItemLike result) {
             return this.result(result, ConstantValue.exactly(1.0f));
         }
 
         @Override
-        public @NotNull Item getResult() {
+        public Item getResult() {
             return results.isEmpty() ? Items.ANVIL : results.getFirst().getItem();
         }
     }
@@ -412,12 +411,12 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         protected abstract T of(List<ItemIngredientPredicate> itemIngredients, List<ChanceItemStack> results);
 
         @Override
-        public @NotNull T buildRecipe() {
+        public T buildRecipe() {
             return this.of(this.itemIngredients, this.results);
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
             if (itemIngredients.isEmpty()) {
                 throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + pId);
             }
@@ -701,7 +700,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          *
          * @return 图标物品堆栈
          */
-        private @NotNull ItemStack getIcon() {
+        private ItemStack getIcon() {
             ItemStack icon = null;
             if (this.resultItems != null && !this.resultItems.isEmpty()) {
                 icon = this.resultItems.getFirst().getStack();
@@ -722,10 +721,10 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         private int getPriority() {
             if (this.priority != null) return this.priority;
             return (this.inputItems == null ? 0 : this.inputItems.size())
-                + (this.resultItems == null ? 0 : this.resultItems.size())
-                + (this.inputBlocks == null ? 0 : this.inputBlocks.size() * 100)
-                + (this.resultBlocks == null ? 0 : this.resultBlocks.size())
-                + (this.hasCauldron != null ? 1 : 0);
+                   + (this.resultItems == null ? 0 : this.resultItems.size())
+                   + (this.inputBlocks == null ? 0 : this.inputBlocks.size() * 100)
+                   + (this.resultBlocks == null ? 0 : this.resultBlocks.size())
+                   + (this.hasCauldron != null ? 1 : 0);
         }
 
         /**
@@ -733,7 +732,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          *
          * @return 非冲突谓词列表
          */
-        private @NotNull List<IRecipePredicate<?>> getNonConflictingPredicates() {
+        private List<IRecipePredicate<?>> getNonConflictingPredicates() {
             List<IRecipePredicate<?>> predicates = new ArrayList<>();
             if (this.hasCauldron != null) {
                 predicates.add(this.hasCauldron.toHasCauldron(this.getCauldronOffset()));
@@ -758,7 +757,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          *
          * @return 冲突谓词列表
          */
-        private @NotNull List<IRecipePredicate<?>> getConflictingPredicates() {
+        private List<IRecipePredicate<?>> getConflictingPredicates() {
             List<IRecipePredicate<?>> predicates = new ArrayList<>();
             if (this.inputItems != null) {
                 for (ItemIngredientPredicate ingredient : this.inputItems) {
@@ -773,7 +772,7 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
          *
          * @return 结果列表
          */
-        private @NotNull List<IRecipeOutcome<?>> getOutcomes() {
+        private List<IRecipeOutcome<?>> getOutcomes() {
             List<IRecipeOutcome<?>> outcomes = new ArrayList<>();
             if (this.resultItems != null) {
                 for (ChanceItemStack chanceItemStack : this.resultItems) {

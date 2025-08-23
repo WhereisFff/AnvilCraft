@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.api.tooltip.impl;
 
-import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProvider;
+import dev.dubhe.anvilcraft.api.injection.tooltip.ITooltipProviderExtension;
 import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
 import dev.dubhe.anvilcraft.client.AnvilCraftClient;
 import dev.dubhe.anvilcraft.util.Util;
@@ -17,15 +17,15 @@ public class InjectedBlockTooltipProvider extends ITooltipProvider.BlockTooltipP
 
     @Override
     public boolean accepts(Level level, BlockPos pos, BlockState value) {
-        return Util.instanceOfAny(value.getBlock(), IInjectedTooltipProvider.class);
+        return Util.instanceOfAny(value.getBlock(), ITooltipProviderExtension.class);
     }
 
     @Override
     public List<Component> tooltip(Level level, BlockPos pos, BlockState state) {
-        if (Util.jadePresent.get() && AnvilCraftClient.CONFIG.doNotShowTooltipWhenJadePresent) return null;
-        return Util.castSafely(state.getBlock(), IInjectedTooltipProvider.class)
+        if (Util.jadePresent.get() && AnvilCraftClient.CONFIG.doNotShowTooltipWhenJadePresent) return List.of();
+        return Util.castSafely(state.getBlock(), ITooltipProviderExtension.class)
             .map(provider -> provider.anvilcraft$getTooltip(state))
-            .orElse(null);
+            .orElse(List.of());
     }
 
     @Override

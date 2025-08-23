@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.util.StateListener;
+import dev.dubhe.anvilcraft.util.IStateListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -17,8 +17,8 @@ public class DischargerBlock extends ChargerBlock {
     @Override
     public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
         level.setBlock(blockPos, ModBlocks.CHARGER.getDefaultState(), 2);
-        if (level.getBlockEntity(blockPos) instanceof StateListener<?> listener) {
-            StateListener<Boolean> thiz = (StateListener<Boolean>) listener;
+        if (level.getBlockEntity(blockPos) instanceof IStateListener<?> listener) {
+            IStateListener<Boolean> thiz = (IStateListener<Boolean>) listener;
             thiz.notifyStateChanged(false);
         }
         return true;

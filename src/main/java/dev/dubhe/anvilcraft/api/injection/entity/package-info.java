@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.recipe.anvil.trigger;
+package dev.dubhe.anvilcraft.api.injection.entity;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

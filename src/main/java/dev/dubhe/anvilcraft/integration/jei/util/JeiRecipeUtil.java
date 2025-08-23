@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.integration.jei.util;
 
 import com.google.common.collect.ImmutableList;
-import dev.dubhe.anvilcraft.util.RecipeUtil;
+import dev.anvilcraft.lib.util.NumberProviderUtil;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -49,15 +49,15 @@ public class JeiRecipeUtil {
 
         if (provider instanceof BinomialDistributionGenerator(NumberProvider n, NumberProvider p)) {
             if (n instanceof ConstantValue(float value) && value == 1) {
-                String chance = FORMATTER.format(RecipeUtil.getExpectedValue(p) * 100);
+                String chance = FORMATTER.format(NumberProviderUtil.expected(p) * 100);
                 tooltipLines.add(Component.translatable("gui.anvilcraft.category.chance", chance)
                     .withStyle(ChatFormatting.GRAY));
             } else {
-                addAvgOutput(tooltipLines, count * RecipeUtil.getExpectedValue(provider));
+                addAvgOutput(tooltipLines, count * NumberProviderUtil.expected(provider));
             }
             addMinMax(tooltipLines, 0, getMax(n));
         } else if (provider.getClass() != ConstantValue.class) {
-            double val = count * RecipeUtil.getExpectedValue(provider);
+            double val = count * NumberProviderUtil.expected(provider);
             if (val != -1) {
                 addAvgOutput(tooltipLines, val);
                 if (provider instanceof UniformGenerator) {

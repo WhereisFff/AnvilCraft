@@ -2,11 +2,11 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -16,7 +16,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 方块粉碎配方类
@@ -46,12 +45,12 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
     }
 
     @Override
-    public @NotNull RecipeType<BlockCrushRecipe> getType() {
+    public RecipeType<BlockCrushRecipe> getType() {
         return ModRecipeTypes.BLOCK_CRUSH_TYPE.get();
     }
 
     @Override
-    public @NotNull RecipeSerializer<BlockCrushRecipe> getSerializer() {
+    public RecipeSerializer<BlockCrushRecipe> getSerializer() {
         return ModRecipeTypes.BLOCK_CRUSH_SERIALIZER.get();
     }
 
@@ -60,7 +59,7 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -92,12 +91,12 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
         );
 
         @Override
-        public @NotNull MapCodec<BlockCrushRecipe> codec() {
+        public MapCodec<BlockCrushRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, BlockCrushRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -166,18 +165,18 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
          * @param result 结果方块
          * @return 构建器实例
          */
-        public Builder result(@NotNull Block result) {
+        public Builder result(Block result) {
             this.result = (new ChanceBlockState(result.defaultBlockState(), 1.0f));
             return this;
         }
 
         @Override
-        public @NotNull BlockCrushRecipe buildRecipe() {
+        public BlockCrushRecipe buildRecipe() {
             return new BlockCrushRecipe(this.input, this.result);
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
             if (input == null) {
                 throw new IllegalArgumentException("Recipe input must not be null, RecipeId: " + pId);
             }
@@ -187,12 +186,12 @@ public class BlockCrushRecipe extends AbstractProcessRecipe<BlockCrushRecipe> {
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "block_crush";
         }
 
         @Override
-        public @NotNull Item getResult() {
+        public Item getResult() {
             return WrapUtils.getItem(result);
         }
     }

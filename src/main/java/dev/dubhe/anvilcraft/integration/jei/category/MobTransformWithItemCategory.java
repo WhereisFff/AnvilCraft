@@ -1,6 +1,8 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
@@ -8,8 +10,6 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -33,7 +33,6 @@ import net.minecraft.world.item.SpawnEggItem;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -63,12 +62,12 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
     }
 
     @Override
-    public @NotNull RecipeType<RecipeHolder<MobTransformWithItemRecipe>> getRecipeType() {
+    public RecipeType<RecipeHolder<MobTransformWithItemRecipe>> getRecipeType() {
         return AnvilCraftJeiPlugin.MOB_TRANSFORM_WITH_ITEM;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return title;
     }
 
@@ -89,9 +88,10 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
 
     @Override
     public void setRecipe(
-        @NotNull IRecipeLayoutBuilder builder,
-        @NotNull RecipeHolder<MobTransformWithItemRecipe> recipe,
-        @NotNull IFocusGroup focuses) {
+        IRecipeLayoutBuilder builder,
+        RecipeHolder<MobTransformWithItemRecipe> recipe,
+        IFocusGroup focuses
+    ) {
 
         List<ItemIngredientPredicate> inputIngredients = new ArrayList<>();
         SpawnEggItem spawnEggItemInput = SpawnEggItem.byId(recipe.value().getInput());
@@ -103,7 +103,9 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
                             .expect(DataComponents.CUSTOM_NAME, Component.literal(recipe.value().getInput().toShortString()))
                             .build())
                     .build());
-        } else inputIngredients.add(ItemIngredientPredicate.Builder.item().of(spawnEggItemInput).build());
+        } else {
+            inputIngredients.add(ItemIngredientPredicate.Builder.item().of(spawnEggItemInput).build());
+        }
         inputIngredients.addAll(recipe.value().getItemIngredients());
         JeiSlotUtil.addInputSlots(builder, inputIngredients);
 
@@ -114,7 +116,9 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
             ItemStack x = Items.BARRIER.getDefaultInstance();
             x.set(DataComponents.CUSTOM_NAME, Component.literal(name));
             outputStacks.add(ChanceItemStack.of(x.copyWithCount(1)));
-        } else outputStacks.add(ChanceItemStack.of(spawnEggItemOutput.getDefaultInstance().copyWithCount(1)));
+        } else {
+            outputStacks.add(ChanceItemStack.of(spawnEggItemOutput.getDefaultInstance().copyWithCount(1)));
+        }
         outputStacks.add(ChanceItemStack.of(recipe.value().getItemResult().copyWithCount(1)));
         JeiSlotUtil.addOutputSlots(builder, outputStacks);
 
@@ -125,7 +129,8 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
             AnvilCraftJeiPlugin.MOB_TRANSFORM_WITH_ITEM,
-            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_TYPE.get()));
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_TYPE.get())
+        );
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
@@ -135,10 +140,11 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
     @Override
     public void draw(
         RecipeHolder<MobTransformWithItemRecipe> recipeHolder,
-        @NotNull IRecipeSlotsView recipeSlotsView,
-        @NotNull GuiGraphics guiGraphics,
+        IRecipeSlotsView recipeSlotsView,
+        GuiGraphics guiGraphics,
         double mouseX,
-        double mouseY) {
+        double mouseY
+    ) {
         MobTransformWithItemRecipe recipe = recipeHolder.value();
 
         BlockState block = ModBlocks.CORRUPTED_BEACON.get().defaultBlockState();
@@ -154,7 +160,8 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
             40,
             10,
             12,
-            RenderHelper.SINGLE_BLOCK);
+            RenderHelper.SINGLE_BLOCK
+        );
 
         arrowIn.draw(guiGraphics, 69, 15);
 
@@ -164,9 +171,11 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.scale(0.8f, 0.8f, 1.0f);
-        guiGraphics.drawString(Minecraft.getInstance().font,
+        guiGraphics.drawString(
+            Minecraft.getInstance().font,
             Component.translatable(KEY_CHANCE, recipe.getChancePercentPerItem()),
-            0, 70, 0xFF000000, false);
+            0, 70, 0xFF000000, false
+        );
         pose.popPose();
     }
 }

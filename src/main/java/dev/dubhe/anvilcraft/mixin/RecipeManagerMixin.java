@@ -3,20 +3,14 @@ package dev.dubhe.anvilcraft.mixin;
 import com.google.common.collect.ImmutableMap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.MultimapBuilder;
 import com.google.gson.JsonElement;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeManager;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.generate.JewelCraftingRecipeGeneratingCache;
-import dev.dubhe.anvilcraft.recipe.generate.MeshRecipeGeneratingCache;
 import dev.dubhe.anvilcraft.recipe.generate.RecipeGenerator;
-import dev.dubhe.anvilcraft.util.injection.IRecipeManager;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -26,23 +20,17 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.common.conditions.WithConditions;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Comparator;
-import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Mixin(RecipeManager.class)
-abstract class RecipeManagerMixin implements IRecipeManager {
+abstract class RecipeManagerMixin {
     @Shadow
     @Final
     private HolderLookup.Provider registries;
@@ -52,8 +40,6 @@ abstract class RecipeManagerMixin implements IRecipeManager {
 
     @Shadow
     private Multimap<RecipeType<?>, RecipeHolder<?>> byType;
-    @Unique
-    private InWorldRecipeManager anc$inWorldRecipeManager = null;
 
     @Inject(
         method = "lambda$apply$0",
@@ -70,7 +56,7 @@ abstract class RecipeManagerMixin implements IRecipeManager {
         ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> byNameBuilder,
         WithConditions<Recipe<?>> r,
         CallbackInfo ci,
-        @Local @NotNull Recipe<?> recipe,
+        @Local Recipe<?> recipe,
         @Local RecipeHolder<?> recipeHolder
     ) {
         RecipeGenerator.handleVanillaRecipe(recipe.getType(), recipeHolder)
@@ -82,7 +68,7 @@ abstract class RecipeManagerMixin implements IRecipeManager {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;")
     )
     private void beforeBuildRecipe(
@@ -95,9 +81,11 @@ abstract class RecipeManagerMixin implements IRecipeManager {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
-        at = @At(value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
-            + "Lcom/google/common/collect/ImmutableMap;")
+                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+        at = @At(
+            value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
+                                              + "Lcom/google/common/collect/ImmutableMap;"
+        )
     )
     private void afterBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
@@ -114,56 +102,5 @@ abstract class RecipeManagerMixin implements IRecipeManager {
             });
         this.byType = byTypeBuilder.build();
         this.byName = byNameBuilder.build();
-    }
-
-    @Override
-    public void anc$setInWorldRecipeManager(InWorldRecipeManager manager) {
-        this.anc$inWorldRecipeManager = manager;
-    }
-
-    @Override
-    public InWorldRecipeManager anc$getInWorldRecipeManager() {
-        return this.anc$inWorldRecipeManager;
-    }
-
-    @Override
-    public HolderLookup.Provider anc$getRegistries() {
-        return this.registries;
-    }
-
-    @Override
-    public void anc$addRecipes(@NotNull List<RecipeHolder<InWorldRecipe>> recipes) {
-        ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> byNameBuilder = ImmutableMap.builder();
-        Multimap<RecipeType<?>, RecipeHolder<?>> byTypeBuilder = MultimapBuilder.hashKeys().<RecipeHolder<?>>treeSetValues(
-            Comparator.comparing(RecipeHolder::id)
-        ).build();
-        Set<ResourceLocation> keys = new HashSet<>();
-        this.byName.forEach((key, value) -> {
-            if (key == null || value == null) return;
-            if (keys.contains(key)) return;
-            keys.add(key);
-            byNameBuilder.put(key, value);
-        });
-        this.byType.forEach((key, value) -> {
-            if (key == null || value == null) return;
-            byTypeBuilder.put(key, value);
-        });
-        recipes.forEach(recipe -> {
-            if (keys.contains(recipe.id())) return;
-            keys.add(recipe.id());
-            byNameBuilder.put(recipe.id(), recipe);
-            byTypeBuilder.put(recipe.value().getType(), recipe);
-        });
-        new MeshRecipeGeneratingCache(this.registries).buildRecipes()
-            .ifPresent(recipeHolders -> {
-                byTypeBuilder.putAll(ModRecipeTypes.MESH_TYPE.get(), recipeHolders);
-                for (RecipeHolder<MeshRecipe> holder : recipeHolders) {
-                    if (keys.contains(holder.id())) continue;
-                    keys.add(holder.id());
-                    byNameBuilder.put(holder.id(), holder);
-                }
-            });
-        this.byName = byNameBuilder.build();
-        this.byType = ImmutableMultimap.copyOf(byTypeBuilder);
     }
 }

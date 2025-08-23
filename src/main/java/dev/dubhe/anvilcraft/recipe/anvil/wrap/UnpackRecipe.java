@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -12,7 +12,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -54,12 +53,12 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<UnpackRecipe> getSerializer() {
+    public RecipeSerializer<UnpackRecipe> getSerializer() {
         return ModRecipeTypes.UNPACK_SERIALIZERS.get();
     }
 
     @Override
-    public @NotNull RecipeType<UnpackRecipe> getType() {
+    public RecipeType<UnpackRecipe> getType() {
         return ModRecipeTypes.UNPACK_TYPE.get();
     }
 
@@ -68,7 +67,7 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -87,7 +86,7 @@ public class UnpackRecipe extends AbstractProcessRecipe<UnpackRecipe> {
      */
     public static class Builder extends SimpleAbstractBuilder<UnpackRecipe, Builder> {
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "unpack";
         }
 

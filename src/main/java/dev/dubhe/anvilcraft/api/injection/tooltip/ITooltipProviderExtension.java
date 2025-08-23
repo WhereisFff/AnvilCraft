@@ -12,13 +12,13 @@ import java.util.List;
  * 头戴铁砧锤时需要显示tooltip，用于接口注入至原版内容
  */
 @MethodsReturnNonnullByDefault
-public interface IInjectedTooltipProvider {
+public interface ITooltipProviderExtension {
     /**
      * 获取需要渲染的tooltip<br>
      * 此方法用于{@link BlockEntity}及其它类
      *
      * @return 一个按顺序存储了所有需要渲染的tooltip的List
-     * @see IInjectedTooltipProvider#anvilcraft$getTooltip(BlockState)
+     * @see ITooltipProviderExtension#anvilcraft$getTooltip(BlockState)
      */
     List<Component> anvilcraft$getTooltip();
 
@@ -27,7 +27,7 @@ public interface IInjectedTooltipProvider {
      * 此方法用于{@link Block}类
      *
      * @return 一个按顺序存储了所有需要渲染的tooltip的List
-     * @see IInjectedTooltipProvider#anvilcraft$getTooltip()
+     * @see ITooltipProviderExtension#anvilcraft$getTooltip()
      */
     List<Component> anvilcraft$getTooltip(BlockState state);
 }

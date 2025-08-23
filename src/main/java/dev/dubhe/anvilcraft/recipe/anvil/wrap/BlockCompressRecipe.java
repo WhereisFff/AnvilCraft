@@ -2,11 +2,11 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -17,7 +17,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -51,12 +50,12 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
     }
 
     @Override
-    public @NotNull RecipeSerializer<BlockCompressRecipe> getSerializer() {
+    public RecipeSerializer<BlockCompressRecipe> getSerializer() {
         return ModRecipeTypes.BLOCK_COMPRESS_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<BlockCompressRecipe> getType() {
+    public RecipeType<BlockCompressRecipe> getType() {
         return ModRecipeTypes.BLOCK_COMPRESS_TYPE.get();
     }
 
@@ -65,7 +64,7 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -98,12 +97,12 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
         );
 
         @Override
-        public @NotNull MapCodec<BlockCompressRecipe> codec() {
+        public MapCodec<BlockCompressRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, BlockCompressRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, BlockCompressRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -172,18 +171,18 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
          * @param result 结果方块
          * @return 构建器实例
          */
-        public Builder result(@NotNull Block result) {
+        public Builder result(Block result) {
             this.result = new ChanceBlockState(result.defaultBlockState(), 1.0f);
             return this;
         }
 
         @Override
-        public @NotNull BlockCompressRecipe buildRecipe() {
+        public BlockCompressRecipe buildRecipe() {
             return new BlockCompressRecipe(inputs, result);
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
             if (inputs.size() != 2) {
                 throw new IllegalArgumentException("Recipe input list size must in 2, RecipeId: " + pId);
             }
@@ -193,12 +192,12 @@ public class BlockCompressRecipe extends AbstractProcessRecipe<BlockCompressReci
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "block_compress";
         }
 
         @Override
-        public @NotNull Item getResult() {
+        public Item getResult() {
             return WrapUtils.getItem(result);
         }
     }

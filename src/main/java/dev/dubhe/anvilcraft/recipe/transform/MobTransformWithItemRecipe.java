@@ -3,9 +3,9 @@ package dev.dubhe.anvilcraft.recipe.transform;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.util.CodecUtil;
+import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
@@ -71,7 +71,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         )
         .apply(ins, MobTransformWithItemRecipe::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, MobTransformWithItemRecipe> STREAM_CODEC = CodecUtil.byCodec(
+    public static final StreamCodec<RegistryFriendlyByteBuf, MobTransformWithItemRecipe> STREAM_CODEC = CodecUtil.codec2Stream(
         MobTransformWithItemRecipe.CODEC
     );
 
@@ -91,9 +91,9 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         TransformResult specialResult,
         ItemStack itemResult,
         int chancePercentPerItem,
-        @NotNull Optional<List<NumericTagValuePredicate>> tagPredicates,
-        @NotNull Optional<List<TagModification>> tagModifications,
-        @NotNull Optional<List<TransformOptions>> options
+        Optional<List<NumericTagValuePredicate>> tagPredicates,
+        Optional<List<TagModification>> tagModifications,
+        Optional<List<TransformOptions>> options
     ) {
         this(
             input,
@@ -128,7 +128,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
     }
 
     @Override
-    public boolean matches(@NotNull Input in, @NotNull Level level) {
+    public boolean matches(Input in, Level level) {
         boolean typeMatches = in.getInputEntity().getType() == this.getInput();
         if (!typeMatches) return false;
         if (!testItem(in.getItem(0))) return false;
@@ -137,7 +137,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
             .allMatch(it -> it.test(new EntityDataAccessor(in.getInputEntity()).getData()));
     }
 
-    public boolean testEntity(@NotNull LivingEntity livingEntity) {
+    public boolean testEntity(LivingEntity livingEntity) {
         return livingEntity.getType() == this.getInput();
     }
 
@@ -147,7 +147,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull Input input, HolderLookup.@NotNull Provider provider) {
+    public ItemStack assemble(Input input, HolderLookup.@NotNull Provider provider) {
         return Items.AIR.getDefaultInstance();
     }
 
@@ -157,22 +157,22 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
+    public ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
         return Items.AIR.getDefaultInstance();
     }
 
     @Override
-    public @NotNull RecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_TYPE.get();
     }
 
     @Nullable
-    private EntityType<?> getResult(RandomSource rand, @NotNull LivingEntity livingEntity) {
+    private EntityType<?> getResult(RandomSource rand, LivingEntity livingEntity) {
         boolean hasTransformItem = this.testItem(livingEntity.getMainHandItem());
         float probability = 0;
         if (hasTransformItem) {
@@ -252,7 +252,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
         }
     }
 
-    public static @NotNull TransformWithItemRecipeBuilder from(
+    public static TransformWithItemRecipeBuilder from(
         EntityType<?> type,
         ItemLike itemInput,
         EntityType<?> specialResult,
@@ -271,7 +271,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
 
     public record Input(LivingEntity inputEntity) implements RecipeInput {
         @Override
-        public @NotNull ItemStack getItem(int i) {
+        public ItemStack getItem(int i) {
             return this.inputEntity().getMainHandItem();
         }
 
@@ -284,7 +284,7 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
             return 1;
         }
 
-        public static @NotNull Input of(LivingEntity livingEntity) {
+        public static Input of(LivingEntity livingEntity) {
             return new Input(livingEntity);
         }
 
@@ -328,12 +328,12 @@ public class MobTransformWithItemRecipe implements Recipe<MobTransformWithItemRe
             ).apply(ins, MobTransformWithItemRecipe::new));
 
         @Override
-        public @NotNull MapCodec<MobTransformWithItemRecipe> codec() {
+        public MapCodec<MobTransformWithItemRecipe> codec() {
             return Serializer.MAP_CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, MobTransformWithItemRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, MobTransformWithItemRecipe> streamCodec() {
             return MobTransformWithItemRecipe.STREAM_CODEC;
         }
     }

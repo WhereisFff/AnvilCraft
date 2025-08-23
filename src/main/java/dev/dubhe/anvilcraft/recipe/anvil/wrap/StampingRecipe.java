@@ -2,15 +2,14 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import dev.dubhe.anvilcraft.init.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -49,12 +48,12 @@ public class StampingRecipe extends AbstractProcessRecipe<StampingRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<StampingRecipe> getSerializer() {
+    public RecipeSerializer<StampingRecipe> getSerializer() {
         return ModRecipeTypes.STAMPING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<StampingRecipe> getType() {
+    public RecipeType<StampingRecipe> getType() {
         return ModRecipeTypes.STAMPING_TYPE.get();
     }
 
@@ -63,7 +62,7 @@ public class StampingRecipe extends AbstractProcessRecipe<StampingRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -82,7 +81,7 @@ public class StampingRecipe extends AbstractProcessRecipe<StampingRecipe> {
      */
     public static class Builder extends SimpleAbstractBuilder<StampingRecipe, Builder> {
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "stamping";
         }
 

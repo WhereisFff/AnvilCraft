@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -12,7 +12,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -54,12 +53,12 @@ public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<CookingRecipe> getSerializer() {
+    public RecipeSerializer<CookingRecipe> getSerializer() {
         return ModRecipeTypes.COOKING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<CookingRecipe> getType() {
+    public RecipeType<CookingRecipe> getType() {
         return ModRecipeTypes.COOKING_TYPE.get();
     }
 
@@ -68,7 +67,7 @@ public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -87,7 +86,7 @@ public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {
      */
     public static class Builder extends SimpleAbstractBuilder<CookingRecipe, Builder> {
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "cooking";
         }
 

@@ -1,5 +1,9 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
@@ -7,10 +11,6 @@ import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.BlockStatePredi
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceBlockStateComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceItemStackComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ItemIngredientPredicateComponent;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
@@ -23,7 +23,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,70 +30,70 @@ import java.util.List;
 public interface ItemInjectRecipeSchema {
     @SuppressWarnings({"unused"})
     class ItemInjectKubeRecipe extends AnvilCraftKubeRecipe {
-        public ItemInjectKubeRecipe requires(@NotNull TagKey<Item> ingredient, int count) {
+        public ItemInjectKubeRecipe requires(TagKey<Item> ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public ItemInjectKubeRecipe requires(@NotNull TagKey<Item> ingredient) {
+        public ItemInjectKubeRecipe requires(TagKey<Item> ingredient) {
             return this.requires(ingredient, 1);
         }
 
-        public ItemInjectKubeRecipe requires(@NotNull ItemStack ingredient) {
+        public ItemInjectKubeRecipe requires(ItemStack ingredient) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
             this.save();
             return this;
         }
 
-        public ItemInjectKubeRecipe requires(@NotNull ItemLike ingredient, int count) {
+        public ItemInjectKubeRecipe requires(ItemLike ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public ItemInjectKubeRecipe requires(@NotNull ItemLike ingredient) {
+        public ItemInjectKubeRecipe requires(ItemLike ingredient) {
             return this.requires(ingredient, 1);
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemStack result, NumberProvider count) {
+        public ItemInjectKubeRecipe result(ItemStack result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
             this.save();
             return this;
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemStack result, float chance) {
+        public ItemInjectKubeRecipe result(ItemStack result, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(result.getCount(), chance));
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemStack result) {
+        public ItemInjectKubeRecipe result(ItemStack result) {
             return this.result(result, ConstantValue.exactly(result.getCount()));
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemLike result, NumberProvider count) {
+        public ItemInjectKubeRecipe result(ItemLike result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
             this.save();
             return this;
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemLike result, int count, float chance) {
+        public ItemInjectKubeRecipe result(ItemLike result, int count, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(count, chance));
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemLike result, int count) {
+        public ItemInjectKubeRecipe result(ItemLike result, int count) {
             return this.result(result, ConstantValue.exactly(count));
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemLike result, float chance) {
+        public ItemInjectKubeRecipe result(ItemLike result, float chance) {
             return this.result(result, 1, chance);
         }
 
-        public ItemInjectKubeRecipe result(@NotNull ItemLike result) {
+        public ItemInjectKubeRecipe result(ItemLike result) {
             return this.result(result, ConstantValue.exactly(1.0f));
         }
 
@@ -110,7 +109,7 @@ public interface ItemInjectRecipeSchema {
             return this;
         }
 
-        public ItemInjectKubeRecipe resultBlock(@NotNull Block block) {
+        public ItemInjectKubeRecipe resultBlock(Block block) {
             this.setValue(BLOCK_RESULT, new ChanceBlockState(block.defaultBlockState(), 1.0f));
             this.save();
             return this;
