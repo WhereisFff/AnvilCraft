@@ -85,7 +85,7 @@ public class AnvilEventListener {
         if (!(level instanceof ServerLevel serverLevel)) return;
         BlockPos pos = event.getPos();
         FallingBlockEntity entity = event.getEntity();
-        InWorldRecipeManager manager = ((IRecipeManagerExtension)level.getRecipeManager()).anvillib$getInWorldRecipeManager();
+        InWorldRecipeManager manager = ((IRecipeManagerExtension) level.getRecipeManager()).anvillib$getInWorldRecipeManager();
         InWorldRecipeContext context = new InWorldRecipeContext(serverLevel, pos.getCenter().subtract(0.0, 0.5, 0.0), entity);
         manager.trigger(ModRecipeTriggers.ON_ANVIL_FALL_ON, context);
         boolean damageAnvil = context.get(DamageAnvil.DAMAGE_ANVIL);
@@ -112,8 +112,8 @@ public class AnvilEventListener {
             .map(b -> b.getBlock() instanceof TranscendenceAnvilBlock)
             .orElse(false);
         ItemStack dummyTool = silkTouch ? BreakBlockUtil.getDummySilkTouchTool(serverLevel)
-            : fortune5 ? BreakBlockUtil.getDummyFortune5Tool(serverLevel)
-            : ItemStack.EMPTY;
+                                        : fortune5 ? BreakBlockUtil.getDummyFortune5Tool(serverLevel)
+                                                   : ItemStack.EMPTY;
         state.spawnAfterBreak(serverLevel, pos, dummyTool, false);
         if (state.getBlock() instanceof IHasMultiBlock multiBlock) {
             multiBlock.onRemove(level, pos, state);
