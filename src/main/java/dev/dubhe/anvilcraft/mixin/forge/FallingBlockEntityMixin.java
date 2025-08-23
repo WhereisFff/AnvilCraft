@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.mixin.forge;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;

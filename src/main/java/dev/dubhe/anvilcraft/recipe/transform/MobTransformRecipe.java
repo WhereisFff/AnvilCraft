@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.recipe.transform;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;

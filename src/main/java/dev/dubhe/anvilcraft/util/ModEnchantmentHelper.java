@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
-import dev.dubhe.anvilcraft.init.ModEnchantmentEffectComponents;
-import dev.dubhe.anvilcraft.init.ModLootContextParamSets;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentEffectComponents;
+import dev.dubhe.anvilcraft.init.loot.ModLootContextParamSets;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.EquipmentSlot;

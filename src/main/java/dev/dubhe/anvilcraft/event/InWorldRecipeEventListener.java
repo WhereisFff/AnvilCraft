@@ -7,7 +7,7 @@ import dev.anvilcraft.lib.injection.IRecipeManagerExtension;
 import dev.anvilcraft.lib.recipe.InWorldRecipe;
 import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.VanillaRecipesWrap;
 import dev.dubhe.anvilcraft.recipe.generate.MeshRecipeGeneratingCache;

@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.recipe.transform;
 
 import com.mojang.serialization.Codec;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import lombok.Getter;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.InteractionHand;

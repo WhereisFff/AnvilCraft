@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.item.property.predicate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.anvilcraft.lib.util.CodecUtil;

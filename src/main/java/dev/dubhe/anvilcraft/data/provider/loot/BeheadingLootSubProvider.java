@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.provider.loot;
 
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModEnchantments;
-import dev.dubhe.anvilcraft.init.ModLootTables;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
+import dev.dubhe.anvilcraft.init.loot.ModLootTables;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.loot.conditions.MatchDataComponent;
 import net.minecraft.core.Holder;

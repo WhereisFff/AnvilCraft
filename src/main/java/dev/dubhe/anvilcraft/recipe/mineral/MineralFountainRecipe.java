@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.recipe.mineral;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.anvilcraft.lib.util.CodecUtil;
 import lombok.Getter;
