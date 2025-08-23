@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlayerWearAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerHurtEntityTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHitPiezoelectricCrystalTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.ConvertBeaconTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.InWorldRecipeTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlayerKilledEntityByAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlayerWearAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.advancements.Advancement;

@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.advancements.criteron;
+package dev.dubhe.anvilcraft.advancements.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class MilkTrigger extends SimpleCriterionTrigger<MilkTrigger.TriggerInstance> {
+public class ConvertBeaconTrigger extends SimpleCriterionTrigger<ConvertBeaconTrigger.TriggerInstance> {
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -26,8 +26,8 @@ public class MilkTrigger extends SimpleCriterionTrigger<MilkTrigger.TriggerInsta
             EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
         ).apply(instance, TriggerInstance::new));
 
-        public static Criterion<TriggerInstance> milk() {
-            return ModCriterionTriggers.MILK.get().createCriterion(new TriggerInstance(Optional.empty()));
+        public static Criterion<TriggerInstance> convertBeacon() {
+            return ModCriterionTriggers.CONVERT_BEACON.get().createCriterion(new TriggerInstance(Optional.empty()));
         }
 
         public boolean matches() {

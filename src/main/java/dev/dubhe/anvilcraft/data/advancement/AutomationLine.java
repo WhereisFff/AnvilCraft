@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.DispenserRepairIronGolem;
-import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilLootingTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.DispenserRepairIronGolem;
+import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
