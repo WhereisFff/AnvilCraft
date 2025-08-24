@@ -49,6 +49,7 @@ import java.util.Objects;
 public class LivingEntityEventListener {
     @SubscribeEvent
     public static void onChangeTarget(LivingChangeTargetEvent event) {
+        if (event.getTargetType() != LivingChangeTargetEvent.LivingTargetType.MOB_TARGET) return;
         Mob entity = Util.castSafely(event.getEntity(), Mob.class).orElse(null);
         if (entity == null) return;
         if (!(event.getNewAboutToBeSetTarget() instanceof Player player)) return;
