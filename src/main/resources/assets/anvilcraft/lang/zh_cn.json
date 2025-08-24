@@ -166,6 +166,8 @@
   "anvilcraft.configuration.transcendence_anvil_beyond_max_level.tooltip": "在超限铁砧中可将物品与超过最大附魔等级的附魔书合并",
   "anvilcraft.configuration.transparent_crafting_table_max_matrix_size": "通透工作台最大矩阵规模",
   "anvilcraft.configuration.transparent_crafting_table_max_matrix_size.tooltip": "相连的通透工作台可形成矩阵的最大规模",
+  "anvilcraft.configuration.vertical_item_frame": "垂直物品展示框",
+  "anvilcraft.configuration.vertical_item_frame.tooltip": "垂直物品展示框垂直展示物品",
   "anvilcraft.ponder.anvil.header": "使用铁砧来制作",
   "anvilcraft.ponder.anvil.text_1": "铁砧是铁砧工艺中所有配方处理的基础",
   "anvilcraft.ponder.anvil.text_2": "铁砧从高处落下，完成一个铁砧配方处理。",

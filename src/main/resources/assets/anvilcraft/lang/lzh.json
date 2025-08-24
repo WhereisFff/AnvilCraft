@@ -166,6 +166,8 @@
   "anvilcraft.configuration.transcendence_anvil_beyond_max_level.tooltip": "Combining items with Enchanted Books beyond max level in Transcendence Anvil",
   "anvilcraft.configuration.transparent_crafting_table_max_matrix_size": "Transparent Crafting Table Max Matrix Size",
   "anvilcraft.configuration.transparent_crafting_table_max_matrix_size.tooltip": "Maximum size for connecting transparent crafting table to form matrix",
+  "anvilcraft.configuration.vertical_item_frame": "Vertical Item Frame",
+  "anvilcraft.configuration.vertical_item_frame.tooltip": "A vertical item frame vertically displays items",
   "anvilcraft.ponder.anvil.header": "砧以製之",
   "anvilcraft.ponder.anvil.text_1": "砧者，砧藝萬製之基焉。",
   "anvilcraft.ponder.anvil.text_2": "砧落而行一砧方矣。",
