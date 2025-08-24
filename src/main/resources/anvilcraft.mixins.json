@@ -47,6 +47,7 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "StriderMixin",
+    "TntBlockMixin",
     "VaultBlockEntityServerMixin",
     "VibrationSystemUserMixin",
     "VillagerMixin",
