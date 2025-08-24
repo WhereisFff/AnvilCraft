@@ -80,6 +80,7 @@
     "ClientPacketListenerMixin",
     "GameRendererMixin",
     "GuiGraphicsMixin",
+    "ItemFrameRendererMixin",
     "ItemInHandRendererMixin",
     "LevelChunkMixin",
     "LevelRendererMixin",
