@@ -5,6 +5,7 @@ dependencies {
 
     // AnvilLib
     implementation(libs.anvillib)
+    interfaceInjectionData(libs.anvillib)
     jarJar(libs.anvillib)
 
     // Cloth Config
