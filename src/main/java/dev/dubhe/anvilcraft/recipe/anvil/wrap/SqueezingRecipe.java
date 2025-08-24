@@ -253,24 +253,24 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         /**
          * 设置是否产生流体
          *
-         * @param produceFluid 是否产生流体
+         * @param produce 是否产生流体
          * @return 构建器实例
          */
-        public Builder produceFluid(boolean produceFluid) {
-            if (!produceFluid) return this;
-            this.hasCauldron.consume(-1000);
+        public Builder produce(int produce) {
+            if (produce <= 0) return this;
+            this.hasCauldron.consume(-produce);
             return this;
         }
 
         /**
          * 设置是否消耗流体
          *
-         * @param consumeFluid 是否消耗流体
+         * @param consume 是否消耗流体
          * @return 构建器实例
          */
-        public Builder consumeFluid(boolean consumeFluid) {
-            if (!consumeFluid) return this;
-            this.hasCauldron.consume(1000);
+        public Builder consume(int consume) {
+            if (consume <= 0) return this;
+            this.hasCauldron.consume(consume);
             return this;
         }
 

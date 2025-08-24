@@ -106,7 +106,7 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         int cur;
         if (!curState.is(emptyCauldron) && (curState.is(fluidCauldron) || curState.is(transformCauldron))) {
             cur = HasCauldron.layer2Mb(
-                optionalCur.map(Tuple::getA).orElse(IntegerProperty.create("level", 1, 1)),
+                optionalCur.map(Tuple::getA).orElse(IntegerProperty.create("level", 0, 1)),
                 optionalCur.map(Tuple::getB).orElse(1)
             );
         } else {
@@ -116,7 +116,7 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         if (target <= 0) {
             targetState = emptyCauldron.defaultBlockState();
         } else {
-            IntegerProperty property = optionalTarget.map(Tuple::getA).orElse(IntegerProperty.create("level", 1, 1));
+            IntegerProperty property = optionalTarget.map(Tuple::getA).orElse(IntegerProperty.create("level", 0, 1));
             Integer max = optionalTarget.map(tuple -> tuple.getA().max).orElse(1);
             target = HasCauldron.mb2Layer(property, Math.clamp(target, 1, HasCauldron.layer2Mb(property, max)));
             if (optionalTarget.isPresent()) {
