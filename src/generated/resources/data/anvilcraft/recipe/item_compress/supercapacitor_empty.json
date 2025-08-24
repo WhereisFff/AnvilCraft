@@ -8,7 +8,10 @@
     {
       "items": "anvilcraft:resin_block",
       "predicates": {
-        "anvilcraft:not": {
+        "anvilcraft:saved_entity": {
+          "entityType": "minecraft:creeper"
+        },
+        "anvillib:not": {
           "anvilcraft:saved_entity": {
             "entityType": "minecraft:creeper",
             "tagPredicates": [
@@ -19,9 +22,6 @@
               }
             ]
           }
-        },
-        "anvilcraft:saved_entity": {
-          "entityType": "minecraft:creeper"
         }
       }
     }
