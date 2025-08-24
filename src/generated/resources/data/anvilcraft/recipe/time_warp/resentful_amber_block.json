@@ -43,6 +43,7 @@
     "count": 1,
     "id": "anvilcraft:resentful_amber_block"
   },
+  "max_efficiency": 1,
   "non_conflicting": [
     {
       "type": "anvilcraft:has_cauldron",

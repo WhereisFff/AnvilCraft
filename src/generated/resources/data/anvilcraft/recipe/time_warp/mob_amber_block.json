@@ -45,6 +45,7 @@
     "count": 1,
     "id": "anvilcraft:mob_amber_block"
   },
+  "max_efficiency": 1,
   "non_conflicting": [
     {
       "type": "anvilcraft:has_cauldron",
