@@ -1,6 +1,8 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.data.advancement.predicate.item.NotPredicate;
+import dev.anvilcraft.lib.init.LibItemSubPredicates;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.anvilcraft.lib.recipe.outcome.ChooseOneOutcome;
 import dev.anvilcraft.lib.recipe.outcome.ProduceExplosion;
@@ -13,7 +15,6 @@ import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
-import dev.dubhe.anvilcraft.item.property.predicate.NotPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.ExtendInWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
@@ -77,7 +78,7 @@ public class ItemCompressRecipeLoader {
                         ItemSavedEntityPredicate.of(EntityType.CREEPER)
                     )
                     .withSubPredicate(
-                        ModItemSubPredicates.NOT.get(),
+                        LibItemSubPredicates.NOT.get(),
                         NotPredicate.of(
                             ModItemSubPredicates.SAVED_ENTITY.get(),
                             ItemSavedEntityPredicate.of(EntityType.CREEPER)
