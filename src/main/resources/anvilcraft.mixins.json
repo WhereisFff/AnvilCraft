@@ -64,7 +64,6 @@
     "forge.FallingBlockEntityMixin",
     "forge.LevelChunkMixin",
     "forge.LightningBoltMixin",
-    "forge.PistonMovingBlockEntityMixin",
     "invoker.BlockBehaviourInvoker",
     "invoker.BlockItemInvoker",
     "piglin.AbstractPiglinMixin",
