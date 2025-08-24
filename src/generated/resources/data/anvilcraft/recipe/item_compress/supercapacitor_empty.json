@@ -8,10 +8,13 @@
     {
       "items": "anvilcraft:resin_block",
       "predicates": {
-        "anvilcraft:not": {
+        "anvilcraft:saved_entity": {
+          "entitys": "minecraft:creeper"
+        },
+        "anvillib:not": {
           "anvilcraft:saved_entity": {
-            "entityType": "minecraft:creeper",
-            "tagPredicates": [
+            "entitys": "minecraft:creeper",
+            "predicates": [
               {
                 "expected": 1,
                 "requirement": "GREATER_OR_EQUAL",
@@ -19,9 +22,6 @@
               }
             ]
           }
-        },
-        "anvilcraft:saved_entity": {
-          "entityType": "minecraft:creeper"
         }
       }
     }

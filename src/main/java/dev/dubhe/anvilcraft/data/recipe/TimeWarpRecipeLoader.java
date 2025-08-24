@@ -1,11 +1,22 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.data.advancement.predicate.item.NotPredicate;
+import dev.anvilcraft.lib.init.LibItemSubPredicates;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
+import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
+import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItemSubPredicates;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.ExtendInWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
@@ -154,6 +165,86 @@ public class TimeWarpRecipeLoader {
             .result(ModItems.RAW_URANIUM, 3)
             .result(ModItems.RAW_LEAD.asStack())
             .save(provider, AnvilCraft.of("time_warp/raw_uranium_from_plutonium_block"));
+
+
+        TimeWarpRecipe.builder()
+            .heat(HeatTier.INCANDESCENT, 12000)
+            .requires(ItemIngredientPredicate.Builder.item()
+                .of(ModBlocks.RESIN_BLOCK)
+                .withSubPredicate(
+                    LibItemSubPredicates.NOT.get(),
+                    NotPredicate.of(ModItemSubPredicates.SAVED_ENTITY.get(), ItemSavedEntityPredicate.any())
+                )
+                .build()
+            )
+            .result(ModBlocks.AMBER_BLOCK)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
+            .save(provider, AnvilCraft.of("time_warp/amber_block"));
+
+        ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
+            .hasCauldron(0, -1, 0)
+            .hasBlock(builder -> builder
+                .of(ModBlocks.CORRUPTED_BEACON.get())
+                .with(CorruptedBeaconBlock.LIT, true)
+                .offset(0, -2, 0)
+            )
+            .hasItemIngredient(builder -> builder
+                .of(ModBlocks.RESIN_BLOCK)
+                .offset(0.0, -0.375, 0.0)
+                .range(0.75, 0.75, 0.75)
+                .with(
+                    LibItemSubPredicates.NOT.get(),
+                    NotPredicate.of(ModItemSubPredicates.SAVED_ENTITY.get(), ItemSavedEntityPredicate.monster())
+                )
+                .saveComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+            )
+            .spawnItem(builder -> builder
+                .item(ModBlocks.MOB_AMBER_BLOCK)
+                .offset(0.0, -0.75, 0.0)
+                .applyComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+            )
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
+            .group("time_warp")
+            .icon(ModBlocks.MOB_AMBER_BLOCK.asStack())
+            .save(provider, AnvilCraft.of("mob_amber_block"));
+
+        ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
+            .hasCauldron(0, -1, 0)
+            .hasBlock(builder -> builder
+                .of(ModBlocks.CORRUPTED_BEACON.get())
+                .with(CorruptedBeaconBlock.LIT, true)
+                .offset(0, -2, 0)
+            )
+            .hasItemIngredient(builder -> builder
+                .of(ModBlocks.RESIN_BLOCK)
+                .offset(0.0, -0.375, 0.0)
+                .range(0.75, 0.75, 0.75)
+                .with(
+                    ModItemSubPredicates.SAVED_ENTITY.get(),
+                    ItemSavedEntityPredicate.monster()
+                )
+                .saveComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+            )
+            .chooseOne(builder -> builder
+                .choice(
+                    SpawnItem.builder().item(ModBlocks.MOB_AMBER_BLOCK)
+                        .offset(0.0, -0.75, 0.0)
+                        .applyComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+                        .build(),
+                    19
+                )
+                .choice(
+                    SpawnItem.builder().item(ModBlocks.RESENTFUL_AMBER_BLOCK)
+                        .offset(0.0, -0.75, 0.0)
+                        .applyComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+                        .build(),
+                    1
+                )
+            )
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
+            .group("time_warp")
+            .icon(ModBlocks.RESENTFUL_AMBER_BLOCK.asStack())
+            .save(provider, AnvilCraft.of("resentful_amber_block"));
     }
 
     private static void timeWarp(

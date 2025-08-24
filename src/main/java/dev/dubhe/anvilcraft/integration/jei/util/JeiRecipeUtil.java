@@ -73,7 +73,7 @@ public class JeiRecipeUtil {
 
     public static boolean isChance(List<ChanceItemStack> chanceItemStacks) {
         for (ChanceItemStack chanceItemStack : chanceItemStacks) {
-            NumberProvider provider = chanceItemStack.getCount();
+            NumberProvider provider = chanceItemStack.count();
             if (provider instanceof BinomialDistributionGenerator) {
                 return true;
             } else if (provider.getClass() != ConstantValue.class) {

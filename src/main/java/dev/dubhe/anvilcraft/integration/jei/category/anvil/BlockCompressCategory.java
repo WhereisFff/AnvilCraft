@@ -88,7 +88,7 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
                     input.getBlocks().stream().map(holder -> new ItemStack(holder.value())).toArray(ItemStack[]::new)));
         }
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-            .addItemStack(new ItemStack(recipe.getFirstResultBlock().getState().getBlock()));
+            .addItemStack(new ItemStack(recipe.getFirstResultBlock().state().getBlock()));
     }
 
     @Override
@@ -133,7 +133,7 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
             guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK
         );
         RenderHelper.renderBlock(
-            guiGraphics, recipe.getFirstResultBlock().getState(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK
+            guiGraphics, recipe.getFirstResultBlock().state(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK
         );
     }
 
@@ -158,7 +158,7 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
         }
         if (mouseX >= 100 && mouseX <= 120) {
             if (mouseY >= 42 && mouseY <= 52) {
-                tooltip.add(recipe.getFirstResultBlock().getState().getBlock().getName());
+                tooltip.add(recipe.getFirstResultBlock().state().getBlock().getName());
             }
         }
     }

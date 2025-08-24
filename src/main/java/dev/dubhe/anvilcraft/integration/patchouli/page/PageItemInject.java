@@ -45,7 +45,7 @@ public class PageItemInject extends PageDoubleRecipeRegistry<ItemInjectRecipe> {
         PatchouliRenderHelper.renderArray(graphics, recipeX + 66, recipeY + 20);
 
         RenderHelper.renderBlock(
-            graphics, recipe.getFirstResultBlock().getState(),
+            graphics, recipe.getFirstResultBlock().state(),
             recipeX + 90, recipeY + 31, 0,
             12,
             RenderHelper.SINGLE_BLOCK);

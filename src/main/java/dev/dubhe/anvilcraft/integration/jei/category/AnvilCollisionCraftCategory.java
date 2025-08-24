@@ -115,11 +115,11 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
         if (!recipe.outputItems().isEmpty()) {
             List<ChanceItemStack> chanceItemStacks = new ArrayList<>();
             for (ChanceItemStack outputItem : recipe.outputItems()) {
-                if (outputItem.getCount() instanceof BinomialDistributionGenerator(NumberProvider n, NumberProvider p)) {
+                if (outputItem.count() instanceof BinomialDistributionGenerator(NumberProvider n, NumberProvider p)) {
                     if (p instanceof ConstantValue(float value) && value < 1 && n instanceof ConstantValue(float count)) {
-                        chanceItemStacks.add(ChanceItemStack.of(outputItem.getStack(), (int) count, value));
+                        chanceItemStacks.add(ChanceItemStack.of(outputItem.stack(), (int) count, value));
                     } else {
-                        chanceItemStacks.add(ChanceItemStack.of(outputItem.getStack(), outputItem.getMaxCount()));
+                        chanceItemStacks.add(ChanceItemStack.of(outputItem.stack(), outputItem.getMaxCount()));
                     }
                 }
             }
@@ -147,7 +147,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
             builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addIngredients(
                 Ingredient.of(
                     recipe.transformBlocks().stream().map(
-                        blockTransform -> new ItemStack(blockTransform.outputBlock().getState().getBlock())
+                        blockTransform -> new ItemStack(blockTransform.outputBlock().state().getBlock())
                     )
                 )
             );
@@ -211,7 +211,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                     );
 
                     ChanceBlockState outputBlock = blockTransform.outputBlock();
-                    BlockState outputBlockState = outputBlock.getState();
+                    BlockState outputBlockState = outputBlock.state();
                     RenderHelper.renderBlock(
                         guiGraphics,
                         outputBlockState,
@@ -251,7 +251,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                     );
 
                     ChanceBlockState outputBlock = blockTransform.outputBlock();
-                    BlockState outputBlockState = outputBlock.getState();
+                    BlockState outputBlockState = outputBlock.state();
                     RenderHelper.renderBlock(
                         guiGraphics,
                         outputBlockState,
@@ -333,7 +333,7 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                         tooltip.addAll(BlockTagUtil.getTooltipsForInput(blockTransform.inputBlock()));
                     }
                     if (mouseY >= 43 && mouseY < 61) {
-                        tooltip.add(blockTransform.outputBlock().getState().getBlock().getName());
+                        tooltip.add(blockTransform.outputBlock().state().getBlock().getName());
                     }
                 }
             }
