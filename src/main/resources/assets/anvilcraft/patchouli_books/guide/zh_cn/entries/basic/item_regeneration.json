@@ -11,8 +11,7 @@
     {
       "type": "patchouli:crafting",
       "anchor": "guide",
-      "recipe": "anvilcraft:guide_book",
-      "text": ""
+      "recipe": "anvilcraft:guide_book"
     },
     {
       "type": "patchouli:spotlight",
@@ -39,14 +38,12 @@
     {
       "type": "anvilcraft:unpack",
       "anchor": "sponge_gemmule",
-      "recipe": "anvilcraft:unpack/sponge_gemmule",
-      "text": ""
+      "recipe": "anvilcraft:unpack/sponge_gemmule"
     },
     {
       "type": "anvilcraft:bulging",
       "anchor": "sponge",
-      "recipe": "anvilcraft:bulging/wet_sponge",
-      "text": ""
+      "recipe": "anvilcraft:bulging/wet_sponge"
     },
     {
       "type": "patchouli:spotlight",
@@ -60,15 +57,12 @@
       "anchor": "lava",
       "recipe": "anvilcraft:super_heating/lava_from_cobblestone",
       "recipe2": "anvilcraft:super_heating/lava_from_stone",
-      "title": "再生熔岩",
-      "text": ""
+      "title": "再生熔岩"
     },
     {
-      "type": "patchouli:spotlight",
+      "type": "anvilcraft:boiling",
       "anchor": "slime_ball",
-      "item": "minecraft:slime_ball",
-      "link_recipe": true,
-      "text": "将$(l:basic/material#resin)树脂$()投入装水的炼药锅中，且在下面放上营火，铁砧砸击后可$(l:basic/item_processing#cooking)生产黏液球$()。"
+      "recipe": "anvilcraft:boiling/slime_ball"
     }
   ]
 }

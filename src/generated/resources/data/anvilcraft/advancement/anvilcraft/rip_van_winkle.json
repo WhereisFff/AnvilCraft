@@ -2,7 +2,10 @@
   "parent": "anvilcraft:anvilcraft/wither",
   "criteria": {
     "timewarp_recipe": {
-      "trigger": "anvilcraft:in_world_time_warp_recipe"
+      "conditions": {
+        "recipeType": "anvilcraft:time_warp"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
     }
   },
   "display": {

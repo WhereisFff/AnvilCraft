@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.advancements.criteron;
+package dev.dubhe.anvilcraft.advancements.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class AnvilHammerLeftClickBlockTrigger extends SimpleCriterionTrigger<AnvilHammerLeftClickBlockTrigger.TriggerInstance> {
+public class AnvilHitPiezoelectricCrystalTrigger extends SimpleCriterionTrigger<AnvilHitPiezoelectricCrystalTrigger.TriggerInstance> {
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -21,13 +21,13 @@ public class AnvilHammerLeftClickBlockTrigger extends SimpleCriterionTrigger<Anv
         this.trigger(player, TriggerInstance::matches);
     }
 
-    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleCriterionTrigger.SimpleInstance {
+    public record TriggerInstance(Optional<ContextAwarePredicate> player) implements SimpleInstance {
         public static final Codec<TriggerInstance> CODEC = RecordCodecBuilder.create((instance) -> instance.group(
             EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
         ).apply(instance, TriggerInstance::new));
 
-        public static Criterion<TriggerInstance> clickBlock() {
-            return ModCriterionTriggers.ANVIL_HAMMER_LIFT_CLICK.get().createCriterion(new TriggerInstance(Optional.empty()));
+        public static Criterion<TriggerInstance> hit() {
+            return ModCriterionTriggers.ANVIL_HIT_PIEZOELECTRIC_CRYSTAL.get().createCriterion(new TriggerInstance(Optional.empty()));
         }
 
         public boolean matches() {

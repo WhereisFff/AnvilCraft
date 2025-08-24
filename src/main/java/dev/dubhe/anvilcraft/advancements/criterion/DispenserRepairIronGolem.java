@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.advancements.criteron;
+package dev.dubhe.anvilcraft.advancements.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class PlayerWearAnvilHammerTrigger extends SimpleCriterionTrigger<PlayerWearAnvilHammerTrigger.TriggerInstance> {
+public class DispenserRepairIronGolem extends SimpleCriterionTrigger<DispenserRepairIronGolem.TriggerInstance> {
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -26,8 +26,8 @@ public class PlayerWearAnvilHammerTrigger extends SimpleCriterionTrigger<PlayerW
             EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
         ).apply(instance, TriggerInstance::new));
 
-        public static Criterion<TriggerInstance> wearAnvilHammer() {
-            return ModCriterionTriggers.PLAYER_WEAR_ANVIL_HAMMER.get().createCriterion(new TriggerInstance(Optional.empty()));
+        public static Criterion<TriggerInstance> repair() {
+            return ModCriterionTriggers.REPAIR_IRON_GOLEM.get().createCriterion(new TriggerInstance(Optional.empty()));
         }
 
         public boolean matches() {

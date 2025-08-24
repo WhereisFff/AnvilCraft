@@ -1,27 +1,21 @@
 package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerLeftClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerRightClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerShiftRightClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingIronGolemTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilLootingTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnythingAnvilCraftingTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.DispenserRepairIronGolem;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldSuperHeatingRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldTimewarpRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.MilkTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlayerWearAnvilHammerTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerHurtEntityTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHitPiezoelectricCrystalTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilLootingTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilOnGroundTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.ConvertBeaconTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.DevourerDevourTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.DispenserRepairIronGolem;
+import dev.dubhe.anvilcraft.advancements.criterion.InWorldRecipeTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.MagnetLiftingAnvilTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlacerPlaceTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlayerKilledEntityByAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlayerWearAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.UseItemTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.IEventBus;
@@ -53,32 +47,14 @@ public class ModCriterionTriggers {
     public static final DeferredHolder<CriterionTrigger<?>, AnvilLootingTrigger> ANVIL_LOOTING =
         CT.register("anvil_looting", AnvilLootingTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilLootingIronGolemTrigger> ANVIL_LOOTING_IRON_GOLEM =
-        CT.register("anvil_looting_iron_golem", AnvilLootingIronGolemTrigger::new);
-
     public static final DeferredHolder<CriterionTrigger<?>, DispenserRepairIronGolem> REPAIR_IRON_GOLEM =
         CT.register("repair_iron_golem", DispenserRepairIronGolem::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, AnythingAnvilCraftingTrigger> ANYTHING_ANVIL_CRAFTING =
-        CT.register("anything_anvil_crafting", AnythingAnvilCraftingTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, InWorldRecipeTrigger> IN_WORLD_RECIPE =
         CT.register("in_world_recipe", InWorldRecipeTrigger::new);
 
-    public static final DeferredHolder<CriterionTrigger<?>, InWorldSuperHeatingRecipeTrigger> IN_WORLD_SUPER_HEATING_RECIPE =
-        CT.register("in_world_super_heating_recipe", InWorldSuperHeatingRecipeTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, InWorldTimewarpRecipeTrigger> IN_WORLD_TIME_WARP_RECIPE =
-        CT.register("in_world_time_warp_recipe", InWorldTimewarpRecipeTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerLeftClickBlockTrigger> ANVIL_HAMMER_LIFT_CLICK =
-        CT.register("anvil_hammer_left_click_block", AnvilHammerLeftClickBlockTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerRightClickBlockTrigger> ANVIL_HAMMER_RIGHT_CLICK =
-        CT.register("anvil_hammer_right_click_block", AnvilHammerRightClickBlockTrigger::new);
-
-    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerShiftRightClickBlockTrigger> ANVIL_HAMMER_SHIFT_RIGHT_CLICK =
-        CT.register("anvil_hammer_shift_right_click_block", AnvilHammerShiftRightClickBlockTrigger::new);
+    public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerClickBlockTrigger> ANVIL_HAMMER_CLICK_BLOCK =
+        CT.register("anvil_hammer_click_block", AnvilHammerClickBlockTrigger::new);
 
     public static final DeferredHolder<CriterionTrigger<?>, AnvilHammerHurtEntityTrigger> ANVIL_HAMMER_HURT_ENTITY =
         CT.register("anvil_hammer_hurt_entity", AnvilHammerHurtEntityTrigger::new);

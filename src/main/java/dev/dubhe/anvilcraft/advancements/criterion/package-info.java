@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.advancements.criteron;
+package dev.dubhe.anvilcraft.advancements.criterion;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

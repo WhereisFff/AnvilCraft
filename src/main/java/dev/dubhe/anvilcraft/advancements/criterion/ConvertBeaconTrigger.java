@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.advancements.criteron;
+package dev.dubhe.anvilcraft.advancements.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class AnvilLootingIronGolemTrigger extends SimpleCriterionTrigger<AnvilLootingIronGolemTrigger.TriggerInstance> {
+public class ConvertBeaconTrigger extends SimpleCriterionTrigger<ConvertBeaconTrigger.TriggerInstance> {
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -26,8 +26,8 @@ public class AnvilLootingIronGolemTrigger extends SimpleCriterionTrigger<AnvilLo
             EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
         ).apply(instance, TriggerInstance::new));
 
-        public static Criterion<TriggerInstance> looting() {
-            return ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().createCriterion(new TriggerInstance(Optional.empty()));
+        public static Criterion<TriggerInstance> convertBeacon() {
+            return ModCriterionTriggers.CONVERT_BEACON.get().createCriterion(new TriggerInstance(Optional.empty()));
         }
 
         public boolean matches() {

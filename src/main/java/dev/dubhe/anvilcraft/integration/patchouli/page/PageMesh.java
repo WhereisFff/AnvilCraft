@@ -50,7 +50,7 @@ public class PageMesh extends PageDoubleRecipeRegistry<MeshRecipe> {
 
         List<ChanceItemStack> results = recipe.getResultItems();
         if (results.size() <= 5) {
-            PatchouliRenderHelper.render1x5(graphics, recipeX - 1, recipeY + 29);
+            PatchouliRenderHelper.render1x5(graphics, recipeX - 1, recipeY + 38);
             for (int i = 0; i < results.size(); i++) {
                 parent.renderItemStack(graphics, recipeX + 3 + i * 19, recipeY + 42, mouseX, mouseY, results.get(i).stack());
             }

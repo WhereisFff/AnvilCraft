@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.advancements.criteron;
+package dev.dubhe.anvilcraft.advancements.criterion;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,7 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 import java.util.Optional;
 
-public class AnvilHammerShiftRightClickBlockTrigger extends SimpleCriterionTrigger<AnvilHammerShiftRightClickBlockTrigger.TriggerInstance> {
+public class MagnetLiftingAnvilTrigger extends SimpleCriterionTrigger<MagnetLiftingAnvilTrigger.TriggerInstance> {
     @Override
     public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
@@ -26,8 +26,8 @@ public class AnvilHammerShiftRightClickBlockTrigger extends SimpleCriterionTrigg
             EntityPredicate.ADVANCEMENT_CODEC.optionalFieldOf("player").forGetter(TriggerInstance::player)
         ).apply(instance, TriggerInstance::new));
 
-        public static Criterion<TriggerInstance> clickBlock() {
-            return ModCriterionTriggers.ANVIL_HAMMER_SHIFT_RIGHT_CLICK.get().createCriterion(new TriggerInstance(Optional.empty()));
+        public static Criterion<TriggerInstance> liftingAnvil() {
+            return ModCriterionTriggers.LIFTING_ANVIL.get().createCriterion(new TriggerInstance(Optional.empty()));
         }
 
         public boolean matches() {
