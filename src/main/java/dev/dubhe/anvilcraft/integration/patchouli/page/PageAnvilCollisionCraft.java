@@ -93,7 +93,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             PatchouliRenderHelper.render2x2(graphics, recipeX + COLLISION_LENGTH + 12, recipeY);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 2 && i * 2 + j < results.size(); j++) {
-                    ItemStack itemStack = results.get(i * 2 + j).getStack();
+                    ItemStack itemStack = results.get(i * 2 + j).stack();
                     parent.renderItemStack(graphics, recipeX + COLLISION_LENGTH + 16 + j * 19, recipeY + 4 + i * 19,
                         mouseX, mouseY, itemStack);
                 }
@@ -117,7 +117,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
                 RenderHelper.renderBlock(graphics, state, 0, 0, 0, 12, RenderHelper.SINGLE_BLOCK);
 
                 // 转化出方块
-                BlockState outputBlockState = transformBlock.outputBlock().getState();
+                BlockState outputBlockState = transformBlock.outputBlock().state();
                 RenderHelper.renderBlock(graphics, outputBlockState, 0, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
                 pose.popPose();
 
