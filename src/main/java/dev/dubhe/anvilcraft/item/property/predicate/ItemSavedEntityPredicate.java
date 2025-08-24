@@ -64,7 +64,7 @@ public record ItemSavedEntityPredicate(
         if (optional.isEmpty()) return false;
         EntityType<?> type = optional.get();
         if (this.entitys.isPresent() && !type.is(this.entitys.get())) return false;
-        if(this.isMonster && !component.isMonster()) return false;
+        if (this.isMonster && !component.isMonster()) return false;
         return this.predicates.stream().allMatch(it -> it.test(tag));
     }
 
