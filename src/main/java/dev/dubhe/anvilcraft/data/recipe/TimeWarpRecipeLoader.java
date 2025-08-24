@@ -168,7 +168,6 @@ public class TimeWarpRecipeLoader {
 
 
         TimeWarpRecipe.builder()
-            .heat(HeatTier.INCANDESCENT, 12000)
             .requires(ItemIngredientPredicate.Builder.item()
                 .of(ModBlocks.RESIN_BLOCK)
                 .withSubPredicate(
