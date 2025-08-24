@@ -202,6 +202,7 @@ public class TimeWarpRecipeLoader {
                 .offset(0.0, -0.75, 0.0)
                 .applyComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
             )
+            .maxEfficiency(1)
             .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
             .group("time_warp")
             .icon(ModBlocks.MOB_AMBER_BLOCK.asStack())
@@ -240,6 +241,7 @@ public class TimeWarpRecipeLoader {
                     1
                 )
             )
+            .maxEfficiency(1)
             .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
             .group("time_warp")
             .icon(ModBlocks.RESENTFUL_AMBER_BLOCK.asStack())
