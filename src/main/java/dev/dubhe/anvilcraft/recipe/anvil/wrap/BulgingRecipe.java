@@ -81,7 +81,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      */
     public boolean isConsumeFluid() {
         HasCauldronSimple hasCauldron = this.getHasCauldron();
-        return HasCauldron.isNotEmpty(hasCauldron.getFluid()) && this.getHasCauldron().getConsume() > 0;
+        return HasCauldron.isNotEmpty(hasCauldron.fluid()) && this.getHasCauldron().consume() > 0;
     }
 
     /**
@@ -91,7 +91,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      */
     public boolean isProduceFluid() {
         HasCauldronSimple hasCauldron = this.getHasCauldron();
-        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() > 0;
+        return HasCauldron.isNotEmpty(hasCauldron.transform()) && this.getHasCauldron().consume() < 0;
     }
 
     /**
@@ -100,7 +100,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
      * @return 如果使用水返回true，否则返回false
      */
     public boolean isFromWater() {
-        return this.getHasCauldron().getFluid().equals(BuiltInRegistries.FLUID.getKey(Fluids.WATER));
+        return this.getHasCauldron().fluid().equals(BuiltInRegistries.FLUID.getKey(Fluids.WATER));
     }
 
     /**
@@ -201,24 +201,24 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         /**
          * 设置是否产生流体
          *
-         * @param produceFluid 是否产生流体
+         * @param produce 是否产生流体
          * @return 构建器实例
          */
-        public Builder produceFluid(boolean produceFluid) {
-            if (!produceFluid) return this;
-            this.hasCauldron.consume(-1);
+        public Builder produce(int produce) {
+            if (produce <= 0) return this;
+            this.hasCauldron.consume(-produce);
             return this;
         }
 
         /**
          * 设置是否消耗流体
          *
-         * @param consumeFluid 是否消耗流体
+         * @param consume 消耗流体
          * @return 构建器实例
          */
-        public Builder consumeFluid(boolean consumeFluid) {
-            if (!consumeFluid) return this;
-            this.hasCauldron.consume(1);
+        public Builder consume(int consume) {
+            if (consume <= 0) return this;
+            this.hasCauldron.consume(consume);
             return this;
         }
 

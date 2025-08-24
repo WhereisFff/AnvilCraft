@@ -5,6 +5,7 @@ import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
@@ -42,8 +43,8 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
                 ((ScreenAccessor) parent).anvilcraft$getFont(),
                 Component.translatable(
                     "gui.anvilcraft.category.time_warp.consume_fluid",
-                    hasCauldron.getConsume(),
-                    Component.translatable("fluid." + hasCauldron.getTransform().toString().replace(':', '.'))),
+                    hasCauldron.consume(),
+                    Component.translatable("fluid." + hasCauldron.transform().toString().replace(':', '.'))),
                 0,
                 0,
                 0xFF000000,
@@ -56,8 +57,8 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
                 ((ScreenAccessor) parent).anvilcraft$getFont(),
                 Component.translatable(
                     "gui.anvilcraft.category.time_warp.produce_fluid",
-                    -hasCauldron.getConsume(),
-                    Component.translatable("fluid." + hasCauldron.getTransform().toString().replace(':', '.'))),
+                    -hasCauldron.consume(),
+                    Component.translatable("fluid." + hasCauldron.transform().toString().replace(':', '.'))),
                 0,
                 0,
                 0xFF000000,
@@ -71,7 +72,7 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
         if (recipe.isProduceFluid()) {
             return Blocks.CAULDRON.defaultBlockState();
         } else {
-            return CauldronUtil.fullState(BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron")));
+            return CauldronUtil.fullState(HasCauldron.getDefaultCauldron(recipe.getHasCauldron().fluid()));
         }
     }
 }

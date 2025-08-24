@@ -1,6 +1,6 @@
 {
   "type": "anvilcraft:squeezing",
-  "consume": -1,
+  "consume": -1000,
   "ingredient": {
     "blocks": "minecraft:moss_block"
   },

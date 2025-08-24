@@ -13,7 +13,7 @@ import net.minecraft.network.codec.StreamCodec;
  * 损坏铁砧配方结果类，用于定义使铁砧损坏的配方结果
  * 该类实现了 IRecipeOutcome 接口，表示一种特殊的配方结果类型
  */
-public class DamageAnvil implements IRecipeOutcome<DamageAnvil> {
+public record DamageAnvil() implements IRecipeOutcome<DamageAnvil> {
     /**
      * 损坏铁砧的配方数据键
      */

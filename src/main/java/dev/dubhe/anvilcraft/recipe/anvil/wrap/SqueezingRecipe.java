@@ -78,7 +78,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
      */
     public boolean isProduceFluid() {
         HasCauldronSimple hasCauldron = this.getHasCauldron();
-        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() > 0;
+        return HasCauldron.isNotEmpty(hasCauldron.transform()) && this.getHasCauldron().consume() < 0;
     }
 
     /**
@@ -258,7 +258,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          */
         public Builder produceFluid(boolean produceFluid) {
             if (!produceFluid) return this;
-            this.hasCauldron.consume(-1);
+            this.hasCauldron.consume(-1000);
             return this;
         }
 
@@ -270,7 +270,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          */
         public Builder consumeFluid(boolean consumeFluid) {
             if (!consumeFluid) return this;
-            this.hasCauldron.consume(1);
+            this.hasCauldron.consume(1000);
             return this;
         }
 

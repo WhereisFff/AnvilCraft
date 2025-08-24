@@ -1,6 +1,6 @@
 {
   "type": "anvilcraft:time_warp",
-  "consume": -1,
+  "consume": -250,
   "ingredients": [
     {
       "items": "minecraft:zombie_head"
