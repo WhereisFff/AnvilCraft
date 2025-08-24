@@ -703,10 +703,10 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         private ItemStack getIcon() {
             ItemStack icon = null;
             if (this.resultItems != null && !this.resultItems.isEmpty()) {
-                icon = this.resultItems.getFirst().getStack();
+                icon = this.resultItems.getFirst().stack();
             }
             if (icon == null && this.resultBlocks != null && !this.resultBlocks.isEmpty()) {
-                Item item = this.resultBlocks.getFirst().getState().getBlock().asItem();
+                Item item = this.resultBlocks.getFirst().state().getBlock().asItem();
                 if (item != Items.AIR) icon = item.getDefaultInstance();
             }
             if (icon == null) icon = Items.ANVIL.getDefaultInstance();

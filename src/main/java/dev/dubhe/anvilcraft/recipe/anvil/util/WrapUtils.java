@@ -134,7 +134,7 @@ public class WrapUtils {
      * @return 物品
      */
     public static Item getItem(ChanceBlockState result) {
-        BlockState state = result.getState();
+        BlockState state = result.state();
         if (state.isEmpty() || state.isAir()) return Items.ANVIL;
         Item item = state.getBlock().asItem();
         if (item == Items.AIR) item = Items.ANVIL;

@@ -4,10 +4,8 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.anvilcraft.lib.data.advancement.predicate.item.NotPredicate;
 import dev.anvilcraft.lib.init.LibItemSubPredicates;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
-import dev.anvilcraft.lib.recipe.outcome.ChooseOneOutcome;
 import dev.anvilcraft.lib.recipe.outcome.ProduceExplosion;
 import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
-import dev.anvilcraft.lib.recipe.predicate.item.HasItemIngredient;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItemSubPredicates;
@@ -95,52 +93,47 @@ public class ItemCompressRecipeLoader {
             .save(provider);
 
         ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
-            .with(
-                HasItemIngredient.builder()
-                    .of(ModBlocks.RESIN_BLOCK.asItem())
-                    .with(
-                        ModItemSubPredicates.SAVED_ENTITY.get(),
-                        ItemSavedEntityPredicate.of(EntityType.CREEPER)
-                            .predicate(b ->
-                                b.compare(NumericTagValuePredicate.ValueFunction.GREATER_OR_EQUAL)
-                                    .lhs("powered")
-                                    .rhs(1)
-                            )
-                    )
-                    .offset(0.0, -0.375, 0.0)
-                    .range(0.75, 0.75, 0.75)
-                    .build()
+            .hasItemIngredient(builder -> builder
+                .of(ModBlocks.RESIN_BLOCK.asItem())
+                .with(
+                    ModItemSubPredicates.SAVED_ENTITY.get(),
+                    ItemSavedEntityPredicate.of(EntityType.CREEPER)
+                        .predicate(b ->
+                            b.compare(NumericTagValuePredicate.ValueFunction.GREATER_OR_EQUAL)
+                                .lhs("powered")
+                                .rhs(1)
+                        )
+                )
+                .offset(0.0, -0.375, 0.0)
+                .range(0.75, 0.75, 0.75)
             )
-            .with(
-                HasItemIngredient.builder()
-                    .of(ModItemTags.IRON_PLATES)
-                    .count(2)
-                    .offset(0.0, -0.375, 0.0)
-                    .range(0.75, 0.75, 0.75)
-                    .build()
+            .hasItemIngredient(builder -> builder
+                .of(ModItemTags.IRON_PLATES)
+                .count(2)
+                .offset(0.0, -0.375, 0.0)
+                .range(0.75, 0.75, 0.75)
             )
             .hasCauldron(0, -1, 0)
-            .out(
-                ChooseOneOutcome.builder()
-                    .choice(
-                        new ProduceExplosion(
-                            new Vec3(0.0, -0.75, 0.0),
-                            1f,
-                            true,
-                            Level.ExplosionInteraction.BLOCK,
-                            //同权重二选一已经包含50%概率了，这里的概率要填1.0
-                            ConstantValue.exactly(1f)
-                        ),
-                        0.5f
-                    )
-                    .choice(
-                        SpawnItem.builder()
-                            .item(ModItems.SUPER_CAPACITOR.asStack())
-                            .offset(new Vec3(0.0, -0.75, 0.0))
-                            .build(),
-                        0.5f
-                    )
-                    .build()
+            .chooseOne(builder -> builder
+                .choice(
+                    new ProduceExplosion(
+                        new Vec3(0.0, -0.75, 0.0),
+                        1f,
+                        true,
+                        Level.ExplosionInteraction.BLOCK,
+                        //同权重二选一已经包含50%概率了，这里的概率要填1.0
+                        ConstantValue.exactly(1f)
+                    ),
+                    0.5f
+                )
+                .choice(
+                    SpawnItem.builder()
+                        .item(ModItems.SUPER_CAPACITOR.asStack())
+                        .offset(new Vec3(0.0, -0.75, 0.0))
+                        .build(),
+                    0.5f
+                )
+                .build()
             )
             .group("item_compress")
             .icon(ModItems.SUPER_CAPACITOR.asStack())

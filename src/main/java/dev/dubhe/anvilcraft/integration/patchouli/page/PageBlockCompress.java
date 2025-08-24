@@ -42,7 +42,7 @@ public class PageBlockCompress extends PageDoubleRecipeRegistry<BlockCompressRec
         PatchouliRenderHelper.renderArray(graphics, recipeX + 45, recipeY + 25);
 
         ChanceBlockState result = recipe.getFirstResultBlock();
-        RenderHelper.renderBlock(graphics, result.getState(), recipeX + 80, recipeY + 37, 0, 12, RenderHelper.SINGLE_BLOCK);
+        RenderHelper.renderBlock(graphics, result.state(), recipeX + 80, recipeY + 37, 0, 12, RenderHelper.SINGLE_BLOCK);
 
         parent.drawCenteredStringNoShadow(
             graphics, getTitle(second).getVisualOrderText(),

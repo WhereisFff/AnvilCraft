@@ -87,7 +87,7 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
             ).toList()
         );
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-            .addItemStack(new ItemStack(recipe.getFirstResultBlock().getState().getBlock()));
+            .addItemStack(new ItemStack(recipe.getFirstResultBlock().state().getBlock()));
     }
 
     @Override
@@ -145,7 +145,7 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
             );
         }
         RenderHelper.renderBlock(
-            guiGraphics, recipe.getFirstResultBlock().getState(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK
+            guiGraphics, recipe.getFirstResultBlock().state(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK
         );
     }
 
@@ -172,7 +172,7 @@ public class BlockSmearCategory implements IRecipeCategory<RecipeHolder<BlockSme
                 tooltip.addAll(BlockTagUtil.getTooltipsForInput(recipe.getInputBlocks().getFirst()));
             }
             if (mouseY >= 42 && mouseY <= 52) {
-                tooltip.add(recipe.getFirstResultBlock().getState().getBlock().getName());
+                tooltip.add(recipe.getFirstResultBlock().state().getBlock().getName());
             }
         }
     }

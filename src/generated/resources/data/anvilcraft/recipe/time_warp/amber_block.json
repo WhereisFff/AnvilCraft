@@ -1,0 +1,24 @@
+{
+  "type": "anvilcraft:time_warp",
+  "heat": [
+    {
+      "duration": 12000,
+      "tier": "incandescent"
+    }
+  ],
+  "ingredients": [
+    {
+      "items": "anvilcraft:resin_block",
+      "predicates": {
+        "anvillib:not": {
+          "anvilcraft:saved_entity": {}
+        }
+      }
+    }
+  ],
+  "results": [
+    {
+      "id": "anvilcraft:amber_block"
+    }
+  ]
+}

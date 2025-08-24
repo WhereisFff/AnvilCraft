@@ -93,7 +93,7 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
         }
         for (ChanceItemStack output : recipe.getResultItems()) {
             builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-                .addItemStack(output.getStack().copyWithCount(output.getMaxCount()));
+                .addItemStack(output.stack().copyWithCount(output.getMaxCount()));
         }
     }
 
@@ -117,7 +117,7 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
             if (mouseY >= 24 && mouseY <= 42) {
                 List<ChanceBlockState> result = recipe.getResultBlocks();
                 if (result.isEmpty()) return;
-                tooltip.add(result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).getState().getBlock().getName());
+                tooltip.add(result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).state().getBlock().getName());
             }
             if (mouseY >= 42 && mouseY <= 52) {
                 tooltip.add(recipe.getHasCauldron().getTransformCauldron().getName());
@@ -160,7 +160,7 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
         RenderHelper.renderBlock(guiGraphics, getCauldron(recipe), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
         List<ChanceBlockState> result = recipe.getResultBlocks();
         if (result.isEmpty()) return;
-        renderedState = result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).getState();
+        renderedState = result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).state();
         RenderHelper.renderBlock(guiGraphics, renderedState, 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
     }
 
