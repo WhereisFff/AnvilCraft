@@ -31,7 +31,7 @@ public class ItemCompressRecipeLoader {
             .save(provider);
 
         ItemCompressRecipe.builder()
-            .requires(ModItems.CREAM, 4)
+            .requires(ModItemTags.CREAM, 4)
             .requires(Items.SUGAR)
             .result(ModBlocks.CREAM_BLOCK)
             .save(provider);
