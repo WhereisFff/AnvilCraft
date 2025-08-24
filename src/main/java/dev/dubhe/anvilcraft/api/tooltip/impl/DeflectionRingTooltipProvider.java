@@ -26,7 +26,7 @@ public class DeflectionRingTooltipProvider extends PowerComponentTooltipProvider
 
     @Override
     public List<Component> tooltip(BlockEntity blockEntity) {
-        final List<Component> lines = new ArrayList<>();
+        final List<Component> lines = new ArrayList<>(super.tooltip(blockEntity));
         if (!(blockEntity.getBlockState().getBlock() instanceof DeflectionRingBlock deflectionRingBlock)) return lines;
         BlockPos center = deflectionRingBlock.getMainPartPos(blockEntity.getBlockPos(), blockEntity.getBlockState());
         Level level = blockEntity.getLevel();
