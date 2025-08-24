@@ -58,6 +58,7 @@
     "accessor.GrowingPlantAccessor",
     "accessor.ShapedRecipePatternAccessor",
     "accessor.StateHolderAccessor",
+    "accessor.TargetingConditionsAccessor",
     "accessor.VaultServerDataAccessor",
     "compat.AE2BatchCrafterBlockEntityMixin",
     "compat.AE2BatchCrafterBlockMixin",
