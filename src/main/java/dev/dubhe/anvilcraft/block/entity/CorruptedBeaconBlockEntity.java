@@ -248,6 +248,7 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         if (list.isEmpty()) return;
         RecipeManager manager = Objects.requireNonNull(level.getServer()).getRecipeManager();
         for (LivingEntity livingEntity : list) {
+            if (!livingEntity.isAlive()) return;
             livingEntity.addEffect(new MobEffectInstance(MobEffects.WITHER, 120, 0, true, true));
             tryTransformEntity(livingEntity, (ServerLevel) level, manager);
         }

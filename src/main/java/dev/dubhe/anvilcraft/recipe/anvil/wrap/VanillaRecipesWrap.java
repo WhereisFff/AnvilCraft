@@ -54,7 +54,10 @@ public class VanillaRecipesWrap {
         VanillaRecipesWrap.recipes = new ArrayList<>();
         for (RecipeHolder<?> recipeHolder : recipes) {
             Recipe<?> recipe = recipeHolder.value();
-            Item item = recipe.getResultItem(registries).getItem();
+            ItemStack stack = recipe.getResultItem(registries);
+            //noinspection ConstantValue
+            if (stack == null) continue;
+            Item item = stack.getItem();
             if (recipe.getIngredients().isEmpty() || recipe.getIngredients().getFirst().isCustom()) {
                 continue;
             }
