@@ -12,9 +12,7 @@ public class MobTransformRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         MobTransformRecipe.from(EntityType.COW).to(EntityType.RAVAGER).save(provider);
         MobTransformRecipe.from(EntityType.PIG).to(EntityType.HOGLIN).save(provider);
-        MobTransformRecipe.from(EntityType.GUARDIAN)
-            .to(EntityType.ELDER_GUARDIAN)
-            .save(provider);
+        MobTransformRecipe.from(EntityType.GUARDIAN).to(EntityType.ELDER_GUARDIAN).save(provider);
         MobTransformRecipe.from(EntityType.PIGLIN).to(EntityType.PIGLIN_BRUTE).save(provider);
         MobTransformRecipe.from(EntityType.VILLAGER)
             .result(EntityType.PILLAGER, 0.3)
@@ -29,24 +27,17 @@ public class MobTransformRecipeLoader {
             .save(provider);
         MobTransformRecipe.from(EntityType.IRON_GOLEM)
             .to(EntityType.WARDEN)
-            .predicate(b -> b.compare(NumericTagValuePredicate.ValueFunction.EQUAL)
-                .lhs("PlayerCreated")
-                .rhs(0))
+            .predicate(b -> b.compare(NumericTagValuePredicate.ValueFunction.EQUAL).lhs("PlayerCreated").rhs(0))
             .tagModification(b -> {
                 CompoundTag tag = new CompoundTag();
                 CompoundTag cooldownMemoryTag = new CompoundTag();
                 cooldownMemoryTag.put("value", new CompoundTag());
                 cooldownMemoryTag.putLong("ttl", 1200L);
                 tag.put("minecraft:dig_cooldown", cooldownMemoryTag);
-                b.path("Brain.memories")
-                    .operation(TagModification.ModifyOperation.SET)
-                    .value(tag);
+                b.path("Brain.memories").operation(TagModification.ModifyOperation.SET).value(tag);
             })
             .save(provider);
-        MobTransformRecipe.from(EntityType.SKELETON)
-            .result(EntityType.STRAY, 0.8)
-            .result(EntityType.WITHER_SKELETON, 0.2)
-            .save(provider);
+        MobTransformRecipe.from(EntityType.SKELETON).result(EntityType.STRAY, 0.8).result(EntityType.WITHER_SKELETON, 0.2).save(provider);
         MobTransformRecipe.from(EntityType.ZOMBIE)
             .result(EntityType.HUSK, 0.5)
             .result(EntityType.DROWNED, 0.5)
