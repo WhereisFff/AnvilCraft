@@ -2,7 +2,7 @@
   "parent": "anvilcraft:anvilcraft/root",
   "criteria": {
     "anything_anvil_crafting": {
-      "trigger": "anvilcraft:anything_anvil_crafting"
+      "trigger": "anvilcraft:in_world_recipe"
     }
   },
   "display": {

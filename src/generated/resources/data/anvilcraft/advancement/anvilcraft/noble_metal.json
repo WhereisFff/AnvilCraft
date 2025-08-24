@@ -5,7 +5,7 @@
       "conditions": {
         "id": "anvilcraft:super_heating/royal_steel_ingot"
       },
-      "trigger": "anvilcraft:in_world_super_heating_recipe"
+      "trigger": "anvilcraft:in_world_recipe"
     }
   },
   "display": {

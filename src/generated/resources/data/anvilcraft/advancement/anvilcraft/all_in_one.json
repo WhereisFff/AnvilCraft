@@ -17,10 +17,16 @@
       "trigger": "anvilcraft:anvil_hammer_hurt_entity"
     },
     "left_click": {
-      "trigger": "anvilcraft:anvil_hammer_left_click_block"
+      "conditions": {
+        "type": "left_click"
+      },
+      "trigger": "anvilcraft:anvil_hammer_click_block"
     },
     "right_click": {
-      "trigger": "anvilcraft:anvil_hammer_right_click_block"
+      "conditions": {
+        "type": "right_click"
+      },
+      "trigger": "anvilcraft:anvil_hammer_click_block"
     },
     "royal_anvil_hammer": {
       "conditions": {
@@ -29,7 +35,10 @@
       "trigger": "minecraft:recipe_crafted"
     },
     "shift_right_click": {
-      "trigger": "anvilcraft:anvil_hammer_shift_right_click_block"
+      "conditions": {
+        "type": "shift_right_click"
+      },
+      "trigger": "anvilcraft:anvil_hammer_click_block"
     },
     "transcendence_anvil_hammer": {
       "conditions": {

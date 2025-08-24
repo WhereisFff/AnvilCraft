@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilOnGroundTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.MagnetLiftingAnvilTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.UseItemTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilOnGroundTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.MagnetLiftingAnvilTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.UseItemTrigger;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.advancements.Advancement;

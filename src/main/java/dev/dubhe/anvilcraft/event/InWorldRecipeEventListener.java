@@ -7,7 +7,6 @@ import dev.anvilcraft.lib.injection.IRecipeManagerExtension;
 import dev.anvilcraft.lib.recipe.InWorldRecipe;
 import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.VanillaRecipesWrap;
 import dev.dubhe.anvilcraft.recipe.generate.MeshRecipeGeneratingCache;
@@ -50,16 +49,7 @@ public class InWorldRecipeEventListener {
         InWorldRecipeContext context = event.getContext();
         ServerLevel level = context.getLevel();
         BlockPos pos = BlockPos.containing(context.getPos());
-        AnvilCraft.LOGGER.debug("type: {}", recipeType);
-        AnvilCraft.LOGGER.debug("id: {}", id);
-        TriggerUtil.anythingAnvilCrafting(level, pos);
-        TriggerUtil.inWorldRecipe(level, pos, id);
-        if (recipeType == ModRecipeTypes.SUPER_HEATING_TYPE.get()) {
-            TriggerUtil.inWorldSuperHeatingRecipe(level, pos, id);
-        }
-        if (recipeType == ModRecipeTypes.TIME_WARP_TYPE.get()) {
-            TriggerUtil.inWorldTimeWrapRecipe(level, pos, id);
-        }
+        TriggerUtil.inWorldRecipe(level, pos, ResourceLocation.parse(recipeType.toString()), id);
     }
 
     @SubscribeEvent
