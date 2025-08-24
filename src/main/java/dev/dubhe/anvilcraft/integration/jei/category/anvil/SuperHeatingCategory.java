@@ -93,7 +93,7 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
         }
 
         HasCauldronSimple hasCauldron = recipe.getHasCauldron();
-        if (!HasCauldron.isNotEmpty(hasCauldron.getTransform())) return;
+        if (!HasCauldron.isNotEmpty(hasCauldron.transform())) return;
         BlockState cauldron = CauldronUtil.fullState(hasCauldron.getTransformCauldron());
         RenderHelper.renderBlock(guiGraphics, cauldron, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
 
@@ -105,7 +105,7 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
                 Minecraft.getInstance().font,
                 Component.translatable(
                     "gui.anvilcraft.category.super_heating.consume_fluid",
-                    recipe.getHasCauldron().getConsume(),
+                    recipe.getHasCauldron().consume(),
                     recipe.getHasCauldron().getFluidCauldron().getName()
                 ),
                 0,
@@ -122,7 +122,7 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
                 Minecraft.getInstance().font,
                 Component.translatable(
                     "gui.anvilcraft.category.super_heating.produce_fluid",
-                    recipe.getHasCauldron().getConsume(),
+                    -recipe.getHasCauldron().consume(),
                     recipe.getHasCauldron().getTransformCauldron().getName()
                 ),
                 0,

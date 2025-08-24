@@ -14,13 +14,13 @@ public class SuperHeatingRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         SuperHeatingRecipe.builder()
             .transform(Blocks.LAVA_CAULDRON)
-            .produce(1)
+            .produce(1000)
             .requires(Items.COBBLESTONE, 4)
             .requires(ModItems.LIME_POWDER)
             .save(provider, AnvilCraft.of("super_heating/lava_from_cobblestone"));
         SuperHeatingRecipe.builder()
             .transform(Blocks.LAVA_CAULDRON)
-            .produce(1)
+            .produce(1000)
             .requires(Tags.Items.STONES, 4)
             .requires(ModItems.LIME_POWDER)
             .save(provider, AnvilCraft.of("super_heating/lava_from_stone"));
@@ -112,7 +112,7 @@ public class SuperHeatingRecipeLoader {
 
         SuperHeatingRecipe.builder()
             .transform(ModBlocks.MELT_GEM_CAULDRON.get())
-            .produce(1)
+            .produce(1000)
             .requires(ModItemTags.GEM_BLOCKS)
             .save(provider, AnvilCraft.of("super_heating/melt_gem_cauldron"));
 

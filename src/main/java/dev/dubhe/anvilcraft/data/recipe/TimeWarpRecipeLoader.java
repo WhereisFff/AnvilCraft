@@ -53,25 +53,25 @@ public class TimeWarpRecipeLoader {
         TimeWarpRecipe.builder()
             .requires(Items.EMERALD)
             .result(Items.EMERALD_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItemTags.GEMS_RUBY)
             .result(ModBlocks.RUBY_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItemTags.GEMS_TOPAZ)
             .result(ModBlocks.TOPAZ_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItemTags.GEMS_SAPPHIRE)
             .result(ModBlocks.SAPPHIRE_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
@@ -96,7 +96,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 3)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_0"));
 
         TimeWarpRecipe.builder()
@@ -105,7 +105,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 4)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_1"));
 
         TimeWarpRecipe.builder()
@@ -114,7 +114,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 5)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_2"));
 
         TimeWarpRecipe.builder()
@@ -123,7 +123,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 6)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_3"));
 
         TimeWarpRecipe.builder()
@@ -134,7 +134,7 @@ public class TimeWarpRecipeLoader {
 
         TimeWarpRecipe.builder()
             .requires(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE)
-            .consume(3)
+            .consume(1000)
             .fluid(Blocks.POWDER_SNOW_CAULDRON)
             .result(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE)
             .save(provider);
@@ -143,7 +143,7 @@ public class TimeWarpRecipeLoader {
             .requires(ModItemTags.TITANIUM_INGOTS)
             .requires(ModItemTags.SILVER_INGOTS)
             .requires(Items.IRON_INGOT)
-            .consume(3)
+            .consume(1000)
             .fluid(Blocks.POWDER_SNOW_CAULDRON)
             .result(ModItems.FROST_METAL_INGOT)
             .save(provider);
@@ -278,7 +278,7 @@ public class TimeWarpRecipeLoader {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
             .transform(ModBlocks.OIL_CAULDRON.get())
-            .produce(1)
+            .produce(250)
             .save(
                 provider,
                 AnvilCraft.of("time_warp/oil_from_" + BuiltInRegistries.ITEM.getKey(input.asItem()).getPath())
@@ -290,7 +290,7 @@ public class TimeWarpRecipeLoader {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
             .transform(ModBlocks.OIL_CAULDRON.get())
-            .produce(1)
+            .produce(250)
             .save(
                 provider,
                 AnvilCraft.of("time_warp/oil_from_" + input.location().getPath())

@@ -1,6 +1,6 @@
 {
   "type": "anvilcraft:squeezing",
-  "consume": -1,
+  "consume": -250,
   "ingredient": {
     "blocks": "minecraft:magma_block"
   },

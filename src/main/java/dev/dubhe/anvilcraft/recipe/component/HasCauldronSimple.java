@@ -4,7 +4,6 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
-import lombok.Getter;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -18,24 +17,12 @@ import org.jetbrains.annotations.NotNull;
  * <p>
  * 该类用于定义配方中对炼药锅的要求，包括所需流体、消耗量和转换后的流体
  * </p>
+ *
+ * @param fluid     流体ID
+ * @param consume   消耗量（负数表示产生）
+ * @param transform 转换后的流体ID
  */
-@Getter
-public class HasCauldronSimple {
-    /**
-     * 流体ID
-     */
-    private final ResourceLocation fluid;
-
-    /**
-     * 消耗量（负数表示产生）
-     */
-    private final int consume;
-
-    /**
-     * 转换后的流体ID
-     */
-    private final ResourceLocation transform;
-
+public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLocation transform) {
     /**
      * 构造一个简单的炼药锅条件
      *
@@ -43,10 +30,7 @@ public class HasCauldronSimple {
      * @param consume   消耗量
      * @param transform 转换后的流体ID
      */
-    public HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLocation transform) {
-        this.fluid = fluid;
-        this.consume = consume;
-        this.transform = transform;
+    public HasCauldronSimple {
     }
 
     /**
@@ -56,13 +40,13 @@ public class HasCauldronSimple {
         instance -> instance.group(
             ResourceLocation.CODEC
                 .optionalFieldOf("fluid", HasCauldron.EMPTY)
-                .forGetter(HasCauldronSimple::getFluid),
+                .forGetter(HasCauldronSimple::fluid),
             Codec.INT
                 .optionalFieldOf("consume", 0)
-                .forGetter(HasCauldronSimple::getConsume),
+                .forGetter(HasCauldronSimple::consume),
             ResourceLocation.CODEC
                 .optionalFieldOf("transform", HasCauldron.NULL)
-                .forGetter(HasCauldronSimple::getTransform)
+                .forGetter(HasCauldronSimple::transform)
         ).apply(instance, HasCauldronSimple::new)
     );
 
@@ -99,11 +83,11 @@ public class HasCauldronSimple {
      */
     public static final StreamCodec<RegistryFriendlyByteBuf, HasCauldronSimple> STREAM_CODEC = StreamCodec.composite(
         ResourceLocation.STREAM_CODEC,
-        HasCauldronSimple::getFluid,
+        HasCauldronSimple::fluid,
         ByteBufCodecs.INT,
-        HasCauldronSimple::getConsume,
+        HasCauldronSimple::consume,
         ResourceLocation.STREAM_CODEC,
-        HasCauldronSimple::getTransform,
+        HasCauldronSimple::transform,
         HasCauldronSimple::new
     );
 

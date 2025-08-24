@@ -10,7 +10,6 @@ import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipePredicateTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -33,9 +32,13 @@ import java.util.Optional;
  * <p>
  * 用于检查指定位置是否存在特定炼药锅的谓词条件，并在配方完成后处理炼药锅中的流体
  * </p>
+ *
+ * @param fluid     流体ID
+ * @param consume   消耗量（负数表示产生）
+ * @param transform 转换后的流体ID
  */
-@Getter
-public class HasCauldron implements IRecipePredicate<HasCauldron> {
+public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, ResourceLocation transform)
+    implements IRecipePredicate<HasCauldron> {
     /**
      * 空炼药锅标识
      */
@@ -46,22 +49,6 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
      */
     public static final ResourceLocation NULL = ResourceLocation.withDefaultNamespace("null");
 
-    private final Vec3 offset;
-    /**
-     * 流体ID
-     */
-    private final ResourceLocation fluid;
-
-    /**
-     * 消耗量（负数表示产生）
-     */
-    private final int consume;
-
-    /**
-     * 转换后的流体ID
-     */
-    private final ResourceLocation transform;
-
     /**
      * 构造一个炼药锅条件谓词
      *
@@ -70,11 +57,7 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
      * @param consume   消耗量
      * @param transform 转换后的流体ID
      */
-    public HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, ResourceLocation transform) {
-        this.offset = offset;
-        this.fluid = fluid;
-        this.consume = consume;
-        this.transform = transform;
+    public HasCauldron {
     }
 
     /**
@@ -89,50 +72,55 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
 
     @Override
     public boolean test(InWorldRecipeContext context) {
-        Vec3 pos = context.getPos().add(this.offset);
+        Vec3 pos = context.getPos().add(this.offset());
         BlockPos blockPos = BlockPos.containing(pos);
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState curState = cache.getBlockState(blockPos);
         if (!curState.is(BlockTags.CAULDRONS)) return false;
         Block fluidCauldron = this.getFluidCauldron();
         if (curState.is(fluidCauldron)) return true;
-        if (HasCauldron.isNotEmpty(this.fluid)) return false;
-        if (!HasCauldron.isNotEmpty(this.transform)) return false;
+        if (HasCauldron.isNotEmpty(this.fluid())) return false;
+        if (!HasCauldron.isNotEmpty(this.transform())) return false;
         Block targetCauldron = this.getTransformCauldron();
         BlockState targetState = targetCauldron.defaultBlockState();
         Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
         int max = optionalTarget.map(tuple -> tuple.getA().max).orElse(0);
-        Optional<Tuple<IntegerProperty, Integer>> optionalCur = getFluidLevel(curState);
+        Optional<Tuple<IntegerProperty, Integer>> optionalCur = HasCauldron.getFluidLevel(curState);
         int cur = optionalCur.map(Tuple::getB).orElse(0);
         return cur < max;
     }
 
     @Override
     public void accept(InWorldRecipeContext context) {
-        if (this.fluid.equals(EMPTY) && !HasCauldron.isNotEmpty(this.transform)) return;
-        BlockPos blockPos = BlockPos.containing(context.getPos().add(this.offset));
+        if (this.fluid.equals(EMPTY) && !HasCauldron.isNotEmpty(this.transform())) return;
+        BlockPos blockPos = BlockPos.containing(context.getPos().add(this.offset()));
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState curState = cache.getBlockState(blockPos);
         Block emptyCauldron = Blocks.CAULDRON;
         Block fluidCauldron = this.getFluidCauldron();
         Block transformCauldron = this.getTransformCauldron();
-        Block targetCauldron = HasCauldron.isNotEmpty(this.transform) ? transformCauldron : fluidCauldron;
+        Block targetCauldron = HasCauldron.isNotEmpty(this.transform()) ? transformCauldron : fluidCauldron;
         BlockState targetState = targetCauldron.defaultBlockState();
-        Optional<Tuple<IntegerProperty, Integer>> optionalCur = getFluidLevel(curState);
+        Optional<Tuple<IntegerProperty, Integer>> optionalCur = HasCauldron.getFluidLevel(curState);
         Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
         int cur;
         if (!curState.is(emptyCauldron) && (curState.is(fluidCauldron) || curState.is(transformCauldron))) {
-            cur = optionalCur.map(Tuple::getB).orElse(1);
+            cur = HasCauldron.layer2Mb(
+                optionalCur.map(Tuple::getA).orElse(IntegerProperty.create("level", 0, 1)),
+                optionalCur.map(Tuple::getB).orElse(1)
+            );
         } else {
             cur = 0;
         }
-        int target = cur - this.consume;
+        int target = cur - this.consume();
         if (target <= 0) {
             targetState = emptyCauldron.defaultBlockState();
         } else {
-            target = Math.clamp(target, 1, optionalTarget.map(tuple -> tuple.getA().max).orElse(1));
+            IntegerProperty property = optionalTarget.map(Tuple::getA).orElse(IntegerProperty.create("level", 0, 1));
+            Integer max = optionalTarget.map(tuple -> tuple.getA().max).orElse(1);
+            target = HasCauldron.mb2Layer(property, Math.clamp(target, 1, HasCauldron.layer2Mb(property, max)));
             if (optionalTarget.isPresent()) {
-                targetState = targetState.setValue(optionalTarget.get().getA(), target);
+                targetState = targetState.setValue(property, target);
             }
         }
         cache.setBlock(blockPos, targetState);
@@ -179,6 +167,18 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
         return value.isPresent() ? Optional.of(new Tuple<>(property, value.get())) : Optional.empty();
     }
 
+    public static int mb2Layer(IntegerProperty property, int mb) {
+        int max = property.max;
+        double mbPreLayer = 1000.0 / max;
+        return (int) Math.round(mb / mbPreLayer);
+    }
+
+    public static int layer2Mb(IntegerProperty property, int layer) {
+        int max = property.max;
+        double mbPreLayer = 1000.0 / max;
+        return (int) Math.round(layer * mbPreLayer);
+    }
+
     /**
      * 获取流体对应的炼药锅方块
      *
@@ -210,10 +210,10 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
          * 编解码器
          */
         public final MapCodec<HasCauldron> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Vec3.CODEC.fieldOf("offset").forGetter(HasCauldron::getOffset),
-                ResourceLocation.CODEC.optionalFieldOf("fluid", EMPTY).forGetter(HasCauldron::getFluid),
-                Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::getConsume),
-                ResourceLocation.CODEC.optionalFieldOf("transform", NULL).forGetter(HasCauldron::getTransform)
+                Vec3.CODEC.fieldOf("offset").forGetter(HasCauldron::offset),
+                ResourceLocation.CODEC.optionalFieldOf("fluid", EMPTY).forGetter(HasCauldron::fluid),
+                Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::consume),
+                ResourceLocation.CODEC.optionalFieldOf("transform", NULL).forGetter(HasCauldron::transform)
             ).apply(instance, HasCauldron::new)
         );
 
@@ -222,13 +222,13 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
          */
         public final StreamCodec<RegistryFriendlyByteBuf, HasCauldron> mapCodec = StreamCodec.composite(
             CodecUtil.VEC3_STREAM_CODEC,
-            HasCauldron::getOffset,
+            HasCauldron::offset,
             ResourceLocation.STREAM_CODEC,
-            HasCauldron::getFluid,
+            HasCauldron::fluid,
             ByteBufCodecs.INT,
-            HasCauldron::getConsume,
+            HasCauldron::consume,
             ResourceLocation.STREAM_CODEC,
-            HasCauldron::getTransform,
+            HasCauldron::transform,
             HasCauldron::new
         );
 
@@ -357,16 +357,6 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
         }
 
         /**
-         * 设置消耗1单位流体
-         *
-         * @return 构建器实例
-         */
-        public Builder consume() {
-            this.consume = 1;
-            return this;
-        }
-
-        /**
          * 设置消耗指定单位流体
          *
          * @param consume 消耗量
@@ -374,16 +364,6 @@ public class HasCauldron implements IRecipePredicate<HasCauldron> {
          */
         public Builder consume(int consume) {
             this.consume = consume;
-            return this;
-        }
-
-        /**
-         * 设置产生1单位流体
-         *
-         * @return 构建器实例
-         */
-        public Builder produce() {
-            this.consume = -1;
             return this;
         }
 

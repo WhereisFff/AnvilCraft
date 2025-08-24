@@ -1,6 +1,6 @@
 {
   "type": "anvilcraft:squeezing",
-  "consume": -1,
+  "consume": -333,
   "ingredient": {
     "blocks": "minecraft:snow_block"
   },

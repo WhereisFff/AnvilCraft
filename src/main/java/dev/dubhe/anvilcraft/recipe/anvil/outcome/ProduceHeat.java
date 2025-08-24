@@ -13,8 +13,6 @@ import dev.dubhe.anvilcraft.init.reicpe.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.Distance;
 import dev.dubhe.anvilcraft.util.Util;
 import io.netty.buffer.ByteBuf;
-import lombok.AccessLevel;
-import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -34,30 +32,11 @@ import java.util.Optional;
 /**
  * 产生热量配方结果类，用于定义在配方执行时产生热量的结果
  * 该类实现了 IRecipeOutcome 接口，可以对范围内的可加热方块产生热量效果
+ *
+ * @param heatData 热量数据列表
+ * @param distance 距离范围
  */
-@Getter(AccessLevel.PRIVATE)
-public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
-    /**
-     * 热量数据列表
-     */
-    private final List<HeatData> heatData;
-
-    /**
-     * 距离范围
-     */
-    private final Distance distance;
-
-    /**
-     * 构造一个新的产生热量配方结果
-     *
-     * @param heatData 热量数据列表
-     * @param distance 距离范围
-     */
-    private ProduceHeat(List<HeatData> heatData, Distance distance) {
-        this.heatData = heatData;
-        this.distance = distance;
-    }
-
+public record ProduceHeat(List<HeatData> heatData, Distance distance) implements IRecipeOutcome<ProduceHeat> {
     /**
      * 创建一个新的产生热量配方结果构建器
      *
@@ -127,8 +106,8 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
          * Map编解码器
          */
         public static final MapCodec<ProduceHeat> MAP_CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
-            HeatData.CODEC.listOf().optionalFieldOf("heat", List.of()).forGetter(ProduceHeat::getHeatData),
-            Distance.CODEC.optionalFieldOf("distance", Distance.DEFAULT).forGetter(ProduceHeat::getDistance)
+            HeatData.CODEC.listOf().optionalFieldOf("heat", List.of()).forGetter(ProduceHeat::heatData),
+            Distance.CODEC.optionalFieldOf("distance", Distance.DEFAULT).forGetter(ProduceHeat::distance)
         ).apply(ins, ProduceHeat::new));
 
         /**
@@ -136,9 +115,9 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
          */
         public static final StreamCodec<RegistryFriendlyByteBuf, ProduceHeat> STREAM_CODEC = StreamCodec.composite(
             HeatData.STREAM_CODEC.apply(ByteBufCodecs.list()),
-            ProduceHeat::getHeatData,
+            ProduceHeat::heatData,
             Distance.STREAM_CODEC,
-            ProduceHeat::getDistance,
+            ProduceHeat::distance,
             ProduceHeat::new
         );
 
@@ -281,7 +260,7 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
         /**
          * 设置曼哈顿距离范围
          *
-         * @param distance 距离
+         * @param distance     距离
          * @param isHorizontal 是否水平
          * @return 构建器实例
          */
@@ -321,7 +300,7 @@ public class ProduceHeat implements IRecipeOutcome<ProduceHeat> {
         /**
          * 设置切比雪夫距离范围
          *
-         * @param distance 距离
+         * @param distance     距离
          * @param isHorizontal 是否水平
          * @return 构建器实例
          */
