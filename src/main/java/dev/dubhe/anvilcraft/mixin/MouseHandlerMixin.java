@@ -39,7 +39,7 @@ public abstract class MouseHandlerMixin implements IMouseHandlerExtension {
     private boolean ignoreFirstMove;
 
     @Override
-    public void anvilCraft$grabMouseWithScreen() {
+    public void anvilcraft$grabMouseWithScreen() {
         if (this.minecraft.isWindowActive() && !this.mouseGrabbed) {
             if (!Minecraft.ON_OSX) {
                 KeyMapping.setAll();

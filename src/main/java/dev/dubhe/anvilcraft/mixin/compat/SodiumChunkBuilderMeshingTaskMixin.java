@@ -15,7 +15,10 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ChunkBuilderMeshingTask.class)
 abstract class SodiumChunkBuilderMeshingTaskMixin {
     @WrapOperation(
-        method = "execute(Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;)Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
+        method = "execute("
+                 + "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildContext;"
+                 + "Lnet/caffeinemc/mods/sodium/client/util/task/CancellationToken;"
+                 + ")Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/ChunkBuildOutput;",
         at = @At(
             value = "INVOKE",
             target = "Lnet/caffeinemc/mods/sodium/client/render/chunk/compile/pipeline/BlockRenderer;renderModel(Lnet/minecraft/client/resources/model/BakedModel;Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/core/BlockPos;)V"

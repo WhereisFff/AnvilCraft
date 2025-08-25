@@ -4,11 +4,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.AABB;
 
 public interface IDynamicPowerComponentHolder {
-    AABB anvilCraft$getPowerSupplyingBoundingBox();
+    AABB anvilcraft$getPowerSupplyingBoundingBox();
 
-    void anvilCraft$gridTick();
+    void anvilcraft$gridTick();
 
-    DynamicPowerComponent anvilCraft$getPowerComponent();
+    DynamicPowerComponent anvilcraft$getPowerComponent();
 
     static IDynamicPowerComponentHolder of(ServerPlayer player) {
         return (IDynamicPowerComponentHolder) player;

@@ -256,7 +256,7 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         this.noPhysics = false;
         if (!this.onGround() || this.getDeltaMovement()
                                     .horizontalDistanceSqr() > (double) 1.0E-5F || (this.tickCount + this.getId()) % 4 == 0) {
-            this.anvilCraft$neutroniumMove(MoverType.SELF, this.getDeltaMovement());
+            this.anvilcraft$neutroniumMove(MoverType.SELF, this.getDeltaMovement());
             float f = 0.98F;
             if (this.onGround()) {
                 BlockPos groundPos = this.getBlockPosBelowThatAffectsMyMovement();
@@ -313,7 +313,7 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         }
     )
     @Unique
-    private void anvilCraft$neutroniumMove(MoverType moverType, Vec3 motion) {
+    private void anvilcraft$neutroniumMove(MoverType moverType, Vec3 motion) {
 
         this.level().getProfiler().push("move");
         //代替原版move方法中的collide调用

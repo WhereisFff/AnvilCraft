@@ -46,7 +46,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers.anvilCraftBlockPlacer;
+import static dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers.anvilcraftBlockPlacer;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.dropAllToPos;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportContentsToItemHandlers;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
@@ -312,7 +312,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
             transferLecternContents(level, itemHandlerList, center, lectern, insertEnabled, dropOriginalPlace);
         }
         if (!(devourBlockState.getBlock() instanceof DoublePlantBlock))
-            devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilCraftBlockPlacer.getPlayer());
+            devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilcraftBlockPlacer.getPlayer());
         level.destroyBlock(devourBlockPos, false);
         TriggerUtil.devourerDevourBlock(level, devourBlockPos, devourBlockState.getBlock());
     }

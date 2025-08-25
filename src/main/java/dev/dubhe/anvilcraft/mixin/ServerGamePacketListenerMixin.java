@@ -17,7 +17,13 @@ abstract class ServerGamePacketListenerMixin {
     @Shadow
     public ServerPlayer player;
 
-    @Inject(method = "handleContainerClick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setRemoteCarried(Lnet/minecraft/world/item/ItemStack;)V"))
+    @Inject(
+        method = "handleContainerClick",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/inventory/AbstractContainerMenu;setRemoteCarried(Lnet/minecraft/world/item/ItemStack;)V"
+        )
+    )
     void onRemoteCarried(ServerboundContainerClickPacket packet, CallbackInfo ci) {
         ItemStack itemStack = packet.getCarriedItem();
         if (itemStack.getItem() instanceof IInventoryCarriedAware inventoryCarriedAware) {

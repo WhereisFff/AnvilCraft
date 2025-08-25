@@ -45,8 +45,10 @@ abstract class RecipeManagerMixin {
         method = "lambda$apply$0",
         at = @At(
             value = "INVOKE",
-            target =
-                "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;",
+            target = "Lcom/google/common/collect/ImmutableMap$Builder;put("
+                     + "Ljava/lang/Object;"
+                     + "Ljava/lang/Object;"
+                     + ")Lcom/google/common/collect/ImmutableMap$Builder;",
             shift = At.Shift.AFTER
         )
     )
@@ -83,8 +85,9 @@ abstract class RecipeManagerMixin {
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
                  + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         at = @At(
-            value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
-                                              + "Lcom/google/common/collect/ImmutableMap;"
+            value = "INVOKE_ASSIGN",
+            target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
+                     + "Lcom/google/common/collect/ImmutableMap;"
         )
     )
     private void afterBuildRecipe(

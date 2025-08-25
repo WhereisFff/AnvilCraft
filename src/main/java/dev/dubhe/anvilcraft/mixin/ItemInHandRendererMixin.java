@@ -69,10 +69,10 @@ abstract class ItemInHandRendererMixin {
             value = "INVOKE",
             ordinal = 1,
             target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;"
-                + "renderItem(Lnet/minecraft/world/entity/LivingEntity;"
-                + "Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;"
-                + "ZLcom/mojang/blaze3d/vertex/PoseStack;"
-                + "Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
+                     + "renderItem(Lnet/minecraft/world/entity/LivingEntity;"
+                     + "Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;"
+                     + "ZLcom/mojang/blaze3d/vertex/PoseStack;"
+                     + "Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
         ),
         cancellable = true
     )

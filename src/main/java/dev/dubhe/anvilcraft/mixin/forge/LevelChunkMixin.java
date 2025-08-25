@@ -55,8 +55,7 @@ abstract class LevelChunkMixin {
                  + "Lnet/minecraft/world/level/chunk/LevelChunk$EntityCreationType;"
                  + ")"
                  + "Lnet/minecraft/world/level/block/entity/BlockEntity;",
-        at =
-        @At(
+        at = @At(
             value = "INVOKE",
             target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;",
             ordinal = 1

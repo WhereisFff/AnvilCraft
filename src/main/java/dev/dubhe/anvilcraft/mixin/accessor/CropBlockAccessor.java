@@ -7,7 +7,6 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 
 @Mixin(CropBlock.class)
 public interface CropBlockAccessor {
-
-    @Invoker("getBaseSeedId")
-    ItemLike invoker$getBaseSeedId();
+    @Invoker
+    ItemLike invokeGetBaseSeedId();
 }

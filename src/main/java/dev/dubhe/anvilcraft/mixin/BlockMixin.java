@@ -11,7 +11,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -31,26 +30,29 @@ abstract class BlockMixin implements IBlockExtension {
     @Inject(
         method = "shouldRenderFace",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;canOcclude()Z"),
-        cancellable = true)
+        cancellable = true
+    )
     private static void emberMetalBlockFaceSkip(
-        @NotNull BlockState state,
+        BlockState state,
         BlockGetter level,
         BlockPos offset,
         Direction face,
         BlockPos pos,
-        CallbackInfoReturnable<Boolean> cir) {
-        if (state.getBlock() instanceof INegativeShapeBlock<?> block)
+        CallbackInfoReturnable<Boolean> cir
+    ) {
+        if (state.getBlock() instanceof INegativeShapeBlock<?> block) {
             anvilcraft$NegativeShapeFaceSkip(
                 t -> block.getBlockType().isInstance(t.getBlock()),
                 state, level, offset, face, pos, cir
             );
+        }
     }
 
     @Unique
     private static void anvilcraft$NegativeShapeFaceSkip(
         Predicate<BlockState> predicate,
         BlockState state,
-        @NotNull BlockGetter level,
+        BlockGetter level,
         BlockPos offset,
         Direction face,
         BlockPos pos,

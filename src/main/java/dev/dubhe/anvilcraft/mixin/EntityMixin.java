@@ -6,8 +6,8 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
-import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
 import dev.dubhe.anvilcraft.api.injection.entity.IEntityExtension;
+import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
 import dev.dubhe.anvilcraft.util.Util;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.core.BlockPos;
@@ -21,7 +21,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -81,13 +80,11 @@ public abstract class EntityMixin implements IEntityExtension {
     @Shadow
     private Vec3 position;
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
     public boolean anvilcraft$isDeflected() {
         return anvil$isDeflected;
     }
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
     public Vec3 anvilcraft$getFixedDeltaMovement() {
         return anvil$fixedDeltaMovement;
@@ -107,7 +104,7 @@ public abstract class EntityMixin implements IEntityExtension {
         double y,
         double z,
         Operation<Void> original,
-        @Share("isFixed") @NotNull LocalBooleanRef isFixed
+        @Share("isFixed") LocalBooleanRef isFixed
     ) {
         isFixed.set(false);
         Vec3 vec3 = new Vec3(x - getX(), y - getY(), z - getZ());
@@ -122,8 +119,9 @@ public abstract class EntityMixin implements IEntityExtension {
                 double c = s.distanceTo(e);
                 double d = -(b * b - c * c - a * a) / (2 * c);
                 double distance = Math.sqrt(a * a - d * d);
-                if (distance <= 0.56747 && d > 0)
+                if (distance <= 0.56747 && d > 0) {
                     blockPosList.add(Pair.of(blockPos, d));
+                }
             }
             double distance = Double.MAX_VALUE;
             BlockPos blockPos = null;
@@ -163,7 +161,12 @@ public abstract class EntityMixin implements IEntityExtension {
             ordinal = 0
         )
     )
-    public boolean anvilcraft$cancelCollision1(double x, double y, Operation<Boolean> original, @Share("isFixed") @NotNull LocalBooleanRef isFixed) {
+    public boolean anvilcraft$cancelCollision1(
+        double x,
+        double y,
+        Operation<Boolean> original,
+        @Share("isFixed") LocalBooleanRef isFixed
+    ) {
         return isFixed.get() || original.call(x, y);
     }
 
@@ -175,7 +178,12 @@ public abstract class EntityMixin implements IEntityExtension {
             ordinal = 1
         )
     )
-    public boolean anvilcraft$cancelCollision2(double x, double y, Operation<Boolean> original, @Share("isFixed") @NotNull LocalBooleanRef isFixed) {
+    public boolean anvilcraft$cancelCollision2(
+        double x,
+        double y,
+        Operation<Boolean> original,
+        @Share("isFixed") LocalBooleanRef isFixed
+    ) {
         return isFixed.get() || original.call(x, y);
     }
 
@@ -195,8 +203,9 @@ public abstract class EntityMixin implements IEntityExtension {
                 double c = s.distanceTo(e);
                 double d = -(b * b - c * c - a * a) / (2 * c);
                 double distance = Math.sqrt(a * a - d * d);
-                if (distance <= 0.56747 && d > 0)
+                if (distance <= 0.56747 && d > 0) {
                     blockPosList.add(Pair.of(blockPos, d));
+                }
             }
             double distance = Double.MAX_VALUE;
             BlockPos blockPos = null;
@@ -219,7 +228,7 @@ public abstract class EntityMixin implements IEntityExtension {
 
     @Inject(method = "move", at = @At("HEAD"))
     public void anvil$recordMovement(
-        MoverType type, Vec3 pos, CallbackInfo ci, @Share("beforeBoundingMovement") @NotNull LocalRef<Vec3> beforeBoundingMovement
+        MoverType type, Vec3 pos, CallbackInfo ci, @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
     ) {
         beforeBoundingMovement.set(this.getDeltaMovement());
     }

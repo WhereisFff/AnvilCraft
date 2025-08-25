@@ -18,14 +18,18 @@ abstract class AbstractPiglinMixin {
         method = "finishConversion",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/monster/piglin/AbstractPiglin;convertTo(Lnet/minecraft/world/entity/EntityType;Z)Lnet/minecraft/world/entity/Mob;"
+            target = "Lnet/minecraft/world/entity/monster/piglin/AbstractPiglin;convertTo("
+                     + "Lnet/minecraft/world/entity/EntityType;"
+                     + "Z"
+                     + ")Lnet/minecraft/world/entity/Mob;"
         )
     )
     private Mob punishmentForGreed(
         AbstractPiglin piglin,
         EntityType<ZombifiedPiglin> type,
         boolean transferInventory,
-        Operation<ZombifiedPiglin> original) {
+        Operation<ZombifiedPiglin> original
+    ) {
         boolean cursed = piglin.getData(ZOMBIFICATED_BY_CURSE);
         Mob zombifiedPiglin = original.call(piglin, type, transferInventory);
         if (cursed) {

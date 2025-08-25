@@ -160,7 +160,7 @@ public class IonoCraftBackpackItem extends ArmorItem implements IInventoryCarrie
         AttributeInstance instance = player.getAttributes().getInstance(NeoForgeMod.CREATIVE_FLIGHT);
         if (instance == null) return;
 
-        DynamicPowerComponent powerComponent = holder.anvilCraft$getPowerComponent();
+        DynamicPowerComponent powerComponent = holder.anvilcraft$getPowerComponent();
         ItemStack equipped = getByPlayer(player);
         if (equipped.isEmpty()) {
             powerComponent.getPowerConsumptions().remove(CONSUMPTION);
