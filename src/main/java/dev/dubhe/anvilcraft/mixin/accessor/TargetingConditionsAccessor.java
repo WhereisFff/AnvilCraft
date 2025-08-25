@@ -10,7 +10,7 @@ import java.util.function.Predicate;
 
 @Mixin(TargetingConditions.class)
 public interface TargetingConditionsAccessor {
-    @Accessor("selector")
     @Nullable
+    @Accessor
     Predicate<LivingEntity> getSelector();
 }

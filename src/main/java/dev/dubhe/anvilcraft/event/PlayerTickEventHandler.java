@@ -29,9 +29,9 @@ public class PlayerTickEventHandler {
         if (player instanceof IDynamicPowerComponentHolder holder) {
             PowerGrid powerGrid = PowerGrid.findPowerGridContains(
                 player.level(),
-                holder.anvilCraft$getPowerSupplyingBoundingBox()
+                holder.anvilcraft$getPowerSupplyingBoundingBox()
             ).orElse(null);
-            holder.anvilCraft$getPowerComponent().switchTo(powerGrid);
+            holder.anvilcraft$getPowerComponent().switchTo(powerGrid);
         }
     }
 }

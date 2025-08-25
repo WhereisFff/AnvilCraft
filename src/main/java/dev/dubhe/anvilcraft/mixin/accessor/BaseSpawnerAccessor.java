@@ -15,8 +15,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
  */
 @Mixin(BaseSpawner.class)
 public interface BaseSpawnerAccessor {
-    @Invoker("getOrCreateNextSpawnData")
-    SpawnData invoker$getOrCreateNextSpawnData(@Nullable Level level, RandomSource random, BlockPos pos);
+    @Invoker
+    SpawnData invokeGetOrCreateNextSpawnData(@Nullable Level level, RandomSource random, BlockPos pos);
 
     @Accessor
     int getSpawnCount();

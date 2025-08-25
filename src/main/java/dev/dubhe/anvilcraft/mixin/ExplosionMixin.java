@@ -9,8 +9,8 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
-import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
 import dev.dubhe.anvilcraft.api.injection.IExplosionExtension;
+import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -71,7 +71,8 @@ abstract class ExplosionMixin implements IExplosionExtension {
         boolean flag,
         List<Pair<ItemStack, BlockPos>> list,
         ObjectListIterator<BlockPos> var4,
-        BlockPos blockpos) {
+        BlockPos blockpos
+    ) {
         BlockState state = this.level.getBlockState(blockpos);
         Block block = state.getBlock();
         if (block instanceof IHasMultiBlock multiBlock) {
@@ -85,7 +86,7 @@ abstract class ExplosionMixin implements IExplosionExtension {
         target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
     )
     )
-    private void anvilCraft$explosionBlockTransform(
+    private void anvilcraft$explosionBlockTransform(
         CallbackInfo ci,
         @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed,
         @Local(ordinal = 0) BlockPos pos
@@ -116,7 +117,7 @@ abstract class ExplosionMixin implements IExplosionExtension {
                 "Lnet/minecraft/world/level/ExplosionDamageCalculator;shouldBlockExplode(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;F)Z"
         )
     )
-    private boolean anvilCraft$explosionBlockTransform(
+    private boolean anvilcraft$explosionBlockTransform(
         ExplosionDamageCalculator instance,
         Explosion explosion,
         BlockGetter reader,
@@ -129,7 +130,6 @@ abstract class ExplosionMixin implements IExplosionExtension {
         return !isExplosionBlockTransformed.get() && original.call(instance, explosion, reader, pos, state, power);
     }
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
     public void anvilcraft$setBlockTransformExplosion(Collection<BlockTransform> blockTransformExplosions) {
         for (BlockTransform blockTransform : blockTransformExplosions) {

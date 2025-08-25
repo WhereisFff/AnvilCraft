@@ -32,7 +32,16 @@ abstract class TntBlockMixin extends Block {
         at = @At("HEAD"),
         cancellable = true
     )
-    private void useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult, CallbackInfoReturnable<ItemInteractionResult> cir) {
+    private void useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult,
+        CallbackInfoReturnable<ItemInteractionResult> cir
+    ) {
         if (stack.is(ModItems.MULTITOOL_ITEM) && MultitoolItem.getMode(stack) == MultitoolItem.FLINT_AND_STEEL_MODE) {
             onCaughtFire(state, level, pos, hitResult.getDirection(), player);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 11);

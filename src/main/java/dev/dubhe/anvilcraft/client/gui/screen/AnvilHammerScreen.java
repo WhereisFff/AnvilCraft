@@ -643,7 +643,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         if (shouldRender() && !closingAnimationStarted) {
-            IMouseHandlerExtension.of(minecraft.mouseHandler).anvilCraft$grabMouseWithScreen();
+            IMouseHandlerExtension.of(minecraft.mouseHandler).anvilcraft$grabMouseWithScreen();
             displayTime = System.currentTimeMillis();
             closingAnimationStarted = true;
         } else {

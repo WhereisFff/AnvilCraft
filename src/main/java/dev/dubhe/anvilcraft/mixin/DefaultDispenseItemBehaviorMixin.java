@@ -27,17 +27,20 @@ public abstract class DefaultDispenseItemBehaviorMixin {
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;split(I)Lnet/minecraft/world/item/ItemStack;"),
         cancellable = true
     )
+    @SuppressWarnings("resource")
     public void betterDispense(BlockSource blockSource, ItemStack item, CallbackInfoReturnable<ItemStack> cir) {
         if (!(item.getItem() instanceof BucketItem)
             && !item.is(Items.POWDER_SNOW_BUCKET)
             && !item.is(Items.GLASS_BOTTLE)
             && !item.is(Items.HONEY_BOTTLE)
-            && !item.is(Items.POTION)) return;
+            && !item.is(Items.POTION)) {
+            return;
+        }
         Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
         BlockPos targetBlockPos = blockSource.pos().relative(direction);
         BlockState targetState = blockSource.level().getBlockState(targetBlockPos);
         if (!(targetState.getBlock() instanceof AbstractCauldronBlock cauldronBlock)) return;
-        Player player = AnvilCraftFakePlayers.anvilCraftBlockPlacer.getPlayer();
+        Player player = AnvilCraftFakePlayers.anvilcraftBlockPlacer.getPlayer();
         ItemStack itemStack = item.copy();
         itemStack.setCount(1);
         player.setItemInHand(player.getUsedItemHand(), itemStack);
@@ -45,9 +48,9 @@ public abstract class DefaultDispenseItemBehaviorMixin {
         ItemStack result = player.getItemInHand(player.getUsedItemHand());
         if (result.is(item.getItem())) return;
         ItemStack out;
-        if (item.getCount() == 1)
+        if (item.getCount() == 1) {
             out = result;
-        else {
+        } else {
             out = item;
             out.split(1);
             ItemStack insertResult = blockSource.blockEntity().insertItem(result);

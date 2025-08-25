@@ -122,9 +122,9 @@ public class BlockStateUtil {
     public static List<ItemStack> ingredientsForPlacement(BlockState state) {
         Block block = state.getBlock();
         ItemStack baseItem = switch (block) {
-            case CropBlock crop -> ((CropBlockAccessor) crop).invoker$getBaseSeedId().asItem().getDefaultInstance();
+            case CropBlock crop -> ((CropBlockAccessor) crop).invokeGetBaseSeedId().asItem().getDefaultInstance();
             case FlowerPotBlock ignored -> Items.FLOWER_POT.getDefaultInstance();
-            case GrowingPlantBodyBlock plantHead -> ((GrowingPlantAccessor) plantHead).invoker$getHeadBlock()
+            case GrowingPlantBodyBlock plantHead -> ((GrowingPlantAccessor) plantHead).invokeGetHeadBlock()
                 .asItem().getDefaultInstance();
             case CandleCakeBlock ignored -> Items.CAKE.getDefaultInstance();
             default -> HARDCODED_SPECIAL_AS_ITEM.getOrDefault(block, block.asItem().getDefaultInstance());
