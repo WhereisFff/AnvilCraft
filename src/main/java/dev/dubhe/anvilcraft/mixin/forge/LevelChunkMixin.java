@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.mixin.forge;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.api.event.BlockEntityEvent;
 import net.minecraft.core.BlockPos;
@@ -7,15 +9,13 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.neoforged.neoforge.common.NeoForge;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import javax.annotation.Nullable;
 import java.util.Map;
 
 @Mixin(LevelChunk.class)
@@ -28,7 +28,9 @@ abstract class LevelChunkMixin {
         at =
         @At(
             value = "INVOKE",
-            target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"))
+            target = "Ljava/util/Map;put(Ljava/lang/Object;Ljava/lang/Object;)Ljava/lang/Object;"
+        )
+    )
     private void onLoadBlockEntity(BlockEntity entity, CallbackInfo ci) {
         if (this.getLevel().isClientSide) return;
         NeoForge.EVENT_BUS.post(new BlockEntityEvent.ServerLoad(this.getLevel(), entity));
@@ -41,24 +43,27 @@ abstract class LevelChunkMixin {
     private void onRemoveBlockEntity(
         BlockEntity pBlockEntity,
         CallbackInfo ci,
-        @Local(ordinal = 1) BlockEntity blockentity) {
+        @Local(ordinal = 1) BlockEntity blockentity
+    ) {
         if (this.getLevel().isClientSide) return;
         NeoForge.EVENT_BUS.post(new BlockEntityEvent.ServerUnload(this.getLevel(), blockentity));
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "getBlockEntity("
-            + "Lnet/minecraft/core/BlockPos;"
-            + "Lnet/minecraft/world/level/chunk/LevelChunk$EntityCreationType;"
-            + ")"
-            + "Lnet/minecraft/world/level/block/entity/BlockEntity;",
+                 + "Lnet/minecraft/core/BlockPos;"
+                 + "Lnet/minecraft/world/level/chunk/LevelChunk$EntityCreationType;"
+                 + ")"
+                 + "Lnet/minecraft/world/level/block/entity/BlockEntity;",
         at =
         @At(
             value = "INVOKE",
             target = "Ljava/util/Map;remove(Ljava/lang/Object;)Ljava/lang/Object;",
-            ordinal = 1))
-    private <K, V> V onRemoveBlockEntity(@NotNull Map<K, V> map, K key) {
-        @Nullable final V removed = map.remove(key);
+            ordinal = 1
+        )
+    )
+    private @Nullable <K, V> V onRemoveBlockEntity(Map<K, V> instance, Object key, Operation<V> original) {
+        final V removed = original.call(instance, key);
         if (!this.getLevel().isClientSide && removed != null) {
             if (removed instanceof BlockEntity entity) {
                 NeoForge.EVENT_BUS.post(new BlockEntityEvent.ServerUnload(this.getLevel(), entity));
@@ -71,7 +76,7 @@ abstract class LevelChunkMixin {
         method = "removeBlockEntity",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/BlockEntity;setRemoved()V")
     )
-    private void onRemoveBlockEntity(BlockPos pos, CallbackInfo ci, @Local BlockEntity removed) {
+    private void onRemoveBlockEntity(BlockPos pos, CallbackInfo ci, @Local @Nullable BlockEntity removed) {
         if (this.getLevel().isClientSide) return;
         if (removed != null) {
             NeoForge.EVENT_BUS.post(new BlockEntityEvent.ServerUnload(this.getLevel(), removed));
