@@ -40,12 +40,14 @@
     {
       "type": "patchouli:text",
       "title": "超温发电",
-      "text": "通过核燃料持续加热并维持至多16个$(l:advanced/special_heated_block)超温余烬金属块$()，用于热能发电可以生产16384kW."
+      "text": "通过铁砧撞击核燃料持续加热至多16个$(l:advanced/special_heated_block)超温余烬金属块$()，用于热能发电可以生产16384kW."
     },
     {
       "type": "patchouli:relations",
       "entries": [
-        "anvilcraft:struct/collision"
+        "anvilcraft:struct/collision",
+        "anvilcraft:advanced/special_heated_block",
+        "anvilcraft:power/heat_collection"
       ],
       "text": ""
     }

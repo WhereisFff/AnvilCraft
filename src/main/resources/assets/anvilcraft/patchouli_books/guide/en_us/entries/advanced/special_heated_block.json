@@ -22,12 +22,12 @@
     {
       "type": "anvilcraft:anvil_collision",
       "recipe": "anvilcraft:anvil_collision/anvil_tier_2_and_uranium_block_256",
-      "text": "一次撞击会将附近最多16个余烬金属块加热为$(thing)超温$()，持续$(thing)20s$()。"
+      "text": "一次撞击会将附近最多16个余烬金属块加热为$(thing)超温$()，最多持续$(thing)20s$()。"
     },
     {
       "type": "anvilcraft:anvil_collision",
       "recipe": "anvilcraft:anvil_collision/anvil_tier_2_and_plutonium_block_256",
-      "text": "一次撞击会将附近最多16个余烬金属块加热为$(thing)超温$()，持续$(thing)60s$()。"
+      "text": "一次撞击会将附近最多16个余烬金属块加热为$(thing)超温$()，最多持续$(thing)60s$()。"
     }
   ]
 }
