@@ -1,13 +1,12 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.BlockStatePredicateComponent;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceBlockStateComponent;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
-import dev.latvian.mods.kubejs.error.KubeRuntimeException;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
@@ -20,7 +19,6 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface BlockCompressRecipeSchema {
-
     @SuppressWarnings({"unused"})
     class BlockCompressKubeRecipe extends AnvilCraftKubeRecipe {
         public BlockCompressKubeRecipe input(Block... block) {
@@ -38,21 +36,14 @@ public interface BlockCompressRecipeSchema {
             return this;
         }
 
-        public BlockCompressKubeRecipe result(Block... block) {
-            this.computeIfAbsent(RESULTS, ArrayList::new)
-                .addAll(Arrays.stream(block).map(b -> new ChanceBlockState(b.defaultBlockState(), 1.0f)).toList());
+        public BlockCompressKubeRecipe result(Block block) {
+            this.setValue(RESULT, new ChanceBlockState(block.defaultBlockState(), 1.0f));
             this.save();
             return this;
         }
 
         @Override
         protected void validate() {
-            if (this.computeIfAbsent(INPUTS, ArrayList::new).isEmpty()) {
-                throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
-            }
-            if (this.computeIfAbsent(RESULTS, ArrayList::new).isEmpty()) {
-                throw new KubeRuntimeException("Result is Empty!").source(sourceLine);
-            }
         }
     }
 
@@ -60,14 +51,13 @@ public interface BlockCompressRecipeSchema {
         .asList()
         .key("inputs", ComponentRole.INPUT)
         .defaultOptional();
-    RecipeKey<List<ChanceBlockState>> RESULTS = ChanceBlockStateComponent.INSTANCE
-        .asList()
-        .key("results", ComponentRole.OUTPUT)
+    RecipeKey<ChanceBlockState> RESULT = ChanceBlockStateComponent.INSTANCE
+        .key("result", ComponentRole.OUTPUT)
         .defaultOptional();
 
-    RecipeSchema SCHEMA = new RecipeSchema(INPUTS, RESULTS)
+    RecipeSchema SCHEMA = new RecipeSchema(INPUTS, RESULT)
         .factory(new KubeRecipeFactory(AnvilCraft.of("block_compress"), BlockCompressKubeRecipe.class, BlockCompressKubeRecipe::new))
-        .constructor(INPUTS, RESULTS)
+        .constructor(INPUTS, RESULT)
         .constructor(new IDRecipeConstructor())
         .constructor();
 }

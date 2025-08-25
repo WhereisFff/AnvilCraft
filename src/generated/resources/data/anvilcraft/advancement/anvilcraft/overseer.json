@@ -1,0 +1,29 @@
+{
+  "parent": "anvilcraft:anvilcraft/noble_metal",
+  "criteria": {
+    "craft_overseer": {
+      "conditions": {
+        "recipe_id": "anvilcraft:overseer"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.overseer.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:overseer"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.overseer.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_overseer"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

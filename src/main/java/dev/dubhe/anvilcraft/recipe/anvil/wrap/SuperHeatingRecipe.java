@@ -2,14 +2,15 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,7 +21,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -64,12 +64,12 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
     }
 
     @Override
-    public @NotNull RecipeSerializer<SuperHeatingRecipe> getSerializer() {
+    public RecipeSerializer<SuperHeatingRecipe> getSerializer() {
         return ModRecipeTypes.SUPER_HEATING_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<SuperHeatingRecipe> getType() {
+    public RecipeType<SuperHeatingRecipe> getType() {
         return ModRecipeTypes.SUPER_HEATING_TYPE.get();
     }
 
@@ -78,8 +78,28 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
+    }
+
+    /**
+     * 是否消耗流体
+     *
+     * @return 如果消耗流体返回true，否则返回false
+     */
+    public boolean isConsumeFluid() {
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getFluid()) && this.getHasCauldron().getConsume() > 0;
+    }
+
+    /**
+     * 是否产生流体
+     *
+     * @return 如果产生流体返回true，否则返回false
+     */
+    public boolean isProduceFluid() {
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -114,12 +134,12 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         );
 
         @Override
-        public @NotNull MapCodec<SuperHeatingRecipe> codec() {
+        public MapCodec<SuperHeatingRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, SuperHeatingRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, SuperHeatingRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -139,7 +159,7 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
          * @param fluid 流体ID
          * @return 构建器实例
          */
-        public @NotNull Builder fluid(ResourceLocation fluid) {
+        public Builder fluid(ResourceLocation fluid) {
             this.hasCauldron.fluid(fluid);
             return this;
         }
@@ -150,7 +170,7 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
          * @param cauldron 炼药锅方块
          * @return 构建器实例
          */
-        public @NotNull Builder fluid(Block cauldron) {
+        public Builder fluid(Block cauldron) {
             this.fluid(WrapUtils.cauldron2Fluid(cauldron));
             return this;
         }
@@ -161,7 +181,7 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
          * @param transform 转换后的流体ID
          * @return 构建器实例
          */
-        public @NotNull Builder transform(ResourceLocation transform) {
+        public Builder transform(ResourceLocation transform) {
             this.hasCauldron.transform(transform);
             return this;
         }
@@ -172,7 +192,7 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
          * @param cauldron 转换后的炼药锅方块
          * @return 构建器实例
          */
-        public @NotNull Builder transform(Block cauldron) {
+        public Builder transform(Block cauldron) {
             this.transform(WrapUtils.cauldron2Fluid(cauldron));
             return this;
         }
@@ -205,14 +225,14 @@ public class SuperHeatingRecipe extends AbstractProcessRecipe<SuperHeatingRecipe
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
             if (itemIngredients.isEmpty()) {
                 throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + pId);
             }
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "super_heating";
         }
 

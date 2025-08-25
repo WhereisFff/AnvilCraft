@@ -1,0 +1,27 @@
+{
+  "parent": "anvilcraft:anvilcraft/wither",
+  "criteria": {
+    "timewarp_recipe": {
+      "trigger": "anvilcraft:in_world_time_warp_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.ripVanWinkle.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:corrupted_beacon"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.ripVanWinkle.title"
+    }
+  },
+  "requirements": [
+    [
+      "timewarp_recipe"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

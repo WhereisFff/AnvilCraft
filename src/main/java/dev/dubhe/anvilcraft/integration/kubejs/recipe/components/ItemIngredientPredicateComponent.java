@@ -1,10 +1,9 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.components;
 
 import com.mojang.serialization.Codec;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.latvian.mods.kubejs.recipe.component.RecipeComponent;
 import dev.latvian.mods.rhino.type.TypeInfo;
-import org.jetbrains.annotations.NotNull;
 
 public record ItemIngredientPredicateComponent() implements RecipeComponent<ItemIngredientPredicate> {
     public static final ItemIngredientPredicateComponent INSTANCE = new ItemIngredientPredicateComponent();
@@ -20,7 +19,7 @@ public record ItemIngredientPredicateComponent() implements RecipeComponent<Item
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "block_state_predicate";
     }
 }

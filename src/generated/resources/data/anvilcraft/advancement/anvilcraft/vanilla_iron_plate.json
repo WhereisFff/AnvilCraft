@@ -1,0 +1,29 @@
+{
+  "parent": "anvilcraft:anvilcraft/dang",
+  "criteria": {
+    "heavy_weighted_pressure_plate": {
+      "conditions": {
+        "id": "anvilcraft:stamping/heavy_weighted_pressure_plate"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.vanilla_iron_plate.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:heavy_weighted_pressure_plate"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.vanilla_iron_plate.title"
+    }
+  },
+  "requirements": [
+    [
+      "heavy_weighted_pressure_plate"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

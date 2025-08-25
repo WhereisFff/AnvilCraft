@@ -2,12 +2,12 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceBlockState;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -19,7 +19,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -60,12 +59,12 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<ItemInjectRecipe> getSerializer() {
+    public RecipeSerializer<ItemInjectRecipe> getSerializer() {
         return ModRecipeTypes.ITEM_INJECT_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<ItemInjectRecipe> getType() {
+    public RecipeType<ItemInjectRecipe> getType() {
         return ModRecipeTypes.ITEM_INJECT_TYPE.get();
     }
 
@@ -74,7 +73,7 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -118,12 +117,12 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
         );
 
         @Override
-        public @NotNull MapCodec<ItemInjectRecipe> codec() {
+        public MapCodec<ItemInjectRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ItemInjectRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, ItemInjectRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -159,7 +158,7 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
          * @param block 输入方块供应器
          * @return 构建器实例
          */
-        public Builder inputBlock(@NotNull Supplier<? extends Block> block) {
+        public Builder inputBlock(Supplier<? extends Block> block) {
             return this.inputBlock(block.get());
         }
 
@@ -169,7 +168,7 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
          * @param block 结果方块
          * @return 构建器实例
          */
-        public Builder resultBlock(@NotNull Block block) {
+        public Builder resultBlock(Block block) {
             this.blockResult = new ChanceBlockState(block.defaultBlockState(), 1.0F);
             return this;
         }
@@ -180,17 +179,17 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
          * @param block 结果方块供应器
          * @return 构建器实例
          */
-        public Builder resultBlock(@NotNull Supplier<? extends Block> block) {
+        public Builder resultBlock(Supplier<? extends Block> block) {
             return this.resultBlock(block.get());
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "item_inject";
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
             if (this.itemIngredients.isEmpty()) {
                 throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + pId);
             }
@@ -202,7 +201,7 @@ public class ItemInjectRecipe extends AbstractProcessRecipe<ItemInjectRecipe> {
         }
 
         @Override
-        public @NotNull Item getResult() {
+        public Item getResult() {
             return WrapUtils.getItem(blockResult);
         }
 

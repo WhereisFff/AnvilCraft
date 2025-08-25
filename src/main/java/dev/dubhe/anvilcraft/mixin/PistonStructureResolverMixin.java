@@ -59,7 +59,7 @@ abstract class PistonStructureResolverMixin {
         BlockState instance, BlockState state, @Local(ordinal = 1) BlockPos otherPos
     ) {
         BlockPos pos = otherPos.relative(this.pushDirection);
-        return instance.canStickTo(pos, otherPos, state);
+        return instance.anvilcraft$canStickTo(pos, otherPos, state);
     }
 
     @Redirect(
@@ -72,7 +72,7 @@ abstract class PistonStructureResolverMixin {
         BlockState instance, BlockState state, @Local(ordinal = 1) BlockPos pos
     ) {
         BlockPos otherPos = pos.relative(this.pushDirection);
-        return instance.canStickTo(pos, otherPos, state);
+        return instance.anvilcraft$canStickTo(pos, otherPos, state);
     }
 
     @Redirect(
@@ -84,7 +84,7 @@ abstract class PistonStructureResolverMixin {
     private boolean useEnhancedCheck10(
         BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos otherPos, @Local(ordinal = 1) BlockPos pos
     ) {
-        return instance.canStickTo(pos, otherPos, state);
+        return instance.anvilcraft$canStickTo(pos, otherPos, state);
     }
 
     @Redirect(
@@ -96,6 +96,6 @@ abstract class PistonStructureResolverMixin {
     private boolean useEnhancedCheck11(
         BlockState instance, BlockState state, @Local(ordinal = 0, argsOnly = true) BlockPos pos, @Local(ordinal = 1) BlockPos otherPos
     ) {
-        return instance.canStickTo(pos, otherPos, state);
+        return instance.anvilcraft$canStickTo(pos, otherPos, state);
     }
 }

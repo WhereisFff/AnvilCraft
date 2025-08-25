@@ -1,15 +1,15 @@
 {
   "type": "anvilcraft:time_warp",
   "consume": 1,
+  "fluid": "anvilcraft:melt_gem",
   "ingredients": [
     {
-      "items": "anvilcraft:sapphire"
+      "items": "#c:gems/sapphire"
     }
   ],
   "results": [
     {
       "id": "anvilcraft:sapphire_block"
     }
-  ],
-  "transform": "anvilcraft:melt_gem"
+  ]
 }

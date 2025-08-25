@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import net.minecraft.world.item.Items;
 
@@ -26,20 +26,18 @@ public class ChargerChargingRecipeLoader {
             .power(64)
             .time(20 * 60)
             .save(provider);
-        /* //Super Capacitor is not implemented yet
-        ChargingDischargingRecipe.builder()
+        ChargerChargingRecipe.builder()
             .requires(ModItems.SUPER_CAPACITOR_EMPTY)
             .result(ModItems.SUPER_CAPACITOR)
             .power(-700)
             .time(20 * 120)
             .save(provider);
-        ChargingDischargingRecipe.builder()
+        ChargerChargingRecipe.builder()
             .requires(ModItems.SUPER_CAPACITOR)
             .result(ModItems.SUPER_CAPACITOR_EMPTY)
             .power(640)
             .time(20 * 120)
             .save(provider);
-        * */
         ChargerChargingRecipe.builder()
             .requires(ModItemTags.UNCHARGED_NEUTRONIUM_INGOTS)
             .result(ModItems.CHARGED_NEUTRONIUM_INGOT)

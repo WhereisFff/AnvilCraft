@@ -2,17 +2,18 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.Distance;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -23,7 +24,6 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -70,12 +70,12 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
     }
 
     @Override
-    public @NotNull RecipeSerializer<TimeWarpRecipe> getSerializer() {
+    public RecipeSerializer<TimeWarpRecipe> getSerializer() {
         return ModRecipeTypes.TIME_WARP_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<TimeWarpRecipe> getType() {
+    public RecipeType<TimeWarpRecipe> getType() {
         return ModRecipeTypes.TIME_WARP_TYPE.get();
     }
 
@@ -84,7 +84,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder builder() {
+    public static Builder builder() {
         return new Builder();
     }
 
@@ -94,7 +94,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
      * @return 如果消耗流体返回true，否则返回false
      */
     public boolean isConsumeFluid() {
-        return this.getHasCauldron().getConsume() > 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getFluid()) && this.getHasCauldron().getConsume() > 0;
     }
 
     /**
@@ -103,7 +104,8 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
      * @return 如果产生流体返回true，否则返回false
      */
     public boolean isProduceFluid() {
-        return this.getHasCauldron().getConsume() < 0;
+        HasCauldronSimple hasCauldron = this.getHasCauldron();
+        return HasCauldron.isNotEmpty(hasCauldron.getTransform()) && this.getHasCauldron().getConsume() < 0;
     }
 
     /**
@@ -142,12 +144,12 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         );
 
         @Override
-        public @NotNull MapCodec<TimeWarpRecipe> codec() {
+        public MapCodec<TimeWarpRecipe> codec() {
             return Serializer.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, TimeWarpRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, TimeWarpRecipe> streamCodec() {
             return Serializer.STREAM_CODEC;
         }
     }
@@ -340,7 +342,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @param fluid 流体ID
          * @return 构建器实例
          */
-        public @NotNull Builder fluid(ResourceLocation fluid) {
+        public Builder fluid(ResourceLocation fluid) {
             this.hasCauldron.fluid(fluid);
             return this;
         }
@@ -351,7 +353,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @param cauldron 炼药锅方块
          * @return 构建器实例
          */
-        public @NotNull Builder fluid(Block cauldron) {
+        public Builder fluid(Block cauldron) {
             this.fluid(WrapUtils.cauldron2Fluid(cauldron));
             return this;
         }
@@ -362,7 +364,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @param transform 转换后的流体ID
          * @return 构建器实例
          */
-        public @NotNull Builder transform(ResourceLocation transform) {
+        public Builder transform(ResourceLocation transform) {
             this.hasCauldron.transform(transform);
             return this;
         }
@@ -373,7 +375,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @param cauldron 转换后的炼药锅方块
          * @return 构建器实例
          */
-        public @NotNull Builder transform(Block cauldron) {
+        public Builder transform(Block cauldron) {
             this.transform(WrapUtils.cauldron2Fluid(cauldron));
             return this;
         }
@@ -406,14 +408,14 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         }
 
         @Override
-        public void validate(@NotNull ResourceLocation pId) {
+        public void validate(ResourceLocation pId) {
             if (itemIngredients.isEmpty()) {
                 throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + pId);
             }
         }
 
         @Override
-        public @NotNull String getType() {
+        public String getType() {
             return "time_warp";
         }
 

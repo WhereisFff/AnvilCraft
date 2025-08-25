@@ -3,7 +3,8 @@ package dev.dubhe.anvilcraft.block;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -87,7 +88,7 @@ public class MagnetBlock extends Block implements IHammerRemovable {
         if (level.isClientSide()) return;
         if (!(state.getBlock() instanceof MagnetBlock) || state.getValue(LIT)) return;
         if (level.getBlockState(magnetPos.below()).is(BlockTags.ANVIL)) return;
-        int distance = AnvilCraft.config.magnetAttractsDistance;
+        int distance = AnvilCraft.CONFIG.magnetAttractsDistance;
         BlockPos currentPos = magnetPos;
         checkAnvil:
         for (int i = 0; i < distance; i++) {
@@ -114,6 +115,7 @@ public class MagnetBlock extends Block implements IHammerRemovable {
                     break checkAnvil;
                 }
             }
+            TriggerUtil.liftingAnvil(level, currentPos);
             BlockState blockState = level.getBlockState(currentPos);
             if (level.isEmptyBlock(currentPos) || blockState.getBlock() instanceof LiquidBlock) {
                 continue;
@@ -133,7 +135,7 @@ public class MagnetBlock extends Block implements IHammerRemovable {
     ) {
         super.onRemove(state, level, magnetPos, newState, movedByPiston);
         if (level.isClientSide()) return;
-        int distance = AnvilCraft.config.magnetAttractsDistance;
+        int distance = AnvilCraft.CONFIG.magnetAttractsDistance;
         BlockPos currentPos = magnetPos;
         for (int i = 0; i < distance; i++) {
             currentPos = currentPos.below();

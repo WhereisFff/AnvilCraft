@@ -1,0 +1,26 @@
+{
+  "parent": "anvilcraft:anvilcraft/networking",
+  "criteria": {
+    "wear_anvil_hammer": {
+      "trigger": "anvilcraft:player_wear_anvil_hammer"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.electric_filed_rhythm.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:anvil_hammer"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.electric_filed_rhythm.title"
+    }
+  },
+  "requirements": [
+    [
+      "wear_anvil_hammer"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

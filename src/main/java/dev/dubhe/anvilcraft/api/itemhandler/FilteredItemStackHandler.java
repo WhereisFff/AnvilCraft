@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.api.itemhandler;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.item.FilterItem;
-import dev.dubhe.anvilcraft.util.CodecUtil;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -145,8 +145,7 @@ public class FilteredItemStackHandler extends ItemStackHandler {
      * @return 指定槽位是否允许放入指定物品堆叠
      */
     public boolean isFiltered(int slot, ItemStack stack) {
-        ItemStack filter = this.filteredItems.get(slot);
-        return filter.isEmpty() || ItemStack.isSameItem(filter, stack) || FilterItem.filter(filter, stack);
+        return FilterItem.filter(this.filteredItems.get(slot), stack);
     }
 
     /**

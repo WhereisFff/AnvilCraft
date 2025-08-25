@@ -6,14 +6,13 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AnvilUtil {
     @SuppressWarnings("DataFlowIssue")
-    public static void dropItems(@NotNull List<ItemStack> items, Level level, Vec3 pos) {
+    public static void dropItems(List<ItemStack> items, Level level, Vec3 pos) {
         for (ItemStack item : items) {
             if (item.isEmpty()) continue;
             int count = item.getCount();

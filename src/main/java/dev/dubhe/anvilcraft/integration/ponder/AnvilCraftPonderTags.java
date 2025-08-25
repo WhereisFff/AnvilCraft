@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.integration.ponder;
 
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.createmod.ponder.api.registration.PonderTagRegistrationHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 public class AnvilCraftPonderTags {
     public static final ResourceLocation ANVIL = AnvilCraft.of("anvil");
     public static final ResourceLocation MAGNET_BLOCK = AnvilCraft.of("magnet_block");
+
+    public static final ResourceLocation REDSTONE_COMPONENTS = AnvilCraft.of("redstone_components");
 
     public static void register(@NotNull PonderTagRegistrationHelper<ResourceLocation> helper) {
         PonderTagRegistrationHelper<RegistryEntry<?, ?>> registryTagHelper = helper.withKeyFunction(RegistryEntry::getId);
@@ -32,6 +34,13 @@ public class AnvilCraftPonderTags {
             .description("Use magnet to attract the anvil")
             .register();
 
+        helper.registerTag(REDSTONE_COMPONENTS)
+            .addToIndex()
+            .item(ModBlocks.BLOCK_COMPARATOR, true, false)
+            .title("Redstone components")
+            .description("New redstone components")
+            .register();
+
 
         itemTagHelper.addToTag(ANVIL)
             .add(Items.ANVIL)
@@ -49,5 +58,11 @@ public class AnvilCraftPonderTags {
             .add(ModBlocks.MAGNET_BLOCK)
             .add(ModBlocks.HOLLOW_MAGNET_BLOCK)
             .add(ModBlocks.FERRITE_CORE_MAGNET_BLOCK);
+
+        registryTagHelper.addToTag(REDSTONE_COMPONENTS)
+            .add(ModBlocks.LOAD_MONITOR)
+            .add(ModBlocks.BLOCK_COMPARATOR)
+            .add(ModBlocks.ITEM_DETECTOR)
+            .add(ModBlocks.PULSE_GENERATOR);
     }
 }

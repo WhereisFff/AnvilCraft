@@ -5,8 +5,8 @@ import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -74,6 +74,6 @@ public class RemoteTransmissionPoleBlockEntity extends AbstractTransmissionPoleB
 
     @Override
     public int getRange() {
-        return AnvilCraft.config.remotePowerTransmitterRange;
+        return AnvilCraft.CONFIG.remotePowerTransmitterRange;
     }
 }
