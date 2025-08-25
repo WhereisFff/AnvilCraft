@@ -64,7 +64,12 @@
         ]
       },
       "enable_visualize": "false",
-      "text": "溜槽成链时，被指向的溜槽变为简化溜槽，不再从世界吸取物品，不能过滤，不受红石信号控制。"
+      "text": "溜槽成链时，被指向的溜槽变为简化溜槽。"
+    },
+    {
+      "type": "patchouli:text",
+      "title": "简化溜槽的特性",
+      "text": "$(li)不吸取物品 $(li)仅容纳1组物品 $(li)不能过滤 $(li)不受红石信号控制"
     },
     {
       "type": "patchouli:crafting",
