@@ -107,7 +107,6 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
             16, 16, 32,
             (button, index) -> this.menu.setRedstoneControl(index == 1)
         );
-
         compareMode.setCurrent(this.menu.getBlockEntity().getCompareMode().index());
         outputMode.setCurrent(this.menu.getBlockEntity().isOutputInvert() ? 1 : 0);
         redstoneControl.setCurrent(this.menu.getBlockEntity().isRedstoneControl() ? 1 : 0);
@@ -115,9 +114,9 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
         this.sliderMin = this.leftPos + 46;
         this.sliderMax = this.sliderMin + 91;
         this.slider1Pos = this.menu.getBlockEntity().getLowLimit();
-        this.slider1X = snapOnGrid(this.slider1Pos, this.GRID, this.sliderMin, this.sliderMax);
+        this.slider1X = Math.clamp((long) this.slider1Pos * this.GRID + this.sliderMin, this.sliderMin, this.sliderMax);
         this.slider2Pos = this.menu.getBlockEntity().getHighLimit();
-        this.slider2X = snapOnGrid(this.slider2Pos, this.GRID, this.sliderMin, this.sliderMax);
+        this.slider2X = Math.clamp((long) this.slider2Pos * this.GRID + this.sliderMin, this.sliderMin, this.sliderMax);
         this.addRenderableWidget(compareMode);
         this.addRenderableWidget(outputMode);
         this.addRenderableWidget(redstoneControl);
@@ -136,32 +135,32 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(CONTAINER_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
-        int vOffset1 = MathUtil.isInRange(mouseX, slider1X, slider1X + 7) ? 11 : 0;
-        int vOffset2 = MathUtil.isInRange(mouseX, slider2X, slider2X + 7) ? 11 : 0;
-        guiGraphics.blit(SLIDER, slider1X, sliderY, 0, vOffset1, 7, 11, 7, 22);
-        guiGraphics.blit(SLIDER, slider2X, sliderY, 0, vOffset2, 7, 11, 7, 22);
+        int vOffset1 = this.isInSlider(mouseX, mouseY, this.slider1X, this.sliderY) ? 11 : 0;
+        int vOffset2 = this.isInSlider(mouseX, mouseY, this.slider2X, this.sliderY) ? 11 : 0;
+        guiGraphics.blit(SLIDER, this.slider1X, this.sliderY, 0, vOffset1, 7, 11, 7, 22);
+        guiGraphics.blit(SLIDER, this.slider2X, this.sliderY, 0, vOffset2, 7, 11, 7, 22);
         PoseStack pose = guiGraphics.pose();
         pose.pushPose();
         pose.scale(0.5F, 0.5F, 1);
-        String pos1 = String.valueOf(slider1Pos);
-        String pos2 = String.valueOf(slider2Pos);
+        String pos1 = String.valueOf(this.slider1Pos);
+        String pos2 = String.valueOf(this.slider2Pos);
         int width1 = this.minecraft.font.width(pos1);
         int width2 = this.minecraft.font.width(pos2);
-        guiGraphics.drawString(this.minecraft.font, pos1, slider1X * 2 + 8 - width1 / 2, sliderY * 2 + 8, 0xFF404040, false);
-        guiGraphics.drawString(this.minecraft.font, pos2, slider2X * 2 + 8 - width2 / 2, sliderY * 2 + 8, 0xFF404040, false);
+        guiGraphics.drawString(this.minecraft.font, pos1, this.slider1X * 2 + 8 - width1 / 2, this.sliderY * 2 + 8, 0xFF404040, false);
+        guiGraphics.drawString(this.minecraft.font, pos2, this.slider2X * 2 + 8 - width2 / 2, this.sliderY * 2 + 8, 0xFF404040, false);
         pose.popPose();
-        int max = Math.max(slider1X, slider2X);
-        int min = Math.min(slider1X, slider2X);
+        int max = Math.max(this.slider1X, this.slider2X);
+        int min = Math.min(this.slider1X, this.slider2X);
         if (this.menu.getBlockEntity().isOutputInvert()) {
-            guiGraphics.fill(min + 3, sliderY, min + 4, sliderY - 90, 0xFF990000);
-            guiGraphics.fill(max + 3, sliderY, max + 4, sliderY - 90, 0xFFFF0000);
-            guiGraphics.fill(sliderMin + 3, sliderY - 90, max + 4, sliderY - 91, 0xFFFF0000);
-            guiGraphics.fill(sliderMax + 15, sliderY, min + 3, sliderY - 1, 0xFF990000);
+            guiGraphics.fill(min + 3, this.sliderY, min + 4, this.sliderY - 90, 0xFF990000);
+            guiGraphics.fill(max + 3, this.sliderY, max + 4, this.sliderY - 90, 0xFFFF0000);
+            guiGraphics.fill(this.sliderMin + 3, this.sliderY - 90, max + 4, this.sliderY - 91, 0xFFFF0000);
+            guiGraphics.fill(this.sliderMax + 15, this.sliderY, min + 3, this.sliderY - 1, 0xFF990000);
         } else {
-            guiGraphics.fill(min + 3, sliderY, min + 4, sliderY - 90, 0xFFFF0000);
-            guiGraphics.fill(max + 3, sliderY, max + 4, sliderY - 90, 0xFF990000);
-            guiGraphics.fill(sliderMin - 4, sliderY, max + 4, sliderY - 1, 0xFF990000);
-            guiGraphics.fill(sliderMax + 5, sliderY - 90, min + 3, sliderY - 91, 0xFFFF0000);
+            guiGraphics.fill(min + 3, this.sliderY, min + 4, this.sliderY - 90, 0xFFFF0000);
+            guiGraphics.fill(max + 3, this.sliderY, max + 4, this.sliderY - 90, 0xFF990000);
+            guiGraphics.fill(this.sliderMin - 4, this.sliderY, max + 4, this.sliderY - 1, 0xFF990000);
+            guiGraphics.fill(this.sliderMax + 5, this.sliderY - 90, min + 3, this.sliderY - 91, 0xFFFF0000);
         }
     }
 
@@ -174,9 +173,9 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) {
             if (this.menu.getBlockEntity().isRedstoneControl()) return super.mouseClicked(mouseX, mouseY, button);
-            if (MathUtil.isInRange(mouseX, slider1X, slider1X + 7)) {
+            if (this.isInSlider(mouseX, mouseY, this.slider1X, this.sliderY)) {
                 this.scrolling1 = true;
-            } else if (MathUtil.isInRange(mouseX, slider2X, slider2X + 7)) {
+            } else if (this.isInSlider(mouseX, mouseY, this.slider2X, this.sliderY)) {
                 this.scrolling2 = true;
             }
         }
@@ -195,37 +194,20 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (this.scrolling1) {
-            this.slider1Pos = posInRange((int) (mouseX - this.sliderMin) / GRID, 0, 15);
-            this.slider1X = snapOnGrid(this.slider1Pos, this.GRID, this.sliderMin, this.sliderMax);
+            this.slider1Pos = Math.clamp((int) (mouseX - this.sliderMin) / GRID, 0, 15);
+            this.slider1X = Math.clamp((long) this.slider1Pos * this.GRID + this.sliderMin, this.sliderMin, this.sliderMax);
             return true;
         } else if (this.scrolling2) {
-            this.slider2Pos = posInRange((int) (mouseX - this.sliderMin) / GRID, 0, 15);
-            this.slider2X = snapOnGrid(this.slider2Pos, this.GRID, this.sliderMin, this.sliderMax);
+            this.slider2Pos = Math.clamp((int) (mouseX - this.sliderMin) / GRID, 0, 15);
+            this.slider2X = Math.clamp((long) this.slider2Pos * this.GRID + this.sliderMin, this.sliderMin, this.sliderMax);
             return true;
         } else {
             return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
         }
     }
 
-    public int snapOnGrid(int sliderPos, int grid, int sliderMin, int sliderMax) {
-        int pos = sliderPos * grid + sliderMin;
-        if (sliderMin > sliderMax) {
-            int v = sliderMin;
-            sliderMin = sliderMax;
-            sliderMax = v;
-        }
-        if (pos > sliderMax) return sliderMax;
-        else if (pos < sliderMin) return sliderMin;
-        return pos;
-    }
-
-    public int posInRange(int pos, int min, int max) {
-        if (min > max) {
-            int v = min;
-            min = max;
-            max = v;
-        }
-        if (pos > max) return max;
-        return Math.max(pos, min);
+    private boolean isInSlider(double mouseX, double mouseY, int sliderX, int sliderY) {
+        return MathUtil.isInRange(mouseX, sliderX - 1, sliderX + 7)
+            && MathUtil.isInRange(mouseY, sliderY - 1, sliderY + 11);
     }
 }
