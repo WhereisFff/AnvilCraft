@@ -70,7 +70,14 @@ public class Slider extends AbstractWidget {
         this.callback = callback;
     }
 
-    public Slider(int x, int y, int min, int max, int length, Callback<Integer> callback) {
+    public Slider(
+        int x,
+        int y,
+        int min,
+        int max,
+        int length,
+        Callback<Integer> callback
+    ) {
         this(
             x,
             y,
@@ -96,7 +103,9 @@ public class Slider extends AbstractWidget {
     }
 
     public static double defaultArgFunction(int value, int min, int max) {
-        return Math.clamp(((double) value - min) / (max - min), 0.0, 1.0);
+        if (value == 0) return Math.clamp(((double) value - min) / (max - min), 0.0, 1.0);
+        double v = (Math.log(Math.abs(value)) / Math.log(2)) + 1;
+        return Math.clamp(((value >= 0 ? v : -v) - min) / (max - min), 0.0, 1.0);
     }
 
     public void setValue(int value) {
@@ -104,7 +113,14 @@ public class Slider extends AbstractWidget {
     }
 
     public int getValue() {
-        return (int) Math.round(this.valueFunction.apply(this.proportion));
+        int v = (int) Math.round(this.valueFunction.apply(this.proportion));
+        if (v == 0) return 0;
+        return v > 0 ? (int) Math.pow(2, Math.abs(v - 1)) : -(int) Math.pow(2, Math.abs(v + 1));
+    }
+
+    public int getAddValue(int value) {
+        if (Math.abs(value) < 4) return 1;
+        return (int) Math.pow(2, Math.floor(Math.log(Math.abs(value)) / Math.log(2)) - 2);
     }
 
     /**
@@ -139,10 +155,11 @@ public class Slider extends AbstractWidget {
             double offset = (mouseX - 8 - this.posX) / this.length;
             this.setProportion(offset);
         }
+        if (this.scroll) this.update();
     }
 
     public void onReleased() {
-        this.update();
+        if (this.scroll) this.update();
         this.scroll = false;
         scrolling = false;
     }
@@ -164,7 +181,7 @@ public class Slider extends AbstractWidget {
     protected void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         double prop = this.getProportion();
         int offsetX = posX + (int) ((length) * prop);
-        guiGraphics.blit(SLIDER, offsetX, posY, 0, this.isHovered ? 8 : 0, 16, 8, 16, 16);
+        guiGraphics.blit(SLIDER, offsetX, posY, 0, this.isHovered || this.scroll ? 8 : 0, 16, 8, 16, 16);
     }
 
     @Override
