@@ -10,14 +10,12 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.piston.MovingPistonBlock;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
@@ -81,7 +79,7 @@ abstract class PistonBaseBlockMixin {
         boolean extending,
         boolean isSourcePiston,
         Operation<BlockEntity> original
-    ){
+    ) {
         BlockEntity blockEntity = original.call(pos, blockState, movedState, direction, extending, isSourcePiston);
         if (blockEntity instanceof IPistonMovingBlockEntityExtension entity) {
             entity.anvilcraft$setData(this.anvilcraft$nbt);
