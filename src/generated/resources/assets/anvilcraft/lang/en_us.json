@@ -71,8 +71,6 @@
   "anvilcraft.configuration.amulet_box_take_out_all_totem.tooltip": "Press shift and right click to take out all totem stored in the holding amulet box",
   "anvilcraft.configuration.anvil_collision_craft_speed": "Anvil Collision Craft Speed",
   "anvilcraft.configuration.anvil_collision_craft_speed.tooltip": "Anvil collision craft speed (m/tick)",
-  "anvilcraft.configuration.anvil_efficiency": "Anvil Efficiency",
-  "anvilcraft.configuration.anvil_efficiency.tooltip": "Maximum number of items processed by the anvil at the same time",
   "anvilcraft.configuration.batch_crafter_cooldown": "Batch Crafter Cooldown",
   "anvilcraft.configuration.batch_crafter_cooldown.tooltip": "Maximum cooldown time of batch crafter (in ticks)",
   "anvilcraft.configuration.block_devourer_upward_chain_devouring": "Block Devourer Upward Chain Devouring",

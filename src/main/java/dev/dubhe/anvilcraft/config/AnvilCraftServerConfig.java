@@ -10,10 +10,6 @@ import net.neoforged.fml.config.ModConfig;
 
 @Config(name = AnvilCraft.MOD_ID, type = ModConfig.Type.SERVER)
 public class AnvilCraftServerConfig {
-    @Comment("Maximum number of items processed by the anvil at the same time")
-    @BoundedDiscrete(max = 64, min = 1)
-    public int anvilEfficiency = 64;
-
     @Comment("Maximum radius of giant anvil's shock behavior")
     @BoundedDiscrete(max = 16, min = 4)
     public int giantAnvilMaxShockRadius = 16;
