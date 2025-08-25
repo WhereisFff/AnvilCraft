@@ -97,12 +97,12 @@ public class CreativeGeneratorBlockEntity extends BlockEntity implements IPowerP
     @Override
     public AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
         if (player.isSpectator()) return null;
-        return new SliderMenu(i, -8192, 8192, this::setPower);
+        return new SliderMenu(i, this::setPower);
     }
 
     public void setPower(int power) {
         this.power = power;
-        if (level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel) {
             if (grid != null) {
                 this.grid.markChanged();
                 return;
