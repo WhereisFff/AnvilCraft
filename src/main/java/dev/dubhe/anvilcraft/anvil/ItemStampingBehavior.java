@@ -85,8 +85,8 @@ public class ItemStampingBehavior implements IAnvilBehavior {
                     }
                 }
                 for (ChanceItemStack stack : recipe.value().getResults()) {
-                    int amount = stack.getStack().getCount() * stack.getCount().getInt(context);
-                    results.mergeInt(stack.getStack().getItem(), amount, Integer::sum);
+                    int amount = stack.stack().getCount() * stack.count().getInt(context);
+                    results.mergeInt(stack.stack().getItem(), amount, Integer::sum);
                 }
             }
             AnvilUtil.dropItems(

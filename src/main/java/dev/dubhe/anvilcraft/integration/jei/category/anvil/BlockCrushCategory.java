@@ -81,7 +81,7 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
         builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
             .addItemStacks(recipe.getFirstInputBlock().getBlocks().stream().map(holder -> new ItemStack(holder.value())).toList());
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-            .addItemStack(new ItemStack(recipe.getFirstResultBlock().getState().getBlock()));
+            .addItemStack(new ItemStack(recipe.getFirstResultBlock().state().getBlock()));
     }
 
     @Override
@@ -115,7 +115,7 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
         RenderHelper.renderBlock(
             guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-            guiGraphics, recipe.value().getFirstResultBlock().getState(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, recipe.value().getFirstResultBlock().state(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
     }
 
     @Override
@@ -133,7 +133,7 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
         }
         if (mouseX >= 100 && mouseX <= 120) {
             if (mouseY >= 42 && mouseY <= 52) {
-                tooltip.add(recipe.value().getFirstResultBlock().getState().getBlock().getName());
+                tooltip.add(recipe.value().getFirstResultBlock().state().getBlock().getName());
             }
         }
     }

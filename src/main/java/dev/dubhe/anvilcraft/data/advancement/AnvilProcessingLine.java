@@ -1,17 +1,12 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerHurtEntityTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerLeftClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerRightClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHammerShiftRightClickBlockTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnvilHitPiezoelectricCrystalTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.ConvertBeaconTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.AnythingAnvilCraftingTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldSuperHeatingRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.InWorldTimewarpRecipeTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlayerKilledEntityByAnvilHammerTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlayerWearAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerHurtEntityTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerClickBlockTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.AnvilHitPiezoelectricCrystalTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.ConvertBeaconTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.InWorldRecipeTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlayerKilledEntityByAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlayerWearAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.advancements.Advancement;
@@ -41,7 +36,7 @@ public class AnvilProcessingLine {
             null, AdvancementType.GOAL,
             true, true, false
         )
-        .addCriterion("anything_anvil_crafting", AnythingAnvilCraftingTrigger.TriggerInstance.anvilCrafting())
+        .addCriterion("anything_anvil_crafting", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe())
         .build(advancementOf("dang"));
 
     public static final AdvancementHolder stoneCrusher = Advancement.Builder.advancement()
@@ -53,8 +48,8 @@ public class AnvilProcessingLine {
             null, AdvancementType.TASK,
             true, true, false
         )
-        .addCriterion("crush_cobblestone", InWorldRecipeTrigger.TriggerInstance.recipe(of("block_crush/gravel")))
-        .addCriterion("crush_gravel", InWorldRecipeTrigger.TriggerInstance.recipe(of("block_crush/sand")))
+        .addCriterion("crush_cobblestone", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("block_crush/gravel")))
+        .addCriterion("crush_gravel", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("block_crush/sand")))
         .build(advancementOf("stone_crusher"));
 
     public static final AdvancementHolder fossick = Advancement.Builder.advancement()
@@ -66,7 +61,7 @@ public class AnvilProcessingLine {
             null, AdvancementType.TASK,
             true, true, false
         )
-        .addCriterion("mesh", InWorldRecipeTrigger.TriggerInstance.recipe(of("mesh/sand")))
+        .addCriterion("mesh", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("mesh/sand")))
         .build(advancementOf("fossick"));
 
     public static final AdvancementHolder iceMaker = Advancement.Builder.advancement()
@@ -78,7 +73,7 @@ public class AnvilProcessingLine {
             null, AdvancementType.TASK,
             true, true, false
         )
-        .addCriterion("make_ice", InWorldRecipeTrigger.TriggerInstance.recipe(of("squeezing/power_snow_from_ice")))
+        .addCriterion("make_ice", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("squeezing/power_snow_from_ice")))
         .build(advancementOf("ice_maker"));
 
     public static final AdvancementHolder four281 = Advancement.Builder.advancement()
@@ -90,8 +85,8 @@ public class AnvilProcessingLine {
             null, AdvancementType.TASK,
             true, true, false
         )
-        .addCriterion("packed_ice", InWorldRecipeTrigger.TriggerInstance.recipe(of("block_compress/packed_ice")))
-        .addCriterion("blue_ice", InWorldRecipeTrigger.TriggerInstance.recipe(of("block_compress/blue_ice")))
+        .addCriterion("packed_ice", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("block_compress/packed_ice")))
+        .addCriterion("blue_ice", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("block_compress/blue_ice")))
         .build(advancementOf("4281"));
 
     public static final AdvancementHolder vanillaIronPlate = Advancement.Builder.advancement()
@@ -103,7 +98,7 @@ public class AnvilProcessingLine {
             null, AdvancementType.TASK,
             true, true, false
         )
-        .addCriterion("heavy_weighted_pressure_plate", InWorldRecipeTrigger.TriggerInstance.recipe(of("stamping/heavy_weighted_pressure_plate")))
+        .addCriterion("heavy_weighted_pressure_plate", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("stamping/heavy_weighted_pressure_plate")))
         .build(advancementOf("vanilla_iron_plate"));
 
     public static final AdvancementHolder recyclingDiamonds = Advancement.Builder.advancement()
@@ -116,16 +111,16 @@ public class AnvilProcessingLine {
             true, true, false
         )
         .requirements(AdvancementRequirements.Strategy.OR)
-        .addCriterion("diamond_pickaxe", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/tool/diamond_pickaxe_2_diamond")))
-        .addCriterion("diamond_axe", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/tool/diamond_axe_2_diamond")))
-        .addCriterion("diamond_sword", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/tool/diamond_sword_2_diamond")))
-        .addCriterion("diamond_hoe", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/tool/diamond_hoe_2_diamond")))
-        .addCriterion("diamond_shovel", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/tool/diamond_shovel_2_diamond")))
-        .addCriterion("diamond_helmet", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/armor/diamond_helmet_2_diamond")))
-        .addCriterion("diamond_chestplate", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/armor/diamond_chestplate_2_diamond")))
-        .addCriterion("diamond_leggings", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/armor/diamond_leggings_2_diamond")))
-        .addCriterion("diamond_boots", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/armor/diamond_boots_2_diamond")))
-        .addCriterion("diamond_horse_armor", InWorldRecipeTrigger.TriggerInstance.recipe(of("item_crush/armor/diamond_horse_armor_2_diamond")))
+        .addCriterion("diamond_pickaxe", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/tool/diamond_pickaxe_2_diamond")))
+        .addCriterion("diamond_axe", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/tool/diamond_axe_2_diamond")))
+        .addCriterion("diamond_sword", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/tool/diamond_sword_2_diamond")))
+        .addCriterion("diamond_hoe", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/tool/diamond_hoe_2_diamond")))
+        .addCriterion("diamond_shovel", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/tool/diamond_shovel_2_diamond")))
+        .addCriterion("diamond_helmet", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/armor/diamond_helmet_2_diamond")))
+        .addCriterion("diamond_chestplate", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/armor/diamond_chestplate_2_diamond")))
+        .addCriterion("diamond_leggings", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/armor/diamond_leggings_2_diamond")))
+        .addCriterion("diamond_boots", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/armor/diamond_boots_2_diamond")))
+        .addCriterion("diamond_horse_armor", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("item_crush/armor/diamond_horse_armor_2_diamond")))
         .build(advancementOf("recycling_diamonds"));
 
     public static final AdvancementHolder allInOne = Advancement.Builder.advancement()
@@ -141,9 +136,9 @@ public class AnvilProcessingLine {
         .addCriterion("royal_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/royal_anvil_hammer")))
         .addCriterion("ember_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/ember_anvil_hammer")))
         .addCriterion("transcendence_anvil_hammer", RecipeCraftedTrigger.TriggerInstance.craftedItem(of("smithing/transcendence_anvil_hammer")))
-        .addCriterion("left_click", AnvilHammerLeftClickBlockTrigger.TriggerInstance.clickBlock())
-        .addCriterion("right_click", AnvilHammerRightClickBlockTrigger.TriggerInstance.clickBlock())
-        .addCriterion("shift_right_click", AnvilHammerShiftRightClickBlockTrigger.TriggerInstance.clickBlock())
+        .addCriterion("left_click", AnvilHammerClickBlockTrigger.TriggerInstance.leftClickBlock())
+        .addCriterion("right_click", AnvilHammerClickBlockTrigger.TriggerInstance.rightClickBlock())
+        .addCriterion("shift_right_click", AnvilHammerClickBlockTrigger.TriggerInstance.shiftRightClickBlock())
         .addCriterion("hurt_entity", AnvilHammerHurtEntityTrigger.TriggerInstance.hurtEntity())
         .requirements(new AdvancementRequirements(List.of(
             List.of("anvil_hammer", "royal_anvil_hammer", "ember_anvil_hammer", "transcendence_anvil_hammer"),
@@ -225,7 +220,7 @@ public class AnvilProcessingLine {
             null, AdvancementType.GOAL,
             true, true, false
         )
-        .addCriterion("super_heating", InWorldSuperHeatingRecipeTrigger.TriggerInstance.superHeating())
+        .addCriterion("super_heating", InWorldRecipeTrigger.TriggerInstance.inWorldRecipeType(of("super_heating")))
         .build(advancementOf("industrial_grade_smelting"));
 
     public static final AdvancementHolder nobleMetal = Advancement.Builder.advancement()
@@ -237,7 +232,7 @@ public class AnvilProcessingLine {
             null, AdvancementType.TASK,
             true, true, false
         )
-        .addCriterion("royal_metal", InWorldSuperHeatingRecipeTrigger.TriggerInstance.superHeating(of("super_heating/royal_steel_ingot")))
+        .addCriterion("royal_metal", InWorldRecipeTrigger.TriggerInstance.inWorldRecipe(of("super_heating/royal_steel_ingot")))
         .build(advancementOf("noble_metal"));
 
     public static final AdvancementHolder smithingTale = Advancement.Builder.advancement()
@@ -316,7 +311,7 @@ public class AnvilProcessingLine {
             null, AdvancementType.GOAL,
             true, true, false
         )
-        .addCriterion("timewarp_recipe", InWorldTimewarpRecipeTrigger.TriggerInstance.timeWrap())
+        .addCriterion("timewarp_recipe", InWorldRecipeTrigger.TriggerInstance.inWorldRecipeType(of("time_warp")))
         .build(advancementOf("rip_van_winkle"));
 
     public static final AdvancementHolder hammer = Advancement.Builder.advancement()

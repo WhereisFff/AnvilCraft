@@ -26,7 +26,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
-import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class BlockEventListener {
@@ -36,7 +35,7 @@ public class BlockEventListener {
      * @param event 左键方块事件
      */
     @SubscribeEvent
-    public static void anvilHammerAttack(@NotNull PlayerInteractEvent.LeftClickBlock event) {
+    public static void anvilHammerAttack(PlayerInteractEvent.LeftClickBlock event) {
         InteractionHand hand = event.getHand();
         if (event.getEntity().getItemInHand(hand).getItem() instanceof AnvilHammerItem) {
             if (!AnvilHammerItem.dropAnvil(event.getEntity(), event.getLevel(), event.getPos())) {
@@ -50,8 +49,9 @@ public class BlockEventListener {
      *
      * @param event 右键方块事件
      */
+    @SuppressWarnings("resource")
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public static void onRightClickBlock(@NotNull PlayerInteractEvent.RightClickBlock event) {
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
         Player player = event.getEntity();
         InteractionHand hand = event.getHand();
         ItemStack itemStack = player.getItemInHand(hand);
@@ -78,15 +78,14 @@ public class BlockEventListener {
         }
     }
 
-    public static void onAnvilFixed(@NotNull LevelAccessor level, ItemStack item, BlockPos pos, @NotNull BlockState state) {
+    public static void onAnvilFixed(LevelAccessor level, ItemStack item, BlockPos pos, BlockState state) {
         if (!state.is(Blocks.CHIPPED_ANVIL) && !state.is(Blocks.DAMAGED_ANVIL)) return;
         RandomSource random = level.getRandom();
         double chance = random.nextDouble();
         item.shrink(1);
         if (chance < 0.1) return;
         Direction facing = state.getValue(AnvilBlock.FACING);
-        BlockState intact = Blocks.ANVIL.defaultBlockState();
-        intact.setValue(AnvilBlock.FACING, facing);
+        BlockState intact = Blocks.ANVIL.defaultBlockState().setValue(AnvilBlock.FACING, facing);
         if (state.is(Blocks.CHIPPED_ANVIL)) {
             level.setBlock(pos, intact, 3);
             level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
@@ -98,8 +97,7 @@ public class BlockEventListener {
                 ParticleUtils.spawnParticles(level, pos, 10, 1.0, 1.0, true, ParticleTypes.HAPPY_VILLAGER);
                 return;
             }
-            BlockState chipped = Blocks.CHIPPED_ANVIL.defaultBlockState();
-            chipped.setValue(AnvilBlock.FACING, facing);
+            BlockState chipped = Blocks.CHIPPED_ANVIL.defaultBlockState().setValue(AnvilBlock.FACING, facing);
             level.setBlock(pos, chipped, 3);
             level.playSound(null, pos, SoundEvents.ANVIL_USE, SoundSource.BLOCKS, 1.0F, 1.0F);
             ParticleUtils.spawnParticles(level, pos, 10, 1.0, 1.0, true, ParticleTypes.HAPPY_VILLAGER);

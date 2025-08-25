@@ -91,7 +91,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
             .addIngredients(Ingredient.of(
                 recipe.getFirstInputBlock().getBlocks().stream().map(state -> new ItemStack(state.value())).toArray(ItemStack[]::new)));
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-            .addItemStack(new ItemStack(recipe.getFirstResultBlock().getState().getBlock()));
+            .addItemStack(new ItemStack(recipe.getFirstResultBlock().state().getBlock()));
     }
 
     @Override
@@ -123,7 +123,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
         RenderHelper.renderBlock(
-            guiGraphics, recipe.getFirstResultBlock().getState(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, recipe.getFirstResultBlock().state(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
     }
 
     @Override
@@ -141,7 +141,7 @@ public class ItemInjectCategory implements IRecipeCategory<RecipeHolder<ItemInje
         }
         if (mouseX >= 124 && mouseX <= 140) {
             if (mouseY >= 24 && mouseY <= 42) {
-                tooltip.add(recipe.getFirstResultBlock().getState().getBlock().getName());
+                tooltip.add(recipe.getFirstResultBlock().state().getBlock().getName());
             }
         }
     }

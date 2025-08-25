@@ -1,19 +1,22 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
-import net.minecraft.world.entity.EntityType;
+import dev.dubhe.anvilcraft.mixin.accessor.TargetingConditionsAccessor;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.TargetGoal;
+import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.monster.AbstractSkeleton;
 import net.minecraft.world.entity.monster.Creeper;
+import net.neoforged.neoforge.attachment.AttachmentType;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 @Mixin(NearestAttackableTargetGoal.class)
 public abstract class NearestAttackableTargetGoalMixin extends TargetGoal {
@@ -25,15 +28,30 @@ public abstract class NearestAttackableTargetGoalMixin extends TargetGoal {
         super(mob, mustSee);
     }
 
-    @Inject(method = "canUse", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
-    private void cancelWhenScaredByAmulet(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(
-            cir.getReturnValueZ()
-            && this.target != null
-            && (
-                this.target.getType() != EntityType.PLAYER
-                || (this.mob instanceof Creeper && this.target.getData(ModDataAttachments.SCARE_CREEPERS))
-            )
+    @ModifyArg(
+        method = "findTarget",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/level/Level;getNearestPlayer("
+                     + "Lnet/minecraft/world/entity/ai/targeting/TargetingConditions;"
+                     + "Lnet/minecraft/world/entity/LivingEntity;DDD)"
+                     + "Lnet/minecraft/world/entity/player/Player;"
+        ),
+        index = 0
+    )
+    private TargetingConditions addAmuletScare(TargetingConditions conditions) {
+        AttachmentType<Boolean> type;
+        switch (this.mob.getClass()) {
+            case Class<?> clazz when clazz.isAssignableFrom(AbstractSkeleton.class) -> type = ModDataAttachments.SCARE_SKELETONS.get();
+            case Class<?> clazz when clazz.isAssignableFrom(Creeper.class) -> type = ModDataAttachments.SCARE_CREEPERS.get();
+            default -> {
+                return conditions;
+            }
+        }
+        return conditions.selector(
+            Optional.ofNullable(((TargetingConditionsAccessor) conditions).getSelector())
+                .map(p -> p.and(entity -> !entity.getData(type)))
+                .orElse(entity -> !entity.getData(type))
         );
     }
 }

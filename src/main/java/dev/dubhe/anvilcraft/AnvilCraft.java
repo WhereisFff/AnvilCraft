@@ -72,9 +72,8 @@ public class AnvilCraft {
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);
     public static final Gson GSON = new GsonBuilder().disableHtmlEscaping().setPrettyPrinting().create();
     public static IEventBus MOD_BUS = null;
-    public static final ConfigManager CONFIG_MANAGER = new ConfigManager();
-    public static final AnvilCraftServerConfig CONFIG = CONFIG_MANAGER.register(new AnvilCraftServerConfig());
-    public static final AnvilCraftClientConfig CLIENT_CONFIG = CONFIG_MANAGER.register(new AnvilCraftClientConfig());
+    public static final AnvilCraftServerConfig CONFIG = ConfigManager.register(AnvilCraftServerConfig::new);
+    public static final AnvilCraftClientConfig CLIENT_CONFIG = ConfigManager.register(AnvilCraftClientConfig::new);
 
     @Getter
     private static final IntegrationManager INTEGRATION_MANAGER = new IntegrationManager(AnvilCraft.MOD_ID);
@@ -83,7 +82,6 @@ public class AnvilCraft {
 
     public AnvilCraft(IEventBus modEventBus, ModContainer modContainer) {
         MOD_BUS = modEventBus;
-        CONFIG_MANAGER.register(modEventBus, modContainer);
         ModAttatchments.register(modEventBus);
         ModItemGroups.register(modEventBus);
         ModBlocks.register();

@@ -19,7 +19,7 @@ public record ColoredConcreteRecipe(Color color, List<ItemIngredientPredicate> i
         for (BulgingRecipe recipe : JeiRecipeUtil.getRecipesFromType(ModRecipeTypes.BULGING_TYPE.get())) {
             if (recipe.getResultItems().isEmpty()) continue;
             ChanceItemStack result = recipe.getResultItems().getFirst();
-            if (!result.getStack().is(ModItemTags.REINFORCED_CONCRETE)) continue;
+            if (!result.stack().is(ModItemTags.REINFORCED_CONCRETE)) continue;
             Color color = Color.valueOf(
                 BuiltInRegistries.ITEM.getKey(result.getItem()).getPath().substring(20).toUpperCase(Locale.ROOT));
             builder.add(new ColoredConcreteRecipe(color, recipe.getInputItems(), result));

@@ -64,12 +64,12 @@ public class StampingUniqueItemsRecipe implements Recipe<ItemProcessInput> {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().getStack();
+        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().stack();
     }
 
     @Override
     public ItemStack assemble(ItemProcessInput pInput, HolderLookup.Provider pRegistries) {
-        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().getStack();
+        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().stack();
     }
 
     @Override
@@ -219,7 +219,7 @@ public class StampingUniqueItemsRecipe implements Recipe<ItemProcessInput> {
 
         @Override
         public Item getResult() {
-            return results.getFirst().getStack().getItem();
+            return results.getFirst().stack().getItem();
         }
 
         @Override

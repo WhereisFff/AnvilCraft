@@ -59,6 +59,7 @@ abstract class PistonMovingBlockEntityMixin implements IPistonMovingBlockEntityE
         @Local(ordinal = 1) BlockState moveState
     ) {
         if (level.isClientSide()) return;
+        //noinspection ConstantValue
         if (!(blockEntity instanceof IPistonMovingBlockEntityExtension blockEntity1)) return;
         if (!(moveState.getBlock() instanceof IMoveableEntityBlock entityBlock)) return;
         CompoundTag tag = blockEntity1.anvilcraft$clearData();

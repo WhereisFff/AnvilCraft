@@ -68,11 +68,10 @@
       "text": "站在巧克力块/楼梯/台阶上可以获得效果：$(li)巧克力：迅捷II $(li)黑巧克力：迅捷I 急迫I $(li)白巧克力：迅捷I 跳跃提升I $(p)$(#888888)原始信标$()"
     },
     {
-      "type": "patchouli:spotlight",
+      "type": "anvilcraft:boiling",
       "anchor": "beef_mushroom_stew",
-      "item": "anvilcraft:beef_mushroom_stew",
-      "link_recipe": true,
-      "text": "食用牛肉炖蘑菇可以提供10点$(thing)饥饿值$()与16点$(thing)饱食度$()$(br2)用生牛肉+红蘑菇+棕蘑菇+碗$(l:basic/item_processing#cooking)烹饪$()获得 $(p)$(#888888)蘑菇牛真好吃$()"
+      "recipe": "anvilcraft:boiling/beef_mushroom_stew",
+      "text": "食用牛肉炖蘑菇可以提供10点$(thing)饥饿值$()与16点$(thing)饱食度$() $(p)$(#888888)蘑菇牛真好吃$()"
     },
     {
       "type": "anvilcraft:cooking",

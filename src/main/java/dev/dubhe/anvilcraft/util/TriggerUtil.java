@@ -25,18 +25,10 @@ public class TriggerUtil {
         }
     }
 
-    public static void anvilLooting(Level level, BlockPos pos) {
+    public static void anvilLooting(Level level, BlockPos pos, Entity entity) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_LOOTING.get().trigger(player);
-            }
-        }
-    }
-
-    public static void anvilLootingIronGolem(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_LOOTING_IRON_GOLEM.get().trigger(player);
+                ModCriterionTriggers.ANVIL_LOOTING.get().trigger(player, entity);
             }
         }
     }
@@ -57,58 +49,18 @@ public class TriggerUtil {
         }
     }
 
-    public static void anythingAnvilCrafting(Level level, BlockPos pos) {
+    public static void inWorldRecipe(Level level, BlockPos pos, ResourceLocation recipeType, ResourceLocation id) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANYTHING_ANVIL_CRAFTING.get().trigger(player);
+                ModCriterionTriggers.IN_WORLD_RECIPE.get().trigger(player, recipeType, id);
             }
         }
     }
 
-    public static void inWorldRecipe(Level level, BlockPos pos, ResourceLocation id) {
+    public static void anvilHammerClickBlock(Level level, BlockPos pos, String type) {
         if (!level.isClientSide) {
             for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.IN_WORLD_RECIPE.get().trigger(player, id);
-            }
-        }
-    }
-
-    public static void inWorldSuperHeatingRecipe(Level level, BlockPos pos, ResourceLocation id) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.IN_WORLD_SUPER_HEATING_RECIPE.get().trigger(player, id);
-            }
-        }
-    }
-
-    public static void inWorldTimeWrapRecipe(Level level, BlockPos pos, ResourceLocation id) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.IN_WORLD_TIME_WARP_RECIPE.get().trigger(player, id);
-            }
-        }
-    }
-
-    public static void anvilHammerLeftClickBlock(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_HAMMER_LIFT_CLICK.get().trigger(player);
-            }
-        }
-    }
-
-    public static void anvilHammerRightClickBlock(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_HAMMER_RIGHT_CLICK.get().trigger(player);
-            }
-        }
-    }
-
-    public static void anvilHammerShiftRightClickBlock(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
-            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
-                ModCriterionTriggers.ANVIL_HAMMER_SHIFT_RIGHT_CLICK.get().trigger(player);
+                ModCriterionTriggers.ANVIL_HAMMER_CLICK_BLOCK.get().trigger(player, type);
             }
         }
     }

@@ -25,8 +25,8 @@ public class JeiLang {
         provider.add("gui.anvilcraft.category.stamping", "Stamping");
 
         provider.add("gui.anvilcraft.category.super_heating", "Super Heating");
-        provider.add("gui.anvilcraft.category.super_heating.consume_fluid", "Consume: %d layer of %s");
-        provider.add("gui.anvilcraft.category.super_heating.produce_fluid", "Produce: %d layer of %s");
+        provider.add("gui.anvilcraft.category.super_heating.consume_fluid", "Consume: %d mB of %s");
+        provider.add("gui.anvilcraft.category.super_heating.produce_fluid", "Produce: %d mB of %s");
         provider.add("gui.anvilcraft.category.super_heating.need_activated", "Need Activated");
 
         provider.add("gui.anvilcraft.category.squeezing", "Squeezing");
@@ -44,12 +44,12 @@ public class JeiLang {
         provider.add("gui.anvilcraft.category.concrete", "Concrete");
 
         provider.add("gui.anvilcraft.category.bulging", "Bulging");
-        provider.add("gui.anvilcraft.category.bulging.consume_fluid", "Consume: %d layer of %s");
-        provider.add("gui.anvilcraft.category.bulging.produce_fluid", "Produce: %d layer of %s");
+        provider.add("gui.anvilcraft.category.bulging.consume_fluid", "Consume: %d mB of %s");
+        provider.add("gui.anvilcraft.category.bulging.produce_fluid", "Produce: %d mB of %s");
 
         provider.add("gui.anvilcraft.category.time_warp", "Time Warp");
-        provider.add("gui.anvilcraft.category.time_warp.consume_fluid", "Consume: %d layer of %s");
-        provider.add("gui.anvilcraft.category.time_warp.produce_fluid", "Produce: %d layer of %s");
+        provider.add("gui.anvilcraft.category.time_warp.consume_fluid", "Consume: %d mB of %s");
+        provider.add("gui.anvilcraft.category.time_warp.produce_fluid", "Produce: %d mB of %s");
         provider.add("gui.anvilcraft.category.time_warp.need_activated", "Need Activated");
 
         provider.add("gui.anvilcraft.category.multiblock", "Multiblock Crafting");

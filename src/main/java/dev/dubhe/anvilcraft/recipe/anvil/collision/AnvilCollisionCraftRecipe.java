@@ -100,10 +100,11 @@ public record AnvilCollisionCraftRecipe(
      */
     @Override
     public ItemStack getResultItem(HolderLookup.Provider provider) {
-        if (anvil.getStatesCache().isEmpty()) {
-            return Blocks.ANVIL.asItem().getDefaultInstance();
-        }
-        return anvil.getStatesCache().getFirst().getBlock().asItem().getDefaultInstance();
+        if (!outputItems.isEmpty())
+            return outputItems.getFirst().stack();
+        if (!transformBlocks.isEmpty())
+            return new ItemStack(transformBlocks.getFirst().outputBlock().state().getBlock().asItem());
+        return ItemStack.EMPTY;
     }
 
     /**

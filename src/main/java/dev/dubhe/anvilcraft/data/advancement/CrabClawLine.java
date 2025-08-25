@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
-import dev.dubhe.anvilcraft.advancements.criteron.DevourerDevourTrigger;
-import dev.dubhe.anvilcraft.advancements.criteron.PlacerPlaceTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.DevourerDevourTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.PlacerPlaceTrigger;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.advancements.Advancement;

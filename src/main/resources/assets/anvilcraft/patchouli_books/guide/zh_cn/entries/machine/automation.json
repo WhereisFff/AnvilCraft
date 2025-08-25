@@ -6,12 +6,18 @@
     "pages": [
         {
             "type": "patchouli:text",
+            "text": "$(l:machine/resources_access#1) 1.自动过筛$()$(br)$(l:machine/resources_access#2) 2.自动方块粉碎$()$(br)$(l:machine/resources_access#3) 3.自动宝石转化$()$(br)$(l:machine/resources_access#4) 4.小巧高效宝石转化机$()$(br)$(l:machine/resources_access#5) 5.原木钻石机$()",
+            "title":"目录"
+        },
+        {
+            "type": "patchouli:text",
             "text": "铁砧工艺中大量的配方通过铁砧落下撞击进行加工，$(thing)自动铁砧处理$()是自动化的第一步。$(br2)例如$(thing)过筛$()可以从闪长岩粉碎而成的石英砂中筛选出石英，但每次$(thing)过筛$()只有一部分石英砂能筛选出石英，$(l)手动$()反复过筛费时又费力，下面给出一个$(l)自动$()$(thing)过筛$()的示例机器。",
 			"title":"自动铁砧加工"
 		},
 		{
             "type": "patchouli:multiblock",
             "name": "自动过筛",
+            "anchor": "1",
 			"multiblock": {
 				"mapping": {
 					"M": "anvilcraft:magnetic_chute[facing=north]",
@@ -54,6 +60,7 @@
 		{
 			"type":"patchouli:text",
 			"title":"自动粉碎机",
+            "anchor": "2",
 			"text":"现在你只要把石英砂丢进机器自就能动筛选出石英了，但是如何获得大量的石英砂呢？你还需要一台自动粉碎的机器，把闪长岩快速砸成石英砂。$(br2)这台示例机器中，在$(5)$(n)时钟模式脉冲发生器$()的控制下$(5)$(n)方块放置器$()后面箱子中的物品会被放出，并立刻被$(5)$(n)铁砧$()砸个粉碎。如果你需要更高效率，可以简单的延长，当然也可以自己设计出更高效的机器。"
 		},
 		{
@@ -101,7 +108,8 @@
 		{
             "type": "patchouli:text",
             "text": "铁砧工艺中有三种独特的宝石，$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()，它们都有各自独特的用处。你可以通过$(thing)粉碎$()$(item)晶洞$()$(n)概率获取$()宝石，但如果需要很多宝石呢？$(br2)例如你想建一台$(l:machine/resources_access#激光挖矿机)激光挖矿机$()，会使用大量的红宝石，这时候你就需要进行$(thing)宝石转化$()，将与$(thing)村民交易$()就能简单获得的绿宝石转化为红宝石。",
-			"title":"自动宝石转化"
+			"title":"自动宝石转化",
+            "anchor": "3"
 		},
 		{
             "type": "patchouli:text",
@@ -182,7 +190,7 @@
             "type": "patchouli:image",
             "text": "连接$(item)发射器$()的$(item)普通溜槽$()设置为只允许宝石桶通过，$(item)磁性溜槽$()设置为只允许$(item)空桶$()通过",
 			"title":"溜槽如何设置",
-			"images": ["anvilcraft:patchouli_images/5.2_8.png"]
+			"images": ["anvilcraft:patchouli_images/5.2_7.png"]
 		},
 		{
             "type": "patchouli:text",
@@ -192,6 +200,7 @@
 		{
             "type": "patchouli:multiblock",
             "name": "宝石转化机 2",
+            "anchor": "4",
 			"multiblock": {
 				"mapping": {
 					"A": "minecraft:iron_block",
@@ -233,9 +242,9 @@
         },
 		{
             "type": "patchouli:image",
-            "text": "$(item)普通溜槽$()无需设置，$(item)磁性溜槽$()设置为只允许$(4)红$()$(6)黄$()$(1)蓝$()3种宝石块$()通过",
+            "text": "$(item)普通溜槽$()无需设置，$(item)磁性溜槽$()设置为只允许$(item)四种宝石块$()通过",
 			"title":"溜槽如何设置",
-			"images": ["anvilcraft:patchouli_images/5.2_5.png"]
+			"images": ["anvilcraft:patchouli_images/5.2_4.png"]
 		},
 		{
             "type": "patchouli:text",
@@ -245,7 +254,8 @@
 		{
             "type": "patchouli:text",
             "text": "钻石，作为主世界最稀有的矿石之一，却有着很高的消耗量。你是否还在为缺少钻石感到苦恼？$(br2)铁砧工艺提供了一系列配方，通过多种加工方式把原木制造成闪闪发光的钻石。下面这台示例机器旨在以此为例，教你如何在铁砧工艺中调节机器的运行时序，得到你想要的运行顺序。",
-			"title":"自动生产钻石"
+			"title":"自动生产钻石",
+            "anchor": "5"
 		},
 		{
             "type": "patchouli:multiblock",
@@ -313,7 +323,7 @@
             "type": "patchouli:image",
             "text": "溜槽这么多，先按图上的顺序编个号吧。",
 			"title":"给溜槽编个号",
-			"images": ["anvilcraft:patchouli_images/5.2_6.png"]
+			"images": ["anvilcraft:patchouli_images/5.2_5.png"]
 		},
 		{
             "type": "patchouli:text",
@@ -324,7 +334,7 @@
             "type": "patchouli:image",
             "text": "脉冲发生器也这么多，先按图上的顺序编个号吧。",
 			"title":"给脉冲发生器编个号",
-			"images": ["anvilcraft:patchouli_images/5.2_7.png"]
+			"images": ["anvilcraft:patchouli_images/5.2_6.png"]
 		},
 		{
             "type": "patchouli:text",

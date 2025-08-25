@@ -1,6 +1,6 @@
 {
   "type": "anvilcraft:super_heating",
-  "consume": -1,
+  "consume": -1000,
   "ingredients": [
     {
       "items": "#anvilcraft:gem_blocks"

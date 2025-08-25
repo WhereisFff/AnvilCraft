@@ -2,8 +2,10 @@ package dev.dubhe.anvilcraft.integration.patchouli;
 
 import dev.anvilcraft.lib.integration.Integration;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.integration.patchouli.page.PageAnvilCollisionCraft;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageBlockCompress;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageBulging;
+import dev.dubhe.anvilcraft.integration.patchouli.page.PageBoiling;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageCooking;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageItemCompress;
 import dev.dubhe.anvilcraft.integration.patchouli.page.PageItemCrush;
@@ -34,8 +36,10 @@ public class PatchouliIntegration {
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("item_compress"), PageItemCompress.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("stamping"), PageStamping.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("bulging"), PageBulging.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("boiling"), PageBoiling.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("cooking"), PageCooking.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("unpack"), PageUnpack.class);
         ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("mesh"), PageMesh.class);
+        ClientBookRegistry.INSTANCE.pageTypes.put(AnvilCraft.of("anvil_collision"), PageAnvilCollisionCraft.class);
     }
 }

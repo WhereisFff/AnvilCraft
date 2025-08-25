@@ -1,13 +1,12 @@
 package dev.dubhe.anvilcraft.data.lang;
 
 import com.tterrag.registrate.providers.RegistrateLangProvider;
-import org.jetbrains.annotations.NotNull;
 
 public class AdvancementLang {
     /**
      * @param provider 提供器
      */
-    public static void init(@NotNull RegistrateLangProvider provider) {
+    public static void init(RegistrateLangProvider provider) {
         // region root
         provider.add("advancements.anvilcraft.root.title", "Welcome to AnvilCraft");
         provider.add("advancements.anvilcraft.root.description", "Pick up the anvil, start from the vanilla, and enter the world of technology and magic");
@@ -102,7 +101,7 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.ripVanWinkle.title", "Rip Van Winkle");
         provider.add("advancements.anvilcraft.ripVanWinkle.description", "Perform any time warp operation");
 
-        provider.add("advancements.anvilcraft.hammer.title", "When you have a hammer, you see everyone wants a nail");
+        provider.add("advancements.anvilcraft.hammer.title", "Everyone's a nail to a hammer");
         provider.add("advancements.anvilcraft.hammer.description", "Use an anvil hammer to kill mobs");
 
         provider.add("advancements.anvilcraft.super_kill.title", "Super kill... almost");

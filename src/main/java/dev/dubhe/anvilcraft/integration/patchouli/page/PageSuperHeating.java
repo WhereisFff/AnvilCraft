@@ -32,7 +32,7 @@ public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
     ) {
         List<ChanceBlockState> blockResults = recipe.getResultBlocks();
         if (!recipe.getResultItems().isEmpty() || blockResults.isEmpty()) return;
-        BlockState state = blockResults.get((parent.ticksInBook / 20) % blockResults.size()).getState();
+        BlockState state = blockResults.get((parent.ticksInBook / 20) % blockResults.size()).state();
         RenderHelper.renderBlock(
             graphics,
             state.getBlock() instanceof CauldronBlock ? CauldronUtil.fullState(state.getBlock()) : state,

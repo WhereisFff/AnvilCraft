@@ -147,7 +147,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
                     Minecraft.getInstance().font,
                     Component.translatable(
                         "gui.anvilcraft.category.bulging.consume_fluid",
-                        hasCauldron.getConsume(),
+                        hasCauldron.consume(),
                         hasCauldron.getFluidCauldron().getName()
                     ),
                     0,
@@ -164,7 +164,7 @@ public class BulgingCategory implements IRecipeCategory<RecipeHolder<BulgingReci
                     Minecraft.getInstance().font,
                     Component.translatable(
                         "gui.anvilcraft.category.bulging.produce_fluid",
-                        hasCauldron.getConsume(),
+                        -hasCauldron.consume(),
                         hasCauldron.getTransformCauldron().getName()
                     ),
                     0,
