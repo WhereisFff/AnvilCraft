@@ -64,7 +64,12 @@
         ]
       },
       "enable_visualize": "false",
-      "text": "When chute are chained, the pointed chute will become a simple chute and no longer draw items from the world. It can not be set filtration or controlled by redstone signals, too."
+      "text": "When chute are chained, the pointed chute will become a simple chute."
+    },
+    {
+      "type": "patchouli:text",
+      "title": "The characteristics of the simple chute",
+      "text": "$(li)don't draw items from the world $(li)only holds 1 group of items $(li)can not be set filtration $(li)can not be controlled by redstone signals"
     },
     {
       "type": "patchouli:crafting",
