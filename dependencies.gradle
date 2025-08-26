@@ -44,7 +44,7 @@ dependencies {
     compileOnly(libs.kubejs)
 
     // Ponder
-    implementation(libs.ponder)
+    implementation(libs.ponder) { transitive = false }
 
     // Create
     implementation(libs.flywheelApi)
