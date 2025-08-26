@@ -64,10 +64,6 @@ repositories {
         name = "Create Mod Maven"
         url = "https://maven.createmod.net"
     }
-    maven {  // ForgeConfigAPIPort
-        name = "ForgeConfigAPIPort Maven"
-        url = "https://raw.githubusercontent.com/Fuzss/modresources/main/maven/"
-    }
     maven {
         url "https://maven.latvian.dev/releases"
         content {
