@@ -40,7 +40,7 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
         if (player != null && player.isShiftKeyDown()) {
             original = true;
         }
-        if (Util.jadePresent.get() && AnvilCraftClient.CONFIG.doNotShowTooltipWhenJadePresent) return null;
+        if (Util.jadePresent.get() && AnvilCraftClient.CONFIG.doNotShowTooltipWhenJadePresent) return List.of();
         boolean overloaded = false;
         BlockPos pos;
         BlockState blockState = e.getBlockState();
@@ -63,7 +63,7 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
         if (powerGrids.isEmpty()) return List.of();
         SimplePowerGrid grid = powerGrids.get();
         final Optional<PowerComponentInfo> optional = grid.getInfoForPos(pos);
-        if (optional.isEmpty()) return null;
+        if (optional.isEmpty()) return List.of();
         PowerComponentInfo componentInfo = optional.get();
         overloaded |= grid.getConsume() > grid.getGenerate();
         final List<Component> lines = new ArrayList<>();

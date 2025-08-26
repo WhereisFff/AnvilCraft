@@ -47,7 +47,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.EnumSet;
 import java.util.List;
 
-import static dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers.anvilCraftBlockPlacer;
+import static dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers.anvilcraftBlockPlacer;
 import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getSourceItemHandlerRecursive;
 
 @ParametersAreNonnullByDefault
@@ -293,7 +293,7 @@ public class BlockPlacerBlock extends Block implements IHammerRemovable, IHammer
         }
         BlockPos placePos = blockPos.relative(direction, distance);
         // 放置方块
-        if (anvilCraftBlockPlacer.placeBlock(
+        if (anvilcraftBlockPlacer.placeBlock(
             level,
             placePos,
             orientation,

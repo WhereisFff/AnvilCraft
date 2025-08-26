@@ -1111,6 +1111,7 @@ public class ModItems {
         .register();
     public static final ItemEntry<EmptyCapacitorItem> CAPACITOR_EMPTY = REGISTRATE
         .item("capacitor_empty", EmptyCapacitorItem::new)
+        .lang("Empty Capacitor")
         .model(DataGenUtil::noExtraModelOrState)
         .tag(ModItemTags.CAPACITOR)
         .recipe((ctx, provider) -> ShapedRecipeBuilder.shaped(
@@ -1130,6 +1131,7 @@ public class ModItems {
         .register();
     public static final ItemEntry<EmptySuperCapacitorItem> SUPER_CAPACITOR_EMPTY = REGISTRATE
         .item("supercapacitor_empty", EmptySuperCapacitorItem::new)
+        .lang("Empty Supercapacitor")
         .model(DataGenUtil::noExtraModelOrState)
         .register();
     public static final ItemEntry<Item> CHOCOLATE = REGISTRATE

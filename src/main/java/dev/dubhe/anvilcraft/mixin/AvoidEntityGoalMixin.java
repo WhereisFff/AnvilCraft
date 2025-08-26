@@ -47,7 +47,9 @@ public abstract class AvoidEntityGoalMixin<T extends LivingEntity> {
     @Final
     protected PathNavigation pathNav;
 
-    @Shadow @Nullable protected T toAvoid;
+    @Shadow
+    @Nullable
+    protected T toAvoid;
 
     @Inject(method = "canUse", at = @At("HEAD"), cancellable = true)
     private void addAvoidPlayerGoal(CallbackInfoReturnable<Boolean> cir) {

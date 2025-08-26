@@ -131,7 +131,7 @@ public class HeliostatsBlockEntity extends BlockEntity {
             ClipContext.Fluid.NONE,
             level.isClientSide
                 ? Objects.requireNonNull(Minecraft.getInstance().player)
-                : AnvilCraftFakePlayers.anvilCraftBlockPlacer.getPlayer())
+                : AnvilCraftFakePlayers.anvilcraftBlockPlacer.getPlayer())
         );
         if (!blockHitResult.getBlockPos().equals(irritatePos)) {
             return WorkResult.OBSCURED;

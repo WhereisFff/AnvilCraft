@@ -42,16 +42,20 @@ public abstract class FlyingHitEntityMixin extends Entity {
         @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/entity/LivingEntity;"
-                + "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+                     + "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
             ordinal = 2,
-            shift = At.Shift.AFTER))
+            shift = At.Shift.AFTER
+        )
+    )
     @SuppressWarnings("UnreachableCode")
     private void onFlyingHitEntity(Vec3 travelVector, CallbackInfo ci) {
         Optional<ServerPlayer> playerOp = Util.castSafely(this, ServerPlayer.class);
         if (playerOp.isEmpty()) return;
         ServerPlayer thiS = playerOp.get();
         if (!AnvilHammerItem.isWearing(thiS)
-            && !this.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.ROYAL_ANVIL_HAMMER.get())) return;
+            && !this.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.ROYAL_ANVIL_HAMMER.get())) {
+            return;
+        }
         AABB headBlockBoundBox = AABB.ofSize(this.getEyePosition(), 1, 1, 1);
         List<LivingEntity> entities =
             level().getEntitiesOfClass(LivingEntity.class, headBlockBoundBox, it -> it != (Object) this);
@@ -59,12 +63,12 @@ public abstract class FlyingHitEntityMixin extends Entity {
         float amount = (float) (movement.length() * DAMAGE_FACTOR);
         for (LivingEntity entity : entities) {
             entity.hurt(damageSources().playerAttack(thiS), amount);
-            anvilCraft$damageItem(thiS, this.getItemBySlot(EquipmentSlot.HEAD));
+            anvilcraft$damageItem(thiS, this.getItemBySlot(EquipmentSlot.HEAD));
         }
     }
 
     @Unique
-    private static void anvilCraft$damageItem(Player player, ItemStack itemStack) {
+    private static void anvilcraft$damageItem(Player player, ItemStack itemStack) {
         if (player.isCreative()) return;
 
         if (itemStack.isDamageableItem()) {

@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -41,7 +40,9 @@ public abstract class BeaconMenuMixin {
         @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/inventory/BeaconMenu$PaymentSlot;"
-                + "remove(I)Lnet/minecraft/world/item/ItemStack;"))
+                     + "remove(I)Lnet/minecraft/world/item/ItemStack;"
+        )
+    )
     private void updateEffects(
         Optional<MobEffect> primaryEffect, Optional<MobEffect> secondaryEffect, CallbackInfo ci) {
         ItemStack item = this.paymentSlot.getItem();
@@ -61,7 +62,7 @@ public abstract class BeaconMenuMixin {
     }
 
     @Unique
-    private boolean anvilcraft$toCorrupted(@NotNull Level level, @NotNull BlockPos pos) {
+    private boolean anvilcraft$toCorrupted(Level level, BlockPos pos) {
         RandomSource random = level.getRandom();
         double chance = random.nextDouble();
         int levels = anvilcraft$updateBase(level, pos.getX(), pos.getY(), pos.getZ());

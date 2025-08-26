@@ -109,7 +109,8 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         BlockState state,
         BlockGetter level,
         BlockPos pos,
-        CollisionContext context) {
+        CollisionContext context
+    ) {
         return switch (state.getValue(AXIS)) {
             case Y -> SHAPE_Y;
             case Z -> SHAPE_Z;
@@ -168,34 +169,32 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         BlockHitResult hit
     ) {
         ItemStack itemInHand = player.getItemInHand(hand);
-        if (!level.isClientSide) {
-            if (itemInHand.is(ModBlocks.INDUCTION_LIGHT.asItem())) {
-                return BlockPlaceAssist.tryPlace(
-                    state, level, pos, player, hand, hit,
-                    ModBlocks.INDUCTION_LIGHT.asItem(),
-                    AXIS,
-                    ModBlocks.INDUCTION_LIGHT.getDefaultState()
-                );
-            } else if (itemInHand.is(Items.REDSTONE)) {
-                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PINK));
-                return InteractionResult.SUCCESS;
-            } else if (itemInHand.is(Items.GLOWSTONE_DUST)) {
-                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.YELLOW));
-                return InteractionResult.SUCCESS;
-            } else if (itemInHand.is(ItemTags.AXES)) {
-                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PRIMARY));
-                itemInHand.hurtAndBreak(1, (ServerLevel) level, (ServerPlayer) player,
-                    item -> player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand))
-                );
-                return InteractionResult.CONSUME_PARTIAL;
-            } else if (itemInHand.is(ModItems.VOID_MATTER.asItem())) {
-                level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.DARK));
-                return InteractionResult.SUCCESS;
-            }
+        if (level.isClientSide) return InteractionResult.SUCCESS;
+        if (itemInHand.is(ModBlocks.INDUCTION_LIGHT.asItem())) {
+            return BlockPlaceAssist.tryPlace(
+                state, level, pos, player, hand, hit,
+                ModBlocks.INDUCTION_LIGHT.asItem(),
+                AXIS,
+                ModBlocks.INDUCTION_LIGHT.getDefaultState()
+            );
+        } else if (itemInHand.is(Items.REDSTONE)) {
+            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PINK));
+            return InteractionResult.SUCCESS;
+        } else if (itemInHand.is(Items.GLOWSTONE_DUST)) {
+            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.YELLOW));
+            return InteractionResult.SUCCESS;
+        } else if (itemInHand.is(ItemTags.AXES)) {
+            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.PRIMARY));
+            itemInHand.hurtAndBreak(1, (ServerLevel) level, (ServerPlayer) player,
+                item -> player.onEquippedItemBroken(item, LivingEntity.getSlotForHand(hand))
+            );
+            return InteractionResult.CONSUME_PARTIAL;
+        } else if (itemInHand.is(ModItems.VOID_MATTER.asItem())) {
+            level.setBlockAndUpdate(pos, state.setValue(COLOR, LightColor.DARK));
+            return InteractionResult.SUCCESS;
         }
         return InteractionResult.SUCCESS;
     }
-
 
     @Nullable
     @Override
@@ -207,7 +206,8 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         return createTickerHelper(
             type,
             ModBlockEntities.INDUCTION_LIGHT.get(),
-            (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1));
+            (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1)
+        );
     }
 
     @Override
@@ -217,7 +217,8 @@ public class InductionLightBlock extends BetterBaseEntityBlock implements IHamme
         BlockPos pos,
         Block neighborBlock,
         BlockPos neighborPos,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (level.isClientSide) return;
         if (state.getValue(WATERLOGGED)) level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         if (state.getValue(OVERLOAD)) return;

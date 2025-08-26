@@ -247,7 +247,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
                                 level,
                                 sourceBlockPos,
                                 level.getBlockState(sourceBlockPos),
-                                anvilCraftBlockPlacer.getPlayer());
+                                anvilcraftBlockPlacer.getPlayer());
                         level.destroyBlock(sourceBlockPos, false);
                     }
                 }*/

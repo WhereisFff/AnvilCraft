@@ -210,7 +210,6 @@ public class BlockTagLoader {
             .add(ModBlocks.DEFLECTION_RING.getKey());
 
         provider.addTag(ModBlockTags.ANVIL_HAMMER_BLACKLIST)
-            .add(ModBlocks.DEFLECTION_RING.getKey())
             .add(findResourceKey(Blocks.NETHER_PORTAL))
             .add(findResourceKey(Blocks.PISTON_HEAD))
             .add(findResourceKey(Blocks.END_PORTAL_FRAME))

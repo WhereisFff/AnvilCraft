@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joml.Vector3f;
@@ -24,8 +26,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
 
 public interface ISlidingRail extends IBlockExtension {
     Map<BlockPos, PistonPushInfo> MOVING_PISTON_MAP = new HashMap<>();
@@ -59,9 +59,24 @@ public interface ISlidingRail extends IBlockExtension {
         return false;
     }
 
+    /**
+     * 当滑轨站尝试移动顶部滑动方块到该滑轨顶部时调用该方法。<br>
+     * 将在{@link ISlidingRail#onSlidingAbove(Level, BlockPos, BlockState, SlidingBlockEntity) onSlidingAbove()}调用。
+     *
+     * @param level 滑轨站所处的世界
+     * @param pos   滑轨方块位置
+     * @param state 滑轨方块状态
+     * @param side  滑轨站相对于滑轨的方向
+     *
+     * @return 将要滑动的方向。若为空，则不滑动。
+     */
+    default boolean canMoveSlidingToTop(LevelReader level, BlockPos pos, BlockState state, Direction side) {
+        return false;
+    }
+
     static void whenOnNeighborChange(LevelReader level, BlockPos pos, BlockPos neighbor) {
         if (!level.getBlockState(neighbor).is(Blocks.MOVING_PISTON)) return;
-        Direction dir = level.getBlockState(neighbor).getValue(FACING);
+        Direction dir = level.getBlockState(neighbor).getValue(BlockStateProperties.FACING);
         if (dir.getAxis() == Direction.Axis.Y || !neighbor.equals(pos.above())) {
             MOVING_PISTON_MAP.remove(pos);
             return;
@@ -115,13 +130,19 @@ public interface ISlidingRail extends IBlockExtension {
         }
 
         List<BlockPos> toDestroys = resolver.getToDestroy();
+        List<BlockState> toDestroyStates = new ArrayList<>();
 
         for (int i = toDestroys.size() - 1; i >= 0; i--) {
             BlockPos destroyingPos = toDestroys.get(i);
             BlockState destroyingState = level.getBlockState(destroyingPos);
             BlockEntity destroyingEntity = destroyingState.hasBlockEntity() ? level.getBlockEntity(destroyingPos) : null;
             Block.dropResources(destroyingState, level, destroyingPos, destroyingEntity);
-            destroyingState.onDestroyedByPushReaction(level, destroyingPos, facing, level.getFluidState(destroyingPos));
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(destroyingState));
+            if (!destroyingState.is(BlockTags.FIRE)) {
+                level.addDestroyBlockEffect(destroyingPos, destroyingState);
+            }
+            toDestroyStates.add(destroyingState);
         }
 
         BlockState air = Blocks.AIR.defaultBlockState();
@@ -136,6 +157,15 @@ public interface ISlidingRail extends IBlockExtension {
             toPushState.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
             air.updateNeighbourShapes(level, toPushPos, 0b0000010);
             air.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
+        }
+
+        int j = 0;
+
+        for (int i = toDestroys.size() - 1; i >= 0; i--) {
+            BlockPos toDestroyPos = toDestroys.get(i);
+            BlockState toDestroyState = toDestroyStates.get(j++);
+            toDestroyState.updateIndirectNeighbourShapes(level, toDestroyPos, 2);
+            level.updateNeighborsAt(toDestroyPos, toDestroyState.getBlock());
         }
 
         for (var toPushEntry : toPushes) {

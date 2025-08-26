@@ -10,7 +10,6 @@ import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,7 +39,7 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
             pose.translate(recipeX - 6, recipeY + 52, 100);
             pose.scale(0.5f, 0.5f, 1);
             graphics.drawString(
-                ((ScreenAccessor) parent).anvilcraft$getFont(),
+                ((ScreenAccessor) parent).getFont(),
                 Component.translatable(
                     "gui.anvilcraft.category.time_warp.consume_fluid",
                     hasCauldron.consume(),
@@ -54,7 +53,7 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
             pose.translate(recipeX - 6, recipeY + 52, 100);
             pose.scale(0.5f, 0.5f, 1);
             graphics.drawString(
-                ((ScreenAccessor) parent).anvilcraft$getFont(),
+                ((ScreenAccessor) parent).getFont(),
                 Component.translatable(
                     "gui.anvilcraft.category.time_warp.produce_fluid",
                     -hasCauldron.consume(),

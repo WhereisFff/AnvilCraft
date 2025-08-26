@@ -200,4 +200,19 @@ public class Util {
         }
         return op.isPresent();
     }
+
+    /**
+     * 若传入的值可被强转为{@code T}类型，则使用传入的值执行传入的方法<br>
+     * 等效于{@code Util.castSafely(o, clazz).ifPresent(action);}
+     *
+     * @param <T>    想要转为的类型
+     * @param o      一个值，可为null
+     * @param action 将要执行的操作
+     */
+    public static <T> void ifCastable(@Nullable Object o, Class<T> clazz, Consumer<T> action) {
+        Optional.ofNullable(o)
+            .filter(clazz::isInstance)
+            .<T>map(Util::cast)
+            .ifPresent(action);
+    }
 }

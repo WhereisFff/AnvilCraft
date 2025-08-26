@@ -27,8 +27,8 @@ abstract class PistonMovingBlockEntityMixin {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/Level;"
-                + "neighborChanged(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;"
-                + "Lnet/minecraft/core/BlockPos;)V",
+                     + "neighborChanged(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/Block;"
+                     + "Lnet/minecraft/core/BlockPos;)V",
             shift = At.Shift.AFTER
         )
     )
@@ -52,7 +52,9 @@ abstract class PistonMovingBlockEntityMixin {
         p.extending = blockEntity.isExtending();
         if (ISlidingRail.MOVING_PISTON_MAP.containsKey(belowPos)) {
             ISlidingRail.MOVING_PISTON_MAP.get(belowPos).extending = p.extending;
-        } else ISlidingRail.MOVING_PISTON_MAP.put(belowPos, p);
+        } else {
+            ISlidingRail.MOVING_PISTON_MAP.put(belowPos, p);
+        }
         ISlidingRail.MOVING_PISTON_MAP.get(belowPos).isSourcePiston = blockEntity.isSourcePiston();
     }
 }
