@@ -17,6 +17,8 @@ public class AnvilCraftPonderTags {
 
     public static final ResourceLocation POWER_COMPONENTS = AnvilCraft.of("power_components");
 
+    public static final ResourceLocation LOGISTICS_COMPONENTS = AnvilCraft.of("logistics_components");
+
     public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
         PonderTagRegistrationHelper<RegistryEntry<?, ?>> registryTagHelper = helper.withKeyFunction(RegistryEntry::getId);
         PonderTagRegistrationHelper<Item> itemTagHelper = helper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
@@ -49,6 +51,13 @@ public class AnvilCraftPonderTags {
             .description("Power components")
             .register();
 
+        helper.registerTag(LOGISTICS_COMPONENTS)
+            .addToIndex()
+            .item(ModBlocks.CHUTE, true, false)
+            .title("Logistics components")
+            .description("Various item transfer and storage components")
+            .register();
+
 
         itemTagHelper.addToTag(ANVIL)
             .add(Items.ANVIL)
@@ -76,5 +85,9 @@ public class AnvilCraftPonderTags {
         registryTagHelper.addToTag(POWER_COMPONENTS)
             .add(ModBlocks.TRANSMISSION_POLE)
             .add(ModBlocks.REMOTE_TRANSMISSION_POLE);
+
+        registryTagHelper.addToTag(LOGISTICS_COMPONENTS)
+            .add(ModBlocks.CHUTE)
+            .add(ModBlocks.SIMPLE_CHUTE);
     }
 }

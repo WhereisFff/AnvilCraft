@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.integration.ponder;
 
 import dev.dubhe.anvilcraft.integration.ponder.scene.AnvilScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.logistics.ChuteScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.power.TransmissionPoleScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.HeaterScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.SpaceOvercompressorScene;
@@ -24,5 +25,7 @@ public class AnvilCraftPonderScenes {
         BlockComparatorScene.register(helper);
         // structure
         ImpactPileScene.register(helper);
+        // logistics
+        ChuteScene.register(helper);
     }
 }
