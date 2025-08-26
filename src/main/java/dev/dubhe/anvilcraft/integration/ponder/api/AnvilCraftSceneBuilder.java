@@ -3,6 +3,11 @@ package dev.dubhe.anvilcraft.integration.ponder.api;
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.ISimpleMultiPartBlockState;
 import dev.dubhe.anvilcraft.constant.Constant;
+import dev.dubhe.anvilcraft.integration.ponder.api.instruction.Interpolation;
+import dev.dubhe.anvilcraft.integration.ponder.api.instruction.InterpolationAnimateWorldSectionInstruction;
+import dev.dubhe.anvilcraft.integration.ponder.api.instruction.LineInstruction;
+import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.Selection;
 import net.createmod.ponder.foundation.PonderScene;
@@ -87,6 +92,13 @@ public class AnvilCraftSceneBuilder extends PonderSceneBuilder {
                 new Vec3i(maxX, maxY, maxZ).offset(pos)
             ));
         }
+
+        public void moveSectionInterpolation(ElementLink<WorldSectionElement> link, Vec3 offset, Interpolation interpolation) {
+            AnvilCraftSceneBuilder.this.addInstruction(
+                InterpolationAnimateWorldSectionInstruction.move(link, offset, interpolation)
+            );
+            AnvilCraftSceneBuilder.this.idle((int) Math.ceil(interpolation.duration(offset.length())));
+        }
     }
 
     public class EffectInstructions extends PonderEffectInstructions {
@@ -105,7 +117,7 @@ public class AnvilCraftSceneBuilder extends PonderSceneBuilder {
         }
 
         public void showTransmitterLine(BlockPos start, BlockPos end, int duration) {
-            this.showLine(Constant.TRANSMITTER_LINE_COLOR, start.getCenter(), end.getCenter(), duration, 1 / 64f);
+            this.showLine(Constant.TRANSMITTER_LINE_COLOR, start.getCenter(), end.getCenter(), duration, 1 / 48f);
         }
 
         public void showBigLine(int color, Vec3 start, Vec3 end, int duration) {

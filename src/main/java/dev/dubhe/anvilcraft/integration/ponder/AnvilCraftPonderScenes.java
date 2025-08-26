@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.power.TransmissionPoleScene
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.HeaterScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.SpaceOvercompressorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockComparatorScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockPlacerScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.MagnetScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.structure.ImpactPileScene;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
@@ -23,6 +24,7 @@ public class AnvilCraftPonderScenes {
         // redstone
         MagnetScene.register(helper);
         BlockComparatorScene.register(helper);
+        BlockPlacerScene.register(helper);
         // structure
         ImpactPileScene.register(helper);
         // logistics

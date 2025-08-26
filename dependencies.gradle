@@ -43,12 +43,14 @@ dependencies {
     compileOnly(libs.theoneprobe)
     compileOnly(libs.kubejs)
 
+    // Flywheel
+    implementation(libs.flywheelApi)
+    implementation(libs.flywheel)
+
     // Ponder
     implementation(libs.ponder) { transitive = false }
 
     // Create
-    implementation(libs.flywheelApi)
-    implementation(libs.flywheel)
     implementation(libs.create) { transitive = false }
 
     // AE2
