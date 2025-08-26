@@ -314,16 +314,16 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
 
     @Override
     public @NotNull CompoundTag clearData(@NotNull Level level, @NotNull BlockPos pos) {
-        CompoundTag data = new CompoundTag();
+        CompoundTag[] data = new CompoundTag[1];
         level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
-            .ifPresent(be -> be.saveAdditional(data, level.registryAccess()));
-        return data;
+            .ifPresent(be -> data[0] = be.exportMoveData());
+        return data[0];
     }
 
     @Override
     public void setData(@NotNull Level level, @NotNull BlockPos pos, @NotNull CompoundTag tag) {
         level.getBlockEntity(pos, ModBlockEntities.PULSE_GENERATOR.get())
-            .ifPresent(be -> be.loadAdditional(tag, level.registryAccess()));
+            .ifPresent(be -> be.applyMoveData(level, pos, level.getBlockState(pos), tag));
     }
 }
 
