@@ -254,8 +254,11 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         Vec3 vec3 = this.getDeltaMovement();
         this.applyGravity();
         this.noPhysics = false;
-        if (!this.onGround() || this.getDeltaMovement()
-                                    .horizontalDistanceSqr() > (double) 1.0E-5F || (this.tickCount + this.getId()) % 4 == 0) {
+        if (
+            !this.onGround()
+            || this.getDeltaMovement().horizontalDistanceSqr() > (double) 1.0E-5F
+            || (this.tickCount + this.getId()) % 4 == 0
+        ) {
             this.anvilcraft$neutroniumMove(MoverType.SELF, this.getDeltaMovement());
             float f = 0.98F;
             if (this.onGround()) {
@@ -270,8 +273,9 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
                 }
             }
         }
-        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX()) || Mth.floor(this.yo) != Mth.floor(this.getY()) || Mth.floor(this.zo) != Mth.floor(
-            this.getZ());
+        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX())
+                       || Mth.floor(this.yo) != Mth.floor(this.getY())
+                       || Mth.floor(this.zo) != Mth.floor(this.getZ());
         int i = flag ? 2 : 40;
         if (this.tickCount % i == 0 && !this.level().isClientSide && this.isMergable()) {
             this.mergeWithNeighbours();

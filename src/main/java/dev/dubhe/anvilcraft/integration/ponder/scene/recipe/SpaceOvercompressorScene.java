@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.integration.ponder.scene;
+package dev.dubhe.anvilcraft.integration.ponder.scene.recipe;
 
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
@@ -17,10 +17,9 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class SpaceOvercompressorScene {
-    public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
+    public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(
                 ModBlocks.SPACE_OVERCOMPRESSOR
@@ -31,7 +30,7 @@ public class SpaceOvercompressorScene {
             );
     }
 
-    private static void crafting(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("space_overcompressor", "Use the Space Overcompressor to create the Neutronium Ingot");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();
@@ -79,7 +78,10 @@ public class SpaceOvercompressorScene {
         }
         // 从空间超压器下方掉出中子锭
         scene.overlay().showText(100)
-            .text("When the Space Overcompressor has built up enough mass, a neutron ingot will form. It can pass through most blocks, so you'll need something like end dust to stop it.")
+            .text(
+                "When the Space Overcompressor has built up enough mass, a neutron ingot will form. "
+                + "It can pass through most blocks, so you'll need something like end dust to stop it."
+            )
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();

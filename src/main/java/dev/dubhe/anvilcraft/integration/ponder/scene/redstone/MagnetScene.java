@@ -23,11 +23,10 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.piston.PistonBaseBlock;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 
 public class MagnetScene {
-    public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
+    public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(
                 ModBlocks.MAGNET_BLOCK,
@@ -37,12 +36,14 @@ public class MagnetScene {
             .addStoryBoard(
                 "platform/555",
                 MagnetScene::thunder,
-                AnvilCraftPonderTags.MAGNET_BLOCK)
+                AnvilCraftPonderTags.MAGNET_BLOCK
+            )
             .addStoryBoard(
                 "platform/555",
                 MagnetScene::magnetizeIngot,
                 AnvilCraftPonderTags.MAGNET_BLOCK
-            ).addStoryBoard(
+            )
+            .addStoryBoard(
                 "platform/555",
                 MagnetScene::attractAnvil,
                 AnvilCraftPonderTags.MAGNET_BLOCK,
@@ -51,10 +52,11 @@ public class MagnetScene {
             .addStoryBoard(
                 "platform/555",
                 MagnetScene::rubCopperBlock,
-                AnvilCraftPonderTags.MAGNET_BLOCK);
+                AnvilCraftPonderTags.MAGNET_BLOCK
+            );
     }
 
-    private static void thunder(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    private static void thunder(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("magnet_thunder", "Get hollow magnet block");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();
@@ -94,7 +96,7 @@ public class MagnetScene {
         scene.markAsFinished(); // 标记场景结束
     }
 
-    private static void magnetizeIngot(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    private static void magnetizeIngot(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("magnet_magnetize_ingot", "Get a magnet ingot through a hollow magnet block");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();
@@ -134,7 +136,7 @@ public class MagnetScene {
         scene.markAsFinished(); // 标记场景结束
     }
 
-    private static void attractAnvil(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    private static void attractAnvil(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("magnet", "Use magnet to attract the anvil");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();
@@ -174,7 +176,8 @@ public class MagnetScene {
         Selection redstoneBlock = util.select().position(3, 4, 2);
         scene.world().showIndependentSection(redstoneBlock, Direction.WEST);
         scene.idle(10);
-        scene.world().modifyBlock(new BlockPos(2, 4, 2),
+        scene.world().modifyBlock(
+            new BlockPos(2, 4, 2),
             bs -> bs.setValue(MagnetBlock.LIT, true),
             false
         );
@@ -192,7 +195,7 @@ public class MagnetScene {
         scene.markAsFinished();
     }
 
-    private static void rubCopperBlock(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    private static void rubCopperBlock(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("magnet_power_generation", "Generate electricity by rubbing a magnet and a copper block");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();
@@ -203,7 +206,8 @@ public class MagnetScene {
         scene.world().setBlock(copperBlockPos, Blocks.COPPER_BLOCK.defaultBlockState(), false);
         scene.world().setBlock(magnetPos, ModBlocks.MAGNET_BLOCK.getDefaultState(), false);
         scene.world().showSection(util.select().position(copperBlockPos), Direction.DOWN);
-        ElementLink<WorldSectionElement> magnetElement = scene.world().showIndependentSection(util.select().position(magnetPos), Direction.DOWN);
+        ElementLink<WorldSectionElement> magnetElement = scene.world()
+            .showIndependentSection(util.select().position(magnetPos), Direction.DOWN);
         scene.world().moveSection(magnetElement, new Vec3(0, 0, 1), 5);
         scene.idle(20);
 
@@ -223,7 +227,8 @@ public class MagnetScene {
         scene.world().modifyBlock(pistonPos, state -> state.setValue(PistonBaseBlock.EXTENDED, true), false);
 
         BlockPos pistonHeadPos = new BlockPos(2, 1, 2);
-        scene.world().setBlock(pistonHeadPos, Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.NORTH), false);
+        scene.world()
+            .setBlock(pistonHeadPos, Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.NORTH), false);
         scene.world().showSection(util.select().position(pistonHeadPos), Direction.NORTH);
         scene.idle(30);
 

@@ -8,7 +8,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
 
 public class AnvilCraftPonderTags {
     public static final ResourceLocation ANVIL = AnvilCraft.of("anvil");
@@ -16,7 +15,9 @@ public class AnvilCraftPonderTags {
 
     public static final ResourceLocation REDSTONE_COMPONENTS = AnvilCraft.of("redstone_components");
 
-    public static void register(@NotNull PonderTagRegistrationHelper<ResourceLocation> helper) {
+    public static final ResourceLocation POWER_COMPONENTS = AnvilCraft.of("power_components");
+
+    public static void register(PonderTagRegistrationHelper<ResourceLocation> helper) {
         PonderTagRegistrationHelper<RegistryEntry<?, ?>> registryTagHelper = helper.withKeyFunction(RegistryEntry::getId);
         PonderTagRegistrationHelper<Item> itemTagHelper = helper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
 
@@ -39,6 +40,13 @@ public class AnvilCraftPonderTags {
             .item(ModBlocks.BLOCK_COMPARATOR, true, false)
             .title("Redstone components")
             .description("New redstone components")
+            .register();
+
+        helper.registerTag(POWER_COMPONENTS)
+            .addToIndex()
+            .item(ModBlocks.TRANSMISSION_POLE, true, false)
+            .title("Power components")
+            .description("Power components")
             .register();
 
 
@@ -64,5 +72,9 @@ public class AnvilCraftPonderTags {
             .add(ModBlocks.BLOCK_COMPARATOR)
             .add(ModBlocks.ITEM_DETECTOR)
             .add(ModBlocks.PULSE_GENERATOR);
+
+        registryTagHelper.addToTag(POWER_COMPONENTS)
+            .add(ModBlocks.TRANSMISSION_POLE)
+            .add(ModBlocks.REMOTE_TRANSMISSION_POLE);
     }
 }
