@@ -7,6 +7,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
 import org.joml.Vector3f;
@@ -128,13 +130,19 @@ public interface ISlidingRail extends IBlockExtension {
         }
 
         List<BlockPos> toDestroys = resolver.getToDestroy();
+        List<BlockState> toDestroyStates = new ArrayList<>();
 
         for (int i = toDestroys.size() - 1; i >= 0; i--) {
             BlockPos destroyingPos = toDestroys.get(i);
             BlockState destroyingState = level.getBlockState(destroyingPos);
             BlockEntity destroyingEntity = destroyingState.hasBlockEntity() ? level.getBlockEntity(destroyingPos) : null;
             Block.dropResources(destroyingState, level, destroyingPos, destroyingEntity);
-            destroyingState.onDestroyedByPushReaction(level, destroyingPos, facing, level.getFluidState(destroyingPos));
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            level.gameEvent(GameEvent.BLOCK_DESTROY, pos, GameEvent.Context.of(destroyingState));
+            if (!destroyingState.is(BlockTags.FIRE)) {
+                level.addDestroyBlockEffect(destroyingPos, destroyingState);
+            }
+            toDestroyStates.add(destroyingState);
         }
 
         BlockState air = Blocks.AIR.defaultBlockState();
@@ -149,6 +157,15 @@ public interface ISlidingRail extends IBlockExtension {
             toPushState.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
             air.updateNeighbourShapes(level, toPushPos, 0b0000010);
             air.updateIndirectNeighbourShapes(level, toPushPos, 0b0000010);
+        }
+
+        int j = 0;
+
+        for (int i = toDestroys.size() - 1; i >= 0; i--) {
+            BlockPos toDestroyPos = toDestroys.get(i);
+            BlockState toDestroyState = toDestroyStates.get(j++);
+            toDestroyState.updateIndirectNeighbourShapes(level, toDestroyPos, 2);
+            level.updateNeighborsAt(toDestroyPos, toDestroyState.getBlock());
         }
 
         for (var toPushEntry : toPushes) {
