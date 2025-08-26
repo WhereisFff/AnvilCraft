@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.block.AdvancedComparatorBlock;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
@@ -11,6 +12,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.NotNull;
 
@@ -53,7 +55,11 @@ public class AdvancedComparatorBlockEntityRender implements BlockEntityRenderer<
     }
 
     private float getHeight(AdvancedComparatorBlockEntity blockEntity) {
-        int inputtingSignal = blockEntity.getInputtingSignal();
+        Level level = blockEntity.getLevel();
+        int inputtingSignal = 0;
+        if (level != null) {
+            inputtingSignal = level.getBlockState(blockEntity.getBlockPos()).getValue(AdvancedComparatorBlock.POWER);
+        }
         return (inputtingSignal / 3f * .0625f);
     }
 }
