@@ -135,7 +135,6 @@ public class StandableFallingBlockEntity extends FallingBlockEntity {
     @Override
     public void move(MoverType type, Vec3 motion) {
         super.move(type, motion);
-        if (motion.equals(Vec3.ZERO)) return;
         List<Entity> list = this.level().getEntities(
             this,
             this.getBoundingBox().expandTowards(0, 1.1F, 0),
