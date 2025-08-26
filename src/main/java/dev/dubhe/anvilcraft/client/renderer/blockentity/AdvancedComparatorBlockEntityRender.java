@@ -5,6 +5,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.AdvancedComparatorBlock;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -57,7 +58,8 @@ public class AdvancedComparatorBlockEntityRender implements BlockEntityRenderer<
     private float getHeight(AdvancedComparatorBlockEntity blockEntity) {
         Level level = blockEntity.getLevel();
         int inputtingSignal = 0;
-        if (level != null) inputtingSignal = level.getBlockState(blockEntity.getBlockPos()).getValue(AdvancedComparatorBlock.POWER);
+        if (level != null && level.getBlockState(blockEntity.getBlockPos()).getBlock() == ModBlocks.ADVANCED_COMPARATOR.get())
+            inputtingSignal = level.getBlockState(blockEntity.getBlockPos()).getValue(AdvancedComparatorBlock.POWER);
         return (inputtingSignal / 3f * .0625f);
     }
 }
