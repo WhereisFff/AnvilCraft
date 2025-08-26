@@ -273,8 +273,9 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
                 }
             }
         }
-        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX()) || Mth.floor(this.yo) != Mth.floor(this.getY()) || Mth.floor(this.zo) != Mth.floor(
-            this.getZ());
+        boolean flag = Mth.floor(this.xo) != Mth.floor(this.getX())
+                       || Mth.floor(this.yo) != Mth.floor(this.getY())
+                       || Mth.floor(this.zo) != Mth.floor(this.getZ());
         int i = flag ? 2 : 40;
         if (this.tickCount % i == 0 && !this.level().isClientSide && this.isMergable()) {
             this.mergeWithNeighbours();
