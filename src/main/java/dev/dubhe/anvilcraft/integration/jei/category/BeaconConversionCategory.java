@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.recipe.BeaconConversionRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -27,6 +27,8 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -40,26 +42,26 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     public static final int WIDTH = 162;
     public static final int HEIGHT = 128;
 
-    private final IDrawable slot;
-    private final IDrawable progressArrow;
+    private final IDrawable slotDefault;
+    private final IDrawable slotChoice;
     private final Component title;
     private final Component activateTooltip;
     private final Component beaconBaseTooltip;
-    private final IDrawable arrowIn;
+    protected final IDrawable arrowIn;
+    protected final IDrawable arrowDefault;
 
     private final Map<BeaconConversionRecipe, LevelLike> cache = new HashMap<>();
 
     public BeaconConversionCategory(IGuiHelper helper) {
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        slotChoice = JeiRenderHelper.getSlotChoice(helper);
         title = Component.translatable("gui.anvilcraft.category.beacon_conversion");
         activateTooltip = Component.translatable("gui.anvilcraft.category.beacon_conversion.activate")
             .withStyle(ChatFormatting.GOLD);
         beaconBaseTooltip = Component.translatable("gui.anvilcraft.category.beacon_conversion.beacon_base")
             .withStyle(ChatFormatting.GOLD);
-        progressArrow = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
     }
 
     @Override
@@ -85,7 +87,9 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
     @Override
     public @Nullable IDrawable getIcon() {
         return new DrawableBlockStateIcon(
-            Blocks.BEACON.defaultBlockState(),
+            Blocks.BEACON
+                .defaultBlockState()
+                .trySetValue(BlockStateProperties.WATERLOGGED, false),
             ModBlocks.CURSED_GOLD_BLOCK.getDefaultState()
         );
     }
@@ -105,11 +109,11 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
             .addItemStack(Blocks.BEACON.asItem().getDefaultInstance());
         IRecipeSlotBuilder slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 130, 96)
             .addItemStack(ModBlocks.CORRUPTED_BEACON.asStack());
-        JeiRecipeUtil.addTooltips(slot, recipe.corruptedBeaconOutput.getStack().getCount(), recipe.corruptedBeaconOutput.getCount());
+        JeiRecipeUtil.addTooltips(slot, recipe.corruptedBeaconOutput.stack().getCount(), recipe.corruptedBeaconOutput.count());
         if (recipe.chance < 1.0f) {
             slot = builder.addSlot(RecipeIngredientRole.OUTPUT, 112, 96)
                 .addItemStack(Blocks.BEACON.asItem().getDefaultInstance());
-            JeiRecipeUtil.addTooltips(slot, recipe.beaconOutput.getStack().getCount(), recipe.beaconOutput.getCount());
+            JeiRecipeUtil.addTooltips(slot, recipe.beaconOutput.stack().getCount(), recipe.beaconOutput.count());
         }
     }
 
@@ -131,21 +135,30 @@ public class BeaconConversionCategory implements IRecipeCategory<BeaconConversio
                     }
                 }
             }
-            beaconBase.setBlockState(new BlockPos(layers, layers, layers), Blocks.BEACON.defaultBlockState());
+
+            BlockState block = ModBlocks.CORRUPTED_BEACON
+                .get()
+                .defaultBlockState()
+                .trySetValue(BlockStateProperties.WATERLOGGED, false);
+            beaconBase.setBlockState(new BlockPos(layers, layers, layers), block);
             cache.put(recipe, beaconBase);
             level = beaconBase;
         }
 
         RenderHelper.renderLevelLike(level, guiGraphics, 84, 54, 90);
 
-        slot.draw(guiGraphics, 47, 7);
-        slot.draw(guiGraphics, 9, 109);
-        slot.draw(guiGraphics, 9, 91);
-        if (recipe.chance < 1.0f) slot.draw(guiGraphics, 111, 95);
-        slot.draw(guiGraphics, 129, 95);
+        slotDefault.draw(guiGraphics, 47, 7);
+        slotDefault.draw(guiGraphics, 9, 109);
+        slotDefault.draw(guiGraphics, 9, 91);
+        if (recipe.chance < 1.0f) {
+            slotChoice.draw(guiGraphics, 111, 95);
+            slotChoice.draw(guiGraphics, 129, 95);
+        } else {
+            slotDefault.draw(guiGraphics, 129, 95);
+        }
 
         arrowIn.draw(guiGraphics, 66, 14);
-        progressArrow.draw(guiGraphics, 60, 96);
+        arrowDefault.draw(guiGraphics, 60, 96);
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {

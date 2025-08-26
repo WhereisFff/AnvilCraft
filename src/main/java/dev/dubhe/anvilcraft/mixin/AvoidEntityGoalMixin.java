@@ -1,24 +1,29 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
+import dev.dubhe.anvilcraft.util.Util;
 import dev.dubhe.anvilcraft.util.dummy.DummyCat;
 import dev.dubhe.anvilcraft.util.dummy.DummyWolf;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.entity.ai.goal.AvoidEntityGoal;
+import net.minecraft.world.entity.ai.navigation.PathNavigation;
 import net.minecraft.world.entity.ai.targeting.TargetingConditions;
+import net.minecraft.world.entity.ai.util.DefaultRandomPos;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
-import org.objectweb.asm.Opcodes;
+import net.minecraft.world.level.pathfinder.Path;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 @Mixin(AvoidEntityGoal.class)
 public abstract class AvoidEntityGoalMixin<T extends LivingEntity> {
@@ -32,64 +37,54 @@ public abstract class AvoidEntityGoalMixin<T extends LivingEntity> {
 
     @Shadow
     @Final
-    protected float maxDist;
+    private TargetingConditions avoidEntityTargeting;
+
+    @Shadow
+    @Nullable
+    protected Path path;
 
     @Shadow
     @Final
-    private TargetingConditions avoidEntityTargeting;
+    protected PathNavigation pathNav;
 
     @Shadow
     @Nullable
     protected T toAvoid;
 
-    @Redirect(
-        method = "canUse",
-        at = @At(
-            value = "FIELD",
-            target = "Lnet/minecraft/world/entity/ai/goal/AvoidEntityGoal;toAvoid:Lnet/minecraft/world/entity/LivingEntity;",
-            opcode = Opcodes.PUTFIELD
-        ))
-    @SuppressWarnings("unchecked")
-    private void addAvoidPlayerGoal(AvoidEntityGoal<T> instance, T value) {
+    @Inject(method = "canUse", at = @At("HEAD"), cancellable = true)
+    private void addAvoidPlayerGoal(CallbackInfoReturnable<Boolean> cir) {
         if (this.avoidClass.isAssignableFrom(Cat.class)) {
-            DummyCat cache = DummyCat.fromPlayer(this.mob.level(), this.mob.level().getNearestEntity(
-                Player.class,
+            Player nearest = this.mob.level().getNearestPlayer(
                 this.avoidEntityTargeting.selector(
-                    player1 -> player1.getData(ModDataAttachments.SCARE_ENTITIES).getBoolean("creepers")
+                    player -> player.getData(ModDataAttachments.SCARE_CREEPERS)
                 ),
                 this.mob,
                 this.mob.getX(),
                 this.mob.getY(),
-                this.mob.getZ(),
-                this.mob.getBoundingBox().inflate(this.maxDist, 3.0, this.maxDist)
-            ));
-            if (cache == null) {
-                ((AvoidEntityGoalMixin<T>) (Object) instance).anvilcraft$setToAvoid(value);
-            } else {
-                ((AvoidEntityGoalMixin<T>) (Object) instance).anvilcraft$setToAvoid((T) cache);
-            }
+                this.mob.getZ()
+            );
+            if (nearest == null) return;
+            Vec3 posAway = DefaultRandomPos.getPosAway(this.mob, 16, 7, nearest.position());
+            if (posAway == null || nearest.distanceToSqr(posAway.x, posAway.y, posAway.z) < nearest.distanceToSqr(this.mob)) return;
+            this.path = this.pathNav.createPath(posAway.x, posAway.y, posAway.z, 0);
+            this.toAvoid = Util.cast(Objects.requireNonNull(DummyCat.fromPlayer(this.mob.level(), nearest)));
+            cir.setReturnValue(this.path != null);
         } else if (this.avoidClass.isAssignableFrom(Wolf.class)) {
-            DummyWolf cache = DummyWolf.fromPlayer(this.mob.level(), this.mob.level().getNearestEntity(
-                Player.class,
+            Player nearest = this.mob.level().getNearestPlayer(
                 this.avoidEntityTargeting.selector(
-                    player1 -> player1.getData(ModDataAttachments.SCARE_ENTITIES).getBoolean("creepers")
+                    player -> player.getData(ModDataAttachments.SCARE_SKELETONS)
                 ),
                 this.mob,
                 this.mob.getX(),
                 this.mob.getY(),
-                this.mob.getZ(),
-                this.mob.getBoundingBox().inflate(this.maxDist, 3.0, this.maxDist)
-            ));
-            if (cache == null) {
-                ((AvoidEntityGoalMixin<T>) (Object) instance).anvilcraft$setToAvoid(value);
-            } else {
-                ((AvoidEntityGoalMixin<T>) (Object) instance).anvilcraft$setToAvoid((T) cache);
-            }
+                this.mob.getZ()
+            );
+            if (nearest == null) return;
+            Vec3 posAway = DefaultRandomPos.getPosAway(this.mob, 16, 7, nearest.position());
+            if (posAway == null || nearest.distanceToSqr(posAway.x, posAway.y, posAway.z) < nearest.distanceToSqr(this.mob)) return;
+            this.path = this.pathNav.createPath(posAway.x, posAway.y, posAway.z, 0);
+            this.toAvoid = Util.cast(Objects.requireNonNull(DummyWolf.fromPlayer(this.mob.level(), nearest)));
+            cir.setReturnValue(this.path != null);
         }
-    }
-
-    @Unique
-    private void anvilcraft$setToAvoid(T toAvoid) {
-        this.toAvoid = toAvoid;
     }
 }

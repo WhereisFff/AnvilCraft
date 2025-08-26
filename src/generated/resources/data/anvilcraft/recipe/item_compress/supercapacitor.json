@@ -1,15 +1,15 @@
 {
-  "type": "anvilcraft:in_world_recipe",
+  "type": "anvillib:in_world_recipe",
   "compatible": true,
   "conflicting": [
     {
-      "type": "anvilcraft:has_item_ingredient",
+      "type": "anvillib:has_item_ingredient",
       "item": {
         "items": "anvilcraft:resin_block",
         "predicates": {
           "anvilcraft:saved_entity": {
-            "entityType": "minecraft:creeper",
-            "tagPredicates": [
+            "entitys": "minecraft:creeper",
+            "predicates": [
               {
                 "expected": 1,
                 "requirement": "GREATER_OR_EQUAL",
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "type": "anvilcraft:has_item_ingredient",
+      "type": "anvillib:has_item_ingredient",
       "item": {
         "count": 2,
         "items": "#c:plates/iron"
@@ -64,11 +64,11 @@
   ],
   "outcomes": [
     {
-      "type": "anvilcraft:choose_one",
+      "type": "anvillib:choose_one",
       "choices": [
         {
           "outcome": {
-            "type": "anvilcraft:produce_explosion",
+            "type": "anvillib:produce_explosion",
             "fire": true,
             "interact": "block",
             "offset": [
@@ -82,7 +82,7 @@
         },
         {
           "outcome": {
-            "type": "anvilcraft:spawn_item",
+            "type": "anvillib:spawn_item",
             "item": "anvilcraft:supercapacitor",
             "offset": [
               0.0,

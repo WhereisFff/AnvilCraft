@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.mixin.providence;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
@@ -28,7 +28,9 @@ public class ApplyBonusCountMixin {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/storage/loot/functions/ApplyBonusCount$Formula;"
-                + "calculateNewCount(Lnet/minecraft/util/RandomSource;II)I"))
+                     + "calculateNewCount(Lnet/minecraft/util/RandomSource;II)I"
+        )
+    )
     private int calculateMultipleForProvidence(
         ApplyBonusCount.Formula instance, RandomSource random1, int count, int level, Operation<Integer> original,
         @Local(ordinal = 0, argsOnly = true) LootContext context
@@ -38,7 +40,9 @@ public class ApplyBonusCountMixin {
             || !(context.getParamOrNull(LootContextParams.TOOL) instanceof ItemStack stack)
             || !stack.has(ModComponents.PROVIDENCE)
             || !this.enchantment.is(ModEnchantmentTags.PROVIDENCE_BONUS)
-        ) return result;
+        ) {
+            return result;
+        }
         float random = random1.nextFloat();
         if (random >= 0.25f) return result;
         result += original.call(instance, random1, count, level);

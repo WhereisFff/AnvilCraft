@@ -1,11 +1,22 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.data.advancement.predicate.item.NotPredicate;
+import dev.anvilcraft.lib.init.LibItemSubPredicates;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
+import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItemSubPredicates;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.ExtendInWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
@@ -42,25 +53,25 @@ public class TimeWarpRecipeLoader {
         TimeWarpRecipe.builder()
             .requires(Items.EMERALD)
             .result(Items.EMERALD_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItemTags.GEMS_RUBY)
             .result(ModBlocks.RUBY_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItemTags.GEMS_TOPAZ)
             .result(ModBlocks.TOPAZ_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
             .requires(ModItemTags.GEMS_SAPPHIRE)
             .result(ModBlocks.SAPPHIRE_BLOCK)
-            .consume(1)
+            .consume(1000)
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
@@ -70,12 +81,12 @@ public class TimeWarpRecipeLoader {
 
         timeWarpToOilCauldron(provider, Items.ROTTEN_FLESH, 64);
         timeWarpToOilCauldron(provider, Items.SPIDER_EYE, 64);
-        timeWarpToOilCauldron(provider, Items.CHICKEN, 64);
+        timeWarpToOilCauldron(provider, ModItemTags.RAW_CHICKEN, 64);
         timeWarpToOilCauldron(provider, Tags.Items.FOODS_RAW_FISH, 64);
-        timeWarpToOilCauldron(provider, Items.BEEF, 16);
-        timeWarpToOilCauldron(provider, Items.PORKCHOP, 16);
-        timeWarpToOilCauldron(provider, Items.MUTTON, 16);
-        timeWarpToOilCauldron(provider, Items.RABBIT, 16);
+        timeWarpToOilCauldron(provider, ModItemTags.RAW_BEEF, 16);
+        timeWarpToOilCauldron(provider, ModItemTags.RAW_PORKCHOP, 16);
+        timeWarpToOilCauldron(provider, ModItemTags.RAW_MUTTON, 16);
+        timeWarpToOilCauldron(provider, ModItemTags.RAW_RABBIT, 16);
 
         timeWarpToOilCauldron(provider, Items.ZOMBIE_HEAD, 1);
         timeWarpToOilCauldron(provider, Items.PIGLIN_HEAD, 1);
@@ -85,7 +96,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 3)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_0"));
 
         TimeWarpRecipe.builder()
@@ -94,7 +105,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 4)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_1"));
 
         TimeWarpRecipe.builder()
@@ -103,7 +114,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 5)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_2"));
 
         TimeWarpRecipe.builder()
@@ -112,7 +123,7 @@ public class TimeWarpRecipeLoader {
             .transform(ModBlocks.FIRE_CAULDRON.get())
             .result(ModItems.EMBER_METAL_INGOT, 6)
             .fluid(ModBlocks.FIRE_CAULDRON.get())
-            .consume(1)
+            .consume(250)
             .save(provider, AnvilCraft.of("time_warp/ember_metal_ingot_3"));
 
         TimeWarpRecipe.builder()
@@ -123,7 +134,7 @@ public class TimeWarpRecipeLoader {
 
         TimeWarpRecipe.builder()
             .requires(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE)
-            .consume(3)
+            .consume(1000)
             .fluid(Blocks.POWDER_SNOW_CAULDRON)
             .result(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE)
             .save(provider);
@@ -132,7 +143,7 @@ public class TimeWarpRecipeLoader {
             .requires(ModItemTags.TITANIUM_INGOTS)
             .requires(ModItemTags.SILVER_INGOTS)
             .requires(Items.IRON_INGOT)
-            .consume(3)
+            .consume(1000)
             .fluid(Blocks.POWDER_SNOW_CAULDRON)
             .result(ModItems.FROST_METAL_INGOT)
             .save(provider);
@@ -154,6 +165,87 @@ public class TimeWarpRecipeLoader {
             .result(ModItems.RAW_URANIUM, 3)
             .result(ModItems.RAW_LEAD.asStack())
             .save(provider, AnvilCraft.of("time_warp/raw_uranium_from_plutonium_block"));
+
+
+        TimeWarpRecipe.builder()
+            .requires(ItemIngredientPredicate.Builder.item()
+                .of(ModBlocks.RESIN_BLOCK)
+                .withSubPredicate(
+                    LibItemSubPredicates.NOT.get(),
+                    NotPredicate.of(ModItemSubPredicates.SAVED_ENTITY.get(), ItemSavedEntityPredicate.any())
+                )
+                .build()
+            )
+            .result(ModBlocks.AMBER_BLOCK)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
+            .save(provider, AnvilCraft.of("time_warp/amber_block"));
+
+        ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
+            .hasCauldron(0, -1, 0)
+            .hasBlock(builder -> builder
+                .of(ModBlocks.CORRUPTED_BEACON.get())
+                .with(CorruptedBeaconBlock.LIT, true)
+                .offset(0, -2, 0)
+            )
+            .hasItemIngredient(builder -> builder
+                .of(ModBlocks.RESIN_BLOCK)
+                .offset(0.0, -0.375, 0.0)
+                .range(0.75, 0.75, 0.75)
+                .with(
+                    LibItemSubPredicates.NOT.get(),
+                    NotPredicate.of(ModItemSubPredicates.SAVED_ENTITY.get(), ItemSavedEntityPredicate.monster())
+                )
+                .saveComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+            )
+            .spawnItem(builder -> builder
+                .item(ModBlocks.MOB_AMBER_BLOCK)
+                .offset(0.0, -0.75, 0.0)
+                .applyComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+            )
+            .maxEfficiency(1)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
+            .group("time_warp")
+            .icon(ModBlocks.MOB_AMBER_BLOCK.asStack())
+            .save(provider, AnvilCraft.of("mob_amber_block"));
+
+        ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
+            .hasCauldron(0, -1, 0)
+            .hasBlock(builder -> builder
+                .of(ModBlocks.CORRUPTED_BEACON.get())
+                .with(CorruptedBeaconBlock.LIT, true)
+                .offset(0, -2, 0)
+            )
+            .hasItemIngredient(builder -> builder
+                .of(ModBlocks.RESIN_BLOCK)
+                .offset(0.0, -0.375, 0.0)
+                .range(0.75, 0.75, 0.75)
+                .with(
+                    ModItemSubPredicates.SAVED_ENTITY.get(),
+                    ItemSavedEntityPredicate.monster()
+                )
+                .saveComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+            )
+            .chooseOne(builder -> builder
+                .choice(
+                    SpawnItem.builder().item(ModBlocks.MOB_AMBER_BLOCK)
+                        .offset(0.0, -0.75, 0.0)
+                        .applyComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+                        .build(),
+                    19
+                )
+                .choice(
+                    SpawnItem.builder().item(ModBlocks.RESENTFUL_AMBER_BLOCK)
+                        .offset(0.0, -0.75, 0.0)
+                        .applyComponent(ModComponents.SAVED_ENTITY, AnvilCraft.of("saved_entity"))
+                        .build(),
+                    1
+                )
+            )
+            .maxEfficiency(1)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.RESIN_BLOCK), AnvilCraftDatagen.has(ModBlocks.RESIN_BLOCK))
+            .group("time_warp")
+            .icon(ModBlocks.RESENTFUL_AMBER_BLOCK.asStack())
+            .save(provider, AnvilCraft.of("resentful_amber_block"));
     }
 
     private static void timeWarp(
@@ -187,7 +279,7 @@ public class TimeWarpRecipeLoader {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
             .transform(ModBlocks.OIL_CAULDRON.get())
-            .produce(1)
+            .produce(250)
             .save(
                 provider,
                 AnvilCraft.of("time_warp/oil_from_" + BuiltInRegistries.ITEM.getKey(input.asItem()).getPath())
@@ -199,7 +291,7 @@ public class TimeWarpRecipeLoader {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
             .transform(ModBlocks.OIL_CAULDRON.get())
-            .produce(1)
+            .produce(250)
             .save(
                 provider,
                 AnvilCraft.of("time_warp/oil_from_" + input.location().getPath())

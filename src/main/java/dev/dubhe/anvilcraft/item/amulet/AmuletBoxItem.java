@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.item.amulet;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.ChatFormatting;
@@ -111,7 +111,7 @@ public class AmuletBoxItem extends Item {
                 }
                 playInsertSound(player);
                 box.set(ModComponents.BOX_CONTENTS, mutable.immutable());
-            } else if (AnvilCraft.config.amuletBoxTakeOutAllTotem) {
+            } else if (AnvilCraft.CONFIG.amuletBoxTakeOutAllTotem) {
                 boolean dropped = false;
                 for (int i = 0; i < contents.totems().size(); i++) {
                     ItemStack stack = mutable.popTotem();

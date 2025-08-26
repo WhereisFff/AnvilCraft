@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -29,16 +28,18 @@ import java.util.List;
 abstract class DispenseItemEmptyBucketBehaviorMixin extends DefaultDispenseItemBehavior {
     @Inject(
         method = "execute(Lnet/minecraft/core/dispenser/BlockSource;Lnet/minecraft/world/item/ItemStack;)"
-            + "Lnet/minecraft/world/item/ItemStack;",
+                 + "Lnet/minecraft/world/item/ItemStack;",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/core/dispenser/DefaultDispenseItemBehavior;"
-                + "execute(Lnet/minecraft/core/dispenser/BlockSource;Lnet/minecraft/world/item/ItemStack;)"
-                + "Lnet/minecraft/world/item/ItemStack;",
-            ordinal = 1),
+                     + "execute(Lnet/minecraft/core/dispenser/BlockSource;Lnet/minecraft/world/item/ItemStack;)"
+                     + "Lnet/minecraft/world/item/ItemStack;",
+            ordinal = 1
+        ),
         cancellable = true
     )
-    public void takeMilkFromCow(@NotNull BlockSource source, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+    @SuppressWarnings("resource")
+    public void takeMilkFromCow(BlockSource source, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         BlockPos blockPos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
         ServerLevel level = source.level();
         ServerLevel levelAccessor = source.level();

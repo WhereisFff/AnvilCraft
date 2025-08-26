@@ -9,8 +9,8 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
+import dev.dubhe.anvilcraft.api.injection.IExplosionExtension;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
-import dev.dubhe.anvilcraft.util.BlockTransformExplosion;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +20,6 @@ import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -37,7 +36,7 @@ import java.util.HashSet;
 import java.util.List;
 
 @Mixin(Explosion.class)
-abstract class ExplosionMixin implements BlockTransformExplosion {
+abstract class ExplosionMixin implements IExplosionExtension {
 
     @Unique
 //    public HashMap<Block, ArrayList<BlockTransform>> anvilcraft$blockTransformMap = new HashMap<>();
@@ -72,7 +71,8 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         boolean flag,
         List<Pair<ItemStack, BlockPos>> list,
         ObjectListIterator<BlockPos> var4,
-        BlockPos blockpos) {
+        BlockPos blockpos
+    ) {
         BlockState state = this.level.getBlockState(blockpos);
         Block block = state.getBlock();
         if (block instanceof IHasMultiBlock multiBlock) {
@@ -86,7 +86,7 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
     )
     )
-    private void anvilCraft$explosionBlockTransform(
+    private void anvilcraft$explosionBlockTransform(
         CallbackInfo ci,
         @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed,
         @Local(ordinal = 0) BlockPos pos
@@ -117,7 +117,7 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
                 "Lnet/minecraft/world/level/ExplosionDamageCalculator;shouldBlockExplode(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;F)Z"
         )
     )
-    private boolean anvilCraft$explosionBlockTransform(
+    private boolean anvilcraft$explosionBlockTransform(
         ExplosionDamageCalculator instance,
         Explosion explosion,
         BlockGetter reader,
@@ -125,14 +125,13 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         BlockState state,
         float power,
         Operation<Boolean> original,
-        @Share("isExplosionBlockTransformed") @NotNull LocalBooleanRef isExplosionBlockTransformed
+        @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed
     ) {
         return !isExplosionBlockTransformed.get() && original.call(instance, explosion, reader, pos, state, power);
     }
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public void setBlockTransformExplosion(@NotNull Collection<BlockTransform> blockTransformExplosions) {
+    public void anvilcraft$setBlockTransformExplosion(Collection<BlockTransform> blockTransformExplosions) {
         for (BlockTransform blockTransform : blockTransformExplosions) {
             for (BlockState state : blockTransform.inputBlock().getStatesCache()) {
                 Block block = state.getBlock();

@@ -1,5 +1,9 @@
 package dev.dubhe.anvilcraft.integration.kubejs;
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.recipe.trigger.IRecipeTrigger;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftRecipeComponents;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.JewelCraftingRecipeSchema;
@@ -21,10 +25,6 @@ import dev.dubhe.anvilcraft.integration.kubejs.recipe.mineral.MineralFountainCha
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.mineral.MineralFountainRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.multiblock.MultiblockRecipeSchema;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.transform.MobTransformRecipeSchema;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.IRecipeOutcome;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.trigger.IRecipeTrigger;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.recipe.multiblock.BlockPredicateWithState;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.dubhe.anvilcraft.recipe.transform.TagModification;

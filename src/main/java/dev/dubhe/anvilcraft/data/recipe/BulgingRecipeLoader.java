@@ -3,9 +3,9 @@ package dev.dubhe.anvilcraft.data.recipe;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.state.Color;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
 import dev.dubhe.anvilcraft.util.VanillaConstants;
 import net.minecraft.tags.TagKey;
@@ -17,19 +17,19 @@ import net.minecraft.world.level.block.Blocks;
 
 public class BulgingRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
-        bulging(provider, Items.DIRT, Items.CLAY);
-        bulging(provider, Items.CRIMSON_FUNGUS, Items.NETHER_WART_BLOCK);
-        bulging(provider, Items.WARPED_FUNGUS, Items.WARPED_WART_BLOCK);
-        bulging(provider, Items.SPIDER_EYE, Items.FERMENTED_SPIDER_EYE);
-        bulging(provider, Items.BRAIN_CORAL, Items.BRAIN_CORAL_BLOCK);
-        bulging(provider, Items.BUBBLE_CORAL, Items.BUBBLE_CORAL_BLOCK);
-        bulging(provider, Items.FIRE_CORAL, Items.FIRE_CORAL_BLOCK);
-        bulging(provider, Items.HORN_CORAL, Items.HORN_CORAL_BLOCK);
-        bulging(provider, Items.TUBE_CORAL, Items.TUBE_CORAL_BLOCK);
-        bulging(provider, ModItems.SPONGE_GEMMULE, Items.WET_SPONGE, true);
-        bulging(provider, ModItemTags.FLOUR, ModItems.DOUGH);
-        bulging(provider, Items.DRIED_KELP, Items.KELP);
-        crystallize(provider, ModItems.SEA_HEART_SHELL_SHARD, ModItems.PRISMARINE_CLUSTER, true);
+        BulgingRecipeLoader.bulging(provider, Items.DIRT, Items.CLAY);
+        BulgingRecipeLoader.bulging(provider, Items.CRIMSON_FUNGUS, Items.NETHER_WART_BLOCK);
+        BulgingRecipeLoader.bulging(provider, Items.WARPED_FUNGUS, Items.WARPED_WART_BLOCK);
+        BulgingRecipeLoader.bulging(provider, Items.SPIDER_EYE, Items.FERMENTED_SPIDER_EYE);
+        BulgingRecipeLoader.bulging(provider, Items.BRAIN_CORAL, Items.BRAIN_CORAL_BLOCK);
+        BulgingRecipeLoader.bulging(provider, Items.BUBBLE_CORAL, Items.BUBBLE_CORAL_BLOCK);
+        BulgingRecipeLoader.bulging(provider, Items.FIRE_CORAL, Items.FIRE_CORAL_BLOCK);
+        BulgingRecipeLoader.bulging(provider, Items.HORN_CORAL, Items.HORN_CORAL_BLOCK);
+        BulgingRecipeLoader.bulging(provider, Items.TUBE_CORAL, Items.TUBE_CORAL_BLOCK);
+        BulgingRecipeLoader.bulging(provider, ModItems.SPONGE_GEMMULE, Items.WET_SPONGE, 333);
+        BulgingRecipeLoader.bulging(provider, ModItemTags.FLOUR, ModItems.DOUGH);
+        BulgingRecipeLoader.bulging(provider, Items.DRIED_KELP, Items.KELP);
+        BulgingRecipeLoader.crystallize(provider, ModItems.SEA_HEART_SHELL_SHARD, ModItems.PRISMARINE_CLUSTER, 333);
 
         VanillaConstants.CONCRETE_POWDERS.forEach(block -> bulging(provider, block, block.concrete));
 
@@ -62,45 +62,43 @@ public class BulgingRecipeLoader {
             .save(provider);
     }
 
-    private static void bulging(RegistrateRecipeProvider provider, ItemLike input, ItemLike result, boolean consumeFluid) {
+    private static void bulging(RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int consume) {
         BulgingRecipe.builder()
             .cauldron(Blocks.WATER_CAULDRON)
             .requires(input)
             .result(result)
-            .consumeFluid(consumeFluid)
+            .consume(consume)
             .save(provider);
     }
 
     private static void bulging(RegistrateRecipeProvider provider, ItemLike input, ItemLike result) {
-        bulging(provider, input, result, false);
+        BulgingRecipeLoader.bulging(provider, input, result, 0);
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void bulging(RegistrateRecipeProvider provider, TagKey<Item> input, ItemLike result, boolean consumeFluid) {
+    private static void bulging(RegistrateRecipeProvider provider, TagKey<Item> input, ItemLike result, int consume) {
         BulgingRecipe.builder()
             .cauldron(Blocks.WATER_CAULDRON)
             .requires(input)
             .result(result)
-            .consumeFluid(consumeFluid)
+            .consume(consume)
             .save(provider);
     }
 
     @SuppressWarnings("SameParameterValue")
     private static void bulging(RegistrateRecipeProvider provider, TagKey<Item> input, ItemLike result) {
-        bulging(provider, input, result, false);
+        BulgingRecipeLoader.bulging(provider, input, result, 0);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void crystallize(
-        RegistrateRecipeProvider provider, ItemLike input, ItemLike result, boolean consumeFluid) {
+        RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int consume
+    ) {
         BulgingRecipe.builder()
             .cauldron(Blocks.POWDER_SNOW_CAULDRON)
             .requires(input)
             .result(result)
-            .consumeFluid(consumeFluid)
+            .consume(consume)
             .save(provider);
-    }
-
-    private static void crystallize(RegistrateRecipeProvider provider, ItemLike input, ItemLike result) {
-        crystallize(provider, input, result, false);
     }
 }

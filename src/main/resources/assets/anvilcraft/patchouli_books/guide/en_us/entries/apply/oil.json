@@ -4,15 +4,12 @@
   "icon": "anvilcraft:oil_bucket",
   "sortnum": 16004,
   "entry_color": "004400",
-  "extra_recipe_mappings": {
-    "anvilcraft:oil": 1,
-    "anvilcraft:oil_bucket": 1
-  },
   "pages": [
     "本模组的原油不会天然生成，而是使用特殊方法制作。原油$(br)为关键材料——$(item)余烬金属$()的合成所必需。$(br)此外，还可用于参与热能发电。",
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:oil_bucket",
+      "link_recipe": true,
       "title": "原油",
       "text": "通过$(l:smithing/corrupted_beacon#time_warp)时移$()，一层原油(250mB)可由以下材料转换而来：$(br)1个$(item)僵尸/猪灵的头$()$(br)16个$(item)生牛/羊/猪/兔肉$()$(br)64个$(item)生鱼/鸡肉/腐肉/蜘蛛眼$()"
     },
@@ -25,7 +22,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:ember_metal_ingot",
-      "text": "装满油(4层)的燃烧锅可以被用于制作$(l:smithing/tier_2_materials#ember_metal)余烬金属$()"
+      "text": "燃烧的油锅可以被用于制作$(l:smithing/tier_2_materials#ember_metal)余烬金属$()"
     },
     {
       "type": "patchouli:spotlight",

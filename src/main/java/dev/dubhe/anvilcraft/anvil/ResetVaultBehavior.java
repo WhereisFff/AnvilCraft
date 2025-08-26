@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.anvil;
 
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.mixin.accessor.VaultServerDataAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -31,7 +31,7 @@ public class ResetVaultBehavior implements IAnvilBehavior {
                 level.setBlockAndUpdate(hitBlockPos, Blocks.AIR.defaultBlockState());
                 VaultServerDataAccessor vaultServerDataAccessor = (VaultServerDataAccessor) vaultServerData;
                 vaultServerDataAccessor.getRewardedPlayers().clear();
-                vaultServerDataAccessor.invoker$markChanged();
+                vaultServerDataAccessor.invokeMarkChanged();
             });
         return false;
     }

@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.client.gui.component.Slider;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
 import dev.dubhe.anvilcraft.inventory.SliderMenu;
 import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -40,9 +41,9 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
         int offsetX = (this.width - this.imageWidth) / 2;
         int offsetY = (this.height - this.imageHeight) / 2;
-        this.slider = new Slider(8 + offsetX, 31 + offsetY, 0, 16, 160, this::update);
         this.value = new EditBox(this.font, offsetX + 50, offsetY + 47, 76, 8, Component.literal("value"));
-        this.value.setCanLoseFocus(false);
+        this.slider = new Slider(8 + offsetX, 31 + offsetY, -14, 14, 160 - 16, this::update);
+        this.value.setCanLoseFocus(true);
         this.value.setTextColor(-1);
         this.value.setTextColorUneditable(-1);
         this.value.setBordered(false);
@@ -58,7 +59,7 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
             16,
             16,
             32,
-            (btn) -> this.slider.setValueWithUpdate(slider.getMax()));
+            (btn) -> this.slider.setValueWithUpdate(8192));
         TexturedButton add = new TexturedButton(
             134 + offsetX,
             43 + offsetY,
@@ -68,7 +69,11 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
             16,
             16,
             32,
-            (btn) -> this.slider.setValueWithUpdate(Math.min(slider.getMax(), slider.getValue() + 1)));
+            (btn) -> this.value.setValue("" + Math.clamp(
+                Integer.parseInt(this.value.getValue()) + slider.getAddValue(Integer.parseInt(this.value.getValue())),
+                -8192,
+                8192
+            )));
         TexturedButton min = new TexturedButton(
             8 + offsetX,
             43 + offsetY,
@@ -78,7 +83,7 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
             16,
             16,
             32,
-            (btn) -> this.slider.setValueWithUpdate(slider.getMin()));
+            (btn) -> this.slider.setValueWithUpdate(-8192));
         TexturedButton minus = new TexturedButton(
             26 + offsetX,
             43 + offsetY,
@@ -88,7 +93,11 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
             16,
             16,
             32,
-            (btn) -> this.slider.setValueWithUpdate(Math.max(slider.getMin(), slider.getValue() - 1)));
+            (btn) -> this.value.setValue("" + Math.clamp(
+                Integer.parseInt(this.value.getValue()) - slider.getAddValue(Integer.parseInt(this.value.getValue())),
+                -8192,
+                8192
+            )));
         this.addRenderableWidget(max);
         this.addRenderableWidget(add);
         this.addRenderableWidget(min);
@@ -119,7 +128,8 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
             this.value.setValue("" + this.slider.getValue());
             return;
         }
-        this.slider.setValueWithUpdate(v);
+        this.slider.setValue(v);
+        PacketDistributor.sendToServer(new SliderUpdatePacket(Math.clamp(v, -8192, 8192)));
     }
 
     public void setMin(int min) {
@@ -135,8 +145,36 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
     }
 
     @Override
+    public void resize(@NotNull Minecraft minecraft, int width, int height) {
+        int lastValue = Integer.parseInt(this.value.getValue());
+        this.init(minecraft, width, height);
+        this.value.setValue("" + lastValue);
+    }
+
+    @Override
     protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0x404040, false);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (button == 0) {
+            slider.onClick(mouseX, mouseY);
+        }
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        this.slider.onDrag(mouseX, mouseY, dragX, dragY);
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        this.slider.onReleased();
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override

@@ -5,7 +5,7 @@ import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager.Entry;
 import dev.dubhe.anvilcraft.api.event.LightningBoltStrikeEvent;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -29,8 +29,8 @@ public class LightningEventListener {
         BlockState state = event.getLevel().getBlockState(pos);
         lightningCharge(pos, event.getLevel(), state);
         if (state.is(Blocks.LIGHTNING_ROD)) pos = pos.below();
-        int depth = AnvilCraft.config.lightningStrikeDepth;
-        int radius = AnvilCraft.config.lightningStrikeRadius;
+        int depth = AnvilCraft.CONFIG.lightningStrikeDepth;
+        int radius = AnvilCraft.CONFIG.lightningStrikeRadius;
         for (int x = -radius; x <= radius; x++) {
             for (int z = -radius; z <= radius; z++) {
                 for (int y = 0; y < depth; y++) {

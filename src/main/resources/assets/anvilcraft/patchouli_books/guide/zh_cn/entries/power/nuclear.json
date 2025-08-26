@@ -4,13 +4,16 @@
   "icon": "anvilcraft:uranium_ingot",
   "sortnum": 22010,
   "entry_color": "661100",
+  "extra_recipe_mappings": {
+    "anvilcraft:uranium_ingot": 0,
+    "anvilcraft:uranium_block": 0
+  },
   "pages": [
     "本章节将会讲述：$(li)如何获得$(item)铀$()和$(item)钚$() $(li)如何借助核能产生大量的电力 $(p)$(#880000)注意$():携带18组铀/钚(块/锭/粒)会受到凋零效果",
     {
-      "type": "patchouli:spotlight",
-      "item": ["anvilcraft:uranium_nugget","anvilcraft:uranium_ingot","anvilcraft:uranium_block"],
-      "link_recipe": true,
-      "text": "使用$(item)皇家铁砧$()[速度>32m/t](或更高级铁砧)$(l:struct/high_speed_impact)撞击$()$(item)红石块$()，平均获得8.5个$(item)铀粒$()。$(br2)之后可以通过$(item)矿物涌泉$()量产。"
+      "type": "anvilcraft:anvil_collision",
+      "recipe": "anvilcraft:anvil_collision/anvil_tier_1_and_redstone_block_32",
+      "text": "一次撞击平均获得8.5个$(item)铀粒$()。$(br2)可以通过$(item)矿物涌泉$()量产。"
     },
     {
       "type": "patchouli:spotlight",
@@ -37,7 +40,16 @@
     {
       "type": "patchouli:text",
       "title": "超温发电",
-      "text": "通过核燃料持续加热并维持至多16个$(l:advanced/special_heated_block)超温余烬金属块$()，用于热能发电可以生产16384kW."
+      "text": "通过铁砧撞击核燃料持续加热至多16个$(l:advanced/special_heated_block)超温余烬金属块$()，用于热能发电可以生产16384kW."
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:struct/collision",
+        "anvilcraft:advanced/special_heated_block",
+        "anvilcraft:power/heat_collection"
+      ],
+      "text": ""
     }
   ]
 }

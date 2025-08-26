@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftRecipeComponents;
@@ -8,8 +10,6 @@ import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceItemStack
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ItemIngredientPredicateComponent;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.component.NumberComponent;
@@ -24,7 +24,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,70 +65,70 @@ public interface BulgingRecipeSchema {
             return this;
         }
 
-        public BulgingKubeRecipe requires(@NotNull TagKey<Item> ingredient, int count) {
+        public BulgingKubeRecipe requires(TagKey<Item> ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public BulgingKubeRecipe requires(@NotNull TagKey<Item> ingredient) {
+        public BulgingKubeRecipe requires(TagKey<Item> ingredient) {
             return this.requires(ingredient, 1);
         }
 
-        public BulgingKubeRecipe requires(@NotNull ItemStack ingredient) {
+        public BulgingKubeRecipe requires(ItemStack ingredient) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).build());
             this.save();
             return this;
         }
 
-        public BulgingKubeRecipe requires(@NotNull ItemLike ingredient, int count) {
+        public BulgingKubeRecipe requires(ItemLike ingredient, int count) {
             this.computeIfAbsent(INGREDIENTS, ArrayList::new)
                 .add(ItemIngredientPredicate.Builder.item().of(ingredient).withCount(count).build());
             this.save();
             return this;
         }
 
-        public BulgingKubeRecipe requires(@NotNull ItemLike ingredient) {
+        public BulgingKubeRecipe requires(ItemLike ingredient) {
             return this.requires(ingredient, 1);
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemStack result, NumberProvider count) {
+        public BulgingKubeRecipe result(ItemStack result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
             this.save();
             return this;
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemStack result, float chance) {
+        public BulgingKubeRecipe result(ItemStack result, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(result.getCount(), chance));
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemStack result) {
+        public BulgingKubeRecipe result(ItemStack result) {
             return this.result(result, ConstantValue.exactly(result.getCount()));
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemLike result, NumberProvider count) {
+        public BulgingKubeRecipe result(ItemLike result, NumberProvider count) {
             this.computeIfAbsent(RESULTS, ArrayList::new)
                 .add(ChanceItemStack.of(result, count));
             this.save();
             return this;
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemLike result, int count, float chance) {
+        public BulgingKubeRecipe result(ItemLike result, int count, float chance) {
             return this.result(result, BinomialDistributionGenerator.binomial(count, chance));
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemLike result, int count) {
+        public BulgingKubeRecipe result(ItemLike result, int count) {
             return this.result(result, ConstantValue.exactly(count));
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemLike result, float chance) {
+        public BulgingKubeRecipe result(ItemLike result, float chance) {
             return this.result(result, 1, chance);
         }
 
-        public BulgingKubeRecipe result(@NotNull ItemLike result) {
+        public BulgingKubeRecipe result(ItemLike result) {
             return this.result(result, ConstantValue.exactly(1.0f));
         }
 

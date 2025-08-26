@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.anvil;
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.StampingUniqueItemsRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.input.ItemProcessInput;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -85,8 +85,8 @@ public class ItemStampingBehavior implements IAnvilBehavior {
                     }
                 }
                 for (ChanceItemStack stack : recipe.value().getResults()) {
-                    int amount = stack.getStack().getCount() * stack.getCount().getInt(context);
-                    results.mergeInt(stack.getStack().getItem(), amount, Integer::sum);
+                    int amount = stack.stack().getCount() * stack.count().getInt(context);
+                    results.mergeInt(stack.stack().getItem(), amount, Integer::sum);
                 }
             }
             AnvilUtil.dropItems(

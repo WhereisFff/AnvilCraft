@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.UnpackRecipe;
 import net.minecraft.world.level.block.Blocks;
 

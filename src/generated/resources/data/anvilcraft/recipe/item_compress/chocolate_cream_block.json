@@ -3,7 +3,7 @@
   "ingredients": [
     {
       "count": 4,
-      "items": "#c:cream"
+      "items": "#c:foods/cream"
     },
     {
       "items": "minecraft:sugar"

@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.event.anvil;
 
+import dev.anvilcraft.lib.injection.IRecipeManagerExtension;
+import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
+import dev.anvilcraft.lib.recipe.util.InWorldRecipeManager;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
@@ -10,8 +13,6 @@ import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
-import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeContext;
-import dev.dubhe.anvilcraft.recipe.anvil.util.InWorldRecipeManager;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
 import dev.dubhe.anvilcraft.util.Util;
@@ -22,7 +23,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -36,7 +36,6 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -54,7 +53,7 @@ public class AnvilEventListener {
      * @param event 铁砧落地事件
      */
     @SubscribeEvent
-    public static void onLand(@NotNull AnvilEvent.OnLand event) {
+    public static void onLand(AnvilEvent.OnLand event) {
         if (!behaviorRegistered) {
             IAnvilBehavior.register();
             behaviorRegistered = true;
@@ -80,12 +79,12 @@ public class AnvilEventListener {
         }
     }
 
-    public static void handleNeoAnvilRecipe(@NotNull AnvilEvent.OnLand event) {
+    public static void handleNeoAnvilRecipe(AnvilEvent.OnLand event) {
         Level level = event.getLevel();
         if (!(level instanceof ServerLevel serverLevel)) return;
         BlockPos pos = event.getPos();
         FallingBlockEntity entity = event.getEntity();
-        InWorldRecipeManager manager = level.getRecipeManager().anc$getInWorldRecipeManager();
+        InWorldRecipeManager manager = ((IRecipeManagerExtension) level.getRecipeManager()).anvillib$getInWorldRecipeManager();
         InWorldRecipeContext context = new InWorldRecipeContext(serverLevel, pos.getCenter().subtract(0.0, 0.5, 0.0), entity);
         manager.trigger(ModRecipeTriggers.ON_ANVIL_FALL_ON, context);
         boolean damageAnvil = context.get(DamageAnvil.DAMAGE_ANVIL);
@@ -93,7 +92,7 @@ public class AnvilEventListener {
         context.accept();
     }
 
-    private static void brokeBlock(@NotNull Level level, BlockPos pos, AnvilEvent.OnLand event) {
+    private static void brokeBlock(Level level, BlockPos pos, AnvilEvent.OnLand event) {
         if (!(level instanceof ServerLevel serverLevel)) return;
         BlockState state = level.getBlockState(pos);
         //noinspection deprecation
@@ -112,8 +111,8 @@ public class AnvilEventListener {
             .map(b -> b.getBlock() instanceof TranscendenceAnvilBlock)
             .orElse(false);
         ItemStack dummyTool = silkTouch ? BreakBlockUtil.getDummySilkTouchTool(serverLevel)
-            : fortune5 ? BreakBlockUtil.getDummyFortune5Tool(serverLevel)
-            : ItemStack.EMPTY;
+                                        : fortune5 ? BreakBlockUtil.getDummyFortune5Tool(serverLevel)
+                                                   : ItemStack.EMPTY;
         state.spawnAfterBreak(serverLevel, pos, dummyTool, false);
         if (state.getBlock() instanceof IHasMultiBlock multiBlock) {
             multiBlock.onRemove(level, pos, state);
@@ -138,7 +137,7 @@ public class AnvilEventListener {
      * @param event 铁砧伤害实体事件
      */
     @SubscribeEvent
-    public static void onAnvilHurtEntity(@NotNull AnvilEvent.HurtEntity event) {
+    public static void onAnvilHurtEntity(AnvilEvent.HurtEntity event) {
         Entity hurtedEntity = event.getHurtedEntity();
         if (!(hurtedEntity instanceof LivingEntity entity)) return;
         if (!(hurtedEntity.level() instanceof ServerLevel serverLevel)) return;
@@ -158,12 +157,12 @@ public class AnvilEventListener {
         Block anvil = eventEntity.getBlockState().getBlock();
         Optional<ServerPlayer> killerOp = Optional.empty();
         if (Util.instanceOfAny(anvil, EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
-            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer(serverLevel);
             builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(killer))
                 .withParameter(LootContextParams.ATTACKING_ENTITY, killer)
                 .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, killer);
             if (anvil instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, killer);
+                AnvilCraftFakePlayers.anvilcraftKiller.enableLooting5(serverLevel, killer);
             }
             killerOp = Optional.of(killer);
         }
@@ -172,10 +171,7 @@ public class AnvilEventListener {
         dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
-        killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
-        if (hurtedEntity instanceof IronGolem) {
-            TriggerUtil.anvilLootingIronGolem(serverLevel, BlockPos.containing(pos));
-        }
-        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos));
+        killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilcraftKiller.disable(killer));
+        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos), entity);
     }
 }

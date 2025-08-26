@@ -4,8 +4,8 @@ import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.inventory.SliderMenu;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -97,12 +97,12 @@ public class CreativeGeneratorBlockEntity extends BlockEntity implements IPowerP
     @Override
     public AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
         if (player.isSpectator()) return null;
-        return new SliderMenu(i, -8192, 8192, this::setPower);
+        return new SliderMenu(i, this::setPower);
     }
 
     public void setPower(int power) {
         this.power = power;
-        if (level instanceof ServerLevel serverLevel) {
+        if (level instanceof ServerLevel) {
             if (grid != null) {
                 this.grid.markChanged();
                 return;

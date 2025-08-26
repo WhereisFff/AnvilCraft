@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -14,6 +14,8 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
+import javax.annotation.Nullable;
+
 @Mixin(Strider.class)
 abstract class StriderMixin extends Animal {
     protected StriderMixin(EntityType<? extends Animal> entityType, Level level) {
@@ -24,12 +26,16 @@ abstract class StriderMixin extends Animal {
     public abstract boolean isSaddled();
 
     @ModifyReturnValue(method = "getControllingPassenger", at = @At("RETURN"))
-    private LivingEntity getControllingPassenger(LivingEntity original) {
-        return this.isSaddled() && this.getFirstPassenger() instanceof Player player && (player.isHolding(Items.WARPED_FUNGUS_ON_A_STICK)
-            || (player.isHolding(ModItems.MULTITOOL_ITEM.asItem())
-            && (MultitoolItem.getMode(player.getMainHandItem()) == MultitoolItem.WARPED_FUNGUS_ON_A_STICK_MODE)
-            || MultitoolItem.getMode(player.getOffhandItem()) == MultitoolItem.WARPED_FUNGUS_ON_A_STICK_MODE))
-            ? player
-            : super.getControllingPassenger();
+    private @Nullable LivingEntity getControllingPassenger(LivingEntity original) {
+        return this.isSaddled() && this.getFirstPassenger() instanceof Player player && (
+            player.isHolding(Items.WARPED_FUNGUS_ON_A_STICK)
+            || (
+                player.isHolding(ModItems.MULTITOOL_ITEM.asItem())
+                && (MultitoolItem.getMode(player.getMainHandItem()) == MultitoolItem.WARPED_FUNGUS_ON_A_STICK_MODE)
+                || MultitoolItem.getMode(player.getOffhandItem()) == MultitoolItem.WARPED_FUNGUS_ON_A_STICK_MODE
+            )
+        )
+               ? player
+               : super.getControllingPassenger();
     }
 }

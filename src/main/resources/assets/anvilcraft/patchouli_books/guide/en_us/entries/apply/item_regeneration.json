@@ -84,7 +84,8 @@
     {
       "type": "patchouli:spotlight",
       "anchor": "powder_snow",
-      "item": "minecraft:powder_snow_bucket",
+      "item": ["minecraft:powder_snow_bucket","minecraft:ice"],
+      "link_recipe": true,
       "text": "用铁砧砸击炼药锅上的$(item)雪块$()，会将其转化为$(item)冰$()，并在锅中留下一层细雪。$(br2)可以用皇家铁砧配合切石机自动$(l:basic/block_processing#break)精准采集$()冰块。"
     },
     {

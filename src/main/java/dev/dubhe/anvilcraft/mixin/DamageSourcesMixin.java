@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.init.ModDamageTypes;
+import dev.dubhe.anvilcraft.init.entity.ModDamageTypes;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.damagesource.DamageSource;
@@ -19,26 +19,26 @@ public abstract class DamageSourcesMixin implements ModDamageTypes.DamageSourceE
     public abstract DamageSource source(ResourceKey<DamageType> damageTypeKey);
 
     @Unique
-    private DamageSource anvilCraft$laser;
+    private DamageSource anvilcraft$laser;
     @Unique
-    private DamageSource anvilCraft$lostInTime;
+    private DamageSource anvilcraft$lostInTime;
 
     @Inject(
         method = "<init>",
         at = @At("RETURN")
     )
     void initModDamageSources(RegistryAccess registry, CallbackInfo ci) {
-        anvilCraft$laser = this.source(ModDamageTypes.LASER);
-        anvilCraft$lostInTime = this.source(ModDamageTypes.LOST_IN_TIME);
+        this.anvilcraft$laser = this.source(ModDamageTypes.LASER);
+        this.anvilcraft$lostInTime = this.source(ModDamageTypes.LOST_IN_TIME);
     }
 
     @Override
-    public DamageSource laser() {
-        return anvilCraft$laser;
+    public DamageSource anvilcraft$laser() {
+        return this.anvilcraft$laser;
     }
 
     @Override
-    public DamageSource lostInTime() {
-        return anvilCraft$lostInTime;
+    public DamageSource anvilcraft$lostInTime() {
+        return this.anvilcraft$lostInTime;
     }
 }

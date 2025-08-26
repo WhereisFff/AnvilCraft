@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.provider;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModEnchantments;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
 import net.minecraft.core.registries.Registries;

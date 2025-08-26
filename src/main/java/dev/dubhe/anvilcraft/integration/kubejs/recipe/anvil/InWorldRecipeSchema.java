@@ -1,20 +1,20 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.recipe.outcome.SetBlock;
+import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
+import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.recipe.predicate.block.HasBlock;
+import dev.anvilcraft.lib.recipe.predicate.block.HasBlockIngredient;
+import dev.anvilcraft.lib.recipe.predicate.item.HasItem;
+import dev.anvilcraft.lib.recipe.predicate.item.HasItemIngredient;
+import dev.anvilcraft.lib.recipe.trigger.IRecipeTrigger;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftRecipeComponents;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.IRecipeOutcome;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.SetBlock;
-import dev.dubhe.anvilcraft.recipe.anvil.outcome.SpawnItem;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.IRecipePredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlock;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasBlockIngredient;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItem;
-import dev.dubhe.anvilcraft.recipe.anvil.predicate.item.HasItemIngredient;
-import dev.dubhe.anvilcraft.recipe.anvil.trigger.IRecipeTrigger;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
 import dev.latvian.mods.kubejs.recipe.component.BooleanComponent;
 import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
@@ -33,7 +33,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -253,7 +252,7 @@ public interface InWorldRecipeSchema {
             return this.addPredicate(HasBlock.builder().of(tag).offset(x, y, z).build());
         }
 
-        public <T extends Comparable<T>> InWorldKubeRecipe hasBlock(Vec3 offset, @NotNull BlockState state) {
+        public <T extends Comparable<T>> InWorldKubeRecipe hasBlock(Vec3 offset, BlockState state) {
             HasBlock.Builder builder = HasBlock.builder();
             Block block = state.getBlock();
             builder.of(block);
@@ -332,7 +331,7 @@ public interface InWorldRecipeSchema {
             return this.addPredicate(HasBlockIngredient.builder().of(tag).offset(new Vec3(x, y, z)).build());
         }
 
-        public <T extends Comparable<T>> InWorldKubeRecipe hasBlockIngredient(Vec3 offset, @NotNull BlockState state) {
+        public <T extends Comparable<T>> InWorldKubeRecipe hasBlockIngredient(Vec3 offset, BlockState state) {
             HasBlockIngredient.Builder builder = HasBlockIngredient.builder();
             Block block = state.getBlock();
             BlockState defaultState = block.defaultBlockState();
@@ -493,7 +492,7 @@ public interface InWorldRecipeSchema {
         }
 
         // 通用谓词添加方法
-        public InWorldKubeRecipe addPredicate(@NotNull IRecipePredicate<?> predicate) {
+        public InWorldKubeRecipe addPredicate(IRecipePredicate<?> predicate) {
             if (predicate.getType().conflict()) {
                 this.computeIfAbsent(CONFLICTING, ArrayList::new).add(predicate);
             } else {

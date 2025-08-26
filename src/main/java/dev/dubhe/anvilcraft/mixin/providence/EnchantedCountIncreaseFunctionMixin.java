@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.mixin.providence;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -27,13 +27,17 @@ public class EnchantedCountIncreaseFunctionMixin {
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/level/storage/loot/providers/number/NumberProvider;"
-                + "getFloat(Lnet/minecraft/world/level/storage/loot/LootContext;)F"))
+                     + "getFloat(Lnet/minecraft/world/level/storage/loot/LootContext;)F"
+        )
+    )
     private float getMultipleForProvidence(NumberProvider instance, LootContext context, Operation<Float> original) {
         float result = original.call(instance, context);
         if (!(context.getParamOrNull(LootContextParams.TOOL) instanceof ItemStack stack)
             || !stack.has(ModComponents.PROVIDENCE)
             || !this.enchantment.is(ModEnchantmentTags.PROVIDENCE_BONUS)
-        ) return result;
+        ) {
+            return result;
+        }
         float random = context.getRandom().nextFloat();
         if (random >= 0.25f) return result;
         result += original.call(instance, context);

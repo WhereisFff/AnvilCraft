@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -93,11 +93,11 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
         List<ChanceItemStack> results = this.results.apply(recipe);
         if (results.size() == 1) {
             PatchouliRenderHelper.render1x1(graphics, recipeX + 81, recipeY + 18);
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 22, mouseX, mouseY, results.getFirst().getStack());
+            parent.renderItemStack(graphics, recipeX + 85, recipeY + 22, mouseX, mouseY, results.getFirst().stack());
         } else if (results.size() > 1) {
             PatchouliRenderHelper.render2x1(graphics, recipeX + 81, recipeY + 8);
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 12, mouseX, mouseY, results.getFirst().getStack());
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 31, mouseX, mouseY, results.get(1).getStack());
+            parent.renderItemStack(graphics, recipeX + 85, recipeY + 12, mouseX, mouseY, results.getFirst().stack());
+            parent.renderItemStack(graphics, recipeX + 85, recipeY + 31, mouseX, mouseY, results.get(1).stack());
         }
 
         this.drawExtra(graphics, recipe, recipeX, recipeY, mouseX, mouseY, second);

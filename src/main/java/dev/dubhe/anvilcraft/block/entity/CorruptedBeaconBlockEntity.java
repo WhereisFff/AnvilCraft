@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.block.entity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformInput;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
@@ -248,6 +248,7 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         if (list.isEmpty()) return;
         RecipeManager manager = Objects.requireNonNull(level.getServer()).getRecipeManager();
         for (LivingEntity livingEntity : list) {
+            if (!livingEntity.isAlive()) return;
             livingEntity.addEffect(new MobEffectInstance(MobEffects.WITHER, 120, 0, true, true));
             tryTransformEntity(livingEntity, (ServerLevel) level, manager);
         }

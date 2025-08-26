@@ -10,10 +10,10 @@ import dev.dubhe.anvilcraft.api.totem.TotemManager;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.init.ModLootTables;
 import dev.dubhe.anvilcraft.init.ModMobEffects;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.init.loot.ModLootTables;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.Holder;
@@ -84,15 +84,16 @@ public abstract class LivingEntityMixin extends Entity {
             && Util.instanceOfAny(falling.getBlockState().getBlock(), EmberAnvilBlock.class, TranscendenceAnvilBlock.class)
             && !this.level().isClientSide
         ) {
-            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer((ServerLevel) this.level());
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer((ServerLevel) this.level());
             this.lastHurtByPlayer = killer;
             this.lastHurtByPlayerTime = 1;
             killerRef.set(killer);
             DamageSource source = new DamageSource(
                 this.level().damageSources().playerAttack(killer).typeHolder(),
-                falling, killer, value.getSourcePosition());
+                falling, killer, value.getSourcePosition()
+            );
             if (falling.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5((ServerLevel) this.level(), killer);
+                AnvilCraftFakePlayers.anvilcraftKiller.enableLooting5((ServerLevel) this.level(), killer);
             }
             return source;
         }
@@ -102,7 +103,7 @@ public abstract class LivingEntityMixin extends Entity {
     @Inject(method = "die", at = @At("RETURN"))
     private void disableKiller(DamageSource cause, CallbackInfo ci, @Share("killer") LocalRef<ServerPlayer> killerRef) {
         if (killerRef.get() == null) return;
-        AnvilCraftFakePlayers.anvilCraftKiller.disable(killerRef.get());
+        AnvilCraftFakePlayers.anvilcraftKiller.disable(killerRef.get());
     }
 
     @Inject(
@@ -116,7 +117,8 @@ public abstract class LivingEntityMixin extends Entity {
         DamageSource damageSource,
         boolean hitByPlayer,
         CallbackInfo ci,
-        @Local LootParams lootParams) {
+        @Local LootParams lootParams
+    ) {
         LivingEntity thiz = Util.cast(this);
         LootTable beheadingLoot = ModLootTables.getBeheadingLoot(thiz);
         if (beheadingLoot == LootTable.EMPTY) return;
@@ -214,7 +216,12 @@ public abstract class LivingEntityMixin extends Entity {
             target = "Ljava/util/Set;contains(Ljava/lang/Object;)Z"
         )
     )
-    private boolean preventRemovalRageEffect(Set<EffectCure> instance, Object o, Operation<Boolean> original, @Local MobEffectInstance effect) {
+    private boolean preventRemovalRageEffect(
+        Set<EffectCure> instance,
+        Object o,
+        Operation<Boolean> original,
+        @Local MobEffectInstance effect
+    ) {
         return original.call(instance, o) && !effect.is(ModMobEffects.RAGE);
     }
 

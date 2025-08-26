@@ -3,13 +3,13 @@ package dev.dubhe.anvilcraft.recipe.anvil.collision;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.input.IItemsInput;
-import dev.dubhe.anvilcraft.recipe.component.BlockStatePredicate;
-import dev.dubhe.anvilcraft.recipe.component.ChanceBlockState;
-import dev.dubhe.anvilcraft.recipe.component.ChanceItemStack;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -100,10 +100,11 @@ public record AnvilCollisionCraftRecipe(
      */
     @Override
     public ItemStack getResultItem(HolderLookup.Provider provider) {
-        if (anvil.getStatesCache().isEmpty()) {
-            return Blocks.ANVIL.asItem().getDefaultInstance();
-        }
-        return anvil.getStatesCache().getFirst().getBlock().asItem().getDefaultInstance();
+        if (!outputItems.isEmpty())
+            return outputItems.getFirst().stack();
+        if (!transformBlocks.isEmpty())
+            return new ItemStack(transformBlocks.getFirst().outputBlock().state().getBlock().asItem());
+        return ItemStack.EMPTY;
     }
 
     /**

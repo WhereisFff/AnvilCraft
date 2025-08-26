@@ -1,0 +1,11 @@
+{
+  "type": "anvilcraft:time_warp",
+  "consume": -250,
+  "ingredients": [
+    {
+      "count": 16,
+      "items": "#c:foods/raw_porkchop"
+    }
+  ],
+  "transform": "anvilcraft:oil"
+}

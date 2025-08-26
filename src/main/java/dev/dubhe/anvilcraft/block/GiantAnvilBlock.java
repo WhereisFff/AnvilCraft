@@ -11,7 +11,7 @@ import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -298,7 +298,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
         for (int dx = -1; dx <= 1; dx++) {
             for (int dz = -1; dz <= 1; dz++) {
                 BlockPos pos1 = belowPos.offset(new Vec3i(dx, 0, dz));
-                NeoForge.EVENT_BUS.post(new AnvilEvent.OnLand(level, pos1, fallingBlock, fallingBlock.fallDistance));
+                NeoForge.EVENT_BUS.post(new AnvilEvent.OnLand(level, pos1, fallingBlock, fallDistance));
             }
         }
 
@@ -341,13 +341,15 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
 
     @Override
     public void removePartsAndUpdate(Level level, BlockPos pos) {
+        BlockState blockState = level.getBlockState(pos);
+        if (!blockState.is(this)) return;
+        BlockPos bottomCenterPos = this.getMainPartPos(pos, blockState).below();
         for (Cube3x3PartHalf part : getParts()) {
-            BlockPos bp = pos.offset(part.getOffset());
-            BlockState blockState = level.getBlockState(bp);
-            level.setBlock(bp, blockState.getFluidState().createLegacyBlock(), 3, 0);
+            BlockPos bp = bottomCenterPos.offset(part.getOffset());
+            level.setBlock(bp, level.getBlockState(bp).getFluidState().createLegacyBlock(), 3, 0);
         }
         UPDATE_OFFSET.forEach((direction, offsetList) -> offsetList.forEach(offset -> {
-            BlockPos updatedPos = pos.offset(offset);
+            BlockPos updatedPos = bottomCenterPos.offset(offset);
             BlockPos fromPos = updatedPos.relative(direction);
             level.neighborShapeChanged(direction,
                 level.getBlockState(fromPos),
@@ -360,7 +362,7 @@ public class GiantAnvilBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> imple
     }
 
     protected void falling(FallingBlockEntity entity) {
-        entity.setHurtsEntities(10.0F, AnvilCraft.config.giantAnvilFallDamageMax);
+        entity.setHurtsEntities(10.0F, AnvilCraft.CONFIG.giantAnvilFallDamageMax);
     }
 
 

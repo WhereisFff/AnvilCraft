@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -33,7 +34,7 @@ public class PageBulging extends PageAnvilItemProcess<BulgingRecipe> {
         if (recipe.isProduceFluid()) {
             return Blocks.CAULDRON.defaultBlockState();
         } else {
-            return CauldronUtil.fullState(BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron")));
+            return CauldronUtil.fullState(HasCauldron.getDefaultCauldron(recipe.getHasCauldron().fluid()));
         }
     }
 }

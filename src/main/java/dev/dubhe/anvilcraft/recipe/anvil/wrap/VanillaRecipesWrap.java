@@ -3,12 +3,14 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Multimaps;
+import dev.anvilcraft.lib.recipe.InWorldRecipe;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.recipe.anvil.InWorldRecipe;
-import dev.dubhe.anvilcraft.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.HolderSet;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -25,7 +27,7 @@ import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,7 +44,7 @@ public class VanillaRecipesWrap {
     public static Multimap<Item, SmeltingRecipe> smeltingRecipes;
     public static List<RecipeHolder<InWorldRecipe>> recipes;
 
-    public static List<RecipeHolder<InWorldRecipe>> init(HolderLookup.Provider registries, @NotNull Collection<RecipeHolder<?>> recipes) {
+    public static List<RecipeHolder<InWorldRecipe>> init(HolderLookup.Provider registries, Collection<RecipeHolder<?>> recipes) {
         VanillaRecipesWrap.shapelessRecipes = Multimaps.synchronizedSetMultimap(HashMultimap.create());
         VanillaRecipesWrap.shapedRecipes = Multimaps.synchronizedSetMultimap(HashMultimap.create());
         VanillaRecipesWrap.blastingRecipes = Multimaps.synchronizedSetMultimap(HashMultimap.create());
@@ -52,7 +54,10 @@ public class VanillaRecipesWrap {
         VanillaRecipesWrap.recipes = new ArrayList<>();
         for (RecipeHolder<?> recipeHolder : recipes) {
             Recipe<?> recipe = recipeHolder.value();
-            Item item = recipe.getResultItem(registries).getItem();
+            ItemStack stack = recipe.getResultItem(registries);
+            //noinspection ConstantValue
+            if (stack == null) continue;
+            Item item = stack.getItem();
             if (recipe.getIngredients().isEmpty() || recipe.getIngredients().getFirst().isCustom()) {
                 continue;
             }
@@ -76,7 +81,7 @@ public class VanillaRecipesWrap {
         return VanillaRecipesWrap.recipes;
     }
 
-    public static void wrap(HolderLookup.Provider registries, ShapelessRecipe recipe) {
+    public static void wrap(HolderLookup.Provider registries, @Nullable ShapelessRecipe recipe) {
         if (recipe == null) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         Ingredient first = ingredients.getFirst();
@@ -131,7 +136,7 @@ public class VanillaRecipesWrap {
         VanillaRecipesWrap.recipes.add(new RecipeHolder<>(location, itemCompressRecipe));
     }
 
-    public static void wrap(HolderLookup.Provider registries, ShapedRecipe recipe) {
+    public static void wrap(HolderLookup.Provider registries, @Nullable ShapedRecipe recipe) {
         if (recipe == null) return;
         if (recipe.getHeight() != recipe.getWidth()) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
@@ -166,7 +171,7 @@ public class VanillaRecipesWrap {
         VanillaRecipesWrap.recipes.add(new RecipeHolder<>(location, itemCompressRecipe));
     }
 
-    public static void wrap(HolderLookup.Provider registries, BlastingRecipe recipe) {
+    public static void wrap(HolderLookup.Provider registries, @Nullable BlastingRecipe recipe) {
         if (recipe == null) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         ItemStack result = recipe.getResultItem(registries);
@@ -176,17 +181,26 @@ public class VanillaRecipesWrap {
         Ingredient first = ingredients.getFirst();
         ItemIngredientPredicate.Builder predicateBuilder = ItemIngredientPredicate.Builder.item();
         String ingredient = "empty";
+        boolean boost = true;
         for (Ingredient.Value value : first.getValues()) {
             if (value instanceof Ingredient.ItemValue(ItemStack item)) {
+                if (!item.is(ModItemTags.SUPER_HEATING_BOOST_PRODUCTION)) boost = false;
                 ingredient = BuiltInRegistries.ITEM.getKey(item.getItem()).getPath();
                 predicateBuilder.of(item);
             }
             if (value instanceof Ingredient.TagValue(TagKey<Item> tag)) {
+                HolderSet.Named<Item> named = BuiltInRegistries.ITEM.getOrCreateTag(tag);
+                for (Holder<Item> holder : named) {
+                    if (!holder.is(ModItemTags.SUPER_HEATING_BOOST_PRODUCTION)) {
+                        boost = false;
+                        break;
+                    }
+                }
                 ingredient = tag.location().getPath().replace("/", "_");
                 predicateBuilder.of(tag);
             }
         }
-        result.setCount(result.getCount() * 2);
+        result.setCount(result.getCount() * (boost ? 2 : 1));
         String res = BuiltInRegistries.ITEM.getKey(result.getItem()).getPath();
         ResourceLocation location = AnvilCraft.of("super_heating_warp_%s_2_%s".formatted(ingredient, res));
         VanillaRecipesWrap.recipes.add(
@@ -200,7 +214,7 @@ public class VanillaRecipesWrap {
         );
     }
 
-    public static void wrap(HolderLookup.Provider registries, SmokingRecipe recipe) {
+    public static void wrap(HolderLookup.Provider registries, @Nullable SmokingRecipe recipe) {
         if (recipe == null) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         ItemStack result = recipe.getResultItem(registries);
@@ -233,7 +247,7 @@ public class VanillaRecipesWrap {
         );
     }
 
-    public static void wrap(HolderLookup.Provider registries, CampfireCookingRecipe recipe) {
+    public static void wrap(HolderLookup.Provider registries, @Nullable CampfireCookingRecipe recipe) {
         if (recipe == null) return;
         ItemStack result = recipe.getResultItem(registries);
         //noinspection ConstantValue
@@ -267,7 +281,7 @@ public class VanillaRecipesWrap {
         );
     }
 
-    public static void wrap(HolderLookup.Provider registries, SmeltingRecipe recipe) {
+    public static void wrap(HolderLookup.Provider registries, @Nullable SmeltingRecipe recipe) {
         if (recipe == null) return;
         ItemStack result = recipe.getResultItem(registries);
         //noinspection ConstantValue

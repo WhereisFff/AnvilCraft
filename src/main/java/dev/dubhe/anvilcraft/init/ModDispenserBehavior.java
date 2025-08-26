@@ -1,5 +1,8 @@
 package dev.dubhe.anvilcraft.init;
 
+import com.tterrag.registrate.util.entry.ItemEntry;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -18,6 +21,8 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.animal.IronGolem;
 import net.minecraft.world.entity.animal.MushroomCow;
 import net.minecraft.world.entity.monster.ZombieVillager;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.DispensibleContainerItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
@@ -41,76 +46,107 @@ public class ModDispenserBehavior {
     "all_players".hashcode() == 75a6b114
      */
     public static final UUID ANVILCRAFT_DISPENSER = new UUID(0x976850D40E652AB5L, 0x83D24BBA75A6B114L);
-    private static final DefaultDispenseItemBehavior defaultDispenseItemBehavior = new DefaultDispenseItemBehavior();
+    private static final DefaultDispenseItemBehavior DEFAULT_BEHAVIOUR = new DefaultDispenseItemBehavior();
+    private static final DefaultDispenseItemBehavior BUCKET = new DefaultDispenseItemBehavior() {
+        @Override
+        public ItemStack execute(BlockSource source, ItemStack stack) {
+            DispensibleContainerItem item = (DispensibleContainerItem) stack.getItem();
+            BlockPos blockpos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
+            Level level = source.level();
+            if (item.emptyContents(null, level, blockpos, null, stack)) {
+                item.checkExtraContent(null, level, stack, blockpos);
+                return this.consumeWithRemainder(source, stack, new ItemStack(Items.BUCKET));
+            } else {
+                return ModDispenserBehavior.DEFAULT_BEHAVIOUR.dispense(source, stack);
+            }
+        }
+    };
 
     public static void register() {
         DispenserBlock.registerBehavior(Items.IRON_INGOT, ModDispenserBehavior::ironIngot);
-        DispenserBlock.registerBehavior(Items.BOWL, new DefaultDispenseItemBehavior() {
-            @Override
-            protected ItemStack execute(BlockSource blockSource, ItemStack bowlItem) {
-                Level level = blockSource.level();
-                BlockPos pos = blockSource.pos();
-                BlockState state = blockSource.state();
-                List<MushroomCow> mushroomCows = level.getEntitiesOfClass(MushroomCow.class,
-                    new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))),
-                    m -> !m.isBaby());
-                if (mushroomCows.isEmpty()) return super.execute(blockSource, bowlItem);
-                MushroomCow mushroomCow = mushroomCows.getFirst();
-                ItemStack stewItem;
-                SoundEvent sound;
-                if (mushroomCow.stewEffects != null) {
-                    stewItem = new ItemStack(Items.SUSPICIOUS_STEW);
-                    stewItem.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, mushroomCow.stewEffects);
-                    mushroomCow.stewEffects = null;
-                    sound = SoundEvents.MOOSHROOM_MILK_SUSPICIOUSLY;
-                } else {
-                    stewItem = new ItemStack(Items.MUSHROOM_STEW);
-                    sound = SoundEvents.MOOSHROOM_MILK;
+        DispenserBlock.registerBehavior(
+            Items.BOWL, new DefaultDispenseItemBehavior() {
+                @Override
+                protected ItemStack execute(BlockSource blockSource, ItemStack bowlItem) {
+                    Level level = blockSource.level();
+                    BlockPos pos = blockSource.pos();
+                    BlockState state = blockSource.state();
+                    List<MushroomCow> mushroomCows = level.getEntitiesOfClass(
+                        MushroomCow.class,
+                        new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))),
+                        m -> !m.isBaby()
+                    );
+                    if (mushroomCows.isEmpty()) return super.execute(blockSource, bowlItem);
+                    MushroomCow mushroomCow = mushroomCows.getFirst();
+                    ItemStack stewItem;
+                    SoundEvent sound;
+                    if (mushroomCow.stewEffects != null) {
+                        stewItem = new ItemStack(Items.SUSPICIOUS_STEW);
+                        stewItem.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, mushroomCow.stewEffects);
+                        mushroomCow.stewEffects = null;
+                        sound = SoundEvents.MOOSHROOM_MILK_SUSPICIOUSLY;
+                    } else {
+                        stewItem = new ItemStack(Items.MUSHROOM_STEW);
+                        sound = SoundEvents.MOOSHROOM_MILK;
+                    }
+                    mushroomCow.playSound(sound, 1.0F, 1.0F);
+                    return this.consumeWithRemainder(blockSource, bowlItem, stewItem);
                 }
-                mushroomCow.playSound(sound, 1.0F, 1.0F);
-                return this.consumeWithRemainder(blockSource, bowlItem, stewItem);
             }
-        });
-        DispenserBlock.registerBehavior(Items.GOLDEN_APPLE, new DefaultDispenseItemBehavior() {
-            @Override
-            protected ItemStack execute(BlockSource blockSource, ItemStack goldenAppleItem) {
-                Level level = blockSource.level();
-                BlockPos pos = blockSource.pos();
-                BlockState state = blockSource.state();
-                List<ZombieVillager> zombieVillagers = level.getEntitiesOfClass(ZombieVillager.class,
-                    new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))),
-                    z -> z.hasEffect(MobEffects.WEAKNESS) && !z.isConverting());
-                if (zombieVillagers.isEmpty()) return super.execute(blockSource, goldenAppleItem);
-                ZombieVillager zombieVillager = zombieVillagers.getFirst();
-                zombieVillager.startConverting(ANVILCRAFT_DISPENSER,
-                    zombieVillager.getRandom().nextInt(2401) + 3600);
-                goldenAppleItem.shrink(1);
-                return goldenAppleItem;
-            }
-        });
-        DispenserBlock.registerBehavior(ModBlocks.RESIN_BLOCK, new DefaultDispenseItemBehavior() {
-            @Override
-            protected ItemStack execute(BlockSource blockSource, ItemStack resinBlockItem) {
-                Level level = blockSource.level();
-                BlockPos pos = blockSource.pos();
-                BlockState state = blockSource.state();
-                if (ResinBlockItem.hasMob(resinBlockItem)) {
-                    ItemStack result = ResinBlockItem.spawnMobFromItem(
-                        level, pos.relative(state.getValue(DirectionalBlock.FACING)), resinBlockItem);
-                    Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-                    spawnItem(blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
-                } else {
-                    List<Mob> entities = level.getEntitiesOfClass(
-                        Mob.class, new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))));
-                    if (entities.isEmpty() || entities.getFirst() == null) return super.execute(blockSource, resinBlockItem);
-                    Mob entity = entities.getFirst();
-                    ItemStack result = ResinBlockItem.saveMobInItem(level, entity, resinBlockItem);
-                    Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-                    spawnItem(blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
+        );
+        DispenserBlock.registerBehavior(
+            Items.GOLDEN_APPLE, new DefaultDispenseItemBehavior() {
+                @Override
+                protected ItemStack execute(BlockSource blockSource, ItemStack goldenAppleItem) {
+                    Level level = blockSource.level();
+                    BlockPos pos = blockSource.pos();
+                    BlockState state = blockSource.state();
+                    List<ZombieVillager> zombieVillagers = level.getEntitiesOfClass(
+                        ZombieVillager.class,
+                        new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))),
+                        z -> z.hasEffect(MobEffects.WEAKNESS) && !z.isConverting()
+                    );
+                    if (zombieVillagers.isEmpty()) return super.execute(blockSource, goldenAppleItem);
+                    ZombieVillager zombieVillager = zombieVillagers.getFirst();
+                    zombieVillager.startConverting(
+                        ANVILCRAFT_DISPENSER,
+                        zombieVillager.getRandom().nextInt(2401) + 3600
+                    );
+                    goldenAppleItem.shrink(1);
+                    return goldenAppleItem;
                 }
-                return resinBlockItem;
             }
-        });
+        );
+        DispenserBlock.registerBehavior(
+            ModBlocks.RESIN_BLOCK, new DefaultDispenseItemBehavior() {
+                @Override
+                protected ItemStack execute(BlockSource blockSource, ItemStack resinBlockItem) {
+                    Level level = blockSource.level();
+                    BlockPos pos = blockSource.pos();
+                    BlockState state = blockSource.state();
+                    if (ResinBlockItem.hasMob(resinBlockItem)) {
+                        ItemStack result = ResinBlockItem.spawnMobFromItem(
+                            level, pos.relative(state.getValue(DirectionalBlock.FACING)), resinBlockItem);
+                        Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
+                        spawnItem(blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
+                    } else {
+                        List<Mob> entities = level.getEntitiesOfClass(
+                            Mob.class, new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))));
+                        if (entities.isEmpty() || entities.getFirst() == null) return super.execute(blockSource, resinBlockItem);
+                        Mob entity = entities.getFirst();
+                        ItemStack result = ResinBlockItem.saveMobInItem(level, entity, resinBlockItem);
+                        Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
+                        spawnItem(blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
+                    }
+                    return resinBlockItem;
+                }
+            }
+        );
+        DispenserBlock.registerBehavior(ModItems.OIL_BUCKET, BUCKET);
+        DispenserBlock.registerBehavior(ModItems.MELT_GEM_BUCKET, BUCKET);
+        for (ItemEntry<BucketItem> cementBucket : ModItems.CEMENT_BUCKETS.values()) {
+            DispenserBlock.registerBehavior(cementBucket, BUCKET);
+        }
     }
 
     private static ItemStack ironIngot(BlockSource source, ItemStack stack) {
@@ -122,7 +158,7 @@ public class ModDispenserBehavior {
                 .stream()
                 .filter(e -> e.getHealth() < e.getMaxHealth())
                 .toList();
-        if (entities.isEmpty()) return ModDispenserBehavior.defaultDispenseItemBehavior.dispense(source, stack);
+        if (entities.isEmpty()) return ModDispenserBehavior.DEFAULT_BEHAVIOUR.dispense(source, stack);
         IronGolem ironGolem = entities.get(level.random.nextInt(0, entities.size()));
         ironGolem.heal(25.0f);
         float g = 1.0f + (level.random.nextFloat() - level.random.nextFloat()) * 0.2f;

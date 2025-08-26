@@ -83,31 +83,31 @@
 					"O": "minecraft:sticky_piston[facing=north]",
 					"P": "minecraft:sticky_piston[facing=down]",
 					"Q": "minecraft:redstone_torch",
-					"R": "minecraft:redstone_torch[lit=false]"
+					"R": "minecraft:redstone_torch[lit=false]",
+                    "S": "minecraft:redstone_wire[east=none,north=side,south=side,west=none]"
 				},
 				"pattern": [
-					[ "     ","     "," N   "," P   " ],
-					[ "KE   ","KE   ","KE   ","KEOIC" ],
-					[ "M    ","M    ","M    ","M   Q" ],
-					[ "     ","     ","     ","    C" ],
-					[ "     ","     ","     ","    R" ],
-					[ "     ","     ","     ","    C" ],
-					[ "     ","     ","     ","    Q" ],
-					[ "J    ","J    ","J   D","J   C" ],
-					[ "J    ","J    ","J    ","J   F" ],
-					[ "J    ","JL   ","JL   ","J   G" ],
-					[ "J    ","JC   ","JC   ","J 0 H" ], 
-                    [ "ABABA","BABAB","ABABA","BABAB" ]
+					[ "     ","     ","     ","     "," P   ","CIS  " ],
+					[ "KE   ","KE   ","KE   ","KE   ","KEO  ","  CIC" ],
+					[ "M    ","M    ","M    ","M    ","M    ","    Q" ],
+					[ "     ","     ","     ","     ","     ","    C" ],
+					[ "     ","     ","     ","     ","     ","    R" ],
+					[ "     ","     ","     ","     ","     ","    C" ],
+					[ "     ","     ","     ","     ","     ","    Q" ],
+					[ "J    ","J    ","J    ","J    ","J   D","    C" ],
+					[ "J    ","J    ","J    ","J    ","J    ","    F" ],
+					[ "J    ","JL   ","JL   ","JL   ","J    ","    G" ],
+					[ "J    ","JC   ","JC   ","JC   ","J    ","  0 H" ],
+                    [ "ABABA","BABAB","ABABA","BABAB","ABABA","BABAB"]
 				]
 			},
 			"enable_visualize":"true",
 			"text": "这台发电机的发电量显著增加了，能满足中期的用电需求，同时易于搭建。"
         },
 		{
-            "type": "patchouli:image",
-            "text": "脉冲发生器设置$(n)$(5)循环模式$()，每间隔$(n)$(5)4gt$()输出信号$(n)$(5)9gt$()，控制皇家铁砧下弹。",
-			"title": "脉冲发生器的设置",
-			"images": ["anvilcraft:patchouli_images/5.3_2.png"]
+            "type": "patchouli:text",
+            "text": "$(br2)较低处的脉冲发生器设置为$(n)$(5)循环模式$()，每间隔$(n)$(5)1gt$()输出信号$(n)$(5)9gt$()，控制粘性活塞推动。$(br2)较高处的脉冲发生器设置为$(n)$(5)上升沿模式$()，延时$(n)$(5)3gt$()输出信号$(n)$(5)3gt$()，控制皇家铁砧下弹。",
+			"title": "脉冲发生器的设置"
         },
 		{
             "type": "patchouli:text",
@@ -162,7 +162,7 @@
             "type": "patchouli:image",
             "text": "$(n)$(5)所有$()脉冲发生器都设置$(n)$(5)循环模式$()，每间隔$(n)$(5)4gt$()输出信号$(n)$(5)1gt$()，控制幻灵铁砧下落。",
 			"title": "脉冲发生器的设置",
-			"images": ["anvilcraft:patchouli_images/5.3_3.png"]
+			"images": ["anvilcraft:patchouli_images/5.3_2.png"]
         },
 		{
             "type": "patchouli:text",
@@ -246,6 +246,7 @@
 				"pattern": [
 					[ "     ","     ","  G  ","     ","     " ],
 					[ "     ","     ","  H  ","     ","     " ],
+                    [ "     ","     ","  H  ","     ","     " ],
 					[ "     ","     ","  C  ","     ","     " ],
 					[ "     ","     ","  D  ","     ","     " ],
 					[ "     ","     ","  E  ","     ","     " ],
@@ -254,7 +255,7 @@
 				]
 			},
 			"enable_visualize":"true",
-			"text": "放定日镜之前先拿着它右键钨块，选定钨块为照射的目标"
+			"text": "放定日镜之前先拿着它右键下面的钨块，选定钨块为照射的目标"
         },
 		{
             "type": "patchouli:text",
@@ -310,7 +311,7 @@
             "type": "patchouli:image",
             "text": "真是轻而易举啊，只要在$(item)热能收集器$()的范围内尽可能多的摆满你的$(item)铀块$()和$(item)钚块$()（",
 			"title": "核电，轻而易举啊！",
-			"images": ["anvilcraft:patchouli_images/5.3_4.png"]
+			"images": ["anvilcraft:patchouli_images/5.3_3.png"]
         }
     ]
 }

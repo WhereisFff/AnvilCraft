@@ -2,17 +2,17 @@ package dev.dubhe.anvilcraft.item.property.predicate;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
-import dev.dubhe.anvilcraft.util.CodecUtil;
-import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.advancements.critereon.SingleComponentItemPredicate;
+import net.minecraft.core.HolderSet;
+import net.minecraft.core.RegistryCodecs;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Contract;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,26 +20,34 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public record ItemSavedEntityPredicate(
-    EntityType<?> entityType,
-    List<NumericTagValuePredicate> predicates
+    Optional<HolderSet<EntityType<?>>> entitys,
+    List<NumericTagValuePredicate> predicates,
+    boolean isMonster
 ) implements SingleComponentItemPredicate<SavedEntity> {
     public static final Codec<ItemSavedEntityPredicate> CODEC = RecordCodecBuilder.create(ins -> ins.group(
-            CodecUtil.ENTITY_CODEC.fieldOf("entityType").forGetter(o -> o.entityType),
-            NumericTagValuePredicate.CODEC
-                .listOf()
-                .optionalFieldOf("tagPredicates")
-                .forGetter(o -> Util.intoOptional(o.predicates))
-        )
-        .apply(ins, ItemSavedEntityPredicate::new));
+        RegistryCodecs.homogeneousList(Registries.ENTITY_TYPE)
+            .optionalFieldOf("entitys")
+            .forGetter(ItemSavedEntityPredicate::entitys),
+        NumericTagValuePredicate.CODEC
+            .listOf()
+            .optionalFieldOf("predicates", new ArrayList<>())
+            .forGetter(ItemSavedEntityPredicate::predicates),
+        Codec.BOOL
+            .optionalFieldOf("is_monster", false)
+            .forGetter(ItemSavedEntityPredicate::isMonster)
+    ).apply(ins, ItemSavedEntityPredicate::new));
 
-    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-    public ItemSavedEntityPredicate(EntityType<?> entityType, Optional<List<NumericTagValuePredicate>> predicates) {
-        this(entityType, predicates.orElseGet(ArrayList::new));
+    @SuppressWarnings("deprecation")
+    public static ItemSavedEntityPredicate of(EntityType<?> entityType) {
+        return new ItemSavedEntityPredicate(Optional.of(HolderSet.direct(entityType.builtInRegistryHolder())), new ArrayList<>(), false);
     }
 
-    @Contract("_ -> new")
-    public static ItemSavedEntityPredicate of(EntityType<?> entityType) {
-        return new ItemSavedEntityPredicate(entityType, new ArrayList<>());
+    public static ItemSavedEntityPredicate any() {
+        return new ItemSavedEntityPredicate(Optional.empty(), new ArrayList<>(), false);
+    }
+
+    public static ItemSavedEntityPredicate monster() {
+        return new ItemSavedEntityPredicate(Optional.empty(), new ArrayList<>(), true);
     }
 
     public ItemSavedEntityPredicate predicate(Consumer<NumericTagValuePredicate.Builder> predicateBuilder) {
@@ -55,8 +63,9 @@ public record ItemSavedEntityPredicate(
         Optional<EntityType<?>> optional = EntityType.by(tag);
         if (optional.isEmpty()) return false;
         EntityType<?> type = optional.get();
-        if (!type.equals(this.entityType)) return false;
-        return predicates.stream().allMatch(it -> it.test(tag));
+        if (this.entitys.isPresent() && !type.is(this.entitys.get())) return false;
+        if (this.isMonster && !component.isMonster()) return false;
+        return this.predicates.stream().allMatch(it -> it.test(tag));
     }
 
     @Override

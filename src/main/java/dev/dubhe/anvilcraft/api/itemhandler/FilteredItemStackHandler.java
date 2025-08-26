@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.api.itemhandler;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.item.FilterItem;
-import dev.dubhe.anvilcraft.util.CodecUtil;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;

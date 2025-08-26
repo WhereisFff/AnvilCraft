@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.inventory;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.IFilterBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.inventory.component.ReadOnlySlot;
 import lombok.Getter;
 import net.minecraft.network.FriendlyByteBuf;

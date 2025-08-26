@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.api.rendering;
 
 import dev.dubhe.anvilcraft.client.renderer.laser.LaserRenderer;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 

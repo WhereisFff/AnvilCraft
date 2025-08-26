@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.integration.jei.category;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -33,17 +33,15 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable progress;
+    private final IDrawable arrowDefault;
     private final IDrawable icon;
-    private final IDrawable slot;
+    private final IDrawable slotDefault;
     private final Component title;
 
     public JewelCraftingCategory(IGuiHelper helper) {
-        progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
         icon = helper.createDrawableItemStack(new ItemStack(ModBlocks.JEWEL_CRAFTING_TABLE));
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.jewel_crafting");
     }
 
@@ -89,14 +87,14 @@ public class JewelCraftingCategory implements IRecipeCategory<RecipeHolder<Jewel
     @Override
     public void draw(RecipeHolder<JewelCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         // source
-        slot.draw(guiGraphics, 58, 10);
+        slotDefault.draw(guiGraphics, 58, 10);
         // result
-        slot.draw(guiGraphics, 134, 23);
+        slotDefault.draw(guiGraphics, 134, 23);
         // input
         for (int i = 0; i < 4; i++) {
-            slot.draw(guiGraphics, 4 + i * 18, 36);
+            slotDefault.draw(guiGraphics, 4 + i * 18, 36);
         }
-        progress.draw(guiGraphics, 95, 24);
+        arrowDefault.draw(guiGraphics, 100, 27);
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {

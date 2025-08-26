@@ -4,7 +4,7 @@ import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager.Entry;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -73,13 +73,15 @@ public class PiezoelectricCrystalBlock extends Block implements IHammerRemovable
      * 被铁砧砸事件
      */
     public void onHitByAnvil(FallingBlockEntity entity, float fallDistance, Level level, BlockPos blockPos) {
-        List<Integer> chargeNums = ANVIL_TYPES.get(entity.blockState.getBlock());
-        if (chargeNums == null) return;
-        int distance = (int) Math.min(chargeNums.size() - 1, fallDistance);
-        int chargeNum = chargeNums.get(distance);
-        this.charge(chargeNum, level, blockPos);
-        pressureConduction(level, blockPos, chargeNum / 2);
-        TriggerUtil.anvilHitPiezoelectricCrystal(level, blockPos);
+        if (level.getGameTime() % 4 == 0) {
+            List<Integer> chargeNums = ANVIL_TYPES.get(entity.blockState.getBlock());
+            if (chargeNums == null) return;
+            int distance = (int) Math.min(chargeNums.size() - 1, fallDistance);
+            int chargeNum = chargeNums.get(distance);
+            this.charge(chargeNum, level, blockPos);
+            pressureConduction(level, blockPos, chargeNum / 2);
+            TriggerUtil.anvilHitPiezoelectricCrystal(level, blockPos);
+        }
     }
 
     private void charge(int chargeNum, Level level, BlockPos blockPos) {

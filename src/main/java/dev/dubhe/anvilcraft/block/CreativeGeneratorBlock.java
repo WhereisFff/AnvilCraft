@@ -4,7 +4,7 @@ import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.better.BetterBaseEntityBlock;
 import dev.dubhe.anvilcraft.block.entity.CreativeGeneratorBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.network.SliderInitPacket;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -61,7 +61,7 @@ public class CreativeGeneratorBlock extends BetterBaseEntityBlock implements IHa
         if (level.getBlockEntity(pos) instanceof CreativeGeneratorBlockEntity entity
             && player instanceof ServerPlayer serverPlayer) {
             ModMenuTypes.open(serverPlayer, entity, pos);
-            PacketDistributor.sendToPlayer(serverPlayer, new SliderInitPacket(entity.getPower(), -8192, 8192));
+            PacketDistributor.sendToPlayer(serverPlayer, new SliderInitPacket(entity.getPower()));
         }
         return InteractionResult.SUCCESS;
     }

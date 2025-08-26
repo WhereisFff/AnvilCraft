@@ -33,7 +33,11 @@ public abstract class GuiGraphicsMixin {
     );
 
     @Inject(
-        method = "renderItem(Lnet/minecraft/world/entity/LivingEntity;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/item/ItemStack;IIII)V",
+        method = "renderItem("
+                 + "Lnet/minecraft/world/entity/LivingEntity;"
+                 + "Lnet/minecraft/world/level/Level;"
+                 + "Lnet/minecraft/world/item/ItemStack;IIII"
+                 + ")V",
         at = @At(
             value = "RETURN"
         )

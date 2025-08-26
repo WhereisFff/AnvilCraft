@@ -17,26 +17,16 @@ public class SliderInitPacket implements CustomPacketPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, SliderInitPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.INT,
         SliderInitPacket::getValue,
-        ByteBufCodecs.INT,
-        SliderInitPacket::getMin,
-        ByteBufCodecs.INT,
-        SliderInitPacket::getMax,
         SliderInitPacket::new);
     public static final IPayloadHandler<SliderInitPacket> HANDLER = SliderInitPacket::clientHandler;
 
     private final int value;
-    private final int min;
-    private final int max;
 
     /**
      * @param value 当前值
-     * @param min   最小值
-     * @param max   最大值
      */
-    public SliderInitPacket(int value, int min, int max) {
+    public SliderInitPacket(int value) {
         this.value = value;
-        this.min = min;
-        this.max = max;
     }
 
     @Override
@@ -48,8 +38,6 @@ public class SliderInitPacket implements CustomPacketPayload {
         Minecraft client = Minecraft.getInstance();
         context.enqueueWork(() -> {
             if (!(client.screen instanceof SliderScreen screen)) return;
-            screen.setMin(data.min);
-            screen.setMax(data.max);
             screen.setValue(data.value);
         });
     }

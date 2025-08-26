@@ -1,12 +1,11 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.recipe.MeshRecipeGroup;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -39,7 +38,8 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
     public static final int WIDTH = 162;
     public static final int ROW_START = 44;
 
-    private final IDrawable slot;
+    private final IDrawable slotDefault;
+    private final IDrawable slotProbability;
     private final IDrawable icon;
     private final Component title;
     private final ITickTimer timer;
@@ -47,13 +47,14 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
     private final IDrawable arrowIn;
 
     public MeshRecipeCategory(IGuiHelper helper) {
-        this.slot = helper.getSlotDrawable();
+        this.slotDefault = JeiRenderHelper.getSlotDefault(helper);
+        this.slotProbability = JeiRenderHelper.getSlotProbability(helper);
         this.icon =
             new DrawableBlockStateIcon(Blocks.ANVIL.defaultBlockState(), Blocks.SCAFFOLDING.defaultBlockState());
         this.title = Component.translatable("gui.anvilcraft.category.mesh");
         this.timer = helper.createTickTimer(30, 60, true);
 
-        this.arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
+        this.arrowIn = JeiRenderHelper.getArrowInput(helper);
     }
 
     @Override
@@ -112,12 +113,12 @@ public class MeshRecipeCategory implements IRecipeCategory<MeshRecipeGroup> {
         RenderHelper.renderBlock(
             guiGraphics, Blocks.SCAFFOLDING.defaultBlockState(), 81, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 22);
-        slot.draw(guiGraphics, 36, 13);
+        arrowIn.draw(guiGraphics, 55, 17);
+        slotDefault.draw(guiGraphics, 36, 13);
 
         for (int row = 0; row < MeshRecipeGroup.maxRows; row++) {
             for (int column = 0; column < 9; column++) {
-                slot.draw(guiGraphics, column * 18, ROW_START + row * 18);
+                slotProbability.draw(guiGraphics, column * 18, ROW_START + row * 18);
             }
         }
     }
