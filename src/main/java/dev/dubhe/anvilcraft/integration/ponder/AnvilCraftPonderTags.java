@@ -71,7 +71,10 @@ public class AnvilCraftPonderTags {
             .add(ModBlocks.LOAD_MONITOR)
             .add(ModBlocks.BLOCK_COMPARATOR)
             .add(ModBlocks.ITEM_DETECTOR)
-            .add(ModBlocks.PULSE_GENERATOR);
+            .add(ModBlocks.PULSE_GENERATOR)
+            .add(ModBlocks.BLOCK_PLACER)
+            .add(ModBlocks.BLOCK_DEVOURER)
+            .add(ModBlocks.ADVANCED_COMPARATOR);
 
         registryTagHelper.addToTag(POWER_COMPONENTS)
             .add(ModBlocks.TRANSMISSION_POLE)

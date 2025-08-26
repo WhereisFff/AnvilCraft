@@ -27,20 +27,18 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class HeaterScene {
-    public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
+    public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(
             BuiltInRegistries.ITEM::getKey
         );
-        helper.forComponents(
-                ModBlocks.HEATER.asItem()
-            )
+        helper.forComponents(ModBlocks.HEATER.asItem())
             .addStoryBoard(
                 "platform/555",
                 HeaterScene::crafting
             );
     }
 
-    private static void crafting(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("heater", "Use heater to execute the high-heat recipe");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();
