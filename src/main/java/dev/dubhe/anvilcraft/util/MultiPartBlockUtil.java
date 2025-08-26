@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -40,7 +40,7 @@ public class MultiPartBlockUtil {
     }
 
     /**
-     *获取主方块位置，只包含可“连锁破坏”的多方块
+     * 获取主方块位置，只包含可“连锁破坏”的多方块
      */
     public static BlockPos getChainableMainPartPos(Level level, BlockPos pos) {
         BlockState state = level.getBlockState(pos);

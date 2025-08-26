@@ -1,21 +1,14 @@
 {
   "type": "anvilcraft:super_heating",
-  "block_result": "minecraft:lava_cauldron",
+  "consume": -1000,
   "ingredients": [
     {
-      "item": "minecraft:cobblestone"
+      "count": 4,
+      "items": "minecraft:cobblestone"
     },
     {
-      "item": "minecraft:cobblestone"
-    },
-    {
-      "item": "minecraft:cobblestone"
-    },
-    {
-      "item": "minecraft:cobblestone"
-    },
-    {
-      "item": "anvilcraft:lime_powder"
+      "items": "anvilcraft:lime_powder"
     }
-  ]
+  ],
+  "transform": "minecraft:lava"
 }

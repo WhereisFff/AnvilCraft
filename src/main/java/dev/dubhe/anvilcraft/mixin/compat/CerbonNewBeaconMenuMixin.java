@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.mixin.compat;
 
 import com.cerbon.better_beacons.menu.custom.NewBeaconMenu;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.MinecraftServer;
@@ -13,7 +13,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,7 +39,9 @@ public abstract class CerbonNewBeaconMenuMixin {
         at =
         @At(
             value = "INVOKE",
-            target = "Lcom/cerbon/better_beacons/menu/custom/NewBeaconMenu$PaymentSlot;remove(I)Lnet/minecraft/world/item/ItemStack;"))
+            target = "Lcom/cerbon/better_beacons/menu/custom/NewBeaconMenu$PaymentSlot;remove(I)Lnet/minecraft/world/item/ItemStack;"
+        )
+    )
     private void updateEffects(
         Optional<Holder<MobEffect>> primaryEffect, Optional<Holder<MobEffect>> secondaryEffect, Optional<Holder<MobEffect>> tertiaryEffect,
         CallbackInfo ci
@@ -61,7 +62,7 @@ public abstract class CerbonNewBeaconMenuMixin {
     }
 
     @Unique
-    private boolean anvilcraft$toCorrupted(@NotNull Level level, @NotNull BlockPos pos) {
+    private boolean anvilcraft$toCorrupted(Level level, BlockPos pos) {
         RandomSource random = level.getRandom();
         double chance = random.nextDouble();
         int levels = anvilcraft$updateBase(level, pos.getX(), pos.getY(), pos.getZ());

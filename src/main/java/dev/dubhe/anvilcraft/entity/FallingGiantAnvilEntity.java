@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
-import dev.dubhe.anvilcraft.init.ModEntities;
+import dev.dubhe.anvilcraft.init.entity.ModEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;

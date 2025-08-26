@@ -1,6 +1,11 @@
 {
   "type": "anvilcraft:squeezing",
-  "cauldron": "minecraft:water_cauldron",
-  "input_block": "minecraft:moss_block",
-  "result_block": "minecraft:moss_carpet"
+  "consume": -333,
+  "ingredient": {
+    "blocks": "minecraft:moss_block"
+  },
+  "result": {
+    "block": "minecraft:moss_carpet"
+  },
+  "transform": "minecraft:water"
 }

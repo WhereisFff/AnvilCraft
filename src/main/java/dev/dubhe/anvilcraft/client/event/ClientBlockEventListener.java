@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.client.event;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.client.gui.screen.AnvilHammerScreen;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModItemTags;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.util.StateUtil;
@@ -62,6 +62,7 @@ public class ClientBlockEventListener {
                 return false;
             }
             if (!event.getEntity().getAbilities().mayBuild) return false;
+            if (!AnvilHammerItem.ableToUseAnvilHammer(event.getLevel(), event.getPos(), event.getEntity())) return false;
             List<BlockState> possibleStates = StateUtil.findPossibleStatesForProperty(targetBlockState, property);
             if (!possibleStates.isEmpty()) {
                 Minecraft.getInstance().setScreen(

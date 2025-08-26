@@ -3,11 +3,14 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.inventory.BatchCrafterMenu;
+import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import lombok.Getter;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
@@ -15,15 +18,12 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
 public class BatchCrafterScreen extends BaseMachineScreen<BatchCrafterMenu> implements IFilterScreen<BatchCrafterMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/auto_crafter.png");
-    BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier =
-        this.getEnableFilterButtonSupplier(116, 18);
+    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/machine/background/auto_crafter.png");
+    BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier = this.getEnableFilterButtonSupplier(116, 18);
 
     @Getter
     private EnableFilterButton enableFilterButton = null;
@@ -43,25 +43,25 @@ public class BatchCrafterScreen extends BaseMachineScreen<BatchCrafterMenu> impl
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override
-    public void renderSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot) {
+    public void renderSlot(GuiGraphics guiGraphics, Slot slot) {
         super.renderSlot(guiGraphics, slot);
         IFilterScreen.super.renderSlot(guiGraphics, slot);
     }
 
     @Override
-    protected void renderTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         super.renderTooltip(guiGraphics, x, y);
         this.renderSlotTooltip(guiGraphics, x, y);
     }
 
-    protected void renderSlotTooltip(@NotNull GuiGraphics guiGraphics, int x, int y) {
+    protected void renderSlotTooltip(GuiGraphics guiGraphics, int x, int y) {
         if (this.hoveredSlot == null) return;
         if (!(this.hoveredSlot instanceof SlotItemHandlerWithFilter)) return;
         if (!((SlotItemHandlerWithFilter) this.hoveredSlot).isFilter()) return;
@@ -81,25 +81,25 @@ public class BatchCrafterScreen extends BaseMachineScreen<BatchCrafterMenu> impl
     }
 
     @Override
-    protected void slotClicked(@NotNull Slot slot, int slotId, int mouseButton, @NotNull ClickType type) {
-        if (type == ClickType.PICKUP) {
-            if (slot instanceof SlotItemHandlerWithFilter && slot.getItem().isEmpty()) {
-                ItemStack carriedItem = this.menu.getCarried();
-                int realSlotId = slot.getContainerSlot();
-                if (this.menu.isFilterEnabled()) {
+    protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
+        if (slot instanceof SlotItemHandlerWithFilter && slot.getItem().isEmpty()) {
+            ItemStack carriedItem = this.menu.getCarried().copy();
+            int realSlotId = slot.getContainerSlot();
+            if (!carriedItem.isEmpty() && this.menu.isFilterEnabled()) {
+                ItemStack filter = this.menu.getFilter(realSlotId);
+                if (this.menu.isSlotDisabled(realSlotId)) {
                     PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
-                    PacketDistributor.sendToServer(new SlotFilterChangePacket(realSlotId, carriedItem.copy()));
-                    menu.setSlotDisabled(realSlotId, false);
-                    menu.setFilter(realSlotId, carriedItem.copy());
-                    slot.set(carriedItem);
-                } else {
-                    if (carriedItem.isEmpty()) {
-                        PacketDistributor.sendToServer(
-                            new SlotDisableChangePacket(realSlotId, !this.menu.isSlotDisabled(realSlotId)));
-                    } else {
-                        PacketDistributor.sendToServer(new SlotDisableChangePacket(realSlotId, false));
-                    }
+                    this.menu.setSlotDisabled(realSlotId, false);
                 }
+                PacketDistributor.sendToServer(new SlotFilterChangePacket(realSlotId, carriedItem));
+                this.menu.setFilter(realSlotId, carriedItem);
+                if (carriedItem.is(ModItems.FILTER) && (filter.isEmpty() || !FilterItem.filter(filter, carriedItem))) return;
+                slot.set(carriedItem);
+            } else if (Screen.hasShiftDown()) {
+                PacketDistributor.sendToServer(new SlotDisableChangePacket(
+                    realSlotId,
+                    carriedItem.isEmpty() && !this.menu.isSlotDisabled(realSlotId)
+                ));
             }
         }
         super.slotClicked(slot, slotId, mouseButton, type);

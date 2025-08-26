@@ -29,12 +29,12 @@ public class MagnetizedNodeEntityRenderer extends EntityRenderer<MagnetizedNodeE
 
     @Override
     public void render(
-            MagnetizedNodeEntity entity,
-            float entityYaw,
-            float partialTick,
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
-            int packedLight
+        MagnetizedNodeEntity entity,
+        float entityYaw,
+        float partialTick,
+        PoseStack poseStack,
+        MultiBufferSource bufferSource,
+        int packedLight
     ) {
         poseStack.pushPose();
         poseStack.translate(0, -1.31f, 0);

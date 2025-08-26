@@ -4,21 +4,20 @@
   "icon": "minecraft:quartz",
   "sortnum": 1009,
   "extra_recipe_mappings": {
-    "minecraft:echo_shard": 8,
     "minecraft:lava_bucket": 9
   },
   "pages": [
-    "模组可以再生资源：$(li)$(l:basic/item_regeneration#guide)铁砧工艺指南$()$(li)$(l:basic/item_regeneration#quartz)石英/黏土/荧石/青金石$()$(li)$(l:basic/item_regeneration#sponge)湿海绵$()$(li)$(l:basic/item_regeneration#echo_shard)回响碎片$()$(li)$(l:basic/item_regeneration#lava)熔岩$()",
+    "模组可以再生资源：$(li)$(l:basic/item_regeneration#guide)铁砧工艺指南$()$(li)$(l:basic/item_regeneration#quartz)石英/黏土/荧石/青金石$() $(li)$(l:basic/item_regeneration#sponge)湿海绵$() $(li)$(l:basic/item_regeneration#echo_shard)回响碎片$() $(li)$(l:basic/item_regeneration#lava)熔岩$() $(li)$(l:basic/item_regeneration#slime_ball)黏液球$()",
     {
       "type": "patchouli:crafting",
       "anchor": "guide",
-      "recipe": "anvilcraft:guide_book",
-      "text": ""
+      "recipe": "anvilcraft:guide_book"
     },
     {
       "type": "patchouli:spotlight",
       "anchor": "quartz",
-      "item": "minecraft:quartz",
+      "item": ["minecraft:quartz","anvilcraft:quartz_sand"],
+      "link_recipe": true,
       "text": "$(li)下界石英+圆石→$(item)闪长岩$()[合成]$(li)闪长岩→$(item)石英砂$()[$(l:basic/block_processing#crush)粉碎$()]$(li)石英砂→$(item)下界石英$()[$(l:basic/item_processing#mesh)筛选$()]"
     },
     {
@@ -39,18 +38,17 @@
     {
       "type": "anvilcraft:unpack",
       "anchor": "sponge_gemmule",
-      "recipe": "anvilcraft:unpack/sponge_gemmule",
-      "text": ""
+      "recipe": "anvilcraft:unpack/sponge_gemmule"
     },
     {
       "type": "anvilcraft:bulging",
       "anchor": "sponge",
-      "recipe": "anvilcraft:bulging/wet_sponge",
-      "text": ""
+      "recipe": "anvilcraft:bulging/wet_sponge"
     },
     {
       "type": "patchouli:spotlight",
       "anchor": "echo_shard",
+      "link_recipe": true,
       "item": "minecraft:echo_shard",
       "text": "$(item)坚守者$()使用$(thing)声波攻击$()杀死任意生物，会生成1个$(item)回响碎片$()"
     },
@@ -59,8 +57,12 @@
       "anchor": "lava",
       "recipe": "anvilcraft:super_heating/lava_from_cobblestone",
       "recipe2": "anvilcraft:super_heating/lava_from_stone",
-      "title": "再生熔岩",
-      "text": ""
+      "title": "再生熔岩"
+    },
+    {
+      "type": "anvilcraft:boiling",
+      "anchor": "slime_ball",
+      "recipe": "anvilcraft:boiling/slime_ball"
     }
   ]
 }

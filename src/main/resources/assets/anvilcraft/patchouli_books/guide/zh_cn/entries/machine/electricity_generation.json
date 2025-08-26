@@ -83,31 +83,31 @@
 					"O": "minecraft:sticky_piston[facing=north]",
 					"P": "minecraft:sticky_piston[facing=down]",
 					"Q": "minecraft:redstone_torch",
-					"R": "minecraft:redstone_torch[lit=false]"
+					"R": "minecraft:redstone_torch[lit=false]",
+                    "S": "minecraft:redstone_wire[east=none,north=side,south=side,west=none]"
 				},
 				"pattern": [
-					[ "     ","     "," N   "," P   " ],
-					[ "KE   ","KE   ","KE   ","KEOIC" ],
-					[ "M    ","M    ","M    ","M   Q" ],
-					[ "     ","     ","     ","    C" ],
-					[ "     ","     ","     ","    R" ],
-					[ "     ","     ","     ","    C" ],
-					[ "     ","     ","     ","    Q" ],
-					[ "J    ","J    ","J   D","J   C" ],
-					[ "J    ","J    ","J    ","J   F" ],
-					[ "J    ","JL   ","JL   ","J   G" ],
-					[ "J    ","JC   ","JC   ","J 0 H" ], 
-                    [ "ABABA","BABAB","ABABA","BABAB" ]
+					[ "     ","     ","     ","     "," P   ","CIS  " ],
+					[ "KE   ","KE   ","KE   ","KE   ","KEO  ","  CIC" ],
+					[ "M    ","M    ","M    ","M    ","M    ","    Q" ],
+					[ "     ","     ","     ","     ","     ","    C" ],
+					[ "     ","     ","     ","     ","     ","    R" ],
+					[ "     ","     ","     ","     ","     ","    C" ],
+					[ "     ","     ","     ","     ","     ","    Q" ],
+					[ "J    ","J    ","J    ","J    ","J   D","    C" ],
+					[ "J    ","J    ","J    ","J    ","J    ","    F" ],
+					[ "J    ","JL   ","JL   ","JL   ","J    ","    G" ],
+					[ "J    ","JC   ","JC   ","JC   ","J    ","  0 H" ],
+                    [ "ABABA","BABAB","ABABA","BABAB","ABABA","BABAB"]
 				]
 			},
 			"enable_visualize":"true",
 			"text": "这台发电机的发电量显著增加了，能满足中期的用电需求，同时易于搭建。"
         },
 		{
-            "type": "patchouli:image",
-            "text": "脉冲发生器设置$(n)$(5)循环模式$()，每间隔$(n)$(5)4gt$()输出信号$(n)$(5)9gt$()，控制皇家铁砧下弹。",
-			"title": "脉冲发生器的设置",
-			"images": ["anvilcraft:patchouli_images/5.3_2.png"]
+            "type": "patchouli:text",
+            "text": "$(br2)较低处的脉冲发生器设置为$(n)$(5)循环模式$()，每间隔$(n)$(5)1gt$()输出信号$(n)$(5)9gt$()，控制粘性活塞推动。$(br2)较高处的脉冲发生器设置为$(n)$(5)上升沿模式$()，延时$(n)$(5)3gt$()输出信号$(n)$(5)3gt$()，控制皇家铁砧下弹。",
+			"title": "脉冲发生器的设置"
         },
 		{
             "type": "patchouli:text",
@@ -162,11 +162,70 @@
             "type": "patchouli:image",
             "text": "$(n)$(5)所有$()脉冲发生器都设置$(n)$(5)循环模式$()，每间隔$(n)$(5)4gt$()输出信号$(n)$(5)1gt$()，控制幻灵铁砧下落。",
 			"title": "脉冲发生器的设置",
-			"images": ["anvilcraft:patchouli_images/5.3_3.png"]
+			"images": ["anvilcraft:patchouli_images/5.3_2.png"]
         },
 		{
             "type": "patchouli:text",
-            "text": "欢迎来到热电。热电发电机使用$(item)集热器$()收集$(thing)高温方块$()放出的热量，并转化为电能，热量越高发电功率就越高。因此在热电中，我们只是在使用不同的方法加热方块。$(br2)在铁砧工艺中，有两种方块可以被加热,$()item下界合金块$()和$(item)钨块$()。考虑到这两种材料都是高阶科技$(item)余烬金属$()的原材料，推科技的路上顺手搭建一台热电发电机就成为了顺理成章的事。$(br2)例如下面这台太阳能发电机，通过$(item)定日镜$()反射阳光加热钨块来发电。",
+            "text": "当你继续发展科技并获得了巨型铁砧，同时打败末影龙得到龙首，就可以利用巨型铁砧强大的压力和方块吞噬器高效的破坏发出更多的电量。$(br2)如果你还不了解这两个元件，可以查阅手册中前面的章节。总之请看这台示例机器吧：",
+			"title": "发电量升级 3"
+        },
+		{
+            "type": "patchouli:multiblock",
+            "name": "巨型铁砧下弹压电发电机",
+			"multiblock": {
+				"mapping": {
+					"A": "minecraft:observer[facing=up]",
+					"B": "minecraft:observer[facing=south]",
+					"C": "minecraft:smooth_stone",
+					"D": "minecraft:lever[face=floor,facing=west,powered=true]",
+					"E": "minecraft:powered_rail[shape=ascending_south,powered=true]",
+					"e": "minecraft:powered_rail[shape=north_south,powered=true]",
+					"F": "anvilcraft:remote_transmission_pole[half=top,overload=false,switch=on]",
+					"G": "anvilcraft:remote_transmission_pole[half=upper,overload=true,switch=on]",
+					"H": "anvilcraft:remote_transmission_pole[half=lower,overload=true,switch=on]",
+					"I": "anvilcraft:remote_transmission_pole[half=bottom,overload=true,switch=on]",
+					"J": "anvilcraft:magnetic_chute[enabled=true,facing=up]",
+					"j": "anvilcraft:magnetic_chute[enabled=true,facing=north]",
+					"K": "anvilcraft:hollow_magnet_block",
+					"L": "anvilcraft:charge_collector",
+					"M": "anvilcraft:spectral_anvil",
+					"N": "anvilcraft:block_placer[orientation=south_up]",
+					"n": "anvilcraft:block_devourer[facing=south]",
+					"O": "minecraft:sticky_piston[facing=down]",
+					"P": "minecraft:slime_block",
+					"Q": "minecraft:redstone_wire[east=side,north=side,south=side,west=side]",
+					"R": "anvilcraft:piezoelectric_crystal"
+				},
+				"pattern": [
+					[ "       ","       ","   e   ","       ","       " ],
+					[ "       ","       ","  EA   ","       ","       " ],
+					[ "       ","       ","DEBA   ","       ","       " ],
+					[ "       ","       ","CA O   ","       ","       " ],
+					[ "       ","       "," C P   ","       ","       " ],
+					[ "       ","       "," K     ","       ","       " ],
+					[ "       ","       ","CM     ","       ","       " ],
+					[ "       ","       ","JN     ","       ","       " ],
+					[ "       ","       ","       ","       ","       " ],
+					[ "       ","       ","       ","       ","       " ],
+					[ "       ","       ","J      ","       ","       " ],
+					[ "       ","       ","       ","       ","       " ],
+					[ "       ","       ","       ","       ","       " ],
+					[ "       ","       ","J      ","       ","       " ],
+					[ "       ","       ","jQn    ","       ","       " ],
+					[ "       ","       "," CB    ","       ","       " ],
+					[ "       ","       "," F  0  ","       ","       " ],
+					[ "       ","   RRR "," G RRR ","   RRR ","       " ],
+					[ "    L  ","   RRR "," HLRRRL","   RRR ","    L  " ],
+					[ "    L  ","   RRR "," ILRRRL","   RRR ","    L  " ], 
+                    [ "       ","   RRR ","   RRR ","   RRR ","       " ]
+				]
+			},
+			"enable_visualize":"true",
+			"text": "这台发电机的发电功率已经接近兆瓦级，你需要在溜槽中放入九个巨型铁砧以维持不间断的循环。"
+        },
+		{
+            "type": "patchouli:text",
+            "text": "欢迎来到热电。热电发电机使用$(item)集热器$()收集$(thing)高温方块$()放出的热量，并转化为电能，热量越高发电功率就越高。因此在热电中，我们只是在使用不同的方法加热方块。$(br2)在铁砧工艺中，有两种方块可以被加热,$(item)下界合金块$()和$(item)钨块$()。考虑到这两种材料都是高阶科技$(item)余烬金属$()的原材料，推科技的路上顺手搭建一台热电发电机就成为了顺理成章的事。$(br2)例如下面这台太阳能发电机，通过$(item)定日镜$()反射阳光加热钨块来发电。",
 			"title": "走进热电"
         },
 		{
@@ -176,7 +235,7 @@
 				"mapping": {
 					"A": "minecraft:red_concrete",
 					"B": "minecraft:white_concrete",
-					"C": "anvilcraft:remote_transmission_pole[half=top,switch=on]",
+					"C": "anvilcraft:remote_transmission_pole[half=top,switch=on,overload=false]",
 					"D": "anvilcraft:remote_transmission_pole[half=upper]",
 					"E": "anvilcraft:remote_transmission_pole[half=lower]",
 					"F": "anvilcraft:remote_transmission_pole[half=bottom,switch=on]",
@@ -187,6 +246,7 @@
 				"pattern": [
 					[ "     ","     ","  G  ","     ","     " ],
 					[ "     ","     ","  H  ","     ","     " ],
+                    [ "     ","     ","  H  ","     ","     " ],
 					[ "     ","     ","  C  ","     ","     " ],
 					[ "     ","     ","  D  ","     ","     " ],
 					[ "     ","     ","  E  ","     ","     " ],
@@ -195,11 +255,11 @@
 				]
 			},
 			"enable_visualize":"true",
-			"text": "放定日镜之前先拿着它右键钨块，选定钨块为照射的目标"
+			"text": "放定日镜之前先拿着它右键下面的钨块，选定钨块为照射的目标"
         },
 		{
             "type": "patchouli:text",
-            "text": "示例中的发电功率很低，因为$(5)定日镜数量少$()，钨块的$(5)温度不够高$()。$(br2)向外扩展一圈定日镜可以提高钨块的温度到$(5)红热$()，再扩展一圈可以到$(5)炽热$()，4圈定日镜就能加热到达$(5)白炽$()温度，发电功率将达到$(l)$(5)256kW$()，此时$(5)共有80个定日镜$()。$(br2)如果你觉得这么多定日镜发电量却不够高很不值，那就看看下面这台燃油热电吧。",
+            "text": "示例中的发电功率很低，因为$(5)定日镜数量少$()，钨块的$(5)温度不够高$()。$(br2)向外扩展一圈定日镜可以提高钨块的温度到$(5)红热$()，再扩展一圈可以到$(5)炽热$()，64个定日镜就能将其加热到$(5)白炽$()温度，发电功率将达到$(l)$(5)256kW$()。$(br2)如果你觉得这么多定日镜发电量却不够高很不值，那就看看下面这台燃油热电吧。",
 			"title": "更大功率"
         },
 		{
@@ -209,15 +269,15 @@
 				"mapping": {
 					"A": "minecraft:red_concrete",
 					"B": "minecraft:white_concrete",
-					"C": "anvilcraft:remote_transmission_pole[half=top,switch=on]",
+					"C": "anvilcraft:remote_transmission_pole[half=top,switch=off,overload=true]",
 					"D": "anvilcraft:remote_transmission_pole[half=upper]",
 					"E": "anvilcraft:remote_transmission_pole[half=lower]",
-					"F": "anvilcraft:remote_transmission_pole[half=bottom,switch=on]",
+					"F": "anvilcraft:remote_transmission_pole[half=bottom,switch=off]",
 					"G": "anvilcraft:heat_collector",
 					"H": "anvilcraft:heater[overload=false]",
 					"I": "anvilcraft:tungsten_block",
 					"J": "anvilcraft:charge_collector[powered=false]",
-					"K": "anvilcraft:pulse_generator[facing=south]",
+					"K": "anvilcraft:pulse_generator[facing=north]",
 					"L": "anvilcraft:chute",
 					"M": "anvilcraft:chute[facing=south]",
 					"N": "anvilcraft:hollow_magnet_block",
@@ -225,25 +285,33 @@
 					"P": "minecraft:lava_cauldron",
 					"Q": "minecraft:smooth_stone",
 					"R": "minecraft:lever[facing=east,face=wall,powered=true]",
-					"T": "minecraft:dispenser[facing=east]"
+					"T": "minecraft:dispenser[facing=east]",
+					"U": "minecraft:hopper[facing=down]",
+					"V": "anvilcraft:discharger[overload=false,powered=false]"
 				},
 				"pattern": [
-					[ " J N J ","JJI IJJ"," J N J " ],
-					[ " J N J ","JJI IJJ"," J N J " ],
-					[ " J N J ","JJI IJJ"," JGNCJ " ],
-					[ " J N J ","JJI IJJ"," J NDJ " ],
-					[ "  MTKQ ","   O R ","    E  " ],
-					[ "   L   ","   H   ","   0F  " ],
-					[ "ABAPABA","BABABAB","ABABABA" ]
+					[ "CJNJ "," I I "," JNJ " ],
+					[ "DJNJ "," I I "," JNJ " ],
+					[ "EJNJ "," I I "," JNJ " ],
+					[ "FJNJ "," I I "," JNJ " ],
+					[ "QKT  ","RUOG ","     " ],
+					[ "  L  "," VHQ ","  0  " ],
+					[ "BAPAB","ABABA","BABAB" ]
 				]
 			},
 			"enable_visualize":"true",
-			"text": "脉冲发生器设置为$(l)$(5)循环模式$()，每$(l)$(5)间隔20分钟$()发出$(l)$(5)长度2gt$()的信号。发射器里放原油桶，下面溜槽只允许空桶通过。"
+			"text": "脉冲发生器设置为$(l)$(5)循环模式$()，每$(l)$(5)间隔10min$()发出$(l)$(5)长度2gt$()的信号。发射器里放原油桶，下面溜槽只允许空桶通过。"
         },
 		{
             "type": "patchouli:text",
-            "text": "这台机器每20分钟消耗一桶原油，而发电功率高达5888kW，是当之无愧的发电利器，而且似乎可以更省原油？具体的就交给你自己探索啦。$(br2)除了本章节列出的发电机，铁砧工艺中也还有许多其它发电的方式，期待你多多尝试，让电网遍布世界吧！",
-			"title": "结语"
+            "text": "核电听起来就是危险与高功率并存，且制造复杂的一种发电。$(br2)好在我们现在有更稳定的方法收集这些放射性同位素中的能量。$(br2)请看下面这个示例~",
+			"title": "走进核电"
+        },
+		{
+            "type": "patchouli:image",
+            "text": "真是轻而易举啊，只要在$(item)热能收集器$()的范围内尽可能多的摆满你的$(item)铀块$()和$(item)钚块$()（",
+			"title": "核电，轻而易举啊！",
+			"images": ["anvilcraft:patchouli_images/5.3_3.png"]
         }
     ]
 }

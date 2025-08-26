@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import com.google.common.collect.Multimap;
+import com.google.common.collect.MultimapBuilder;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -7,12 +9,10 @@ import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
+import dev.dubhe.anvilcraft.api.injection.IExplosionExtension;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
-import dev.dubhe.anvilcraft.util.BlockTransformExplosion;
 import it.unimi.dsi.fastutil.objects.ObjectListIterator;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Explosion;
@@ -32,17 +32,23 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 @Mixin(Explosion.class)
-abstract class ExplosionMixin implements BlockTransformExplosion {
+abstract class ExplosionMixin implements IExplosionExtension {
 
     @Unique
-    public HashMap<Block, ArrayList<BlockTransform>> anvilcraft$blockTransformMap = new HashMap<>();
+//    public HashMap<Block, ArrayList<BlockTransform>> anvilcraft$blockTransformMap = new HashMap<>();
+    public Multimap<Block, BlockTransform> anvilcraft$blockTransformMap = MultimapBuilder.hashKeys().hashSetValues().build();
 
     @Unique
     @SuppressWarnings("FieldMayBeFinal")
     private HashMap<BlockTransform, Integer> anvilcraft$counterMap = new HashMap<>();
+
+    @Unique
+    @SuppressWarnings("FieldMayBeFinal")
+    private HashSet<BlockPos> anvilcraft$processedPosSet = new HashSet<>();
 
     @Shadow
     @Final
@@ -55,15 +61,18 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
             value = "INVOKE",
             target =
                 "Lnet/minecraft/world/level/block/state/BlockState;onExplosionHit(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Explosion;Ljava/util/function/BiConsumer;)V",
-            shift = At.Shift.AFTER),
-        locals = LocalCapture.CAPTURE_FAILSOFT)
+            shift = At.Shift.AFTER
+        ),
+        locals = LocalCapture.CAPTURE_FAILSOFT
+    )
     private void finalizeExplosion(
         boolean pSpawnParticles,
         CallbackInfo ci,
         boolean flag,
         List<Pair<ItemStack, BlockPos>> list,
         ObjectListIterator<BlockPos> var4,
-        BlockPos blockpos) {
+        BlockPos blockpos
+    ) {
         BlockState state = this.level.getBlockState(blockpos);
         Block block = state.getBlock();
         if (block instanceof IHasMultiBlock multiBlock) {
@@ -71,22 +80,30 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         }
     }
 
-    @Inject(method = "explode()V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"))
-    private void anvilCraft$explosionBlockTransform(
+    @Inject(
+        method = "explode()V", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/world/level/Level;getBlockState(Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/block/state/BlockState;"
+    )
+    )
+    private void anvilcraft$explosionBlockTransform(
         CallbackInfo ci,
         @Share("isExplosionBlockTransformed") LocalBooleanRef isExplosionBlockTransformed,
         @Local(ordinal = 0) BlockPos pos
     ) {
-        ArrayList<BlockTransform> blockTransforms;
-        if ((blockTransforms = anvilcraft$blockTransformMap.get(level.getBlockState(pos).getBlock())) != null) {
-            BlockTransform blockTransform = blockTransforms.get(level.random.nextInt(blockTransforms.size()));
-            if (anvilcraft$counterMap.getOrDefault(blockTransform, 0) >= blockTransform.maxCount()) return;
-            isExplosionBlockTransformed.set(blockTransform.progress(level, pos));
-            if (isExplosionBlockTransformed.get()) {
-                if (anvilcraft$counterMap.containsKey(blockTransform)) {
-                    anvilcraft$counterMap.put(blockTransform, anvilcraft$counterMap.get(blockTransform) + 1);
-                } else
-                    anvilcraft$counterMap.put(blockTransform, 1);
+        Block block = level.getBlockState(pos).getBlock();
+        ArrayList<BlockTransform> blockTransforms = new ArrayList<>(this.anvilcraft$blockTransformMap.get(block));
+        if (blockTransforms.isEmpty()) return;
+        BlockTransform blockTransform = blockTransforms.get(level.random.nextInt(blockTransforms.size()));
+        if (anvilcraft$counterMap.getOrDefault(blockTransform, 0) >= blockTransform.maxCount()) return;
+        if (anvilcraft$processedPosSet.contains(pos)) return;
+        isExplosionBlockTransformed.set(blockTransform.progress(level, pos));
+        if (isExplosionBlockTransformed.get() && !anvilcraft$processedPosSet.contains(pos)) {
+            anvilcraft$processedPosSet.add(pos);
+            if (anvilcraft$counterMap.containsKey(blockTransform)) {
+                anvilcraft$counterMap.put(blockTransform, anvilcraft$counterMap.get(blockTransform) + 1);
+            } else {
+                anvilcraft$counterMap.put(blockTransform, 1);
             }
         }
     }
@@ -100,7 +117,7 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
                 "Lnet/minecraft/world/level/ExplosionDamageCalculator;shouldBlockExplode(Lnet/minecraft/world/level/Explosion;Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;F)Z"
         )
     )
-    private boolean anvilCraft$explosionBlockTransform(
+    private boolean anvilcraft$explosionBlockTransform(
         ExplosionDamageCalculator instance,
         Explosion explosion,
         BlockGetter reader,
@@ -113,36 +130,12 @@ abstract class ExplosionMixin implements BlockTransformExplosion {
         return !isExplosionBlockTransformed.get() && original.call(instance, explosion, reader, pos, state, power);
     }
 
-    @SuppressWarnings("AddedMixinMembersNamePattern")
     @Override
-    public void setBlockTransformExplosion(Collection<BlockTransform> blockTransformExplosions) {
+    public void anvilcraft$setBlockTransformExplosion(Collection<BlockTransform> blockTransformExplosions) {
         for (BlockTransform blockTransform : blockTransformExplosions) {
-            if (blockTransform.inputBlock().getTag() == null) {
-                if (!anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
-                    anvilcraft$blockTransformMap.put(
-                        blockTransform.inputBlock().getBlock(),
-                        new ArrayList<>() {
-                            {
-                                add(blockTransform);
-                            }
-                        }
-                    );
-                } else {
-                    anvilcraft$blockTransformMap.get(blockTransform.inputBlock().getBlock()).add(blockTransform);
-                }
-
-            } else {
-                for (Holder<Block> blockHolder : BuiltInRegistries.BLOCK.getTagOrEmpty(blockTransform.inputBlock().getTag())) {
-                    if (!anvilcraft$blockTransformMap.containsKey(blockTransform.inputBlock().getBlock())) {
-                        anvilcraft$blockTransformMap.put(blockHolder.value(), new ArrayList<>() {
-                            {
-                                add(blockTransform);
-                            }
-                        });
-                    } else {
-                        anvilcraft$blockTransformMap.get(blockHolder.value()).add(blockTransform);
-                    }
-                }
+            for (BlockState state : blockTransform.inputBlock().getStatesCache()) {
+                Block block = state.getBlock();
+                this.anvilcraft$blockTransformMap.put(block, blockTransform);
             }
         }
     }

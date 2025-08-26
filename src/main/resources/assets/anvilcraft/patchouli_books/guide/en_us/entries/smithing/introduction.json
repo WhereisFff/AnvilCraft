@@ -1,7 +1,7 @@
 {
   "name": "Smithing Introduction",
   "category": "anvilcraft:smithing_system",
-  "icon": "anvilcraft:royal_anvil",
+  "icon": "minecraft:smithing_table",
   "priority": "true",
   "sortnum": 3000,
   "pages": [

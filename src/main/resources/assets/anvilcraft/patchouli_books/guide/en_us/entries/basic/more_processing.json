@@ -34,7 +34,7 @@
     },
     {
       "type": "patchouli:text",
-      "text": "The higher the drop height of the anvil, the greater the chance of spawning. This method of farming does not require players to be around, but it needs to meet the lighting conditions of the spawner and the number of mobs around it will also affect the spawning, and quickly transporting or killing nearby mobs can greatly improve efficiency."
+      "text": "铁砧下落高度h决定刷怪概率$(li)p = 1 - 1/h $(br)This method of farming $(n)does not require players to be around$(), but it needs to meet the lighting conditions of the spawner and the number of mobs around it will also affect the spawning, and quickly transporting or killing nearby mobs can greatly improve efficiency. $(p)$(#666666)利用不需要上升回收的$(item)幻灵铁砧$(/l)，可以获得更高的敲击周期$()"
     },
     {
       "type": "patchouli:multiblock",

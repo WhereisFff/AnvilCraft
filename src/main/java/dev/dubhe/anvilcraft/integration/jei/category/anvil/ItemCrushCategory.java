@@ -1,13 +1,13 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.recipe.anvil.ItemCrushRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -26,7 +26,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class ItemCrushCategory extends AbstractItemProgressCategory<ItemCrushRecipe> {
+public class ItemCrushCategory extends AbstractProgressCategory<ItemCrushRecipe> {
     public ItemCrushCategory(IGuiHelper helper) {
         super(
             helper,
@@ -66,11 +66,15 @@ public class ItemCrushCategory extends AbstractItemProgressCategory<ItemCrushRec
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOutputFromBelow.draw(guiGraphics, 92, 29);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.mergedIngredients.size());
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
+        if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());
+        }
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {

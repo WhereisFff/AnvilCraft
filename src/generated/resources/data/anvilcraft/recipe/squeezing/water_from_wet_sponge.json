@@ -1,6 +1,11 @@
 {
   "type": "anvilcraft:squeezing",
-  "cauldron": "minecraft:water_cauldron",
-  "input_block": "minecraft:wet_sponge",
-  "result_block": "minecraft:sponge"
+  "consume": -333,
+  "ingredient": {
+    "blocks": "minecraft:wet_sponge"
+  },
+  "result": {
+    "block": "minecraft:sponge"
+  },
+  "transform": "minecraft:water"
 }

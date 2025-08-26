@@ -6,12 +6,18 @@
     "pages": [
         {
             "type": "patchouli:text",
+            "text": "$(l:machine/resources_access#1) 1.自动过筛$()$(br)$(l:machine/resources_access#2) 2.自动方块粉碎$()$(br)$(l:machine/resources_access#3) 3.自动宝石转化$()$(br)$(l:machine/resources_access#4) 4.小巧高效宝石转化机$()$(br)$(l:machine/resources_access#5) 5.原木钻石机$()",
+            "title":"目录"
+        },
+        {
+            "type": "patchouli:text",
             "text": "铁砧工艺中大量的配方通过铁砧落下撞击进行加工，$(thing)自动铁砧处理$()是自动化的第一步。$(br2)例如$(thing)过筛$()可以从闪长岩粉碎而成的石英砂中筛选出石英，但每次$(thing)过筛$()只有一部分石英砂能筛选出石英，$(l)手动$()反复过筛费时又费力，下面给出一个$(l)自动$()$(thing)过筛$()的示例机器。",
 			"title":"自动铁砧加工"
 		},
 		{
             "type": "patchouli:multiblock",
             "name": "自动过筛",
+            "anchor": "1",
 			"multiblock": {
 				"mapping": {
 					"M": "anvilcraft:magnetic_chute[facing=north]",
@@ -54,6 +60,7 @@
 		{
 			"type":"patchouli:text",
 			"title":"自动粉碎机",
+            "anchor": "2",
 			"text":"现在你只要把石英砂丢进机器自就能动筛选出石英了，但是如何获得大量的石英砂呢？你还需要一台自动粉碎的机器，把闪长岩快速砸成石英砂。$(br2)这台示例机器中，在$(5)$(n)时钟模式脉冲发生器$()的控制下$(5)$(n)方块放置器$()后面箱子中的物品会被放出，并立刻被$(5)$(n)铁砧$()砸个粉碎。如果你需要更高效率，可以简单的延长，当然也可以自己设计出更高效的机器。"
 		},
 		{
@@ -101,7 +108,8 @@
 		{
             "type": "patchouli:text",
             "text": "铁砧工艺中有三种独特的宝石，$(item)红宝石$()、$(item)蓝宝石$()和$(item)黄玉$()，它们都有各自独特的用处。你可以通过$(thing)粉碎$()$(item)晶洞$()$(n)概率获取$()宝石，但如果需要很多宝石呢？$(br2)例如你想建一台$(l:machine/resources_access#激光挖矿机)激光挖矿机$()，会使用大量的红宝石，这时候你就需要进行$(thing)宝石转化$()，将与$(thing)村民交易$()就能简单获得的绿宝石转化为红宝石。",
-			"title":"自动宝石转化"
+			"title":"自动宝石转化",
+            "anchor": "3"
 		},
 		{
             "type": "patchouli:text",
@@ -120,69 +128,79 @@
 			"multiblock": {
 				"mapping": {
 					"A": "minecraft:iron_block",
-					"B": "minecraft:smooth_stone_slab[type=top]",
-					"C": "minecraft:smooth_stone",
-					"D": "minecraft:chest[type=left,facing=west]",
-					"E": "minecraft:chest[type=right,facing=west]",
-					"F": "minecraft:anvil[facing=west]",
-					"G": "minecraft:redstone_wire[east=none,north=none,power=0,south=none,west=none]",
-					"H": "minecraft:redstone_wire[east=side,north=none,power=0,south=none,west=side]",
-                    "I": "minecraft:redstone_wire[east=none,north=none,power=0,south=up,west=side]",
-                    "J": "minecraft:redstone_wire[east=none,north=side,power=0,south=side,west=none]",
-					"L": "anvilcraft:pulse_generator[facing=west]",
-                    "M": "minecraft:repeater[facing=east,delay=3]",
-                    "N": "anvilcraft:hollow_magnet_block",
-					"O": "minecraft:cauldron",
-					"P": "minecraft:lever[face=floor,facing=south,powered=true]",
-					"Q": "minecraft:dispenser",
-					"R": "minecraft:dropper[facing=up]",
-					"S": "minecraft:repeater[facing=east,delay=1]",
-					"T": "anvilcraft:magnetic_chute[facing=west]",
-					"U": "anvilcraft:magnetic_chute[facing=up]",
-					"V": "anvilcraft:chute[facing=south]",
-					"W": "anvilcraft:chute[facing=east]",
-					"X": "anvilcraft:simple_chute[facing=east]",
-					"Y": "anvilcraft:corrupted_beacon",
-					"Z": "anvilcraft:heater[overload=false]",
-					"a": "powered_rail[powered=false,shape=east_west]",
-					"b": "anvilcraft:magnet_block",
-					"c": "minecraft:redstone_torch",
-					"d": "minecraft:comparator[facing=east]",
-					"e": "minecraft:redstone_wire[east=side,north=none,power=15,south=none,west=side]"
+					"B": "anvilcraft:heater",
+					"C": "anvilcraft:chute[facing=east]",
+					"D": "anvilcraft:simple_chute[waterlogged=false,facing=east]",
+					"E": "anvilcraft:magnetic_chute[facing=up]",
+					"F": "anvilcraft:corrupted_beacon[lit=true]",
+					"G": "minecraft:smooth_stone",
+					"H": "anvilcraft:pulse_generator[facing=north]",
+					"I": "anvilcraft:chute[facing=south]",
+					"J": "minecraft:dropper[facing=west]",
+					"K": "minecraft:note_block",
+					"L": "minecraft:dropper[facing=east]",
+					"M": "minecraft:chest[type=left,facing=east]",
+					"m": "minecraft:chest[type=right,facing=east]",
+					"N": "anvilcraft:melt_gem_cauldron",
+					"O": "minecraft:dispenser[facing=west]",
+					"P": "anvilcraft:magnetic_chute[facing=west]",
+					"Q": "minecraft:dispenser[facing=east]",
+					"R": "minecraft:cauldron",
+					"S": "anvilcraft:magnetic_chute[facing=east]",
+					"U": "minecraft:observer[facing=down]",
+					"V": "minecraft:powered_rail[waterlogged=false,shape=north_south]",
+					"W": "minecraft:anvil[facing=west]",
+					"X": "minecraft:smooth_stone_slab[waterlogged=false,type=top]",
+					"Y": "minecraft:observer[facing=up]",
+					"Z": "minecraft:redstone_wire[east=side,north=side,power=0,south=none,west=side]",
+					"a": "anvilcraft:hollow_magnet_block[waterlogged=false,lit=false]",
+					"b": "minecraft:repeater[facing=east,delay=3]",
+					"c": "minecraft:repeater[facing=west,delay=3]",
+					"d": "minecraft:repeater[facing=north,powered=true]",
+					"e": "minecraft:redstone_wire[east=side,north=none,power=15,south=side,west=side]",
+					"f": "minecraft:comparator[facing=south]",
+					"g": "minecraft:redstone_wall_torch[lit=true,facing=north]"
 				},
 				"pattern": [
-					[ "   ","   ","   ","   "," J " ],
-					[ "   ","   "," N "," S ","Ib " ],
-                    [ "   ","   "," F ","HB ","BF " ],
-					[ "C  ","e  ","L a","CMC","  a" ],
-					[ "cED","BT ","VOQ","G T","VOQ" ],
-					[ "C0 ","d  ","RYW","C X","RZU" ],
-					[ "AAA","AAA","AAA","AAA","AAA" ]
+					[ "       ","       ","       ","       ","       ","       ","       " ],
+					[ "    a  ","    b  ","   eZ  ","    c  ","    a  ","       ","       " ],
+					[ "    W  ","    X  ","   GY  ","    X  ","    W  ","       ","       " ],
+					[ "       ","    V  ","   UG  ","    V  ","       ","       ","       " ],
+					[ "   IN  ","gGfJO  ","edHKP  ","gGfLQ  ","   IR  ","    S  ","   Mm  " ],
+					[ "    B  ","  G C  ","GGG D  ","  G0E  ","    F  ","       ","       " ],
+					[ "AAAAAAA","AAAAAAA","AAAAAAA","AAAAAAA","AAAAAAA","AAAAAAA","AAAAAAA" ]
 				]
 			},
 			"enable_visualize":"true",
-			"text": "这台机器在两个锅中分别$(thing)熔炼$()和$(thing)时移$()，使用$(item)装有桶的发射器$()转移$(item)熔融宝石$()，时序简单好理解，占地面积小。"
+			"text": "这台机器在两个锅中分别$(thing)熔炼$()和$(thing)时移$()，使用$(item)装有桶的发射器$()转移$(item)熔融宝石$()，时序简单好理解。"
         },
 		{
             "type": "patchouli:image",
-            "text": "脉冲发生器设置$(l)$(5)循环模式$()，每间隔$(l)$(5)16gt$()输出信号$(l)$(5)8gt$()，控制机器运行。",
+            "text": "脉冲发生器设置$(l)$(5)循环模式$()，每间隔$(l)$(5)22gt$()输出信号$(l)$(5)2gt$()，控制机器运行。",
 			"title":"脉冲发生器的设置",
 			"images": ["anvilcraft:patchouli_images/5.2_3.png"]
 		},
 		{
             "type": "patchouli:image",
-            "text": "$(item)普通溜槽$()无需设置，$(item)磁性溜槽$()设置为只允许$(l)$(5)4种宝石块$()通过",
+            "text": "$(item)对着锅的两个普通溜槽$()无需设置，$(item)磁性溜槽$()设置为只允许$(l)$(5)4种宝石块$()通过",
 			"title":"溜槽如何设置",
 			"images": ["anvilcraft:patchouli_images/5.2_4.png"]
 		},
 		{
+            "type": "patchouli:image",
+            "text": "连接$(item)发射器$()的$(item)普通溜槽$()设置为只允许宝石桶通过，$(item)磁性溜槽$()设置为只允许$(item)空桶$()通过",
+			"title":"溜槽如何设置",
+			"images": ["anvilcraft:patchouli_images/5.2_7.png"]
+		},
+		{
             "type": "patchouli:text",
-            "text": "这台机器通过$(item)循环模式脉冲发生器$()控制，$(item)红石比较器$()检测要转化的宝石的数量$(l)$(5)$(n)自动$()控制机器的开关。$(br2)搭建完成后$(l)第一次开机前$()，要在$(o)腐化信标上方锅旁的发射器$()中放$(item)1桶$熔融宝石$()，并在$(o)另一个发射器$()中放$(item)1个空桶$()。$(br2)$(l)使用时$()在$(o)在加热器旁的投掷器$()放入$(item)足量绿宝石块$()，然后在$(o)另一个投掷器$()中放入$(l)$(5)数量小于$()$(2)绿宝石块$()的要转化的宝石，机器将$(l)$(5)$(n)自动$()开始运行，并在加工完成后停止。",
+            "text": "这台机器通过$(item)循环模式脉冲发生器$()控制，$(item)红石比较器$()检测要转化的宝石的数量$(l)$(5)$(n)自动$()控制机器的开关。$(br2)搭建完成后$(l)第一次开机前$()，要在$(o)腐化信标上方锅旁的发射器$()中放1桶$(item)熔融宝石$()，并在$(o)另一个发射器$()中放$(item)1个空桶$()。$(br2)$(l)使用时$()在$(o)在加热器旁的投掷器$()放入$(item)足量绿宝石块$()，然后在$(o)另一个投掷器$()中放入$(l)$(5)数量小于$()$(2)绿宝石块$()的要转化的宝石，机器将$(l)$(5)$(n)自动$()开始运行，并在加工完成后停止。",
 			"title":"如何使用 宝石转化机 1"
 		},
 		{
             "type": "patchouli:multiblock",
             "name": "宝石转化机 2",
+            "anchor": "4",
 			"multiblock": {
 				"mapping": {
 					"A": "minecraft:iron_block",
@@ -193,7 +211,7 @@
 					"F": "minecraft:observer[facing=down]",
 					"G": "minecraft:observer[facing=up]",
 					"H": "minecraft:observer[facing=east]",
-                    "I": "minecraft:observer",
+                    "I": "minecraft:observer[facing=north]",
                     "J": "minecraft:note_block",
 					"L": "minecraft:note_block[powered=true]",
                     "M": "anvilcraft:hollow_magnet_block[lit=true]",
@@ -224,9 +242,9 @@
         },
 		{
             "type": "patchouli:image",
-            "text": "$(item)普通溜槽$()无需设置，$(item)磁性溜槽$()设置为只允许$(4)红$()$(6)黄$()$(1)蓝$()3种宝石块$()通过",
+            "text": "$(item)普通溜槽$()无需设置，$(item)磁性溜槽$()设置为只允许$(item)四种宝石块$()通过",
 			"title":"溜槽如何设置",
-			"images": ["anvilcraft:patchouli_images/5.2_5.png"]
+			"images": ["anvilcraft:patchouli_images/5.2_4.png"]
 		},
 		{
             "type": "patchouli:text",
@@ -236,7 +254,8 @@
 		{
             "type": "patchouli:text",
             "text": "钻石，作为主世界最稀有的矿石之一，却有着很高的消耗量。你是否还在为缺少钻石感到苦恼？$(br2)铁砧工艺提供了一系列配方，通过多种加工方式把原木制造成闪闪发光的钻石。下面这台示例机器旨在以此为例，教你如何在铁砧工艺中调节机器的运行时序，得到你想要的运行顺序。",
-			"title":"自动生产钻石"
+			"title":"自动生产钻石",
+            "anchor": "5"
 		},
 		{
             "type": "patchouli:multiblock",
@@ -304,7 +323,7 @@
             "type": "patchouli:image",
             "text": "溜槽这么多，先按图上的顺序编个号吧。",
 			"title":"给溜槽编个号",
-			"images": ["anvilcraft:patchouli_images/5.2_6.png"]
+			"images": ["anvilcraft:patchouli_images/5.2_5.png"]
 		},
 		{
             "type": "patchouli:text",
@@ -315,7 +334,7 @@
             "type": "patchouli:image",
             "text": "脉冲发生器也这么多，先按图上的顺序编个号吧。",
 			"title":"给脉冲发生器编个号",
-			"images": ["anvilcraft:patchouli_images/5.2_7.png"]
+			"images": ["anvilcraft:patchouli_images/5.2_6.png"]
 		},
 		{
             "type": "patchouli:text",

@@ -11,12 +11,12 @@ public interface IBlockStateExtension {
     /**
      * Determines if this block can stick to another block when pushed by a piston.
      *
-     * @param pos My pos
+     * @param pos      My pos
      * @param otherPos Other pos
-     * @param other Other state
+     * @param other    Other state
      * @return True to link blocks
      */
-    default boolean canStickTo(BlockPos pos, BlockPos otherPos, BlockState other) {
-        return self().getBlock().canStickTo(pos, self(), otherPos, other);
+    default boolean anvilcraft$canStickTo(BlockPos pos, BlockPos otherPos, BlockState other) {
+        return self().getBlock().anvilcraft$canStickTo(pos, self(), otherPos, other);
     }
 }

@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -189,7 +189,6 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.NETHER_GOLD_ORE))
             .add(findResourceKey(Blocks.GILDED_BLACKSTONE))
             .add(findResourceKey(Blocks.NETHER_QUARTZ_ORE))
-            //FlintBlockNeedsToBeSupplementedHere
             .add(ModBlocks.VOID_STONE.getKey())
             .add(ModBlocks.END_DUST.getKey())
             .add(ModBlocks.DEEPSLATE_TIN_ORE.getKey())
@@ -197,8 +196,8 @@ public class BlockTagLoader {
             .add(ModBlocks.DEEPSLATE_LEAD_ORE.getKey());
 
         provider.addTag(ModBlockTags.CRAFTING_MATRIX_ELEMENT)
-                .add(ModBlocks.SPACE_OVERCOMPRESSOR.getKey())
-                .addTag(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
+            .add(ModBlocks.SPACE_OVERCOMPRESSOR.getKey())
+            .addTag(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
 
         //mekanism integration
         provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
@@ -274,5 +273,35 @@ public class BlockTagLoader {
         provider.addTag(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)
             .addTag(ModBlockTags.SLIDING_RAILS)
             .add(ModBlocks.SLIDING_RAIL_STOP.getKey());
+
+        provider.addTag(ModBlockTags.OVERHEATABLE)
+            .add(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK.getKey())
+            .add(ModBlocks.EMBER_METAL_BLOCK.getKey());
+
+        /*
+        tier 0：原版三种铁砧以及下列所有;
+        tier 1：皇家铁砧以及下列所有;
+        tier 2：余烬铁砧以及下列所有;
+        tier 3：超限铁砧
+         */
+        provider.addTag(ModBlockTags.ANVIL_TIER_0)
+            .add(findResourceKey(Blocks.ANVIL))
+            .add(findResourceKey(Blocks.CHIPPED_ANVIL))
+            .add(findResourceKey(Blocks.DAMAGED_ANVIL))
+            .add(ModBlocks.ROYAL_ANVIL.getKey())
+            .add(ModBlocks.EMBER_ANVIL.getKey())
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
+
+        provider.addTag(ModBlockTags.ANVIL_TIER_1)
+            .add(ModBlocks.ROYAL_ANVIL.getKey())
+            .add(ModBlocks.EMBER_ANVIL.getKey())
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
+
+        provider.addTag(ModBlockTags.ANVIL_TIER_2)
+            .add(ModBlocks.EMBER_ANVIL.getKey())
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
+
+        provider.addTag(ModBlockTags.ANVIL_TIER_3)
+            .add(ModBlocks.TRANSCENDENCE_ANVIL.getKey());
     }
 }

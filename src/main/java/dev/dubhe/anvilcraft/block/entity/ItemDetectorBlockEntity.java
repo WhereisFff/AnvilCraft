@@ -4,8 +4,8 @@ import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.ItemDetectorMenu;
 import dev.dubhe.anvilcraft.inventory.container.FilterOnlyContainer;
@@ -243,7 +243,7 @@ public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider
     }
 
     @Override
-    public FilteredItemStackHandler getFilteredItemDepository() {
+    public FilteredItemStackHandler getFilteredItemStackHandler() {
         return DUMMY_HANDLER;
     }
 

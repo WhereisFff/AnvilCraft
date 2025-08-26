@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.init;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.nbt.CompoundTag;
+import dev.dubhe.anvilcraft.api.amulet.AmuletRaffleProbability;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.attachment.AttachmentType;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -21,11 +21,18 @@ public class ModDataAttachments {
     public static final Supplier<AttachmentType<Boolean>> ZOMBIFICATED_BY_CURSE = ATTACHMENT_TYPES.register(
         "zombificated_by_curse", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
 
-    public static final Supplier<AttachmentType<CompoundTag>> AMULET_RAFFLE_PROBABILITY = ATTACHMENT_TYPES.register(
-        "amulet_raffle_probability", () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build());
+    public static final Supplier<AttachmentType<AmuletRaffleProbability>> AMULET_RAFFLE_PROBABILITY = ATTACHMENT_TYPES.register(
+        "amulet_raffle_probability", () -> AttachmentType.builder(() -> AmuletRaffleProbability.EMPTY)
+            .serialize(AmuletRaffleProbability.CODEC).copyOnDeath().build());
 
-    public static final Supplier<AttachmentType<CompoundTag>> SCARE_ENTITIES = ATTACHMENT_TYPES.register(
-        "scare_entities", () -> AttachmentType.builder(CompoundTag::new).serialize(CompoundTag.CODEC).build());
+    public static final Supplier<AttachmentType<Boolean>> SCARE_SKELETONS = ATTACHMENT_TYPES.register(
+        "scare_skeletons", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+
+    public static final Supplier<AttachmentType<Boolean>> SCARE_CREEPERS = ATTACHMENT_TYPES.register(
+        "scare_creepers", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
+
+    public static final Supplier<AttachmentType<Boolean>> SCARE_PHANTOMS = ATTACHMENT_TYPES.register(
+        "scare_phantoms", () -> AttachmentType.builder(() -> false).serialize(Codec.BOOL).build());
 
     public static void register(IEventBus eventBus) {
         ATTACHMENT_TYPES.register(eventBus);

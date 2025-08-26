@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IMultipleResult;
-import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -94,7 +94,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
     public static double getThrownBaseDamage(ItemStack stack) {
         for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
             if ((entry.matches(Attributes.ATTACK_DAMAGE, BASE_ATTACK_DAMAGE_ID)
-                 || entry.matches(Attributes.ATTACK_DAMAGE, Merciless.MERCILESS_ID))
+                || entry.matches(Attributes.ATTACK_DAMAGE, Merciless.MERCILESS_ID))
                 && entry.modifier().operation().equals(AttributeModifier.Operation.ADD_VALUE)
             ) {
                 return entry.modifier().amount() / 3;
@@ -383,8 +383,8 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         }
 
         return entity.level() instanceof ServerLevel level
-               ? damageBonus + EnchantmentHelper.modifyFallBasedDamage(level, entity.getWeaponItem(), target, source, 0.0F) * fallDistance
-               : damageBonus;
+            ? damageBonus + EnchantmentHelper.modifyFallBasedDamage(level, entity.getWeaponItem(), target, source, 0.0F) * fallDistance
+            : damageBonus;
     }
 
     @Override

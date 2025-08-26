@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.init.ModEnchantments;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.ItemStack;

@@ -2,18 +2,17 @@ package dev.dubhe.anvilcraft.api.amulet;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Sets;
-import com.tterrag.registrate.util.nullness.NonNullUnaryOperator;
-import dev.dubhe.anvilcraft.api.item.property.BoxContents;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModRegistries;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
+import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.util.CollectionUtil;
+import dev.dubhe.anvilcraft.util.InventoryUtil;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.ItemLike;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -37,16 +35,19 @@ public class AmuletManager {
 
     private AmuletManager() {
         this.registerAmulets(
-            () -> (AmuletItem) ModItems.EMERALD_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.TOPAZ_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.RUBY_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.SAPPHIRE_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.ANVIL_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.COMRADE_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.FEATHER_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.CAT_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.DOG_AMULET.asItem(),
-            () -> (AmuletItem) ModItems.SILENCE_AMULET.asItem()
+            ModItems.EMERALD_AMULET::get,
+            ModItems.TOPAZ_AMULET::get,
+            ModItems.RUBY_AMULET::get,
+            ModItems.SAPPHIRE_AMULET::get,
+            ModItems.ANVIL_AMULET::get,
+            ModItems.COMRADE_AMULET::get,
+            ModItems.FEATHER_AMULET::get,
+            ModItems.CAT_AMULET::get,
+            ModItems.DOG_AMULET::get,
+            ModItems.SILENCE_AMULET::get,
+            ModItems.ABNORMAL_AMULET::get,
+            ModItems.GEM_AMULET::get,
+            ModItems.NATURE_AMULET::get
         );
         this.registerFinders(
             (player, holders) -> processFoundStack(player.getWeaponItem(), holders),
@@ -68,7 +69,7 @@ public class AmuletManager {
         if (found.is(ModItems.AMULET_BOX)) {
             BoxContents contents = found.get(ModComponents.BOX_CONTENTS);
             if (contents == null) return;
-            for (ItemStack stack : contents.getAmulets()) {
+            for (ItemStack stack : contents.amulets()) {
                 if (stack.getItem() instanceof AmuletItem) {
                     holders.add(stack.copy());
                 }
@@ -95,31 +96,30 @@ public class AmuletManager {
     public Optional<Holder<AmuletType>> getTypeMatchedDamage(ServerPlayer player, DamageSource source, HolderLookup.Provider registryAccess) {
         Optional<HolderLookup.RegistryLookup<AmuletType>> lookupOptional = registryAccess.lookup(ModRegistries.AMULET_TYPE_KEY);
         return lookupOptional.flatMap(lookup -> lookup.listElements()
-            .filter(reference -> reference.value().matchesByDamage(player, source))
+            .filter(reference -> reference.value().canObtain(player, source))
             .findFirst());
     }
 
     public void startRaffle(ServerPlayer player, DamageSource source, boolean isConsumedInBox) {
+        Optional<AmuletType> typeOp = this.getTypeMatchedDamage(player, source, player.registryAccess()).map(Holder::value);
+        if (typeOp.isEmpty()) return;
+        AmuletType type = typeOp.get();
+        ItemStack amulet = type.amulet().get();
+        if (!InventoryUtil.getFirstItem(player.getInventory(), amulet.getItem()).isEmpty()) return;
+        if (!InventoryUtil.getItemInCompat(player, stack -> ItemStack.isSameItem(stack, amulet)).isEmpty()) return;
+
         RandomSource random = player.getRandom();
-        int raffleProbability = Math.min(this.getRaffleProbability(player, source, isConsumedInBox), 100);
-
-        if (raffleProbability > random.nextIntBetweenInclusive(0, 100)) {
-            Optional<AmuletType> type = this.getTypeMatchedDamage(player, source, player.registryAccess()).map(Holder::value);
-            type.ifPresent(amuletType -> player.getInventory().placeItemBackInInventory(amuletType.amulet().copy()));
-
-            this.setRaffleProbability(player, source, value -> 20);
+        int probability = Math.min(this.getRaffleProbability(player, source, isConsumedInBox), 100);
+        if (probability > random.nextIntBetweenInclusive(0, 100)) {
+            player.getInventory().placeItemBackInInventory(amulet.copy());
+            this.setRaffleProbability(player, source, 0);
         } else {
-            this.setRaffleProbability(
-                player, source,
-                value -> Math.min(value + (isConsumedInBox ? 10 : 5), 100)
-            );
+            this.setRaffleProbability(player, source, Math.min(probability + (isConsumedInBox ? 10 : 5), 100));
         }
     }
 
-    public static int getStoredRaffleProbability(Player player, Holder<AmuletType> type) {
-        ResourceKey<AmuletType> typeKey = type.getKey();
-        if (typeKey == null) return 0;
-        return player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY).getInt(typeKey.location().toString());
+    public static int getStoredRaffleProbability(Player player, AmuletType type) {
+        return player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY).getProbability(type);
     }
 
     public int getRaffleProbability(Player player, DamageSource source, boolean isConsumedInBox) {
@@ -132,30 +132,29 @@ public class AmuletManager {
 
     public int getRaffleProbability(Player player, Holder<AmuletType> type, boolean isConsumedInBox) {
         if (!this.hasAmuletInInventory(player, type)) {
-            return getStoredRaffleProbability(player, type) + (isConsumedInBox ? 20 : 5);
+            return getStoredRaffleProbability(player, type.value()) + (isConsumedInBox ? 20 : 5);
         } else {
             return 0;
         }
     }
 
-    public void setRaffleProbability(ServerPlayer player, DamageSource source, NonNullUnaryOperator<Integer> modifier) {
+    public void setRaffleProbability(ServerPlayer player, DamageSource source, int probability) {
         Optional<Holder<AmuletType>> typeHolder = this.getTypeMatchedDamage(player, source, player.registryAccess());
-        typeHolder.ifPresent(damageTypeHolder -> this.setRaffleProbability(player, damageTypeHolder, modifier));
+        typeHolder.ifPresent(holder -> this.setRaffleProbability(player, holder, probability));
     }
 
-    public void setRaffleProbability(ServerPlayer player, Holder<AmuletType> type, NonNullUnaryOperator<Integer> modifier) {
-        CompoundTag root = player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY);
-        String key = Objects.requireNonNull(type.getKey()).location().toString();
+    public void setRaffleProbability(ServerPlayer player, Holder<AmuletType> type, int probability) {
+        AmuletRaffleProbability arp = player.getData(ModDataAttachments.AMULET_RAFFLE_PROBABILITY);
         if (!this.hasAmuletInInventory(player, type)) {
-            root.putInt(key, modifier.apply(root.getInt(key)));
+            arp.setProbability(type.value(), probability);
         } else {
-            root.putInt(key, 0);
+            arp.setProbability(type.value(), 0);
         }
     }
 
     public boolean hasAmuletInInventory(Player player, ItemLike itemLike) {
         List<Holder<AmuletType>> holders = this.getTypesFromInventory(player);
-        return !holders.isEmpty() && CollectionUtil.anyMatch(holders, holder -> holder.value().matchesByItem(itemLike));
+        return !holders.isEmpty() && CollectionUtil.anyMatch(holders, holder -> holder.value().matches(itemLike));
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
@@ -174,7 +173,7 @@ public class AmuletManager {
                     type.value().inventoryTick(player, amulet, true);
                 }
             } else {
-                type.value().inventoryTick(player, type.value().amulet(), false);
+                type.value().inventoryTick(player, type.value().amulet().get(), false);
             }
         }
     }

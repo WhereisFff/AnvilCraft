@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.init.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.RandomSource;

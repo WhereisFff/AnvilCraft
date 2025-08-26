@@ -3,10 +3,10 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.datafixers.util.Pair;
-import dev.dubhe.anvilcraft.api.item.property.Merciless;
-import dev.dubhe.anvilcraft.api.item.property.Multiphase;
 import dev.dubhe.anvilcraft.client.gui.component.WheelWidget;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.item.property.component.Merciless;
+import dev.dubhe.anvilcraft.item.property.component.Multiphase;
 import dev.dubhe.anvilcraft.network.MultiphaseChangePacket;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import dev.dubhe.anvilcraft.util.function.Consumer4;
@@ -73,7 +73,7 @@ public class MultiphaseScreen extends Screen {
             .sorted(Comparator.comparingInt(pair -> pair.getFirst().index()))
             .<Pair<Component, Consumer4<GuiGraphics, PoseStack, Integer, Integer>>>map(pair -> new Pair<>(
                 !hasMerciless ? pair.getFirst().phaseName().copy()
-                             : pair.getFirst().phaseName().copy()
+                    : pair.getFirst().phaseName().copy()
                     .append(Component.translatable("screen.anvilcraft.multiphase.merciless")),
                 pair.getSecond()))
             .collect(Collectors.toCollection(ArrayList::new));

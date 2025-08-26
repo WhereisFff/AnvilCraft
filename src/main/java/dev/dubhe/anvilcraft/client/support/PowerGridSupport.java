@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.client.support;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
+import dev.dubhe.anvilcraft.client.AnvilCraftClient;
 import dev.dubhe.anvilcraft.client.init.ModRenderTargets;
 import dev.dubhe.anvilcraft.client.init.ModRenderTypes;
 import dev.dubhe.anvilcraft.client.renderer.Line;
@@ -40,13 +40,9 @@ public class PowerGridSupport {
         }
     }
 
-    public static void renderEnhancedTransmitterLine(
-        PoseStack poseStack,
-        MultiBufferSource.BufferSource bufferSource,
-        Vec3 camera
-    ) {
+    public static void renderEnhancedTransmitterLine(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, Vec3 camera) {
         if (!RenderState.isEnhancedRenderingAvailable() || !RenderState.isBloomEffectEnabled()) return;
-        if (!AnvilCraft.config.renderPowerTransmitterLines) return;
+        if (!AnvilCraftClient.CONFIG.renderPowerTransmitterLines) return;
         if (Minecraft.getInstance().level == null) return;
         if (ModRenderTargets.getBloomTarget() != null) {
             ModRenderTargets.getBloomTarget().setClearColor(0, 0, 0, 0);
@@ -64,13 +60,9 @@ public class PowerGridSupport {
         bufferSource.endBatch();
     }
 
-    public static void renderTransmitterLine(
-        PoseStack poseStack,
-        MultiBufferSource.BufferSource bufferSource,
-        Vec3 camera
-    ) {
+    public static void renderTransmitterLine(PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, Vec3 camera) {
         if (RenderState.isEnhancedRenderingAvailable() && RenderState.isBloomEffectEnabled()) return;
-        if (!AnvilCraft.config.renderPowerTransmitterLines) return;
+        if (!AnvilCraftClient.CONFIG.renderPowerTransmitterLines) return;
         if (Minecraft.getInstance().level == null) return;
         String level = Minecraft.getInstance().level.dimension().location().toString();
         VertexConsumer consumer = bufferSource.getBuffer(RenderType.LINES);

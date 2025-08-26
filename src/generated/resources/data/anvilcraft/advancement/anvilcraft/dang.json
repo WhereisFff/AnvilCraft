@@ -1,0 +1,27 @@
+{
+  "parent": "anvilcraft:anvilcraft/root",
+  "criteria": {
+    "anything_anvil_crafting": {
+      "trigger": "anvilcraft:in_world_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.dang.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:anvil"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.dang.title"
+    }
+  },
+  "requirements": [
+    [
+      "anything_anvil_crafting"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

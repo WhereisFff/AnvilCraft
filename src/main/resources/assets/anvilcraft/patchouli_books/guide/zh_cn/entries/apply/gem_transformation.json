@@ -2,7 +2,7 @@
   "name": "熔融宝石与宝石转化",
   "category": "anvilcraft:technology_application",
   "icon": "anvilcraft:melt_gem_bucket",
-  "sortnum": 6001,
+  "sortnum": 16001,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:melt_gem_bucket": 1,

@@ -1,17 +1,16 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.property.Eternal;
-import dev.dubhe.anvilcraft.api.item.property.Merciless;
-import dev.dubhe.anvilcraft.api.item.property.Multiphase;
-import dev.dubhe.anvilcraft.api.item.property.Providence;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.item.property.component.Eternal;
+import dev.dubhe.anvilcraft.item.property.component.Merciless;
+import dev.dubhe.anvilcraft.item.property.component.Multiphase;
+import dev.dubhe.anvilcraft.item.property.component.Providence;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.Unbreakable;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
 import java.util.Objects;

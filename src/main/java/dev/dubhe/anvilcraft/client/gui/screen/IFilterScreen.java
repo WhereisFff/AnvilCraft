@@ -6,6 +6,8 @@ import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
 import dev.dubhe.anvilcraft.inventory.IFilterMenu;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
+import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
+import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
@@ -13,14 +15,15 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.function.BiFunction;
 
 /**
  * 有过滤的 GUI
  */
-public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> {
+public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> extends IGhostIngredientScreen {
     ResourceLocation DISABLED_SLOT = AnvilCraft.of("textures/gui/container/machine/disabled_slot.png");
 
     T getFilterMenu();
@@ -68,6 +71,7 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> {
      * @param slot   槽位
      * @param filter 过滤
      */
+    @SuppressWarnings("UnusedReturnValue")
     default boolean setFilter(int slot, ItemStack filter) {
         return this.getFilterMenu().setFilter(slot, filter);
     }
@@ -132,7 +136,7 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> {
      * @param guiGraphics 画布
      * @param crafterSlot 槽位
      */
-    default void renderDisabledSlot(@NotNull GuiGraphics guiGraphics, @NotNull Slot crafterSlot) {
+    default void renderDisabledSlot(GuiGraphics guiGraphics, Slot crafterSlot) {
         RenderSystem.enableDepthTest();
         guiGraphics.blit(DISABLED_SLOT, crafterSlot.x, crafterSlot.y, 0, 0, 16, 16, 16, 16);
     }
@@ -144,7 +148,7 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> {
      * @param slot        槽位
      * @param stack       物品堆叠
      */
-    default void renderFilterItem(@NotNull GuiGraphics guiGraphics, @NotNull Slot slot, @NotNull ItemStack stack) {
+    default void renderFilterItem(GuiGraphics guiGraphics, Slot slot, ItemStack stack) {
         int i = slot.x;
         int j = slot.y;
         RenderHelper.renderItemWithTransparency(stack, guiGraphics.pose(), i, j, 0.52f);
@@ -157,5 +161,20 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> {
 
     default int getOffsetX() {
         return 0;
+    }
+
+    @Override
+    default Collection<Integer> getGhostSlots() {
+        if (!this.getFilterMenu().isFilterEnabled()) return List.of();
+        return IGhostIngredientScreen.range(36, 45, 1);
+    }
+
+    @Override
+    default void acceptGhost(Slot slot, ItemStack ingredient) {
+        if (!this.getFilterMenu().isFilterEnabled()) return;
+        int slotIndex = slot.getSlotIndex();
+        PacketDistributor.sendToServer(new SlotDisableChangePacket(slotIndex, false));
+        PacketDistributor.sendToServer(new SlotFilterChangePacket(slotIndex, ingredient.copyWithCount(1)));
+        this.getFilterMenu().setFilter(slotIndex, ingredient.copyWithCount(1));
     }
 }

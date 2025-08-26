@@ -2,7 +2,7 @@
   "name": "飘升机背包",
   "category": "anvilcraft:special_props",
   "icon": "anvilcraft:ionocraft_backpack",
-  "sortnum": 4001,
+  "sortnum": 4002,
   "pages": [
     {
       "type": "text",

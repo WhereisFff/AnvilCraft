@@ -2,10 +2,9 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.google.common.collect.ImmutableMap;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
@@ -54,10 +53,15 @@ public class MassInjectRecipeLoader {
             .put(ModItemTags.STORAGE_BLOCKS_TUNGSTEN, 1900)
             .put(Tags.Items.STORAGE_BLOCKS_GOLD, 1900)
             .put(Tags.Items.STORAGE_BLOCKS_NETHERITE, 15000)
-
             .put(ModItemTags.PLUTONIUM_NUGGETS, 19)
             .put(ModItemTags.PLUTONIUM_INGOTS, 190)
             .put(ModItemTags.STORAGE_BLOCKS_PLUTONIUM, 1900)
+            .put(ModItemTags.TRANSCENDIUM_NUGGETS, 250)
+            .put(ModItemTags.TRANSCENDIUM_INGOTS, 2500)
+            .put(ModItemTags.STORAGE_BLOCKS_TRANSCENDIUM, 25000)
+            .put(ModItemTags.FROST_METAL_NUGGETS, 30)
+            .put(ModItemTags.FROST_METAL_INGOTS, 300)
+            .put(ModItemTags.STORAGE_BLOCKS_FROST_METAL, 3000)
             .build();
         tagRecipes.forEach((tag, mass) -> addTag(provider, tag, mass));
 

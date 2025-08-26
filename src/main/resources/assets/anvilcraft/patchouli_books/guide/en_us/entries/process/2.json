@@ -4,25 +4,7 @@
   "icon": "anvilcraft:magnet_ingot",
   "sortnum": 2,
   "pages": [
-    "The $(item)Magnet Block$() will help you simply lift the anvil up and down it. There are three types of magnet blocks, which have basically the same function, and can invert into each other. How to get the first batch of magnet blocks: $(item)Iron block$() is converted into a hollow magnet block by lightning strike. You can change the impact range of lightning in config profile. The default is 3 x 3 blocks horizontally and 2 blocks high.",
-    {
-      "type": "patchouli:multiblock",
-      "name": "Lightning Convert Magnets",
-      "multiblock": {
-        "mapping": {
-          "L": "minecraft:lightning_rod",
-          "I": "minecraft:iron_block",
-          "0": "minecraft:iron_block"
-        },
-        "pattern": [
-          ["   ", " L ", "   "],
-          ["III", "III", "III"],
-          ["III", "I0I", "III"]
-        ]
-      },
-      "enable_visualize": "false",
-      "text": "Default lightning conversion magnet block range. After a lightning strike, the iron blocks in the picture will be converted into hollow magnet blocks."
-    },
+    "The $(l:basic/material#magnet_block) will help you simply lift the anvil up and down it. There are three types of magnet blocks, which have basically the same function, and can invert into each other. How to get the first batch of magnet blocks: $(item)Iron block$() is converted into a hollow magnet block by lightning strike. You can change the impact range of lightning in config profile. The default is 3 x 3 blocks horizontally and 2 blocks high.",
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:topaz,minecraft:lightning_rod",
@@ -66,6 +48,13 @@
       "type": "patchouli:crafting",
       "recipe": "anvilcraft:hollow_magnet_block",
       "recipe2": "anvilcraft:magnet_block"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:basic/material"
+      ],
+      "text": ""
     }
   ]
 }

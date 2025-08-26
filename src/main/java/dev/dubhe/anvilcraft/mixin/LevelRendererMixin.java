@@ -45,7 +45,8 @@ public abstract class LevelRendererMixin {
         method = "renderLevel",
         at = @At(
             value = "INVOKE",
-            target = "Lnet/minecraft/client/renderer/RenderBuffers;crumblingBufferSource()Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;",
+            target = "Lnet/minecraft/client/renderer/RenderBuffers;crumblingBufferSource()"
+                     + "Lnet/minecraft/client/renderer/MultiBufferSource$BufferSource;",
             ordinal = 2
         )
     )
@@ -73,7 +74,16 @@ public abstract class LevelRendererMixin {
             target = "Lnet/minecraft/client/renderer/LevelRenderer;compileSections(Lnet/minecraft/client/Camera;)V"
         )
     )
-    void uploadBuffers(DeltaTracker deltaTracker, boolean renderBlockOutline, Camera camera, GameRenderer gameRenderer, LightTexture lightTexture, Matrix4f frustumMatrix, Matrix4f projectionMatrix, CallbackInfo ci) {
+    void uploadBuffers(
+        DeltaTracker deltaTracker,
+        boolean renderBlockOutline,
+        Camera camera,
+        GameRenderer gameRenderer,
+        LightTexture lightTexture,
+        Matrix4f frustumMatrix,
+        Matrix4f projectionMatrix,
+        CallbackInfo ci
+    ) {
         CacheableBERenderingPipeline.getInstance().runTasks();
     }
 
@@ -83,7 +93,11 @@ public abstract class LevelRendererMixin {
         at = @At(
             value = "INVOKE",
             shift = At.Shift.AFTER,
-            target = "Lnet/minecraft/client/renderer/LevelRenderer;renderDebug(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/Camera;)V"
+            target = "Lnet/minecraft/client/renderer/LevelRenderer;renderDebug("
+                     + "Lcom/mojang/blaze3d/vertex/PoseStack;"
+                     + "Lnet/minecraft/client/renderer/MultiBufferSource;"
+                     + "Lnet/minecraft/client/Camera;"
+                     + ")V"
         )
     )
     void bloomPostProcess(
@@ -113,7 +127,9 @@ public abstract class LevelRendererMixin {
         mcInput.setClearColor(0, 0, 0, 0);
         mcInput.clear(Minecraft.ON_OSX);
         int oldTexture = GlStateManager._getActiveTexture();
-        ModRenderTargets.getTempTarget().copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
+        if (ModRenderTargets.getTempTarget() != null) {
+            ModRenderTargets.getTempTarget().copyDepthFrom(Minecraft.getInstance().getMainRenderTarget());
+        }
         ModShaders.getBloomChain().process(RenderHelper.getPartialTick());
         RenderSystem.clearColor(
             FogRenderer.fogRed,

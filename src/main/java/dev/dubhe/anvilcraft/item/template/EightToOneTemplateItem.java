@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item.template;
 
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -61,6 +61,8 @@ public class EightToOneTemplateItem extends BaseMultipleToOneTemplateItem {
         }
     };
 
+    public static final Component MISSING_TOOLTIP = Component.translatable(
+        "screen.anvilcraft.ember_smithing.eight.missing");
     public static final List<ResourceLocation> EMPTY_SLOT_TEXTURES = List.of(
     );
 
@@ -70,7 +72,7 @@ public class EightToOneTemplateItem extends BaseMultipleToOneTemplateItem {
 
     @Override
     public Component getMaterialTooltip() {
-        return Component.empty();
+        return MISSING_TOOLTIP;
     }
 
     @Override

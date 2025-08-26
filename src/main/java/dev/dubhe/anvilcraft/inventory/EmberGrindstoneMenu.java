@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.inventory;
 
 import com.google.common.collect.Collections2;
 import com.mojang.datafixers.util.Pair;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.util.EnchantmentUtil;
 import dev.dubhe.anvilcraft.util.ListUtil;
@@ -178,7 +178,7 @@ public class EmberGrindstoneMenu extends AbstractContainerMenu {
         int repairCost = input.getOrDefault(DataComponents.REPAIR_COST, 0);
         int anvilCost = enchantment.enchantment.value().getAnvilCost();
         return Math.clamp(
-            (long) anvilCost * enchantment.level * input.getCount() * (repairCost <= 0 ? 1 : repairCost),
+            (long) anvilCost * enchantment.level * input.getCount() + repairCost,
             0, Integer.MAX_VALUE
         );
     }

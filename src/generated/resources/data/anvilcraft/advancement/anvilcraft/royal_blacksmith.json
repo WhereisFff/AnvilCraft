@@ -1,0 +1,59 @@
+{
+  "parent": "anvilcraft:anvilcraft/smithing_table",
+  "criteria": {
+    "royal_anvil": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:royal_anvil"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "royal_grindstone": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:royal_grindstone"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "royal_smithing_table": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:royal_smithing_table"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.royal_blacksmith.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:royal_anvil"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.royal_blacksmith.title"
+    }
+  },
+  "requirements": [
+    [
+      "royal_anvil"
+    ],
+    [
+      "royal_smithing_table"
+    ],
+    [
+      "royal_grindstone"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

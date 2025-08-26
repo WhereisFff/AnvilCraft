@@ -44,7 +44,7 @@ public abstract class HeatableBlockEntity extends BlockEntity {
         if (this.level == null || this.level.getGameTime() % 10 != 0) return;
         if (this.level instanceof ServerLevel serverLevel) {
             PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(this.getBlockPos()),
-            new HeatableSyncPacket(this.getBlockPos(), duration));
+                new HeatableSyncPacket(this.getBlockPos(), duration));
         }
     }
 

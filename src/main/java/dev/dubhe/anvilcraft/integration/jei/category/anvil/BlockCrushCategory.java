@@ -1,12 +1,11 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
-import dev.dubhe.anvilcraft.recipe.anvil.BlockCrushRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCrushRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -27,9 +26,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -37,15 +38,13 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable progress;
+    private final IDrawable arrowDefault;
     private final IDrawable icon;
     private final Component title;
     private final ITickTimer timer;
 
     public BlockCrushCategory(IGuiHelper helper) {
-        progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
         icon = helper.createDrawableItemStack(new ItemStack(Items.ANVIL));
         title = Component.translatable("gui.anvilcraft.category.block_crush");
         timer = helper.createTickTimer(30, 60, true);
@@ -77,9 +76,12 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BlockCrushRecipe> recipe, IFocusGroup focuses) {
-        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addItemStack(new ItemStack(recipe.value().input));
-        builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addItemStack(new ItemStack(recipe.value().result));
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<BlockCrushRecipe> recipeHolder, IFocusGroup focuses) {
+        BlockCrushRecipe recipe = recipeHolder.value();
+        builder.addInvisibleIngredients(RecipeIngredientRole.INPUT)
+            .addItemStacks(recipe.getFirstInputBlock().getBlocks().stream().map(holder -> new ItemStack(holder.value())).toList());
+        builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
+            .addItemStack(new ItemStack(recipe.getFirstResultBlock().state().getBlock()));
     }
 
     @Override
@@ -90,7 +92,7 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
         double mouseX,
         double mouseY) {
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
-        progress.draw(guiGraphics, 69, 30);
+        arrowDefault.draw(guiGraphics, 73, 35);
 
         RenderHelper.renderBlock(
             guiGraphics,
@@ -100,13 +102,20 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
             20,
             12,
             RenderHelper.SINGLE_BLOCK);
-        RenderHelper.renderBlock(
-            guiGraphics, recipe.value().input.defaultBlockState(), 50, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
+
+        renderInput:
+        {
+            List<BlockState> input = recipe.value().getFirstInputBlock().constructStatesForRender();
+            if (input.isEmpty()) break renderInput;
+            BlockState renderedState = input.get((int) ((System.currentTimeMillis() / 1000) % input.size()));
+            if (renderedState == null) break renderInput;
+            RenderHelper.renderBlock(guiGraphics, renderedState, 50, 40, 10, 12, RenderHelper.SINGLE_BLOCK);
+        }
 
         RenderHelper.renderBlock(
             guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK);
         RenderHelper.renderBlock(
-            guiGraphics, recipe.value().result.defaultBlockState(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
+            guiGraphics, recipe.value().getFirstResultBlock().state(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
     }
 
     @Override
@@ -119,12 +128,12 @@ public class BlockCrushCategory implements IRecipeCategory<RecipeHolder<BlockCru
         IRecipeCategory.super.getTooltip(tooltip, recipe, recipeSlotsView, mouseX, mouseY);
         if (mouseX >= 40 && mouseX <= 58) {
             if (mouseY >= 42 && mouseY <= 52) {
-                tooltip.add(recipe.value().input.getName());
+                tooltip.add(recipe.value().getFirstInputBlock().constructStatesForRender().getFirst().getBlock().getName());
             }
         }
         if (mouseX >= 100 && mouseX <= 120) {
             if (mouseY >= 42 && mouseY <= 52) {
-                tooltip.add(recipe.value().result.getName());
+                tooltip.add(recipe.value().getFirstResultBlock().state().getBlock().getName());
             }
         }
     }

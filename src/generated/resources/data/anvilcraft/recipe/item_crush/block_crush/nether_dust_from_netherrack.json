@@ -2,20 +2,17 @@
   "type": "anvilcraft:item_crush",
   "ingredients": [
     {
-      "item": "minecraft:netherrack"
+      "items": "minecraft:netherrack"
     }
   ],
   "results": [
     {
-      "amount": {
+      "count": {
         "type": "minecraft:binomial",
         "n": 1.0,
         "p": 0.8
       },
-      "stack": {
-        "count": 1,
-        "id": "anvilcraft:nether_dust"
-      }
+      "id": "anvilcraft:nether_dust"
     }
   ]
 }

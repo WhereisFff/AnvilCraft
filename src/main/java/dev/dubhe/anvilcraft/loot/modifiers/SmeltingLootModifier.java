@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.loot.modifiers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
-import dev.dubhe.anvilcraft.init.ModEnchantments;
-import dev.dubhe.anvilcraft.init.ModItemTags;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.util.Util;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.core.BlockPos;
@@ -57,8 +57,8 @@ public class SmeltingLootModifier extends LootModifier {
                         BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN)),
                         Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState()
                     )
-                .map(block -> block.asItem().getDefaultInstance())
-                .orElse(ItemStack.EMPTY));
+                    .map(block -> block.asItem().getDefaultInstance())
+                    .orElse(ItemStack.EMPTY));
         }
         ObjectArrayList<ItemStack> smeltList = new ObjectArrayList<>();
         for (ItemStack item : objectArrayList) {

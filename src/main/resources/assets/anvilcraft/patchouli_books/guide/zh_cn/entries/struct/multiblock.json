@@ -2,7 +2,7 @@
   "name": "多方块转化与合成",
   "category": "anvilcraft:structural_engineering",
   "icon": "anvilcraft:giant_anvil",
-  "sortnum": 5002,
+  "sortnum": 15002,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:giant_anvil": 1

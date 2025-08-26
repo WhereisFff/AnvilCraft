@@ -4,8 +4,8 @@ import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.better.BetterBaseEntityBlock;
 import dev.dubhe.anvilcraft.block.entity.CrabTrapBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModLootTables;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.loot.ModLootTables;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -152,6 +152,7 @@ public class CrabTrapBlock extends BetterBaseEntityBlock implements SimpleWaterl
                     level.addFreshEntity(itemEntity);
                     itemHandler.extractItem(i, stack.getCount(), false);
                 }
+                blockEntity.setChanged();
             }
         }
         return InteractionResult.SUCCESS;
@@ -203,10 +204,11 @@ public class CrabTrapBlock extends BetterBaseEntityBlock implements SimpleWaterl
             ObjectArrayList<ItemStack> items = lootTable.getRandomItems(lootParams);
             if (items.isEmpty()) return;
             CrabTrapBlockEntity blockEntity = (CrabTrapBlockEntity) level.getBlockEntity(pos);
-            for (ItemStack item : items) {
-                if (blockEntity != null) {
+            if (blockEntity != null) {
+                for (ItemStack item : items) {
                     ItemHandlerHelper.insertItem(blockEntity.getItemHandler(), item, false);
                 }
+                blockEntity.setChanged();
             }
         }
     }

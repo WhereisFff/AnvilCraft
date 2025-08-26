@@ -56,14 +56,14 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
     );
 
     /**
-     * 皇家锻造台 GUI
+     * 余烬锻造台 GUI
      *
-     * @param menu            菜单
-     * @param playerInventory 背包
-     * @param title           标题
+     * @param menu      菜单
+     * @param inventory 背包
+     * @param title     标题
      */
-    public EmberSmithingScreen(EmberSmithingMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, BACKGROUND);
+    public EmberSmithingScreen(EmberSmithingMenu menu, Inventory inventory, Component title) {
+        super(menu, inventory, title, BACKGROUND);
     }
 
     @Override
@@ -159,8 +159,8 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
                         optional = Optional.of(templateItem.getMaterialTooltip());
                     } else if (
                         this.hoveredSlot.index >= 2 && this.hoveredSlot.index <= 9
-                        && material.getItem() instanceof IMultipleMaterial materialItem
-                        && this.isSlotEnabled(this.hoveredSlot.index)
+                            && material.getItem() instanceof IMultipleMaterial materialItem
+                            && this.isSlotEnabled(this.hoveredSlot.index)
                     ) {
                         optional = Optional.of(materialItem.getInputTooltip(
                             this.menu.getSlot(0).getItem(), this.menu.getInputStacks()));

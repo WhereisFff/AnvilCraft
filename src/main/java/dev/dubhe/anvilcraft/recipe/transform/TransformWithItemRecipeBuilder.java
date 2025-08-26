@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.recipe.transform;
 
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -11,8 +12,6 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -21,7 +20,7 @@ import java.util.Map;
 import java.util.function.Consumer;
 
 public class TransformWithItemRecipeBuilder {
-    private final Ingredient itemInput;
+    private final List<ItemIngredientPredicate> itemIngredients;
     private final TransformResult specialResult;
     private final ItemStack itemResult;
     private int chancePercentPerItem = 5;
@@ -33,11 +32,11 @@ public class TransformWithItemRecipeBuilder {
 
     public TransformWithItemRecipeBuilder(
         EntityType<?> inputType,
-        Ingredient itemInput,
+        List<ItemIngredientPredicate> itemIngredients,
         EntityType<?> specialResult,
         ItemStack itemResult) {
         this.inputType = inputType;
-        this.itemInput = itemInput;
+        this.itemIngredients = itemIngredients;
         this.specialResult = new TransformResult(specialResult, 1d);
         this.itemResult = itemResult;
     }
@@ -50,7 +49,7 @@ public class TransformWithItemRecipeBuilder {
     public MobTransformWithItemRecipe create() {
         return new MobTransformWithItemRecipe(
             inputType,
-            itemInput,
+            itemIngredients,
             specialResult,
             itemResult,
             chancePercentPerItem,
@@ -65,7 +64,7 @@ public class TransformWithItemRecipeBuilder {
     /**
      *
      */
-    public TransformWithItemRecipeBuilder predicate(@NotNull Consumer<NumericTagValuePredicate.Builder> predicateBuilder) {
+    public TransformWithItemRecipeBuilder predicate(Consumer<NumericTagValuePredicate.Builder> predicateBuilder) {
         NumericTagValuePredicate.Builder builder = NumericTagValuePredicate.builder();
         predicateBuilder.accept(builder);
         predicates.add(builder.build());
@@ -75,7 +74,7 @@ public class TransformWithItemRecipeBuilder {
     /**
      * 修改生物nbt
      */
-    public TransformWithItemRecipeBuilder tagModification(@NotNull Consumer<TagModification.Builder> predicateBuilder) {
+    public TransformWithItemRecipeBuilder tagModification(Consumer<TagModification.Builder> predicateBuilder) {
         TagModification.Builder builder = TagModification.builder();
         predicateBuilder.accept(builder);
         tagModifications.add(builder.build());
@@ -94,8 +93,8 @@ public class TransformWithItemRecipeBuilder {
         save(
             recipeOutput,
             AnvilCraft.of(
-                BuiltInRegistries.ENTITY_TYPE.getKey(inputType).getPath()
-                    + "_to_" + BuiltInRegistries.ITEM.getKey(itemResult.getItem()).getPath())
+                    BuiltInRegistries.ENTITY_TYPE.getKey(inputType).getPath()
+                        + "_to_" + BuiltInRegistries.ITEM.getKey(itemResult.getItem()).getPath())
                 .withPrefix("mob_transform_with_item/"));
     }
 

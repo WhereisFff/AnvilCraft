@@ -18,24 +18,24 @@ import org.jetbrains.annotations.NotNull;
 
 public class MagnetizedNodeModel extends HierarchicalModel<MagnetizedNodeEntity> {
     public static final AnimationDefinition ROTATING = AnimationDefinition.Builder.withLength(6f).looping()
-            .addAnimation("rotating",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(2f, KeyframeAnimations.degreeVec(0f, 360f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(4f, KeyframeAnimations.degreeVec(0f, 720f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(6f, KeyframeAnimations.degreeVec(0f, 1080f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR)))
-            .addAnimation("main",
-                    new AnimationChannel(AnimationChannel.Targets.ROTATION,
-                            new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(3f, KeyframeAnimations.degreeVec(0f, -360f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR),
-                            new Keyframe(6f, KeyframeAnimations.degreeVec(0f, -720f, 0f),
-                                    AnimationChannel.Interpolations.LINEAR))).build();
+        .addAnimation("rotating",
+            new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                    AnimationChannel.Interpolations.LINEAR),
+                new Keyframe(2f, KeyframeAnimations.degreeVec(0f, 360f, 0f),
+                    AnimationChannel.Interpolations.LINEAR),
+                new Keyframe(4f, KeyframeAnimations.degreeVec(0f, 720f, 0f),
+                    AnimationChannel.Interpolations.LINEAR),
+                new Keyframe(6f, KeyframeAnimations.degreeVec(0f, 1080f, 0f),
+                    AnimationChannel.Interpolations.LINEAR)))
+        .addAnimation("main",
+            new AnimationChannel(AnimationChannel.Targets.ROTATION,
+                new Keyframe(0f, KeyframeAnimations.degreeVec(0f, 0f, 0f),
+                    AnimationChannel.Interpolations.LINEAR),
+                new Keyframe(3f, KeyframeAnimations.degreeVec(0f, -360f, 0f),
+                    AnimationChannel.Interpolations.LINEAR),
+                new Keyframe(6f, KeyframeAnimations.degreeVec(0f, -720f, 0f),
+                    AnimationChannel.Interpolations.LINEAR))).build();
     private final ModelPart root;
 
     public MagnetizedNodeModel(ModelPart root) {
@@ -55,12 +55,12 @@ public class MagnetizedNodeModel extends HierarchicalModel<MagnetizedNodeEntity>
 
     @Override
     public void setupAnim(
-            @NotNull MagnetizedNodeEntity entity,
-            float limbSwing,
-            float limbSwingAmount,
-            float ageInTicks,
-            float netHeadYaw,
-            float headPitch
+        @NotNull MagnetizedNodeEntity entity,
+        float limbSwing,
+        float limbSwingAmount,
+        float ageInTicks,
+        float netHeadYaw,
+        float headPitch
     ) {
         this.root().getAllParts().forEach(ModelPart::resetPose);
         animate(entity.rotatingState, ROTATING, ageInTicks, 1.0f);

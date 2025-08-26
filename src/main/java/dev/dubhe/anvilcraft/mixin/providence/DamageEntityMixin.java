@@ -18,13 +18,18 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(DamageEntity.class)
 public class DamageEntityMixin {
-    @Shadow @Final private LevelBasedValue minDamage;
+    @Shadow
+    @Final
+    private LevelBasedValue minDamage;
 
-    @Shadow @Final private LevelBasedValue maxDamage;
+    @Shadow
+    @Final
+    private LevelBasedValue maxDamage;
 
     @WrapOperation(
         method = "apply",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;randomBetween(Lnet/minecraft/util/RandomSource;FF)F"))
+        at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;randomBetween(Lnet/minecraft/util/RandomSource;FF)F")
+    )
     private float randomMultipleForProvidence(
         RandomSource random1, float minInclusive, float maxExclusive, Operation<Float> original,
         @Local(argsOnly = true) ServerLevel serverLevel,

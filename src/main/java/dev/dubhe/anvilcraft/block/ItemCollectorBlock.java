@@ -6,8 +6,8 @@ import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.block.better.BetterBaseEntityBlock;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
@@ -98,7 +98,7 @@ public class ItemCollectorBlock extends BetterBaseEntityBlock implements IHammer
                 }
             }
             entity.setRemoved();
-            
+
             Vec3 vec3 = entity.getBlockPos().getCenter();
             FilteredItemStackHandler depository = entity.getItemHandler();
             for (int slot = 0; slot < depository.getSlots(); slot++) {

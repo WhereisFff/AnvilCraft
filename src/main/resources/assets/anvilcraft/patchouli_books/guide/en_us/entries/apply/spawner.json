@@ -2,7 +2,7 @@
   "name": "制造刷怪笼",
   "category": "anvilcraft:technology_application",
   "icon": "minecraft:spawner",
-  "sortnum": 6003,
+  "sortnum": 16003,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "minecraft:spawner": 0,
@@ -11,11 +11,11 @@
     "anvilcraft:resentful_amber_block": 0
   },
   "pages": [
-    "$(l:smithing/corrupted_beacon#time_warp)时移$()操作可以将$(item)树脂$()转化为$(item)琥珀$()。如果$(item)树脂块$()中含有敌对生物，那么就会有$(thing)5%$()的概率产生对应的$(item)怨恨琥珀块$()。$(br2)利用它和$(l:smithing/tier_1_materials#cursed_gold_block)诅咒金块$()可以生产对应敌对生物的$(item)刷怪笼$()。",
+    "$(l:smithing/corrupted_beacon#time_warp)时移$()操作可以将$(item)树脂(块)$()转化为$(item)琥珀(块)$()。$(br2)如果$(item)树脂块$()中含有的不是被动生物，则有$(thing)5%$()的概率产生$(item)怨恨琥珀块$()。$(br2)利用它和$(l:smithing/tier_1_materials#cursed_gold_block)诅咒金块$()可以生产对应敌对生物的$(item)刷怪笼$()。",
     {
       "type": "anvilcraft:time_warp",
       "recipe": "anvilcraft:time_warp/amber",
-      "text": "琥珀块获取方式与琥珀同理"
+      "text": "琥珀块获取方式与琥珀同理 $(br2)部分高级别的$(l:smithing/jewelcrafting_table#jeweler)珠宝商$()会收购琥珀块"
     },
     {
       "type": "patchouli:multiblock",
@@ -56,11 +56,16 @@
       "text": "若没有搬运刷怪笼的手段，请提前规划好位置"
     },
     {
+      "type": "patchouli:text",
+      "text": "推荐配合$(l:basic/more_processing#spawner)强制刷怪$(/l)使用"
+    },
+    {
       "type": "patchouli:relations",
       "entries": [
         "anvilcraft:smithing/corrupted_beacon",
         "anvilcraft:basic/more_device",
-        "anvilcraft:struct/multiblock"
+        "anvilcraft:struct/multiblock",
+        "anvilcraft:smithing/jewelcrafting_table"
       ],
       "text": ""
     }

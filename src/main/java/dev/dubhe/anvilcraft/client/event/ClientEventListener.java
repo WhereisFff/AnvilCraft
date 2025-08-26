@@ -4,13 +4,15 @@ import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.client.gui.screen.MultiphaseScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.MultitoolScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ResonatorScreen;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.client.support.AmuletSelectorSupport;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
+import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
@@ -67,9 +69,13 @@ public class ClientEventListener {
     public static void onKeyPress(Key event) {
         if (ModKeyMappings.TOGGLE_GOGGLE.get().isDown()) AnvilHammerItem.goggleEnabled = !AnvilHammerItem.goggleEnabled;
 
+        // 以下是界面部分
+
         switchPhase:
         if (event.getKey() == ModKeyMappings.SWITCH_PHASE.get().getKey().getValue()) {
-            if (event.getAction() == InputConstants.REPEAT && !(Minecraft.getInstance().screen instanceof MultiphaseScreen)) {
+            if (event.getAction() == InputConstants.REPEAT
+                && Minecraft.getInstance().screen == null
+            ) {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player == null) return;
                 ItemStack stack = player.getMainHandItem();
@@ -97,7 +103,7 @@ public class ClientEventListener {
         }
 
         if (event.getKey() == ModKeyMappings.SWITCH_RESONATE_MODE.get().getKey().getValue()) {
-            if (event.getAction() == InputConstants.PRESS) {
+            if (event.getAction() == InputConstants.PRESS && Minecraft.getInstance().screen == null) {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player == null) return;
                 ItemStack stack = player.getMainHandItem();
@@ -117,6 +123,21 @@ public class ClientEventListener {
                 }
             } else if (event.getAction() == InputConstants.RELEASE && Minecraft.getInstance().screen instanceof ResonatorScreen screen) {
                 screen.wheel.onClosing();
+            }
+        }
+
+        if (event.getKey() == ModKeyMappings.SWITCH_RESONATE_MODE.get().getKey().getValue()) {
+            if (event.getAction() == InputConstants.PRESS) {
+                LocalPlayer player = Minecraft.getInstance().player;
+                if (player == null) {
+                    return;
+                }
+                ItemStack stack = player.getMainHandItem();
+                if (stack.is(ModItems.MULTITOOL_ITEM)) {
+                    Minecraft.getInstance().setScreen(new MultitoolScreen(InteractionHand.MAIN_HAND, MultitoolItem.getMode(stack)));
+                }
+            } else if (event.getAction() == InputConstants.RELEASE && Minecraft.getInstance().screen instanceof MultitoolScreen screen) {
+                screen.getWheel().onClosing();
             }
         }
     }

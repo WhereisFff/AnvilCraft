@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.server.level.ServerPlayer;
@@ -40,7 +40,9 @@ public abstract class PlayerHitEntityMixin extends LivingEntity {
         ServerPlayer thiS = playerOp.get();
         if (!this.isFallFlying()) return;
         if (!(this.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AnvilHammerItem)
-            && !this.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.ROYAL_ANVIL_HAMMER.get())) return;
+            && !this.getItemBySlot(EquipmentSlot.HEAD).is(ModItems.ROYAL_ANVIL_HAMMER.get())) {
+            return;
+        }
         AABB headBlockBoundBox = AABB.ofSize(this.getEyePosition(), 1, 1, 1);
         List<LivingEntity> entities =
             level().getEntitiesOfClass(LivingEntity.class, headBlockBoundBox, it -> it != this);
@@ -50,7 +52,7 @@ public abstract class PlayerHitEntityMixin extends LivingEntity {
         if (source.type().equals(level().damageSources().flyIntoWall().type())) {
             for (LivingEntity entity : entities) {
                 entity.hurt(damageSources().playerAttack(thiS), hurtAmount);
-                anvilCraft$damageItem(thiS, this.getItemBySlot(EquipmentSlot.HEAD));
+                anvilcraft$damageItem(thiS, this.getItemBySlot(EquipmentSlot.HEAD));
             }
             cir.setReturnValue(false);
             cir.cancel();
@@ -58,7 +60,7 @@ public abstract class PlayerHitEntityMixin extends LivingEntity {
             if (source.type().equals(level().damageSources().fall().type())) {
                 for (LivingEntity entity : entities) {
                     entity.hurt(damageSources().playerAttack(thiS), hurtAmount);
-                    anvilCraft$damageItem(thiS, this.getItemBySlot(EquipmentSlot.HEAD));
+                    anvilcraft$damageItem(thiS, this.getItemBySlot(EquipmentSlot.HEAD));
                 }
                 cir.setReturnValue(false);
                 cir.cancel();
@@ -67,7 +69,7 @@ public abstract class PlayerHitEntityMixin extends LivingEntity {
     }
 
     @Unique
-    private static void anvilCraft$damageItem(Player player, ItemStack itemStack) {
+    private static void anvilcraft$damageItem(Player player, ItemStack itemStack) {
         if (player.isCreative()) return;
 
         if (itemStack.isDamageableItem()) {

@@ -5,7 +5,7 @@ import dev.dubhe.anvilcraft.api.totem.handler.TotemHandler;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemOfRageHandler;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemOfRecoveryHandler;
 import dev.dubhe.anvilcraft.api.totem.handler.TotemOfUndyingHandler;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import lombok.Getter;
 import net.minecraft.world.item.Item;

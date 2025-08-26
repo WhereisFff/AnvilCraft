@@ -2,31 +2,17 @@
   "type": "anvilcraft:item_crush",
   "ingredients": [
     {
-      "item": "minecraft:chainmail_chestplate"
+      "items": "minecraft:chainmail_chestplate"
     }
   ],
   "results": [
     {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.5
+      "count": {
+        "type": "minecraft:uniform",
+        "max": 2.0,
+        "min": 0.0
       },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:chain"
-      }
-    },
-    {
-      "amount": {
-        "type": "minecraft:binomial",
-        "n": 1.0,
-        "p": 0.5
-      },
-      "stack": {
-        "count": 1,
-        "id": "minecraft:chain"
-      }
+      "id": "minecraft:chain"
     }
   ]
 }

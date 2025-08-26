@@ -18,7 +18,6 @@ import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
@@ -44,30 +43,39 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
     @Final
     public MinecraftServer server;
     @Unique
-    private DynamicPowerComponent anvilCraft$component;
+    private DynamicPowerComponent anvilcraft$component;
 
     public ServerPlayerMixin(Level level, BlockPos pos, float yRot, GameProfile gameProfile) {
         super(level, pos, yRot, gameProfile);
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    void constructPowerComponent(MinecraftServer server, ServerLevel level, GameProfile gameProfile, ClientInformation clientInformation, CallbackInfo ci) {
-        this.anvilCraft$component = new DynamicPowerComponent(
+    void constructPowerComponent(
+        MinecraftServer server,
+        ServerLevel level,
+        GameProfile gameProfile,
+        ClientInformation clientInformation,
+        CallbackInfo ci
+    ) {
+        this.anvilcraft$component = new DynamicPowerComponent(
             this,
-            this::anvilCraft$getPowerSupplyingBoundingBox
+            this::anvilcraft$getPowerSupplyingBoundingBox
         );
     }
 
     @Unique
-    public AABB anvilCraft$getPowerSupplyingBoundingBox() {
+    public AABB anvilcraft$getPowerSupplyingBoundingBox() {
         return this.getBoundingBox().inflate(0.5);
     }
 
     @Override
-    public void anvilCraft$gridTick() {
+    public void anvilcraft$gridTick() {
         ItemStack stack = IonoCraftBackpackItem.getByPlayer(this);
-        if (IonoCraftBackpackItem.canModify(stack, this.anvilCraft$component) && IonoCraftBackpackItem.getFlightTime(stack) < AnvilCraft.config.ionoCraftBackpackMaxFlightTime) {
-            IonoCraftBackpackItem.addFlightTime(stack, AnvilCraft.config.ionoCraftBackpackMaxFlightTime / 120);
+        if (IonoCraftBackpackItem.canModify(
+            stack,
+            this.anvilcraft$component
+        ) && IonoCraftBackpackItem.getFlightTime(stack) < AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime) {
+            IonoCraftBackpackItem.addFlightTime(stack, AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime / 120);
         }
     }
 
@@ -76,15 +84,16 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
         if (value.getEntity() instanceof FallingBlockEntity falling
             && Util.instanceOfAny(falling.getBlockState().getBlock(), EmberAnvilBlock.class, TranscendenceAnvilBlock.class)
         ) {
-            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer((ServerLevel) this.level());
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer((ServerLevel) this.level());
             this.lastHurtByPlayer = killer;
             this.lastHurtByPlayerTime = 1;
             killerRef.set(killer);
             DamageSource source = new DamageSource(
                 this.level().damageSources().playerAttack(killer).typeHolder(),
-                falling, killer, value.getSourcePosition());
+                falling, killer, value.getSourcePosition()
+            );
             if (falling.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5((ServerLevel) this.level(), killer);
+                AnvilCraftFakePlayers.anvilcraftKiller.enableLooting5((ServerLevel) this.level(), killer);
             }
             return source;
         }
@@ -94,17 +103,17 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
     @Inject(method = "die", at = @At("RETURN"))
     private void disableKiller(DamageSource cause, CallbackInfo ci, @Share("killer") LocalRef<ServerPlayer> killerRef) {
         if (killerRef.get() == null) return;
-        AnvilCraftFakePlayers.anvilCraftKiller.disable(killerRef.get());
+        AnvilCraftFakePlayers.anvilcraftKiller.disable(killerRef.get());
     }
 
     @Override
     public void remove(Entity.RemovalReason reason) {
         super.remove(reason);
-        anvilCraft$component.switchTo(null);
+        anvilcraft$component.switchTo(null);
     }
 
     @Override
-    public DynamicPowerComponent anvilCraft$getPowerComponent() {
-        return anvilCraft$component;
+    public DynamicPowerComponent anvilcraft$getPowerComponent() {
+        return anvilcraft$component;
     }
 }

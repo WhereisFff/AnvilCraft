@@ -27,6 +27,10 @@
     "anvilcraft:void_matter_block",
     "anvilcraft:earth_core_shard_block",
     "anvilcraft:multiphase_matter_block",
-    "anvilcraft:negative_matter_block"
+    "anvilcraft:negative_matter_block",
+    "anvilcraft:sugar_block",
+    "anvilcraft:gunpowder_block",
+    "anvilcraft:rotten_flesh_block",
+    "anvilcraft:flint_block"
   ]
 }

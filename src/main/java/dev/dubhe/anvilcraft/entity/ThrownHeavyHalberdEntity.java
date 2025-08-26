@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.entity;
 
+import com.google.common.collect.ImmutableSet;
 import dev.dubhe.anvilcraft.item.HeavyHalberdItem;
 import net.minecraft.MethodsReturnNonnullByDefault;
+import net.minecraft.core.HolderSet;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -14,19 +16,26 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 
 import javax.annotation.Nullable;
 import javax.annotation.ParametersAreNonnullByDefault;
+import java.io.Serializable;
+import java.util.function.Predicate;
+import java.util.function.ToIntFunction;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
@@ -239,5 +248,54 @@ public abstract class ThrownHeavyHalberdEntity extends AbstractArrow {
     @Override
     public boolean shouldRender(double x, double y, double z) {
         return true;
+    }
+
+    public interface Factory<T extends ThrownHeavyHalberdEntity> extends EntityType.EntityFactory<T>, Serializable {
+    }
+
+    public static class HeavyHalberdType<T extends ThrownHeavyHalberdEntity> extends EntityType<T> {
+        public HeavyHalberdType(
+            EntityFactory<T> factory,
+            MobCategory category,
+            boolean serialize,
+            boolean summon,
+            boolean fireImmune,
+            boolean canSpawnFarFromPlayer,
+            ImmutableSet<Block> immuneTo,
+            EntityDimensions dimensions,
+            float spawnDimensionsScale,
+            int clientTrackingRange,
+            int updateInterval,
+            FeatureFlagSet requiredFeatures,
+            Predicate<EntityType<?>> trackDeltasSupplier,
+            ToIntFunction<EntityType<?>> trackingRangeSupplier,
+            ToIntFunction<EntityType<?>> updateIntervalSupplier
+        ) {
+            super(
+                factory,
+                category,
+                serialize,
+                summon,
+                fireImmune,
+                canSpawnFarFromPlayer,
+                immuneTo,
+                dimensions,
+                spawnDimensionsScale,
+                clientTrackingRange,
+                updateInterval,
+                requiredFeatures,
+                trackDeltasSupplier,
+                trackingRangeSupplier,
+                updateIntervalSupplier
+            );
+        }
+
+        @Override
+        public boolean is(HolderSet<EntityType<?>> entityType) {
+            return super.is(entityType)
+                   || (entityType instanceof HolderSet.Direct<EntityType<?>> direct
+                       && direct.size() == 1
+                       && direct.get(0).is(ResourceLocation.withDefaultNamespace("trident")));
+        }
     }
 }

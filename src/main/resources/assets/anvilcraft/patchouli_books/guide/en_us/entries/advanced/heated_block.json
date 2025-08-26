@@ -2,7 +2,7 @@
   "name": "Heated Block",
   "category": "anvilcraft:advanced_features",
   "icon": "anvilcraft:glowing_tungsten_block",
-  "sortnum": 4001,
+  "sortnum": 17003,
   "entry_color": "004400",
   "pages": [
     "$(thing)Heatable Block$()是一系列方块的统称，每种方块有若干温度等级。$(br2)可加热方块有持续时间。当持续时间归零，则温度等级-1。若-1后仍为高温方块，则将持续时间设为10秒。$(br2)挖掘方块时不保留持续时间。如果工具没有$(item)精准采集/熔炼$()附魔，则温度等级-1",
@@ -16,6 +16,12 @@
       "item": ["anvilcraft:tungsten_block","minecraft:netherite_block"],
       "title": "Common Heatable Block",
       "text": "$(item)钨块$()、$(item)下界合金块$()属于此类。$(br2)具有5个温度等级：$(thing)普通$()、$(thing)高温$()、$(thing)红热$()、$(thing)炽热$()、$(thing)白炽$()。$(br2)可以被后文所有加热方式加热。"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "item": ["anvilcraft:redhot_tungsten_block","anvilcraft:glowing_netherite_block","anvilcraft:incandescent_tungsten_block"],
+      "title": "*特性",
+      "text": "不是$(thing)普通$()等级的可加热方块称为$(thing)高温方块$()，可以为$(l:power/heat_collection#unchanged_block)集热器$()提供给热量以发电。$(br2)$(thing)红热$()、$(thing)炽热$()、$(thing)白炽$()等级的方块会烫伤踩在上面的生物，分别造成1, 2, 4点伤害。 $(br2)$(thing)红热$()、$(thing)炽热$()、$(thing)白炽$()等级的方块接触水一段时间后，和海绵类似，蒸发距离4, 6, 8以内的水。"
     },
     {
       "type": "patchouli:text",
@@ -38,14 +44,14 @@
       "type": "patchouli:spotlight",
       "anchor": "heliostats",
       "item": "anvilcraft:heliostats",
-      "text": "When $(item)Heliostats$() irradiates to heatable blocks can heat it. When block has been irradiated by heliostats, determine Heat Tier based on the number of heliostats. The curve of association of count and Heat Tier is 4, 12, 32, 64. If the Heat Tier of the block is lower or equal than provided Heat Tier, raise the Tier to the provided Tier and add 4 seconds to duration every seconds. If the Heat Tier of the block is higher than the provided Tier, then do nothing."
+      "text": "手持$(item)定日镜$()右键绑定可加热方块后。不同数量的定日镜会将可加热方块$(n)及其之上$()的方块加热为不同等级并每秒增加4秒持续时间。 $(li)4个：高温  12个：红热 $(li)32个：炽热 64个：白炽"
     },
     {
       "type": "patchouli:spotlight",
       "anchor": "laser",
       "title": "Laser",
       "item": "anvilcraft:ruby_laser,anvilcraft:ruby_prism",
-      "text": "When $(l:power/advanced_laser_system)Laser$() irradiates to heatable blocks can heat it.方块被激光照射时，根据激光等级决定加热能力：$(li)1到3级：Heated Tier $(li)4到15级：Redhot Tier $(li)16到63级：Glowing Tier $(li)64级及以上：Incandescent Tier $(br2)At any level, increase its duration by 0.1 seconds per second."
+      "text": "When $(l:power/laser_system)Laser$() irradiates to heatable blocks can heat it.方块被激光照射时，根据激光等级决定加热能力：$(li)1到3级：Heated Tier $(li)4到15级：Redhot Tier $(li)16到63级：Glowing Tier $(li)64级及以上：Incandescent Tier $(br2)At any level, increase its duration by 0.1 seconds per second."
     },
     {
       "type": "patchouli:text",

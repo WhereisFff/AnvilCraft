@@ -9,7 +9,7 @@ import dev.dubhe.anvilcraft.api.itemhandler.PollableFilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.BatchCrafterMenu;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
@@ -116,7 +116,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
         boolean powered = state.getValue(BatchCrafterBlock.POWERED);
         this.cooldown = Math.max(0, this.cooldown - 1);
         if (powered && !poweredBefore && !level.isClientSide && this.cooldown == 0) {
-            if (this.craft(level)) this.cooldown = AnvilCraft.config.batchCrafterCooldown;
+            if (this.craft(level)) this.cooldown = AnvilCraft.CONFIG.batchCrafterCooldown;
         }
         poweredBefore = powered;
     }
@@ -306,7 +306,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     }
 
     @Override
-    public FilteredItemStackHandler getFilteredItemDepository() {
+    public FilteredItemStackHandler getFilteredItemStackHandler() {
         return this.itemHandler;
     }
 

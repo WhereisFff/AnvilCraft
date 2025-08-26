@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ActiveSilencerBlock;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.ActiveSilencerMenu;
-import dev.dubhe.anvilcraft.network.MutedSoundSyncPacket;
 import dev.dubhe.anvilcraft.network.SilencerSyncPacket;
 import dev.dubhe.anvilcraft.util.DistExecutor;
 import dev.dubhe.anvilcraft.util.NetworkUtil;
@@ -36,7 +35,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

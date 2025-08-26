@@ -1,43 +1,51 @@
 package dev.dubhe.anvilcraft.integration.kubejs.recipe.anvil;
 
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.AnvilCraftKubeRecipe;
 import dev.dubhe.anvilcraft.integration.kubejs.recipe.IDRecipeConstructor;
-import dev.latvian.mods.kubejs.error.KubeRuntimeException;
+import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.BlockStatePredicateComponent;
+import dev.dubhe.anvilcraft.integration.kubejs.recipe.components.ChanceBlockStateComponent;
 import dev.latvian.mods.kubejs.recipe.RecipeKey;
-import dev.latvian.mods.kubejs.recipe.component.BlockComponent;
+import dev.latvian.mods.kubejs.recipe.component.ComponentRole;
 import dev.latvian.mods.kubejs.recipe.schema.KubeRecipeFactory;
 import dev.latvian.mods.kubejs.recipe.schema.RecipeSchema;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.block.Block;
 
 public interface BlockCrushRecipeSchema {
     @SuppressWarnings("unused")
     class BlockCrushKubeRecipe extends AnvilCraftKubeRecipe {
-        public BlockCrushKubeRecipe input(Block block) {
-            setValue(INPUT, block);
-            save();
+        public BlockCrushKubeRecipe input(Block... block) {
+            this.setValue(INPUT, BlockStatePredicate.builder().of(block).build());
+            this.save();
+            return this;
+        }
+
+        public final BlockCrushKubeRecipe inputTag(TagKey<Block> tag) {
+            this.setValue(INPUT, BlockStatePredicate.builder().of(tag).build());
+            this.save();
             return this;
         }
 
         public BlockCrushKubeRecipe result(Block block) {
-            setValue(RESULT, block);
-            save();
+            this.setValue(RESULT, new ChanceBlockState(block.defaultBlockState(), 1.0f));
+            this.save();
             return this;
         }
 
         @Override
         protected void validate() {
-            if (getValue(INPUT) == null) {
-                throw new KubeRuntimeException("Inputs is Empty!").source(sourceLine);
-            }
-            if (getValue(RESULT) == null) {
-                throw new KubeRuntimeException("Result is Empty!").source(sourceLine);
-            }
         }
     }
 
-    RecipeKey<Block> INPUT = BlockComponent.BLOCK.inputKey("input").defaultOptional();
-    RecipeKey<Block> RESULT = BlockComponent.BLOCK.outputKey("result").defaultOptional();
+    RecipeKey<BlockStatePredicate> INPUT = BlockStatePredicateComponent.INSTANCE
+        .key("input", ComponentRole.INPUT)
+        .defaultOptional();
+    RecipeKey<ChanceBlockState> RESULT = ChanceBlockStateComponent.INSTANCE
+        .key("result", ComponentRole.OUTPUT)
+        .defaultOptional();
 
     RecipeSchema SCHEMA = new RecipeSchema(INPUT, RESULT)
         .factory(new KubeRecipeFactory(AnvilCraft.of("block_crush"), BlockCrushKubeRecipe.class, BlockCrushKubeRecipe::new))

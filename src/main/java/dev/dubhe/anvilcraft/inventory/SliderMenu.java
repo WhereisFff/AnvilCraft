@@ -13,18 +13,14 @@ import org.jetbrains.annotations.Nullable;
 
 @Getter
 public class SliderMenu extends AbstractContainerMenu {
-    private final int min;
-    private final int max;
     private final Callback<Integer> callback;
 
     /**
      * @param menuType    菜单类型
      * @param containerId 容器ID
      */
-    public SliderMenu(@Nullable MenuType<SliderMenu> menuType, int containerId) {
+    public SliderMenu(@Nullable MenuType<?> menuType, int containerId) {
         super(menuType, containerId);
-        this.min = 0;
-        this.max = 160;
         this.callback = null;
     }
 
@@ -32,13 +28,10 @@ public class SliderMenu extends AbstractContainerMenu {
      * @param containerId 容器ID
      * @param callback    更新回调
      */
-    public SliderMenu(int containerId, int min, int max, Callback<Integer> callback) {
+    public SliderMenu(int containerId, Callback<Integer> callback) {
         super(ModMenuTypes.SLIDER.get(), containerId);
-        this.min = min;
-        this.max = max;
         this.callback = callback;
     }
-
     @Override
     public @NotNull ItemStack quickMoveStack(@NotNull Player player, int index) {
         Slot sourceSlot = slots.get(index);

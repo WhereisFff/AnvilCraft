@@ -1,15 +1,13 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.recipe.ChanceItemStack;
-import dev.dubhe.anvilcraft.recipe.anvil.StampingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.StampingUniqueItemsRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.StampingRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
@@ -25,11 +23,10 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
 
 import javax.annotation.ParametersAreNonnullByDefault;
-import java.util.List;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class StampingCategory extends AbstractItemProgressCategory<StampingRecipe> {
+public class StampingCategory extends AbstractProgressCategory<StampingRecipe> {
     public StampingCategory(IGuiHelper helper) {
         super(
             helper,
@@ -63,17 +60,22 @@ public class StampingCategory extends AbstractItemProgressCategory<StampingRecip
         RenderHelper.renderBlock(
             guiGraphics, ModBlocks.STAMPING_PLATFORM.getDefaultState(), 81, 40, 0, 12, RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOutputFromBelow.draw(guiGraphics, 92, 29);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.mergedIngredients.size());
+        // TODO: 等待重构StampingUniqueItemsRecipe（目前仅多合一模板使用），重构后直接取消注释并修复import即可
+//        if (recipe instanceof StampingUniqueItemsRecipe) {
+//            ItemStack input = recipe.getItemIngredients().getFirst()
+//                .getItems()[(int) System.currentTimeMillis() / 1000 % recipe.getItemIngredients().size()];
+//            JeiSlotUtil.drawInputSlots(guiGraphics, slot, input.getCount());
+//        } else {
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
+//        }
 
-        List<ChanceItemStack> results = this.getResults(recipe);
-        if (recipe instanceof StampingUniqueItemsRecipe) {
-            ChanceItemStack result = results.getFirst();
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, result.getStack().getCount());
+        if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
         } else {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slot, results.size());
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());
         }
     }
 

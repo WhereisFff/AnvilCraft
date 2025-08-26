@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.entity;
 
-import dev.dubhe.anvilcraft.init.ModEntities;
-import dev.dubhe.anvilcraft.util.AdsorbableItemEntity;
+import dev.dubhe.anvilcraft.init.entity.ModEntities;
+import dev.dubhe.anvilcraft.api.injection.entity.IItemEntityExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
@@ -9,6 +9,7 @@ import net.minecraft.nbt.NbtUtils;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.AnimationState;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
@@ -19,13 +20,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class MagnetizedNodeEntity extends Entity {
     private static final EntityDataAccessor<BlockPos> DATA_BLOCK_POS =
-            SynchedEntityData.defineId(MagnetizedNodeEntity.class, EntityDataSerializers.BLOCK_POS);
+        SynchedEntityData.defineId(MagnetizedNodeEntity.class, EntityDataSerializers.BLOCK_POS);
     private static final EntityDataAccessor<BlockState> DATA_BLOCK_STATE =
-            SynchedEntityData.defineId(MagnetizedNodeEntity.class, EntityDataSerializers.BLOCK_STATE);
+        SynchedEntityData.defineId(MagnetizedNodeEntity.class, EntityDataSerializers.BLOCK_STATE);
 
     public BlockPos blockPos = BlockPos.ZERO;
     private BlockState blockState = Blocks.AIR.defaultBlockState();
@@ -57,21 +57,25 @@ public class MagnetizedNodeEntity extends Entity {
         }
         super.tick();
         if (!this.level().isClientSide && !this.level().getBlockState(this.blockPos).is(this.blockState.getBlock())) {
-            this.kill();
+            BlockState currentState = this.level().getBlockState(this.blockPos);
+            if (!currentState.is(this.blockState.getBlock())
+                && (!currentState.is(BlockTags.CAULDRONS) || !this.blockState.is(BlockTags.CAULDRONS))) {
+                this.kill();
+            }
         }
         AABB aabb = new AABB(blockPos.getX() - 0.01,
-                blockPos.getY() - 0.01,
-                blockPos.getZ() - 0.01,
-                blockPos.getX() + 1.01,
-                blockPos.getY() + 1.01,
-                blockPos.getZ() + 1.01
+            blockPos.getY() - 0.01,
+            blockPos.getZ() - 0.01,
+            blockPos.getX() + 1.01,
+            blockPos.getY() + 1.01,
+            blockPos.getZ() + 1.01
         );
         level()
-                .getEntities(EntityType.ITEM, aabb, it -> ((AdsorbableItemEntity) it).anvilcraft$isAdsorbable())
-                .forEach(entity -> {
-                    entity.teleportTo(position().x, position().y, position().z);
-                    entity.setDeltaMovement(Vec3.ZERO);
-                });
+            .getEntities(EntityType.ITEM, aabb, IItemEntityExtension::anvilcraft$isAdsorbable)
+            .forEach(entity -> {
+                entity.teleportTo(position().x, position().y, position().z);
+                entity.setDeltaMovement(Vec3.ZERO);
+            });
     }
 
     @Override
@@ -97,7 +101,7 @@ public class MagnetizedNodeEntity extends Entity {
     }
 
     @Override
-    protected @NotNull AABB makeBoundingBox() {
+    protected AABB makeBoundingBox() {
         return EntityDimensions.scalable(0.25f, 0.25f).makeBoundingBox(this.position());
     }
 

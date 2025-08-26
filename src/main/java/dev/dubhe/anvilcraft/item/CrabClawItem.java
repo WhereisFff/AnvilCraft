@@ -4,7 +4,7 @@ import com.google.common.collect.Multimap;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.entity.EntityHelper;
 import dev.dubhe.anvilcraft.api.entity.attribute.EntityReachAttribute;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.util.EntityUtil;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;

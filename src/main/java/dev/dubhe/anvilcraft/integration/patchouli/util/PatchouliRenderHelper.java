@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.integration.patchouli.util;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
 import dev.dubhe.anvilcraft.util.RenderHelper;
@@ -64,6 +65,21 @@ public class PatchouliRenderHelper {
 
     public static void render2x3(GuiGraphics guiGraphics, int x, int y) {
         RenderSystem.enableBlend();
+        guiGraphics.blit(EXTRA, x, y, 155, 32, 62, 43, 256, 256);
+    }
+
+    public static void render2x4(GuiGraphics guiGraphics, int x, int y) {
+        RenderSystem.enableBlend();
+        guiGraphics.blit(EXTRA, x, y, 155, 77, 81, 43, 256, 256);
+    }
+
+    public static void render2x5(GuiGraphics guiGraphics, int x, int y) {
+        RenderSystem.enableBlend();
+        guiGraphics.blit(EXTRA, x, y, 155, 122, 100, 43, 256, 256);
+    }
+
+    public static void render3x2(GuiGraphics guiGraphics, int x, int y) {
+        RenderSystem.enableBlend();
         guiGraphics.blit(EXTRA, x, y, 110, 77, 43, 62, 256, 256);
     }
 
@@ -82,7 +98,23 @@ public class PatchouliRenderHelper {
         ItemStack stack = stacks[(parent.ticksInBook / 20) % stacks.length];
 
         guiGraphics.renderFakeItem(stack, x, y);
-        guiGraphics.renderItemDecorations(((ScreenAccessor) parent).anvilcraft$getFont(), stack.copyWithCount(count), x, y);
+        guiGraphics.renderItemDecorations(((ScreenAccessor) parent).getFont(), stack.copyWithCount(count), x, y);
+
+        if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
+            parent.setTooltipStack(stack);
+        }
+    }
+
+    public static void renderIngredient(
+        GuiBookEntry parent, GuiGraphics guiGraphics, ItemIngredientPredicate ingr, int x, int y, int mouseX, int mouseY
+    ) {
+        RenderSystem.enableBlend();
+        ItemStack[] stacks = ingr.getItems();
+        if (stacks.length == 0) return;
+        ItemStack stack = stacks[(parent.ticksInBook / 20) % stacks.length];
+
+        guiGraphics.renderFakeItem(stack, x, y);
+        guiGraphics.renderItemDecorations(((ScreenAccessor) parent).getFont(), stack, x, y);
 
         if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             parent.setTooltipStack(stack);
@@ -94,7 +126,7 @@ public class PatchouliRenderHelper {
     ) {
         RenderSystem.enableBlend();
         guiGraphics.renderFakeItem(stack, x, y);
-        guiGraphics.renderItemDecorations(((ScreenAccessor) parent).anvilcraft$getFont(), stack, x, y);
+        guiGraphics.renderItemDecorations(((ScreenAccessor) parent).getFont(), stack, x, y);
 
         if (parent.isMouseInRelativeRange(mouseX, mouseY, x, y, 16, 16)) {
             parent.setTooltipStack(stack);

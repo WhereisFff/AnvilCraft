@@ -1,16 +1,16 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import com.google.gson.JsonElement;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.generate.JewelCraftingRecipeGeneratingCache;
-import dev.dubhe.anvilcraft.recipe.generate.MeshRecipeGeneratingCache;
 import dev.dubhe.anvilcraft.recipe.generate.RecipeGenerator;
-
 import net.minecraft.core.HolderLookup;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.ResourceManager;
@@ -20,11 +20,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.neoforged.neoforge.common.conditions.WithConditions;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.ImmutableMultimap;
-import com.llamalad7.mixinextras.sugar.Local;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -50,8 +45,10 @@ abstract class RecipeManagerMixin {
         method = "lambda$apply$0",
         at = @At(
             value = "INVOKE",
-            target =
-                "Lcom/google/common/collect/ImmutableMap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMap$Builder;",
+            target = "Lcom/google/common/collect/ImmutableMap$Builder;put("
+                     + "Ljava/lang/Object;"
+                     + "Ljava/lang/Object;"
+                     + ")Lcom/google/common/collect/ImmutableMap$Builder;",
             shift = At.Shift.AFTER
         )
     )
@@ -61,7 +58,7 @@ abstract class RecipeManagerMixin {
         ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> byNameBuilder,
         WithConditions<Recipe<?>> r,
         CallbackInfo ci,
-        @Local @NotNull Recipe<?> recipe,
+        @Local Recipe<?> recipe,
         @Local RecipeHolder<?> recipeHolder
     ) {
         RecipeGenerator.handleVanillaRecipe(recipe.getType(), recipeHolder)
@@ -73,45 +70,36 @@ abstract class RecipeManagerMixin {
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
         at = @At(value = "INVOKE", target = "Ljava/util/Map;entrySet()Ljava/util/Set;")
     )
     private void beforeBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
-        @Share("jewelsCache") LocalRef<JewelCraftingRecipeGeneratingCache> jewelsCache,
-        @Share("meshesCache") LocalRef<MeshRecipeGeneratingCache> meshesCache
+        @Share("jewelsCache") LocalRef<JewelCraftingRecipeGeneratingCache> jewelsCache
     ) {
         JewelCraftingRecipeGeneratingCache jewelsCache1 = new JewelCraftingRecipeGeneratingCache(this.registries);
         jewelsCache.set(jewelsCache1);
-
-        MeshRecipeGeneratingCache meshesCache1 = new MeshRecipeGeneratingCache(this.registries);
-        meshesCache.set(meshesCache1);
     }
 
     @Inject(
         method = "apply(Ljava/util/Map;Lnet/minecraft/server/packs/resources/ResourceManager;"
-            + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
-        at = @At(value = "INVOKE_ASSIGN", target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
-            + "Lcom/google/common/collect/ImmutableMap;")
+                 + "Lnet/minecraft/util/profiling/ProfilerFiller;)V",
+        at = @At(
+            value = "INVOKE_ASSIGN",
+            target = "Lcom/google/common/collect/ImmutableMap$Builder;build()"
+                     + "Lcom/google/common/collect/ImmutableMap;"
+        )
     )
     private void afterBuildRecipe(
         Map<ResourceLocation, JsonElement> object, ResourceManager resourceManager, ProfilerFiller profiler, CallbackInfo ci,
         @Local ImmutableMultimap.Builder<RecipeType<?>, RecipeHolder<?>> byTypeBuilder,
         @Local ImmutableMap.Builder<ResourceLocation, RecipeHolder<?>> byNameBuilder,
-        @Share("jewelsCache") LocalRef<JewelCraftingRecipeGeneratingCache> jewelsCache,
-        @Share("meshesCache") LocalRef<MeshRecipeGeneratingCache> meshesCache
+        @Share("jewelsCache") LocalRef<JewelCraftingRecipeGeneratingCache> jewelsCache
     ) {
         jewelsCache.get().buildRecipes()
             .ifPresent(recipeHolders -> {
                 byTypeBuilder.putAll(ModRecipeTypes.JEWEL_CRAFTING_TYPE.get(), recipeHolders);
                 for (RecipeHolder<JewelCraftingRecipe> holder : recipeHolders) {
-                    byNameBuilder.put(holder.id(), holder);
-                }
-            });
-        meshesCache.get().buildRecipes()
-            .ifPresent(recipeHolders -> {
-                byTypeBuilder.putAll(ModRecipeTypes.MESH_TYPE.get(), recipeHolders);
-                for (RecipeHolder<MeshRecipe> holder : recipeHolders) {
                     byNameBuilder.put(holder.id(), holder);
                 }
             });

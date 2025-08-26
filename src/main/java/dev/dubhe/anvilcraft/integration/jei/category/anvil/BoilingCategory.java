@@ -1,13 +1,13 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.recipe.anvil.BoilingRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.BoilingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -28,7 +28,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-public class BoilingCategory extends AbstractItemProgressCategory<BoilingRecipe> {
+public class BoilingCategory extends AbstractProgressCategory<BoilingRecipe> {
     public BoilingCategory(IGuiHelper helper) {
         super(
             helper,
@@ -77,16 +77,21 @@ public class BoilingCategory extends AbstractItemProgressCategory<BoilingRecipe>
             12,
             RenderHelper.SINGLE_BLOCK);
 
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 20);
+        arrowOut.draw(guiGraphics, 92, 19);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.mergedIngredients.size());
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
+        if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());
+        }
     }
 
     public static void registerRecipes(IRecipeRegistration registration) {
         registration.addRecipes(
-            AnvilCraftJeiPlugin.BOILING, JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BOILING_TYPE.get()));
+            AnvilCraftJeiPlugin.BOILING,
+            JeiRecipeUtil.getRecipeHoldersFromType(ModRecipeTypes.BOILING_TYPE.get()));
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {

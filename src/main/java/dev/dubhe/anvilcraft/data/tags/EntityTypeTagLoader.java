@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
-import dev.dubhe.anvilcraft.init.ModEntityTypeTags;
+import dev.dubhe.anvilcraft.init.entity.ModEntityTypeTags;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
@@ -21,20 +21,14 @@ public class EntityTypeTagLoader {
     public static void init(@NotNull RegistrateTagsProvider<EntityType<?>> provider) {
         provider.addTag(ModEntityTypeTags.AMULET_VALID)
             .addOptionalTag(ModEntityTypeTags.EMERALD_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.TOPAZ_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.RUBY_AMULET_VALID)
             .addOptionalTag(ModEntityTypeTags.SAPPHIRE_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.ANVIL_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.COMRADE_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.FEATHER_AMULET_VALID)
             .addOptionalTag(ModEntityTypeTags.CAT_AMULET_VALID)
             .addOptionalTag(ModEntityTypeTags.DOG_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.SILENCE_AMULET_VALID)
-            .addOptionalTag(ModEntityTypeTags.COGWHEEL_AMULET_VALID);
+            .addOptionalTag(ModEntityTypeTags.SILENCE_AMULET_VALID);
 
         provider.addTag(ModEntityTypeTags.EMERALD_AMULET_VALID)
             .add(findResourceKey(EntityType.IRON_GOLEM))
-            .add(findResourceKey(EntityType.PILLAGER));
+            .addTag(EntityTypeTags.ILLAGER);
 
         provider.addTag(ModEntityTypeTags.SAPPHIRE_AMULET_VALID)
             .add(findResourceKey(EntityType.GUARDIAN))

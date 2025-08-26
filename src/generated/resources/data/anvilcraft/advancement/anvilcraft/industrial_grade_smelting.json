@@ -1,0 +1,30 @@
+{
+  "parent": "anvilcraft:anvilcraft/electric_filed_rhythm",
+  "criteria": {
+    "super_heating": {
+      "conditions": {
+        "recipeType": "anvilcraft:super_heating"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.industrial_grade_smelting.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:heater"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.industrial_grade_smelting.title"
+    }
+  },
+  "requirements": [
+    [
+      "super_heating"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

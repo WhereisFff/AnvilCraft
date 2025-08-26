@@ -2,14 +2,14 @@
   "name": "一阶材料",
   "category": "anvilcraft:smithing_system",
   "icon": "anvilcraft:royal_steel_ingot",
-  "sortnum": 3002,
+  "sortnum": 13002,
   "entry_color": "004400",
   "extra_recipe_mappings": {
     "anvilcraft:royal_steel_upgrade_smithing_template": 4,
     "anvilcraft:cursed_gold_ingot": 11
   },
   "pages": [
-    "本页面展示了所有可用的$(thing)一阶材料$()。",
+    "本页面展示了所有可用的$(thing)一阶材料$()。$(br)$(li)$(l:smithing/tier_1_materials#royal_steel_ingot)皇家钢$() $(li)$(l:smithing/tier_1_materials#cursed_gold_ingot)诅咒金$()",
     {
       "type": "patchouli:spotlight",
       "anchor": "royal_steel_ingot",
@@ -72,7 +72,7 @@
       "type": "patchouli:spotlight",
       "anchor": "cursed_gold_ingot",
       "item": "anvilcraft:cursed_gold_ingot",
-      "text": "散发着诅咒气息的物品，携带者将受到$(thing)debuff$()；携带者使用$(item)皇家铁砧$()时会被雷劈。使用$(l:smithing/tier_1_materials#royal_grindstone)皇家砂轮$()祛除物品的诅咒和附魔惩罚时，金锭会转化为诅咒金锭。"
+      "text": "散发着诅咒气息的物品，携带者将受到$(thing)debuff$()，且使用$(item)皇家铁砧$()时会被雷劈。$(br2)使用$(l:smithing/tier_1_materials#royal_grindstone)皇家砂轮$()祛除物品的诅咒和附魔惩罚时，金锭会转化为诅咒金锭。$(br2)拿着诅咒金的$(item)猪灵$()会被僵尸化，死亡掉落额外的诅咒金。"
     },
     {
       "type": "patchouli:crafting",

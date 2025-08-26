@@ -1,7 +1,8 @@
 package dev.dubhe.anvilcraft.event.giantanvil.shock;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.event.anvil.GiantAnvilFallOnLandEvent;
+import dev.dubhe.anvilcraft.api.event.AnvilEvent;
+import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -12,7 +13,9 @@ import net.minecraft.world.level.block.Block;
 import java.util.ArrayList;
 import java.util.List;
 
-public record ShockContext(Level level, BlockPos centerPos, List<BlockPos> rangePosList, float fallDistance) {
+public record ShockContext(
+    Level level, BlockPos centerPos, FallingGiantAnvilEntity fallingGiantAnvil, List<BlockPos> rangePosList, float fallDistance
+) {
 
     public static final Direction[] HORIZONTAL = {
         Direction.NORTH,
@@ -31,18 +34,18 @@ public record ShockContext(Level level, BlockPos centerPos, List<BlockPos> range
         Direction.NORTH
     };
 
-    public static ShockContext inflate(GiantAnvilFallOnLandEvent event) {
+    public static ShockContext inflate(AnvilEvent.GiantOnLand event) {
         BlockPos detectCenter = event.getPos().below(2);
         BlockPos ground = detectCenter.above();
         List<BlockPos> rangePosList = new ArrayList<>();
-        int radius = (int) Math.min(Math.ceil(event.getFallDistance()), AnvilCraft.config.giantAnvilMaxShockRadius);
+        int radius = (int) Math.min(Math.ceil(event.getFallDistance()), AnvilCraft.CONFIG.giantAnvilMaxShockRadius);
         for (int dx = -radius; dx <= radius; dx++) {
             for (int dz = -radius; dz <= radius; dz++) {
                 BlockPos pos = ground.offset(dx, 0, dz);
                 rangePosList.add(pos);
             }
         }
-        return new ShockContext(event.getLevel(), detectCenter, rangePosList, event.getFallDistance());
+        return new ShockContext(event.getLevel(), detectCenter, event.getEntity(), rangePosList, event.getFallDistance());
     }
 
     public boolean testCorner(TagKey<Block> tagKey) {

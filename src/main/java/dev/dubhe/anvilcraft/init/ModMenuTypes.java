@@ -2,11 +2,13 @@ package dev.dubhe.anvilcraft.init;
 
 import com.tterrag.registrate.util.entry.MenuEntry;
 import dev.dubhe.anvilcraft.client.gui.screen.ActiveSilencerScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.AdvancedComparatorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.BatchCrafterScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ChuteScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberAnvilScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberGrindstoneScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberSmithingScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.FilterScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemCollectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemDetectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.JewelCraftingScreen;
@@ -20,11 +22,13 @@ import dev.dubhe.anvilcraft.client.gui.screen.StructureToolScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.TeslaTowerScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.TranscendenceAnvilScreen;
 import dev.dubhe.anvilcraft.inventory.ActiveSilencerMenu;
+import dev.dubhe.anvilcraft.inventory.AdvancedComparatorMenu;
 import dev.dubhe.anvilcraft.inventory.BatchCrafterMenu;
 import dev.dubhe.anvilcraft.inventory.ChuteMenu;
 import dev.dubhe.anvilcraft.inventory.EmberAnvilMenu;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import dev.dubhe.anvilcraft.inventory.EmberSmithingMenu;
+import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
 import dev.dubhe.anvilcraft.inventory.ItemDetectorMenu;
 import dev.dubhe.anvilcraft.inventory.JewelCraftingMenu;
@@ -86,6 +90,9 @@ public class ModMenuTypes {
     public static final MenuEntry<ItemDetectorMenu> ITEM_DETECTOR = REGISTRATE
         .menu("item_detector", ItemDetectorMenu::new, () -> ItemDetectorScreen::new)
         .register();
+    public static final MenuEntry<FilterMenu> FILTER = REGISTRATE
+        .menu("filter", FilterMenu::new, () -> FilterScreen::new)
+        .register();
 
     public static final MenuEntry<ActiveSilencerMenu> ACTIVE_SILENCER = REGISTRATE
         .menu("active_silencer", ActiveSilencerMenu::new, () -> ActiveSilencerScreen::new)
@@ -119,6 +126,10 @@ public class ModMenuTypes {
 
     public static final MenuEntry<PulseGeneratorMenu> PULSE_GENERATOR = REGISTRATE
         .menu("pulse_generator", PulseGeneratorMenu::new, () -> PulseGeneratorScreen::new)
+        .register();
+
+    public static final MenuEntry<AdvancedComparatorMenu> ADVANCED_COMPARATOR = REGISTRATE
+        .menu("advanced_comparator", AdvancedComparatorMenu::new, () -> AdvancedComparatorScreen::new)
         .register();
 
     public static final MenuEntry<TranscendenceAnvilMenu> TRANSCENDENCE_ANVIL = REGISTRATE

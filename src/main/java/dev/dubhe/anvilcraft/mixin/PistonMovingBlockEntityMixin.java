@@ -2,8 +2,7 @@ package dev.dubhe.anvilcraft.mixin;
 
 import dev.dubhe.anvilcraft.block.sliding.ActivatorSlidingRailBlock;
 import dev.dubhe.anvilcraft.block.sliding.ISlidingRail;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.MinecraftServer;
@@ -53,7 +52,9 @@ abstract class PistonMovingBlockEntityMixin {
         p.extending = blockEntity.isExtending();
         if (ISlidingRail.MOVING_PISTON_MAP.containsKey(belowPos)) {
             ISlidingRail.MOVING_PISTON_MAP.get(belowPos).extending = p.extending;
-        } else ISlidingRail.MOVING_PISTON_MAP.put(belowPos, p);
+        } else {
+            ISlidingRail.MOVING_PISTON_MAP.put(belowPos, p);
+        }
         ISlidingRail.MOVING_PISTON_MAP.get(belowPos).isSourcePiston = blockEntity.isSourcePiston();
     }
 }

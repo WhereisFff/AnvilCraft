@@ -2,11 +2,13 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
+import dev.dubhe.anvilcraft.network.AdvancedComparatorUpdatePacket;
 import dev.dubhe.anvilcraft.network.ChargeCollectorIncomingChargePacket;
 import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
+import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
@@ -33,10 +35,12 @@ import dev.dubhe.anvilcraft.network.SlidingEntitySyncPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
+import dev.dubhe.anvilcraft.network.SwitchMultitoolModePacket;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
 import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
+import dev.dubhe.anvilcraft.network.UpdateDeflectionRingLastEntitySpeedPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
@@ -184,6 +188,11 @@ public class ModNetworks {
             PulseGeneratorUpdatePacket.HANDLER
         );
         registrar.playToServer(
+            AdvancedComparatorUpdatePacket.TYPE,
+            AdvancedComparatorUpdatePacket.STREAM_CODEC,
+            AdvancedComparatorUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
             SwitchPhasePacket.TYPE,
             SwitchPhasePacket.STREAM_CODEC,
             SwitchPhasePacket.HANDLER
@@ -202,6 +211,11 @@ public class ModNetworks {
             DragonRodDevourPacket.TYPE,
             DragonRodDevourPacket.STREAM_CODEC,
             DragonRodDevourPacket.HANDLER
+        );
+        registrar.playToServer(
+            FilterContentSyncPacket.TYPE,
+            FilterContentSyncPacket.STREAM_CODEC,
+            FilterContentSyncPacket.HANDLER
         );
         registrar.playBidirectional(
             SilencerSyncPacket.TYPE,
@@ -232,6 +246,16 @@ public class ModNetworks {
             ComparatorSyncPacket.TYPE,
             ComparatorSyncPacket.STREAM_CODEC,
             ComparatorSyncPacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchMultitoolModePacket.TYPE,
+            SwitchMultitoolModePacket.STREAM_CODEC,
+            SwitchMultitoolModePacket.HANDLER
+        );
+        registrar.playToClient(
+            UpdateDeflectionRingLastEntitySpeedPacket.TYPE,
+            UpdateDeflectionRingLastEntitySpeedPacket.STREAM_CODEC,
+            UpdateDeflectionRingLastEntitySpeedPacket.HANDLER
         );
     }
 }

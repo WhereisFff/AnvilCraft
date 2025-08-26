@@ -4,7 +4,6 @@
   "icon": "minecraft:end_portal_frame",
   "sortnum": 1010,
   "extra_recipe_mappings": {
-    "anvilcraft:end_dust": 1,
     "anvilcraft:spectral_anvil": 2
   },
   "pages": [
@@ -22,7 +21,7 @@
     {
       "type": "patchouli:spotlight",
       "item": "anvilcraft:spectral_anvil",
-      "text": "非重力方块，且不会损坏。$(br2)当头顶的磁铁消失或磁性消失时，会向下掉落一个虚影，完成类似于普通铁砧的加工方式。$(br2)$(#aa0000)注意$()：无法进行$(l:basic/more_processing#loot)铁砧抢劫$()，砸击$(l:power/basic_generation)压电晶体$()产生的电荷也会偏少。"
+      "text": "非重力方块，可被推动，且不会损坏。$(br2)当头顶的磁铁消失或磁性消失时，会向下掉落一个虚影，完成类似于普通铁砧的加工方式。$(br2)$(#aa0000)注意$()：无法进行$(l:basic/more_processing#loot)铁砧抢劫$()，砸击$(l:power/basic_generation)压电晶体$()产生的电荷也会偏少。"
     }
   ]
 }

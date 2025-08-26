@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
 import com.google.common.collect.Streams;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
 import dev.dubhe.anvilcraft.util.MultiPartBlockUtil;
@@ -180,6 +180,7 @@ public class DragonRodItem extends Item {
         player.getCooldowns().addCooldown(ModItems.DRAGON_ROD.asItem(), cooldown);
         player.getCooldowns().addCooldown(ModItems.ROYAL_DRAGON_ROD.asItem(), cooldown);
         player.getCooldowns().addCooldown(ModItems.EMBER_DRAGON_ROD.asItem(), cooldown);
+        player.getCooldowns().addCooldown(ModItems.TRANSCENDENCE_DRAGON_ROD.asItem(), calculateTranscendenceDragonRodCooldown(player));
         if (!(dragonRod.getItem() instanceof DragonRodItem)) {
             player.getCooldowns().addCooldown(dragonRod.getItem(), cooldown);
         }
@@ -216,5 +217,16 @@ public class DragonRodItem extends Item {
             cooldown += Objects.requireNonNull(player.getEffect(MobEffects.DIG_SLOWDOWN)).getAmplifier() * 60;
         }
         return Math.max(cooldown, 4);
+    }
+
+    public static int calculateTranscendenceDragonRodCooldown(Player player) {
+        int cooldown = 4;
+        if (player.hasEffect(MobEffects.DIG_SPEED)) {
+            cooldown -= Math.max(Objects.requireNonNull(player.getEffect(MobEffects.DIG_SPEED)).getAmplifier(), 1);
+        }
+        if (player.hasEffect(MobEffects.DIG_SLOWDOWN)) {
+            cooldown += Objects.requireNonNull(player.getEffect(MobEffects.DIG_SLOWDOWN)).getAmplifier() * 4;
+        }
+        return cooldown;
     }
 }

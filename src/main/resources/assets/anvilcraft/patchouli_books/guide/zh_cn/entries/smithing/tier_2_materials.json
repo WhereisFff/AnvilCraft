@@ -1,11 +1,25 @@
 {
   "name": "二阶材料",
   "category": "anvilcraft:smithing_system",
-  "icon": "anvilcraft:frost_metal_ingot",
-  "sortnum": 3004,
+  "icon": "anvilcraft:ember_metal_ingot",
+  "sortnum": 23006,
   "entry_color": "661100",
   "pages": [
-    "本页面展示了目前所有可用的$(thing)二阶材料$()。",
+    "本页面展示了目前所有可用的$(thing)二阶材料$(): $(li)地核碎片 $(li)虚空物质 $(li)$(l:smithing/tier_2_materials#frost_metal)浮霜金属$(/l) $(li)$(l:smithing/tier_2_materials#ember_metal)余烬金属$(/l) $(li)$(l:smithing/tier_2_materials#multiphase_matter)多相物质$(/l) $(li)$(l:smithing/tier_2_materials#multiple_templates)多合一锻造模板$(/l) ",
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "earth_core_shard",
+      "item": ["anvilcraft:earth_core_shard","anvilcraft:earth_core_shard_block","anvilcraft:earth_core_shard_ore"],
+      "link_recipe": true,
+      "text": "$(item)地核碎片$()系列物品不受$(item)熔岩$()和$(item)火焰$()损害，通过$(l:struct/mineral_fountain)矿物涌泉$(/l)生产。 $(br2)可参与$(item)余烬金属锭$()的制作 $(br2)方块形态具有同黑曜石的挖掘等级"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "void_matter",
+      "item": ["anvilcraft:void_matter","anvilcraft:void_matter_block","anvilcraft:void_stone"],
+      "link_recipe": true,
+      "text": "$(item)虚空物质$()系列物品在$(thing)虚空$()中会上升，通过$(l:struct/mineral_fountain)矿物涌泉$(/l)生产。 $(br2)可用于制作$(l:power/void_energy_collection#void_energy_collector)虚空能收集器$() $(br2)方块形态具有同黑曜石的挖掘等级 $(br2)虚空物质块具有$(l:advanced/void_decay)特性：虚空衰变$()"
+    },
     {
       "type": "patchouli:spotlight",
       "anchor": "frost_metal",
@@ -14,6 +28,7 @@
     },
     {
       "type": "anvilcraft:time_warp",
+      "title": "浮霜锻造模板",
       "recipe": "anvilcraft:time_warp/frost_metal_ingot",
       "text": "使用1$(item)钛锭$()、1$(item)银锭$()、1$(item)铁锭$()进行时移来制作。"
     },
@@ -68,9 +83,9 @@
       "recipe2": "anvilcraft:ember_metal_nugget_from_ingot"
     },
     {
-      "type": "patchouli:spotlight",
-      "item": "anvilcraft:ember_metal_upgrade_smithing_template",
-      "text": "在村庄铁匠铺可以找到锻造模板，与$(l:smithing/jewelcrafting_table)珠宝匠$(/l)村民交易也可以得到锻造模板。"
+      "type": "anvilcraft:stamping",
+      "recipe": "anvilcraft:stamping/ember_metal_upgrade_smithing_template",
+      "text": "使用$(item)皇家升级锻造模板$()进行冲压配方以获得。可用于将$(thing)皇家钢系列工具$()升级为$(thing)余烬金属系列工具$()。"
     },
     {
       "type": "patchouli:smithing",
@@ -108,25 +123,33 @@
       "text": "使用$(item)余烬金属锭$()升级你的工具，它们将自带$(l:advanced/tool_properties#reforging)重铸$(/l)属性。"
     },
     {
-      "type": "patchouli:spotlight",
+      "type": "anvilcraft:anvil_collision",
       "anchor": "multiphase_matter",
-      "item": "anvilcraft:multiphase_matter",
-      "text": "$(item)多相物质$()是一种人造物质。"
-    },
-    {
-      "type": "patchouli:text",
-      "text": "（此处为对撞配方，等待对撞适配）在对撞装置尾部放上$(l:smithing/tier_2_materials#frost_metal_block_and_nugget)一块浮霜金属块$(/l)，并成功执行一次对撞获得。"
+      "recipe": "anvilcraft:anvil_collision/ember_anvil_and_frost_metal_block_32",
+      "text": "一次撞击获得4个$(item)多相物质$() $(p)用于在$(item)余烬锻造台$()上参与多合一锻造"
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "anvilcraft:multiphase_matter_block"
+      "recipe": "anvilcraft:multiphase_matter_block",
+      "text": "$(#888888)把极冷与极热的物质掺和在一起是一件令人激动的事情，然后它就这么诞生了！ ——氙氪博士$()"
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "multiple_templates",
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "多合一锻造模板",
       "link_recipe": true,
-      "text": "将多个互不相同的$(thing)锻造模板$()进行物品冲压加工获得，由模板数量决定获得的是几合一锻造模板。"
+      "text": "将多个互不相同的$(thing)锻造模板$()进行物品冲压加工获得，由模板数量决定获得的是几合一锻造模板。$(br2)用于在$(item)余烬锻造台$()上参与多合一锻造"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:struct/mineral_fountain",
+        "anvilcraft:struct/collision",
+        "anvilcraft:advanced/tool_properties",
+        "anvilcraft:apply/oil"
+      ],
+      "text": ""
     }
   ]
 }

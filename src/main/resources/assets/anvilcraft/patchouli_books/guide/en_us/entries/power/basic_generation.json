@@ -6,7 +6,7 @@
   "pages": [
     {
       "type": "patchouli:text",
-      "text": "Use a charge collector to collect electrical charge to generate power. Some block behaviors generate charges: an anvil hits a piezoelectric crystal, a piston pushes and pulls a magnet next to a copper block, and a copper block is struck by lightning."
+      "text": "Use a charge collector to collect electrical charge to generate power. Some block behaviors generate charges: $(li)an anvil hits a piezoelectric crystal $(li)a piston pushes and pulls a magnet next to a copper block $(li)and a lightning rod is struck by lightning."
     },
     {
       "type": "patchouli:crafting",

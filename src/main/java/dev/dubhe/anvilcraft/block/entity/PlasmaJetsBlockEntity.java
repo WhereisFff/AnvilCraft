@@ -7,9 +7,9 @@ import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.init.ModParticles;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -153,6 +153,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
             }
         }
         boolean cauldronExisting = level.getBlockState(cauldronPos).is(ModBlocks.FIRE_CAULDRON)
+                                   || level.getBlockState(cauldronPos).is(ModBlocks.OIL_CAULDRON)
                                    || level.getBlockState(cauldronPos).is(Blocks.CAULDRON);
         boolean belowCauldronIsNotHeater = !level.getBlockState(cauldronPos.below(1))
             .is(ModBlocks.HEATER);
@@ -252,6 +253,7 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         ) return;
         for (int i = 1; i < 6; i++) {
             if (level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)
+                || level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.OIL_CAULDRON)
                 || level.getBlockState(this.getBlockPos().below(i)).is(Blocks.CAULDRON)) {
                 this.cauldronPos = this.getBlockPos().below(i);
                 break;

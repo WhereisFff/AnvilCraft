@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.event.giantanvil.shock;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.behavior.BehaviorTree;
 import dev.dubhe.anvilcraft.api.behavior.TreeNode;
-import dev.dubhe.anvilcraft.api.event.anvil.GiantAnvilFallOnLandEvent;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.api.event.AnvilEvent;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -48,9 +48,9 @@ public class GiantAnvilShockEventListener {
                 TreeNode.multiple(
                     TreeNode.<ShockContext>predicatedExecutable(it ->
                         (it.unwrap().testBorder(AnvilBlock.class) || it.unwrap().testBorder(ModBlocks.SPECTRAL_ANVIL))
-                        && !it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
-                        && !it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
-                        && !it.unwrap().testBorder(ModBlocks.TRANSCENDENCE_ANVIL)
+                            && !it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
+                            && !it.unwrap().testBorder(ModBlocks.EMBER_ANVIL)
+                            && !it.unwrap().testBorder(ModBlocks.TRANSCENDENCE_ANVIL)
                     ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.NORMAL)),
                     TreeNode.<ShockContext>predicatedExecutable(
                         it -> it.unwrap().testBorder(ModBlocks.ROYAL_ANVIL)
@@ -121,7 +121,7 @@ public class GiantAnvilShockEventListener {
                 it.putAttachment(NO_HURT, true);
             })
         ).executes(it -> {
-            int radius = (int) Math.min(Math.ceil(it.unwrap().fallDistance()), AnvilCraft.config.giantAnvilMaxShockRadius);
+            int radius = (int) Math.min(Math.ceil(it.unwrap().fallDistance()), AnvilCraft.CONFIG.giantAnvilMaxShockRadius);
             AABB aabb = AABB.ofSize(
                 Vec3.atCenterOf(it.unwrap().centerPos().above()),
                 radius * 2 + 1,
@@ -136,7 +136,7 @@ public class GiantAnvilShockEventListener {
                     hurtType.postApply(l.level(), l, it.unwrap().fallDistance());
                 } else {
                     if (l.getItemBySlot(EquipmentSlot.FEET).is(Items.AIR)) {
-                        l.hurt(it.unwrap().level().damageSources().fall(), it.unwrap().fallDistance() * 2);
+                        l.hurt(it.unwrap().level().damageSources().anvil(it.unwrap().fallingGiantAnvil()), it.unwrap().fallDistance() * 2);
                     }
                 }
             }
@@ -145,7 +145,7 @@ public class GiantAnvilShockEventListener {
     }
 
     @SubscribeEvent
-    public static void onLand(@NotNull GiantAnvilFallOnLandEvent event) {
+    public static void onLand(@NotNull AnvilEvent.GiantOnLand event) {
         ShockContext context = ShockContext.inflate(event);
         behaviorTree.run(context);
     }

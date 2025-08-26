@@ -39,10 +39,19 @@ import java.util.Map;
 public abstract class SectionCompilerMixin {
 
     @Shadow
-    protected abstract BufferBuilder getOrBeginLayer(Map<RenderType, BufferBuilder> bufferLayers, SectionBufferBuilderPack sectionBufferBuilderPack, RenderType renderType);
+    protected abstract BufferBuilder getOrBeginLayer(
+        Map<RenderType, BufferBuilder> bufferLayers,
+        SectionBufferBuilderPack sectionBufferBuilderPack,
+        RenderType renderType
+    );
 
     @WrapOperation(
-        method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;Ljava/util/List;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
+        method = "compile("
+                 + "Lnet/minecraft/core/SectionPos;"
+                 + "Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;"
+                 + "Lcom/mojang/blaze3d/vertex/VertexSorting;"
+                 + "Lnet/minecraft/client/renderer/SectionBufferBuilderPack;Ljava/util/List;"
+                 + ")Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/client/renderer/block/BlockRenderDispatcher;renderBatched(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/BlockAndTintGetter;Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;ZLnet/minecraft/util/RandomSource;Lnet/neoforged/neoforge/client/model/data/ModelData;Lnet/minecraft/client/renderer/RenderType;)V"
@@ -95,8 +104,17 @@ public abstract class SectionCompilerMixin {
     }
 
     @Inject(
-        method = "compile(Lnet/minecraft/core/SectionPos;Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;Lcom/mojang/blaze3d/vertex/VertexSorting;Lnet/minecraft/client/renderer/SectionBufferBuilderPack;Ljava/util/List;)Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
-        at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/chunk/SectionCompiler;handleBlockEntity(Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;Lnet/minecraft/world/level/block/entity/BlockEntity;)V")
+        method = "compile("
+                 + "Lnet/minecraft/core/SectionPos;"
+                 + "Lnet/minecraft/client/renderer/chunk/RenderChunkRegion;"
+                 + "Lcom/mojang/blaze3d/vertex/VertexSorting;"
+                 + "Lnet/minecraft/client/renderer/SectionBufferBuilderPack;"
+                 + "Ljava/util/List;"
+                 + ")Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/client/renderer/chunk/SectionCompiler;handleBlockEntity(Lnet/minecraft/client/renderer/chunk/SectionCompiler$Results;Lnet/minecraft/world/level/block/entity/BlockEntity;)V"
+        )
     )
     void compile(
         SectionPos sectionPos,

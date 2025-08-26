@@ -1,11 +1,25 @@
 {
   "name": "Tier 2 Materials",
   "category": "anvilcraft:smithing_system",
-  "icon": "anvilcraft:frost_metal_ingot",
-  "sortnum": 3004,
+  "icon": "anvilcraft:ember_metal_ingot",
+  "sortnum": 23006,
   "entry_color": "661100",
   "pages": [
-    "This page shows all available $(thing)tier 2 materials$().",
+    "This page shows all available $(thing)tier 2 materials$(): $(li)地核碎片 $(li)虚空物质 $(li)$(l:smithing/tier_2_materials#frost_metal)浮霜金属$(/l) $(li)$(l:smithing/tier_2_materials#ember_metal)余烬金属$(/l) $(li)$(l:smithing/tier_2_materials#multiphase_matter)多相物质$(/l) $(li)$(l:smithing/tier_2_materials#multiple_templates)多合一锻造模板$(/l) ",
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "earth_core_shard",
+      "item": ["anvilcraft:earth_core_shard","anvilcraft:earth_core_shard_block","anvilcraft:earth_core_shard_ore"],
+      "link_recipe": true,
+      "text": "$(item)地核碎片$()系列物品不受$(item)熔岩$()和$(item)火焰$()损害，通过$(l:struct/mineral_fountain)矿物涌泉$(/l)生产。 $(br2)可参与$(item)余烬金属锭$()的制作 $(br2)方块形态具有同黑曜石的挖掘等级"
+    },
+    {
+      "type": "patchouli:spotlight",
+      "anchor": "void_matter",
+      "item": ["anvilcraft:void_matter","anvilcraft:void_matter_block","anvilcraft:void_stone"],
+      "link_recipe": true,
+      "text": "$(item)虚空物质$()系列物品在$(thing)虚空$()中会上升，通过$(l:struct/mineral_fountain)矿物涌泉$(/l)生产。 $(br2)可用于制作$(l:power/void_energy_collection#void_energy_collector)虚空能收集器$() $(br2)方块形态具有同黑曜石的挖掘等级 $(br2)虚空物质块具有$(l:advanced/void_decay)特性：虚空衰变$()"
+    },
     {
       "type": "patchouli:spotlight",
       "anchor": "frost_metal",
@@ -69,10 +83,9 @@
       "recipe2": "anvilcraft:ember_metal_nugget_from_ingot"
     },
     {
-      "type": "patchouli:spotlight",
-      "title": "Ember Metal Template",
-      "item": "anvilcraft:ember_metal_upgrade_smithing_template",
-      "text": "You can find this template in the Village's Weaponsmith. Trade with $(l:smithing/jewelcrafting_table)Jeweler$(/l) villager can also get this template."
+      "type": "anvilcraft:stamping",
+      "recipe": "anvilcraft:stamping/ember_metal_upgrade_smithing_template",
+      "text": "Use Stamping with $(item)Royal Steel Upgrade Smithing Template$() to craft this. Can be used to upgrade $(thing)Royal Steel tools$() to $(thing)Ember Metal tools$()."
     },
     {
       "type": "patchouli:smithing",
@@ -110,25 +123,33 @@
       "text": "Use $(item)Ember Metal Ingot$() to upgrade your tools. They will include $(l:advanced/tool_properties#reforging)Fire Reforging$(/l) property."
     },
     {
-      "type": "patchouli:spotlight",
+      "type": "anvilcraft:anvil_collision",
       "anchor": "multiphase_matter",
-      "item": "anvilcraft:multiphase_matter",
-      "text": "$(item)Multiphase Matter$() is an artificial matter."
-    },
-    {
-      "type": "patchouli:text",
-      "text": "(This will be Anvil Collision recipe, until it has support)Put a $(l:smithing/tier_2_materials#frost_metal_block_and_nugget)Frost Metal Block$(/l) on the tail of Collision facility and do it once to craft the Multiphase Matter."
+      "recipe": "anvilcraft:anvil_collision/ember_anvil_and_frost_metal_block_32",
+      "text": "一次撞击获得4个$(item)多相物质$() $(p)用于在$(item)余烬锻造台$()上参与多合一锻造"
     },
     {
       "type": "patchouli:crafting",
-      "recipe": "anvilcraft:multiphase_matter_block"
+      "recipe": "anvilcraft:multiphase_matter_block",
+      "text": "$(#888888)把极冷与极热的物质掺和在一起是一件令人激动的事情，然后它就这么诞生了！ ——氙氪博士$()"
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "multiple_templates",
       "item": "tag:anvilcraft:multiple_to_one_smithing_templates",
       "title": "Multiple to One Smithing Template",
       "link_recipe": true,
-      "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template."
+      "text": "Use stamping with some different $(thing)Smithing Templates$() to craft them. The count of these templates decide you will get X to One Smithing Template. $(br2)It is used to participate in multiple_to_one smithing on the $(item)Embers smithing table$()"
+    },
+    {
+      "type": "patchouli:relations",
+      "entries": [
+        "anvilcraft:struct/mineral_fountain",
+        "anvilcraft:struct/collision",
+        "anvilcraft:advanced/tool_properties",
+        "anvilcraft:apply/oil"
+      ],
+      "text": ""
     }
   ]
 }

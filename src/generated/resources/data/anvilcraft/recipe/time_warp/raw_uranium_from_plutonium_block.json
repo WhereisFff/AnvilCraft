@@ -1,0 +1,23 @@
+{
+  "type": "anvilcraft:time_warp",
+  "heat": [
+    {
+      "duration": 12000,
+      "tier": "incandescent"
+    }
+  ],
+  "ingredients": [
+    {
+      "items": "anvilcraft:plutonium_block"
+    }
+  ],
+  "results": [
+    {
+      "count": 3,
+      "id": "anvilcraft:raw_uranium"
+    },
+    {
+      "id": "anvilcraft:raw_lead"
+    }
+  ]
+}

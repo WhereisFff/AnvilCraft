@@ -1,15 +1,16 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.event.anvil.AnvilFallOnLandEvent;
+import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.api.hammer.HammerManager;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
+import dev.dubhe.anvilcraft.client.AnvilCraftClient;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.mixin.invoker.BlockBehaviourInvoker;
 import dev.dubhe.anvilcraft.network.RocketJumpPacket;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
@@ -40,6 +41,8 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
 
@@ -54,12 +57,19 @@ import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getChainableMainPartP
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class AnvilHammerItem extends Item implements Equipable {
-    public static final Property<?>[] SUPPORTED_PROPERTIES = {BlockStateProperties.FACING, BlockStateProperties.FACING_HOPPER, BlockStateProperties.HORIZONTAL_FACING, BlockStateProperties.ORIENTATION, BlockStateProperties.AXIS, BlockStateProperties.HORIZONTAL_AXIS};
-    private static final List<Predicate<Player>> isWearingPredicates = new ArrayList<>();
+    public static final Property<?>[] SUPPORTED_PROPERTIES = {
+        BlockStateProperties.FACING,
+        BlockStateProperties.FACING_HOPPER,
+        BlockStateProperties.HORIZONTAL_FACING,
+        BlockStateProperties.ORIENTATION,
+        BlockStateProperties.AXIS,
+        BlockStateProperties.HORIZONTAL_AXIS
+    };
+    private static final List<Predicate<Player>> IS_WEARING_PREDICATES = new ArrayList<>();
     public static boolean goggleEnabled = false;
 
     static {
-        isWearingPredicates.add(player -> player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AnvilHammerItem);
+        IS_WEARING_PREDICATES.add(player -> player.getItemBySlot(EquipmentSlot.HEAD).getItem() instanceof AnvilHammerItem);
     }
 
     private final ItemAttributeModifiers modifiers;
@@ -71,7 +81,15 @@ public class AnvilHammerItem extends Item implements Equipable {
      */
     public AnvilHammerItem(Item.Properties properties) {
         super(properties);
-        modifiers = ItemAttributeModifiers.builder().add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, getAttackDamageModifierAmount(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -3F, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND).build();
+        modifiers = ItemAttributeModifiers.builder().add(
+            Attributes.ATTACK_DAMAGE, new AttributeModifier(
+                BASE_ATTACK_DAMAGE_ID, getAttackDamageModifierAmount(),
+                AttributeModifier.Operation.ADD_VALUE
+            ), EquipmentSlotGroup.MAINHAND
+        ).add(
+            Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -3F, AttributeModifier.Operation.ADD_VALUE),
+            EquipmentSlotGroup.MAINHAND
+        ).build();
     }
 
     private static void breakBlock(ServerPlayer player, BlockPos pos, ServerLevel level, ItemStack tool) {
@@ -136,10 +154,11 @@ public class AnvilHammerItem extends Item implements Equipable {
         player.getCooldowns().addCooldown(itemStack.getItem(), 5);
         FallingBlockEntity dummyAnvilEntity = new FallingBlockEntity(EntityType.FALLING_BLOCK, level);
         dummyAnvilEntity.blockState = anvilHammerItem.getAnvil().defaultBlockState();
-        AnvilFallOnLandEvent event = new AnvilFallOnLandEvent(level, blockPos.above(), dummyAnvilEntity, player.fallDistance);
+        AnvilEvent.OnLand event = new AnvilEvent.OnLand(level, blockPos.above(), dummyAnvilEntity, player.fallDistance);
         NeoForge.EVENT_BUS.post(event);
         level.playSound(null, blockPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1f, 1f);
         itemStack.hurtAndBreak(1, player, LivingEntity.getSlotForHand(player.getUsedItemHand()));
+        TriggerUtil.anvilHammerClickBlock(level, blockPos, "left_click");
         return true;
     }
 
@@ -150,9 +169,11 @@ public class AnvilHammerItem extends Item implements Equipable {
         if (rocketJump(player, level, blockPos)) return;
         if (!player.getAbilities().mayBuild) return;
         if (player.isShiftKeyDown()) {
+            TriggerUtil.anvilHammerClickBlock(level, blockPos, "right_click");
             breakBlock(player, blockPos, level, anvilHammer);
             return;
         }
+        TriggerUtil.anvilHammerClickBlock(level, blockPos, "shift_right_click");
         BlockState state = level.getBlockState(blockPos);
         Block block = state.getBlock();
         MenuProvider provider = ((BlockBehaviourInvoker) block).invokeGetMenuProvider(state, level, blockPos);
@@ -184,19 +205,28 @@ public class AnvilHammerItem extends Item implements Equipable {
     }
 
     public static void addIsWearingPredicate(Predicate<Player> predicate) {
-        isWearingPredicates.add(predicate);
+        IS_WEARING_PREDICATES.add(predicate);
     }
 
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isWearing(Player player) {
-        return switch (AnvilCraft.config.goggleMode) {
+        for (var it : AnvilHammerItem.IS_WEARING_PREDICATES) {
+            if (it.test(player)) return true;
+        }
+        return false;
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean shouldRenderEffect(Player player) {
+        return switch (AnvilCraftClient.CONFIG.goggleMode) {
             case ALWAYS_SHOW -> true;
-            case WEARING_HAMMER -> {
-                for (var it : isWearingPredicates) if (it.test(player)) yield true;
-                yield false;
+            case WEARING_HAMMER -> AnvilHammerItem.isWearing(player);
+            case HOLDING_HAMMER -> {
+                if (player.getMainHandItem().getItem() instanceof AnvilHammerItem) yield true;
+                yield player.getOffhandItem().getItem() instanceof AnvilHammerItem;
             }
-            case HOLDING_HAMMER -> player.getMainHandItem().getItem() instanceof AnvilHammerItem;
-            case TOGGLE_WITH_KEY -> goggleEnabled;
+            case TOGGLE_WITH_KEY -> AnvilHammerItem.goggleEnabled;
         };
     }
 
@@ -252,8 +282,17 @@ public class AnvilHammerItem extends Item implements Equipable {
         }
         target.hurt(target.level().damageSources().anvil(attacker), damageBonus);
         if (attacker.fallDistance >= 3) {
-            attacker.level().playSound(null, BlockPos.containing(attacker.position()), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1f, attacker.fallDistance > 17 ? (float) 0.5 : 1 - attacker.fallDistance / 35);
+            attacker.level().playSound(
+                null, BlockPos.containing(attacker.position()), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1f,
+                attacker.fallDistance > 17 ? (float) 0.5 : 1 - attacker.fallDistance / 35
+            );
         }
+        if (level instanceof ServerLevel serverLevel) {
+            if (target.killedEntity(serverLevel, attacker)) {
+                TriggerUtil.killedEntityByAnvilHammer(serverLevel, BlockPos.containing(target.position()), target);
+            }
+        }
+        TriggerUtil.anvilHammerHurtEntity(level, BlockPos.containing(target.position()), damageBonus);
         return true;
     }
 
