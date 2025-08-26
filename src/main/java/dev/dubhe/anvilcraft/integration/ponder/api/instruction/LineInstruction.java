@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.integration.ponder.api;
+package dev.dubhe.anvilcraft.integration.ponder.api.instruction;
 
 import net.createmod.ponder.foundation.PonderScene;
 import net.createmod.ponder.foundation.instruction.TickingInstruction;
