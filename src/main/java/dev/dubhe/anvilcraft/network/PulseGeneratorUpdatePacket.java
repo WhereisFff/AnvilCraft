@@ -46,7 +46,7 @@ public record PulseGeneratorUpdatePacket(
             if (!(player.containerMenu instanceof PulseGeneratorMenu menu)) return;
             PulseGeneratorBlockEntity repeater = menu.getBlockEntity();
             repeater.setStartMode(data.startMode);
-            repeater.setOutputInvert(data.outputInvert);
+            repeater.setOutputMode(data.outputInvert);
             repeater.setWaitingTime(data.waitingTime);
             repeater.setSignalDuration(data.signalDuration);
         });
