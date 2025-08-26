@@ -57,9 +57,7 @@ public class AdvancedComparatorBlockEntityRender implements BlockEntityRenderer<
     private float getHeight(AdvancedComparatorBlockEntity blockEntity) {
         Level level = blockEntity.getLevel();
         int inputtingSignal = 0;
-        if (level != null) {
-            inputtingSignal = level.getBlockState(blockEntity.getBlockPos()).getValue(AdvancedComparatorBlock.POWER);
-        }
+        if (level != null) inputtingSignal = level.getBlockState(blockEntity.getBlockPos()).getValue(AdvancedComparatorBlock.POWER);
         return (inputtingSignal / 3f * .0625f);
     }
 }
