@@ -50,8 +50,8 @@ public class HeaterScene {
         scene.world().setBlock(heaterBlockPos, ModBlocks.HEATER.getDefaultState(), true);
         scene.world().showIndependentSection(util.select().position(heaterBlockPos), Direction.NORTH);
         scene.overlay().showText(30)
-            .text("When placing down the heater, it will not work if there is no valid power grid nearby " +
-                "or if the grid is already overloaded.")
+            .text("When placing down the heater, it will not work if there is no valid power grid nearby "
+                + "or if the grid is already overloaded.")
             .pointAt(util.vector().blockSurface(heaterBlockPos, Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
@@ -74,13 +74,13 @@ public class HeaterScene {
         scene.world().setBlock(transmissionPolePos.above(2),
             ModBlocks.TRANSMISSION_POLE.getDefaultState()
                 .setValue(TransmissionPoleBlock.HALF, Vertical3PartHalf.TOP)
-                .setValue(HeaterBlock.OVERLOAD, false)
-            , false
+                .setValue(HeaterBlock.OVERLOAD, false),
+            false
         );
         scene.world().setBlock(heaterBlockPos,
             ModBlocks.HEATER.getDefaultState()
-                .setValue(HeaterBlock.OVERLOAD, false)
-            , false
+                .setValue(HeaterBlock.OVERLOAD, false),
+            false
         );
         scene.overlay().showText(20)
             .text("The heater is now working properly.")
