@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -72,11 +71,6 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(FACING, POWERED);
-    }
-
-    @Override
-    protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return Shapes.block();
     }
 
     @Override

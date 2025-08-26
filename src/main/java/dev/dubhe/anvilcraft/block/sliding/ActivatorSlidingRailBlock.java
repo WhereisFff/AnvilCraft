@@ -120,11 +120,6 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
     }
 
     @Override
-    protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return Shapes.block();
-    }
-
-    @Override
     protected boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }

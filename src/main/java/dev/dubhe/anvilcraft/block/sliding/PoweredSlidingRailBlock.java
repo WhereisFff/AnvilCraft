@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import dev.dubhe.anvilcraft.init.ModBlocks;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -116,11 +115,6 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return Shapes.block();
-    }
-
-    @Override
     protected boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
@@ -211,7 +205,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         if (!state.getValue(POWERED)) {
             ISlidingRail.absorbEntity(pos, entity);
         } else {
-            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.5));
+            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.35));
         }
     }
 
@@ -219,11 +213,6 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
         BlockState bs = level.getBlockState(blockPos);
         level.setBlockAndUpdate(blockPos, bs.cycle(FACING));
-        return true;
-    }
-
-    @Override
-    public boolean isStickyBlock(BlockState state) {
         return true;
     }
 
@@ -249,6 +238,11 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
 
     @Override
     public boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top, Direction side) {
+        return state.getValue(POWERED) && state.getValue(FACING) == side.getOpposite();
+    }
+
+    @Override
+    public boolean canMoveSlidingToTop(LevelReader level, BlockPos pos, BlockState state, Direction side) {
         return state.getValue(POWERED) && state.getValue(FACING) == side.getOpposite();
     }
 }

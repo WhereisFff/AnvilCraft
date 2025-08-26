@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
@@ -76,11 +75,6 @@ public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerCha
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(AXIS);
-    }
-
-    @Override
-    protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return Shapes.block();
     }
 
     @Override
