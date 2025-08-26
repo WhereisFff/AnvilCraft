@@ -10,11 +10,12 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.common.util.TriState;
 import org.jetbrains.annotations.Nullable;
 
+@Getter
 public class ActivatorSlidingRailBlockEntity extends BlockEntity {
-    @Getter
-    private boolean shouldPower = false;
+    private TriState shouldPower = TriState.DEFAULT;
 
     public ActivatorSlidingRailBlockEntity(
         BlockEntityType<?> type, BlockPos pos,
@@ -31,27 +32,35 @@ public class ActivatorSlidingRailBlockEntity extends BlockEntity {
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
         CompoundTag data = super.getUpdateTag(registries);
-        data.putBoolean("ShouldPower", this.shouldPower);
+        data.putInt("ShouldPower", this.shouldPower.ordinal());
         return data;
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
-        tag.putBoolean("ShouldPower", this.shouldPower);
+        tag.putInt("ShouldPower", this.shouldPower.ordinal());
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
-        this.shouldPower = tag.getBoolean("ShouldPower");
+        this.shouldPower = TriState.values()[tag.getInt("ShouldPower")];
     }
 
-    public void shouldNotPower() {
-        this.shouldPower = false;
+    public boolean shouldPower() {
+        return this.shouldPower != TriState.FALSE;
     }
 
-    public void shouldPower() {
-        this.shouldPower = true;
+    public void stopPulse() {
+        this.shouldPower = TriState.FALSE;
+    }
+
+    public void startPulse() {
+        this.shouldPower = TriState.TRUE;
+    }
+
+    public void backToDefault() {
+        this.shouldPower = TriState.DEFAULT;
     }
 }

@@ -115,11 +115,6 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    protected VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
-        return Shapes.block();
-    }
-
-    @Override
     protected boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
@@ -170,15 +165,10 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     @Override
     public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos, boolean isMoving) {
         boolean powered = this.updatePower(level, pos, state, fromPos);
+        pushAbove:
         if (powered) {
             fromPos = pos.above();
-//            if (level.isEmptyBlock(fromPos)) {
-//                BlockPos stop = pos.relative(state.getValue(FACING).getOpposite());
-//                if (!level.getBlockState(stop).is(ModBlocks.SLIDING_RAIL_STOP) || level.isEmptyBlock(stop.above())) return;
-//                BlockState above = level.getBlockState(stop.above());
-//                level.setBlock(stop.above(), Blocks.AIR.defaultBlockState(), 0b1000011);
-//                level.setBlock(fromPos, above, 0b1000011);
-//            }
+            if (level.isEmptyBlock(fromPos)) break pushAbove;
             PistonPushInfo ppi = new PistonPushInfo(fromPos, state.getValue(FACING));
             ppi.extending = true;
             if (MOVING_PISTON_MAP.containsKey(pos)) {
@@ -215,7 +205,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         if (!state.getValue(POWERED)) {
             ISlidingRail.absorbEntity(pos, entity);
         } else {
-            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.5));
+            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.35));
         }
     }
 
@@ -223,11 +213,6 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
         BlockState bs = level.getBlockState(blockPos);
         level.setBlockAndUpdate(blockPos, bs.cycle(FACING));
-        return true;
-    }
-
-    @Override
-    public boolean isStickyBlock(BlockState state) {
         return true;
     }
 
@@ -253,6 +238,11 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
 
     @Override
     public boolean canMoveBlockToTop(LevelReader level, BlockPos pos, BlockState state, BlockState top, Direction side) {
+        return state.getValue(POWERED) && state.getValue(FACING) == side.getOpposite();
+    }
+
+    @Override
+    public boolean canMoveSlidingToTop(LevelReader level, BlockPos pos, BlockState state, Direction side) {
         return state.getValue(POWERED) && state.getValue(FACING) == side.getOpposite();
     }
 }

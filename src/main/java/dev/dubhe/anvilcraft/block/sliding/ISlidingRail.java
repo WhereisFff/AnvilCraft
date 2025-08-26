@@ -25,8 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
-import static net.minecraft.world.level.block.state.properties.BlockStateProperties.FACING;
-
 public interface ISlidingRail extends IBlockExtension {
     Map<BlockPos, PistonPushInfo> MOVING_PISTON_MAP = new HashMap<>();
 
@@ -59,9 +57,24 @@ public interface ISlidingRail extends IBlockExtension {
         return false;
     }
 
+    /**
+     * 当滑轨站尝试移动顶部滑动方块到该滑轨顶部时调用该方法。<br>
+     * 将在{@link ISlidingRail#onSlidingAbove(Level, BlockPos, BlockState, SlidingBlockEntity) onSlidingAbove()}调用。
+     *
+     * @param level 滑轨站所处的世界
+     * @param pos   滑轨方块位置
+     * @param state 滑轨方块状态
+     * @param side  滑轨站相对于滑轨的方向
+     *
+     * @return 将要滑动的方向。若为空，则不滑动。
+     */
+    default boolean canMoveSlidingToTop(LevelReader level, BlockPos pos, BlockState state, Direction side) {
+        return false;
+    }
+
     static void whenOnNeighborChange(LevelReader level, BlockPos pos, BlockPos neighbor) {
         if (!level.getBlockState(neighbor).is(Blocks.MOVING_PISTON)) return;
-        Direction dir = level.getBlockState(neighbor).getValue(FACING);
+        Direction dir = level.getBlockState(neighbor).getValue(BlockStateProperties.FACING);
         if (dir.getAxis() == Direction.Axis.Y || !neighbor.equals(pos.above())) {
             MOVING_PISTON_MAP.remove(pos);
             return;
