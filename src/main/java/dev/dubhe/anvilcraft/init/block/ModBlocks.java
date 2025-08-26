@@ -623,7 +623,7 @@ public class ModBlocks {
                 .save(provider);
         })
         .register();
-    public static final BlockEntry<? extends Block> TRANSMISSION_POLE = REGISTRATE
+    public static final BlockEntry<TransmissionPoleBlock> TRANSMISSION_POLE = REGISTRATE
         .block("transmission_pole", TransmissionPoleBlock::new)
         .initialProperties(ModBlocks.MAGNET_BLOCK)
         .properties(properties -> properties.noOcclusion().lightLevel(state -> {
