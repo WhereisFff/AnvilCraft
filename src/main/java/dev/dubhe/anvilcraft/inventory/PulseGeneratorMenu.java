@@ -60,7 +60,7 @@ public class PulseGeneratorMenu extends AbstractContainerMenu {
     }
 
     public void setOutputInvert(boolean isInvert) {
-        this.blockEntity.setOutputInvert(isInvert);
+        this.blockEntity.setOutputMode(isInvert);
     }
 
     public void addWaitingTime(int delta) {

@@ -110,6 +110,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, level, pos, oldState, isMoving);
+        if (oldState.getBlock() == state.getBlock()) return;
         this.update(level, pos, () -> state);
     }
 
@@ -218,7 +219,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
         generator.setBlockState(newState);
         level.neighborChanged(neighbourPos, state.getBlock(), pos);
         level.updateNeighborsAtExceptFromFacing(neighbourPos, state.getBlock(), direction.getOpposite());
-        if (generator.getSignalDuration() == 0 && shouldPower) {
+        if (generator.getSignalDuration() == 0) {
             level.scheduleTick(pos, this, 1, TickPriority.LOW);
         }
     }
