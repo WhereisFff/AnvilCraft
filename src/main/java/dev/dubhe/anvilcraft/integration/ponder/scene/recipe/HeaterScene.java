@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.integration.ponder.scene;
+package dev.dubhe.anvilcraft.integration.ponder.scene.recipe;
 
 
 import dev.dubhe.anvilcraft.block.HeaterBlock;
