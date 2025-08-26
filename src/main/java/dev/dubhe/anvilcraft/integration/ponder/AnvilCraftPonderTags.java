@@ -87,7 +87,6 @@ public class AnvilCraftPonderTags {
             .add(ModBlocks.REMOTE_TRANSMISSION_POLE);
 
         registryTagHelper.addToTag(LOGISTICS_COMPONENTS)
-            .add(ModBlocks.CHUTE)
-            .add(ModBlocks.SIMPLE_CHUTE);
+            .add(ModBlocks.CHUTE);
     }
 }
