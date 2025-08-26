@@ -1,0 +1,29 @@
+{
+  "parent": "anvilcraft:anvilcraft/stone_crusher",
+  "criteria": {
+    "mesh": {
+      "conditions": {
+        "id": "anvilcraft:mesh/sand"
+      },
+      "trigger": "anvilcraft:in_world_recipe"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.fossick.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "minecraft:gold_nugget"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.fossick.title"
+    }
+  },
+  "requirements": [
+    [
+      "mesh"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,5 +1,6 @@
 {
   "type": "anvilcraft:super_heating",
+  "consume": -1000,
   "ingredients": [
     {
       "count": 4,

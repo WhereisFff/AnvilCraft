@@ -1,13 +1,12 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import dev.dubhe.anvilcraft.block.state.Color;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.recipe.CementStainingRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -16,6 +15,7 @@ import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
+import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
@@ -26,6 +26,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.material.Fluid;
+import net.neoforged.neoforge.fluids.CauldronFluidContent;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -37,7 +39,7 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
     public static final int HEIGHT = 64;
 
     private final IDrawable icon;
-    private final IDrawable slot;
+    private final IDrawable slotDefault;
     private final Component title;
     private final ITickTimer anvilTimer;
     private final ITickTimer colorTimer;
@@ -49,13 +51,13 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
         icon = new DrawableBlockStateIcon(
             Blocks.ANVIL.defaultBlockState(),
             ModBlocks.CEMENT_CAULDRONS.get(Color.PINK).getDefaultState());
-        slot = helper.getSlotDrawable();
+        slotDefault = JeiRenderHelper.getSlotDefault(helper);
         title = Component.translatable("gui.anvilcraft.category.cement_staining");
         anvilTimer = helper.createTickTimer(30, 60, true);
         colorTimer = helper.createTickTimer(20 * Color.values().length, Color.values().length - 1, false);
 
-        arrowIn = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 31, 16, 8);
-        arrowOut = helper.createDrawable(TextureConstants.ANVIL_CRAFT_SPRITES, 0, 40, 16, 10);
+        arrowIn = JeiRenderHelper.getArrowInput(helper);
+        arrowOut = JeiRenderHelper.getArrowOutput(helper);
     }
 
     @Override
@@ -86,6 +88,16 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CementStainingRecipe recipe, IFocusGroup focuses) {
         JeiSlotUtil.addInputSlots(builder, recipe.ingredients());
+
+        // 将水泥锅里面的流体加入输入输出(在别处写CauldronFluidContent不保证能正常运行
+        // TODO: 等流体系统出来后可能要重写
+        if (recipe.resultBlock() != null) {
+            CauldronFluidContent cauldronFluidContent = CauldronFluidContent.getForBlock(recipe.resultBlock());
+            if (cauldronFluidContent == null) return;
+            Fluid fluid = cauldronFluidContent.fluid;
+            builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT).addFluidStack(fluid);
+            builder.addInvisibleIngredients(RecipeIngredientRole.INPUT).addFluidStack(fluid);
+        }
     }
 
     @Override
@@ -113,10 +125,10 @@ public class CementStainingCategory implements IRecipeCategory<CementStainingRec
             10,
             12,
             RenderHelper.SINGLE_BLOCK);
-        arrowIn.draw(guiGraphics, 54, 32);
-        arrowOut.draw(guiGraphics, 92, 31);
+        arrowIn.draw(guiGraphics, 54, 30);
+        arrowOut.draw(guiGraphics, 92, 29);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.ingredients().size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.ingredients().size());
 
         RenderHelper.renderBlock(guiGraphics, recipe.resultBlock().defaultBlockState(), 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
     }

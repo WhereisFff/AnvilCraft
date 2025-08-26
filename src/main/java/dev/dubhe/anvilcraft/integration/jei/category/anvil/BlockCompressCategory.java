@@ -1,13 +1,12 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
-import dev.dubhe.anvilcraft.recipe.anvil.util.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCompressRecipe;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.ITickTimer;
@@ -43,15 +42,13 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
 
-    private final IDrawable progress;
+    private final IDrawable arrowDefault;
     private final IDrawable icon;
     private final ITickTimer timer;
     private final Component title;
 
     public BlockCompressCategory(IGuiHelper helper) {
-        progress = helper.drawableBuilder(TextureConstants.PROGRESS, 0, 0, 24, 16)
-            .setTextureSize(24, 16)
-            .build();
+        arrowDefault = JeiRenderHelper.getArrowDefault(helper);
         icon = helper.createDrawableItemStack(new ItemStack(Items.ANVIL));
         title = Component.translatable("gui.anvilcraft.category.block_compress");
         timer = helper.createTickTimer(30, 60, true);
@@ -91,7 +88,7 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
                     input.getBlocks().stream().map(holder -> new ItemStack(holder.value())).toArray(ItemStack[]::new)));
         }
         builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-            .addItemStack(new ItemStack(recipe.getFirstResultBlock().getState().getBlock()));
+            .addItemStack(new ItemStack(recipe.getFirstResultBlock().state().getBlock()));
     }
 
     @Override
@@ -104,7 +101,7 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
         BlockCompressRecipe recipe = recipeHolder.value();
 
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
-        progress.draw(guiGraphics, 69, 30);
+        arrowDefault.draw(guiGraphics, 73, 35);
 
         RenderHelper.renderBlock(
             guiGraphics,
@@ -136,7 +133,7 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
             guiGraphics, Blocks.ANVIL.defaultBlockState(), 110, 30, 10, 12, RenderHelper.SINGLE_BLOCK
         );
         RenderHelper.renderBlock(
-            guiGraphics, recipe.getFirstResultBlock().getState(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK
+            guiGraphics, recipe.getFirstResultBlock().state(), 110, 40, 0, 12, RenderHelper.SINGLE_BLOCK
         );
     }
 
@@ -161,7 +158,7 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
         }
         if (mouseX >= 100 && mouseX <= 120) {
             if (mouseY >= 42 && mouseY <= 52) {
-                tooltip.add(recipe.getFirstResultBlock().getState().getBlock().getName());
+                tooltip.add(recipe.getFirstResultBlock().state().getBlock().getName());
             }
         }
     }

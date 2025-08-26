@@ -7,7 +7,7 @@ import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.util.Util;
@@ -33,7 +33,13 @@ abstract class PlayerMixin extends LivingEntity {
     }
 
     //飘升机背包飞行时无挖掘惩罚
-    @ModifyExpressionValue(method = "getDigSpeed", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;onGround()Z"))
+    @ModifyExpressionValue(
+        method = "getDigSpeed",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/player/Player;onGround()Z"
+        )
+    )
     private boolean modifyOnGround(boolean original) {
         Player player = Util.cast(this);
         boolean noDiggingPenalty = !IonoCraftBackpackItem.getByPlayer(player).isEmpty() && player.getAbilities().flying;
@@ -46,15 +52,16 @@ abstract class PlayerMixin extends LivingEntity {
             && Util.instanceOfAny(falling.getBlockState().getBlock(), EmberAnvilBlock.class, TranscendenceAnvilBlock.class)
             && !this.level().isClientSide
         ) {
-            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer((ServerLevel) this.level());
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer((ServerLevel) this.level());
             this.lastHurtByPlayer = killer;
             this.lastHurtByPlayerTime = 1;
             killerRef.set(killer);
             DamageSource source = new DamageSource(
                 this.level().damageSources().playerAttack(killer).typeHolder(),
-                falling, killer, value.getSourcePosition());
+                falling, killer, value.getSourcePosition()
+            );
             if (falling.getBlockState().getBlock() instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5((ServerLevel) this.level(), killer);
+                AnvilCraftFakePlayers.anvilcraftKiller.enableLooting5((ServerLevel) this.level(), killer);
             }
             return source;
         }
@@ -64,14 +71,18 @@ abstract class PlayerMixin extends LivingEntity {
     @Inject(method = "die", at = @At("RETURN"))
     private void disableKiller(DamageSource cause, CallbackInfo ci, @Share("killer") LocalRef<ServerPlayer> killerRef) {
         if (killerRef.get() == null) return;
-        AnvilCraftFakePlayers.anvilCraftKiller.disable(killerRef.get());
+        AnvilCraftFakePlayers.anvilcraftKiller.disable(killerRef.get());
     }
 
     @ModifyReturnValue(method = "isScoping", at = @At("RETURN"))
     private boolean isScoping(boolean original) {
         return this.isUsingItem()
-            && (this.getUseItem().is(Items.SPYGLASS)
-            || (this.getUseItem().is(ModItems.MULTITOOL_ITEM)
-            && MultitoolItem.getMode(this.getUseItem()) == MultitoolItem.SPYGLASS_MODE));
+               && (
+                   this.getUseItem().is(Items.SPYGLASS)
+                   || (
+                       this.getUseItem().is(ModItems.MULTITOOL_ITEM)
+                       && MultitoolItem.getMode(this.getUseItem()) == MultitoolItem.SPYGLASS_MODE
+                   )
+               );
     }
 }

@@ -3,12 +3,13 @@ package dev.dubhe.anvilcraft.recipe.anvil.util;
 import com.google.common.collect.AbstractIterator;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.util.CodecUtil;
+import dev.anvilcraft.lib.util.CodecUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * 距离定义类
@@ -74,7 +75,7 @@ public record Distance(Type type, int distance, boolean isHorizontal) {
                 private int z = -distance - 1;
 
                 @Override
-                protected BlockPos computeNext() {
+                protected @Nullable BlockPos computeNext() {
                     while (x <= distance) {
                         while (y <= distance) {
                             while (++z <= distance) {
@@ -94,7 +95,8 @@ public record Distance(Type type, int distance, boolean isHorizontal) {
             case MANHATTAN -> BlockPos.withinManhattan(center, this.distance, this.distance, this.distance);
             case CHEBYSHEV -> BlockPos.betweenClosed(
                 center.offset(-this.distance, -this.distance, -this.distance),
-                center.offset(this.distance, this.distance, this.distance));
+                center.offset(this.distance, this.distance, this.distance)
+            );
         };
     }
 

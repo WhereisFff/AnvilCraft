@@ -5,6 +5,11 @@
 	"sortnum": 5001,
     "pages": [
         {
+            "type": "patchouli:text",
+            "text": "$(l:machine/resources_access#1) 1.丐中丐刷铁机$()$(br)$(l:machine/resources_access#2) 2.简易刷石机$()$(br)$(l:machine/resources_access#3) 3.极简三模式砸沙机$()$(br)$(l:machine/resources_access#4) 4.极简盾构机$()$(br)$(l:machine/resources_access#5) 5.更大更强的盾构机$()$(br)$(l:machine/resources_access#6) 6.激光挖矿机$()$(br)$(l:machine/resources_access#7) 7.极简巨型铁砧树场$()$(br)$(l:machine/resources_access#8) 8.进阶高效率树场$()",
+            "title":"目录"
+        },
+        {
 			"type": "patchouli:text",
             "text": "铁砧、铁工具、铁装备、铁锅……有$(5)这么多东西需要铁$()，显而易见的，你不能总靠下矿洞挖矿来获取它们。正确的做法是建造一台$(thing)刷铁机$()。$(br2)放过可爱的村民吧！铁砧工艺提供了一种更高效的刷铁方案——$(thing)铁砧抢夺$()，当$(5)足够高的铁砧$()砸到铁傀儡时会掉一些铁，而你可以通过发射器将一部分铁来$(5)修复受伤的铁傀儡$()，从而在一只铁傀儡身上得到无限的铁！",
 			"title":"自动获取铁"
@@ -12,6 +17,7 @@
 		{
             "type": "patchouli:multiblock",
             "name": "铁砧抢夺刷铁机——底部",
+            "anchor": "1",
 			"multiblock": {
 				"mapping": {
 					"A": "minecraft:smooth_stone",
@@ -103,7 +109,8 @@
 		{
             "type": "patchouli:text",
             "text": "或许有了铁的你还在为建筑方块烦恼，毕竟不管是去干什么，垫脚方块是少不了的，一台$(thing)刷石机$()可以解决这一难题。$(br2)铁砧工艺提供了新的$(thing)刷石机$()制作方法——$(thing)下落的铁砧$()砸到$(item)切石机$()上方的方块时会$(n)$(5)破坏$()它。这里的铁砧起到了$(thing)原版刷石机$()中$(item)TNT$()的作用，但它更安全可控，同时有着不俗的效率。",
-			"title": "获取圆石"
+			"title": "获取圆石",
+            "anchor": "2"
         },
 		{
             "type": "patchouli:multiblock",
@@ -154,7 +161,8 @@
 		{
             "type": "patchouli:text",
             "text": "$(br2)和刷石机一样的结构，只要稍微改造一下就能用来砸沙砾和沙子了。$(br2)请看接下来这台三模式砸沙机，你可以控制拉杆切换产出圆石、沙砾还是沙子。",
-			"title": "获取沙砾和沙子"
+			"title": "获取沙砾和沙子",
+            "anchor": "3"
         },
 		{
             "type": "patchouli:multiblock",
@@ -203,7 +211,7 @@
         },
 		{
             "type": "patchouli:text",
-            "text": "面朝磁铁的脉冲发生器设置为$(5)循环模式$()，每$(5)间隔10gt$()发出$(5)长度5gt$()的信号。$(br2)背对磁铁的脉冲发生器设置为$(5)上升沿模式$()吗，$(5)延迟5gt$()发出$(5)长度17gt$()的信号。",
+            "text": "$(br2)面朝磁铁的脉冲发生器设置为$(5)循环模式$()，每$(5)间隔10gt$()发出$(5)长度5gt$()的信号。$(br2)背对磁铁的脉冲发生器设置为$(5)上升沿模式$()吗，$(5)延迟6gt$()发出$(5)长度17gt$()的信号。",
 			"title": "脉冲发生器的设置"
         },
 		{
@@ -215,7 +223,8 @@
 		{
             "type": "patchouli:text",
             "text": "$(thing)盾构机$()是一种破坏前方方块，同时自身不断前进，从而方便的制造一条隧道的机器。$(item)方块吞噬器$()可以迅速精准的破坏前方一大片的方块，因此可以用来制作$(thing)盾构机$()。在这里给出一种简单的$(thing)盾构机$()的示例，通过红石激活$(item)方块吞噬器$()，不断破坏掉前方3x3范围的方块。$(br2)你可以在$(thing)盾构机$()开掘出的隧道中修建交通，或者挖矿，这都很好不是吗？",
-			"title": "开凿隧道"
+			"title": "开凿隧道",
+            "anchor": "4"
         },
 		{
             "type": "patchouli:multiblock",
@@ -243,7 +252,8 @@
 		{
             "type": "patchouli:text",
             "text": "你也可以尝试通过控制铁砧下落撞击$(item)方块吞噬器$()，来挖掘更大的隧道。$(br2)从$(n)$(5)1格高$()落下的铁砧会使被砸到的$(item)方块吞噬器$()挖掘前方$(n)$(5)5x5$()的方块，而从$(n)$(5)2格高$()落下的铁砧将可以让$(item)方块吞噬器$()挖掉$(n)$(5)7x7$()的超大范围。$(br2)这里给出一种简单的思路来挖掘一条截面$(n)$(5)7x7$()的宽敞隧道！",
-			"title": "更大，更高！"
+			"title": "更大，更高！",
+            "anchor": "5"
         },
 		{
             "type": "patchouli:multiblock",
@@ -277,7 +287,8 @@
 		{
             "type": "patchouli:text",
             "text": "激光可以用来挖矿？这真的很神奇。想要了解如何使用$(thing)激光挖矿$()，前面的章节有详细的解释。想要用$(thing)激光挖矿$()，你需要先搭建一台$(n)$(thing)激光挖矿机$()。$(br2)考虑到这台机器$(5)较高的电力消耗$()和$(5)大量的红宝石$()需求，在建造之前，你至少需要先完成$(l:machine/automation)自动化$()章节中$(l:machine/automation#自动宝石转化 1)宝石转化机$()和$(l:machine/electricity_generation)发电$()章节中$(l:machine/electricity_generation#发电量升级 2)幻灵堆叠发电机$()的搭建。$(br2)不过不用担心，这台机器相比起那两个可谓是十分简单。",
-			"title": "激光挖矿"
+			"title": "激光挖矿",
+            "anchor": "6"
         },
 		{
             "type": "patchouli:multiblock",
@@ -322,7 +333,8 @@
 		{
             "type": "patchouli:text",
             "text": "$(br2)想要取之不尽用之不竭的木材吗？如果你已经看过$(l:machine/automation)自动化$()章节最后的$(l:machine/automation#原木钻石机)原木钻石机$()，你一定知道了在铁砧工艺中木材可以加工成钻石。$(br2)建造这样一台$(thing)巨型铁砧树场$()，原木就能源源不断进入箱子，并且不消耗骨粉。",
-			"title": "获得木材"
+			"title": "获得木材",
+            "anchor": "7"
         },
 		{	
 			"type": "patchouli:multiblock",
@@ -403,6 +415,7 @@
 		{	
 			"type": "patchouli:multiblock",
 			"name": "树场进阶",
+            "anchor": "8",
 			"multiblock": {
 				"mapping": {
 					"=": "anvilcraft:magnet_block[lit=false]",

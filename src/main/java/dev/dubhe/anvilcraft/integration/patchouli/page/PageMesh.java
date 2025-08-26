@@ -2,11 +2,11 @@ package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -50,17 +50,17 @@ public class PageMesh extends PageDoubleRecipeRegistry<MeshRecipe> {
 
         List<ChanceItemStack> results = recipe.getResultItems();
         if (results.size() <= 5) {
-            PatchouliRenderHelper.render1x5(graphics, recipeX - 1, recipeY + 29);
+            PatchouliRenderHelper.render1x5(graphics, recipeX - 1, recipeY + 38);
             for (int i = 0; i < results.size(); i++) {
-                parent.renderItemStack(graphics, recipeX + 3 + i * 19, recipeY + 42, mouseX, mouseY, results.get(i).getStack());
+                parent.renderItemStack(graphics, recipeX + 3 + i * 19, recipeY + 42, mouseX, mouseY, results.get(i).stack());
             }
         } else if (results.size() <= 8) {
             PatchouliRenderHelper.render2x5(graphics, recipeX - 1, recipeY + 29);
             for (int i = 0; i < 5; i++) {
-                parent.renderItemStack(graphics, recipeX + 3 + i * 19, recipeY + 33, mouseX, mouseY, results.get(i).getStack());
+                parent.renderItemStack(graphics, recipeX + 3 + i * 19, recipeY + 33, mouseX, mouseY, results.get(i).stack());
             }
             for (int i = 0; i < results.size() - 5; i++) {
-                parent.renderItemStack(graphics, recipeX + 3 + i * 19, recipeY + 52, mouseX, mouseY, results.get(i + 5).getStack());
+                parent.renderItemStack(graphics, recipeX + 3 + i * 19, recipeY + 52, mouseX, mouseY, results.get(i + 5).stack());
             }
         }
     }

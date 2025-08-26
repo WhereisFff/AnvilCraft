@@ -7,6 +7,6 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Screen.class)
 public interface ScreenAccessor {
-    @Accessor("font")
-    Font anvilcraft$getFont();
+    @Accessor
+    Font getFont();
 }

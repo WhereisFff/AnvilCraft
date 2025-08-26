@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -21,7 +21,8 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
-public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImpl implements ClientGamePacketListener, TickablePacketListener {
+public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImpl
+    implements ClientGamePacketListener, TickablePacketListener {
     @Shadow
     private ClientLevel level;
 
@@ -40,14 +41,32 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
         switch (packet.getEventId()) {
             case 36:
                 this.minecraft.particleEngine.createTrackingEmitter(entity, ParticleTypes.TOTEM_OF_UNDYING, 30);
-                this.level.playLocalSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.TOTEM_USE, entity.getSoundSource(), 1.0F, 1.0F, false);
+                this.level.playLocalSound(
+                    entity.getX(),
+                    entity.getY(),
+                    entity.getZ(),
+                    SoundEvents.TOTEM_USE,
+                    entity.getSoundSource(),
+                    1.0F,
+                    1.0F,
+                    false
+                );
                 if (entity == this.minecraft.player) {
                     this.minecraft.gameRenderer.displayItemActivation(ModItems.TOTEM_OF_RECOVERY.asStack());
                 }
                 break;
             case 37:
                 this.minecraft.particleEngine.createTrackingEmitter(entity, ParticleTypes.TOTEM_OF_UNDYING, 30);
-                this.level.playLocalSound(entity.getX(), entity.getY(), entity.getZ(), SoundEvents.TOTEM_USE, entity.getSoundSource(), 1.0F, 1.0F, false);
+                this.level.playLocalSound(
+                    entity.getX(),
+                    entity.getY(),
+                    entity.getZ(),
+                    SoundEvents.TOTEM_USE,
+                    entity.getSoundSource(),
+                    1.0F,
+                    1.0F,
+                    false
+                );
                 if (entity == this.minecraft.player) {
                     this.minecraft.gameRenderer.displayItemActivation(ModItems.TOTEM_OF_RAGE.asStack());
                 }

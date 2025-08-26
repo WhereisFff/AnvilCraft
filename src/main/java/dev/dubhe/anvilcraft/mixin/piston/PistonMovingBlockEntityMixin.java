@@ -1,14 +1,14 @@
 package dev.dubhe.anvilcraft.mixin.piston;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import dev.dubhe.anvilcraft.api.injection.block.entity.IPistonMovingBlockEntityExtension;
 import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
-import dev.dubhe.anvilcraft.util.mixin.magic.PistonMovingBlockEntityInjector;
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.piston.PistonMovingBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PistonMovingBlockEntity.class)
-abstract class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityInjector {
+abstract class PistonMovingBlockEntityMixin implements IPistonMovingBlockEntityExtension {
     @Shadow
     private BlockState movedState;
     @Unique
@@ -31,7 +31,7 @@ abstract class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityIn
     }
 
     @Override
-    public void anvilcraft$setData(CompoundTag nbt) {
+    public void anvilcraft$setData(@Nullable CompoundTag nbt) {
         if (nbt == null) return;
         this.anvilcraft$nbt.merge(nbt);
     }
@@ -51,7 +51,7 @@ abstract class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityIn
         )
     )
     private static void tick(
-        @NotNull Level level,
+        Level level,
         BlockPos pos,
         BlockState state,
         PistonMovingBlockEntity blockEntity,
@@ -59,8 +59,12 @@ abstract class PistonMovingBlockEntityMixin implements PistonMovingBlockEntityIn
         @Local(ordinal = 1) BlockState moveState
     ) {
         if (level.isClientSide()) return;
-        if (!(blockEntity instanceof PistonMovingBlockEntityInjector blockEntity1)) return;
+        //noinspection ConstantValue
+        if (!(blockEntity instanceof IPistonMovingBlockEntityExtension blockEntity1)) return;
         if (!(moveState.getBlock() instanceof IMoveableEntityBlock entityBlock)) return;
-        entityBlock.setData(level, pos, blockEntity1.anvilcraft$clearData());
+        CompoundTag tag = blockEntity1.anvilcraft$clearData();
+        if (tag != null) {
+            entityBlock.setData(level, pos, tag);
+        }
     }
 }

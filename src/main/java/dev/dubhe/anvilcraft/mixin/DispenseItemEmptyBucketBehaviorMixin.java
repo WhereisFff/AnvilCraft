@@ -1,9 +1,12 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
+import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.Cow;
 import net.minecraft.world.entity.animal.goat.Goat;
@@ -14,7 +17,6 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -26,16 +28,18 @@ import java.util.List;
 abstract class DispenseItemEmptyBucketBehaviorMixin extends DefaultDispenseItemBehavior {
     @Inject(
         method = "execute(Lnet/minecraft/core/dispenser/BlockSource;Lnet/minecraft/world/item/ItemStack;)"
-            + "Lnet/minecraft/world/item/ItemStack;",
+                 + "Lnet/minecraft/world/item/ItemStack;",
         at = @At(
             value = "INVOKE",
             target = "Lnet/minecraft/core/dispenser/DefaultDispenseItemBehavior;"
-                + "execute(Lnet/minecraft/core/dispenser/BlockSource;Lnet/minecraft/world/item/ItemStack;)"
-                + "Lnet/minecraft/world/item/ItemStack;",
-            ordinal = 1),
+                     + "execute(Lnet/minecraft/core/dispenser/BlockSource;Lnet/minecraft/world/item/ItemStack;)"
+                     + "Lnet/minecraft/world/item/ItemStack;",
+            ordinal = 1
+        ),
         cancellable = true
     )
-    public void takeMilkFromCow(@NotNull BlockSource source, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
+    @SuppressWarnings("resource")
+    public void takeMilkFromCow(BlockSource source, ItemStack stack, CallbackInfoReturnable<ItemStack> cir) {
         BlockPos blockPos = source.pos().relative(source.state().getValue(DispenserBlock.FACING));
         ServerLevel level = source.level();
         ServerLevel levelAccessor = source.level();
@@ -48,6 +52,11 @@ abstract class DispenseItemEmptyBucketBehaviorMixin extends DefaultDispenseItemB
         if (cows.isEmpty() && goats.isEmpty()) return;
         levelAccessor.gameEvent(null, GameEvent.FLUID_PICKUP, blockPos);
         Item item = Items.MILK_BUCKET;
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, blockPos, 5)) {
+                ModCriterionTriggers.MILK.get().trigger(player);
+            }
+        }
         cir.setReturnValue(
             this.consumeWithRemainder(
                 source,

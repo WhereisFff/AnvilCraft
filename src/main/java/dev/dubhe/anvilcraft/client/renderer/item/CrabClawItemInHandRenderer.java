@@ -21,11 +21,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class CrabClawItemInHandRenderer extends AbstractItemInHandRenderer {
 
     @Unique
-    private static final ModelResourceLocation anvilCraft$HOLDING_ITEM =
+    private static final ModelResourceLocation anvilcraft$HOLDING_ITEM =
         ModelResourceLocation.standalone(AnvilCraft.of("item/crab_claw_holding_item"));
 
     @Unique
-    private static final ModelResourceLocation anvilCraft$HOLDING_BLOCK =
+    private static final ModelResourceLocation anvilcraft$HOLDING_BLOCK =
         ModelResourceLocation.standalone(AnvilCraft.of("item/crab_claw_holding_block"));
 
     protected CrabClawItemInHandRenderer(ItemRenderer itemRenderer, IItemRenderer iItemRenderer) {
@@ -97,7 +97,7 @@ public class CrabClawItemInHandRenderer extends AbstractItemInHandRenderer {
             this.itemRenderer
                 .getItemModelShaper()
                 .getModelManager()
-                .getModel(isBlockItem ? anvilCraft$HOLDING_BLOCK : anvilCraft$HOLDING_ITEM)
+                .getModel(isBlockItem ? anvilcraft$HOLDING_BLOCK : anvilcraft$HOLDING_ITEM)
         );
         if (isBlockItem) {
             poseStack.mulPose(Axis.YP.rotationDegrees(60f * i));

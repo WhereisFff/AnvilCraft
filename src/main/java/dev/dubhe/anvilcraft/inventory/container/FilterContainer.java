@@ -1,9 +1,10 @@
 package dev.dubhe.anvilcraft.inventory.container;
 
-import dev.dubhe.anvilcraft.api.item.property.FilterContent;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
@@ -20,7 +21,8 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 public class FilterContainer implements Container {
-    private final FilterContent content;
+    @Setter
+    private FilterContent content;
     private final Player player;
     private final int position;
     private final ItemStack stack;
@@ -41,7 +43,7 @@ public class FilterContainer implements Container {
 
     @Override
     public int getContainerSize() {
-        return content.getList().size();
+        return content.list().size();
     }
 
     @Override
@@ -51,7 +53,7 @@ public class FilterContainer implements Container {
 
     @Override
     public ItemStack getItem(int slot) {
-        return content.getList().get(slot);
+        return content.list().get(slot);
     }
 
     @Override
@@ -66,7 +68,7 @@ public class FilterContainer implements Container {
 
     @Override
     public void setItem(int slot, ItemStack stack) {
-        content.getList().set(slot, stack);
+        content.list().set(slot, stack);
     }
 
     @Override
@@ -86,5 +88,21 @@ public class FilterContainer implements Container {
     @OnlyIn(Dist.CLIENT)
     public void sync() {
         PacketDistributor.sendToServer(new FilterContentSyncPacket(position, content));
+    }
+
+    public boolean includeComponents() {
+        return this.getContent().includeComponents();
+    }
+
+    public boolean blackList() {
+        return this.getContent().blackList();
+    }
+
+    public void setIncludeComponents(boolean includeComponents) {
+        this.setContent(this.getContent().setIncludeComponents(includeComponents));
+    }
+
+    public void setBlackList(boolean blackList) {
+        this.setContent(this.getContent().setBlackList(blackList));
     }
 }

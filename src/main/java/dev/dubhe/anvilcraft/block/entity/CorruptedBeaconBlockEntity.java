@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.block.entity;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformInput;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformWithItemRecipe;
@@ -38,7 +38,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.AABB;
-import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
@@ -54,11 +53,7 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
     int levels;
     private int lastCheckY;
 
-    public static @NotNull CorruptedBeaconBlockEntity createBlockEntity(
-        BlockEntityType<?> type,
-        BlockPos pos,
-        BlockState blockState
-    ) {
+    public static CorruptedBeaconBlockEntity createBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         return new CorruptedBeaconBlockEntity(type, pos, blockState);
     }
 
@@ -71,52 +66,57 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
     }
 
     /**
-     * tick 逻辑
+     * 腐化信标方块实体的tick逻辑，用于处理信标光柱的渲染和效果应用
+     *
+     * @param level       方块所在的世界
+     * @param pos         方块的位置
+     * @param state       方块的状态
+     * @param blockEntity 被tick的方块实体
      */
     @SuppressWarnings("unused")
-    public static void tick(
-        Level pLevel,
-        BlockPos pPos,
-        BlockState pState,
-        CorruptedBeaconBlockEntity pBlockEntity
-    ) {
-        int i = pPos.getX();
-        int j = pPos.getY();
-        int k = pPos.getZ();
+    public static void tick(Level level, BlockPos pos, BlockState state, CorruptedBeaconBlockEntity blockEntity) {
+        int posX = pos.getX();
+        int posY = pos.getY();
+        int posZ = pos.getZ();
         BlockPos blockpos;
-        if (pBlockEntity.lastCheckY < j) {
-            blockpos = pPos;
-            pBlockEntity.checkingBeamSections = Lists.newArrayList();
-            pBlockEntity.lastCheckY = pPos.getY() - 1;
+        // 初始化光柱检查位置
+        if (blockEntity.lastCheckY < posY) {
+            blockpos = pos;
+            blockEntity.checkingBeamSections = Lists.newArrayList();
+            blockEntity.lastCheckY = pos.getY() - 1;
         } else {
-            blockpos = new BlockPos(i, pBlockEntity.lastCheckY + 1, k);
+            blockpos = new BlockPos(posX, blockEntity.lastCheckY + 1, posZ);
         }
 
-        BeaconBeamSection beamSection = pBlockEntity.checkingBeamSections.isEmpty()
-            ? null
-            : pBlockEntity.checkingBeamSections.getLast();
-        int l = pLevel.getHeight(Heightmap.Types.WORLD_SURFACE, i, k);
+        // 获取当前正在检查的光柱段
+        BeaconBeamSection beamSection = blockEntity.checkingBeamSections.isEmpty() ? null : blockEntity.checkingBeamSections.getLast();
+        // 获取地表高度
+        int height = level.getHeight(Heightmap.Types.WORLD_SURFACE, posX, posZ);
 
-        for (int i1 = 0; i1 < 10 && blockpos.getY() <= l; i1++) {
-            BlockState blockstate = pLevel.getBlockState(blockpos);
-            Integer j1 = blockstate.getBeaconColorMultiplier(pLevel, blockpos, pPos);
-            if (j1 != null) {
-                if (pBlockEntity.checkingBeamSections.size() <= 1) {
+        // 检查上方方块以构建光柱
+        for (int i = 0; i < 10 && blockpos.getY() <= height; i++) {
+            BlockState blockstate = level.getBlockState(blockpos);
+            // 获取方块的信标颜色乘数
+            Integer colorMultiplier = blockstate.getBeaconColorMultiplier(level, blockpos, pos);
+            if (colorMultiplier != null) {
+                // 如果当前检查的光柱段为空或只有一段，则创建新的光柱段
+                if (blockEntity.checkingBeamSections.size() <= 1) {
                     beamSection = new BeaconBeamSection(0xDF101010);
-                    pBlockEntity.checkingBeamSections.add(beamSection);
+                    blockEntity.checkingBeamSections.add(beamSection);
                 } else if (beamSection != null) {
-                    if (j1 == beamSection.color) {
+                    // 根据颜色是否相同决定是增加高度还是创建新的光柱段
+                    if (colorMultiplier == beamSection.color) {
                         beamSection.increaseHeight();
                     } else {
-                        beamSection = new BeaconBeamSection(FastColor.ARGB32.average(beamSection.color, j1));
-                        pBlockEntity.checkingBeamSections.add(beamSection);
+                        beamSection = new BeaconBeamSection(FastColor.ARGB32.average(beamSection.color, colorMultiplier));
+                        blockEntity.checkingBeamSections.add(beamSection);
                     }
                 }
             } else {
-                if (beamSection == null
-                    || blockstate.getLightBlock(pLevel, blockpos) >= 15 && !blockstate.is(Blocks.BEDROCK)) {
-                    pBlockEntity.checkingBeamSections.clear();
-                    pBlockEntity.lastCheckY = l;
+                // 如果当前方块会阻挡光柱且不是基岩，则清空光柱段
+                if (beamSection == null || blockstate.getLightBlock(level, blockpos) >= 15 && !blockstate.is(Blocks.BEDROCK)) {
+                    blockEntity.checkingBeamSections.clear();
+                    blockEntity.lastCheckY = height;
                     break;
                 }
 
@@ -124,42 +124,58 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
             }
 
             blockpos = blockpos.above();
-            pBlockEntity.lastCheckY++;
+            blockEntity.lastCheckY++;
         }
 
-        int k1 = pBlockEntity.levels;
-        if (pLevel.getGameTime() % 80L == 0L) {
-            if (!pBlockEntity.beamSections.isEmpty()) {
-                pBlockEntity.levels = updateBase(pLevel, i, j, k);
+        // 保存当前信标等级
+        int lastLevel = blockEntity.levels;
+
+        // 每 80 tick 检查一次信标光柱状态是否正确
+        if (level.getGameTime() % 80L == 0L) {
+            if (!blockEntity.beamSections.isEmpty()) {
+                blockEntity.levels = CorruptedBeaconBlockEntity.updateBase(level, posX, posY, posZ);
             }
 
-            if (pBlockEntity.levels > 0 && !pBlockEntity.beamSections.isEmpty()) {
-                playSound(pLevel, pPos, SoundEvents.BEACON_AMBIENT);
-                CorruptedBeaconBlockEntity.affectEntities(pLevel, pPos);
+            // 如果信标有效且有光柱，则播放音效并影响实体
+            if (blockEntity.levels > 0 && !blockEntity.beamSections.isEmpty()) {
+                CorruptedBeaconBlockEntity.playSound(level, pos, SoundEvents.BEACON_AMBIENT);
+                CorruptedBeaconBlockEntity.affectEntities(level, pos);
             }
         }
 
-        if (pBlockEntity.lastCheckY >= l) {
-            pBlockEntity.lastCheckY = pLevel.getMinBuildHeight() - 1;
-            boolean flag = k1 > 0;
-            pBlockEntity.beamSections = pBlockEntity.checkingBeamSections;
-            if (!pLevel.isClientSide) {
-                boolean flag1 = pBlockEntity.levels > 0;
-                if (!flag && flag1) {
-                    playSound(pLevel, pPos, SoundEvents.BEACON_ACTIVATE);
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(CorruptedBeaconBlock.LIT, true));
-
-                    for (ServerPlayer serverplayer : pLevel.getEntitiesOfClass(
-                        ServerPlayer.class,
-                        new AABB(i, j, k, i, j - 4, k).inflate(10.0, 5.0, 10.0))
-                    ) {
-                        CriteriaTriggers.CONSTRUCT_BEACON.trigger(serverplayer, pBlockEntity.levels);
-                    }
-                } else if (flag && !flag1) {
-                    playSound(pLevel, pPos, SoundEvents.BEACON_DEACTIVATE);
-                    pLevel.setBlockAndUpdate(pPos, pState.setValue(CorruptedBeaconBlock.LIT, false));
+        // 如果已完成光柱检查
+        if (blockEntity.lastCheckY >= height) {
+            blockEntity.lastCheckY = level.getMinBuildHeight() - 1;
+            blockEntity.beamSections = blockEntity.checkingBeamSections;
+            if (!level.isClientSide) {
+                boolean lastHasLevel = lastLevel > 0;
+                boolean shouldLit = blockEntity.levels > 0 && !blockEntity.beamSections.isEmpty();
+                // 根据信标状态变化播放相应的音效和更新方块状态
+                if (!lastHasLevel && shouldLit) {
+                    CorruptedBeaconBlockEntity.setBeaconStatus(level, pos, state, blockEntity, true);
+                } else if (lastHasLevel && !shouldLit) {
+                    blockEntity.levels = 0;
+                    CorruptedBeaconBlockEntity.setBeaconStatus(level, pos, state, blockEntity, false);
                 }
             }
+        }
+    }
+
+    public static void setBeaconStatus(Level level, BlockPos pos, BlockState state, CorruptedBeaconBlockEntity entity, boolean status) {
+        level.setBlockAndUpdate(pos, state.setValue(CorruptedBeaconBlock.LIT, status));
+
+        if (status) {
+            CorruptedBeaconBlockEntity.playSound(level, pos, SoundEvents.BEACON_ACTIVATE);
+            List<ServerPlayer> players = level.getEntitiesOfClass(
+                ServerPlayer.class,
+                new AABB(pos).inflate(0.0, -4.0, 0.0).inflate(10.0, 5.0, 10.0)
+            );
+            // 触发成就
+            for (ServerPlayer serverplayer : players) {
+                CriteriaTriggers.CONSTRUCT_BEACON.trigger(serverplayer, entity.levels);
+            }
+        } else {
+            CorruptedBeaconBlockEntity.playSound(level, pos, SoundEvents.BEACON_DEACTIVATE);
         }
     }
 
@@ -192,11 +208,11 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
 
     private static void tryTransformEntity(LivingEntity livingEntity, ServerLevel level, RecipeManager manager) {
         MobTransformInput input = MobTransformInput.of(livingEntity);
-        Optional<RecipeHolder<MobTransformRecipe>> optionalRecipeHolder =
-            manager.getRecipeFor(ModRecipeTypes.MOB_TRANSFORM_TYPE.get(), input, level);
+        Optional<RecipeHolder<MobTransformRecipe>> optionalRecipeHolder = manager.getRecipeFor(
+            ModRecipeTypes.MOB_TRANSFORM_TYPE.get(), input, level);
         MobTransformWithItemRecipe.Input input2 = MobTransformWithItemRecipe.Input.of(livingEntity);
-        Optional<RecipeHolder<MobTransformWithItemRecipe>> optionalRecipeHolder2 =
-            manager.getRecipeFor(ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_TYPE.get(), input2, level);
+        Optional<RecipeHolder<MobTransformWithItemRecipe>> optionalRecipeHolder2 = manager.getRecipeFor(
+            ModRecipeTypes.MOB_TRANSFORM_WITH_ITEM_TYPE.get(), input2, level);
         Entity result = null;
         boolean noItemFlag = true;
         if (optionalRecipeHolder2.isPresent()) {
@@ -225,27 +241,20 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         }
     }
 
-    private static void affectEntities(@NotNull Level level, BlockPos pos) {
+    private static void affectEntities(Level level, BlockPos pos) {
         if (level.isClientSide) return;
         AABB aabb = new AABB(pos).expandTowards(0.0, level.getHeight(), 0.0);
         List<LivingEntity> list = level.getEntitiesOfClass(LivingEntity.class, aabb);
         if (list.isEmpty()) return;
         RecipeManager manager = Objects.requireNonNull(level.getServer()).getRecipeManager();
         for (LivingEntity livingEntity : list) {
-            livingEntity.addEffect(
-                new MobEffectInstance(
-                    MobEffects.WITHER,
-                    120,
-                    0,
-                    true,
-                    true
-                )
-            );
+            if (!livingEntity.isAlive()) return;
+            livingEntity.addEffect(new MobEffectInstance(MobEffects.WITHER, 120, 0, true, true));
             tryTransformEntity(livingEntity, (ServerLevel) level, manager);
         }
     }
 
-    public static void playSound(@NotNull Level level, BlockPos pos, SoundEvent sound) {
+    public static void playSound(Level level, BlockPos pos, SoundEvent sound) {
         level.playSound(null, pos, sound, SoundSource.BLOCKS, 1.0f, 1.0f);
     }
 
@@ -258,12 +267,12 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
     }
 
     @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider pRegistries) {
-        return this.saveWithoutMetadata(pRegistries);
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
     }
 
     @Override
-    public void setLevel(@NotNull Level level) {
+    public void setLevel(Level level) {
         super.setLevel(level);
         this.lastCheckY = level.getMinBuildHeight() - 1;
     }
@@ -273,8 +282,8 @@ public class CorruptedBeaconBlockEntity extends BlockEntity {
         final int color;
         private int height;
 
-        public BeaconBeamSection(int pColor) {
-            this.color = pColor;
+        public BeaconBeamSection(int color) {
+            this.color = color;
             this.height = 1;
         }
 

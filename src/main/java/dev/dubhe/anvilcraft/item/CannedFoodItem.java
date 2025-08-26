@@ -1,8 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.item.IExtraItemDisplay;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.item.property.component.StoredItem;
 import lombok.Getter;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.component.DataComponents;
@@ -46,26 +47,29 @@ public class CannedFoodItem extends Item implements IExtraItemDisplay {
         FoodProperties copiedFood = displayStack.getFoodProperties(null);
         if (copiedFood != null) {
             int nutrition = copiedFood.nutrition();
-            int foodNutrition = switch (foodStack.getCount()) {
-                case 1 -> nutrition;
-                case 2 -> (int) (nutrition * 1.8);
-                case 3 -> (int) (nutrition * 2.4);
-                case 4 -> (int) (nutrition * 2.8);
-                case 5 -> nutrition * 3;
+            float magnification = switch (foodStack.getCount()) {
+                case 1 -> 1;
+                case 2 -> 1.8f;
+                case 3 -> 2.4f;
+                case 4 -> 2.8f;
+                case 5 -> 3;
                 default -> throw new IndexOutOfBoundsException(foodStack.getCount());
             };
-            canStack.set(DataComponents.FOOD, new FoodProperties.Builder()
-                .nutrition(foodNutrition)
-                .saturationModifier(copiedFood.saturation() / (foodNutrition * 2.0f))
-                .fast()
-                .build());
+            canStack.set(DataComponents.FOOD, new FoodProperties(
+                (int) (nutrition * magnification),
+                copiedFood.saturation() * magnification,
+                false,
+                0.8f,
+                Optional.empty(),
+                List.of()
+            ));
         }
         return canStack;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        StoredItem foodInfo = stack.getOrDefault(ModComponents.DISPLAY_ITEM, new IExtraItemDisplay.StoredItem(ItemStack.EMPTY));
+        StoredItem foodInfo = stack.getOrDefault(ModComponents.DISPLAY_ITEM, new StoredItem(ItemStack.EMPTY));
         ItemStack food = foodInfo.stored();
         if (!food.isEmpty()) {
             if (food.getCount() == 1) {

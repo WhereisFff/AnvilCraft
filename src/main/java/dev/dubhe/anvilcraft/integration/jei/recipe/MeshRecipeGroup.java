@@ -3,12 +3,12 @@ package dev.dubhe.anvilcraft.integration.jei.recipe;
 import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Multimap;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.util.NumberProviderUtil;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.dubhe.anvilcraft.util.RecipeUtil;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
@@ -45,10 +45,10 @@ public record MeshRecipeGroup(ItemIngredientPredicate ingredient, List<Result> r
 
             for (MeshRecipe recipe : values) {
                 for (ChanceItemStack stack : recipe.getResultItems()) {
-                    int resultCount = stack.getCount() instanceof ConstantValue(float value)
+                    int resultCount = stack.count() instanceof ConstantValue(float value)
                         ? Math.round(value)
                         : 1;
-                    results.add(new Result(stack.getStack().copyWithCount(resultCount), stack.getCount()));
+                    results.add(new Result(stack.stack().copyWithCount(resultCount), stack.count()));
                 }
             }
 
@@ -65,7 +65,7 @@ public record MeshRecipeGroup(ItemIngredientPredicate ingredient, List<Result> r
 
     public record Result(ItemStack item, NumberProvider provider, double expectedCount) {
         public Result(ItemStack item, NumberProvider provider) {
-            this(item, provider, RecipeUtil.getExpectedValue(provider));
+            this(item, provider, NumberProviderUtil.expected(provider));
         }
     }
 }

@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.api.item.property.FilterContent;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.container.FilterContainer;
+import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import lombok.AllArgsConstructor;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -25,8 +25,21 @@ public class FilterItem extends Item {
         super(properties);
     }
 
-    public static boolean filter(ItemStack filterStack, ItemStack stack) {
-        return FilterContent.filter(filterStack, stack, false, false);
+    public static boolean filter(ItemStack filter, ItemStack stack) {
+        return filter.isEmpty()
+               || (
+                   filter.is(ModItems.FILTER)
+                   ? ItemStack.isSameItemSameComponents(filter, stack)
+                   : ItemStack.isSameItem(filter, stack)
+               )
+               || FilterContent.filter(filter, stack, false, false);
+    }
+
+    @Override
+    public void verifyComponentsAfterLoad(ItemStack stack) {
+        if (stack.is(ModItems.FILTER) && !stack.has(ModComponents.FILTER_CONTENT)) {
+            stack.set(ModComponents.FILTER_CONTENT, new FilterContent());
+        }
     }
 
     @Override
@@ -34,9 +47,6 @@ public class FilterItem extends Item {
         ItemStack itemstack = player.getItemInHand(usedHand);
         if (!itemstack.is(ModItems.FILTER)) return InteractionResultHolder.pass(itemstack);
         if (level.isClientSide()) return InteractionResultHolder.success(itemstack);
-        if (!itemstack.has(ModComponents.FILTER_CONTENT)) {
-            itemstack.set(ModComponents.FILTER_CONTENT, new FilterContent());
-        }
         int position = usedHand == InteractionHand.MAIN_HAND ? player.getInventory().selected : 151;
         ModMenuTypes.open((ServerPlayer) player, new FilterMenuProvider(position));
         return InteractionResultHolder.success(itemstack);

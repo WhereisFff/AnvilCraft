@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.DrawableBlockStateIcon;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
@@ -11,8 +11,7 @@ import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.SuperHeatingRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -29,7 +28,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
@@ -84,14 +82,18 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
             RenderHelper.SINGLE_BLOCK
         );
 
-        arrowIn.draw(guiGraphics, 54, 30);
-        arrowOut.draw(guiGraphics, 92, 29);
+        arrowIn.draw(guiGraphics, 54, 20);
+        arrowOut.draw(guiGraphics, 92, 19);
 
-        JeiSlotUtil.drawInputSlots(guiGraphics, slot, recipe.getInputItems().size());
-        JeiSlotUtil.drawOutputSlots(guiGraphics, slot, this.getResults(recipe).size());
+        JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
+        if (JeiRecipeUtil.isChance(this.getResults(recipe))) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, this.getResults(recipe).size());
+        } else {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, this.getResults(recipe).size());
+        }
 
         HasCauldronSimple hasCauldron = recipe.getHasCauldron();
-        if (!HasCauldron.isNotEmpty(hasCauldron.getTransform())) return;
+        if (!HasCauldron.isNotEmpty(hasCauldron.transform())) return;
         BlockState cauldron = CauldronUtil.fullState(hasCauldron.getTransformCauldron());
         RenderHelper.renderBlock(guiGraphics, cauldron, 133, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
 
@@ -103,7 +105,7 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
                 Minecraft.getInstance().font,
                 Component.translatable(
                     "gui.anvilcraft.category.super_heating.consume_fluid",
-                    recipe.getHasCauldron().getConsume(),
+                    recipe.getHasCauldron().consume(),
                     recipe.getHasCauldron().getFluidCauldron().getName()
                 ),
                 0,
@@ -120,7 +122,7 @@ public class SuperHeatingCategory extends AbstractProgressCategory<SuperHeatingR
                 Minecraft.getInstance().font,
                 Component.translatable(
                     "gui.anvilcraft.category.super_heating.produce_fluid",
-                    recipe.getHasCauldron().getConsume(),
+                    -recipe.getHasCauldron().consume(),
                     recipe.getHasCauldron().getTransformCauldron().getName()
                 ),
                 0,

@@ -7,12 +7,16 @@ import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderStateShard;
 
+import javax.annotation.Nullable;
+
 import static dev.dubhe.anvilcraft.client.init.ModShaders.MINECRAFT;
 
 public class ModRenderTargets {
     @Getter
+    @Nullable
     static RenderTarget bloomTarget;
     @Getter
+    @Nullable
     static RenderTarget tempTarget;
 
     public static final RenderStateShard.OutputStateShard LASER_TARGET = new RenderStateShard.OutputStateShard(
@@ -50,8 +54,12 @@ public class ModRenderTargets {
     );
 
     public static void clear() {
-        bloomTarget.clear(Minecraft.ON_OSX);
-        tempTarget.clear(Minecraft.ON_OSX);
+        if (bloomTarget != null) {
+            bloomTarget.clear(Minecraft.ON_OSX);
+        }
+        if (tempTarget != null) {
+            tempTarget.clear(Minecraft.ON_OSX);
+        }
     }
 
     public static void renderTargetLoaded(

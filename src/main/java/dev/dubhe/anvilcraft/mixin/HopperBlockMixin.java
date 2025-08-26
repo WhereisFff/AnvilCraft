@@ -9,7 +9,6 @@ import net.minecraft.world.level.block.HopperBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.level.block.state.properties.Property;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +22,7 @@ abstract class HopperBlockMixin implements IHammerChangeable {
 
     @Override
     @SuppressWarnings("AddedMixinMembersNamePattern")
-    public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
+    public boolean change(Player player, BlockPos blockPos, Level level, ItemStack anvilHammer) {
         return level.setBlockAndUpdate(blockPos, level.getBlockState(blockPos).cycle(FACING));
     }
 

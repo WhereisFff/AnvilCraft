@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -124,7 +124,7 @@ public class TransparentCraftingTableBlock extends TransparentBlock implements I
      */
     private boolean tryFormMatrix(Level level, BlockPos pos) {
         if (!isValidMatrixBlock(level.getBlockState(pos), false)) return false;
-        int maxSize = AnvilCraft.config.transparentCraftingTableMaxMatrixSize;
+        int maxSize = AnvilCraft.CONFIG.transparentCraftingTableMaxMatrixSize;
         int x0 = pos.getX();
         int y0 = pos.getY();
         int z0 = pos.getZ();

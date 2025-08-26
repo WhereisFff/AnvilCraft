@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.util.registrater;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 public class PropertiesProviderUtil {

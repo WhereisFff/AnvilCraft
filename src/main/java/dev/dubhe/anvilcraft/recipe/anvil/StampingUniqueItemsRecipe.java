@@ -2,11 +2,11 @@ package dev.dubhe.anvilcraft.recipe.anvil;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.input.ItemProcessInput;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
-import dev.dubhe.anvilcraft.util.CodecUtil;
+import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.util.CollectionUtil;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -64,12 +64,12 @@ public class StampingUniqueItemsRecipe implements Recipe<ItemProcessInput> {
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider pRegistries) {
-        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().getStack();
+        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().stack();
     }
 
     @Override
     public ItemStack assemble(ItemProcessInput pInput, HolderLookup.Provider pRegistries) {
-        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().getStack();
+        return results.isEmpty() ? ItemStack.EMPTY : results.getFirst().stack();
     }
 
     @Override
@@ -219,7 +219,7 @@ public class StampingUniqueItemsRecipe implements Recipe<ItemProcessInput> {
 
         @Override
         public Item getResult() {
-            return results.getFirst().getStack().getItem();
+            return results.getFirst().stack().getItem();
         }
 
         @Override

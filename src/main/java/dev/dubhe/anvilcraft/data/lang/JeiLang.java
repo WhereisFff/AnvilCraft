@@ -13,6 +13,7 @@ public class JeiLang {
 
         provider.add("gui.anvilcraft.category.block_compress", "Block Compress");
         provider.add("gui.anvilcraft.category.block_crush", "Block Crush");
+        provider.add("gui.anvilcraft.category.block_smear", "Block Smear");
 
         provider.add("gui.anvilcraft.category.item_compress", "Item Compress");
         provider.add("gui.anvilcraft.category.item_crush", "Item Crush");
@@ -24,8 +25,8 @@ public class JeiLang {
         provider.add("gui.anvilcraft.category.stamping", "Stamping");
 
         provider.add("gui.anvilcraft.category.super_heating", "Super Heating");
-        provider.add("gui.anvilcraft.category.super_heating.consume_fluid", "Consume: %d layer of %s");
-        provider.add("gui.anvilcraft.category.super_heating.produce_fluid", "Produce: %d layer of %s");
+        provider.add("gui.anvilcraft.category.super_heating.consume_fluid", "Consume: %d mB of %s");
+        provider.add("gui.anvilcraft.category.super_heating.produce_fluid", "Produce: %d mB of %s");
         provider.add("gui.anvilcraft.category.super_heating.need_activated", "Need Activated");
 
         provider.add("gui.anvilcraft.category.squeezing", "Squeezing");
@@ -43,17 +44,19 @@ public class JeiLang {
         provider.add("gui.anvilcraft.category.concrete", "Concrete");
 
         provider.add("gui.anvilcraft.category.bulging", "Bulging");
-        provider.add("gui.anvilcraft.category.bulging.consume_fluid", "Consume: %d layer of %s");
-        provider.add("gui.anvilcraft.category.bulging.produce_fluid", "Produce: %d layer of %s");
+        provider.add("gui.anvilcraft.category.bulging.consume_fluid", "Consume: %d mB of %s");
+        provider.add("gui.anvilcraft.category.bulging.produce_fluid", "Produce: %d mB of %s");
 
         provider.add("gui.anvilcraft.category.time_warp", "Time Warp");
-        provider.add("gui.anvilcraft.category.time_warp.consume_fluid", "Consume: %d layer of %s");
-        provider.add("gui.anvilcraft.category.time_warp.produce_fluid", "Produce: %d layer of %s");
+        provider.add("gui.anvilcraft.category.time_warp.consume_fluid", "Consume: %d mB of %s");
+        provider.add("gui.anvilcraft.category.time_warp.produce_fluid", "Produce: %d mB of %s");
         provider.add("gui.anvilcraft.category.time_warp.need_activated", "Need Activated");
 
         provider.add("gui.anvilcraft.category.multiblock", "Multiblock Crafting");
         provider.add("gui.anvilcraft.category.multiblock.all_layers", "All Layers Visible");
         provider.add("gui.anvilcraft.category.multiblock.single_layer", "Visible Layer: %d of %d");
+
+        provider.add("gui.anvilcraft.category.multiblock.size", "Crafting Table Size: %s*%s");
 
         provider.add("gui.anvilcraft.category.multiblock_conversion", "Multiblock Conversion");
         provider.add("gui.anvilcraft.category.multiblock_conversion.current_mode", "Display Mode: %s");
@@ -104,5 +107,10 @@ public class JeiLang {
         provider.add("jei.anvilcraft.info.end_dust", "Any falling block, except for anvils and Dragon Egg, will be converted into End Dust when fall through end portal.");
 
         provider.add("jei.anvilcraft.info.mob_transform_with_item", "Right-clicking mobs with the corresponding item in its Mob-Transform-with-Held-Item recipes can force the mob to hold it.");
+
+        provider.add("gui.anvilcraft.category.anvil_collision", "Anvil Collision");
+        provider.add("gui.anvilcraft.category.anvil_collision.maxcount", "Max Count: %s");
+        provider.add("gui.anvilcraft.category.anvil_collision.consume", "Consume Anvil: %d");
+        provider.add("gui.anvilcraft.category.anvil_collision.speed", "Need Speed: %s");
     }
 }

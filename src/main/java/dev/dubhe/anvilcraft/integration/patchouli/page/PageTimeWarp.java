@@ -1,15 +1,15 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.HasCauldronSimple;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,11 +39,11 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
             pose.translate(recipeX - 6, recipeY + 52, 100);
             pose.scale(0.5f, 0.5f, 1);
             graphics.drawString(
-                ((ScreenAccessor) parent).anvilcraft$getFont(),
+                ((ScreenAccessor) parent).getFont(),
                 Component.translatable(
                     "gui.anvilcraft.category.time_warp.consume_fluid",
-                    hasCauldron.getConsume(),
-                    Component.translatable("fluid." + hasCauldron.getTransform().toString().replace(':', '.'))),
+                    hasCauldron.consume(),
+                    Component.translatable("fluid." + hasCauldron.transform().toString().replace(':', '.'))),
                 0,
                 0,
                 0xFF000000,
@@ -53,11 +53,11 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
             pose.translate(recipeX - 6, recipeY + 52, 100);
             pose.scale(0.5f, 0.5f, 1);
             graphics.drawString(
-                ((ScreenAccessor) parent).anvilcraft$getFont(),
+                ((ScreenAccessor) parent).getFont(),
                 Component.translatable(
                     "gui.anvilcraft.category.time_warp.produce_fluid",
-                    -hasCauldron.getConsume(),
-                    Component.translatable("fluid." + hasCauldron.getTransform().toString().replace(':', '.'))),
+                    -hasCauldron.consume(),
+                    Component.translatable("fluid." + hasCauldron.transform().toString().replace(':', '.'))),
                 0,
                 0,
                 0xFF000000,
@@ -71,7 +71,7 @@ public class PageTimeWarp extends PageAnvilItemProcess<TimeWarpRecipe> {
         if (recipe.isProduceFluid()) {
             return Blocks.CAULDRON.defaultBlockState();
         } else {
-            return CauldronUtil.fullState(BuiltInRegistries.BLOCK.get(recipe.getHasCauldron().getFluid().withSuffix("_cauldron")));
+            return CauldronUtil.fullState(HasCauldron.getDefaultCauldron(recipe.getHasCauldron().fluid()));
         }
     }
 }

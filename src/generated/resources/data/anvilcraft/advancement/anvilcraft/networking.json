@@ -1,0 +1,43 @@
+{
+  "parent": "anvilcraft:anvilcraft/hearts_of_iron",
+  "criteria": {
+    "craft_transmission_pole": {
+      "conditions": {
+        "recipe_id": "anvilcraft:transmission_pole"
+      },
+      "trigger": "minecraft:recipe_crafted"
+    },
+    "place_transmission_pole": {
+      "conditions": {
+        "location": [
+          {
+            "block": "anvilcraft:transmission_pole",
+            "condition": "minecraft:block_state_property"
+          }
+        ]
+      },
+      "trigger": "minecraft:placed_block"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.anvilcraft.networking.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "anvilcraft:transmission_pole"
+    },
+    "title": {
+      "translate": "advancements.anvilcraft.networking.title"
+    }
+  },
+  "requirements": [
+    [
+      "craft_transmission_pole"
+    ],
+    [
+      "place_transmission_pole"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

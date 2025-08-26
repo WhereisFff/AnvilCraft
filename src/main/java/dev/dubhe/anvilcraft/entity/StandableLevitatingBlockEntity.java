@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.entity;
 
-import dev.dubhe.anvilcraft.init.ModEntities;
+import dev.dubhe.anvilcraft.init.entity.ModEntities;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

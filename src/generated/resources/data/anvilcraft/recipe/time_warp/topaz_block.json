@@ -1,10 +1,10 @@
 {
   "type": "anvilcraft:time_warp",
-  "consume": 1,
+  "consume": 1000,
   "fluid": "anvilcraft:melt_gem",
   "ingredients": [
     {
-      "items": "anvilcraft:topaz"
+      "items": "#c:gems/topaz"
     }
   ],
   "results": [

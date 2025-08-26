@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.recipe.multiple;
 
-import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.init.ModRecipeTypes;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.multiple.result.MultipleToOneResult;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 

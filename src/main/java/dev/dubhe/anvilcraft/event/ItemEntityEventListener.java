@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModComponents;
-import dev.dubhe.anvilcraft.util.IDiscardableItemEntity;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -16,7 +15,7 @@ public class ItemEntityEventListener {
         if (item.getItem().has(ModComponents.ETERNAL)) {
             item.setUnlimitedLifetime();
         }
-        if (IDiscardableItemEntity.castFromItemEntity(item).anvilcraft$getDiscarded()) {
+        if (item.anvilcraft$getDiscarded()) {
             event.setCanceled(true);
         }
     }

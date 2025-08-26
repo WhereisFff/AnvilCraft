@@ -1,12 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.event.UseMagnetEvent;
 import dev.dubhe.anvilcraft.api.item.IMultipleResult;
-import dev.dubhe.anvilcraft.entity.MagnetizedNodeEntity;
-import dev.dubhe.anvilcraft.init.ModEntities;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.multiple.MultipleToOneSmithingRecipeInput;
+import dev.dubhe.anvilcraft.util.MagnetUtil;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -35,13 +32,11 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.HumanoidArm;
 import net.minecraft.world.entity.ItemSteerable;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.FishingHook;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -64,13 +59,10 @@ import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BrushableBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.gameevent.GameEvent;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.common.IShearable;
 import net.neoforged.neoforge.common.ItemAbilities;
@@ -98,8 +90,8 @@ public class MultitoolItem extends Item implements IMultipleResult {
         super(properties);
     }
 
-    @SuppressWarnings("removal")
     @Override
+    @SuppressWarnings("removal")
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         ItemProperties.register(
             this, ResourceLocation.withDefaultNamespace("cast"), (itemStack, level, entity, value) -> {
@@ -108,18 +100,19 @@ public class MultitoolItem extends Item implements IMultipleResult {
                 } else {
                     boolean flag = itemStack.is(entity.getMainHandItem().getItem());
                     boolean flag1 = itemStack.is(entity.getOffhandItem().getItem());
-                    if (entity.getMainHandItem().getItem() instanceof MultitoolItem
-                    && getMode(entity.getMainHandItem()) == FISHING_ROD_MODE) {
+                    if (entity.getMainHandItem()
+                            .getItem() instanceof MultitoolItem && getMode(entity.getMainHandItem()) == MultitoolItem.FISHING_ROD_MODE) {
                         flag1 = false;
                     }
                     return (flag || flag1) && entity instanceof Player && ((Player) entity).fishing != null ? 1.0f : 0.0f;
                 }
-            });
+            }
+        );
     }
 
     @Override
     public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
-        if (getMode(stack) == SPYGLASS_MODE) {
+        if (MultitoolItem.getMode(stack) == SPYGLASS_MODE) {
             this.stopUsing(livingEntity);
         } else {
             super.releaseUsing(stack, level, livingEntity, timeCharged);
@@ -128,7 +121,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
 
     @Override
     public ItemStack finishUsingItem(ItemStack stack, Level level, LivingEntity livingEntity) {
-        if (getMode(stack) == SPYGLASS_MODE) {
+        if (MultitoolItem.getMode(stack) == SPYGLASS_MODE) {
             this.stopUsing(livingEntity);
             return stack;
         } else {
@@ -138,16 +131,16 @@ public class MultitoolItem extends Item implements IMultipleResult {
 
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
-        return switch (getMode(player.getItemInHand(usedHand))) {
+        return switch (MultitoolItem.getMode(player.getItemInHand(usedHand))) {
             case SPYGLASS_MODE -> {
                 player.playSound(SoundEvents.SPYGLASS_USE, 1.0F, 1.0F);
                 player.awardStat(Stats.ITEM_USED.get(this));
-                yield  ItemUtils.startUsingInstantly(level, player, usedHand);
+                yield ItemUtils.startUsingInstantly(level, player, usedHand);
             }
-            case MAGNET_MODE -> useAsMagnet(level, player, usedHand);
-            case FISHING_ROD_MODE -> useAsFishingRod(level, player, usedHand);
-            case CARROT_ON_A_STICK_MODE -> useAsCarrotOnAStick(level, player, usedHand);
-            case WARPED_FUNGUS_ON_A_STICK_MODE -> useAsWarpedFungusOnAStick(level, player, usedHand);
+            case MAGNET_MODE -> this.useAsMagnet(level, player, usedHand);
+            case FISHING_ROD_MODE -> this.useAsFishingRod(level, player, usedHand);
+            case CARROT_ON_A_STICK_MODE -> this.useAsCarrotOnAStick(level, player, usedHand);
+            case WARPED_FUNGUS_ON_A_STICK_MODE -> this.useAsWarpedFungusOnAStick(level, player, usedHand);
             case ALL_MODE -> {
                 player.hurt(level.damageSources().playerAttack(player), 1);
                 yield InteractionResultHolder.pass(player.getItemInHand(usedHand));
@@ -159,17 +152,17 @@ public class MultitoolItem extends Item implements IMultipleResult {
     @Override
     public InteractionResult useOn(UseOnContext context) {
         return switch (context.getItemInHand().getOrDefault(DataComponents.CUSTOM_MODEL_DATA, CustomModelData.DEFAULT).value()) {
-            case SHEARS_MODE -> useOnAsShears(context);
-            case FLINT_AND_STEEL_MODE -> useOnAsFlintAndSteel(context);
-            case BRUSH_MODE -> useOnAsBrush(context);
-            case MAGNET_MODE -> useOnAsMagnet(context);
+            case SHEARS_MODE -> this.useOnAsShears(context);
+            case FLINT_AND_STEEL_MODE -> this.useOnAsFlintAndSteel(context);
+            case BRUSH_MODE -> this.useOnAsBrush(context);
+            case MAGNET_MODE -> this.useOnAsMagnet(context);
             default -> super.useOn(context);
         };
     }
 
     @Override
     public boolean canPerformAction(ItemStack stack, ItemAbility itemAbility) {
-        return switch (getMode(stack)) {
+        return switch (MultitoolItem.getMode(stack)) {
             case SHEARS_MODE -> ItemAbilities.DEFAULT_SHEARS_ACTIONS.contains(itemAbility);
             case FLINT_AND_STEEL_MODE -> ItemAbilities.DEFAULT_FLINT_ACTIONS.contains(itemAbility);
             case BRUSH_MODE -> ItemAbilities.DEFAULT_BRUSH_ACTIONS.contains(itemAbility);
@@ -180,7 +173,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
 
     @Override
     public UseAnim getUseAnimation(ItemStack stack) {
-        return switch (getMode(stack)) {
+        return switch (MultitoolItem.getMode(stack)) {
             case BRUSH_MODE -> UseAnim.BRUSH;
             case SPYGLASS_MODE -> UseAnim.SPYGLASS;
             default -> super.getUseAnimation(stack);
@@ -189,7 +182,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
 
     @Override
     public int getUseDuration(ItemStack stack, LivingEntity entity) {
-        return switch (getMode(stack)) {
+        return switch (MultitoolItem.getMode(stack)) {
             case BRUSH_MODE -> 200;
             case SPYGLASS_MODE -> 1200;
             default -> super.getUseDuration(stack, entity);
@@ -198,8 +191,8 @@ public class MultitoolItem extends Item implements IMultipleResult {
 
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
-        if (getMode(stack) == BRUSH_MODE) {
-            onUseTickAsBrush(level, livingEntity, stack, remainingUseDuration);
+        if (MultitoolItem.getMode(stack) == BRUSH_MODE) {
+            this.onUseTickAsBrush(level, livingEntity, stack, remainingUseDuration);
         } else {
             super.onUseTick(level, livingEntity, stack, remainingUseDuration);
         }
@@ -207,17 +200,22 @@ public class MultitoolItem extends Item implements IMultipleResult {
 
     @Override
     public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
-        if (getMode(stack) == SHEARS_MODE) {
-            return mineBlockAsShears(stack, level, state, miningEntity);
+        if (MultitoolItem.getMode(stack) == SHEARS_MODE) {
+            return this.mineBlockAsShears(stack, level, state, miningEntity);
         } else {
             return super.mineBlock(stack, level, state, pos, miningEntity);
         }
     }
 
     @Override
-    public InteractionResult interactLivingEntity(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
-        if (getMode(stack) == SHEARS_MODE) {
-            return interactLivingEntityAsShears(stack, player, interactionTarget, usedHand);
+    public InteractionResult interactLivingEntity(
+        ItemStack stack,
+        Player player,
+        LivingEntity interactionTarget,
+        InteractionHand usedHand
+    ) {
+        if (MultitoolItem.getMode(stack) == SHEARS_MODE) {
+            return this.interactLivingEntityAsShears(stack, player, interactionTarget, usedHand);
         } else {
             return super.interactLivingEntity(stack, player, interactionTarget, usedHand);
         }
@@ -226,7 +224,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
     @Override
     public ItemStack assemble(int id, MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
         if (id == 0) {
-            ItemStack defaultInstance = getDefaultInstance();
+            ItemStack defaultInstance = this.getDefaultInstance();
             DataComponentType<ItemEnchantments> type = EnchantmentHelper.getComponentType(defaultInstance);
             Map<Holder<Enchantment>, Integer> enchantments = new Object2IntArrayMap<>();
             for (int i = 0; i < 8; i++) {
@@ -251,21 +249,7 @@ public class MultitoolItem extends Item implements IMultipleResult {
     }
 
     private InteractionResultHolder<ItemStack> useAsMagnet(Level level, Player player, InteractionHand usedHand) {
-        if (player.isShiftKeyDown()) return InteractionResultHolder.pass(player.getItemInHand(usedHand));
-        ItemStack item = player.getItemInHand(usedHand);
-        double radius = AnvilCraft.config.magnetItemAttractsRadius;
-        UseMagnetEvent event = new UseMagnetEvent(level, player, radius);
-        ModLoader.postEvent(event);
-        if (event.isCanceled()) return InteractionResultHolder.pass(item);
-        radius = event.getAttractRadius();
-        AABB aabb = new AABB(
-            player.position().add(-radius, -radius, -radius),
-            player.position().add(radius, radius, radius));
-        level.getEntities(EntityTypeTest.forClass(ItemEntity.class), aabb, Entity::isAlive)
-            .forEach(e -> e.moveTo(player.position()));
-        item.hurtAndBreak(1, player, LivingEntity.getSlotForHand(usedHand));
-        player.getCooldowns().addCooldown(this, 5);
-        return InteractionResultHolder.sidedSuccess(item, level.isClientSide());
+        return MagnetUtil.magnetizeItems(this, level, player, usedHand);
     }
 
     private InteractionResultHolder<ItemStack> useAsFishingRod(Level level, Player player, InteractionHand usedHand) {
@@ -311,15 +295,12 @@ public class MultitoolItem extends Item implements IMultipleResult {
             player.awardStat(Stats.ITEM_USED.get(this));
             player.gameEvent(GameEvent.ITEM_INTERACT_START);
         }
-
         return InteractionResultHolder.sidedSuccess(itemstack, level.isClientSide());
     }
 
     private InteractionResultHolder<ItemStack> useAsCarrotOnAStick(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        if (level.isClientSide) {
-            return InteractionResultHolder.pass(itemStack);
-        } else {
+        if (!level.isClientSide()) {
             Entity entity = player.getControlledVehicle();
             if (player.isPassenger() && entity instanceof ItemSteerable itemSteerable) {
                 if (entity.getType() == EntityType.PIG && itemSteerable.boost()) {
@@ -328,17 +309,14 @@ public class MultitoolItem extends Item implements IMultipleResult {
                     return InteractionResultHolder.success(itemStack);
                 }
             }
-
             player.awardStat(Stats.ITEM_USED.get(this));
-            return InteractionResultHolder.pass(itemStack);
         }
+        return InteractionResultHolder.pass(itemStack);
     }
 
     private InteractionResultHolder<ItemStack> useAsWarpedFungusOnAStick(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        if (level.isClientSide) {
-            return InteractionResultHolder.pass(itemStack);
-        } else {
+        if (!level.isClientSide()) {
             Entity entity = player.getControlledVehicle();
             if (player.isPassenger() && entity instanceof ItemSteerable itemSteerable) {
                 if (entity.getType() == EntityType.STRIDER && itemSteerable.boost()) {
@@ -347,10 +325,9 @@ public class MultitoolItem extends Item implements IMultipleResult {
                     return InteractionResultHolder.success(itemStack);
                 }
             }
-
             player.awardStat(Stats.ITEM_USED.get(this));
-            return InteractionResultHolder.pass(itemStack);
         }
+        return InteractionResultHolder.pass(itemStack);
     }
 
     public InteractionResult useOnAsShears(UseOnContext context) {
@@ -385,7 +362,14 @@ public class MultitoolItem extends Item implements IMultipleResult {
         if (blockstate2 == null) {
             BlockPos blockpos1 = blockpos.relative(context.getClickedFace());
             if (BaseFireBlock.canBePlacedAt(level, blockpos1, context.getHorizontalDirection())) {
-                level.playSound(player, blockpos1, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+                level.playSound(
+                    player,
+                    blockpos1,
+                    SoundEvents.FLINTANDSTEEL_USE,
+                    SoundSource.BLOCKS,
+                    1.0F,
+                    level.getRandom().nextFloat() * 0.4F + 0.8F
+                );
                 BlockState blockstate1 = BaseFireBlock.getState(level, blockpos1);
                 level.setBlock(blockpos1, blockstate1, 11);
                 level.gameEvent(player, GameEvent.BLOCK_PLACE, blockpos);
@@ -400,7 +384,14 @@ public class MultitoolItem extends Item implements IMultipleResult {
                 return InteractionResult.FAIL;
             }
         } else {
-            level.playSound(player, blockpos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
+            level.playSound(
+                player,
+                blockpos,
+                SoundEvents.FLINTANDSTEEL_USE,
+                SoundSource.BLOCKS,
+                1.0F,
+                level.getRandom().nextFloat() * 0.4F + 0.8F
+            );
             level.setBlock(blockpos, blockstate2, 11);
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, blockpos);
             if (player != null) {
@@ -421,29 +412,15 @@ public class MultitoolItem extends Item implements IMultipleResult {
     }
 
     public InteractionResult useOnAsMagnet(UseOnContext context) {
-        Player player = context.getPlayer();
-        Level level = context.getLevel();
-        if (player == null) return InteractionResult.PASS;
-        if (!player.isShiftKeyDown()) return InteractionResult.PASS;
-        BlockPos pos = context.getClickedPos();
-        BlockState blockState = level.getBlockState(pos);
-        if (blockState.isAir()) return InteractionResult.PASS;
-        double maxY = blockState.getCollisionShape(level, pos).max(Direction.Axis.Y, 0.5, 0.5);
-        if (!blockState.getBlock().properties().hasCollision && maxY == 0) return InteractionResult.PASS;
-        for (MagnetizedNodeEntity entity : level.getEntities(ModEntities.MAGNETIZED_NODE.get(), new AABB(pos).setMaxY(pos.getY() + 1.1), EntitySelector.NO_SPECTATORS)) {
-            if (entity.blockPos.equals(pos)) return InteractionResult.PASS;
-        }
-        Vec3 nodePos = pos.getBottomCenter().add(0, maxY, 0);
-        MagnetizedNodeEntity magnetizedNodeEntity = new MagnetizedNodeEntity(level, nodePos, pos);
-        level.addFreshEntity(magnetizedNodeEntity);
-        player.getCooldowns().addCooldown(this, 5);
-        return InteractionResult.sidedSuccess(level.isClientSide());
+        return MagnetUtil.placeMagnetizedNode(this, context);
     }
 
     private HitResult calculateHitResult(Player player) {
-        return ProjectileUtil.getHitResultOnViewVector(player,
+        return ProjectileUtil.getHitResultOnViewVector(
+            player,
             (entity) -> !entity.isSpectator() && player.isPickable(),
-            player.blockInteractionRange());
+            player.blockInteractionRange()
+        );
     }
 
     private void spawnDustParticles(Level level, BlockHitResult hitResult, BlockState state, Vec3 pos, HumanoidArm arm) {
@@ -454,7 +431,15 @@ public class MultitoolItem extends Item implements IMultipleResult {
         DustParticlesDelta dustparticlesdelta = DustParticlesDelta.fromDirection(pos, direction);
         Vec3 vec3 = hitResult.getLocation();
         for (int k = 0; k < j; ++k) {
-            level.addParticle(blockparticleoption, vec3.x - (double) (direction == Direction.WEST ? 1.0E-6F : 0.0F), vec3.y, vec3.z - (double) (direction == Direction.NORTH ? 1.0E-6F : 0.0F), dustparticlesdelta.xd() * (double) i * (double) 3.0F * level.getRandom().nextDouble(), 0.0F, dustparticlesdelta.zd() * (double) i * (double) 3.0F * level.getRandom().nextDouble());
+            level.addParticle(
+                blockparticleoption,
+                vec3.x - (double) (direction == Direction.WEST ? 1.0E-6F : 0.0F),
+                vec3.y,
+                vec3.z - (double) (direction == Direction.NORTH ? 1.0E-6F : 0.0F),
+                dustparticlesdelta.xd() * (double) i * (double) 3.0F * level.getRandom().nextDouble(),
+                0.0F,
+                dustparticlesdelta.zd() * (double) i * (double) 3.0F * level.getRandom().nextDouble()
+            );
         }
     }
 
@@ -468,7 +453,9 @@ public class MultitoolItem extends Item implements IMultipleResult {
                     if (flag) {
                         BlockPos blockpos = blockhitresult.getBlockPos();
                         BlockState blockstate = level.getBlockState(blockpos);
-                        HumanoidArm humanoidarm = livingEntity.getUsedItemHand() == InteractionHand.MAIN_HAND ? player.getMainArm() : player.getMainArm().getOpposite();
+                        HumanoidArm humanoidarm = livingEntity.getUsedItemHand() == InteractionHand.MAIN_HAND
+                                                  ? player.getMainArm()
+                                                  : player.getMainArm().getOpposite();
                         if (blockstate.shouldSpawnTerrainParticles() && blockstate.getRenderShape() != RenderShape.INVISIBLE) {
                             this.spawnDustParticles(level, blockhitresult, blockstate, livingEntity.getViewVector(0.0F), humanoidarm);
                         }
@@ -487,7 +474,9 @@ public class MultitoolItem extends Item implements IMultipleResult {
                             if (var18 instanceof BrushableBlockEntity brushableBlockEntity) {
                                 boolean flag1 = brushableBlockEntity.brush(level.getGameTime(), player, blockhitresult.getDirection());
                                 if (flag1) {
-                                    EquipmentSlot equipmentslot = stack.equals(player.getItemBySlot(EquipmentSlot.OFFHAND)) ? EquipmentSlot.OFFHAND : EquipmentSlot.MAINHAND;
+                                    EquipmentSlot equipmentslot = stack.equals(player.getItemBySlot(EquipmentSlot.OFFHAND))
+                                                                  ? EquipmentSlot.OFFHAND
+                                                                  : EquipmentSlot.MAINHAND;
                                     stack.hurtAndBreak(1, livingEntity, equipmentslot);
                                 }
                             }
@@ -508,17 +497,23 @@ public class MultitoolItem extends Item implements IMultipleResult {
             stack.hurtAndBreak(1, miningEntity, EquipmentSlot.MAINHAND);
         }
         return state.is(BlockTags.LEAVES)
-            || state.is(Blocks.COBWEB)
-            || state.is(Blocks.SHORT_GRASS)
-            || state.is(Blocks.FERN)
-            || state.is(Blocks.DEAD_BUSH)
-            || state.is(Blocks.HANGING_ROOTS)
-            || state.is(Blocks.VINE)
-            || state.is(Blocks.TRIPWIRE)
-            || state.is(BlockTags.WOOL);
+               || state.is(Blocks.COBWEB)
+               || state.is(Blocks.SHORT_GRASS)
+               || state.is(Blocks.FERN)
+               || state.is(Blocks.DEAD_BUSH)
+               || state.is(Blocks.HANGING_ROOTS)
+               || state.is(Blocks.VINE)
+               || state.is(Blocks.TRIPWIRE)
+               || state.is(BlockTags.WOOL);
     }
 
-    private InteractionResult interactLivingEntityAsShears(ItemStack stack, Player player, LivingEntity interactionTarget, InteractionHand usedHand) {
+    @SuppressWarnings("resource")
+    private InteractionResult interactLivingEntityAsShears(
+        ItemStack stack,
+        Player player,
+        LivingEntity interactionTarget,
+        InteractionHand usedHand
+    ) {
         if (interactionTarget instanceof IShearable target) {
             BlockPos pos = interactionTarget.blockPosition();
             boolean isClient = interactionTarget.level().isClientSide();
@@ -581,24 +576,31 @@ public class MultitoolItem extends Item implements IMultipleResult {
 
         public boolean is(int mode, TagKey<Item> tagKey) {
             return switch (tagKey) {
-                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_SHEAR)       -> super.is(tag) && mode == SHEARS_MODE;
-                case TagKey<Item> tag when tag.equals(ItemTags.CREEPER_IGNITERS)    -> super.is(tag) && mode == FLINT_AND_STEEL_MODE;
-                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_IGNITER)     -> super.is(tag) && mode == FLINT_AND_STEEL_MODE;
-                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_BRUSH)       -> super.is(tag) && mode == BRUSH_MODE;
+                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_SHEAR) -> super.is(tag) && mode == SHEARS_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.CREEPER_IGNITERS) -> super.is(tag) && mode == FLINT_AND_STEEL_MODE;
+                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_IGNITER) -> super.is(tag) && mode == FLINT_AND_STEEL_MODE;
+                case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_BRUSH) -> super.is(tag) && mode == BRUSH_MODE;
                 case TagKey<Item> tag when tag.equals(Tags.Items.TOOLS_FISHING_ROD) -> super.is(tag) && mode == FISHING_ROD_MODE;
-                case TagKey<Item> tag when tag.equals(ItemTags.STRIDER_TEMPT_ITEMS) -> super.is(tag) && mode == WARPED_FUNGUS_ON_A_STICK_MODE;
+                case TagKey<Item> tag when tag.equals(ItemTags.STRIDER_TEMPT_ITEMS) ->
+                    super.is(tag) && mode == WARPED_FUNGUS_ON_A_STICK_MODE;
                 default -> super.is(tagKey);
             };
         }
 
         public boolean is(int mode, HolderSet<Item> holders) {
             return switch (holders) {
-                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_SHEAR)       -> holderSet.contains(this) && mode == SHEARS_MODE;
-                case HolderSet.Named<Item> holderSet when holderSet.key().equals(ItemTags.CREEPER_IGNITERS)    -> holderSet.contains(this) && mode == FLINT_AND_STEEL_MODE;
-                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_IGNITER)     -> holderSet.contains(this) && mode == FLINT_AND_STEEL_MODE;
-                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_BRUSH)       -> holderSet.contains(this) && mode == BRUSH_MODE;
-                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_FISHING_ROD) -> holderSet.contains(this) && mode == FISHING_ROD_MODE;
-                case HolderSet.Named<Item> holderSet when holderSet.key().equals(ItemTags.STRIDER_TEMPT_ITEMS) -> holderSet.contains(this) && mode == WARPED_FUNGUS_ON_A_STICK_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_SHEAR) ->
+                    holderSet.contains(this) && mode == SHEARS_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(ItemTags.CREEPER_IGNITERS) ->
+                    holderSet.contains(this) && mode == FLINT_AND_STEEL_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_IGNITER) ->
+                    holderSet.contains(this) && mode == FLINT_AND_STEEL_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_BRUSH) ->
+                    holderSet.contains(this) && mode == BRUSH_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(Tags.Items.TOOLS_FISHING_ROD) ->
+                    holderSet.contains(this) && mode == FISHING_ROD_MODE;
+                case HolderSet.Named<Item> holderSet when holderSet.key().equals(ItemTags.STRIDER_TEMPT_ITEMS) ->
+                    holderSet.contains(this) && mode == WARPED_FUNGUS_ON_A_STICK_MODE;
                 default -> holders.contains(this);
             };
         }

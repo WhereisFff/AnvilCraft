@@ -7,9 +7,9 @@ import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
-import dev.dubhe.anvilcraft.init.ModBlockEntities;
-import dev.dubhe.anvilcraft.init.ModBlockTags;
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.init.ModParticles;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -68,9 +68,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         BlockPos pos = this.getBlockPos();
         if (this.level != null
             && (this.level.getBlockState(pos.north()).isAir()
-            || this.level.getBlockState(pos.south()).isAir()
-            || this.level.getBlockState(pos.east()).isAir()
-            || this.level.getBlockState(pos.west()).isAir())
+                || this.level.getBlockState(pos.south()).isAir()
+                || this.level.getBlockState(pos.east()).isAir()
+                || this.level.getBlockState(pos.west()).isAir())
         ) return false;
         this.tubeWalls.add(TubeWallLayer.of(pos));
         this.level.removeBlock(pos, false);
@@ -153,7 +153,8 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
             }
         }
         boolean cauldronExisting = level.getBlockState(cauldronPos).is(ModBlocks.FIRE_CAULDRON)
-            || level.getBlockState(cauldronPos).is(Blocks.CAULDRON);
+                                   || level.getBlockState(cauldronPos).is(ModBlocks.OIL_CAULDRON)
+                                   || level.getBlockState(cauldronPos).is(Blocks.CAULDRON);
         boolean belowCauldronIsNotHeater = !level.getBlockState(cauldronPos.below(1))
             .is(ModBlocks.HEATER);
         boolean heaterOverload = level.getBlockState(cauldronPos.below(1))
@@ -248,10 +249,11 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
     protected void refreshCauldronPos(Level level) {
         if (this.cauldronPos != null
             && (level.getBlockState(this.cauldronPos).is(ModBlocks.FIRE_CAULDRON)
-            || level.getBlockState(this.cauldronPos).is(Blocks.CAULDRON))
+                || level.getBlockState(this.cauldronPos).is(Blocks.CAULDRON))
         ) return;
         for (int i = 1; i < 6; i++) {
             if (level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)
+                || level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.OIL_CAULDRON)
                 || level.getBlockState(this.getBlockPos().below(i)).is(Blocks.CAULDRON)) {
                 this.cauldronPos = this.getBlockPos().below(i);
                 break;
@@ -309,9 +311,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
 
         public boolean isBroken(Level level) {
             return level.getBlockState(this.second.getFirst()).isAir()
-                || level.getBlockState(this.second.getSecond()).isAir()
-                || level.getBlockState(this.first.getFirst()).isAir()
-                || level.getBlockState(this.first.getSecond()).isAir();
+                   || level.getBlockState(this.second.getSecond()).isAir()
+                   || level.getBlockState(this.first.getFirst()).isAir()
+                   || level.getBlockState(this.first.getSecond()).isAir();
         }
 
         /**
@@ -328,9 +330,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 return TriState.TRUE;
             } else if (
                 level.getBlockState(this.first.getFirst()).is(ModBlockTags.MAGNET)
-                    && level.getBlockState(this.first.getSecond()).is(ModBlockTags.MAGNET)
-                    && level.getBlockState(this.second.getFirst()).is(ModBlockTags.HEATABLE_BLOCKS)
-                    && level.getBlockState(this.second.getSecond()).is(ModBlockTags.HEATABLE_BLOCKS)
+                && level.getBlockState(this.first.getSecond()).is(ModBlockTags.MAGNET)
+                && level.getBlockState(this.second.getFirst()).is(ModBlockTags.HEATABLE_BLOCKS)
+                && level.getBlockState(this.second.getSecond()).is(ModBlockTags.HEATABLE_BLOCKS)
             ) {
                 return TriState.FALSE;
             }

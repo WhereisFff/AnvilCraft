@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page;
 
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
-import dev.dubhe.anvilcraft.recipe.anvil.util.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.components.ChanceItemStack;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -75,16 +75,16 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 2 && i * 2 + j < inputs.size(); j++) {
                     PatchouliRenderHelper.renderIngredient(
-                        parent, graphics, inputs.get(i * 2 + j), recipeX - 4 + j * 19, recipeY + 12 + i * 19, mouseX, mouseY
+                        parent, graphics, inputs.get(i * 2 + j), recipeX - 4 + i * 19, recipeY + 12 + j * 19, mouseX, mouseY
                     );
                 }
             }
         } else if (inputs.size() <= 6) {
             PatchouliRenderHelper.render3x2(graphics, recipeX - 6, recipeY);
             for (int i = 0; i < 2; i++) {
-                for (int j = 0; j < 3 && i * 2 + j < inputs.size(); j++) {
+                for (int j = 0; j < 3 && i * 3 + j < inputs.size(); j++) {
                     PatchouliRenderHelper.renderIngredient(
-                        parent, graphics, inputs.get(i * 2 + j), recipeX - 4 + j * 19, recipeY + 4 + i * 19, mouseX, mouseY
+                        parent, graphics, inputs.get(i * 3 + j), recipeX - 2 + i * 19, recipeY + 4 + j * 19, mouseX, mouseY
                     );
                 }
             }
@@ -93,11 +93,11 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
         List<ChanceItemStack> results = this.results.apply(recipe);
         if (results.size() == 1) {
             PatchouliRenderHelper.render1x1(graphics, recipeX + 81, recipeY + 18);
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 22, mouseX, mouseY, results.getFirst().getStack());
+            parent.renderItemStack(graphics, recipeX + 85, recipeY + 22, mouseX, mouseY, results.getFirst().stack());
         } else if (results.size() > 1) {
             PatchouliRenderHelper.render2x1(graphics, recipeX + 81, recipeY + 8);
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 12, mouseX, mouseY, results.getFirst().getStack());
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 31, mouseX, mouseY, results.get(1).getStack());
+            parent.renderItemStack(graphics, recipeX + 85, recipeY + 12, mouseX, mouseY, results.getFirst().stack());
+            parent.renderItemStack(graphics, recipeX + 85, recipeY + 31, mouseX, mouseY, results.get(1).stack());
         }
 
         this.drawExtra(graphics, recipe, recipeX, recipeY, mouseX, mouseY, second);

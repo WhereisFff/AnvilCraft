@@ -161,7 +161,7 @@ public class RoyalAnvilMenu extends AnvilMenu {
                             flag3 = true;
                         } else {
                             flag2 = true;
-                            if (!AnvilCraft.config.royalAnvilBeyondMaxLevel && j2 > enchantment.getMaxLevel()) {
+                            if (!AnvilCraft.CONFIG.royalAnvilBeyondMaxLevel && j2 > enchantment.getMaxLevel()) {
                                 j2 = enchantment.getMaxLevel();
                             }
 

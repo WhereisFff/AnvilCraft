@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import com.mojang.datafixers.util.Unit;
-import dev.dubhe.anvilcraft.init.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.world.item.SwordItem;
 

@@ -47,7 +47,7 @@ public class HitSpawnerBehavior implements IAnvilBehavior {
             if (level.getBlockEntity(pos) instanceof SpawnerBlockEntity blockEntity) {
                 BaseSpawner spawner = blockEntity.getSpawner();
                 BaseSpawnerAccessor accessor = (BaseSpawnerAccessor) spawner;
-                SpawnData spawnData = accessor.invoker$getOrCreateNextSpawnData(level, randomSource, pos);
+                SpawnData spawnData = accessor.invokeGetOrCreateNextSpawnData(level, randomSource, pos);
                 spawnEntities(spawnData, serverLevel, pos, randomSource, accessor);
             }
         }

@@ -11,9 +11,9 @@ import java.util.UUID;
 @Mixin(VaultServerData.class)
 public interface VaultServerDataAccessor {
 
-    @Invoker(value = "markChanged")
-    void invoker$markChanged();
+    @Invoker
+    void invokeMarkChanged();
 
-    @Accessor(value = "rewardedPlayers")
+    @Accessor
     Set<UUID> getRewardedPlayers();
 }

@@ -2,16 +2,16 @@ package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItemTags;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.neoforge.common.Tags;
 
 public class ItemTagLoader {
     /**
@@ -19,7 +19,7 @@ public class ItemTagLoader {
      *
      * @param provider 提供器
      */
-    public static void init(@NotNull RegistrateTagsProvider<Item> provider) {
+    public static void init(RegistrateTagsProvider<Item> provider) {
         provider.addTag(ModItemTags.PLATES)
             .add(findResourceKey(Items.HEAVY_WEIGHTED_PRESSURE_PLATE))
             .add(findResourceKey(Items.LIGHT_WEIGHTED_PRESSURE_PLATE));
@@ -191,8 +191,11 @@ public class ItemTagLoader {
         provider.addTag(ModItemTags.TOTEM)
             .add(findResourceKey(Items.TOTEM_OF_UNDYING));
 
+        provider.addTag(ItemTags.SWORDS)
+            .addTag(ModItemTags.HEAVY_HALBERD);
         provider.addTag(ItemTags.AXES)
-            .addTag(ModItemTags.RESONATOR);
+            .addTag(ModItemTags.RESONATOR)
+            .addTag(ModItemTags.HEAVY_HALBERD);
         provider.addTag(ItemTags.SHOVELS)
             .addTag(ModItemTags.RESONATOR);
         provider.addTag(ItemTags.HOES)
@@ -206,9 +209,41 @@ public class ItemTagLoader {
 
         provider.addTag(ItemTags.DURABILITY_ENCHANTABLE)
             .add(findResourceKey(ModItems.MAGNET.get()));
+
+        provider.addTag(ModItemTags.COMPRESS_ITEM)
+            .add(findResourceKey(Items.SNOW_BLOCK))
+            .add(findResourceKey(Items.WHITE_WOOL))
+            .addTag(Tags.Items.INGOTS)
+            .addTag(Tags.Items.STORAGE_BLOCKS);
+
+        provider.addTag(ModItemTags.COMPRESS_ITEM)
+            .add(findResourceKey(Items.SNOW_BLOCK))
+            .add(findResourceKey(Items.WHITE_WOOL))
+            .addTag(Tags.Items.INGOTS)
+            .addTag(Tags.Items.STORAGE_BLOCKS);
+
+
+        provider.addTag(ModItemTags.SUPER_HEATING_BOOST_PRODUCTION)
+            .addTag(Tags.Items.RAW_MATERIALS)
+            .addTag(Tags.Items.ORES);
+
+        provider.addTag(ModItemTags.RAW_MUTTON)
+            .add(findResourceKey(Items.MUTTON));
+
+        provider.addTag(ModItemTags.RAW_BEEF)
+            .add(findResourceKey(Items.BEEF));
+
+        provider.addTag(ModItemTags.RAW_CHICKEN)
+            .add(findResourceKey(Items.CHICKEN));
+
+        provider.addTag(ModItemTags.RAW_PORKCHOP)
+            .add(findResourceKey(Items.PORKCHOP));
+
+        provider.addTag(ModItemTags.RAW_RABBIT)
+            .add(findResourceKey(Items.RABBIT));
     }
 
-    private static @NotNull ResourceKey<Item> findResourceKey(Item item) {
+    private static ResourceKey<Item> findResourceKey(Item item) {
         return ResourceKey.create(Registries.ITEM, BuiltInRegistries.ITEM.getKey(item));
     }
 }

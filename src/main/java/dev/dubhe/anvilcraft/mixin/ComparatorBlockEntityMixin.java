@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.api.injection.tooltip.IInjectedTooltipProvider;
+import dev.dubhe.anvilcraft.api.injection.tooltip.ITooltipProviderExtension;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import net.minecraft.ChatFormatting;
 import net.minecraft.MethodsReturnNonnullByDefault;
@@ -28,7 +28,7 @@ import java.util.List;
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
 @Mixin(ComparatorBlockEntity.class)
-public abstract class ComparatorBlockEntityMixin extends BlockEntity implements IInjectedTooltipProvider {
+public abstract class ComparatorBlockEntityMixin extends BlockEntity implements ITooltipProviderExtension {
     public ComparatorBlockEntityMixin(
         BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -44,7 +44,8 @@ public abstract class ComparatorBlockEntityMixin extends BlockEntity implements 
     public List<Component> anvilcraft$getTooltip() {
         final ArrayList<Component> lines = new ArrayList<>();
         lines.add(Component.translatable("tooltip.anvilcraft.redstone.title").withStyle(ChatFormatting.BLUE));
-        lines.add(Component.translatable("tooltip.anvilcraft.redstone.output_power", this.getOutputSignal()).withStyle(ChatFormatting.GRAY));
+        lines.add(Component.translatable("tooltip.anvilcraft.redstone.output_power", this.getOutputSignal())
+            .withStyle(ChatFormatting.GRAY));
 
         Component mode = switch (this.getBlockState().getValue(ComparatorBlock.MODE)) {
             case COMPARE -> Component.translatable("tooltip.anvilcraft.redstone.output_mode.compare");

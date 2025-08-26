@@ -1,7 +1,8 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModItems;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
@@ -12,7 +13,6 @@ import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -40,7 +40,9 @@ public abstract class BeaconMenuMixin {
         @At(
             value = "INVOKE",
             target = "Lnet/minecraft/world/inventory/BeaconMenu$PaymentSlot;"
-                + "remove(I)Lnet/minecraft/world/item/ItemStack;"))
+                     + "remove(I)Lnet/minecraft/world/item/ItemStack;"
+        )
+    )
     private void updateEffects(
         Optional<MobEffect> primaryEffect, Optional<MobEffect> secondaryEffect, CallbackInfo ci) {
         ItemStack item = this.paymentSlot.getItem();
@@ -48,6 +50,7 @@ public abstract class BeaconMenuMixin {
         this.access.execute((level, pos) -> {
             if (!(level instanceof ServerLevel serverLevel)) return;
             if (this.anvilcraft$toCorrupted(level, pos)) {
+                TriggerUtil.convertBeacon(level, pos);
                 serverLevel.setBlockAndUpdate(pos, ModBlocks.CORRUPTED_BEACON.getDefaultState());
                 MinecraftServer server = serverLevel.getServer();
                 GameRules.BooleanValue rule = server.getGameRules().getRule(GameRules.RULE_WEATHER_CYCLE);
@@ -59,7 +62,7 @@ public abstract class BeaconMenuMixin {
     }
 
     @Unique
-    private boolean anvilcraft$toCorrupted(@NotNull Level level, @NotNull BlockPos pos) {
+    private boolean anvilcraft$toCorrupted(Level level, BlockPos pos) {
         RandomSource random = level.getRandom();
         double chance = random.nextDouble();
         int levels = anvilcraft$updateBase(level, pos.getX(), pos.getY(), pos.getZ());

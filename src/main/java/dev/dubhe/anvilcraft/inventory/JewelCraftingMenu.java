@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.inventory;
 
-import dev.dubhe.anvilcraft.init.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.inventory.component.jewel.JewelInputSlot;
 import dev.dubhe.anvilcraft.inventory.component.jewel.JewelResultSlot;
 import dev.dubhe.anvilcraft.inventory.container.JewelSourceContainer;

@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.event;
 
-import dev.dubhe.anvilcraft.api.item.property.Eternal;
-import dev.dubhe.anvilcraft.api.item.property.Merciless;
 import dev.dubhe.anvilcraft.api.power.IDynamicPowerComponentHolder;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.item.CrabClawItem;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
+import dev.dubhe.anvilcraft.item.property.component.Eternal;
+import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -29,9 +29,9 @@ public class PlayerTickEventHandler {
         if (player instanceof IDynamicPowerComponentHolder holder) {
             PowerGrid powerGrid = PowerGrid.findPowerGridContains(
                 player.level(),
-                holder.anvilCraft$getPowerSupplyingBoundingBox()
+                holder.anvilcraft$getPowerSupplyingBoundingBox()
             ).orElse(null);
-            holder.anvilCraft$getPowerComponent().switchTo(powerGrid);
+            holder.anvilcraft$getPowerComponent().switchTo(powerGrid);
         }
     }
 }

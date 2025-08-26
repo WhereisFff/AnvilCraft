@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
-import dev.dubhe.anvilcraft.init.ModEntityTypeTags;
+import dev.dubhe.anvilcraft.init.entity.ModEntityTypeTags;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;

@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.item.abnormal;
 
 import dev.dubhe.anvilcraft.api.amulet.AmuletManager;
-import dev.dubhe.anvilcraft.init.ModItems;
-import dev.dubhe.anvilcraft.util.InventoryUtil;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.Holder;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;

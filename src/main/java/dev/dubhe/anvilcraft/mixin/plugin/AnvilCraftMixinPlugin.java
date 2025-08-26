@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.mixin.plugin;
 
 import net.neoforged.fml.loading.LoadingModList;
-import org.jetbrains.annotations.NotNull;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
 
+import javax.annotation.Nullable;
 import java.util.List;
 import java.util.Set;
 
@@ -30,12 +30,12 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public String getRefMapperConfig() {
+    public @Nullable String getRefMapperConfig() {
         return null;
     }
 
     @Override
-    public boolean shouldApplyMixin(String targetClassName, @NotNull String mixinClassName) {
+    public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
         if (mixinClassName.endsWith("PistonStructureResolverMixin")) return !hasZetaPiston;
         if (mixinClassName.endsWith("DefaultDisplayViewingScreenMixin")) return hasReiScreen;
         if (mixinClassName.contains("Create")) return hasCreate;
@@ -49,7 +49,7 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public List<String> getMixins() {
+    public @Nullable List<String> getMixins() {
         return null;
     }
 
@@ -58,6 +58,6 @@ public class AnvilCraftMixinPlugin implements IMixinConfigPlugin {
     }
 
     @Override
-    public void postApply(@NotNull String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
+    public void postApply(String targetClassName, ClassNode targetClass, String mixinClassName, IMixinInfo mixinInfo) {
     }
 }

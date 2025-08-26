@@ -6,6 +6,7 @@ import lombok.Setter;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 
+import javax.annotation.Nullable;
 import java.util.Set;
 import java.util.function.Supplier;
 
@@ -32,7 +33,7 @@ public class DynamicPowerComponent {
         return amount;
     }
 
-    public void switchTo(PowerGrid powerGrid) {
+    public void switchTo(@Nullable PowerGrid powerGrid) {
         if (this.powerGrid == powerGrid) return;
         if (this.powerGrid != null) {
             this.powerGrid.notifyLeaving(this);
@@ -49,7 +50,7 @@ public class DynamicPowerComponent {
 
     public void gridTick() {
         if (owner instanceof IDynamicPowerComponentHolder) {
-            ((IDynamicPowerComponentHolder) owner).anvilCraft$gridTick();
+            ((IDynamicPowerComponentHolder) owner).anvilcraft$gridTick();
         }
     }
 

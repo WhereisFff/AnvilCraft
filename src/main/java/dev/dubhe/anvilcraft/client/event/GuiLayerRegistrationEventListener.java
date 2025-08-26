@@ -44,7 +44,7 @@ public class GuiLayerRegistrationEventListener {
                     screenHeight
                 );
             }
-            if (!AnvilHammerItem.isWearing(minecraft.player)) return;
+            if (!AnvilHammerItem.shouldRenderEffect(minecraft.player)) return;
             HitResult hit = minecraft.hitResult;
             if (hit == null || hit.getType() != HitResult.Type.BLOCK) {
                 return;
