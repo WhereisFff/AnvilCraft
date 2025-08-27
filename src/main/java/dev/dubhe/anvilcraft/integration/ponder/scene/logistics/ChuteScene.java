@@ -252,8 +252,7 @@ public class ChuteScene {
 
         // 添加红石控制
         BlockPos leverPos = util.grid().at(1, 1, 2);
-        scene.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState()
-            .setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
+        scene.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
         Selection lever = util.select().position(leverPos);
         scene.world().showIndependentSection(lever, Direction.DOWN);
         scene.idle(20);
