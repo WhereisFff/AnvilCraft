@@ -25,12 +25,12 @@ public class IronTrapdoorScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
         helper.forComponents(
-                        IRON_TRAPDOOR
-                )
-                .addStoryBoard(
-                        "platform/555",
-                        IronTrapdoorScene::crafting
-                );
+                IRON_TRAPDOOR
+            )
+            .addStoryBoard(
+                "platform/555",
+                IronTrapdoorScene::crafting
+            );
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -39,7 +39,7 @@ public class IronTrapdoorScene {
         scene.showBasePlate();
         // 创建铁活板门
         BlockPos ironTrapdoorPos = new BlockPos(2, 1, 2);
-        scene.world().setBlock(ironTrapdoorPos, Blocks.IRON_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.HALF , Half.TOP),false );
+        scene.world().setBlock(ironTrapdoorPos, Blocks.IRON_TRAPDOOR.defaultBlockState().setValue(TrapDoorBlock.HALF, Half.TOP), false);
         Selection ironTrapdoor = util.select().position(2, 1, 2);
         scene.world().showIndependentSection(ironTrapdoor, Direction.NORTH);
         // 创建铁砧
@@ -67,10 +67,10 @@ public class IronTrapdoorScene {
         scene.idle(3);
         // 生成文本
         scene.overlay().showText(50)
-                .text("You can use the iron trapdoor to disassemble composite items into their components.")
-                .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
-                .attachKeyFrame()
-                .placeNearTarget();
+            .text("You can use the iron trapdoor to disassemble composite items into their components.")
+            .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
+            .attachKeyFrame()
+            .placeNearTarget();
 
         scene.idle(20);
 
