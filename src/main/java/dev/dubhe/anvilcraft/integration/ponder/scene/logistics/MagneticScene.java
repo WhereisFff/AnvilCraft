@@ -5,6 +5,7 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.dubhe.anvilcraft.block.ChuteBlock;
 import dev.dubhe.anvilcraft.block.MagneticChuteBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
+import dev.dubhe.anvilcraft.block.entity.MagneticChuteBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
 import net.createmod.catnip.math.Pointing;
@@ -105,11 +106,7 @@ public class MagneticScene {
 
         // 模拟磁性溜槽朝前方投掷物品（带有动量）
         Vec3 magneticDropPos = util.vector().topOf(new BlockPos(3, 1, 3)); // 朝南方向的位置
-        scene.world().createItemEntity(
-            util.vector().topOf(new BlockPos(3, 1, 2)).add(0, 0, 0.2),  // 起始位置略微向南
-            new Vec3(0, 0, 0.4),  // 给予南向的动量
-            goldIngot
-        );
+        scene.world().createItemEntity(magneticDropPos, MagneticChuteBlockEntity.getOutputSpeed(Direction.SOUTH), goldIngot);
 
         scene.overlay().showText(40)
             .text("When items are ejected, they're given forward momentum")
@@ -231,7 +228,7 @@ public class MagneticScene {
         scene.idle(16);
 
         // 模拟钻石从磁性溜槽输出
-        scene.world().createItemEntity(targetItemPos, new Vec3(0, -0.4, 0), diamond);
+        scene.world().createItemEntity(targetItemPos, MagneticChuteBlockEntity.getOutputSpeed(Direction.DOWN), diamond);
         scene.idle(20);
 
         // 铁锭（应该被阻挡）
