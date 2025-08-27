@@ -10,10 +10,10 @@ import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
-import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
@@ -37,25 +37,18 @@ public class SpaceOvercompressorScene {
         // 创建空间超压器
         BlockPos spaceOvercompressorPos = new BlockPos(2, 2, 2);
         scene.world().setBlock(spaceOvercompressorPos, ModBlocks.SPACE_OVERCOMPRESSOR.getDefaultState(), false);
-        Selection spaceOvercompressor = util.select().position(2, 2, 2);
-        scene.world().showIndependentSection(spaceOvercompressor, Direction.NORTH);
+        scene.world().showIndependentSection(util.select().position(spaceOvercompressorPos), Direction.NORTH);
         // 创建铁砧
         BlockPos anvilPos = new BlockPos(2, 4, 2);
         scene.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
-        Selection anvil = util.select().position(2, 4, 2);
-        ElementLink<WorldSectionElement> anvilLink = scene.world().showIndependentSection(anvil, Direction.NORTH);
+        ElementLink<WorldSectionElement> anvilLink =
+            scene.world().showIndependentSection(util.select().position(anvilPos), Direction.NORTH);
         scene.idle(10);
-        // 在 y=0 层，从 (1,0,1) 到 (3,0,3) 的 3x3 区域内删除原有方块并放置飘浮粉块
-        for (int x = 1; x <= 3; x++) {
-            for (int z = 1; z <= 3; z++) {
-                BlockPos pos = new BlockPos(x, 0, z);
-                scene.world().setBlock(pos, ModBlocks.END_DUST.getDefaultState(), true);
-            }
-        }
+        // 在 y=0 层，从 (1,0,1) 到 (3,0,3) 的 3x3 区域内放置飘浮粉块
+        scene.world().setBlocks(util.select().fromTo(1, 0, 1, 3, 0, 3),  ModBlocks.END_DUST.getDefaultState(), true);
         scene.idle(10);
 
         Vec3 ironBlockPos = new Vec3(2.5, 3.3, 2.5);
-        Vec3 ironBlockMotion = new Vec3(0, -0.3, 0);
         ItemStack ironBlockItem = new ItemStack(ModBlocks.HEAVY_IRON_BLOCK, 64);
         // 循环3次，每次砸入物品
         scene.overlay().showText(40)
@@ -65,12 +58,12 @@ public class SpaceOvercompressorScene {
             .placeNearTarget();
         for (int i = 0; i < 3; i++) {
             // 添加铁块
-            ElementLink<EntityElement> ironBockItemLink = scene.world().createItemEntity(ironBlockPos, ironBlockMotion, ironBlockItem);
+            ElementLink<EntityElement> ironBockItemLink = scene.world().createItemEntity(ironBlockPos, Vec3.ZERO, ironBlockItem);
             scene.idle(5);
             // 铁砧压入
             scene.world().moveSection(anvilLink, new Vec3(0, -1, 0), 2);
             scene.idle(2);
-            scene.world().modifyEntity(ironBockItemLink, entity -> entity.setPos(2.5, -100, 2.5));
+            scene.world().modifyEntity(ironBockItemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
             scene.idle(6);
             // 铁砧上移
             scene.world().moveSection(anvilLink, new Vec3(0, 1, 0), 3);
@@ -85,9 +78,7 @@ public class SpaceOvercompressorScene {
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
-        ItemStack outputItem = new ItemStack(ModItems.NEUTRONIUM_INGOT.asItem(), 1);
-        Vec3 outputPos = new Vec3(2.5, 1.8, 2.5);
-        scene.world().createItemEntity(outputPos, Vec3.ZERO, outputItem);
+        scene.world().createItemEntity(spaceOvercompressorPos.getBottomCenter(), Vec3.ZERO, ModItems.NEUTRONIUM_INGOT.asStack());
 
         scene.idle(20); // 等待一会展示结果
 
