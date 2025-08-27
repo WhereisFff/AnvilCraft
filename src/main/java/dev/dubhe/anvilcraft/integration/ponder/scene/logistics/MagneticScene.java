@@ -52,8 +52,10 @@ public class MagneticScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        // 放置普通溜槽
         BlockPos chutePos = util.grid().at(1, 2, 2);
+        BlockPos magneticPos = chutePos.offset(2, 0, 0);
+
+        // 放置普通溜槽
         scene.world().setBlock(chutePos, ModBlocks.CHUTE.getDefaultState().setValue(ChuteBlock.FACING, Direction.DOWN), false);
         Selection chute = util.select().position(chutePos);
         scene.world().showIndependentSection(chute, Direction.DOWN);
@@ -67,7 +69,6 @@ public class MagneticScene {
         scene.idle(50);
 
         // 放置磁性溜槽，朝南方向
-        BlockPos magneticPos = util.grid().at(3, 2, 2);
         scene.world().setBlock(magneticPos, ModBlocks.MAGNETIC_CHUTE.getDefaultState().setValue(MagneticChuteBlock.FACING, Direction.SOUTH), false);
         Selection magnetic = util.select().position(magneticPos);
         scene.world().showIndependentSection(magnetic, Direction.DOWN);
@@ -80,8 +81,8 @@ public class MagneticScene {
         scene.idle(50);
 
         // 演示物品掉落
-        Vec3 chuteItemPos = util.vector().topOf(chutePos).add(0, 1, 0);
-        Vec3 magneticItemPos = util.vector().topOf(magneticPos).add(0, 1, -1); // 从北面（后面）放置物品
+        Vec3 chuteItemPos = util.vector().topOf(chutePos.above());
+        Vec3 magneticItemPos = util.vector().topOf(magneticPos.offset(0, 1, -1)); // 从北面（后面）放置物品
 
         // 向普通溜槽添加物品
         ItemStack ironIngot = new ItemStack(Items.IRON_INGOT, 16);
@@ -92,7 +93,7 @@ public class MagneticScene {
         scene.idle(10);
 
         // 模拟普通溜槽向下掉落物品
-        Vec3 chuteDropPos = util.vector().topOf(new BlockPos(1, 1, 2));
+        Vec3 chuteDropPos = util.vector().topOf(chutePos.below());
         scene.world().createItemEntity(chuteDropPos, Vec3.ZERO, ironIngot);
         scene.idle(30);
 
@@ -105,7 +106,7 @@ public class MagneticScene {
         scene.idle(16); // 短暂延时
 
         // 模拟磁性溜槽朝前方投掷物品（带有动量）
-        Vec3 magneticDropPos = util.vector().topOf(new BlockPos(3, 1, 3)); // 朝南方向的位置
+        Vec3 magneticDropPos = util.vector().centerOf(magneticPos.south()); // 朝南方向的位置
         scene.world().createItemEntity(magneticDropPos, MagneticChuteBlockEntity.getOutputSpeed(Direction.SOUTH), goldIngot);
 
         scene.overlay().showText(40)
@@ -125,15 +126,17 @@ public class MagneticScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        // 演示1：磁性溜槽 + 普通溜槽
         BlockPos magneticPos = util.grid().at(1, 2, 2);
+        BlockPos chutePos = magneticPos.east();
+        BlockPos magnetic2Pos = util.grid().at(2, 2, 2);
+
+        // 演示1：磁性溜槽 + 普通溜槽
         scene.world().setBlock(magneticPos, ModBlocks.MAGNETIC_CHUTE.getDefaultState().setValue(MagneticChuteBlock.FACING, Direction.EAST), false);
         Selection magnetic = util.select().position(magneticPos);
         scene.world().showIndependentSection(magnetic, Direction.DOWN);
         scene.idle(20);
 
         // 放置普通溜槽在磁性溜槽的输出方向
-        BlockPos chutePos = util.grid().at(2, 2, 2);
         scene.world().setBlock(chutePos, ModBlocks.CHUTE.getDefaultState().setValue(ChuteBlock.FACING, Direction.DOWN), false);
         ElementLink<WorldSectionElement> chuteLink = scene.world().showIndependentSection(util.select().position(chutePos), Direction.DOWN);
         scene.idle(10);
@@ -156,16 +159,13 @@ public class MagneticScene {
         scene.idle(20);
 
         // 放置磁性溜槽替换简易溜槽
-        BlockPos magnetic2Pos = util.grid().at(2, 2, 2);
-
         scene.world().setBlock(magnetic2Pos, ModBlocks.MAGNETIC_CHUTE.getDefaultState().setValue(MagneticChuteBlock.FACING, Direction.DOWN), false);
-        Selection magnetic2 = util.select().position(magnetic2Pos);
-        scene.world().showIndependentSection(magnetic2, Direction.DOWN);
+        scene.world().showIndependentSection(util.select().position(magnetic2Pos), Direction.DOWN);
         scene.idle(20);
 
         scene.overlay().showText(40)
             .text("But magnetic chutes don't transform into simple chutes when connected to other magnetic chutes")
-            .pointAt(util.vector().centerOf(magnetic2Pos))
+            .pointAt(magnetic2Pos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         scene.idle(50);
@@ -180,8 +180,11 @@ public class MagneticScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        // 放置磁性溜槽
         BlockPos magneticPos = util.grid().at(2, 2, 2);
+        Vec3 itemDropPos = util.vector().topOf(magneticPos.above());
+        Vec3 targetItemPos = util.vector().topOf(magneticPos.below());
+
+        // 放置磁性溜槽
         scene.world().setBlock(magneticPos, ModBlocks.MAGNETIC_CHUTE.getDefaultState().setValue(MagneticChuteBlock.FACING, Direction.DOWN), false);
         Selection magnetic = util.select().position(magneticPos);
         scene.world().showIndependentSection(magnetic, Direction.DOWN);
@@ -213,10 +216,6 @@ public class MagneticScene {
             .placeNearTarget();
         scene.idle(50);
 
-        // 模拟丢入位置
-        Vec3 itemDropPos = util.vector().topOf(magneticPos).add(0, 1, 0);
-        // 物品输出位置
-        Vec3 targetItemPos = util.vector().topOf(util.grid().at(2, 1, 2));
 
         // 钻石（应该通过）
         ItemStack diamond = new ItemStack(Items.DIAMOND, 1);
