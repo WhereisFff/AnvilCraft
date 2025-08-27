@@ -67,14 +67,15 @@ public class MagneticChuteBlockEntity extends BaseChuteBlockEntity {
 
     @Override
     protected void applySpeed(ItemEntity itemEntity, Direction direction) {
-        Vec3 delta = new Vec3(
+        itemEntity.setDeltaMovement(getOutputSpeed(direction));
+    }
+
+    public static Vec3 getOutputSpeed(Direction direction) {
+        return new Vec3(
             direction.getStepX(),
             direction.getStepY(),
             direction.getStepZ()
-        );
-        itemEntity.setDeltaMovement(
-            delta.multiply(0.25, 0.25, 0.25)
-        );
+        ).multiply(0.25, 0.25, 0.25);
     }
 
     @Nullable
