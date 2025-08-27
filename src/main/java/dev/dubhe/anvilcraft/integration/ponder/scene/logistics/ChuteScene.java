@@ -331,7 +331,7 @@ public class ChuteScene {
 
         // 模拟设置过滤器
         scene.overlay().showControls(
-            util.vector().blockSurface(chutePos, Direction.WEST).add(0, 0.5, 0),
+            util.vector().blockSurface(chutePos, Direction.WEST),
             Pointing.DOWN, 20
         ).withItem(Items.DIAMOND.getDefaultInstance());
 
