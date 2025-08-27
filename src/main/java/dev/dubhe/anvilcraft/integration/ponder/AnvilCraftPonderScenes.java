@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.logistics.ChuteScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.logistics.MagneticScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.power.TransmissionPoleScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.HeaterScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.IronTrapdoorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.SpaceOvercompressorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockComparatorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockPlacerScene;
