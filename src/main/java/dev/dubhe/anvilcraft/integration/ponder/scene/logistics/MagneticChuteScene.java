@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.block.MagneticChuteBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
 import dev.dubhe.anvilcraft.block.entity.MagneticChuteBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.EntityElement;
@@ -24,24 +23,21 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 
-public class MagneticScene {
+public class MagneticChuteScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.MAGNETIC_CHUTE)
             .addStoryBoard(
                 "platform/555",
-                MagneticScene::basicOperation,
-                AnvilCraftPonderTags.LOGISTICS_COMPONENTS
+                MagneticChuteScene::basicOperation
             )
             .addStoryBoard(
                 "platform/555",
-                MagneticScene::chuteConnections,
-                AnvilCraftPonderTags.LOGISTICS_COMPONENTS
+                MagneticChuteScene::chuteConnections
             )
             .addStoryBoard(
                 "platform/555",
-                MagneticScene::filtering,
-                AnvilCraftPonderTags.LOGISTICS_COMPONENTS
+                MagneticChuteScene::filtering
             );
     }
 

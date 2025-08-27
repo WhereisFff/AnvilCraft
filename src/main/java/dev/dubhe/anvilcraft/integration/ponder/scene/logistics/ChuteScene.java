@@ -5,7 +5,6 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.dubhe.anvilcraft.block.ChuteBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.EntityElement;
@@ -32,18 +31,15 @@ public class ChuteScene {
         helper.forComponents(ModBlocks.CHUTE)
             .addStoryBoard(
                 "platform/555",
-                ChuteScene::basicOperation,
-                AnvilCraftPonderTags.LOGISTICS_COMPONENTS
+                ChuteScene::basicOperation
             )
             .addStoryBoard(
                 "platform/555",
-                ChuteScene::simpleChute,
-                AnvilCraftPonderTags.LOGISTICS_COMPONENTS
+                ChuteScene::simpleChute
             )
             .addStoryBoard(
                 "platform/555",
-                ChuteScene::filtering,
-                AnvilCraftPonderTags.LOGISTICS_COMPONENTS
+                ChuteScene::filtering
             );
     }
 
