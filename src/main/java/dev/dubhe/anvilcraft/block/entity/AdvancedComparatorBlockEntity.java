@@ -44,7 +44,7 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
     protected boolean redstoneControl = false;
     protected int highLimit = 10;
     protected int lowLimit = 5;
-    protected int inputtingSignal = 0;
+    protected int inputtingSignal;
 
     public AdvancedComparatorBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.ADVANCED_COMPARATOR.get(), pos, blockState);
