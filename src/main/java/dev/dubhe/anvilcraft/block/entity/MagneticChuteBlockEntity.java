@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
@@ -31,12 +30,12 @@ public class MagneticChuteBlockEntity extends BaseChuteBlockEntity {
     }
 
     @Override
-    protected boolean shouldSkipDirection(@NotNull Direction direction) {
+    protected boolean shouldSkipDirection(Direction direction) {
         return false;
     }
 
     @Override
-    protected boolean validateBlockState(@NotNull BlockState state) {
+    protected boolean validateBlockState(BlockState state) {
         return state.is(ModBlocks.MAGNETIC_CHUTE.get());
     }
 
@@ -61,7 +60,7 @@ public class MagneticChuteBlockEntity extends BaseChuteBlockEntity {
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
+    public Component getDisplayName() {
         return Component.translatable("block.anvilcraft.magnetic_chute");
     }
 
@@ -80,7 +79,7 @@ public class MagneticChuteBlockEntity extends BaseChuteBlockEntity {
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         if (player.isSpectator()) return null;
         return new MagneticChuteMenu(ModMenuTypes.MAGNETIC_CHUTE.get(), i, inventory, this);
     }
