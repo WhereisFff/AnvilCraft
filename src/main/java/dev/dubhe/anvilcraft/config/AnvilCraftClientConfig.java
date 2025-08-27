@@ -24,6 +24,9 @@ public class AnvilCraftClientConfig {
     @Comment("Bloom effect on laser and power transmitter lines.")
     public boolean renderBloomEffect = false;
 
+    @Comment("A vertical item frame vertically displays items")
+    public boolean verticalItemFrame = false;
+
     @CollapsibleObject
     public IonoCraftBackpackHud ionoCraftBackpackHud = new IonoCraftBackpackHud();
 

@@ -31,7 +31,7 @@ public class ResetVaultBehavior implements IAnvilBehavior {
                 level.setBlockAndUpdate(hitBlockPos, Blocks.AIR.defaultBlockState());
                 VaultServerDataAccessor vaultServerDataAccessor = (VaultServerDataAccessor) vaultServerData;
                 vaultServerDataAccessor.getRewardedPlayers().clear();
-                vaultServerDataAccessor.invoker$markChanged();
+                vaultServerDataAccessor.invokeMarkChanged();
             });
         return false;
     }

@@ -190,7 +190,9 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
             blockpos = blockpos.relative(direction);
             blockstate = level.getBlockState(blockpos);
             ItemFrame itemframe = getItemFrame(level, direction, blockpos);
-            int j = Math.max(itemframe.getAnalogOutput(), blockstate.hasAnalogOutputSignal() ? blockstate.getAnalogOutputSignal(level, blockpos) : Integer.MIN_VALUE);
+            int j = Integer.MIN_VALUE;
+            if (blockstate.hasAnalogOutputSignal()) j = Math.max(j, blockstate.getAnalogOutputSignal(level, blockpos));
+            if (itemframe != null) j = Math.max(j, itemframe.getAnalogOutput());
             if (j != Integer.MIN_VALUE) {
                 i = j;
             }
@@ -198,10 +200,12 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
         return i;
     }
 
+    @Nullable
     private static ItemFrame getItemFrame(Level level, Direction facing, BlockPos pos) {
         List<ItemFrame> list = level.getEntitiesOfClass(ItemFrame.class, new AABB(
             pos.getX(), pos.getY(), pos.getZ(), (pos.getX() + 1), (pos.getY() + 1), (pos.getZ() + 1)), (frame) -> frame != null && frame.getDirection() == facing);
-        return list.getFirst();
+        if (!list.isEmpty()) return list.getFirst();
+        return null;
     }
 
     public static int getAlternateSignal(SignalGetter level, BlockPos pos, BlockState state, boolean isHigh) {

@@ -68,7 +68,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
 
         pose.scale(0.5f, 0.5f, 1);
         graphics.drawString(
-            ((ScreenAccessor) parent).anvilcraft$getFont(),
+            ((ScreenAccessor) parent).getFont(),
             Component.translatable(
                 "gui.anvilcraft.category.anvil_collision_craft_speed",
                 recipe.speed()),
@@ -134,7 +134,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
                 pose.translate(x + 4, y + 5, 100);
                 pose.scale(0.5f, 0.5f, 1);
                 graphics.drawString(
-                    ((ScreenAccessor) parent).anvilcraft$getFont(),
+                    ((ScreenAccessor) parent).getFont(),
                     Integer.toString(transformBlock.maxCount()),
                     0,
                     0,
@@ -142,7 +142,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
                     false
                 );
                 graphics.drawString(
-                    ((ScreenAccessor) parent).anvilcraft$getFont(),
+                    ((ScreenAccessor) parent).getFont(),
                     Integer.toString(transformBlock.maxCount()),
                     0,
                     48,

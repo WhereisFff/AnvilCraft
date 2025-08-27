@@ -1,5 +1,7 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.client.renderer.item.ItemInHandRendererManager;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -18,7 +20,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ItemInHandRenderer.class)
@@ -48,7 +49,7 @@ abstract class ItemInHandRendererMixin {
         anvilcraft$manager = new ItemInHandRendererManager(itemRenderer, this::renderItem);
     }
 
-    @Redirect(
+    @WrapOperation(
         method = "renderArmWithItem",
         at = @At(
             value = "INVOKE",
@@ -56,9 +57,9 @@ abstract class ItemInHandRendererMixin {
             ordinal = 0
         )
     )
-    private boolean isEmpty(ItemStack instance) {
+    private boolean isEmpty(ItemStack instance, Operation<Boolean> original) {
         if (this.offHandItem.is(ModItems.CRAB_CLAW.get())) return false;
-        return instance.isEmpty();
+        return original.call(instance);
     }
 
     @Inject(
@@ -68,10 +69,10 @@ abstract class ItemInHandRendererMixin {
             value = "INVOKE",
             ordinal = 1,
             target = "Lnet/minecraft/client/renderer/ItemInHandRenderer;"
-                + "renderItem(Lnet/minecraft/world/entity/LivingEntity;"
-                + "Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;"
-                + "ZLcom/mojang/blaze3d/vertex/PoseStack;"
-                + "Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
+                     + "renderItem(Lnet/minecraft/world/entity/LivingEntity;"
+                     + "Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;"
+                     + "ZLcom/mojang/blaze3d/vertex/PoseStack;"
+                     + "Lnet/minecraft/client/renderer/MultiBufferSource;I)V"
         ),
         cancellable = true
     )

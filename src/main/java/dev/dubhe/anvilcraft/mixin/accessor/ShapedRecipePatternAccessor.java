@@ -8,6 +8,6 @@ import java.util.Optional;
 
 @Mixin(ShapedRecipePattern.class)
 public interface ShapedRecipePatternAccessor {
-    @Accessor("data")
-    Optional<ShapedRecipePattern.Data> accessor$data();
+    @Accessor
+    Optional<ShapedRecipePattern.Data> getData();
 }

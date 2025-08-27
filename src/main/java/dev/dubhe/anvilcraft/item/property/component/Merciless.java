@@ -77,12 +77,12 @@ public record Merciless(boolean enabled) {
                     .withModifierAdded(
                         Attributes.ATTACK_DAMAGE,
                         new AttributeModifier(MERCILESS_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND
+                        EquipmentSlotGroup.MAINHAND
                     )
                     .withModifierAdded(
                         Attributes.MINING_EFFICIENCY,
                         new AttributeModifier(MERCILESS_ID, miningEfficiency, AttributeModifier.Operation.ADD_VALUE),
-                        EquipmentSlotGroup.HAND
+                        EquipmentSlotGroup.MAINHAND
                     );
                 stack.set(DataComponents.ATTRIBUTE_MODIFIERS, attributeModifiers);
             } else {

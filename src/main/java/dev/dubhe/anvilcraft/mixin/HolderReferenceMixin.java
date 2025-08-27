@@ -18,9 +18,11 @@ abstract class HolderReferenceMixin {
         at = @At(
             value = "NEW",
             target = "(Lnet/minecraft/core/Holder$Reference$Type;"
-                + "Lnet/minecraft/core/HolderOwner;"
-                + "Lnet/minecraft/resources/ResourceKey;"
-                + "Ljava/lang/Object;)Lnet/minecraft/core/Holder$Reference;"))
+                     + "Lnet/minecraft/core/HolderOwner;"
+                     + "Lnet/minecraft/resources/ResourceKey;"
+                     + "Ljava/lang/Object;)Lnet/minecraft/core/Holder$Reference;"
+        )
+    )
     private static <T> Holder.Reference<T> createForResonator(
         Holder.Reference.Type type,
         HolderOwner<T> owner,
@@ -29,10 +31,20 @@ abstract class HolderReferenceMixin {
     ) {
         if (value instanceof ResonatorItem resonator) {
             //noinspection unchecked
-            return (Holder.Reference<T>) new ResonatorItem.ResonatorHolder(type, (HolderOwner<Item>) owner, (ResourceKey<Item>) key, resonator);
+            return (Holder.Reference<T>) new ResonatorItem.ResonatorHolder(
+                type,
+                (HolderOwner<Item>) owner,
+                (ResourceKey<Item>) key,
+                resonator
+            );
         } else if (value instanceof MultitoolItem multitoolItem) {
             //noinspection unchecked
-            return (Holder.Reference<T>) new MultitoolItem.MultitoolHolder(type, (HolderOwner<Item>) owner, (ResourceKey<Item>) key, multitoolItem);
+            return (Holder.Reference<T>) new MultitoolItem.MultitoolHolder(
+                type,
+                (HolderOwner<Item>) owner,
+                (ResourceKey<Item>) key,
+                multitoolItem
+            );
         } else {
             return original.call(type, owner, key, value);
         }

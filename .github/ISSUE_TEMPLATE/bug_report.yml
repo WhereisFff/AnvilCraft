@@ -61,8 +61,8 @@ body:
     attributes:
       label: Existing behavior - 现有行为
       description: |
-        Please describe the problem you have encountered carefully.
-        请仔细描述你所遇到的问题。
+        Please describe the problem you have encountered carefully.Log and crash-report please upload to mclo.gs, and paste the link from the address bar here. Do not upload files or directly paste into the text.
+        请仔细描述你所遇到的问题。 log 与 crash-report 请上传至 mclo.gs ，并将地址栏中的链接复制到这里，请勿上传文件或直接粘贴至正文中。
     validations:
       required: true
 

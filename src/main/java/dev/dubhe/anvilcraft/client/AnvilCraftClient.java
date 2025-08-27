@@ -14,7 +14,6 @@ import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModParticles;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,9 +27,6 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.ParametersAreNonnullByDefault;
 
 @Mod(value = AnvilCraft.MOD_ID, dist = Dist.CLIENT)
 public class AnvilCraftClient {
@@ -38,10 +34,9 @@ public class AnvilCraftClient {
     public static ModContainer modContainer = null;
     public static final AnvilCraftClientConfig CONFIG = AnvilCraft.CLIENT_CONFIG;
 
-    public AnvilCraftClient(@NotNull IEventBus modBus, @NotNull ModContainer container) {
+    public AnvilCraftClient(IEventBus modBus, ModContainer container) {
         modEventBus = modBus;
         modContainer = container;
-        AnvilCraft.CONFIG_MANAGER.registerScreen(container);
         modBus.addListener(GuiLayerRegistrationEventListener::onRegister);
         modBus.addListener(ModKeyMappings::register);
         modBus.addListener(AnvilCraftClient::registerClientExtensions);
@@ -66,16 +61,14 @@ public class AnvilCraftClient {
         e.registerItem(new ItemExtensionImpl(), ModItems.IONOCRAFT_BACKPACK);
     }
 
-    public static void registerCustomItemDecorations(@NotNull RegisterItemDecorationsEvent e) {
+    public static void registerCustomItemDecorations(RegisterItemDecorationsEvent e) {
         e.register(ModItems.IONOCRAFT_BACKPACK, new IonoCraftBackpackDecoration());
     }
 
-    public static void registerParticleProviders(@NotNull RegisterParticleProvidersEvent e) {
+    public static void registerParticleProviders(RegisterParticleProvidersEvent e) {
         e.registerSpriteSet(ModParticles.PLASMA_JETS.get(), PlasmaJetsParticle.Provider::new);
     }
 
-    @ParametersAreNonnullByDefault
-    @MethodsReturnNonnullByDefault
     public static class ItemExtensionImpl implements IClientItemExtensions {
         @Override
         public HumanoidModel<?> getHumanoidArmorModel(

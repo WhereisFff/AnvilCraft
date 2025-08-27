@@ -20,6 +20,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -63,7 +64,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         CompoundTag data = this.constructDataNbt();
         data.putByte("State", this.state.index());
@@ -71,7 +72,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
+    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         CompoundTag data = tag.getCompound("ExtraData");
         this.readDataNbt(data);
@@ -141,6 +142,15 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         this.setChanged();
     }
 
+    public void setOutputMode(boolean outputInvert) {
+        this.outputInvert = outputInvert;
+        if (this.level != null) {
+            Util.castSafely(this.getBlockState().getBlock(), PulseGeneratorBlock.class)
+                .ifPresent(block -> block.update(this.level, this.getBlockPos(), this::getBlockState));
+        }
+        this.setChanged();
+    }
+
     public void setWaitingTime(int waitingTime) {
         this.waitingTime = Math.clamp(waitingTime, 0, 24000);
         if (this.waitingTime == 0 && this.signalDuration == 0) {
@@ -177,6 +187,30 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         if (player.level().getBlockEntity(getBlockPos()) instanceof PulseGeneratorBlockEntity blockEntity)
             return new PulseGeneratorMenu(ModMenuTypes.PULSE_GENERATOR.get(), containerId, inventory, blockEntity);
         return null;
+    }
+
+    public CompoundTag exportMoveData() {
+        CompoundTag data = new CompoundTag();
+        data.put("Data", this.constructDataNbt());
+        data.putBoolean("Inputting", this.isInputtingSignal);
+        data.putByte("State", this.state.index());
+        return data;
+    }
+
+    public void applyMoveData(Level level, BlockPos pos, BlockState state, CompoundTag move) {
+        this.readDataNbt(move.getCompound("Data"));
+        this.isInputtingSignal = move.getBoolean("Inputting");
+        this.state = State.fromIndex(move.getByte("State"));
+        switch (this.state) {
+            case WAITING -> level.scheduleTick(pos, state.getBlock(), this.getWaitingTime());
+            case OUTPUTTING -> level.scheduleTick(pos, state.getBlock(), this.getSignalDuration());
+        }
+        level.setBlock(pos, state.setValue(PulseGeneratorBlock.POWERED, this.isOutputting()), 3);
+        this.isDeadlock = false;
+
+        Util.<PulseGeneratorBlock>cast(this.getBlockState().getBlock()).update(level, pos, () -> state);
+
+        this.setChanged();
     }
 
     public enum State {

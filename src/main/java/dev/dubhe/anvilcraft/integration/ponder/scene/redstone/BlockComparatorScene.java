@@ -15,22 +15,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CopperBulbBlock;
 import net.minecraft.world.level.block.RedstoneLampBlock;
-import org.jetbrains.annotations.NotNull;
 
 public class BlockComparatorScene {
-    public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
+    public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
-        helper.forComponents(
-                ModBlocks.BLOCK_COMPARATOR
-            )
+        helper.forComponents(ModBlocks.BLOCK_COMPARATOR)
             .addStoryBoard(
                 "platform/555",
                 BlockComparatorScene::run,
-                AnvilCraftPonderTags.REDSTONE_COMPONENTS);
-
+                AnvilCraftPonderTags.REDSTONE_COMPONENTS
+            );
     }
 
-    public static void run(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    public static void run(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("block_comparator", "Block Comparator");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();

@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.anvil;
 
+import dev.anvilcraft.lib.AnvilLib;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
@@ -30,7 +31,7 @@ public class MassInjectBehavior implements IAnvilBehavior {
     ) {
         BlockEntity blockEntity = level.getBlockEntity(hitBlockPos);
         if (!(blockEntity instanceof SpaceOvercompressorBlockEntity compressor)) return false;
-        int remainingProcessCount = AnvilCraft.CONFIG.anvilEfficiency;
+        int remainingProcessCount = AnvilLib.CONFIG.inWorldRecipeMaxEfficiency;
         long totalMassConsumed = 0L;
         RecipeManager manager = level.getRecipeManager();
         List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class,

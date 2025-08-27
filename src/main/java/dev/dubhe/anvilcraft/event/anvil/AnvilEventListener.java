@@ -157,12 +157,12 @@ public class AnvilEventListener {
         Block anvil = eventEntity.getBlockState().getBlock();
         Optional<ServerPlayer> killerOp = Optional.empty();
         if (Util.instanceOfAny(anvil, EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
-            ServerPlayer killer = AnvilCraftFakePlayers.anvilCraftKiller.offerPlayer(serverLevel);
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer(serverLevel);
             builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(killer))
                 .withParameter(LootContextParams.ATTACKING_ENTITY, killer)
                 .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, killer);
             if (anvil instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilCraftKiller.enableLooting5(serverLevel, killer);
+                AnvilCraftFakePlayers.anvilcraftKiller.enableLooting5(serverLevel, killer);
             }
             killerOp = Optional.of(killer);
         }
@@ -171,7 +171,7 @@ public class AnvilEventListener {
         dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
         if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
-        killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilCraftKiller.disable(killer));
+        killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilcraftKiller.disable(killer));
         TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos), entity);
     }
 }

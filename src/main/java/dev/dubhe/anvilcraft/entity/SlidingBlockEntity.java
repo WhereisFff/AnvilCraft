@@ -38,14 +38,14 @@ import java.util.Optional;
 
 @ParametersAreNonnullByDefault
 public class SlidingBlockEntity extends Entity {
+    public static final double DEFAULT_MOVEMENT = 0.35;
+    protected static final EntityDataAccessor<BlockPos> DATA_START_POS = SynchedEntityData.defineId(
+        SlidingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
     @Getter
     @Setter
     private SlidingBlockSection section;
     @Getter
     private Direction moveDirection;
-    public static final double DEFAULT_MOVEMENT = 0.35;
-    protected static final EntityDataAccessor<BlockPos> DATA_START_POS = SynchedEntityData.defineId(
-        SlidingBlockEntity.class, EntityDataSerializers.BLOCK_POS);
     private int time = 0;
 
     public SlidingBlockEntity(EntityType<? extends SlidingBlockEntity> entityType, Level level) {

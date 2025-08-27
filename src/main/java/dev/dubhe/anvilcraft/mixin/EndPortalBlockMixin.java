@@ -24,15 +24,19 @@ abstract class EndPortalBlockMixin {
         at =
         @At(
             value = "INVOKE",
-            target =
-                "Lnet/minecraft/world/entity/Entity;setAsInsidePortal(Lnet/minecraft/world/level/block/Portal;Lnet/minecraft/core/BlockPos;)V"),
-        cancellable = true)
+            target = "Lnet/minecraft/world/entity/Entity;setAsInsidePortal("
+                     + "Lnet/minecraft/world/level/block/Portal;"
+                     + "Lnet/minecraft/core/BlockPos;"
+                     + ")V"
+        ),
+        cancellable = true
+    )
     private void fallBlockEntityInside(
         BlockState pState, Level pLevel, BlockPos pPos, Entity pEntity, CallbackInfo ci
     ) {
         if (
             pEntity instanceof FallingBlockEntity fallingBlockEntity
-                && !fallingBlockEntity.blockState.is(ModBlockTags.END_PORTAL_UNABLE_CHANGE)
+            && !fallingBlockEntity.blockState.is(ModBlockTags.END_PORTAL_UNABLE_CHANGE)
         ) {
             BlockState newState = ModBlocks.END_DUST.getDefaultState();
             if (fallingBlockEntity.blockState.is(BlockTags.ANVIL)) {

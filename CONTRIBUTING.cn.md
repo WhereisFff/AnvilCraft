@@ -2,27 +2,27 @@
 
 ## 配置你的 `IDEA`
 
-1. 设置强制换行位置为 `140` 字符
-    * `编辑器` -> `代码样式` -> `常规`
-2. 设置制表符大小为 `4` 个空格，缩进为 `4` 个空格，连续缩进为 `4` 个空格
-    * `编辑器` -> `代码样式` -> `Java` -> `制表符和缩进`
-3. 设置将 `import` 与 `*` 搭配使用的类计数为 `9999`，设置将静态 `import` 与 `*` 搭配使用的类计数为 `9999`
-    * `编辑器` -> `代码样式` -> `Java` -> `Import`
+1. 导入 Java 代码样式配置（必须）
+    - [此处查看](https://gist.github.com/Gu-ZT/c3dfd97991daea73d1a5316e0974778f)
+    - `设置` -> `编辑器` -> `代码样式` -> `Java` -> `方案` -> `导入方案`
+2. 导入配色方案（可选）
+    - [此处查看](https://server.cjsah.net:1002/self/Cjsah.v15.icls)
+    - `设置` -> `编辑器` -> `配色方案` -> `导入方案`
 
 ## 各类注解的使用
 
-1. `org.jetbrains.annotations.NotNull` 表示该参数不能为 `null`，你应该修复所有未使用该注解所产生的 `IDEA` 提醒，包括段落前的 `@` 符号提醒和参数
-    标黄的提醒
-2. `org.jetbrains.annotations.Nullable` 表示该参数可以为 `null`，你应该修复所有未使用该注解所产生的 `IDEA` 提醒，包括段落前的 `@` 符号提醒和参数
-    标黄的提醒
+1. 在所有软件包下放置 `package-info.java`  文件，并在其中为软件包添加以下注解
+    - `net.minecraft.MethodsReturnNonnullByDefault`
+    - `javax.annotation.ParametersAreNonnullByDefault`
+2. 对于需要表示为 `null` 的`参数`/`字段`/`返回值`等，请使用 `javax.annotation.Nullable`
 
 ## 提交规范
 
 1. 提交时，请使用 `git commit -m "commit message"` 的格式
 2. 如果该 `commit` 是对于 `issue` 的解决或修复，请在 `commit message` 中填写 `#issue number`
 3. 我们不限制在 `commit message` 中使用的语言，但请至少包含一个英文的简单描述，并将其放置在其它语言的描述之前
-4. 如果你在 `dev.dubhe.anvilcraft.api` 软件包中添加了新的类和公开方法，请为他们添加完善的 `Javadoc` ，如果你修改了此软件包内的任何公开或非公开的
-    方法，请保证它们的二进制兼容性
+4. 如果你在 `dev.dubhe.anvilcraft.api` 软件包中添加了新的类和公开方法，请为他们添加完善的 `Javadoc`，
+   如果你修改了此软件包内的任何公开或非公开的方法，请保证它们的二进制兼容性
 
 ## Pull requests
 
@@ -30,6 +30,13 @@
 2. 你应在 `Pull requests` 的描述中详细解释你所做的更改
 3. 你应在 `Pull requests` 的描述中使用 `fixed` 或 `resolved` 链接对应的 `issue`
 4. 以下是一个简单的 `Pull requests` 示例
+    * ```markdown
+      ### Fix drop of mob amber blocks 修复生物琥珀块挖掘掉落物问题
+      - 修复了 #1533 的问题。
+      - 现在挖掘含生物琥珀块时，会正确地保存其包含生物的数据。
+      - 修复了部分数据与语言文件的错误。
+      - fixed #1533
+      ```
     * > ### Fix drop of mob amber blocks 修复生物琥珀块挖掘掉落物问题
       > - 修复了 #1533 的问题。
       > - 现在挖掘含生物琥珀块时，会正确地保存其包含生物的数据。

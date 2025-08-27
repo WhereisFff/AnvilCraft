@@ -54,7 +54,10 @@ public class VanillaRecipesWrap {
         VanillaRecipesWrap.recipes = new ArrayList<>();
         for (RecipeHolder<?> recipeHolder : recipes) {
             Recipe<?> recipe = recipeHolder.value();
-            Item item = recipe.getResultItem(registries).getItem();
+            ItemStack stack = recipe.getResultItem(registries);
+            //noinspection ConstantValue
+            if (stack == null) continue;
+            Item item = stack.getItem();
             if (recipe.getIngredients().isEmpty() || recipe.getIngredients().getFirst().isCustom()) {
                 continue;
             }
@@ -82,7 +85,10 @@ public class VanillaRecipesWrap {
         if (recipe == null) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         Ingredient first = ingredients.getFirst();
-        ItemStack result = recipe.getResultItem(registries).copy();
+        ItemStack result = recipe.getResultItem(registries);
+        //noinspection ConstantValue
+        if (result == null) return;
+        result = result.copy();
         ItemIngredientPredicate.Builder builder1 = ItemIngredientPredicate.Builder.item();
         if (ingredients.size() == 1 && result.getCount() > 1) {
             UnpackRecipe.Builder builder = UnpackRecipe.builder();
@@ -136,7 +142,10 @@ public class VanillaRecipesWrap {
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         Ingredient first = ingredients.getFirst();
         if (ingredients.size() <= 1) return;
-        ItemStack result = recipe.getResultItem(registries).copy();
+        ItemStack result = recipe.getResultItem(registries);
+        //noinspection ConstantValue
+        if (result == null) return;
+        result = result.copy();
         if (!result.is(ModItemTags.COMPRESS_ITEM)) return;
         for (Ingredient ingredient : ingredients) {
             if (!ingredient.equals(first)) return;
@@ -165,7 +174,10 @@ public class VanillaRecipesWrap {
     public static void wrap(HolderLookup.Provider registries, @Nullable BlastingRecipe recipe) {
         if (recipe == null) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
-        ItemStack result = recipe.getResultItem(registries).copy();
+        ItemStack result = recipe.getResultItem(registries);
+        //noinspection ConstantValue
+        if (result == null) return;
+        result = result.copy();
         Ingredient first = ingredients.getFirst();
         ItemIngredientPredicate.Builder predicateBuilder = ItemIngredientPredicate.Builder.item();
         String ingredient = "empty";
@@ -205,7 +217,10 @@ public class VanillaRecipesWrap {
     public static void wrap(HolderLookup.Provider registries, @Nullable SmokingRecipe recipe) {
         if (recipe == null) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
-        ItemStack result = recipe.getResultItem(registries).copy();
+        ItemStack result = recipe.getResultItem(registries);
+        //noinspection ConstantValue
+        if (result == null) return;
+        result = result.copy();
         Ingredient first = ingredients.getFirst();
         ItemIngredientPredicate.Builder predicateBuilder = ItemIngredientPredicate.Builder.item();
         String ingredient = "empty";
@@ -234,7 +249,10 @@ public class VanillaRecipesWrap {
 
     public static void wrap(HolderLookup.Provider registries, @Nullable CampfireCookingRecipe recipe) {
         if (recipe == null) return;
-        ItemStack result = recipe.getResultItem(registries).copy();
+        ItemStack result = recipe.getResultItem(registries);
+        //noinspection ConstantValue
+        if (result == null) return;
+        result = result.copy();
         if (VanillaRecipesWrap.smokingRecipes.containsKey(result.getItem())) return;
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         Ingredient first = ingredients.getFirst();
@@ -265,7 +283,10 @@ public class VanillaRecipesWrap {
 
     public static void wrap(HolderLookup.Provider registries, @Nullable SmeltingRecipe recipe) {
         if (recipe == null) return;
-        ItemStack result = recipe.getResultItem(registries).copy();
+        ItemStack result = recipe.getResultItem(registries);
+        //noinspection ConstantValue
+        if (result == null) return;
+        result = result.copy();
         if (VanillaRecipesWrap.smokingRecipes.containsKey(result.getItem())) return;
         if (VanillaRecipesWrap.blastingRecipes.containsKey(result.getItem())) return;
         if (VanillaRecipesWrap.campfireCookingRecipes.containsKey(result.getItem())) return;
