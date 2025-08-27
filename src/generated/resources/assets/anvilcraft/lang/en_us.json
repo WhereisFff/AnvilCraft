@@ -210,6 +210,8 @@
   "anvilcraft.ponder.impact_pile.text_4": "Then strike it with an undamaged anvil dropped from at least 20 blocks high.",
   "anvilcraft.ponder.impact_pile.text_5": "When the conditions are met, the anvil and the impact pile will be consumed...",
   "anvilcraft.ponder.impact_pile.text_6": "and a mineral fountain will be generated.",
+  "anvilcraft.ponder.iron_trapdoor.header": "Use Iron Trapdoor to trigger unpack Recipe",
+  "anvilcraft.ponder.iron_trapdoor.text_1": "You can use the iron trapdoor to disassemble composite items into their components.",
   "anvilcraft.ponder.magnet.header": "Use magnet to attract the anvil",
   "anvilcraft.ponder.magnet.text_1": "The anvil needs to be lifted and fallen for processing",
   "anvilcraft.ponder.magnet.text_2": "Magnets can attract anvils",
