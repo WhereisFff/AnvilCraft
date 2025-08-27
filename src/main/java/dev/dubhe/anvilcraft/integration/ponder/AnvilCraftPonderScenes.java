@@ -21,6 +21,7 @@ public class AnvilCraftPonderScenes {
         // recipe
         SpaceOvercompressorScene.register(helper);
         HeaterScene.register(helper);
+        IronTrapdoorScene.register(helper);
         // redstone
         MagnetScene.register(helper);
         BlockComparatorScene.register(helper);
