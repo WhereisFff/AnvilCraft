@@ -29,18 +29,9 @@ public class ChuteScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.CHUTE)
-            .addStoryBoard(
-                "platform/555",
-                ChuteScene::basicOperation
-            )
-            .addStoryBoard(
-                "platform/555",
-                ChuteScene::simpleChute
-            )
-            .addStoryBoard(
-                "platform/555",
-                ChuteScene::filtering
-            );
+            .addStoryBoard("platform/555", ChuteScene::basicOperation)
+            .addStoryBoard("platform/555", ChuteScene::simpleChute)
+            .addStoryBoard("platform/555", ChuteScene::filtering);
     }
 
     // 基本操作展示：对比漏斗和溜槽，演示物品阻塞
@@ -50,22 +41,25 @@ public class ChuteScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        // 放置漏斗和溜槽
         BlockPos hopperPos = util.grid().at(1, 2, 2);
-        BlockPos chutePos = util.grid().at(3, 2, 2);
+        BlockPos chutePos = hopperPos.east(2);
+        BlockPos chuteTargetPos = chutePos.below();
 
-        // 目标位置
-        BlockPos chuteTargetPos = util.grid().at(3, 1, 2);
+        Vec3 hopperItemVec = util.vector().topOf(hopperPos).add(0, 1, 0);
+        Vec3 chuteItemVec = util.vector().topOf(chutePos).add(0, 1, 0);
+        Vec3 targetItemVec = util.vector().topOf(chuteTargetPos);
+
+        ItemStack ironIngot = new ItemStack(Items.IRON_INGOT, 1);
+        ItemStack ironIngots = new ItemStack(Items.IRON_INGOT, 64);
 
         // 放置漏斗
         scene.world().setBlock(hopperPos, Blocks.HOPPER.defaultBlockState().setValue(HopperBlock.FACING, Direction.DOWN), false);
         Selection hopper = util.select().position(hopperPos);
         scene.world().showIndependentSection(hopper, Direction.DOWN);
 
-        // 漏斗下方的文本
         scene.overlay().showText(40)
             .text("A normal funnel can only transmit one item at a time") // 普通的漏斗一次只能传输一个物品
-            .pointAt(util.vector().topOf(hopperPos))
+            .pointAt(util.vector().centerOf(hopperPos))
             .attachKeyFrame()
             .placeNearTarget();
         scene.idle(50);
@@ -77,42 +71,32 @@ public class ChuteScene {
 
         scene.overlay().showText(40)
             .text("Whereas chutes can transfer a set of items at once") // 而溜槽可以一次性传输一组物品
-            .pointAt(util.vector().topOf(chutePos))
+            .pointAt(util.vector().centerOf(chutePos))
             .attachKeyFrame()
             .placeNearTarget();
         scene.idle(50);
 
-        // 演示物品掉落
-        Vec3 hopperItemPos = util.vector().topOf(hopperPos).add(0, 1, 0);
-        Vec3 chuteItemPos = util.vector().topOf(chutePos).add(0, 1, 0);
-        Vec3 targetItemPos = util.vector().topOf(chuteTargetPos);
-
         // 向漏斗添加几个物品
-        ItemStack ironIngot = new ItemStack(Items.IRON_INGOT, 1);
-
         for (int i = 0; i < 3; i++) {
-            ElementLink<EntityElement> hopperItems = scene.world().createItemEntity(hopperItemPos, Vec3.ZERO, ironIngot);
+            ElementLink<EntityElement> hopperItems = scene.world().createItemEntity(hopperItemVec, Vec3.ZERO, ironIngot);
             scene.idle(8);
-            // 模拟漏斗吸收物品
+            // 漏斗吸收物品
             scene.world().modifyEntity(hopperItems, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         }
-
         scene.idle(20);
 
         // 向溜槽添加一组物品
-        ItemStack ironIngots = new ItemStack(Items.IRON_INGOT, 64);
-        ElementLink<EntityElement> chuteItem = scene.world().createItemEntity(chuteItemPos, Vec3.ZERO, ironIngots);
+        ElementLink<EntityElement> chuteItem1 = scene.world().createItemEntity(chuteItemVec, Vec3.ZERO, ironIngots);
         scene.idle(8);
 
-        // 模拟溜槽吸收物品
-        scene.world().modifyEntity(chuteItem, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        // 溜槽吸收物品
+        scene.world().modifyEntity(chuteItem1, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         scene.idle(8);
 
-        // 模拟溜槽一次性输出一组物品
-        ElementLink<EntityElement> chuteItem2 = scene.world().createItemEntity(targetItemPos, Vec3.ZERO, ironIngots);
+        // 溜槽一次性输出一组物品
+        ElementLink<EntityElement> chuteItem2 = scene.world().createItemEntity(targetItemVec, Vec3.ZERO, ironIngots);
         scene.idle(8);
 
-        // 演示溜槽可以投掷物品
         scene.overlay().showText(40)
             .text("and can be thrown as drops") // 并且可以将物品作为掉落物投掷出来
             .pointAt(util.vector().centerOf(chuteTargetPos).add(0, -0.5, 0))
@@ -135,10 +119,10 @@ public class ChuteScene {
 
         // 添加物品到溜槽，但因为被阻塞所以不会输出
         ItemStack goldIngot = new ItemStack(Items.GOLD_INGOT, 64);
-        ElementLink<EntityElement> goldItem = scene.world().createItemEntity(chuteItemPos, Vec3.ZERO, goldIngot);
+        ElementLink<EntityElement> goldItem = scene.world().createItemEntity(chuteItemVec, Vec3.ZERO, goldIngot);
         scene.idle(8);
         scene.world().modifyEntity(goldItem, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
-        scene.idle(20);  // 演示一段时间，但没有物品输出
+        scene.idle(20);
 
         // 移除石头，金锭被输出
         scene.world().destroyBlock(chuteTargetPos);
@@ -156,10 +140,10 @@ public class ChuteScene {
         scene.idle(30);
 
         // 添加物品到溜槽，但因为下方有相同物品所以不会输出
-        ElementLink<EntityElement> chuteItem3 = scene.world().createItemEntity(chuteItemPos, Vec3.ZERO, goldIngot);
+        ElementLink<EntityElement> chuteItem3 = scene.world().createItemEntity(chuteItemVec, Vec3.ZERO, goldIngot);
         scene.idle(8);
         scene.world().modifyEntity(chuteItem3, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
-        scene.idle(20);  // 演示一段时间，但没有物品输出
+        scene.idle(20);
 
         scene.markAsFinished();
     }
@@ -208,7 +192,7 @@ public class ChuteScene {
         scene.world().showIndependentSection(topChute, Direction.DOWN);
         scene.idle(20);
 
-        // 模拟物品从上方溜槽流入简易溜槽
+        // 物品从上方溜槽流入简易溜槽
         Vec3 topItemPos = util.vector().topOf(topChutePos).add(0, 1, 0);
         Vec3 targetItemPos = util.vector().topOf(new BlockPos(2, 1, 2));
 
@@ -217,10 +201,10 @@ public class ChuteScene {
         ElementLink<EntityElement> topItem = scene.world().createItemEntity(topItemPos, Vec3.ZERO, diamonds);
         scene.idle(8);
 
-        // 模拟上方溜槽吸收物品
+        // 上方溜槽吸收物品
         scene.world().modifyEntity(topItem, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
 
-        // 模拟简易溜槽输出物品
+        // 简易溜槽输出物品
         scene.idle(16);
         scene.world().createItemEntity(targetItemPos, Vec3.ZERO, diamonds);
 
@@ -238,11 +222,11 @@ public class ChuteScene {
         ElementLink<EntityElement> leftItem = scene.world().createItemEntity(leftItemPos, Vec3.ZERO, emeralds);
         scene.idle(8);
 
-        // 模拟左侧溜槽吸收物品
+        // 左侧溜槽吸收物品
         scene.world().modifyEntity(leftItem, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         scene.idle(16);
 
-        // 模拟简易溜槽输出物品
+        // 简易溜槽输出物品
         scene.world().createItemEntity(targetItemPos, Vec3.ZERO, emeralds);
         scene.idle(20);
 
@@ -272,7 +256,7 @@ public class ChuteScene {
         scene.world().createItemEntity(leftItemPos, Vec3.ZERO, redstoneItems);
         scene.idle(20);
 
-        // 模拟物品保留在锁定溜槽内（不移除，表示没有被吸收）
+        // 物品保留在锁定溜槽内（不移除，表示没有被吸收）
         scene.idle(30);
 
         // 向上方溜槽添加物品，展示简易溜槽不被锁定
@@ -280,11 +264,11 @@ public class ChuteScene {
         ElementLink<EntityElement> moreTopItem = scene.world().createItemEntity(topItemPos, Vec3.ZERO, moreItems);
         scene.idle(8);
 
-        // 模拟上方溜槽吸收物品
+        // 上方溜槽吸收物品
         scene.world().modifyEntity(moreTopItem, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         scene.idle(16);
 
-        // 模拟简易溜槽输出物品
+        // 简易溜槽输出物品
         scene.world().createItemEntity(targetItemPos, Vec3.ZERO, moreItems);
 
         scene.overlay().showText(40)
@@ -324,7 +308,7 @@ public class ChuteScene {
             .placeNearTarget();
         scene.idle(50);
 
-        // 模拟设置过滤器
+        // 设置过滤器
         scene.overlay().showControls(
             util.vector().blockSurface(chutePos, Direction.WEST),
             Pointing.DOWN, 20
@@ -337,7 +321,7 @@ public class ChuteScene {
             .placeNearTarget();
         scene.idle(50);
 
-        // 模拟丢入位置
+        // 丢入位置
         Vec3 itemDropPos = util.vector().topOf(chutePos).add(0, 1, 0);
         // 物品输出位置
         Vec3 targetItemPos = util.vector().topOf(util.grid().at(2, 1, 2));
@@ -347,11 +331,11 @@ public class ChuteScene {
         ElementLink<EntityElement> diamondItem = scene.world().createItemEntity(itemDropPos, Vec3.ZERO, diamond);
         scene.idle(8);
 
-        // 模拟溜槽吸收钻石
+        // 溜槽吸收钻石
         scene.world().modifyEntity(diamondItem, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         scene.idle(8);
 
-        // 模拟钻石从溜槽输出
+        // 钻石从溜槽输出
         scene.world().createItemEntity(targetItemPos, Vec3.ZERO, diamond);
         scene.idle(20);
 

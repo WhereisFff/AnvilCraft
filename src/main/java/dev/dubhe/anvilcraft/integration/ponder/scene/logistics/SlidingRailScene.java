@@ -30,18 +30,9 @@ public class SlidingRailScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.SLIDING_RAIL)
-            .addStoryBoard(
-                "platform/999",
-                SlidingRailScene::itemSliding
-            )
-            .addStoryBoard(
-                "platform/999",
-                SlidingRailScene::blockSliding
-            )
-            .addStoryBoard(
-                "platform/999",
-                SlidingRailScene::multiBlockSliding
-            );
+            .addStoryBoard("platform/999", SlidingRailScene::itemSliding)
+            .addStoryBoard("platform/999", SlidingRailScene::blockSliding)
+            .addStoryBoard("platform/999", SlidingRailScene::multiBlockSliding);
     }
 
     // 演示物品在滑轨上滑行
@@ -51,42 +42,48 @@ public class SlidingRailScene {
         scene.showBasePlate();
         scene.idle(20);
 
+        int distance = 5;
+        BlockPos railStartPos = util.grid().at(1, 1, 4);
+        BlockPos railEndPos = railStartPos.east(distance);
+        Selection railsSection = util.select().fromTo(railStartPos, railEndPos);
+        BlockPos chutePos = railEndPos.east();
+        Vec3 chuteInputPos = util.vector().topOf(chutePos).add(1, 1, 0);
+        Vec3 railItemPos = util.vector().centerOf(chutePos.west());
+        ItemStack ironIngots = new ItemStack(Items.IRON_INGOT, 64);
+
         // 创建一条长滑轨
-        Selection railsSection = util.select().fromTo(1, 1, 4, 6, 1, 4);
         scene.world().setBlocks(railsSection, ModBlocks.SLIDING_RAIL.getDefaultState(), false);
         scene.world().showSection(railsSection, Direction.DOWN);
-        scene.idle(20);
-
-        // 添加文字说明
-        scene.overlay().showText(40)
-            .text("Sliding rails have extremely smooth surfaces that allow items to slide without friction")
-            .pointAt(util.vector().topOf(util.grid().at(1, 1, 4)))
-            .attachKeyFrame()
-            .placeNearTarget();
-        scene.rotateCameraY(-45);
-        scene.idle(50);
+        scene.idle(10);
 
         // 放置磁性溜槽在滑轨旁边
-        BlockPos chutePos = util.grid().at(7, 1, 4);
         scene.world().setBlock(chutePos, ModBlocks.MAGNETIC_CHUTE.getDefaultState().setValue(MagneticChuteBlock.FACING, Direction.WEST), false);
         scene.world().showSection(util.select().position(chutePos), Direction.DOWN);
+        scene.idle(10);
+
+        // 旋转视角
+        scene.rotateCameraY(-45);
         scene.idle(20);
-        scene.addKeyframe();
+
+        scene.overlay().showText(40)
+            .text("Sliding rails have extremely smooth surfaces that allow items to slide without friction")
+            .pointAt(railsSection.getCenter())
+            .attachKeyFrame()
+            .placeNearTarget();
+        scene.idle(50);
+
         // 向磁性溜槽添加物品
-        ItemStack ironIngots = new ItemStack(Items.IRON_INGOT, 64);
-        Vec3 chuteInputPos = util.vector().topOf(chutePos).add(1, 1, 0); // 从后面放置物品
         ElementLink<EntityElement> chuteItems = scene.world().createItemEntity(chuteInputPos, Vec3.ZERO, ironIngots);
         scene.idle(8);
         scene.world().modifyEntity(chuteItems, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         scene.idle(16);
 
-        // 物品从磁性溜槽落到滑轨上并开始滑动
-        Vec3 railItemPos = util.vector().centerOf(chutePos).add(-1, 0, 0);
+        // 输出物品
         scene.world().createItemEntity(railItemPos, MagneticChuteBlockEntity.getOutputSpeed(Direction.WEST), ironIngots);
 
         scene.overlay().showText(40)
             .text("Items can slide infinitely far until they reach the end of the rail or are collected")
-            .pointAt(util.vector().topOf(util.grid().at(6, 1, 4)))
+            .pointAt(railItemPos)
             .attachKeyFrame()
             .placeNearTarget();
         scene.idle(50);
@@ -101,9 +98,9 @@ public class SlidingRailScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        int length = 6;
+        int distance = 6;
         BlockPos railStartPos = util.grid().at(1, 1, 4);
-        BlockPos railEndPos = railStartPos.east(length);
+        BlockPos railEndPos = railStartPos.east(distance);
         Selection railsSection = util.select().fromTo(railStartPos, railEndPos);
         BlockPos pistonPos = railEndPos.east().above();
         BlockPos pistonHeadPos = pistonPos.above();
@@ -154,7 +151,7 @@ public class SlidingRailScene {
         scene.idle(4);
 
         // 其他方块继续滑动
-        scene.world().moveSection(stone, new Vec3(-length, 0, 0), (int) (length / SlidingBlockEntity.DEFAULT_MOVEMENT));
+        scene.world().moveSection(stone, new Vec3(-distance, 0, 0), (int) (distance / SlidingBlockEntity.DEFAULT_MOVEMENT));
         scene.idle(30);
 
         // 移除其他方块
@@ -196,9 +193,9 @@ public class SlidingRailScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        int length = 6;
+        int distance = 6;
         BlockPos railStartPos = util.grid().at(1, 1, 4);
-        BlockPos railEndPos = railStartPos.east(length);
+        BlockPos railEndPos = railStartPos.east(distance);
         Selection railsSection = util.select().fromTo(railStartPos, railEndPos);
         BlockPos pistonPos = railEndPos.east().above();
         BlockPos pistonHeadPos = pistonPos.above();
@@ -258,7 +255,7 @@ public class SlidingRailScene {
         scene.idle(4);
 
         // 结构继续滑动
-        scene.world().moveSection(structure, new Vec3(-length, 0, 0), (int) (length / SlidingBlockEntity.DEFAULT_MOVEMENT));
+        scene.world().moveSection(structure, new Vec3(-distance, 0, 0), (int) (distance / SlidingBlockEntity.DEFAULT_MOVEMENT));
         scene.idle(30);
 
         scene.markAsFinished();
