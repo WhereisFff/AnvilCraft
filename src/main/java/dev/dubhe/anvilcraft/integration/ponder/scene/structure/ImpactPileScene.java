@@ -18,10 +18,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 public class ImpactPileScene {
-    public static void register(@NotNull PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
+    public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(
             BuiltInRegistries.ITEM::getKey
         );
@@ -35,7 +34,7 @@ public class ImpactPileScene {
             );
     }
 
-    private static void impact(@NotNull SceneBuilder scene, @NotNull SceneBuildingUtil util) {
+    private static void impact(SceneBuilder scene, SceneBuildingUtil util) {
         scene.title("impact_pile", "Use Impact Pile to generate Mineral Fountain.");
         scene.configureBasePlate(0, 0, 5);
         scene.showBasePlate();
