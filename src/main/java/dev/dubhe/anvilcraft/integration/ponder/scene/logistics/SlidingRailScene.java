@@ -4,6 +4,7 @@ import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.dubhe.anvilcraft.block.MagneticChuteBlock;
 import dev.dubhe.anvilcraft.block.entity.MagneticChuteBlockEntity;
+import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.EntityElement;
@@ -100,83 +101,93 @@ public class SlidingRailScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        Selection railsSection = util.select().fromTo(1, 1, 4, 7, 1, 4);
-        BlockPos pistonPos = util.grid().at(8, 2, 4);
+        int length = 6;
+        BlockPos railStartPos = util.grid().at(1, 1, 4);
+        BlockPos railEndPos = railStartPos.east(length);
+        Selection railsSection = util.select().fromTo(railStartPos, railEndPos);
+        BlockPos pistonPos = railEndPos.east().above();
+        BlockPos pistonHeadPos = pistonPos.above();
         BlockPos leverPos = pistonPos.below();
-        BlockPos headPos = pistonPos.west();
-        BlockPos stonePos = headPos.west();
+        BlockPos stonePos = pistonPos.west();
 
         // 创建一条长滑轨
         scene.world().setBlocks(railsSection, ModBlocks.SLIDING_RAIL.getDefaultState(), false);
         scene.world().showSection(railsSection, Direction.DOWN);
-        scene.idle(10);
+        scene.idle(5);
 
         // 在滑轨一端放置活塞
         scene.world().setBlock(pistonPos, Blocks.PISTON.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.WEST), false);
         scene.world().showSection(util.select().position(pistonPos), Direction.DOWN);
+        scene.idle(5);
 
-        //在活塞下放置拉杆
+        // 在活塞下放置拉杆
         scene.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
         scene.world().showSection(util.select().position(leverPos), Direction.DOWN);
-        scene.idle(10);
+        scene.idle(5);
+
+        // 在滑轨上放置石头
+        scene.world().setBlock(stonePos, Blocks.STONE.defaultBlockState(), false);
+        ElementLink<WorldSectionElement> stone = scene.world().showIndependentSection(util.select().position(stonePos), Direction.DOWN);
+        scene.idle(5);
 
         scene.overlay().showText(40)
             .text("Blocks can also slide on sliding rails when pushed by pistons")
-            .pointAt(pistonPos.getCenter())
+            .pointAt(stonePos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         scene.idle(50);
 
-        // 在滑轨上放置石头
-        scene.world().setBlock(headPos, Blocks.STONE.defaultBlockState(), false);
-        scene.world().showSection(util.select().position(headPos), Direction.DOWN);
-        scene.idle(30);
-        scene.world().hideSection(util.select().position(headPos), Direction.WEST);
-        // 激活杠杆
+        // 激活杠杆和活塞
         scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
         scene.effects().indicateRedstone(leverPos);
+        scene.world().modifyBlock(pistonPos, state -> state.setValue(PistonBaseBlock.EXTENDED, true), false);
 
-        // 模拟方块推动
-        scene.world().setBlock(stonePos, Blocks.STONE.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> stoneLink2 = scene.world().showIndependentSection(util.select().position(stonePos), Direction.WEST);
-        scene.world().moveSection(stoneLink2, new Vec3(-6, 0, 0), 30);
+        // 放置活塞头至活塞处
+        scene.world().setBlock(pistonHeadPos, Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.WEST), false);
+        ElementLink<WorldSectionElement> pistonHead = scene.world().showIndependentSectionImmediately(util.select().position(pistonHeadPos));
+        scene.world().moveSection(pistonHead, new Vec3(0, -1, 0), 0);
 
-        // 激活活塞
-        scene.world().modifyBlock(pistonPos, state -> state.setValue(BlockStateProperties.EXTENDED, true), false);
-        ElementLink<WorldSectionElement> headLink = scene.world().showIndependentSection(util.select().position(headPos), Direction.WEST);
-        scene.world().setBlock(headPos, Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.WEST), false);
-        scene.idle(40);
+        // 推出活塞头和其他方块
+        Vec3 offset = new Vec3(-1, 0, 0);
+        scene.world().moveSection(pistonHead, offset, 2);
+        scene.world().moveSection(stone, offset, 2);
+        scene.idle(4);
 
-        // 重置拉杆
-        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, false), false);
-        scene.world().hideIndependentSection(headLink, Direction.EAST);
-        scene.idle(15);
+        // 其他方块继续滑动
+        scene.world().moveSection(stone, new Vec3(-length, 0, 0), (int) (length / SlidingBlockEntity.DEFAULT_MOVEMENT));
+        scene.idle(30);
 
-        // 重置活塞
-        scene.world().modifyBlock(pistonPos, state -> state.setValue(BlockStateProperties.EXTENDED, false), false);
+        // 移除其他方块
+        scene.world().hideIndependentSection(stone, Direction.UP);
         scene.idle(20);
-        scene.world().hideIndependentSection(stoneLink2, Direction.UP);
-        scene.idle(10);
+
+        // 恢复拉杆，活塞头，活塞
+        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, false), false);
+        scene.world().moveSection(pistonHead, offset.reverse(), 2);
+        scene.idle(2);
+        scene.world().modifyBlock(pistonPos, state -> state.setValue(PistonBaseBlock.EXTENDED, false), false);
+        scene.idle(20);
 
         // 放置铁砧
-        scene.world().setBlock(headPos, Blocks.ANVIL.defaultBlockState(), false);
-        scene.world().showIndependentSection(util.select().position(headPos), Direction.DOWN);
-        scene.idle(20);
+        scene.world().setBlock(stonePos, Blocks.ANVIL.defaultBlockState(), false);
+        scene.world().showSection(util.select().position(stonePos), Direction.DOWN);
+        scene.idle(10);
 
         scene.overlay().showText(40)
             .text("However, blocks that cannot be pushed by pistons also cannot slide on rails")
-            .pointAt(util.vector().centerOf(headPos))
+            .pointAt(util.vector().centerOf(stonePos))
             .attachKeyFrame()
             .placeNearTarget();
         scene.idle(50);
 
-        // 激活拉杆但活塞和铁砧不动
-        scene.world().modifyBlock(leverPos, state -> state.setValue(LeverBlock.POWERED, true), false);
+        // 仅激活拉杆
+        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
         scene.effects().indicateRedstone(leverPos);
-        scene.idle(20);
+        scene.idle(10);
 
         scene.markAsFinished();
     }
+
 
     // 演示多方块结构在滑轨上滑行
     private static void multiBlockSliding(SceneBuilder scene, SceneBuildingUtil util) {
@@ -185,23 +196,30 @@ public class SlidingRailScene {
         scene.showBasePlate();
         scene.idle(20);
 
-        BlockPos pistonPos = util.grid().at(8, 2, 4);
+        int length = 6;
+        BlockPos railStartPos = util.grid().at(1, 1, 4);
+        BlockPos railEndPos = railStartPos.east(length);
+        Selection railsSection = util.select().fromTo(railStartPos, railEndPos);
+        BlockPos pistonPos = railEndPos.east().above();
+        BlockPos pistonHeadPos = pistonPos.above();
         BlockPos leverPos = pistonPos.below();
         BlockPos slimePos = pistonPos.west();
-        BlockPos stone = slimePos.above();
-        BlockPos headPos = pistonPos.west();
+        BlockPos stonePos = slimePos.above();
 
         // 创建一条长滑轨
-        Selection railsSection = util.select().fromTo(new BlockPos(1, 1, 4), new BlockPos(7, 1, 4));
         scene.world().setBlocks(railsSection, ModBlocks.SLIDING_RAIL.getDefaultState(), false);
         scene.world().showSection(railsSection, Direction.DOWN);
-        scene.idle(20);
+        scene.idle(5);
 
-        // 放置活塞和拉杆
+        // 在滑轨一端放置活塞
         scene.world().setBlock(pistonPos, Blocks.PISTON.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.WEST), false);
-        scene.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
         scene.world().showSection(util.select().position(pistonPos), Direction.DOWN);
+        scene.idle(5);
+
+        // 在活塞下放置拉杆
+        scene.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
         scene.world().showSection(util.select().position(leverPos), Direction.DOWN);
+        scene.idle(5);
 
         scene.overlay().showText(40)
             .text("Sliding rails can handle multiple blocks")
@@ -210,11 +228,11 @@ public class SlidingRailScene {
             .placeNearTarget();
         scene.idle(50);
 
-        // 放置结构
-        Selection multiBlock1 = util.select().position(slimePos).add(util.select().position(stone));
+        // 在滑轨上放置结构
         scene.world().setBlock(slimePos, Blocks.SLIME_BLOCK.defaultBlockState(), false);
-        scene.world().setBlock(stone, Blocks.STONE.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> multiLink1 = scene.world().showIndependentSection(multiBlock1, Direction.DOWN);
+        scene.world().setBlock(stonePos, Blocks.STONE.defaultBlockState(), false);
+        ElementLink<WorldSectionElement> structure = scene.world().showIndependentSection(util.select().fromTo(slimePos, stonePos), Direction.DOWN);
+        scene.idle(5);
 
         scene.overlay().showText(40)
             .text("Slime blocks can stick multiple blocks together to form a sliding structure")
@@ -223,34 +241,25 @@ public class SlidingRailScene {
             .placeNearTarget();
         scene.idle(50);
 
-        // 激活拉杆
+        // 激活杠杆和活塞
         scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
         scene.effects().indicateRedstone(leverPos);
+        scene.world().modifyBlock(pistonPos, state -> state.setValue(PistonBaseBlock.EXTENDED, true), false);
 
-        // 移动结构
-        scene.world().moveSection(multiLink1, new Vec3(-1, 0, 0), 5);
-        scene.idle(5);
-        scene.world().setBlocks(multiBlock1, Blocks.AIR.defaultBlockState(), false);
-        scene.world().moveSection(multiLink1, new Vec3(1, 0, 0), 0);
+        // 放置活塞头至活塞处
+        scene.world().setBlock(pistonHeadPos, Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.WEST), false);
+        ElementLink<WorldSectionElement> pistonHead = scene.world().showIndependentSectionImmediately(util.select().position(pistonHeadPos));
+        scene.world().moveSection(pistonHead, new Vec3(0, -1, 0), 0);
 
-        Selection multiBlock2 = util.select().position(slimePos.west()).add(util.select().position(stone.west()));
-        scene.world().setBlock(slimePos.west(), Blocks.SLIME_BLOCK.defaultBlockState(), false);
-        scene.world().setBlock(stone.west(), Blocks.STONE.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> multiLink2 = scene.world().showIndependentSection(multiBlock2, Direction.WEST);
+        // 推出活塞头和结构
+        Vec3 offset = new Vec3(-1, 0, 0);
+        scene.world().moveSection(pistonHead, offset, 2);
+        scene.world().moveSection(structure, offset, 2);
+        scene.idle(4);
 
-        scene.world().moveSection(multiLink2, new Vec3(-6, 0, 0), 30);
-
-        // 激活活塞
-        scene.world().modifyBlock(pistonPos, state -> state.setValue(BlockStateProperties.EXTENDED, true), false);
-        scene.world().setBlock(headPos, Blocks.PISTON_HEAD.defaultBlockState().setValue(PistonBaseBlock.FACING, Direction.WEST), false);
-        scene.idle(50);
-
-        scene.overlay().showText(40)
-            .text("The entire multi-block structure slides together along the rails")
-            .pointAt(pistonPos.west(8).getCenter())
-            .attachKeyFrame()
-            .placeNearTarget();
-        scene.idle(50);
+        // 结构继续滑动
+        scene.world().moveSection(structure, new Vec3(-length, 0, 0), (int) (length / SlidingBlockEntity.DEFAULT_MOVEMENT));
+        scene.idle(30);
 
         scene.markAsFinished();
     }
