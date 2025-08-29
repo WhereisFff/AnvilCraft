@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.logistics.MagneticChuteScen
 import dev.dubhe.anvilcraft.integration.ponder.scene.logistics.SlidingRailScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.power.TransmissionPoleScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.BlockRecipeScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.CookingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.HeaterScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.IronTrapdoorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.ItemCompressScene;
@@ -29,6 +30,7 @@ public class AnvilCraftPonderScenes {
         BlockRecipeScene.register(helper);
         IronTrapdoorScene.register(helper);
         ItemCompressScene.register(helper);
+        CookingScene.register(helper);
         // redstone
         MagnetScene.register(helper);
         BlockComparatorScene.register(helper);
