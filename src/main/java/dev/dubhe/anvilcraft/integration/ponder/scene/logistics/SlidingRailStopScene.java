@@ -18,6 +18,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 
 public class SlidingRailStopScene {
@@ -28,7 +29,7 @@ public class SlidingRailStopScene {
     }
 
     private static void slidingStop(SceneBuilder scene, SceneBuildingUtil util) {
-        scene.title("sliding_rail_entities", "Entities on sliding rails");
+        scene.title("sliding_rail_stop", "Basics of sliding rail stop");
         scene.configureBasePlate(0, 0, 9);
         scene.showBasePlate();
         scene.idle(20);
@@ -61,7 +62,7 @@ public class SlidingRailStopScene {
 
         // 旋转视角
         scene.rotateCameraY(-45);
-        scene.idle(20);
+        scene.idle(40);
 
         scene.overlay().showText(40)
             .text("Sliding rail stops have a powerful suction that can pull in any entity passing above it.")
@@ -70,10 +71,15 @@ public class SlidingRailStopScene {
             .placeNearTarget();
         scene.idle(50);
 
-        // 扔铁锭，鹦鹉
-        scene.world().createItemEntity(railEndPos1.east().above().getBottomCenter(), MagneticChuteBlockEntity.getOutputSpeed(Direction.WEST), new ItemStack(Items.IRON_INGOT));
-        scene.idle(10);
+        // 扔铁锭
+        scene.world().createItemEntity(
+            railEndPos1.east().above().getBottomCenter(),
+            MagneticChuteBlockEntity.getOutputSpeed(Direction.WEST),
+            new ItemStack(Items.IRON_INGOT)
+        );
+        scene.idle(50);
 
+        // 扔鹦鹉
         ElementLink<ParrotElement> birb = scene.special().createBirb(util.vector().topOf(railEndPos1), ParrotPose.FaceCursorPose::new);
         scene.idle(15);
         scene.special().moveParrot(birb, util.vector().of(-distance - 1, 0, 0), 30);
@@ -87,12 +93,15 @@ public class SlidingRailStopScene {
         scene.idle(50);
 
         // 放置方块
-        scene.world().setBlock(railEndPos2.above(), ModBlocks.MAGNET_BLOCK.getDefaultState(), false);
-        ElementLink<WorldSectionElement> magnetBlock = scene.world().showIndependentSection(util.select().position(railEndPos2.above()), Direction.DOWN);
+        scene.world().setBlock(railEndPos2.above(), Blocks.GLASS.defaultBlockState(), false);
+        ElementLink<WorldSectionElement> glass = scene.world().showIndependentSection(
+            util.select().position(railEndPos2.above()),
+            Direction.DOWN
+        );
         scene.idle(20);
 
         // 移动方块
-        scene.world().moveSection(magnetBlock, new Vec3(-distance - 1, 0, 0), (int) (distance / SlidingBlockEntity.DEFAULT_MOVEMENT));
+        scene.world().moveSection(glass, new Vec3(-distance - 1, 0, 0), (int) (distance / SlidingBlockEntity.DEFAULT_MOVEMENT));
         scene.idle(40);
 
         scene.markAsFinished();
