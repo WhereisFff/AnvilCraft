@@ -12,7 +12,7 @@
       "type": "patchouli:spotlight",
       "anchor": "magnet_ingot",
       "item": "anvilcraft:magnet_ingot",
-      "text": "首次获得磁铁，需要$(item)铁块$()被雷击转化为空心磁铁块，可以将其分解为磁铁锭。 $(br)$(li)之后可以$(thing)人工$()将铁锭$(thing)逐个$()丢入空心磁铁块中央的洞，将铁锭概率转化为磁铁锭。 $(li)具有发电能力后，可将铁锭充能为磁铁锭。"
+      "text": "首次获得磁铁，需要$(item)铁块$()被雷击转化为空心磁铁块，可以将其分解为磁铁锭。$(br)$(li)具有发电能力后，可将铁锭充能为磁铁锭。"
     },
     {
       "type": "patchouli:crafting",
