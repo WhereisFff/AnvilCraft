@@ -18,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 
 public class SpaceOvercompressorScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
@@ -52,26 +51,26 @@ public class SpaceOvercompressorScene {
         builder.world().setBlocks(util.select().fromTo(1, 0, 1, 3, 0, 3), ModBlocks.END_DUST.getDefaultState(), true);
         builder.idle(10);
 
-        Vec3 ironBlockPos = new Vec3(2.5, 3.3, 2.5);
-        ItemStack ironBlockItem = new ItemStack(ModBlocks.HEAVY_IRON_BLOCK, 64);
         // 循环3次，每次砸入物品
         builder.overlay().showText(40)
             .text("Press a large amount of metal items into the Space Overcompressor to accumulate mass.")
             .pointAt(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
+        builder.idle(50);
+
         for (int i = 0; i < 3; i++) {
             // 添加铁块
-            ElementLink<EntityElement> ironBockItemLink = builder.world().createItemEntity(ironBlockPos, Vec3.ZERO, ironBlockItem);
-            builder.idle(5);
+            ElementLink<EntityElement> ironBockItemLink =
+                builder.world().createItem(spaceOvercompressorPos.above(), new ItemStack(ModBlocks.HEAVY_IRON_BLOCK, 64));
             // 铁砧压入
             builder.world().dropSection(anvilLink);
             builder.world().modifyEntity(ironBockItemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
-            builder.idle(6);
             // 铁砧上移
             builder.world().liftSection(anvilLink);
         }
         // 从空间超压器下方掉出中子锭
+        builder.world().createItem(spaceOvercompressorPos.getBottomCenter(), ModItems.NEUTRONIUM_INGOT.asStack());
         builder.overlay().showText(100)
             .text(
                 "When the Space Overcompressor has built up enough mass, a neutron ingot will form. "
@@ -80,8 +79,6 @@ public class SpaceOvercompressorScene {
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
-        builder.world().createItemEntity(spaceOvercompressorPos.getBottomCenter(), Vec3.ZERO, ModItems.NEUTRONIUM_INGOT.asStack());
-
         builder.idle(20); // 等待一会展示结果
 
         builder.markAsFinished();

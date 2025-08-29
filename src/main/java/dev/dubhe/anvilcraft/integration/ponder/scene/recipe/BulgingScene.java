@@ -19,7 +19,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 
 public class BulgingScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
@@ -52,12 +51,12 @@ public class BulgingScene {
             Items.COPPER_BLOCK.getDefaultInstance(),
             Items.FIRE_CORAL.getDefaultInstance(),
             Items.ORANGE_CONCRETE_POWDER.getDefaultInstance(),
-        };
+            };
         ItemStack[] outputs = new ItemStack[]{
             Items.EXPOSED_COPPER.getDefaultInstance(),
             Items.FIRE_CORAL_BLOCK.getDefaultInstance(),
             Items.ORANGE_CONCRETE.getDefaultInstance(),
-        };
+            };
         ElementLink<EntityElement> itemEntity;
         for (int i = 0; i < inputs.length; i++) {
             itemEntity = builder.world().createItem(cauldronPos.above(), inputs[i]);
@@ -78,8 +77,8 @@ public class BulgingScene {
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
-            builder.idle(70);
+        builder.idle(70);
 
-            builder.markAsFinished();
+        builder.markAsFinished();
     }
 }

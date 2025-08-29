@@ -12,12 +12,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
@@ -46,15 +44,10 @@ public class ItemCompressScene {
         builder.world().showSection(util.select().position(cauldronPos), Direction.NORTH);
         builder.idle(20);
 
-        // 放入物品
-        ElementLink<EntityElement> itemLink =
-            builder.world().createItemEntity(cauldronPos.above().getCenter(), Vec3.ZERO, new ItemStack(Items.IRON_INGOT, 9));
-        builder.idle(10);
-
         // 给我砸！
+        ElementLink<EntityElement> itemLink = builder.world().createItem(cauldronPos.above(), new ItemStack(Items.IRON_INGOT, 9));
         builder.world().dropSection(anvilLink);
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
-        builder.world().createItemEntity(cauldronPos.getCenter(), Vec3.ZERO, Items.IRON_BLOCK.getDefaultInstance());
+        builder.world().changeItem(cauldronPos, Items.IRON_BLOCK.getDefaultInstance(), itemLink);
         builder.world().liftSection(anvilLink);
         builder.idle(10);
 
