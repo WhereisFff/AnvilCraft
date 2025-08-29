@@ -40,6 +40,7 @@ public class HollowMagnetBlock extends MagnetBlock implements SimpleWaterloggedB
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     private static final VoxelShape REDUCE_AABB = Block.box(5.0, 0.0, 5.0, 11.0, 16.0, 11.0);
     private static final VoxelShape AABB = Shapes.join(Shapes.block(), REDUCE_AABB, BooleanOp.ONLY_FIRST);
+    private static int itemEntityHashCode = 0;
 
     public HollowMagnetBlock(Properties properties) {
         super(properties);
@@ -111,13 +112,20 @@ public class HollowMagnetBlock extends MagnetBlock implements SimpleWaterloggedB
         if (level.isClientSide) {
             return;
         }
+        if (state.getValue(LIT)) {
+            return;
+        }
         if (entity instanceof ItemEntity itemEntity) {
+            if (itemEntityHashCode == entity.hashCode()) {
+                return;
+            }
             ItemStack item = itemEntity.getItem();
             if (item.is(Items.IRON_INGOT) && item.getCount() == 1) {
                 if (itemEntity.getOwner() instanceof ServerPlayer) {
                     if (level.random.nextDouble() <= 0.005) {
                         itemEntity.setItem(new ItemStack(ModItems.MAGNET_INGOT.get()));
                     }
+                    itemEntityHashCode = entity.hashCode();
                 }
             }
         }
