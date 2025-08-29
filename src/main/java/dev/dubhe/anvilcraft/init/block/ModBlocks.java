@@ -5160,6 +5160,7 @@ public class ModBlocks {
 
     public static final BlockEntry<RotatedPillarBlock> CUT_FLINT_PILLAR_BLOCK = REGISTRATE
         .block("cut_flint_pillar", RotatedPillarBlock::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .simpleItem()
         .initialProperties(FLINT_BLOCK::get)
         .blockstate((ctx, provider) -> {
