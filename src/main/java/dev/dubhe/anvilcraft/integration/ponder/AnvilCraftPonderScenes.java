@@ -6,11 +6,13 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.logistics.MagneticChuteScen
 import dev.dubhe.anvilcraft.integration.ponder.scene.logistics.SlidingRailScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.power.TransmissionPoleScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.BlockRecipeScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.BulgingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.CookingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.HeaterScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.IronTrapdoorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.ItemCompressScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.SpaceOvercompressorScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.StampingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockComparatorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockPlacerScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.MagnetScene;
@@ -25,12 +27,14 @@ public class AnvilCraftPonderScenes {
         // power
         TransmissionPoleScene.register(helper);
         // recipe
-        SpaceOvercompressorScene.register(helper);
-        HeaterScene.register(helper);
         BlockRecipeScene.register(helper);
-        IronTrapdoorScene.register(helper);
         ItemCompressScene.register(helper);
+        BulgingScene.register(helper);
         CookingScene.register(helper);
+        IronTrapdoorScene.register(helper);
+        StampingScene.register(helper);
+        HeaterScene.register(helper);
+        SpaceOvercompressorScene.register(helper);
         // redstone
         MagnetScene.register(helper);
         BlockComparatorScene.register(helper);
