@@ -125,6 +125,7 @@ public class AnvilCraftSceneBuilder extends PonderSceneBuilder {
             AnvilCraftSceneBuilder.this.idle(10);
             return link;
         }
+
         public ElementLink<EntityElement> createItem(BlockPos pos, ItemStack item) {
             return createItem(pos.getCenter(), item);
         }
