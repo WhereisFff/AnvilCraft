@@ -99,6 +99,22 @@ public class AnvilCraftSceneBuilder extends PonderSceneBuilder {
             );
             AnvilCraftSceneBuilder.this.idle((int) Math.ceil(interpolation.duration(offset.length())));
         }
+
+        public void dropSection(ElementLink<WorldSectionElement> link, float height) {
+            moveSectionInterpolation(link, new Vec3(0, -height, 0), Interpolation.acceleration(0.08));
+        }
+
+        public void dropSection(ElementLink<WorldSectionElement> link) {
+            dropSection(link, 1);
+        }
+
+        public void liftSection(ElementLink<WorldSectionElement> link, float height) {
+            moveSectionInterpolation(link, new Vec3(0, height, 0), Interpolation.acceleration(0.05));
+        }
+
+        public void liftSection(ElementLink<WorldSectionElement> link) {
+            liftSection(link, 1);
+        }
     }
 
     public class EffectInstructions extends PonderEffectInstructions {

@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.EntityElement;
@@ -34,7 +35,8 @@ public class HeaterScene {
         helper.forComponents(ModBlocks.HEATER.asItem())
             .addStoryBoard(
                 "platform/555",
-                HeaterScene::crafting
+                HeaterScene::crafting,
+                AnvilCraftPonderTags.PROCESSING_COMPONENTS
             );
     }
 
