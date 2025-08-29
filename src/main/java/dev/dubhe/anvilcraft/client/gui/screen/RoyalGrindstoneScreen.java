@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.RoyalGrindstoneMenu;
 import net.minecraft.client.gui.GuiGraphics;
