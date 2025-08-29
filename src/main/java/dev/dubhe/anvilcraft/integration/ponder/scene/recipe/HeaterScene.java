@@ -63,7 +63,7 @@ public class HeaterScene {
 
         // Let's Light On
         builder.world().modifyBlock(transmissionPolePos.above(2), state -> state.setValue(HeaterBlock.OVERLOAD, false), false);
-        builder.world().modifyBlock(heaterBlockPos, state -> state.setValue(HeaterBlock.OVERLOAD, true), false);
+        builder.world().modifyBlock(heaterBlockPos, state -> state.setValue(HeaterBlock.OVERLOAD, false), false);
         builder.idle(10);
 
         builder.overlay().showText(20)

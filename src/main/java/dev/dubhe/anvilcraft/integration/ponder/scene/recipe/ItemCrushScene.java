@@ -17,25 +17,25 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
-public class StampingScene {
+public class ItemCrushScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
-        helper.forComponents(ModBlocks.STAMPING_PLATFORM)
+        helper.forComponents(ModBlocks.CRUSHING_TABLE)
             .addStoryBoard(
                 "platform/555",
-                StampingScene::crafting,
+                ItemCrushScene::crafting,
                 AnvilCraftPonderTags.PROCESSING_COMPONENTS
             );
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
         AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
-        builder.title("stamping", "Stamp Items");
+        builder.title("item_crush", "Crush Items");
         builder.configureBasePlate(0, 0, 5);
         builder.showBasePlate();
 
         BlockPos tablePos = util.grid().at(2, 1, 2);
-        builder.world().setBlock(tablePos, ModBlocks.STAMPING_PLATFORM.getDefaultState(), false);
+        builder.world().setBlock(tablePos, ModBlocks.CRUSHING_TABLE.getDefaultState(), false);
         builder.world().showSection(util.select().position(tablePos), Direction.NORTH);
 
         BlockPos anvilPos = tablePos.above(2);
@@ -44,16 +44,15 @@ public class StampingScene {
             builder.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
         builder.idle(20);
 
-        // 物品冲压
-        ElementLink<EntityElement> itemEntity = builder.world().createItem(tablePos.above(), Items.IRON_INGOT.getDefaultInstance());
+        // 物品粉碎
+        ElementLink<EntityElement> itemEntity = builder.world().createItem(tablePos.above(), Items.DIAMOND_HOE.getDefaultInstance());
         builder.world().dropSection(anvilLink);
-        builder.world()
-            .changeItem(tablePos.above().getBottomCenter(), Items.HEAVY_WEIGHTED_PRESSURE_PLATE.getDefaultInstance(), itemEntity);
+        builder.world().changeItem(tablePos, Items.DIAMOND.getDefaultInstance(), itemEntity);
         builder.world().liftSection(anvilLink);
         builder.idle(10);
 
         builder.overlay().showText(20)
-            .text("The stamping platform can stamp items.")
+            .text("The crushing table can crush items.")
             .pointAt(tablePos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();

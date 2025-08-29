@@ -113,8 +113,8 @@ public class AnvilCraftPonderTags {
             .add(Items.CAULDRON)
             .add(Items.IRON_TRAPDOOR)
             .add(Items.CAMPFIRE)
-            .add(Items.STONECUTTER)
             .add(Items.SCAFFOLDING);
+
         registryTagHelper.addToTag(PROCESSING_COMPONENTS)
             .add(ModBlocks.STAMPING_PLATFORM)
             .add(ModBlocks.CRUSHING_TABLE)
