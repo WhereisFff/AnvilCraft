@@ -242,33 +242,33 @@ public class BlockRecipeScene {
 
     private static void processing(SceneBuilder scene, SceneBuildingUtil util) {
         AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
-        scene.title("block_process", "Use anvil to processing");
-        scene.configureBasePlate(0, 0, 5);
-        scene.showBasePlate();
+        builder.title("block_process", "Use anvil to processing");
+        builder.configureBasePlate(0, 0, 5);
+        builder.showBasePlate();
 
         BlockPos anvilPos = util.grid().at(2, 3, 2);
         BlockPos blockPos = util.grid().at(2, 1, 2);
 
         // 强制刷怪
-        scene.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> anvilLink = scene.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
+        builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
+        ElementLink<WorldSectionElement> anvilLink = builder.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
 
-        scene.world().setBlock(blockPos, Blocks.SPAWNER.defaultBlockState(), false);
-        scene.world().showSection(util.select().position(blockPos), Direction.NORTH);
-        scene.idle(20);
+        builder.world().setBlock(blockPos, Blocks.SPAWNER.defaultBlockState(), false);
+        builder.world().showSection(util.select().position(blockPos), Direction.NORTH);
+        builder.idle(20);
 
-        scene.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
-        scene.idle(13);
-        scene.world().moveSection(anvilLink, util.vector().of(0, 1, 0), 5);
-        scene.idle(10);
-        scene.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
-        scene.idle(3);
+        builder.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
+        builder.idle(13);
+        builder.world().moveSection(anvilLink, util.vector().of(0, 1, 0), 5);
+        builder.idle(10);
+        builder.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
+        builder.idle(3);
 
         List<ElementLink<EntityElement>> pigs = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             BlockPos pigPos = blockPos.east(new Random().nextInt(5) - 2).north(new Random().nextInt(5) - 2);
             pigs.add(
-                scene.world().createEntity(world -> {
+                builder.world().createEntity(world -> {
                     Pig pig = EntityType.PIG.create(world);
                     if (pig != null) {
                         pig.moveTo(pigPos.getBottomCenter());
@@ -276,32 +276,32 @@ public class BlockRecipeScene {
                     return pig;
                 })
             );
-            scene.effects().indicateSuccess(pigPos);
+            builder.effects().indicateSuccess(pigPos);
         }
-        scene.idle(10);
+        builder.idle(10);
 
-        scene.overlay().showText(100)
+        builder.overlay().showText(100)
             .text(
                 "When the anvil hits the spawner, it will be forced to work. But there are still constraints, such as light, number of mob.")
             .pointAt(blockPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(110);
+        builder.idle(110);
         for (ElementLink<EntityElement> pig : pigs) {
-            scene.world().modifyEntity(pig, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            builder.world().modifyEntity(pig, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         }
         pigs.clear();
-        scene.idle(10);
+        builder.idle(10);
         // 高度越高，成功概率越大
-        scene.world().moveSection(anvilLink, util.vector().of(0, 4, 0), 10);
-        scene.idle(20);
+        builder.world().moveSection(anvilLink, util.vector().of(0, 4, 0), 10);
+        builder.idle(20);
         builder.world().moveSectionInterpolation(anvilLink, util.vector().of(0, -4, 0), Interpolation.acceleration(0.05));
-        scene.idle(4);
+        builder.idle(4);
 
         for (int i = 0; i < 4; i++) {
             BlockPos pigPos = blockPos.east(new Random().nextInt(5) - 2).north(new Random().nextInt(5) - 2);
             pigs.add(
-                scene.world().createEntity(world -> {
+                builder.world().createEntity(world -> {
                     Pig pig = EntityType.PIG.create(world);
                     if (pig != null) {
                         pig.moveTo(pigPos.getBottomCenter());
@@ -309,24 +309,24 @@ public class BlockRecipeScene {
                     return pig;
                 })
             );
-            scene.effects().indicateSuccess(pigPos);
+            builder.effects().indicateSuccess(pigPos);
         }
-        scene.idle(10);
+        builder.idle(10);
 
-        scene.overlay().showText(60)
+        builder.overlay().showText(60)
             .text("The higher the height of the anvil, the higher the probability of success.")
             .pointAt(blockPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(70);
+        builder.idle(70);
         for (ElementLink<EntityElement> pig : pigs) {
-            scene.world().modifyEntity(pig, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            builder.world().modifyEntity(pig, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
         }
         // 复位
         pigs.clear();
-        scene.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
-        scene.world().moveSection(anvilLink, util.vector().of(0, 1, 0), 5);
-        scene.idle(10);
+        builder.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
+        builder.world().moveSection(anvilLink, util.vector().of(0, 1, 0), 5);
+        builder.idle(10);
 
         // 红石EMP
         final BlockPos[] redstonePos = {
@@ -340,65 +340,65 @@ public class BlockRecipeScene {
 
         // 在每个位置放置红石火把
         for (BlockPos pos : redstonePos) {
-            scene.world().setBlock(pos, Blocks.REDSTONE_TORCH.defaultBlockState(), false);
-            scene.world().showSection(util.select().position(pos), Direction.NORTH);
+            builder.world().setBlock(pos, Blocks.REDSTONE_TORCH.defaultBlockState(), false);
+            builder.world().showSection(util.select().position(pos), Direction.NORTH);
         }
-        scene.world().setBlock(blockPos, Blocks.REDSTONE_BLOCK.defaultBlockState(), false);
-        scene.idle(10);
+        builder.world().setBlock(blockPos, Blocks.REDSTONE_BLOCK.defaultBlockState(), false);
+        builder.idle(10);
 
-        scene.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
-        scene.idle(3);
+        builder.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
+        builder.idle(3);
         for (BlockPos pos : redstonePos) {
-            scene.world().modifyBlock(pos, state -> state.setValue(RedstoneTorchBlock.LIT, false), false);
+            builder.world().modifyBlock(pos, state -> state.setValue(RedstoneTorchBlock.LIT, false), false);
         }
-        scene.idle(2);
+        builder.idle(2);
         for (BlockPos pos : redstonePos) {
-            scene.world().modifyBlock(pos, state -> state.setValue(RedstoneTorchBlock.LIT, true), false);
+            builder.world().modifyBlock(pos, state -> state.setValue(RedstoneTorchBlock.LIT, true), false);
         }
-        scene.idle(10);
+        builder.idle(10);
 
-        scene.overlay().showText(100)
+        builder.overlay().showText(100)
             .text("When the anvil strikes the red stone, a red stone EMP occurs, extinguishing the nearby red stone torches for an instant.")
             .pointAt(blockPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(110);
-        scene.overlay().showText(60)
+        builder.idle(110);
+        builder.overlay().showText(60)
             .text("The higher the anvil falls, the larger the range.")
             .pointAt(anvilPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(70);
+        builder.idle(70);
         // 复位
         for (BlockPos pos : redstonePos) {
-            scene.world().setBlock(pos, Blocks.AIR.defaultBlockState(), false);
+            builder.world().setBlock(pos, Blocks.AIR.defaultBlockState(), false);
         }
-        scene.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
-        scene.world().moveSection(anvilLink, util.vector().of(0, 2, 0), 5);
-        scene.idle(10);
+        builder.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
+        builder.world().moveSection(anvilLink, util.vector().of(0, 2, 0), 5);
+        builder.idle(10);
 
         // 宝库重置
-        scene.world().setBlock(blockPos, Blocks.VAULT.defaultBlockState(), false);
+        builder.world().setBlock(blockPos, Blocks.VAULT.defaultBlockState(), false);
         BlockPos leadPos = util.grid().at(2, 2, 2);
-        scene.world().setBlock(leadPos, ModBlocks.LEAD_BLOCK.getDefaultState(), false);
-        scene.world().showSection(util.select().position(leadPos), Direction.NORTH);
-        scene.idle(20);
+        builder.world().setBlock(leadPos, ModBlocks.LEAD_BLOCK.getDefaultState(), false);
+        builder.world().showSection(util.select().position(leadPos), Direction.NORTH);
+        builder.idle(20);
 
-        scene.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
-        scene.idle(3);
-        scene.world().setBlock(leadPos, Blocks.AIR.defaultBlockState(), false);
-        scene.world().modifyBlock(blockPos, state -> state.setValue(VaultBlock.STATE, VaultState.ACTIVE), false);
-        scene.idle(3);
-        scene.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
-        scene.idle(3);
-        scene.overlay().showText(40)
+        builder.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
+        builder.idle(3);
+        builder.world().setBlock(leadPos, Blocks.AIR.defaultBlockState(), false);
+        builder.world().modifyBlock(blockPos, state -> state.setValue(VaultBlock.STATE, VaultState.ACTIVE), false);
+        builder.idle(3);
+        builder.world().moveSection(anvilLink, util.vector().of(0, -1, 0), 3);
+        builder.idle(3);
+        builder.overlay().showText(40)
             .text("Press the lead into the vault to reset it.")
             .pointAt(blockPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(50);
+        builder.idle(50);
 
-        scene.markAsFinished();
+        builder.markAsFinished();
     }
 }
 
