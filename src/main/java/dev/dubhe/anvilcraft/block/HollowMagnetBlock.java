@@ -133,13 +133,12 @@ public class HollowMagnetBlock extends MagnetBlock implements SimpleWaterloggedB
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        if (level.isClientSide) {
-            return ItemInteractionResult.sidedSuccess(true);
-        }
-        if (stack.is(Items.IRON_INGOT)) {
-            stack.consume(1, player);
-            level.setBlockAndUpdate(pos, ModBlocks.FERRITE_CORE_MAGNET_BLOCK.getDefaultState());
-            return ItemInteractionResult.sidedSuccess(false);
+        if (!level.isClientSide) {
+            if (stack.is(Items.IRON_INGOT)) {
+                stack.consume(1, player);
+                level.setBlockAndUpdate(pos, ModBlocks.FERRITE_CORE_MAGNET_BLOCK.getDefaultState());
+                return ItemInteractionResult.SUCCESS;
+            }
         }
         return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
