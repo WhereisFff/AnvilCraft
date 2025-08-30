@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.integration.ponder.api.instruction.Interpolation;
 import dev.dubhe.anvilcraft.integration.ponder.api.instruction.InterpolationAnimateWorldSectionInstruction;
 import dev.dubhe.anvilcraft.integration.ponder.api.instruction.LineInstruction;
 import net.createmod.ponder.api.element.ElementLink;
+import net.createmod.ponder.api.element.EntityElement;
 import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.Selection;
@@ -15,6 +16,8 @@ import net.createmod.ponder.foundation.PonderSceneBuilder;
 import net.createmod.ponder.foundation.SelectionImpl;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
@@ -98,6 +101,42 @@ public class AnvilCraftSceneBuilder extends PonderSceneBuilder {
                 InterpolationAnimateWorldSectionInstruction.move(link, offset, interpolation)
             );
             AnvilCraftSceneBuilder.this.idle((int) Math.ceil(interpolation.duration(offset.length())));
+        }
+
+        public void dropSection(ElementLink<WorldSectionElement> link, float height) {
+            moveSectionInterpolation(link, new Vec3(0, -height, 0), Interpolation.acceleration(0.08));
+        }
+
+        public void dropSection(ElementLink<WorldSectionElement> link) {
+            dropSection(link, 1);
+        }
+
+        public void liftSection(ElementLink<WorldSectionElement> link, float height) {
+            moveSectionInterpolation(link, new Vec3(0, height, 0), Interpolation.acceleration(0.05));
+        }
+
+        public void liftSection(ElementLink<WorldSectionElement> link) {
+            liftSection(link, 1);
+        }
+
+        public ElementLink<EntityElement> createItem(Vec3 pos, ItemStack item) {
+            ElementLink<EntityElement> link =
+                AnvilCraftSceneBuilder.this.world().createItemEntity(pos, Vec3.ZERO, item);
+            AnvilCraftSceneBuilder.this.idle(10);
+            return link;
+        }
+
+        public ElementLink<EntityElement> createItem(BlockPos pos, ItemStack item) {
+            return createItem(pos.getCenter(), item);
+        }
+
+        public ElementLink<EntityElement> changeItem(Vec3 pos, ItemStack item, ElementLink<EntityElement> link) {
+            AnvilCraftSceneBuilder.this.world().modifyEntity(link, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            return AnvilCraftSceneBuilder.this.world().createItemEntity(pos, Vec3.ZERO, item);
+        }
+
+        public ElementLink<EntityElement> changeItem(BlockPos pos, ItemStack item, ElementLink<EntityElement> link) {
+            return changeItem(pos.getCenter(), item, link);
         }
     }
 

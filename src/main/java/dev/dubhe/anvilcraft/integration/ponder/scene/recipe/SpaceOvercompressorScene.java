@@ -4,6 +4,8 @@ import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
+import dev.dubhe.anvilcraft.integration.ponder.api.AnvilCraftSceneBuilder;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.EntityElement;
 import net.createmod.ponder.api.element.WorldSectionElement;
@@ -16,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.phys.Vec3;
 
 public class SpaceOvercompressorScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
@@ -26,51 +27,51 @@ public class SpaceOvercompressorScene {
             )
             .addStoryBoard(
                 "platform/555",
-                SpaceOvercompressorScene::crafting
+                SpaceOvercompressorScene::crafting,
+                AnvilCraftPonderTags.PROCESSING_COMPONENTS
             );
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
-        scene.title("space_overcompressor", "Use the Space Overcompressor to create the Neutronium Ingot");
-        scene.configureBasePlate(0, 0, 5);
-        scene.showBasePlate();
+        AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
+        builder.title("space_overcompressor", "Use the Space Overcompressor to create the Neutronium Ingot");
+        builder.configureBasePlate(0, 0, 5);
+        builder.showBasePlate();
         // 创建空间超压器
         BlockPos spaceOvercompressorPos = new BlockPos(2, 2, 2);
-        scene.world().setBlock(spaceOvercompressorPos, ModBlocks.SPACE_OVERCOMPRESSOR.getDefaultState(), false);
-        scene.world().showIndependentSection(util.select().position(spaceOvercompressorPos), Direction.NORTH);
+        builder.world().setBlock(spaceOvercompressorPos, ModBlocks.SPACE_OVERCOMPRESSOR.getDefaultState(), false);
+        builder.world().showIndependentSection(util.select().position(spaceOvercompressorPos), Direction.NORTH);
         // 创建铁砧
         BlockPos anvilPos = new BlockPos(2, 4, 2);
-        scene.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
+        builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
         ElementLink<WorldSectionElement> anvilLink =
-            scene.world().showIndependentSection(util.select().position(anvilPos), Direction.NORTH);
-        scene.idle(10);
+            builder.world().showIndependentSection(util.select().position(anvilPos), Direction.NORTH);
+        builder.idle(10);
         // 在 y=0 层，从 (1,0,1) 到 (3,0,3) 的 3x3 区域内放置飘浮粉块
-        scene.world().setBlocks(util.select().fromTo(1, 0, 1, 3, 0, 3),  ModBlocks.END_DUST.getDefaultState(), true);
-        scene.idle(10);
+        builder.world().setBlocks(util.select().fromTo(1, 0, 1, 3, 0, 3), ModBlocks.END_DUST.getDefaultState(), true);
+        builder.idle(10);
 
-        Vec3 ironBlockPos = new Vec3(2.5, 3.3, 2.5);
-        ItemStack ironBlockItem = new ItemStack(ModBlocks.HEAVY_IRON_BLOCK, 64);
         // 循环3次，每次砸入物品
-        scene.overlay().showText(40)
+        builder.overlay().showText(40)
             .text("Press a large amount of metal items into the Space Overcompressor to accumulate mass.")
             .pointAt(util.vector().blockSurface(util.grid().at(2, 3, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
+        builder.idle(50);
+
         for (int i = 0; i < 3; i++) {
             // 添加铁块
-            ElementLink<EntityElement> ironBockItemLink = scene.world().createItemEntity(ironBlockPos, Vec3.ZERO, ironBlockItem);
-            scene.idle(5);
+            ElementLink<EntityElement> ironBockItemLink =
+                builder.world().createItem(spaceOvercompressorPos.above(), new ItemStack(ModBlocks.HEAVY_IRON_BLOCK, 64));
             // 铁砧压入
-            scene.world().moveSection(anvilLink, new Vec3(0, -1, 0), 2);
-            scene.idle(2);
-            scene.world().modifyEntity(ironBockItemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
-            scene.idle(6);
+            builder.world().dropSection(anvilLink);
+            builder.world().modifyEntity(ironBockItemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
             // 铁砧上移
-            scene.world().moveSection(anvilLink, new Vec3(0, 1, 0), 3);
-            scene.idle(3);
+            builder.world().liftSection(anvilLink);
         }
         // 从空间超压器下方掉出中子锭
-        scene.overlay().showText(100)
+        builder.world().createItem(spaceOvercompressorPos.getBottomCenter(), ModItems.NEUTRONIUM_INGOT.asStack());
+        builder.overlay().showText(100)
             .text(
                 "When the Space Overcompressor has built up enough mass, a neutron ingot will form. "
                 + "It can pass through most blocks, so you'll need something like end dust to stop it."
@@ -78,10 +79,8 @@ public class SpaceOvercompressorScene {
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
-        scene.world().createItemEntity(spaceOvercompressorPos.getBottomCenter(), Vec3.ZERO, ModItems.NEUTRONIUM_INGOT.asStack());
+        builder.idle(20); // 等待一会展示结果
 
-        scene.idle(20); // 等待一会展示结果
-
-        scene.markAsFinished();
+        builder.markAsFinished();
     }
 }
