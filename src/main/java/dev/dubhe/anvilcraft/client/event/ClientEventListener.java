@@ -127,7 +127,7 @@ public class ClientEventListener {
         }
 
         if (event.getKey() == ModKeyMappings.SWITCH_RESONATE_MODE.get().getKey().getValue()) {
-            if (event.getAction() == InputConstants.PRESS) {
+            if (event.getAction() == InputConstants.PRESS == Minecraft.getInstance().screen == null) {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player == null) {
                     return;
