@@ -166,14 +166,13 @@ public class MagnetBlock extends Block implements IHammerRemovable {
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.isClientSide) {
-            return InteractionResult.sidedSuccess(true);
-        }
-        if (state.is(ModBlocks.MAGNET_BLOCK)) {
-            if (player.isShiftKeyDown()) {
-                player.addItem(ModItems.MAGNET_INGOT.asStack());
-                level.setBlockAndUpdate(pos, ModBlocks.HOLLOW_MAGNET_BLOCK.getDefaultState());
-                return InteractionResult.sidedSuccess(false);
+        if (!level.isClientSide) {
+            if (state.is(ModBlocks.MAGNET_BLOCK)) {
+                if (player.isShiftKeyDown()) {
+                    player.addItem(ModItems.MAGNET_INGOT.asStack());
+                    level.setBlockAndUpdate(pos, ModBlocks.HOLLOW_MAGNET_BLOCK.getDefaultState());
+                    return InteractionResult.SUCCESS;
+                }
             }
         }
         return super.useWithoutItem(state, level, pos, player, hitResult);
