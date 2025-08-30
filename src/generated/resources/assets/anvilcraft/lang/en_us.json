@@ -596,6 +596,7 @@
   "block.anvilcraft.yellow_cement_cauldron": "Yellow Cement Cauldron",
   "block.anvilcraft.zinc_block": "Block of Zinc",
   "block.anvilcraft.zinc_pressure_plate": "Zinc Pressure Plate",
+  "config.jade.plugin_anvilcraft.heatable_block_provider": "Heatable Block",
   "config.jade.plugin_anvilcraft.item_detector": "Item Detector",
   "config.jade.plugin_anvilcraft.power_provider": "Anvil Craft Power",
   "config.jade.plugin_anvilcraft.ruby_prism": "Ruby Prism",
