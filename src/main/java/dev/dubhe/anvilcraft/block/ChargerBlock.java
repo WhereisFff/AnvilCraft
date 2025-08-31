@@ -189,9 +189,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
                         return ItemInteractionResult.sidedSuccess(level.isClientSide);
                     }
                 }
-            }
-            // 玩家手持物品时尝试放入物品
-            else if (charger.containsValidItem(stack)) {
+            } else if (charger.containsValidItem(stack)) {
                 ItemStack result = charger.getFilteredItemStackHandler().insertItem(0, stack, true);
                 if (result.isEmpty() || result.getCount() < stack.getCount()) {
                     if (!level.isClientSide) {
