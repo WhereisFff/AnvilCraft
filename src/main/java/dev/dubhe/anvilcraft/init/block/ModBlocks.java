@@ -157,6 +157,9 @@ import dev.dubhe.anvilcraft.item.TeslaTowerItem;
 import dev.dubhe.anvilcraft.item.abnormal.CursedBlockItem;
 import dev.dubhe.anvilcraft.item.abnormal.LevitationBlockItem;
 import dev.dubhe.anvilcraft.item.abnormal.RadiationBlockItem;
+import dev.dubhe.anvilcraft.item.abnormal.SuperHeavyBlockItem;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemInjectRecipe;
+import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
 import dev.dubhe.anvilcraft.util.DangerUtil;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
@@ -3988,7 +3991,7 @@ public class ModBlocks {
             "confined_time_anvilon",
             SimpleConfinementAnvilonBlock::new
         )
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE, ModBlockTags.HAMMER_REMOVABLE)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
         .properties(PropertiesProviderUtil::confinedAnvilon)
         .blockstate(DataGenUtil::simple)
         .item()
@@ -4001,7 +4004,7 @@ public class ModBlocks {
             "confined_space_anvilon",
             SimpleConfinementAnvilonBlock::new
         )
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE, ModBlockTags.HAMMER_REMOVABLE)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
         .properties(PropertiesProviderUtil::confinedAnvilon)
         .blockstate(DataGenUtil::simple)
         .item()
@@ -4014,7 +4017,7 @@ public class ModBlocks {
             "confined_mass_anvilon",
             SimpleConfinementAnvilonBlock::new
         )
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE, ModBlockTags.HAMMER_REMOVABLE)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
         .properties(PropertiesProviderUtil::confinedAnvilon)
         .blockstate(DataGenUtil::simple)
         .item()
@@ -4027,13 +4030,31 @@ public class ModBlocks {
             "confined_energy_anvilon",
             SimpleConfinementAnvilonBlock::new
         )
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE, ModBlockTags.HAMMER_REMOVABLE)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.DRAGON_IMMUNE, BlockTags.WITHER_IMMUNE)
         .properties(PropertiesProviderUtil::confinedAnvilon)
         .blockstate(DataGenUtil::simple)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.EXPLOSION_PROOF)
         .build()
+        .register();
+
+    public static final BlockEntry<SimpleConfinementAnvilonBlock> CONFINED_NEUTRONIUM_INGOT_BLOCK = REGISTRATE
+        .block("confined_neutronium_ingot", SimpleConfinementAnvilonBlock::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .properties(PropertiesProviderUtil::confinedAnvilon)
+        .blockstate(DataGenUtil::simple)
+        .item(SuperHeavyBlockItem::new)
+        .initialProperties(() -> new Item.Properties().fireResistant().stacksTo(16))
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .recipe((ctx, provider) -> {
+            ItemInjectRecipe.builder()
+                .inputBlock(ModBlocks.CONFINEMENT_CHAMBER)
+                .requires(ModItems.CHARGED_NEUTRONIUM_INGOT)
+                .resultBlock(ctx)
+                .save(provider);
+        })
         .register();
 
     public static BlockEntry<ConfinementChamberBlock> CONFINEMENT_CHAMBER = REGISTRATE.block(
@@ -4056,6 +4077,34 @@ public class ModBlocks {
                 .define('B', ModItems.MAGNET_INGOT)
                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.TRANSCENDIUM_NUGGET), AnvilCraftDatagen.has(ModItems.TRANSCENDIUM_NUGGET))
                 .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.MAGNET_INGOT), AnvilCraftDatagen.has(ModItems.MAGNET_INGOT))
+                .save(provider);
+        })
+        .register();
+
+    public static final BlockEntry<Block> SINGULARITY_CRYSTAL = REGISTRATE
+        .block("singularity_crystal", Block::new)
+        .initialProperties(() -> ModBlocks.CONFINEMENT_CHAMBER.get())
+        .blockstate(DataGenUtil::simple)
+        .properties((properties) -> properties.pushReaction(PushReaction.BLOCK).lightLevel((state) -> 15))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.INCORRECT_FOR_WOODEN_TOOL,
+            BlockTags.INCORRECT_FOR_STONE_TOOL,
+            BlockTags.INCORRECT_FOR_IRON_TOOL,
+            BlockTags.INCORRECT_FOR_GOLD_TOOL,
+            BlockTags.INCORRECT_FOR_DIAMOND_TOOL,
+            BlockTags.INCORRECT_FOR_NETHERITE_TOOL,
+            ModBlockTags.INCORRECT_FOR_EMBER_TOOL)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant().stacksTo(1))
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .recipe((ctx, provider) -> {
+            MultiblockRecipe.builder(ctx.get(), 1)
+                .layer("ABA", "BAB", "ABA")
+                .layer("BAB", "ABA", "BAB")
+                .layer("ABA", "BAB", "ABA")
+                .symbol('A', ModBlocks.CONFINED_NEUTRONIUM_INGOT_BLOCK)
+                .symbol('B', ModBlocks.NEGATIVE_MATTER_BLOCK)
                 .save(provider);
         })
         .register();
