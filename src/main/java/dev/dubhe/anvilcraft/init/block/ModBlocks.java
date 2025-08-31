@@ -4085,15 +4085,13 @@ public class ModBlocks {
         .block("singularity_crystal", Block::new)
         .initialProperties(() -> ModBlocks.CONFINEMENT_CHAMBER.get())
         .blockstate(DataGenUtil::simple)
-        .properties((properties) -> properties.pushReaction(PushReaction.BLOCK).lightLevel((state) -> 15))
-        .tag(BlockTags.MINEABLE_WITH_PICKAXE,
-            BlockTags.INCORRECT_FOR_WOODEN_TOOL,
-            BlockTags.INCORRECT_FOR_STONE_TOOL,
-            BlockTags.INCORRECT_FOR_IRON_TOOL,
-            BlockTags.INCORRECT_FOR_GOLD_TOOL,
-            BlockTags.INCORRECT_FOR_DIAMOND_TOOL,
-            BlockTags.INCORRECT_FOR_NETHERITE_TOOL,
-            ModBlockTags.INCORRECT_FOR_EMBER_TOOL)
+        .properties((properties) -> properties
+            .pushReaction(PushReaction.BLOCK)
+            .lightLevel((state) -> 15)
+            .noOcclusion()
+            .strength(50F, 1200.0F)
+            .requiresCorrectToolForDrops())
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, ModBlockTags.NEEDS_TRANSCENDIUM_TOOL)
         .item()
         .initialProperties(() -> new Item.Properties().fireResistant().stacksTo(1))
         .tag(ModItemTags.EXPLOSION_PROOF)
