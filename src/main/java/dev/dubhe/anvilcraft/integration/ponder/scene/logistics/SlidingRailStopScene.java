@@ -25,7 +25,7 @@ public class SlidingRailStopScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.SLIDING_RAIL_STOP)
-            .addStoryBoard("platform/999", SlidingRailStopScene::slidingStop);
+            .addStoryBoard("platform/9x", SlidingRailStopScene::slidingStop);
     }
 
     private static void slidingStop(SceneBuilder scene, SceneBuildingUtil util) {

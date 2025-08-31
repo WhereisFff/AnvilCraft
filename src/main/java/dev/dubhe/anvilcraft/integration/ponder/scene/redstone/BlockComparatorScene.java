@@ -20,11 +20,7 @@ public class BlockComparatorScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.BLOCK_COMPARATOR)
-            .addStoryBoard(
-                "platform/555",
-                BlockComparatorScene::run,
-                AnvilCraftPonderTags.REDSTONE_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", BlockComparatorScene::run, AnvilCraftPonderTags.REDSTONE_COMPONENTS);
     }
 
     public static void run(SceneBuilder scene, SceneBuildingUtil util) {

@@ -28,8 +28,8 @@ public class PoweredSlidingRailScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.POWERED_SLIDING_RAIL)
-            .addStoryBoard("platform/999", PoweredSlidingRailScene::basicOperation)
-            .addStoryBoard("platform/999", PoweredSlidingRailScene::withRailStop);
+            .addStoryBoard("platform/9x", PoweredSlidingRailScene::basicOperation)
+            .addStoryBoard("platform/9x", PoweredSlidingRailScene::withRailStop);
     }
 
     private static void basicOperation(SceneBuilder scene, SceneBuildingUtil util) {

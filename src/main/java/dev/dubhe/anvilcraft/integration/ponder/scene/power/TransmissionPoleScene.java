@@ -18,7 +18,7 @@ public class TransmissionPoleScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.TRANSMISSION_POLE)
-            .addStoryBoard("platform/555", TransmissionPoleScene::run, AnvilCraftPonderTags.REDSTONE_COMPONENTS);
+            .addStoryBoard("platform/5x", TransmissionPoleScene::run, AnvilCraftPonderTags.REDSTONE_COMPONENTS);
     }
 
     public static void run(SceneBuilder scene, SceneBuildingUtil util) {

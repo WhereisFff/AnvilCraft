@@ -25,11 +25,7 @@ public class SpaceOvercompressorScene {
         helper.forComponents(
                 ModBlocks.SPACE_OVERCOMPRESSOR
             )
-            .addStoryBoard(
-                "platform/555",
-                SpaceOvercompressorScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", SpaceOvercompressorScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {

@@ -26,11 +26,7 @@ public class AnvilScene {
                 Items.CHIPPED_ANVIL,
                 Items.DAMAGED_ANVIL
             )
-            .addStoryBoard(
-                "platform/555",
-                AnvilScene::crafting,
-                AnvilCraftPonderTags.ANVIL
-            );
+            .addStoryBoard("platform/5x", AnvilScene::crafting, AnvilCraftPonderTags.ANVIL);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {

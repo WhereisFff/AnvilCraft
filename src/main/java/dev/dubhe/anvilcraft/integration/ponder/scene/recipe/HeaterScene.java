@@ -33,11 +33,7 @@ public class HeaterScene {
             BuiltInRegistries.ITEM::getKey
         );
         helper.forComponents(ModBlocks.HEATER.asItem())
-            .addStoryBoard(
-                "platform/555",
-                HeaterScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", HeaterScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {

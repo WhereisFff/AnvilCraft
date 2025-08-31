@@ -31,27 +31,10 @@ public class MagnetScene {
                 ModBlocks.HOLLOW_MAGNET_BLOCK,
                 ModBlocks.FERRITE_CORE_MAGNET_BLOCK
             )
-            .addStoryBoard(
-                "platform/555",
-                MagnetScene::thunder,
-                AnvilCraftPonderTags.MAGNET_BLOCK
-            )
-            .addStoryBoard(
-                "platform/555",
-                MagnetScene::magnetizeIngot,
-                AnvilCraftPonderTags.MAGNET_BLOCK
-            )
-            .addStoryBoard(
-                "platform/555",
-                MagnetScene::attractAnvil,
-                AnvilCraftPonderTags.MAGNET_BLOCK,
-                AnvilCraftPonderTags.ANVIL
-            )
-            .addStoryBoard(
-                "platform/555",
-                MagnetScene::rubCopperBlock,
-                AnvilCraftPonderTags.MAGNET_BLOCK
-            );
+            .addStoryBoard("platform/5x", MagnetScene::thunder, AnvilCraftPonderTags.MAGNET_BLOCK)
+            .addStoryBoard("platform/5x", MagnetScene::magnetizeIngot, AnvilCraftPonderTags.MAGNET_BLOCK)
+            .addStoryBoard("platform/5x", MagnetScene::attractAnvil, AnvilCraftPonderTags.MAGNET_BLOCK, AnvilCraftPonderTags.ANVIL)
+            .addStoryBoard("platform/5x", MagnetScene::rubCopperBlock, AnvilCraftPonderTags.MAGNET_BLOCK);
     }
 
     private static void thunder(SceneBuilder scene, SceneBuildingUtil util) {
