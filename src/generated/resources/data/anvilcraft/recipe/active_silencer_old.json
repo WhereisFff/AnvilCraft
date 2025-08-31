@@ -9,16 +9,12 @@
       "item": "minecraft:note_block"
     },
     "C": {
-      "item": "anvilcraft:circuit_board"
-    },
-    "D": {
-      "item": "anvilcraft:piezoelectric_crystal"
+      "item": "minecraft:sculk_sensor"
     }
   },
   "pattern": [
     "ABA",
-    "ACA",
-    "BDB"
+    "ACA"
   ],
   "result": {
     "count": 1,
