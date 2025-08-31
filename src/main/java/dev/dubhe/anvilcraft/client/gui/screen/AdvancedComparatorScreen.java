@@ -163,7 +163,7 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
         pose.popPose();
         int max = Math.max(this.slider1X, this.slider2X);
         int min = Math.min(this.slider1X, this.slider2X);
-        if(this.menu.getBlockEntity().getCompareMode() == AdvancedComparatorBlockEntity.Mode.WINDOW){
+        if (this.menu.getBlockEntity().getCompareMode() == AdvancedComparatorBlockEntity.Mode.WINDOW) {
             guiGraphics.fill(min + 3, this.sliderY, min + 4, this.sliderY - 90, 0xFF990000);
             guiGraphics.fill(max + 3, this.sliderY, max + 4, this.sliderY - 90, 0xFF990000);
             guiGraphics.fill(min + 3, this.sliderY - 90, max + 4, this.sliderY - 91, 0xFFFF0000);
