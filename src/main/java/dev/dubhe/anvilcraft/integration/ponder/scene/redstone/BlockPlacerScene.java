@@ -31,16 +31,8 @@ public class BlockPlacerScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.BLOCK_PLACER)
-            .addStoryBoard(
-                "platform/555",
-                BlockPlacerScene::run,
-                AnvilCraftPonderTags.REDSTONE_COMPONENTS
-            )
-            .addStoryBoard(
-                "platform/777",
-                BlockPlacerScene::anvilRun,
-                AnvilCraftPonderTags.POWER_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", BlockPlacerScene::run, AnvilCraftPonderTags.REDSTONE_COMPONENTS)
+            .addStoryBoard("platform/7x", BlockPlacerScene::anvilRun, AnvilCraftPonderTags.POWER_COMPONENTS);
     }
 
     private static void run(SceneBuilder scene, SceneBuildingUtil util) {

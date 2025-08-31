@@ -27,9 +27,9 @@ public class MagneticChuteScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.MAGNETIC_CHUTE)
-            .addStoryBoard("platform/555", MagneticChuteScene::basicOperation)
-            .addStoryBoard("platform/555", MagneticChuteScene::chuteConnections)
-            .addStoryBoard("platform/555", MagneticChuteScene::filtering);
+            .addStoryBoard("platform/5x", MagneticChuteScene::basicOperation)
+            .addStoryBoard("platform/5x", MagneticChuteScene::chuteConnections)
+            .addStoryBoard("platform/5x", MagneticChuteScene::filtering);
     }
 
     // 基本操作展示：对比普通溜槽和磁性溜槽，展示物品掉落方式的不同

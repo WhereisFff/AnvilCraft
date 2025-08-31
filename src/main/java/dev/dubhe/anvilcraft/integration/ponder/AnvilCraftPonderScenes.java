@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.power.TransmissionPoleScene
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.BlockRecipeScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.BulgingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.CookingScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.CorruptedBeaconSence;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.HeaterScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.IronTrapdoorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.ItemCompressScene;
@@ -40,6 +41,7 @@ public class AnvilCraftPonderScenes {
         ItemCrushScene.register(helper);
         MeshScene.register(helper);
         HeaterScene.register(helper);
+        CorruptedBeaconSence.register(helper);
         SpaceOvercompressorScene.register(helper);
         // redstone
         MagnetScene.register(helper);

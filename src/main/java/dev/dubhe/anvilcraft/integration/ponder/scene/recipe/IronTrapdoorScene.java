@@ -26,14 +26,8 @@ import static net.minecraft.world.item.Items.IRON_TRAPDOOR;
 public class IronTrapdoorScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
-        helper.forComponents(
-                IRON_TRAPDOOR
-            )
-            .addStoryBoard(
-                "platform/555",
-                IronTrapdoorScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+        helper.forComponents(IRON_TRAPDOOR)
+            .addStoryBoard("platform/5x", IronTrapdoorScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {

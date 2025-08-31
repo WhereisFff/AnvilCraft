@@ -29,8 +29,8 @@ public class SlidingRailScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.SLIDING_RAIL)
-            .addStoryBoard("platform/999", SlidingRailScene::itemSliding)
-            .addStoryBoard("platform/999", SlidingRailScene::blockSliding);
+            .addStoryBoard("platform/9x", SlidingRailScene::itemSliding)
+            .addStoryBoard("platform/9x", SlidingRailScene::blockSliding);
     }
 
     // 演示物品在滑轨上滑行

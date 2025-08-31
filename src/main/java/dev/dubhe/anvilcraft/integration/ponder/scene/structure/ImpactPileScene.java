@@ -28,10 +28,7 @@ public class ImpactPileScene {
                 ModBlocks.IMPACT_PILE.asItem(),
                 ModBlocks.MINERAL_FOUNTAIN.asItem()
             )
-            .addStoryBoard(
-                "platform/555",
-                ImpactPileScene::impact
-            );
+            .addStoryBoard("platform/5x", ImpactPileScene::impact);
     }
 
     private static void impact(SceneBuilder scene, SceneBuildingUtil util) {
