@@ -47,11 +47,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
      */
     public ChargerBlock(Properties properties) {
         super(properties);
-        registerDefaultState(
-            getStateDefinition().any()
-                .setValue(POWERED, false)
-                .setValue(OVERLOAD, true)
-        );
+        registerDefaultState(getStateDefinition().any().setValue(POWERED, false).setValue(OVERLOAD, true));
     }
 
     @Override
@@ -68,7 +64,10 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-        @NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+        @NotNull Level level,
+        @NotNull BlockState state,
+        @NotNull BlockEntityType<T> type
+    ) {
         if (level.isClientSide) {
             return null;
         }
@@ -86,7 +85,8 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
         @NotNull BlockPos pos,
         @NotNull Block neighborBlock,
         @NotNull BlockPos neighborPos,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (level.isClientSide) {
             return;
         }
@@ -115,7 +115,8 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
         @NotNull Level level,
         @NotNull BlockPos pos,
         @NotNull BlockState newState,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (state.is(newState.getBlock())) return;
         if (level.getBlockEntity(pos) instanceof ChargerBlockEntity entity) {
             Vec3 vec3 = entity.getBlockPos().getCenter();
@@ -129,11 +130,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
     }
 
     @Override
-    public void tick(
-        @NotNull BlockState state,
-        @NotNull ServerLevel level,
-        @NotNull BlockPos pos,
-        @NotNull RandomSource random) {
+    public void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
         if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
             level.setBlock(pos, state.cycle(POWERED), 2);
         }
@@ -179,7 +176,10 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
             // 玩家空手时尝试取出物品
             if (stack.isEmpty()) {
                 // 优先从输出槽（槽位2）取物品，如果为空则从输入槽（槽位0）取
-                for (int slot : new int[]{2, 0}) {
+                for (int slot : new int[]{
+                    2,
+                    0
+                }) {
                     ItemStack itemInSlot = charger.getFilteredItemStackHandler().getStackInSlot(slot);
                     if (!itemInSlot.isEmpty()) {
                         if (!level.isClientSide) {
@@ -189,7 +189,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
                         return ItemInteractionResult.sidedSuccess(level.isClientSide);
                     }
                 }
-            } 
+            }
             // 玩家手持物品时尝试放入物品
             else if (charger.containsValidItem(stack)) {
                 ItemStack result = charger.getFilteredItemStackHandler().insertItem(0, stack, true);

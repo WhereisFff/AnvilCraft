@@ -56,8 +56,8 @@ public class GiantAnvilScene {
         builder.idle(10);
         //放置重质铁块
         builder.world().setBlock(new BlockPos(16, 0, 16), ModBlocks.HEAVY_IRON_BLOCK.getDefaultState(), false);
-        Selection heavy_iron_block = util.select().position(16, 0, 16);
-        builder.world().showSection(heavy_iron_block, Direction.DOWN);
+        Selection heavyIronBlock = util.select().position(16, 0, 16);
+        builder.world().showSection(heavyIronBlock, Direction.DOWN);
         //生成XeKr
         ElementLink<EntityElement> mushroomCow = spawnMushroomCow(util, builder);
         //延时10gt
@@ -79,10 +79,10 @@ public class GiantAnvilScene {
                 .setValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER),
             false
         );
-        Selection giant_anvil = util.select().position(16, 12, 16);
-        ElementLink<WorldSectionElement> GiantAnvilLink = builder.world().showIndependentSection(giant_anvil, Direction.DOWN);
+        Selection giantAnvil = util.select().position(16, 12, 16);
+        ElementLink<WorldSectionElement> giantAnvilLink = builder.world().showIndependentSection(giantAnvil, Direction.DOWN);
         //巨型铁砧下落10m
-        builder.world().moveSectionInterpolation(GiantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(giantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
         //文本：就会产生撼地冲击向四周扩散
         builder.overlay()
             .showText(40)
@@ -160,10 +160,10 @@ public class GiantAnvilScene {
         builder.idle(10);
         //放置重质铁块
         builder.world().setBlock(new BlockPos(16, 0, 16), ModBlocks.HEAVY_IRON_BLOCK.getDefaultState(), false);
-        Selection heavy_iron_block = util.select().position(16, 0, 16);
-        builder.world().showSection(heavy_iron_block, Direction.DOWN);
+        Selection heavyIronBlock = util.select().position(16, 0, 16);
+        builder.world().showSection(heavyIronBlock, Direction.DOWN);
         //生成XeKr
-        ElementLink<EntityElement> MushroomCow = builder.world().createEntity(w -> {
+        ElementLink<EntityElement> mushroomCow = builder.world().createEntity(w -> {
             MushroomCow entity = EntityType.MOOSHROOM.create(w);
             Vec3 p = util.vector().topOf(util.grid().at(17, 1, 10));
             entity.setPos(p.x, p.y, p.z);
@@ -196,16 +196,16 @@ public class GiantAnvilScene {
                 .setValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER),
             false
         );
-        Selection giant_anvil = util.select().position(16, 5, 16);
-        ElementLink<WorldSectionElement> GiantAnvilLink = builder.world().showIndependentSection(giant_anvil, Direction.NORTH);
+        Selection giantAnvil = util.select().position(16, 5, 16);
+        ElementLink<WorldSectionElement> giantAnvilLink = builder.world().showIndependentSection(giantAnvil, Direction.NORTH);
         //延时20gt
         builder.idle(20);
         //巨型铁砧下落3m
-        builder.world().moveSectionInterpolation(GiantAnvilLink, new Vec3(0, -3, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(giantAnvilLink, new Vec3(0, -3, 0), Interpolation.acceleration(0.05));
         //延时30gt
         builder.idle(30);
         //巨型铁砧上升16m 10gt
-        builder.world().moveSection(GiantAnvilLink, new Vec3(0, 16, 0), 10);
+        builder.world().moveSection(giantAnvilLink, new Vec3(0, 16, 0), 10);
         //选择框33x1x33，文本：而下落16格高的巨型铁砧可以撼地33x33的范围
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(0, 0, 0, 32, 0, 32), 70)
@@ -216,7 +216,7 @@ public class GiantAnvilScene {
         //延时40gt
         builder.idle(40);
         //巨型铁砧下降16m
-        builder.world().moveSectionInterpolation(GiantAnvilLink, new Vec3(0, -16, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(giantAnvilLink, new Vec3(0, -16, 0), Interpolation.acceleration(0.05));
         //XeKr冒烟
         builder.effects()
             .emitParticles(
@@ -230,9 +230,9 @@ public class GiantAnvilScene {
             int tick = i;
             builder.idle(1);
             builder.world().modifyEntity(
-                MushroomCow, e -> {
-                    if (e instanceof MushroomCow mushroomCow) {
-                        mushroomCow.deathTime = tick;
+                mushroomCow, e -> {
+                    if (e instanceof MushroomCow cow) {
+                        cow.deathTime = tick;
                     }
                 }
             );
@@ -265,8 +265,8 @@ public class GiantAnvilScene {
         builder.idle(10);
         //放置重质铁块
         builder.world().setBlock(new BlockPos(16, 0, 16), ModBlocks.HEAVY_IRON_BLOCK.getDefaultState(), false);
-        Selection heavy_iron_block = util.select().position(16, 0, 16);
-        builder.world().showSection(heavy_iron_block, Direction.DOWN);
+        Selection heavyIronBlock = util.select().position(16, 0, 16);
+        builder.world().showSection(heavyIronBlock, Direction.DOWN);
         //延时20gt
         builder.idle(20);
         //选择框3x1x3，文本：改变重质铁块周围一圈的方块可以改变撼地的模式
@@ -277,7 +277,7 @@ public class GiantAnvilScene {
             .pointAt(util.vector().blockSurface(util.grid().at(15, 0, 16), Direction.NORTH))
             .text("Changing the blocks surrounding the Heavy Iron Block can alter the Shock mode.");
         //绕圈先后放置8个树脂块
-        Selection resin_block;
+        Selection resinBlock;
         BlockPos[] path = {
             new BlockPos(15, 0, 15),
             new BlockPos(15, 0, 16),
@@ -290,8 +290,8 @@ public class GiantAnvilScene {
         };
         for (BlockPos pos : path) {
             builder.world().setBlock(pos, ModBlocks.RESIN_BLOCK.getDefaultState(), false);
-            resin_block = util.select().position(pos);
-            builder.world().showSection(resin_block, Direction.DOWN);
+            resinBlock = util.select().position(pos);
+            builder.world().showSection(resinBlock, Direction.DOWN);
             builder.idle(2);
         }
         //延时40gt
@@ -306,7 +306,7 @@ public class GiantAnvilScene {
         //放置铁砧并链接
         builder.world().setBlock(new BlockPos(15, 1, 13), Blocks.ANVIL.defaultBlockState(), false);
         Selection anvil = util.select().position(15, 1, 13);
-        ElementLink<WorldSectionElement> AnvilLink = builder.world().showIndependentSection(anvil, Direction.NORTH);
+        ElementLink<WorldSectionElement> anvilLink = builder.world().showIndependentSection(anvil, Direction.NORTH);
         //放置巨型铁砧并链接
         builder.world().setBlock(
             new BlockPos(16, 12, 16),
@@ -315,20 +315,20 @@ public class GiantAnvilScene {
                 .setValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER),
             false
         );
-        Selection giant_anvil = util.select().position(16, 12, 16);
-        ElementLink<WorldSectionElement> GiantAnvilLink = builder.world().showIndependentSection(giant_anvil, Direction.NORTH);
+        Selection giantAnvil = util.select().position(16, 12, 16);
+        ElementLink<WorldSectionElement> giantAnvilLink = builder.world().showIndependentSection(giantAnvil, Direction.NORTH);
         //延时20gt
         builder.idle(20);
         //巨型铁砧下落10m
-        builder.world().moveSectionInterpolation(GiantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(giantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
         //铁砧上升1m
-        builder.world().moveSectionInterpolation(AnvilLink, new Vec3(0, 1, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(anvilLink, new Vec3(0, 1, 0), Interpolation.acceleration(0.05));
         //铁砧下降1m
-        builder.world().moveSectionInterpolation(AnvilLink, new Vec3(0, -1, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(anvilLink, new Vec3(0, -1, 0), Interpolation.acceleration(0.05));
         //延时40gt
         builder.idle(40);
         //巨型铁砧上升10m
-        builder.world().moveSection(GiantAnvilLink, new Vec3(0, 10, 0), 10);
+        builder.world().moveSection(giantAnvilLink, new Vec3(0, 10, 0), 10);
         //生成XeKr
         ElementLink<EntityElement> mushroomCow = spawnMushroomCow(util, builder);
         //四边放置诅咒金块
@@ -374,7 +374,7 @@ public class GiantAnvilScene {
         //延时60gt
         builder.idle(60);
         //巨型铁砧下落10m
-        builder.world().moveSectionInterpolation(GiantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(giantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
         //XeKr冒烟
         builder.effects()
             .emitParticles(
@@ -413,7 +413,7 @@ public class GiantAnvilScene {
         //延时40gt
         builder.idle(50);
         //巨型铁砧上升10m
-        builder.world().moveSection(GiantAnvilLink, new Vec3(0, 10, 0), 10);
+        builder.world().moveSection(giantAnvilLink, new Vec3(0, 10, 0), 10);
         //四角放置蓝宝石块
         for (BlockPos pos : rubyPath) {
             builder.world().setBlock(pos, ModBlocks.SAPPHIRE_BLOCK.getDefaultState(), false);
@@ -487,7 +487,7 @@ public class GiantAnvilScene {
         //延时30gt
         builder.idle(30);
         //铁砧下落10m
-        builder.world().moveSectionInterpolation(GiantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
+        builder.world().moveSectionInterpolation(giantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
         //僵尸冒烟
         builder.effects()
             .emitParticles(
