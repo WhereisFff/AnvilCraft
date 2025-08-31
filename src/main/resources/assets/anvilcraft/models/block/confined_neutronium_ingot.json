@@ -4,8 +4,8 @@
 	"ambientocclusion": false,
 	"render_type": "minecraft:cutout",
 	"textures": {
-		"0": "anvilcraft:block/confined_time_anvilon",
-		"particle": "anvilcraft:block/confined_time_anvilon"
+		"0": "anvilcraft:block/confined_neutronium_ingot",
+		"particle": "anvilcraft:block/confined_neutronium_ingot"
 	},
 	"elements": [
 		{
