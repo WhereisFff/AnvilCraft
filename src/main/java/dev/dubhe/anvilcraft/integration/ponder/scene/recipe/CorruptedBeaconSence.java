@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
 import dev.dubhe.anvilcraft.integration.ponder.api.AnvilCraftSceneBuilder;
-import dev.dubhe.anvilcraft.util.CauldronUtil;
 import net.createmod.catnip.math.Pointing;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.EntityElement;
@@ -136,7 +135,7 @@ public class CorruptedBeaconSence {
         builder.idle(20);
 
         builder.world().modifyEntity(entity, skeleton -> skeleton.remove(Entity.RemovalReason.KILLED));
-        entity = builder.world().createEntity(world -> {
+        builder.world().createEntity(world -> {
             WitherSkeleton witherSkeleton = EntityType.WITHER_SKELETON.create(world);
             if (witherSkeleton != null) {
                 witherSkeleton.moveTo(beaconPos.above().getBottomCenter());
