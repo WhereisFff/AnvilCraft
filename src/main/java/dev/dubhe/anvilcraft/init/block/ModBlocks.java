@@ -1180,7 +1180,9 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<BlockDevourerBlock> BLOCK_DEVOURER = REGISTRATE
         .block("block_devourer", BlockDevourerBlock::new)
-        .simpleItem()
+        .item()
+        .properties(Item.Properties::fireResistant)
+        .build()
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .properties(BlockBehaviour.Properties::noOcclusion)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
