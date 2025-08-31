@@ -44,18 +44,7 @@ import dev.dubhe.anvilcraft.block.entity.heatable.IncandescentBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.OverheatedBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.RedhotBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.plate.TimeCountedPressurePlateBlockEntity;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.AdvancedComparatorBlockEntityRender;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.BatchCrafterRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.ChargeCollectorRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.ConfinementChamberRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.CorruptedBeaconRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.CreativeGeneratorRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.HasMobBlockRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.HeatCollectorRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.HeliostatsRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.LaserBlockRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.PlasmaJetsRenderer;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.VoidEnergyCollectorRenderer;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.*;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
@@ -165,6 +154,7 @@ public class ModBlockEntities {
 
     public static final BlockEntityEntry<ChargerBlockEntity> CHARGER = REGISTRATE
         .blockEntity("charger", ChargerBlockEntity::new)
+        .renderer(()-> ChargerBlockRenderer::new)
         .validBlocks(ModBlocks.CHARGER, ModBlocks.DISCHARGER)
         .register();
 
