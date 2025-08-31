@@ -20,6 +20,7 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.StampingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockComparatorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockPlacerScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.MagnetScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.structure.GiantAnvilScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.structure.ImpactPileScene;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.minecraft.resources.ResourceLocation;
@@ -47,6 +48,7 @@ public class AnvilCraftPonderScenes {
         BlockPlacerScene.register(helper);
         // structure
         ImpactPileScene.register(helper);
+        GiantAnvilScene.register(helper);
         // logistics
         ChuteScene.register(helper);
         MagneticChuteScene.register(helper);
