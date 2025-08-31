@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.InductionLightBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
@@ -17,7 +16,6 @@ import java.util.*;
 public class RipeningManager {
     private static final Map<Level, RipeningManager> INSTANCES = new HashMap<>();
 
-    private static int cooldown = 0;
     private final Level level;
     private final Set<BlockPos> lightBlocks = Collections.synchronizedSet(new HashSet<>());
 
@@ -91,11 +89,9 @@ public class RipeningManager {
      *
      */
     private void tick() {
-        cooldown--;
-        if (cooldown > 0 || lightBlocks.isEmpty()) return;
-
-        MinecraftServer server = level.getServer();
-        if (server == null) return;
+        if (level.getServer() == null || lightBlocks.isEmpty() ||
+                level.getGameTime() % AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown != 0
+        ) return;
 
         lightBlocks.removeIf(pos -> {
             BlockState lightBlockState = level.getBlockState(pos);
@@ -106,10 +102,9 @@ public class RipeningManager {
         });
         
         HashSet<BlockPos> ripenedBlocks = new HashSet<>();
-		for (BlockPos pos : lightBlocks) {
-			doRipen(pos, ripenedBlocks);
-		}
-        cooldown = AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown;
+        for (BlockPos pos : lightBlocks) {
+            doRipen(pos, ripenedBlocks);
+        }
     }
 
     /**
