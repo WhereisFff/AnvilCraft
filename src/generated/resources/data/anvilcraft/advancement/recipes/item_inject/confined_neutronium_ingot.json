@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:super_heating/multiphase_transcendium"
+        "recipe": "anvilcraft:item_inject/confined_neutronium_ingot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:super_heating/multiphase_transcendium"
+      "anvilcraft:item_inject/confined_neutronium_ingot"
     ]
   }
 }

@@ -141,7 +141,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
         level.setBlock(blockPos, ModBlocks.DISCHARGER.getDefaultState(), 2);
         if (level.getBlockEntity(blockPos) instanceof IStateListener<?> listener) {
             IStateListener<Boolean> thiz = (IStateListener<Boolean>) listener;
-            thiz.notifyStateChanged(true);
+            thiz.notifyStateChanged(false);
         }
         return true;
     }
