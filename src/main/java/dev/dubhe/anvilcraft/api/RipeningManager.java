@@ -103,25 +103,24 @@ public class RipeningManager {
      */
     private void tick() {
         cooldown--;
-        if (cooldown == 1 && !lightBlocks.isEmpty()) {
+        if (cooldown <= 0 && !lightBlocks.isEmpty()) {
             MinecraftServer server = level.getServer();
             if (server == null) return;
-            server.tell(new TickTask(server.getTickCount() + 1, () -> {
-                HashSet<BlockPos> ripenedBlocks = new HashSet<>();
-                Iterator<BlockPos> it = lightBlocks.iterator();
-                while (it.hasNext()) {
-                    BlockPos pos = it.next();
-                    BlockState lightBlockState = level.getBlockState(pos);
-                    if (lightBlockState.getBlock() instanceof InductionLightBlock
+
+            HashSet<BlockPos> ripenedBlocks = new HashSet<>();
+            Iterator<BlockPos> it = lightBlocks.iterator();
+            while (it.hasNext()) {
+                BlockPos pos = it.next();
+                BlockState lightBlockState = level.getBlockState(pos);
+                if (lightBlockState.getBlock() instanceof InductionLightBlock
                         && InductionLightBlock.isLit(lightBlockState)
                         && InductionLightBlock.canCropGrow(lightBlockState)
-                    ) {
-                        doRipen(pos, ripenedBlocks);
-                    } else {
-                        it.remove();
-                    }
+                ) {
+                    doRipen(pos, ripenedBlocks);
+                } else {
+                    it.remove();
                 }
-            }));
+            }
             cooldown = AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown;
         }
     }
