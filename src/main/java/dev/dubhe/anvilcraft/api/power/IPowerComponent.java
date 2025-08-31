@@ -1,8 +1,13 @@
 package dev.dubhe.anvilcraft.api.power;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -109,5 +114,25 @@ public interface IPowerComponent extends Comparable<IPowerComponent> {
 
     default boolean isGridWorking() {
         return Optional.ofNullable(this.getGrid()).map(PowerGrid::isWorking).orElse(false);
+    }
+
+    default MutableComponent getCommandDiscription() {
+        Block block = Optional.ofNullable(this.getCurrentLevel())
+            .map(level -> level.getBlockState(this.getPos()).getBlock())
+            .orElse(Blocks.AIR);
+        int x = this.getPos().getX();
+        int y = this.getPos().getY();
+        int z = this.getPos().getZ();
+        if (this.getComponentType() == PowerComponentType.PRODUCER && this instanceof IPowerProducer producer) {
+            return Component.translatable("command.anvilcraft.powergrid.info.producer",
+                block.getName(), x, y, z, producer.getOutputPower(), this.getRange()).withStyle(ChatFormatting.GREEN);
+        } else if (this.getComponentType() == PowerComponentType.CONSUMER && this instanceof IPowerConsumer consumer) {
+            return Component.translatable("command.anvilcraft.powergrid.info.consumer",
+                block.getName(), x, y, z, consumer.getInputPower(), this.getRange()).withStyle(ChatFormatting.YELLOW);
+        } else if (this.getComponentType() == PowerComponentType.TRANSMITTER) {
+            return Component.translatable("command.anvilcraft.powergrid.info.transmitter",
+                block.getName(), x, y, z, this.getRange()).withStyle(ChatFormatting.AQUA);
+        }
+        return Component.literal("");
     }
 }
