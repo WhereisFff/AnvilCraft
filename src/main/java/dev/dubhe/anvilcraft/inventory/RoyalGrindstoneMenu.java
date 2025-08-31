@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.inventory;
 
+import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
@@ -26,12 +27,14 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class RoyalGrindstoneMenu extends AbstractContainerMenu {
-
-    public static final Item REPAIR_MATERIAL = Items.GOLD_INGOT;
-    public static final Item RESULT_MATERIAL = ModItems.CURSED_GOLD_INGOT.get();
+    // Map<repairMaterial, Pair<perUnitRepair, resultMaterial>>
+    public static final Map<Item, Pair<Integer, Item>> REPAIR_COST_RECIPES = new HashMap<>();
+    public static final Item DEFAULT_REPAIR_MATERIAL = Items.GOLD_INGOT;
     public static final int GOLD_PER_CURSE = 16;
     private final Container repairToolSlots;
     private final Container resultToolSlots;
@@ -44,6 +47,13 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
     public int totalCurseCount = 0;
     public int removedRepairCost = 0;
     public int removedCurseCount = 0;
+    public Item repairMaterial = null;
+    public Pair<Integer, Item> currentRecipe = null;
+
+    static {
+        REPAIR_COST_RECIPES.put(Items.GOLD_INGOT, new Pair<>(1, ModItems.CURSED_GOLD_INGOT.get()));
+        REPAIR_COST_RECIPES.put(Items.GOLD_BLOCK, new Pair<>(9, ModBlocks.CURSED_GOLD_BLOCK.asItem()));
+    }
 
     public RoyalGrindstoneMenu(MenuType<RoyalGrindstoneMenu> type, int containerId, Inventory playerInventory) {
         this(type, containerId, playerInventory, ContainerLevelAccess.NULL);
@@ -93,7 +103,7 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
         });
         this.addSlot(new Slot(this.repairMaterialSlots, 0, 89, 22) {
             public boolean mayPlace(@NotNull ItemStack stack) {
-                return stack.is(REPAIR_MATERIAL);
+                return isRepairMaterial(stack);
             }
         });
         this.addSlot(new Slot(this.resultToolSlots, 2, 145, 34) {
@@ -104,15 +114,8 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
             public void onTake(@NotNull Player player, @NotNull ItemStack stack) {
                 player.playSound(SoundEvents.GRINDSTONE_USE);
                 repairToolSlots.setItem(0, ItemStack.EMPTY);
-                repairMaterialSlots.setItem(
-                    0,
-                    new ItemStack(
-                        REPAIR_MATERIAL, repairMaterialSlots.getItem(0).getCount() - usedGold));
-                resultMaterialSlots.setItem(
-                    2,
-                    new ItemStack(
-                        RESULT_MATERIAL,
-                        usedGold + resultMaterialSlots.getItem(2).getCount()));
+                repairMaterialSlots.setItem(0, new ItemStack(repairMaterial, repairMaterialSlots.getItem(0).getCount() - usedGold));
+                resultMaterialSlots.setItem(2, new ItemStack(currentRecipe.getSecond(), usedGold + resultMaterialSlots.getItem(2).getCount()));
             }
         });
         this.addSlot(new Slot(this.resultMaterialSlots, 2, 89, 47) {
@@ -134,46 +137,55 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
 
     private ItemStack createResult() {
         ItemStack repairTool = repairToolSlots.getItem(0);
-        ItemStack repairMaterial = repairMaterialSlots.getItem(0);
-        if (repairTool.isEmpty() || repairMaterial.isEmpty()) return ItemStack.EMPTY;
+        ItemStack repairSlotItem = repairMaterialSlots.getItem(0);
+        ItemStack resultSlotItem = resultMaterialSlots.getItem(0);
+        this.repairMaterial = repairSlotItem.getItem();
+        if (repairTool.isEmpty() || repairSlotItem.isEmpty()) return ItemStack.EMPTY;
+        this.currentRecipe = REPAIR_COST_RECIPES.getOrDefault(repairSlotItem.getItem(), null);
+        if (this.currentRecipe == null) return ItemStack.EMPTY;
+        if (!resultSlotItem.isEmpty() && !resultSlotItem.is(this.currentRecipe.getSecond())) return ItemStack.EMPTY;
+
+        int repairMaterialUsable = Math.min(repairSlotItem.getCount(), currentRecipe.getSecond().getDefaultMaxStackSize() - resultSlotItem.getCount());
         ItemStack result = repairTool.copy();
         int repairCost = repairTool.getOrDefault(DataComponents.REPAIR_COST, 0);
         this.totalRepairCost = repairCost;
-        int goldUsed = 0;
-        int goldUsable = Math.min(repairMaterial.getCount(),
-            RESULT_MATERIAL.getDefaultMaxStackSize() - resultMaterialSlots.getItem(0).getCount());
-        int removedRepairCost = Math.min(repairCost, goldUsable);
-        goldUsed += removedRepairCost;
-        goldUsable -= removedRepairCost;
+        int perUnitRepair = this.currentRecipe.getFirst();
+        int maxUnitsByCost = repairCost / perUnitRepair;
+        this.usedGold = Math.min(maxUnitsByCost, repairMaterialUsable);
+        int maxRemovable = perUnitRepair * this.usedGold;
+        repairMaterialUsable -= this.usedGold;
+        removedRepairCost = Math.min(repairCost, maxRemovable);
         int remainRepairCost = repairCost - removedRepairCost;
         result.set(DataComponents.REPAIR_COST, remainRepairCost);
-        int removedCurseCount = 0;
-        DataComponentType<ItemEnchantments> enchantmentComponent = result.is(Items.ENCHANTED_BOOK) ? DataComponents.STORED_ENCHANTMENTS : DataComponents.ENCHANTMENTS;
+        DataComponentType<ItemEnchantments> enchantmentComponent = result.is(Items.ENCHANTED_BOOK)
+                                                                   ? DataComponents.STORED_ENCHANTMENTS
+                                                                   : DataComponents.ENCHANTMENTS;
         ItemEnchantments enchantments = result.get(enchantmentComponent);
         this.totalCurseCount = 0;
+        this.removedCurseCount = 0;
+        ItemEnchantments.Mutable mutEnch = null;
         if (enchantments != null) {
             this.totalCurseCount = (int) enchantments.keySet()
                 .stream()
                 .filter(it -> it.is(EnchantmentTags.CURSE))
                 .count();
-            ItemEnchantments.Mutable mutEnch = new ItemEnchantments.Mutable(enchantments);
+            mutEnch = new ItemEnchantments.Mutable(enchantments);
+        }
+        if (repairSlotItem.is(DEFAULT_REPAIR_MATERIAL)
+            && repairSlotItem.getCount() - this.usedGold >= GOLD_PER_CURSE
+            && mutEnch != null) {
             Iterator<Holder<Enchantment>> iterator = mutEnch.keySet().iterator();
-            while (iterator.hasNext() && goldUsable >= GOLD_PER_CURSE) {
+            while (iterator.hasNext() && repairMaterialUsable >= GOLD_PER_CURSE) {
                 Holder<Enchantment> curseEnchantment = iterator.next();
                 if (!curseEnchantment.is(EnchantmentTags.CURSE)) continue;
                 iterator.remove();
-                goldUsed += GOLD_PER_CURSE;
-                goldUsable -= GOLD_PER_CURSE;
+                this.usedGold += GOLD_PER_CURSE;
+                repairMaterialUsable -= GOLD_PER_CURSE;
                 removedCurseCount += 1;
             }
             result.set(enchantmentComponent, mutEnch.toImmutable());
+            if (result.is(Items.ENCHANTED_BOOK) && !EnchantmentHelper.hasAnyEnchantments(result)) result = result.transmuteCopy(Items.BOOK);
         }
-        if (result.is(Items.ENCHANTED_BOOK) && !EnchantmentHelper.hasAnyEnchantments(result)) {
-            result = result.transmuteCopy(Items.BOOK);
-        }
-        this.usedGold = goldUsed;
-        this.removedCurseCount = removedCurseCount;
-        this.removedRepairCost = removedRepairCost;
         return result;
     }
 
@@ -204,11 +216,11 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
                     } else {
                         return ItemStack.EMPTY;
                     }
-                } else if (itemStack.is(REPAIR_MATERIAL)) {
+                } else if (isRepairMaterial(itemStack)) {
                     if (!this.getSlot(1).hasItem()) {
                         this.getSlot(1).setByPlayer(itemStack);
                         this.getSlot(index).setByPlayer(ItemStack.EMPTY);
-                    } else if ((gold = this.getSlot(1).getItem()).is(REPAIR_MATERIAL)
+                    } else if ((isRepairMaterial(gold = this.getSlot(1).getItem()))
                         && gold.getCount() < gold.getMaxStackSize()) {
                         int canSet = gold.getMaxStackSize() - gold.getCount();
                         canSet = Math.min(itemStack.getCount(), canSet);
@@ -265,5 +277,9 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
                 }
             }
         }
+    }
+
+    private boolean isRepairMaterial(ItemStack stack) {
+        return REPAIR_COST_RECIPES.containsKey(stack.getItem());
     }
 }

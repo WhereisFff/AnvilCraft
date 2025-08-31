@@ -21,18 +21,7 @@
     "item": {
       "count": 1,
       "id": "anvilcraft:ember_metal_heavy_halberd"
-    },
-    "modifiers": [
-      {
-        "type": "anvilcraft:copy_data",
-        "types": [
-          {
-            "type": "anvilcraft:multiphase",
-            "input_type": "four"
-          }
-        ]
-      }
-    ]
+    }
   },
   "template": {
     "items": "anvilcraft:four_to_one_smithing_template"
