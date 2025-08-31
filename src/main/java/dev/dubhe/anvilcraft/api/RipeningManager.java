@@ -5,25 +5,14 @@ import dev.dubhe.anvilcraft.block.InductionLightBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.TickTask;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.BonemealableBlock;
-import net.minecraft.world.level.block.GrassBlock;
-import net.minecraft.world.level.block.NetherWartBlock;
-import net.minecraft.world.level.block.NyliumBlock;
+import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class RipeningManager {
     private static final Map<Level, RipeningManager> INSTANCES = new HashMap<>();
@@ -103,26 +92,26 @@ public class RipeningManager {
      */
     private void tick() {
         cooldown--;
-        if (cooldown <= 0 && !lightBlocks.isEmpty()) {
-            MinecraftServer server = level.getServer();
-            if (server == null) return;
+        if (cooldown > 0 || lightBlocks.isEmpty()) return;
 
-            HashSet<BlockPos> ripenedBlocks = new HashSet<>();
-            Iterator<BlockPos> it = lightBlocks.iterator();
-            while (it.hasNext()) {
-                BlockPos pos = it.next();
-                BlockState lightBlockState = level.getBlockState(pos);
-                if (lightBlockState.getBlock() instanceof InductionLightBlock
-                        && InductionLightBlock.isLit(lightBlockState)
-                        && InductionLightBlock.canCropGrow(lightBlockState)
-                ) {
-                    doRipen(pos, ripenedBlocks);
-                } else {
-                    it.remove();
-                }
+        MinecraftServer server = level.getServer();
+        if (server == null) return;
+
+        HashSet<BlockPos> ripenedBlocks = new HashSet<>();
+        Iterator<BlockPos> it = lightBlocks.iterator();
+        while (it.hasNext()) {
+            BlockPos pos = it.next();
+            BlockState lightBlockState = level.getBlockState(pos);
+            if (lightBlockState.getBlock() instanceof InductionLightBlock
+                    && InductionLightBlock.isLit(lightBlockState)
+                    && InductionLightBlock.canCropGrow(lightBlockState)
+            ) {
+                doRipen(pos, ripenedBlocks);
+            } else {
+                it.remove();
             }
-            cooldown = AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown;
         }
+        cooldown = AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown;
     }
 
     /**
