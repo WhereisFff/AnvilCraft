@@ -1039,7 +1039,7 @@ public class ModBlocks {
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.AMETHYST_BLOCK), AnvilCraftDatagen.has(Items.AMETHYST_BLOCK))
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.JUKEBOX), AnvilCraftDatagen.has(Items.JUKEBOX))
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.SCULK_SENSOR), AnvilCraftDatagen.has(Items.SCULK_SENSOR))
-                .save(provider,AnvilCraft.of("active_silencer_old"));
+                .save(provider, AnvilCraft.of("active_silencer_old"));
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("ABA")
                 .pattern("ACA")
@@ -3919,7 +3919,8 @@ public class ModBlocks {
         .recipe((ctx, provider) -> {
         })
         .register();
-    public static final BlockEntry<SupercriticalNestingShulkerBoxBlock> SUPERCRITICAL_NESTING_SHULKER_BOX = REGISTRATE.block("supercritical_nesting_shulker_box",
+    public static final BlockEntry<SupercriticalNestingShulkerBoxBlock> SUPERCRITICAL_NESTING_SHULKER_BOX = REGISTRATE.block(
+            "supercritical_nesting_shulker_box",
             SupercriticalNestingShulkerBoxBlock::new
         )
         .initialProperties(() -> Blocks.SHULKER_BOX)
@@ -4408,15 +4409,18 @@ public class ModBlocks {
                 .save(provider, AnvilCraft.of("copper_pressure_plate_from_" + location1.getPath().replace('/', '_')));
         })
         .register();
-    public static final BlockEntry<? extends TimeCountedPressurePlateBlock> EXPOSED_COPPER_PRESSURE_PLATE = registerOtherCopperPressurePlate("exposed_",
+    public static final BlockEntry<? extends TimeCountedPressurePlateBlock> EXPOSED_COPPER_PRESSURE_PLATE = registerOtherCopperPressurePlate(
+        "exposed_",
         Blocks.EXPOSED_COPPER,
         20
     );
-    public static final BlockEntry<? extends TimeCountedPressurePlateBlock> WEATHERED_COPPER_PRESSURE_PLATE = registerOtherCopperPressurePlate("weathered_",
+    public static final BlockEntry<? extends TimeCountedPressurePlateBlock> WEATHERED_COPPER_PRESSURE_PLATE = registerOtherCopperPressurePlate(
+        "weathered_",
         Blocks.WEATHERED_COPPER,
         40
     );
-    public static final BlockEntry<? extends TimeCountedPressurePlateBlock> OXIDIZED_COPPER_PRESSURE_PLATE = registerOtherCopperPressurePlate("oxidized_",
+    public static final BlockEntry<? extends TimeCountedPressurePlateBlock> OXIDIZED_COPPER_PRESSURE_PLATE = registerOtherCopperPressurePlate(
+        "oxidized_",
         Blocks.OXIDIZED_COPPER,
         80
     );
