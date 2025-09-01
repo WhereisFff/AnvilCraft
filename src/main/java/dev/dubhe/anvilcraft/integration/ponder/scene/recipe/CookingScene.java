@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
@@ -35,8 +34,8 @@ public class CookingScene {
 
         BlockPos anvilPos = util.grid().at(2, 4, 2);
         builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> anvilLink =
-            builder.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
+        ElementLink<WorldSectionElement> anvilLink = builder.world()
+            .showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
 
         BlockPos cauldronPos = util.grid().at(2, 2, 2);
         builder.world().setBlock(cauldronPos, Blocks.CAULDRON.defaultBlockState(), false);
@@ -52,20 +51,21 @@ public class CookingScene {
         itemLink = builder.world().createItemEntity(cauldronPos.above().getCenter(), Vec3.ZERO, ModItems.RESIN.asStack());
         builder.idle(10);
 
-        builder.world().dropSection(anvilLink);
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().falldownSection(anvilLink);
+        builder.world().removeEntity(itemLink);
         itemLink = builder.world().createItemEntity(cauldronPos.getCenter(), Vec3.ZERO, ModItems.HARDEND_RESIN.asStack());
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("Using the cauldron with the campfire to process items.")
             .pointAt(cauldronPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(50);
 
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(itemLink);
         builder.world().hideSection(util.select().position(cauldronPos), Direction.NORTH);
         builder.idle(20);
 
@@ -77,15 +77,16 @@ public class CookingScene {
         itemLink = builder.world().createItemEntity(cauldronPos.above().getCenter(), Vec3.ZERO, ModItems.RESIN.asStack());
         builder.idle(10);
 
-        builder.world().dropSection(anvilLink);
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().falldownSection(anvilLink);
+        builder.world().removeEntity(itemLink);
         builder.world().createItemEntity(cauldronPos.getCenter(), Vec3.ZERO, Items.SLIME_BALL.getDefaultInstance());
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
         builder.world().hideSection(util.select().position(cauldronPos), Direction.NORTH);
 
-        builder.overlay().showText(60)
+        builder.overlay()
+            .showText(60)
             .text("If there is water in the cauldron, another recipe can be performed.")
             .pointAt(cauldronPos.getCenter())
             .attachKeyFrame()

@@ -6,6 +6,7 @@ import com.tterrag.registrate.util.entry.RegistryEntry;
 import dev.dubhe.anvilcraft.block.BlockPlacerBlock;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
+import dev.dubhe.anvilcraft.integration.ponder.api.AnvilCraftSceneBuilder;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.EntityElement;
 import net.createmod.ponder.api.element.WorldSectionElement;
@@ -16,7 +17,6 @@ import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.item.ItemStack;
@@ -36,109 +36,114 @@ public class BlockPlacerScene {
     }
 
     private static void run(SceneBuilder scene, SceneBuildingUtil util) {
-        scene.title("block_placer", "Block Placer");
-        scene.configureBasePlate(0, 0, 5);
-        scene.showBasePlate();
-        scene.idle(20);
+        AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
+        builder.title("block_placer", "Block Placer");
+        builder.configureBasePlate(0, 0, 5);
+        builder.showBasePlate();
+        builder.idle(20);
 
         // 初始化
         BlockPos placerPos = util.grid().at(2, 1, 2);
-        scene.world().setBlock(placerPos, ModBlocks.BLOCK_PLACER.getDefaultState(), false);
+        builder.world().setBlock(placerPos, ModBlocks.BLOCK_PLACER.getDefaultState(), false);
         Selection placerSelection = util.select().position(placerPos);
-        scene.world().showSection(placerSelection, Direction.DOWN);
-        scene.idle(20);
+        builder.world().showSection(placerSelection, Direction.DOWN);
+        builder.idle(20);
 
         BlockPos leverPos = placerPos.west(1);
         BlockPos frontPos = placerPos.north(1);
         BlockPos backPos = placerPos.south(1);
 
         // 添加红石控制
-        scene.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
+        builder.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
 
         Selection leverSelection = util.select().position(leverPos);
         Selection frontSelection = util.select().position(frontPos);
         Selection backSelection = util.select().position(backPos);
 
-        scene.world().showSection(leverSelection, Direction.DOWN);
-        scene.world().showSection(frontSelection, Direction.DOWN);
-        scene.world().showSection(backSelection, Direction.DOWN);
-        scene.idle(20);
+        builder.world().showSection(leverSelection, Direction.DOWN);
+        builder.world().showSection(frontSelection, Direction.DOWN);
+        builder.world().showSection(backSelection, Direction.DOWN);
+        builder.idle(20);
 
         // 将身后的掉落物作为方块放置在前方
-        ElementLink<EntityElement> itemLink = scene.world()
+        ElementLink<EntityElement> itemLink = builder.world()
             .createItemEntity(backPos.above().getCenter(), Vec3.ZERO, new ItemStack(Items.GRASS_BLOCK));
-        scene.idle(20);
+        builder.idle(20);
 
         // 激活杠杆
-        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
-        scene.effects().indicateRedstone(leverPos);
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
+        builder.effects().indicateRedstone(leverPos);
 
-        scene.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, true), false);
-        scene.world().setBlock(frontPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.world().modifyEntity(itemLink, item -> item.remove(Entity.RemovalReason.DISCARDED));
-        scene.effects().indicateSuccess(frontPos);  // 绿色粒子
-        scene.idle(10);
-        scene.overlay().showText(40)
+        builder.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, true), false);
+        builder.world().setBlock(frontPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
+        builder.world().removeEntity(itemLink);
+        // 绿色粒子
+        builder.effects().indicateSuccess(frontPos);
+        builder.idle(10);
+        builder.overlay()
+            .showText(40)
             .text("Block Placer can place blocks in front of it when powered by redstone.")
             .pointAt(util.vector().blockSurface(placerPos, Direction.DOWN))
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(50);
+        builder.idle(50);
 
         // 将身后容器中的方块放置在前方
-        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, false), false);
-        scene.world().hideSection(frontSelection, Direction.UP);
-        scene.idle(10);
-        scene.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, false), false);
-        scene.idle(10);
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, false), false);
+        builder.world().hideSection(frontSelection, Direction.UP);
+        builder.idle(10);
+        builder.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, false), false);
+        builder.idle(10);
 
-        scene.world().setBlock(backPos, Blocks.CHEST.defaultBlockState(), false);
-        scene.idle(20);
+        builder.world().setBlock(backPos, Blocks.CHEST.defaultBlockState(), false);
+        builder.idle(20);
 
-        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
-        scene.effects().indicateRedstone(leverPos);
-        scene.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, true), false);
-        scene.world().setBlock(frontPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
+        builder.effects().indicateRedstone(leverPos);
+        builder.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, true), false);
+        builder.world().setBlock(frontPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
 
-        ElementLink<WorldSectionElement> frontLink = scene.world().showIndependentSectionImmediately(frontSelection);
+        ElementLink<WorldSectionElement> frontLink = builder.world().showIndependentSectionImmediately(frontSelection);
 
-        scene.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("It can also read the items in the container.")
             .pointAt(util.vector().blockSurface(frontPos, Direction.DOWN))
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(50);
+        builder.idle(50);
 
         // 被生物堵塞
-        scene.world().hideIndependentSection(frontLink, Direction.UP);
-        scene.idle(10);
-        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, false), false);
-        scene.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, false), false);
-        scene.idle(10);
+        builder.world().hideIndependentSection(frontLink, Direction.UP);
+        builder.idle(10);
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, false), false);
+        builder.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, false), false);
+        builder.idle(10);
 
         // 创建猪实体
-        scene.world().createEntity(world -> {
+        builder.world().createEntity(world -> {
             Pig pig = EntityType.PIG.create(world);
             if (pig != null) {
                 pig.moveTo(frontPos.getBottomCenter());
             }
             return pig;
         });
-        scene.idle(30);
+        builder.idle(30);
 
-        scene.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
-        scene.effects().indicateRedstone(leverPos);
-        scene.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, true), false);
-        scene.idle(10);
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
+        builder.effects().indicateRedstone(leverPos);
+        builder.world().modifyBlock(placerPos, blockState -> blockState.setValue(BlockPlacerBlock.TRIGGERED, true), false);
+        builder.idle(10);
 
-        scene.overlay().showText(60)
+        builder.overlay()
+            .showText(60)
             .text("If the block placer is blocked by a mob, it will not place the block.")
             .pointAt(util.vector().blockSurface(frontPos, Direction.DOWN))
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(70);
+        builder.idle(70);
 
-        scene.markAsFinished();
+        builder.markAsFinished();
     }
 
     private static void anvilRun(SceneBuilder scene, SceneBuildingUtil util) {
@@ -181,7 +186,8 @@ public class BlockPlacerScene {
         scene.world().moveSection(anvilBLink, new Vec3(0, -1, 0), 3);
         scene.idle(3);
         scene.world().setBlock(frontBPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.overlay().showText(40)
+        scene.overlay()
+            .showText(40)
             .text("Block Placer can place blocks with anvil.")
             .pointAt(util.vector().centerOf(placerBPos))
             .attachKeyFrame()
@@ -196,7 +202,8 @@ public class BlockPlacerScene {
         scene.world().moveSection(anvilBLink, new Vec3(0, -2, 0), 5);
         scene.idle(5);
         scene.world().setBlock(frontAPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.overlay().showText(60)
+        scene.overlay()
+            .showText(60)
             .text("The higher the anvil falls, the farther the blocks are placed. The farthest is 5 grids.")
             .pointAt(util.vector().centerOf(frontAPos))
             .attachKeyFrame()
@@ -221,7 +228,8 @@ public class BlockPlacerScene {
         scene.idle(3);
         scene.world().setBlock(frontAPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
         scene.world().setBlock(frontBPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.overlay().showText(60)
+        scene.overlay()
+            .showText(60)
             .text("When the placer is followed by another placer, they can share containers.")
             .pointAt(util.vector().centerOf(placerAPos))
             .attachKeyFrame()
