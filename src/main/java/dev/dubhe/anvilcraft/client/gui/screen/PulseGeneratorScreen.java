@@ -83,7 +83,7 @@ public class PulseGeneratorScreen extends AbstractContainerScreen<PulseGenerator
             List.of(BUTTON_RISING_EDGE, BUTTON_FALLING_EDGE, BUTTON_LOOP),
             16, 16, 32,
             (button, index) -> this.menu.setStartMode((byte) index),
-            List.of(Component.translatable( "screen.anvilcraft.button.pulse_generator.start_mode.rising"),
+            List.of(Component.translatable("screen.anvilcraft.button.pulse_generator.start_mode.rising"),
                 Component.translatable("screen.anvilcraft.button.pulse_generator.start_mode.falling"),
                 Component.translatable("screen.anvilcraft.button.pulse_generator.start_mode.loop"))
         );
