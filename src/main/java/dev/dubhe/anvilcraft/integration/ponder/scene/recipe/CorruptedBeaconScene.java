@@ -185,11 +185,13 @@ public class CorruptedBeaconScene {
         builder.overlay().showControls(zombiePos.getCenter(), Pointing.RIGHT, 5)
             .rightClick()
             .withItem(Items.ANVIL.getDefaultInstance());
-        builder.world().modifyEntity(zombieLink, zombie -> {
-            if (zombie instanceof Zombie z) {
-                z.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.ANVIL));
+        builder.world().modifyEntity(
+            zombieLink, zombie -> {
+                if (zombie instanceof Zombie z) {
+                    z.setItemSlot(EquipmentSlot.MAINHAND, new ItemStack(Items.ANVIL));
+                }
             }
-        });
+        );
         builder.idle(20);
 
         builder.world().showSection(util.select().position(beaconPos), Direction.NORTH);
@@ -244,19 +246,19 @@ public class CorruptedBeaconScene {
             builder.world().showIndependentSection(util.select().position(anvilPos), Direction.NORTH);
         builder.idle(20);
 
-        ElementLink<EntityElement> item = builder.world().createItem(cauldronPos.above(), Items.OAK_LOG.getDefaultInstance());
-        builder.world().dropSection(anvilLink);
-        item = builder.world().changeItem(cauldronPos, Items.COAL.getDefaultInstance(), item);
-        builder.world().liftSection(anvilLink);
+        ElementLink<EntityElement> item = builder.world().createItemEntity(cauldronPos.above(), Items.OAK_LOG.getDefaultInstance());
+        builder.world().falldownSection(anvilLink);
+        item = builder.world().replaceItemEntity(cauldronPos, Items.COAL.getDefaultInstance(), item);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
         builder.world().modifyEntity(item, itemEntity -> itemEntity.remove(Entity.RemovalReason.DISCARDED));
         builder.idle(10);
 
-        item = builder.world().createItem(cauldronPos.above(), new ItemStack(Items.PORKCHOP, 64));
-        builder.world().dropSection(anvilLink);
+        item = builder.world().createItemEntity(cauldronPos.above(), new ItemStack(Items.PORKCHOP, 64));
+        builder.world().falldownSection(anvilLink);
         builder.world().modifyEntity(item, itemEntity -> itemEntity.remove(Entity.RemovalReason.DISCARDED));
         builder.world().setBlock(cauldronPos, ModBlocks.OIL_CAULDRON.getDefaultState().setValue(OilCauldronBlock.LEVEL, 4), false);
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
         builder.overlay().showText(40)

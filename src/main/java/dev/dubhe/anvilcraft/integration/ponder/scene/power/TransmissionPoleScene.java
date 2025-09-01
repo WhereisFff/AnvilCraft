@@ -31,16 +31,18 @@ public class TransmissionPoleScene {
         builder.world().showSection(basePlate, Direction.UP);
         builder.idle(20);
 
-        Selection pole = builder.world().setMultiPartBlock(
-            new BlockPos(4, 1, 0),
-            ModBlocks.TRANSMISSION_POLE.getDefaultState().setValue(TransmissionPoleBlock.OVERLOAD, false),
-            false
-        );
-        Selection pole1 = builder.world().setMultiPartBlock(
-            new BlockPos(0, 1, 4),
-            ModBlocks.TRANSMISSION_POLE.getDefaultState().setValue(TransmissionPoleBlock.OVERLOAD, false),
-            false
-        );
+        Selection pole = builder.world()
+            .setMultiPartBlock(
+                new BlockPos(4, 1, 0),
+                ModBlocks.TRANSMISSION_POLE.getDefaultState().setValue(TransmissionPoleBlock.OVERLOAD, false),
+                false
+            );
+        Selection pole1 = builder.world()
+            .setMultiPartBlock(
+                new BlockPos(0, 1, 4),
+                ModBlocks.TRANSMISSION_POLE.getDefaultState().setValue(TransmissionPoleBlock.OVERLOAD, false),
+                false
+            );
         builder.world().showIndependentSection(pole, Direction.NORTH);
         builder.world().showIndependentSection(pole1, Direction.NORTH);
         builder.overlay().showTransmitterLine(new BlockPos(4, 3, 0), new BlockPos(0, 3, 4), 600);

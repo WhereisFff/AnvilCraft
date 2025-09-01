@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -53,11 +52,11 @@ public class IronTrapdoorScene {
         builder.idle(20);
 
         // 铁砧下落
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         // 拆解石英块
-        builder.world().modifyEntity(quartzBlock, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(quartzBlock);
         builder.world().createItemEntity(ironTrapdoorPos.getCenter(), Vec3.ZERO, new ItemStack(Items.QUARTZ.asItem(), 4));
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
         // 生成文本

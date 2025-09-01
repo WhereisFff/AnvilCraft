@@ -32,8 +32,8 @@ public class ItemCompressScene {
 
         BlockPos anvilPos = util.grid().at(2, 3, 2);
         builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> anvilLink =
-            builder.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
+        ElementLink<WorldSectionElement> anvilLink = builder.world()
+            .showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
 
         BlockPos cauldronPos = util.grid().at(2, 1, 2);
         builder.world().setBlock(cauldronPos, Blocks.CAULDRON.defaultBlockState(), false);
@@ -41,13 +41,14 @@ public class ItemCompressScene {
         builder.idle(20);
 
         // 给我砸！
-        ElementLink<EntityElement> itemLink = builder.world().createItem(cauldronPos.above(), new ItemStack(Items.IRON_INGOT, 9));
-        builder.world().dropSection(anvilLink);
-        builder.world().changeItem(cauldronPos, Items.IRON_BLOCK.getDefaultInstance(), itemLink);
-        builder.world().liftSection(anvilLink);
+        ElementLink<EntityElement> itemLink = builder.world().createItemEntity(cauldronPos.above(), new ItemStack(Items.IRON_INGOT, 9));
+        builder.world().falldownSection(anvilLink);
+        builder.world().replaceItemEntity(cauldronPos, Items.IRON_BLOCK.getDefaultInstance(), itemLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("Using cauldrons to compress items.")
             .pointAt(cauldronPos.getCenter())
             .attachKeyFrame()
