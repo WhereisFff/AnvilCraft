@@ -169,11 +169,10 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
         }
         if (repairTool.isEmpty()
             || repairMaterialSlotItem.isEmpty()
-            || this.currentRecipe == null)
-        {
+            || this.currentRecipe == null) {
             this.usedGold = 0;
             return ItemStack.EMPTY;
-        };
+        }
         int repairMaterialUsable = Math.min(repairMaterialSlotItem.getCount(), currentRecipe.getSecond().getDefaultMaxStackSize() - resultMaterialSlotItem.getCount());
         int perUnitRepair = this.currentRecipe.getFirst();
         int maxUnitsByCost = repairCost / perUnitRepair;
