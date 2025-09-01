@@ -99,15 +99,20 @@ public class RipeningManager {
         }
     }
 
-    /**
-     *
-     */
+
+    private long lastTickRipen = -1;
+
     private void tick() {
-        if (level.getServer() == null || lightBlocks.isEmpty() ||
-            level.getGameTime() % AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown != 0
-        ) {
+        if (level.getServer() == null || lightBlocks.isEmpty()) return;
+        long curTime = level.getGameTime();
+        if (lastTickRipen > curTime) { // time set xxx may change the gameTime.
+            lastTickRipen = curTime;
             return;
         }
+        if (curTime - lastTickRipen < AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown) {
+            return;
+        }
+        lastTickRipen = curTime;
 
         lightBlocks.removeIf(pos -> {
             BlockState lightBlockState = level.getBlockState(pos);
