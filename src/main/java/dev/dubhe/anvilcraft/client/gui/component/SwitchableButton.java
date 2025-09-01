@@ -83,6 +83,9 @@ public class SwitchableButton extends Button {
 
     @Override
     public Component getMessage() {
+        if (this.message.isEmpty()) {
+            return Component.empty();
+        }
         return this.message.get(this.getCurrent());
     }
 
