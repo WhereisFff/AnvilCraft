@@ -16,10 +16,12 @@ import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LeverBlock;
+import net.minecraft.world.level.block.state.properties.AttachFace;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.phys.Vec3;
 
 public class BlockDevourerScene {
@@ -46,18 +48,19 @@ public class BlockDevourerScene {
         BlockPos devourerPos = util.grid().at(2, 1, 2);
         builder.world().setBlock(devourerPos, ModBlocks.BLOCK_DEVOURER.getDefaultState(), false);
         builder.world().showSection(util.select().position(devourerPos), Direction.NORTH);
+
+        BlockPos leverPos = util.grid().at(1, 1, 2);
+        builder.world().setBlock(leverPos, Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.FLOOR), false);
+        builder.world().showSection(util.select().position(leverPos), Direction.NORTH);
         builder.idle(20);
 
-        // 放置红石火把激活，物品掉于背后
-        BlockPos signPos = util.grid().at(1, 1, 2);
-        builder.world().setBlock(signPos, Blocks.REDSTONE_TORCH.defaultBlockState(), false);
-        builder.world().showSection(util.select().position(signPos), Direction.NORTH);
-        builder.idle(5);
-
+        // 激活，物品掉于背后
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
+        builder.effects().indicateRedstone(leverPos);
         builder.world().modifyBlock(devourerPos, state -> state.setValue(BlockDevourerBlock.TRIGGERED, true), false);
         builder.world().setBlocks(wallPos, Blocks.AIR.defaultBlockState(), true);
-        ElementLink<EntityElement> item = builder.world().createItem(devourerPos.south(), new ItemStack(Items.IRON_BLOCK, 9));
-        builder.idle(10);
+        ElementLink<EntityElement> item = builder.world().createItemEntity(devourerPos.south(), new ItemStack(Items.IRON_BLOCK, 9));
+        builder.idle(20);
 
         builder.overlay()
             .showOutlineWithText(wallPos, 60)
@@ -69,11 +72,11 @@ public class BlockDevourerScene {
 
         BlockPos chestPos = devourerPos.south();
         builder.world().modifyBlock(devourerPos, state -> state.setValue(BlockDevourerBlock.TRIGGERED, false), false);
-        builder.world().hideSection(util.select().position(signPos), Direction.SOUTH);
         // 删掉物品换上箱子
-        builder.world().modifyEntity(item, e -> e.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(item);
         builder.world().setBlock(chestPos, Blocks.CHEST.defaultBlockState(), false);
         builder.world().showSection(util.select().position(chestPos), Direction.NORTH);
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, false), false);
         builder.idle(10);
 
         builder.overlay()
@@ -90,20 +93,22 @@ public class BlockDevourerScene {
         builder.idle(20);
 
         builder.world().setBlock(chestPos, Blocks.AIR.defaultBlockState(), false);
-        builder.world().showSection(util.select().position(signPos), Direction.NORTH);
+        builder.world().modifyBlock(leverPos, state -> state.setValue(BlockStateProperties.POWERED, true), false);
+        builder.effects().indicateRedstone(leverPos);
         builder.world().modifyBlock(devourerPos, state -> state.setValue(BlockDevourerBlock.TRIGGERED, true), false);
         builder.world().setBlocks(wallPos, Blocks.AIR.defaultBlockState(), true);
-        item = builder.world().createItem(devourerPos.south(), new ItemStack(Items.COBBLESTONE));
+        item = builder.world().createItemEntity(devourerPos.south(), new ItemStack(Items.COBBLESTONE));
         builder.idle(20);
 
-        builder.overlay().showText(60)
+        builder.overlay()
+            .showText(60)
             .text("Only a very small portion of the world's base blocks will be retained.")
             .pointAt(devourerPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(70);
 
-        builder.world().modifyEntity(item, e -> e.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(item);
 
         builder.markAsFinished();
 
@@ -131,19 +136,20 @@ public class BlockDevourerScene {
         for (int i = 1; i <= 3; i++) {
             int r = i + 1;
             Selection wallPos = util.select().fromTo(4 - r, 4 - r, 3, 4 + r, 4 + r, 3);
-            builder.world().liftSection(anvilLink, i);
+            builder.world().riseSection(anvilLink, i);
             builder.world().setBlocks(wallPos, Blocks.IRON_BLOCK.defaultBlockState(), false);
             builder.world().showSection(wallPos, Direction.SOUTH);
             builder.idle(20);
 
-            builder.world().dropSection(anvilLink, i);
+            builder.world().falldownSection(anvilLink, i);
             builder.world().setBlocks(wallPos, Blocks.AIR.defaultBlockState(), true);
-            builder.world().createItem(devourerPos.south(), new ItemStack(Items.IRON_BLOCK, r*r));
+            builder.world().createItemEntity(devourerPos.south(), new ItemStack(Items.IRON_BLOCK, r * r));
             builder.world().hideSection(wallPos, Direction.NORTH);
             builder.idle(20);
 
         }
-        builder.overlay().showText(100)
+        builder.overlay()
+            .showText(100)
             .text("The Block Devourer can destroy larger blocks based on the height from which the anvil falls, with a maximum area of 9x9.")
             .pointAt(devourerPos.getCenter())
             .attachKeyFrame()
@@ -181,20 +187,21 @@ public class BlockDevourerScene {
             .showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
         builder.idle(20);
 
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
         for (int i = 0; i < 5; i++) {
-            builder.world().dropSection(anvilLink);
+            builder.world().falldownSection(anvilLink);
             builder.world().moveSection(devourerLink, new Vec3(0, -1, 0), 1);
             Selection destroyPos = util.select().fromTo(2, 6 - i, 2, 6, 6 - i, 6);
             builder.world().setBlocks(destroyPos, Blocks.AIR.defaultBlockState(), true);
             builder.idle(4);
         }
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(80)
+        builder.overlay()
+            .showText(80)
             .text(
                 "When a downward-facing block devourer is hit by an anvil, it will move down one block at the same time.")
             .pointAt(devourerPos.getCenter())

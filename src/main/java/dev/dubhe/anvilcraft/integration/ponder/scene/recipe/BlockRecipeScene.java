@@ -9,6 +9,7 @@ import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
 import net.createmod.ponder.api.scene.SceneBuilder;
 import net.createmod.ponder.api.scene.SceneBuildingUtil;
+import net.createmod.ponder.api.scene.Selection;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -289,11 +290,12 @@ public class BlockRecipeScene {
         }
         pigs.clear();
         builder.idle(10);
+
         // 高度越高，成功概率越大
         builder.world().riseSection(anvilLink, 3);
         builder.idle(10);
-        builder.world().falldownSection(anvilLink, 4);
 
+        builder.world().falldownSection(anvilLink, 4);
         for (int i = 0; i < 4; i++) {
             BlockPos pigPos = blockPos.east(new Random().nextInt(5) - 2).north(new Random().nextInt(5) - 2);
             pigs.add(builder.world().createEntity(world -> {
@@ -319,36 +321,25 @@ public class BlockRecipeScene {
         }
         // 复位
         pigs.clear();
-        builder.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
         builder.world().riseSection(anvilLink);
         builder.idle(10);
 
+        builder.world().hideSection(util.select().position(blockPos), Direction.NORTH);
         // 红石EMP
-        final BlockPos[] redstonePos = {
-            new BlockPos(0, 1, 1),
-            new BlockPos(1, 1, 1),
-            new BlockPos(0, 1, 2),
-            new BlockPos(1, 1, 2),
-            new BlockPos(0, 1, 3),
-            new BlockPos(1, 1, 3)
-        };
+        Selection redstonePos = util.select().fromTo(0, 1, 1, 1, 1, 2);
 
         // 在每个位置放置红石火把
-        for (BlockPos pos : redstonePos) {
-            builder.world().setBlock(pos, Blocks.REDSTONE_TORCH.defaultBlockState(), false);
-            builder.world().showSection(util.select().position(pos), Direction.NORTH);
-        }
+        builder.world().setBlocks(redstonePos, Blocks.REDSTONE_TORCH.defaultBlockState(), false);
+        builder.world().showSection(redstonePos, Direction.NORTH);
+
         builder.world().setBlock(blockPos, Blocks.REDSTONE_BLOCK.defaultBlockState(), false);
-        builder.idle(10);
+        builder.world().showSection(util.select().position(blockPos), Direction.NORTH);
+        builder.idle(20);
 
         builder.world().falldownSection(anvilLink);
-        for (BlockPos pos : redstonePos) {
-            builder.world().modifyBlock(pos, state -> state.setValue(RedstoneTorchBlock.LIT, false), false);
-        }
+        builder.world().modifyBlocks(redstonePos, state -> state.setValue(RedstoneTorchBlock.LIT, true), false);
         builder.idle(2);
-        for (BlockPos pos : redstonePos) {
-            builder.world().modifyBlock(pos, state -> state.setValue(RedstoneTorchBlock.LIT, true), false);
-        }
+        builder.world().modifyBlocks(redstonePos, state -> state.setValue(RedstoneTorchBlock.LIT, false), false);
         builder.idle(10);
 
         builder.overlay()
@@ -358,6 +349,7 @@ public class BlockRecipeScene {
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(110);
+
         builder.overlay()
             .showText(60)
             .text("The higher the anvil falls, the larger the range.")
@@ -366,16 +358,16 @@ public class BlockRecipeScene {
             .placeNearTarget();
         builder.idle(70);
         // 复位
-        for (BlockPos pos : redstonePos) {
-            builder.world().setBlock(pos, Blocks.AIR.defaultBlockState(), false);
-        }
-        builder.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
+        builder.world().setBlocks(redstonePos, Blocks.AIR.defaultBlockState(), false);
+        builder.world().hideSection(util.select().position(blockPos), Direction.NORTH);
         builder.world().riseSection(anvilLink, 2);
         builder.idle(10);
 
         // 宝库重置
         builder.world().setBlock(blockPos, Blocks.VAULT.defaultBlockState(), false);
-        BlockPos leadPos = util.grid().at(2, 2, 2);
+        builder.world().showSection(util.select().position(blockPos), Direction.NORTH);
+
+        BlockPos leadPos = blockPos.above();
         builder.world().setBlock(leadPos, ModBlocks.LEAD_BLOCK.getDefaultState(), false);
         builder.world().showSection(util.select().position(leadPos), Direction.NORTH);
         builder.idle(20);
