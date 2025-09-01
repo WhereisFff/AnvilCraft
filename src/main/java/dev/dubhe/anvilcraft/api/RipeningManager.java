@@ -7,11 +7,20 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
-import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.BonemealableBlock;
+import net.minecraft.world.level.block.GrassBlock;
+import net.minecraft.world.level.block.NetherWartBlock;
+import net.minecraft.world.level.block.NyliumBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 public class RipeningManager {
     private static final Map<Level, RipeningManager> INSTANCES = new HashMap<>();
@@ -59,7 +68,8 @@ public class RipeningManager {
                             pos1.getZ() + 0.5,
                             0.0,
                             0.0,
-                            0.0);
+                            0.0
+                        );
                         ripened.add(pos1);
                     }
                     if (state.is(Blocks.SUGAR_CANE)
@@ -75,10 +85,14 @@ public class RipeningManager {
                         level.setBlock(pos1.above(), Blocks.CACTUS.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
                     }
                     if (state.is(Blocks.NETHER_WART) && state.getValue(NetherWartBlock.AGE) != NetherWartBlock.MAX_AGE) {
-                        level.setBlock(pos1,
-                            Blocks.NETHER_WART.defaultBlockState().setValue(NetherWartBlock.AGE,
-                                state.getValue(NetherWartBlock.AGE) + 1),
-                            Block.UPDATE_ALL_IMMEDIATE);
+                        level.setBlock(
+                            pos1,
+                            Blocks.NETHER_WART.defaultBlockState().setValue(
+                                NetherWartBlock.AGE,
+                                state.getValue(NetherWartBlock.AGE) + 1
+                            ),
+                            Block.UPDATE_ALL_IMMEDIATE
+                        );
                     }
                 }
             }
@@ -90,17 +104,20 @@ public class RipeningManager {
      */
     private void tick() {
         if (level.getServer() == null || lightBlocks.isEmpty() ||
-                level.getGameTime() % AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown != 0
-        ) return;
+            level.getGameTime() % AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown != 0
+        ) {
+            return;
+        }
 
         lightBlocks.removeIf(pos -> {
             BlockState lightBlockState = level.getBlockState(pos);
-            return !(lightBlockState.getBlock() instanceof InductionLightBlock
-                    && InductionLightBlock.isLit(lightBlockState)
-                    && InductionLightBlock.canCropGrow(lightBlockState)
+            return !(
+                lightBlockState.getBlock() instanceof InductionLightBlock
+                && InductionLightBlock.isLit(lightBlockState)
+                && InductionLightBlock.canCropGrow(lightBlockState)
             );
         });
-        
+
         HashSet<BlockPos> ripenedBlocks = new HashSet<>();
         for (BlockPos pos : lightBlocks) {
             doRipen(pos, ripenedBlocks);
