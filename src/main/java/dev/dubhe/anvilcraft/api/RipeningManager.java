@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.api;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.block.InductionLightBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -16,34 +15,24 @@ import net.minecraft.world.level.block.NyliumBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 
 public class RipeningManager {
     private static final Map<Level, RipeningManager> INSTANCES = new HashMap<>();
 
     private final Level level;
-    private final Set<BlockPos> lightBlocks = Collections.synchronizedSet(new HashSet<>());
 
     /**
-     * 获取当前维度催熟实例
+     * 获取或新建一个当前维度催熟实例。
      */
-    public static RipeningManager getInstance(Level level) {
-        if (!INSTANCES.containsKey(level)) {
-            INSTANCES.put(level, new RipeningManager(level));
-        }
-        return INSTANCES.get(level);
+    public static RipeningManager from(Level level) {
+        return INSTANCES.computeIfAbsent(level, RipeningManager::new);
     }
 
     public RipeningManager(Level level) {
         this.level = level;
-    }
-
-    public static void tickAll() {
-        INSTANCES.values().forEach(RipeningManager::tick);
     }
 
     private void doRipen(@NotNull BlockPos pos, @NotNull HashSet<BlockPos> ripened) {
@@ -102,38 +91,34 @@ public class RipeningManager {
 
     private long lastTickRipen = -1;
 
-    private void tick() {
-        if (level.getServer() == null || lightBlocks.isEmpty()) return;
-        long curTime = level.getGameTime();
-        if (lastTickRipen > curTime) { // time set xxx may change the gameTime.
-            lastTickRipen = curTime;
-            return;
-        }
-        if (curTime - lastTickRipen < AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown) {
-            return;
-        }
-        lastTickRipen = curTime;
-
-        lightBlocks.removeIf(pos -> {
-            BlockState lightBlockState = level.getBlockState(pos);
-            return !(
-                lightBlockState.getBlock() instanceof InductionLightBlock
-                && InductionLightBlock.isLit(lightBlockState)
-                && InductionLightBlock.canCropGrow(lightBlockState)
-            );
-        });
-
-        HashSet<BlockPos> ripenedBlocks = new HashSet<>();
-        for (BlockPos pos : lightBlocks) {
-            doRipen(pos, ripenedBlocks);
-        }
-    }
 
     /**
-     *
+     * 如果当前时间距离上次催熟不小于催熟冷却则清空重复催熟过滤器 ripened 并重新计时，返回 true
+     * 如果时间差在 (0, 冷却) 之间则返回 false 无事发生
+     * 如果为 0 则返回 true 无事发生（因为意味着其他灯已经调用过这个函数了）
+     * 如果为负数说明有时间旅行（time set xxx），重置上次催熟时间。
+     * @return if already cooldown for ripen
      */
-    public static void addLightBlock(BlockPos pos, Level level) {
-        RipeningManager inst = RipeningManager.getInstance(level);
-        inst.lightBlocks.add(pos);
+    private boolean isRipenReady() {
+        if (level.getServer() == null) return false;
+        long curTime = level.getGameTime();
+        long ticksBeforeLastRipen = curTime - lastTickRipen;
+        if (ticksBeforeLastRipen == 0) return true; // another LightBlock is Ripened at this tick.
+        if (ticksBeforeLastRipen < 0) { // time set xxx may change the gameTime.
+            lastTickRipen = curTime - 1;
+            return false;
+        }
+        if (ticksBeforeLastRipen >= AnvilCraft.CONFIG.inductionLightBlockRipeningCooldown) {
+            lastTickRipen = curTime;
+            ripened.clear();
+            return true;
+        }
+        return false;
+    }
+
+    private final HashSet<BlockPos> ripened = new HashSet<>();
+
+    public void doRipen(BlockPos blockPos) {
+        if (isRipenReady()) doRipen(blockPos, ripened);
     }
 }
