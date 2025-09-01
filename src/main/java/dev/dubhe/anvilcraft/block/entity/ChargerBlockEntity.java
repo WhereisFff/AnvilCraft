@@ -187,13 +187,10 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     private ItemStack getDisplayItemStackForRender() {
-        for (int i = 1; i >= 0; i--) {
+        for (int i = 2; i >= 0; i--) {
             if (!itemHandler.getStackInSlot(i).isEmpty()) {
                 return itemHandler.getStackInSlot(i);
             }
-        }
-        if (!itemHandler.getStackInSlot(2).isEmpty()) {
-            return itemHandler.getStackInSlot(2);
         }
         return ItemStack.EMPTY;
     }

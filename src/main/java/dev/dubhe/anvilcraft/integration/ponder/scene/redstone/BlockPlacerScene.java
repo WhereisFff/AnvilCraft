@@ -121,7 +121,7 @@ public class BlockPlacerScene {
         builder.idle(10);
 
         // 创建猪实体
-        builder.world().createEntity(world -> {
+        ElementLink<EntityElement> pigLink = builder.world().createEntity(world -> {
             Pig pig = EntityType.PIG.create(world);
             if (pig != null) {
                 pig.moveTo(frontPos.getBottomCenter());
@@ -143,15 +143,18 @@ public class BlockPlacerScene {
             .placeNearTarget();
         builder.idle(70);
 
+        builder.world().letLivingEntityDie(pigLink, frontPos, true);
+
         builder.markAsFinished();
     }
 
     private static void anvilRun(SceneBuilder scene, SceneBuildingUtil util) {
-        scene.title("block_placer_anvil", "Place with anvil");
-        scene.configureBasePlate(0, 0, 7);
-        scene.showBasePlate();
-        scene.scaleSceneView(0.8f);
-        scene.idle(20);
+        AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
+        builder.title("block_placer_anvil", "Place with anvil");
+        builder.configureBasePlate(0, 0, 7);
+        builder.showBasePlate();
+        builder.scaleSceneView(0.8f);
+        builder.idle(20);
 
         // 初始化
         BlockPos placerAPos = util.grid().at(3, 1, 3);
@@ -163,79 +166,76 @@ public class BlockPlacerScene {
         BlockPos frontBPos = util.grid().at(3, 1, 2);
 
         // 使用普通Section替代IndependentSection以保持一致的动画效果
-        scene.world().setBlock(placerBPos, ModBlocks.BLOCK_PLACER.getDefaultState(), false);
+        builder.world().setBlock(placerBPos, ModBlocks.BLOCK_PLACER.getDefaultState(), false);
         Selection placerBSelection = util.select().position(placerBPos);
-        scene.world().showSection(placerBSelection, Direction.DOWN);
+        builder.world().showSection(placerBSelection, Direction.DOWN);
 
-        scene.world().setBlock(anvilBPos, Blocks.ANVIL.defaultBlockState(), false);
+        builder.world().setBlock(anvilBPos, Blocks.ANVIL.defaultBlockState(), false);
         Selection anvilBSelection = util.select().position(anvilBPos);
-        ElementLink<WorldSectionElement> anvilBLink = scene.world().showIndependentSection(anvilBSelection, Direction.DOWN);
+        ElementLink<WorldSectionElement> anvilBLink = builder.world().showIndependentSection(anvilBSelection, Direction.DOWN);
 
         Selection frontASelection = util.select().position(frontAPos);
         Selection frontBSelection = util.select().position(frontBPos);
-        scene.world().showSection(frontASelection, Direction.DOWN);
-        scene.world().showSection(frontBSelection, Direction.DOWN);
-        scene.idle(20);
+        builder.world().showSection(frontASelection, Direction.DOWN);
+        builder.world().showSection(frontBSelection, Direction.DOWN);
+        builder.idle(20);
 
         // 铁砧敲击放置
-        scene.world().setBlock(backPos, Blocks.CHEST.defaultBlockState(), false);
+        builder.world().setBlock(backPos, Blocks.CHEST.defaultBlockState(), false);
         Selection backSelection = util.select().position(backPos);
-        scene.world().showSection(backSelection, Direction.DOWN);
-        scene.idle(10);
+        builder.world().showSection(backSelection, Direction.DOWN);
+        builder.idle(10);
 
-        scene.world().moveSection(anvilBLink, new Vec3(0, -1, 0), 3);
-        scene.idle(3);
-        scene.world().setBlock(frontBPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.overlay()
+        builder.world().falldownSection(anvilBLink);
+        builder.world().setBlock(frontBPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
+        builder.overlay()
             .showText(40)
             .text("Block Placer can place blocks with anvil.")
             .pointAt(util.vector().centerOf(placerBPos))
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(50);
+        builder.idle(50);
 
         // 从越高的地方砸下来，放置方块越远
-        scene.world().setBlock(frontBPos, Blocks.AIR.defaultBlockState(), false);
-        scene.world().moveSection(anvilBLink, new Vec3(0, 2, 0), 10);
-        scene.idle(20);
+        builder.world().setBlock(frontBPos, Blocks.AIR.defaultBlockState(), false);
+        builder.world().riseSection(anvilBLink, 2);
+        builder.idle(20);
 
-        scene.world().moveSection(anvilBLink, new Vec3(0, -2, 0), 5);
-        scene.idle(5);
-        scene.world().setBlock(frontAPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.overlay()
+        builder.world().falldownSection(anvilBLink, 2);
+        builder.world().setBlock(frontAPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
+        builder.overlay()
             .showText(60)
             .text("The higher the anvil falls, the farther the blocks are placed. The farthest is 5 grids.")
             .pointAt(util.vector().centerOf(frontAPos))
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(70);
+        builder.idle(70);
 
         // 可以连锁的从身后的容器或物品堆中获取物品
-        scene.world().setBlock(frontAPos, Blocks.AIR.defaultBlockState(), false);
-        scene.world().moveSection(anvilBLink, new Vec3(0, 1, 0), 10);
+        builder.world().setBlock(frontAPos, Blocks.AIR.defaultBlockState(), false);
+        builder.world().moveSection(anvilBLink, new Vec3(0, 1, 0), 10);
 
-        scene.world().setBlock(placerAPos, ModBlocks.BLOCK_PLACER.getDefaultState(), false);
+        builder.world().setBlock(placerAPos, ModBlocks.BLOCK_PLACER.getDefaultState(), false);
         Selection placerASelection = util.select().position(placerAPos);
-        scene.world().showSection(placerASelection, Direction.DOWN);
+        builder.world().showSection(placerASelection, Direction.DOWN);
 
-        scene.world().setBlock(anvilAPos, Blocks.ANVIL.defaultBlockState(), false);
+        builder.world().setBlock(anvilAPos, Blocks.ANVIL.defaultBlockState(), false);
         Selection anvilASelection = util.select().position(anvilAPos);
-        ElementLink<WorldSectionElement> anvilALink = scene.world().showIndependentSection(anvilASelection, Direction.DOWN);
-        scene.idle(30);
+        ElementLink<WorldSectionElement> anvilALink = builder.world().showIndependentSection(anvilASelection, Direction.DOWN);
+        builder.idle(30);
 
-        scene.world().moveSection(anvilALink, new Vec3(0, -1, 0), 3);
-        scene.world().moveSection(anvilBLink, new Vec3(0, -1, 0), 3);
-        scene.idle(3);
-        scene.world().setBlock(frontAPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.world().setBlock(frontBPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
-        scene.overlay()
+        builder.world().falldownSection(anvilALink);
+        builder.world().setBlock(frontAPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
+        builder.world().falldownSection(anvilBLink);
+        builder.world().setBlock(frontBPos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
+        builder.overlay()
             .showText(60)
             .text("When the placer is followed by another placer, they can share containers.")
             .pointAt(util.vector().centerOf(placerAPos))
             .attachKeyFrame()
             .placeNearTarget();
-        scene.idle(70);
+        builder.idle(70);
 
-        scene.markAsFinished();
+        builder.markAsFinished();
     }
 }

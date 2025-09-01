@@ -11,6 +11,8 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.util.IStateListener;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
@@ -173,6 +175,9 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
         BlockHitResult hit
     ) {
         if (level.getBlockEntity(pos) instanceof ChargerBlockEntity charger) {
+            if (level.isClientSide) {
+                return ItemInteractionResult.SUCCESS;
+            }
             // 玩家空手时尝试取出物品
             if (stack.isEmpty()) {
                 // 优先从输出槽（槽位2）取物品，如果为空则从输入槽（槽位0）取
@@ -182,22 +187,19 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
                 }) {
                     ItemStack itemInSlot = charger.getFilteredItemStackHandler().getStackInSlot(slot);
                     if (!itemInSlot.isEmpty()) {
-                        if (!level.isClientSide) {
-                            ItemStack extracted = charger.getFilteredItemStackHandler().extractItem(slot, itemInSlot.getCount(), false);
-                            player.getInventory().placeItemBackInInventory(extracted);
-                        }
-                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                        ItemStack extracted = charger.getFilteredItemStackHandler().extractItem(slot, itemInSlot.getCount(), false);
+                        player.getInventory().placeItemBackInInventory(extracted);
+                        level.playSound(null, pos, SoundEvents.ITEM_PICKUP, SoundSource.PLAYERS, .2f, 1f + level.getRandom().nextFloat());
+                        return ItemInteractionResult.SUCCESS;
                     }
                 }
             } else if (charger.containsValidItem(stack)) {
                 ItemStack result = charger.getFilteredItemStackHandler().insertItem(0, stack, true);
                 if (result.isEmpty() || result.getCount() < stack.getCount()) {
-                    if (!level.isClientSide) {
-                        int countDiff = stack.getCount() - (result.isEmpty() ? 0 : result.getCount());
-                        ItemStack toInsert = stack.split(countDiff);
-                        charger.getFilteredItemStackHandler().insertItem(0, toInsert, false);
-                    }
-                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    int countDiff = stack.getCount() - (result.isEmpty() ? 0 : result.getCount());
+                    ItemStack toInsert = stack.split(countDiff);
+                    charger.getFilteredItemStackHandler().insertItem(0, toInsert, false);
+                    return ItemInteractionResult.SUCCESS;
                 }
             }
         }

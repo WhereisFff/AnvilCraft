@@ -10,7 +10,7 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.power.TransmissionPoleScene
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.BlockRecipeScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.BulgingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.CookingScene;
-import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.CorruptedBeaconSence;
+import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.CorruptedBeaconScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.HeaterScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.IronTrapdoorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.ItemCompressScene;
@@ -19,6 +19,7 @@ import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.MeshScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.SpaceOvercompressorScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.recipe.StampingScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockComparatorScene;
+import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockDevourerScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.BlockPlacerScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.redstone.MagnetScene;
 import dev.dubhe.anvilcraft.integration.ponder.scene.structure.GiantAnvilScene;
@@ -42,12 +43,13 @@ public class AnvilCraftPonderScenes {
         ItemCrushScene.register(helper);
         MeshScene.register(helper);
         HeaterScene.register(helper);
-        CorruptedBeaconSence.register(helper);
+        CorruptedBeaconScene.register(helper);
         SpaceOvercompressorScene.register(helper);
         // redstone
         MagnetScene.register(helper);
         BlockComparatorScene.register(helper);
         BlockPlacerScene.register(helper);
+        BlockDevourerScene.register(helper);
         // structure
         ImpactPileScene.register(helper);
         GiantAnvilScene.register(helper);

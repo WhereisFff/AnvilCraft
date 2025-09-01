@@ -30,18 +30,18 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
-public class CorruptedBeaconSence {
+public class CorruptedBeaconScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.CORRUPTED_BEACON)
-            .addStoryBoard("platform/9x", CorruptedBeaconSence::get, AnvilCraftPonderTags.PROCESSING_COMPONENTS)
-            .addStoryBoard("platform/5x", CorruptedBeaconSence::mobTransform, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
+            .addStoryBoard("platform/9x", CorruptedBeaconScene::get, AnvilCraftPonderTags.PROCESSING_COMPONENTS)
+            .addStoryBoard("platform/5x", CorruptedBeaconScene::mobTransform, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
 
         helper.forComponents(ModBlocks.CORRUPTED_BEACON, ModBlocks.GIANT_ANVIL)
-            .addStoryBoard("platform/5x", CorruptedBeaconSence::giantAnvil, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
+            .addStoryBoard("platform/5x", CorruptedBeaconScene::giantAnvil, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
 
         helper.forComponents(ModBlocks.CORRUPTED_BEACON)
-            .addStoryBoard("platform/5x", CorruptedBeaconSence::timeWarp, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
+            .addStoryBoard("platform/5x", CorruptedBeaconScene::timeWarp, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void get(SceneBuilder scene, SceneBuildingUtil util) {
@@ -157,7 +157,7 @@ public class CorruptedBeaconSence {
 
     private static void giantAnvil(SceneBuilder scene, SceneBuildingUtil util) {
         AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
-        builder.title("giant_anvil", "Get Giant Anvil");
+        builder.title("get_giant_anvil", "Get Giant Anvil");
         builder.configureBasePlate(0, 0, 5);
         builder.scaleSceneView(0.4f);
         builder.showBasePlate();
