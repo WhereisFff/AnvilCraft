@@ -15,7 +15,6 @@ import net.createmod.ponder.api.scene.SceneBuildingUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Blocks;
 
@@ -25,11 +24,7 @@ public class SpaceOvercompressorScene {
         helper.forComponents(
                 ModBlocks.SPACE_OVERCOMPRESSOR
             )
-            .addStoryBoard(
-                "platform/555",
-                SpaceOvercompressorScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", SpaceOvercompressorScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -62,15 +57,15 @@ public class SpaceOvercompressorScene {
         for (int i = 0; i < 3; i++) {
             // 添加铁块
             ElementLink<EntityElement> ironBockItemLink =
-                builder.world().createItem(spaceOvercompressorPos.above(), new ItemStack(ModBlocks.HEAVY_IRON_BLOCK, 64));
+                builder.world().createItemEntity(spaceOvercompressorPos.above(), new ItemStack(ModBlocks.HEAVY_IRON_BLOCK, 64));
             // 铁砧压入
-            builder.world().dropSection(anvilLink);
-            builder.world().modifyEntity(ironBockItemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            builder.world().falldownSection(anvilLink);
+            builder.world().removeEntity(ironBockItemLink);
             // 铁砧上移
-            builder.world().liftSection(anvilLink);
+            builder.world().riseSection(anvilLink);
         }
         // 从空间超压器下方掉出中子锭
-        builder.world().createItem(spaceOvercompressorPos.getBottomCenter(), ModItems.NEUTRONIUM_INGOT.asStack());
+        builder.world().createItemEntity(spaceOvercompressorPos.getBottomCenter(), ModItems.NEUTRONIUM_INGOT.asStack());
         builder.overlay().showText(100)
             .text(
                 "When the Space Overcompressor has built up enough mass, a neutron ingot will form. "

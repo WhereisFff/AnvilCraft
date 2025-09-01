@@ -21,11 +21,7 @@ public class StampingScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.STAMPING_PLATFORM)
-            .addStoryBoard(
-                "platform/555",
-                StampingScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", StampingScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -40,19 +36,20 @@ public class StampingScene {
 
         BlockPos anvilPos = tablePos.above(2);
         builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> anvilLink =
-            builder.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
+        ElementLink<WorldSectionElement> anvilLink = builder.world()
+            .showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
         builder.idle(20);
 
         // 物品冲压
-        ElementLink<EntityElement> itemEntity = builder.world().createItem(tablePos.above(), Items.IRON_INGOT.getDefaultInstance());
-        builder.world().dropSection(anvilLink);
+        ElementLink<EntityElement> itemEntity = builder.world().createItemEntity(tablePos.above(), Items.IRON_INGOT.getDefaultInstance());
+        builder.world().falldownSection(anvilLink);
         builder.world()
-            .changeItem(tablePos.above().getBottomCenter(), Items.HEAVY_WEIGHTED_PRESSURE_PLATE.getDefaultInstance(), itemEntity);
-        builder.world().liftSection(anvilLink);
+            .replaceItemEntity(tablePos.above().getBottomCenter(), Items.HEAVY_WEIGHTED_PRESSURE_PLATE.getDefaultInstance(), itemEntity);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(20)
+        builder.overlay()
+            .showText(20)
             .text("The stamping platform can stamp items.")
             .pointAt(tablePos.getCenter())
             .attachKeyFrame()

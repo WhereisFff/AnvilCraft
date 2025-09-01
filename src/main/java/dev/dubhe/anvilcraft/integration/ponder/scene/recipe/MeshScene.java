@@ -22,11 +22,7 @@ public class MeshScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
         helper.forComponents(Items.SCAFFOLDING)
-            .addStoryBoard(
-                "platform/555",
-                MeshScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", MeshScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -41,20 +37,21 @@ public class MeshScene {
 
         BlockPos anvilPos = tablePos.above(2);
         builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> anvilLink =
-            builder.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
+        ElementLink<WorldSectionElement> anvilLink = builder.world()
+            .showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
         builder.idle(20);
 
         // 物品过筛
-        ElementLink<EntityElement> itemEntity = builder.world().createItem(tablePos.above(), new ItemStack(Items.SAND, 64));
-        builder.world().dropSection(anvilLink);
-        builder.world().changeItem(tablePos.getCenter(), Items.SAND.getDefaultInstance(), itemEntity);
+        ElementLink<EntityElement> itemEntity = builder.world().createItemEntity(tablePos.above(), new ItemStack(Items.SAND, 64));
+        builder.world().falldownSection(anvilLink);
+        builder.world().replaceItemEntity(tablePos.getCenter(), Items.SAND.getDefaultInstance(), itemEntity);
         builder.world().createItemEntity(tablePos.getCenter(), Vec3.ZERO, Items.CLAY_BALL.getDefaultInstance());
         builder.world().createItemEntity(tablePos.getCenter(), Vec3.ZERO, Items.GOLD_NUGGET.getDefaultInstance());
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(20)
+        builder.overlay()
+            .showText(20)
             .text("Scaffolding can screen items.")
             .pointAt(tablePos.getCenter())
             .attachKeyFrame()

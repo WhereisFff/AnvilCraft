@@ -21,11 +21,7 @@ public class ItemCrushScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.CRUSHING_TABLE)
-            .addStoryBoard(
-                "platform/555",
-                ItemCrushScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", ItemCrushScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -40,18 +36,19 @@ public class ItemCrushScene {
 
         BlockPos anvilPos = tablePos.above(2);
         builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> anvilLink =
-            builder.world().showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
+        ElementLink<WorldSectionElement> anvilLink = builder.world()
+            .showIndependentSection(util.select().position(anvilPos), Direction.DOWN);
         builder.idle(20);
 
         // 物品粉碎
-        ElementLink<EntityElement> itemEntity = builder.world().createItem(tablePos.above(), Items.DIAMOND_HOE.getDefaultInstance());
-        builder.world().dropSection(anvilLink);
-        builder.world().changeItem(tablePos, Items.DIAMOND.getDefaultInstance(), itemEntity);
-        builder.world().liftSection(anvilLink);
+        ElementLink<EntityElement> itemEntity = builder.world().createItemEntity(tablePos.above(), Items.DIAMOND_HOE.getDefaultInstance());
+        builder.world().falldownSection(anvilLink);
+        builder.world().replaceItemEntity(tablePos, Items.DIAMOND.getDefaultInstance(), itemEntity);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(20)
+        builder.overlay()
+            .showText(20)
             .text("The crushing table can crush items.")
             .pointAt(tablePos.getCenter())
             .attachKeyFrame()

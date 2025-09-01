@@ -12,7 +12,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -26,14 +25,8 @@ import static net.minecraft.world.item.Items.IRON_TRAPDOOR;
 public class IronTrapdoorScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
-        helper.forComponents(
-                IRON_TRAPDOOR
-            )
-            .addStoryBoard(
-                "platform/555",
-                IronTrapdoorScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+        helper.forComponents(IRON_TRAPDOOR)
+            .addStoryBoard("platform/5x", IronTrapdoorScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -59,11 +52,11 @@ public class IronTrapdoorScene {
         builder.idle(20);
 
         // 铁砧下落
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         // 拆解石英块
-        builder.world().modifyEntity(quartzBlock, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(quartzBlock);
         builder.world().createItemEntity(ironTrapdoorPos.getCenter(), Vec3.ZERO, new ItemStack(Items.QUARTZ.asItem(), 4));
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
         // 生成文本

@@ -14,7 +14,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -24,11 +23,7 @@ public class BulgingScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
         helper.forComponents(Items.CAULDRON)
-            .addStoryBoard(
-                "platform/555",
-                BulgingScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", BulgingScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
@@ -59,16 +54,16 @@ public class BulgingScene {
             };
         ElementLink<EntityElement> itemEntity;
         for (int i = 0; i < inputs.length; i++) {
-            itemEntity = builder.world().createItem(cauldronPos.above(), inputs[i]);
+            itemEntity = builder.world().createItemEntity(cauldronPos.above(), inputs[i]);
             builder.idle(10);
-            builder.world().dropSection(anvilLink);
-            itemEntity = builder.world().changeItem(cauldronPos, outputs[i], itemEntity);
-            builder.world().liftSection(anvilLink);
+            builder.world().falldownSection(anvilLink);
+            itemEntity = builder.world().replaceItemEntity(cauldronPos, outputs[i], itemEntity);
+            builder.world().riseSection(anvilLink);
             builder.overlay().showControls(cauldronPos.east().getCenter(), Pointing.RIGHT, 10)
                 .withItem(outputs[i]);
             builder.idle(20);
 
-            builder.world().modifyEntity(itemEntity, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            builder.world().removeEntity(itemEntity);
         }
         builder.idle(10);
 

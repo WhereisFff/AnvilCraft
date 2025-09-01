@@ -28,8 +28,8 @@ public class PoweredSlidingRailScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.POWERED_SLIDING_RAIL)
-            .addStoryBoard("platform/999", PoweredSlidingRailScene::basicOperation)
-            .addStoryBoard("platform/999", PoweredSlidingRailScene::withRailStop);
+            .addStoryBoard("platform/9x", PoweredSlidingRailScene::basicOperation)
+            .addStoryBoard("platform/9x", PoweredSlidingRailScene::withRailStop);
     }
 
     private static void basicOperation(SceneBuilder scene, SceneBuildingUtil util) {
@@ -80,7 +80,8 @@ public class PoweredSlidingRailScene {
         scene.idle(40);
 
         // 第一部分：无红石信号时的效果
-        scene.overlay().showText(60)
+        scene.overlay()
+            .showText(60)
             .text("Without redstone signal, powered sliding rail acts like a sliding rail stop for items and blocks")
             .pointAt(poweredRailVec)
             .attachKeyFrame()
@@ -88,12 +89,11 @@ public class PoweredSlidingRailScene {
         scene.idle(70);
 
         // 添加鹦鹉演示生物不受影响
-        ElementLink<ParrotElement> birb = scene.special().createBirb(
-            util.vector().topOf(railEndPos), ParrotPose.FaceCursorPose::new
-        );
+        ElementLink<ParrotElement> birb = scene.special().createBirb(util.vector().topOf(railEndPos), ParrotPose.FaceCursorPose::new);
         scene.idle(20);
 
-        scene.overlay().showText(40)
+        scene.overlay()
+            .showText(40)
             .text("But living entities like parrots are not affected by the powered rail")
             .pointAt(railEndPos.above().getCenter())
             .attachKeyFrame()
@@ -108,7 +108,8 @@ public class PoweredSlidingRailScene {
         scene.special().hideElement(birb, Direction.UP);
         scene.idle(30);
 
-        scene.overlay().showText(40)
+        scene.overlay()
+            .showText(40)
             .text("Items and blocks passing over will be attracted and stopped")
             .pointAt(poweredRailVec)
             .placeNearTarget();
@@ -117,14 +118,15 @@ public class PoweredSlidingRailScene {
         // 扔物品
         scene.world().createItemEntity(
             railEndPos.east().above().getBottomCenter(),
-            MagneticChuteBlockEntity.getOutputSpeed(Direction.WEST), new ItemStack(Items.IRON_INGOT)
+            MagneticChuteBlockEntity.getOutputSpeed(Direction.WEST),
+            new ItemStack(Items.IRON_INGOT)
         );
         scene.idle(30);
 
         // 放置方块
         scene.world().setBlock(railEndPos.above(), Blocks.GLASS.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> glass = scene.world().showIndependentSection(
-            util.select().position(railEndPos.above()), Direction.DOWN);
+        ElementLink<WorldSectionElement> glass = scene.world()
+            .showIndependentSection(util.select().position(railEndPos.above()), Direction.DOWN);
         scene.idle(10);
 
         // 移动方块到动力滑轨上方并停止
@@ -132,7 +134,8 @@ public class PoweredSlidingRailScene {
         scene.idle(20);
 
         // 第二部分：通入红石信号的效果
-        scene.overlay().showText(60)
+        scene.overlay()
+            .showText(60)
             .text("When powered with redstone, it accelerates items and pushes blocks forward")
             .pointAt(poweredRailVec)
             .attachKeyFrame()
@@ -195,7 +198,8 @@ public class PoweredSlidingRailScene {
         scene.rotateCameraY(-45);
         scene.idle(20);
 
-        scene.overlay().showText(60)
+        scene.overlay()
+            .showText(60)
             .text("When there's a sliding rail stop behind, it pulls items and blocks from the stop and accelerates them forward")
             .pointAt(util.vector().centerOf(railStopPos))
             .attachKeyFrame()
@@ -203,17 +207,13 @@ public class PoweredSlidingRailScene {
         scene.idle(70);
 
         // 扔物品
-        scene.world().createItemEntity(
-            railStopPos.above().getBottomCenter(),
-            Vec3.ZERO, new ItemStack(Items.IRON_INGOT)
-        );
+        scene.world().createItemEntity(railStopPos.above().getBottomCenter(), Vec3.ZERO, new ItemStack(Items.IRON_INGOT));
         scene.idle(30);
 
         // 放置方块
         scene.world().setBlock(railStopPos.above(), Blocks.GLASS.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> glass = scene.world().showIndependentSection(
-            util.select().position(railStopPos.above()), Direction.DOWN
-        );
+        ElementLink<WorldSectionElement> glass = scene.world()
+            .showIndependentSection(util.select().position(railStopPos.above()), Direction.DOWN);
         scene.idle(20);
 
         scene.world().toggleRedstonePower(lever);
