@@ -35,6 +35,10 @@ public class RipeningManager {
         this.level = level;
     }
 
+    /**
+     * @param pos 灯的位置
+     * @param ripened 在本轮催熟中，已经被催熟过的位置。
+     */
     private void doRipen(@NotNull BlockPos pos, @NotNull HashSet<BlockPos> ripened) {
         int rangeSize = AnvilCraft.CONFIG.inductionLightBlockRipeningRange;
         for (int dx = -rangeSize / 2; dx <= rangeSize / 2; dx++) {
