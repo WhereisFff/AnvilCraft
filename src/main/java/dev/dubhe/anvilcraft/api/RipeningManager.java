@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.api;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Vec3i;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
@@ -40,54 +41,49 @@ public class RipeningManager {
      * @param ripened 在本轮催熟中，已经被催熟过的位置。
      */
     private void doRipen(@NotNull BlockPos pos, @NotNull HashSet<BlockPos> ripened) {
-        int rangeSize = AnvilCraft.CONFIG.inductionLightBlockRipeningRange;
-        for (int dx = -rangeSize / 2; dx <= rangeSize / 2; dx++) {
-            for (int dy = -rangeSize / 2; dy <= rangeSize / 2; dy++) {
-                for (int dz = -rangeSize / 2; dz <= rangeSize / 2; dz++) {
-                    BlockPos pos1 = pos.offset(dx, dy, dz);
-                    if (ripened.contains(pos1)) continue;
-                    BlockState state = level.getBlockState(pos1);
-                    if (state.getBlock() instanceof BonemealableBlock growable
-                        && !(growable instanceof GrassBlock)
-                        && !(growable instanceof NyliumBlock)
-                        && growable.isValidBonemealTarget(level, pos1, state)
-                        && level.getBrightness(LightLayer.BLOCK, pos1) >= 10
-                    ) {
-                        growable.performBonemeal((ServerLevel) level, level.getRandom(), pos1, state);
-                        level.addParticle(
-                            ParticleTypes.HAPPY_VILLAGER,
-                            pos1.getX() + 0.5,
-                            pos1.getY() + 0.5,
-                            pos1.getZ() + 0.5,
-                            0.0,
-                            0.0,
-                            0.0
-                        );
-                        ripened.add(pos1);
-                    }
-                    if (state.is(Blocks.SUGAR_CANE)
-                        && level.getBlockState(pos1.above()).is(Blocks.AIR)
-                    ) {
-                        level.setBlock(
-                            pos1.above(),
-                            Blocks.SUGAR_CANE.defaultBlockState(),
-                            Block.UPDATE_ALL_IMMEDIATE
-                        );
-                    }
-                    if (state.is(Blocks.CACTUS) && level.getBlockState(pos1.above()).is(Blocks.AIR)) {
-                        level.setBlock(pos1.above(), Blocks.CACTUS.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
-                    }
-                    if (state.is(Blocks.NETHER_WART) && state.getValue(NetherWartBlock.AGE) != NetherWartBlock.MAX_AGE) {
-                        level.setBlock(
-                            pos1,
-                            Blocks.NETHER_WART.defaultBlockState().setValue(
-                                NetherWartBlock.AGE,
-                                state.getValue(NetherWartBlock.AGE) + 1
-                            ),
-                            Block.UPDATE_ALL_IMMEDIATE
-                        );
-                    }
-                }
+        int radius = AnvilCraft.CONFIG.inductionLightBlockRipeningRange / 2;
+        for (BlockPos plantPos : BlockPos.betweenClosed(pos.offset(radius, radius, radius), pos.offset(-radius, -radius, -radius))) {
+            if (ripened.contains(plantPos)) continue;
+            BlockState state = level.getBlockState(plantPos);
+            Block block = state.getBlock();
+           
+            if (block instanceof BonemealableBlock growable
+                && !(growable instanceof GrassBlock)
+                && !(growable instanceof NyliumBlock)
+                && growable.isValidBonemealTarget(level, plantPos, state)
+                && level.getBrightness(LightLayer.BLOCK, plantPos) >= 10
+            ) {
+                growable.performBonemeal((ServerLevel) level, level.getRandom(), plantPos, state);
+                level.addParticle(
+                    ParticleTypes.HAPPY_VILLAGER,
+                    plantPos.getX() + 0.5,
+                    plantPos.getY() + 0.5,
+                    plantPos.getZ() + 0.5,
+                    0.0,
+                    0.0,
+                    0.0
+                );
+                ripened.add(plantPos);
+            }
+            if (state.is(Blocks.SUGAR_CANE)
+                && level.getBlockState(plantPos.above()).is(Blocks.AIR)
+            ) {
+                level.setBlock(
+                    plantPos.above(),
+                    Blocks.SUGAR_CANE.defaultBlockState(),
+                    Block.UPDATE_ALL_IMMEDIATE
+                );
+            } else if (state.is(Blocks.CACTUS) && level.getBlockState(plantPos.above()).is(Blocks.AIR)) {
+                level.setBlock(plantPos.above(), Blocks.CACTUS.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
+            } else if (state.is(Blocks.NETHER_WART) && state.getValue(NetherWartBlock.AGE) != NetherWartBlock.MAX_AGE) {
+                level.setBlock(
+                    plantPos,
+                    Blocks.NETHER_WART.defaultBlockState().setValue(
+                        NetherWartBlock.AGE,
+                        state.getValue(NetherWartBlock.AGE) + 1
+                    ),
+                    Block.UPDATE_ALL_IMMEDIATE
+                );
             }
         }
     }
