@@ -335,8 +335,6 @@ public class GiantAnvilScene {
             .placeNearTarget();
         // 延时10gt
         builder.idle(10);
-        // 移除Xekr
-        builder.world().modifyEntity(mushroomCow, Entity::discard);
         // 延时40gt
         builder.idle(50);
         // 巨型铁砧上升10m
