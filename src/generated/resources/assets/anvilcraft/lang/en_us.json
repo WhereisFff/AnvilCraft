@@ -185,7 +185,7 @@
   "anvilcraft.ponder.block_devourer_anvil.header": "Devour with Anvil",
   "anvilcraft.ponder.block_devourer_anvil.text_1": "The Block Devourer can destroy larger blocks based on the height from which the anvil falls, with a maximum area of 9x9.",
   "anvilcraft.ponder.block_devourer_anvil_fall.header": "Falling Block Devourer",
-  "anvilcraft.ponder.block_devourer_anvil_fall.text_1": "When a downward-facing block devourer is hit by an anvil, it will destroy the block and move down one square at the same time.",
+  "anvilcraft.ponder.block_devourer_anvil_fall.text_1": "When a downward-facing block devourer is hit by an anvil, it will move down one block at the same time.",
   "anvilcraft.ponder.block_placer.header": "Block Placer",
   "anvilcraft.ponder.block_placer.text_1": "Block Placer can place blocks in front of it when powered by redstone.",
   "anvilcraft.ponder.block_placer.text_2": "It can also read the items in the container.",

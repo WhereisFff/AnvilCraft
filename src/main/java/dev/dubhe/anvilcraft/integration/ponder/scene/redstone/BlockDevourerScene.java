@@ -86,13 +86,15 @@ public class BlockDevourerScene {
 
         // 清除石头，说明：方块吞噬器破坏世界基底方块只会有很小一部分产生掉落物
         builder.world().setBlocks(wallPos, Blocks.STONE.defaultBlockState(), false);
+        builder.world().hideSection(util.select().position(chestPos), Direction.SOUTH);
         builder.idle(20);
 
+        builder.world().setBlock(chestPos, Blocks.AIR.defaultBlockState(), false);
         builder.world().showSection(util.select().position(signPos), Direction.NORTH);
         builder.world().modifyBlock(devourerPos, state -> state.setValue(BlockDevourerBlock.TRIGGERED, true), false);
         builder.world().setBlocks(wallPos, Blocks.AIR.defaultBlockState(), true);
         item = builder.world().createItem(devourerPos.south(), new ItemStack(Items.COBBLESTONE));
-        builder.idle(10);
+        builder.idle(20);
 
         builder.overlay().showText(60)
             .text("Only a very small portion of the world's base blocks will be retained.")
@@ -192,13 +194,13 @@ public class BlockDevourerScene {
         builder.world().dropSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(100)
+        builder.overlay().showText(80)
             .text(
-                "When a downward-facing block devourer is hit by an anvil, it will destroy the block and move down one square at the same time.")
+                "When a downward-facing block devourer is hit by an anvil, it will move down one block at the same time.")
             .pointAt(devourerPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
-        builder.idle(110);
+        builder.idle(90);
     }
 
 }
