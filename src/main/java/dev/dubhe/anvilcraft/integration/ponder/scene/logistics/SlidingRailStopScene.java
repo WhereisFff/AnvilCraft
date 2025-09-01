@@ -64,7 +64,8 @@ public class SlidingRailStopScene {
         scene.rotateCameraY(-45);
         scene.idle(40);
 
-        scene.overlay().showText(40)
+        scene.overlay()
+            .showText(40)
             .text("Sliding rail stops have a powerful suction that can pull in any entity passing above it.")
             .pointAt(util.vector().centerOf(railStopPos1))
             .attachKeyFrame()
@@ -85,7 +86,8 @@ public class SlidingRailStopScene {
         scene.special().moveParrot(birb, util.vector().of(-distance - 1, 0, 0), 30);
         scene.idle(40);
 
-        scene.overlay().showText(40)
+        scene.overlay()
+            .showText(40)
             .text("Even blocks in sliding")
             .pointAt(util.vector().centerOf(railStopPos2))
             .attachKeyFrame()
@@ -94,10 +96,8 @@ public class SlidingRailStopScene {
 
         // 放置方块
         scene.world().setBlock(railEndPos2.above(), Blocks.GLASS.defaultBlockState(), false);
-        ElementLink<WorldSectionElement> glass = scene.world().showIndependentSection(
-            util.select().position(railEndPos2.above()),
-            Direction.DOWN
-        );
+        ElementLink<WorldSectionElement> glass = scene.world()
+            .showIndependentSection(util.select().position(railEndPos2.above()), Direction.DOWN);
         scene.idle(20);
 
         // 移动方块

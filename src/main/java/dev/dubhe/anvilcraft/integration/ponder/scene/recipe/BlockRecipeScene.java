@@ -13,7 +13,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Pig;
 import net.minecraft.world.item.Item;
@@ -61,17 +60,18 @@ public class BlockRecipeScene {
         builder.world().showSection(util.select().position(downPos), Direction.NORTH);
         builder.idle(20);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(downPos, Blocks.GRAVEL.defaultBlockState(), true);
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(downPos, Blocks.SAND.defaultBlockState(), true);
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("When the anvil hits a specific block, the block is crushed.")
             .pointAt(downPos.getCenter())
             .attachKeyFrame()
@@ -86,13 +86,14 @@ public class BlockRecipeScene {
         itemLink = builder.world().createItemEntity(upPos.getCenter(), Vec3.ZERO, Items.SHULKER_BOX.getDefaultInstance());
         builder.idle(20);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(downPos, ModBlocks.NESTING_SHULKER_BOX.getDefaultState(), true);
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
-        builder.world().liftSection(anvilLink);
+        builder.world().removeEntity(itemLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(60)
+        builder.overlay()
+            .showText(60)
             .text("When the anvil hits the block with an item on it, press the item into the block.")
             .pointAt(downPos.getCenter())
             .attachKeyFrame()
@@ -105,61 +106,64 @@ public class BlockRecipeScene {
         // 方块破坏
         builder.world().setBlock(downPos, Blocks.STONECUTTER.defaultBlockState(), false);
         builder.world().setBlock(upPos, Blocks.STONE.defaultBlockState(), false);
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(upPos, Blocks.AIR.defaultBlockState(), true);
         itemLink = builder.world().createItemEntity(upPos.getCenter(), Vec3.ZERO, Items.COBBLESTONE.getDefaultInstance());
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(60)
+        builder.overlay()
+            .showText(60)
             .text("When the anvil hit the block on the stone cutter, the block was destroyed.")
             .pointAt(upPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(70);
 
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(itemLink);
         // 皇家铁砧: 精准采集
         builder.world().setBlock(anvilPos, ModBlocks.ROYAL_ANVIL.getDefaultState(), false);
         builder.world().setBlock(upPos, Blocks.STONE.defaultBlockState(), false);
         builder.idle(10);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(upPos, Blocks.AIR.defaultBlockState(), true);
         itemLink = builder.world().createItemEntity(upPos.getCenter(), Vec3.ZERO, Items.STONE.getDefaultInstance());
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("The Royal Anvil can precisely destroy blocks.")
             .pointAt(upPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(50);
 
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(itemLink);
         // 余烬铁砧：熔炼
         builder.world().setBlock(anvilPos, ModBlocks.EMBER_ANVIL.getDefaultState(), false);
         builder.world().setBlock(upPos, Blocks.IRON_ORE.defaultBlockState(), false);
         builder.idle(10);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(upPos, Blocks.AIR.defaultBlockState(), true);
         itemLink = builder.world().createItemEntity(upPos.getCenter(), Vec3.ZERO, Items.IRON_INGOT.getDefaultInstance());
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("The Ember Anvil can melt blocks.")
             .pointAt(upPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(50);
 
-        builder.world().modifyEntity(itemLink, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+        builder.world().removeEntity(itemLink);
         // 复位
         builder.world().setBlock(downPos, Blocks.AIR.defaultBlockState(), false);
         builder.world().setBlock(anvilPos, Blocks.ANVIL.defaultBlockState(), false);
@@ -170,22 +174,23 @@ public class BlockRecipeScene {
         builder.world().setBlock(upPos, Blocks.ICE.defaultBlockState(), false);
         builder.idle(20);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(upPos, Blocks.AIR.defaultBlockState(), false);
         builder.world().setBlock(downPos, Blocks.PACKED_ICE.defaultBlockState(), true);
         builder.idle(3);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("The anvil can compress blocks.")
             .pointAt(downPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(50);
         // 复位
-        builder.world().liftSection(anvilLink, 2);
+        builder.world().riseSection(anvilLink, 2);
         builder.world().setBlock(downPos, Blocks.AIR.defaultBlockState(), false);
         builder.idle(10);
 
@@ -194,19 +199,15 @@ public class BlockRecipeScene {
         builder.world().setBlock(upPos, Blocks.MOSS_BLOCK.defaultBlockState(), false);
         builder.idle(20);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(downPos, Blocks.MOSSY_COBBLESTONE.defaultBlockState(), false);
         builder.idle(10);
 
-        builder.overlay().showText(40)
-            .text("The anvil can smear blocks.")
-            .pointAt(downPos.getCenter())
-            .attachKeyFrame()
-            .placeNearTarget();
+        builder.overlay().showText(40).text("The anvil can smear blocks.").pointAt(downPos.getCenter()).attachKeyFrame().placeNearTarget();
         builder.idle(50);
         // 复位
         builder.world().setBlock(downPos, Blocks.AIR.defaultBlockState(), false);
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
         // 方块压榨
@@ -214,12 +215,13 @@ public class BlockRecipeScene {
         builder.world().setBlock(upPos, Blocks.SNOW_BLOCK.defaultBlockState(), false);
         builder.idle(20);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(upPos, Blocks.ICE.defaultBlockState(), false);
         builder.world().setBlock(downPos, CauldronUtil.getStateFromContentAndLevel(Blocks.POWDER_SNOW_CAULDRON, 1), false);
         builder.idle(10);
 
-        builder.overlay().showText(40)
+        builder.overlay()
+            .showText(40)
             .text("The anvil can squeeze blocks.")
             .pointAt(downPos.getCenter())
             .attachKeyFrame()
@@ -228,7 +230,7 @@ public class BlockRecipeScene {
         // 复位
         builder.world().setBlock(downPos, Blocks.AIR.defaultBlockState(), false);
         builder.world().setBlock(upPos, Blocks.AIR.defaultBlockState(), false);
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
     }
 
@@ -251,31 +253,30 @@ public class BlockRecipeScene {
         builder.idle(20);
 
         for (int i = 0; i < 2; i++) {
-            builder.world().dropSection(anvilLink);
-            builder.world().liftSection(anvilLink);
+            builder.world().falldownSection(anvilLink);
+            builder.world().riseSection(anvilLink);
             builder.idle(10);
         }
 
         // 随机生成很多猪
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         List<ElementLink<EntityElement>> pigs = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             BlockPos pigPos = blockPos.east(new Random().nextInt(5) - 2).north(new Random().nextInt(5) - 2);
-            pigs.add(
-                builder.world().createEntity(world -> {
-                    Pig pig = EntityType.PIG.create(world);
-                    if (pig != null) {
-                        pig.moveTo(pigPos.getBottomCenter());
-                    }
-                    return pig;
-                })
-            );
+            pigs.add(builder.world().createEntity(world -> {
+                Pig pig = EntityType.PIG.create(world);
+                if (pig != null) {
+                    pig.moveTo(pigPos.getBottomCenter());
+                }
+                return pig;
+            }));
             builder.effects().indicateSuccess(pigPos);
         }
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.overlay().showText(100)
+        builder.overlay()
+            .showText(100)
             .text(
                 "When the anvil hits the spawner, it will be forced to work. But there are still constraints, such as light, number of mob.")
             .pointAt(blockPos.getCenter())
@@ -284,43 +285,42 @@ public class BlockRecipeScene {
         builder.idle(110);
 
         for (ElementLink<EntityElement> pig : pigs) {
-            builder.world().modifyEntity(pig, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            builder.world().removeEntity(pig);
         }
         pigs.clear();
         builder.idle(10);
         // 高度越高，成功概率越大
-        builder.world().liftSection(anvilLink, 3);
+        builder.world().riseSection(anvilLink, 3);
         builder.idle(10);
-        builder.world().dropSection(anvilLink, 4);
+        builder.world().falldownSection(anvilLink, 4);
 
         for (int i = 0; i < 4; i++) {
             BlockPos pigPos = blockPos.east(new Random().nextInt(5) - 2).north(new Random().nextInt(5) - 2);
-            pigs.add(
-                builder.world().createEntity(world -> {
-                    Pig pig = EntityType.PIG.create(world);
-                    if (pig != null) {
-                        pig.moveTo(pigPos.getBottomCenter());
-                    }
-                    return pig;
-                })
-            );
+            pigs.add(builder.world().createEntity(world -> {
+                Pig pig = EntityType.PIG.create(world);
+                if (pig != null) {
+                    pig.moveTo(pigPos.getBottomCenter());
+                }
+                return pig;
+            }));
             builder.effects().indicateSuccess(pigPos);
         }
         builder.idle(10);
 
-        builder.overlay().showText(60)
+        builder.overlay()
+            .showText(60)
             .text("The higher the height of the anvil, the higher the probability of success.")
             .pointAt(blockPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(70);
         for (ElementLink<EntityElement> pig : pigs) {
-            builder.world().modifyEntity(pig, entity -> entity.remove(Entity.RemovalReason.DISCARDED));
+            builder.world().removeEntity(pig);
         }
         // 复位
         pigs.clear();
         builder.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
-        builder.world().liftSection(anvilLink);
+        builder.world().riseSection(anvilLink);
         builder.idle(10);
 
         // 红石EMP
@@ -341,7 +341,7 @@ public class BlockRecipeScene {
         builder.world().setBlock(blockPos, Blocks.REDSTONE_BLOCK.defaultBlockState(), false);
         builder.idle(10);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         for (BlockPos pos : redstonePos) {
             builder.world().modifyBlock(pos, state -> state.setValue(RedstoneTorchBlock.LIT, false), false);
         }
@@ -351,13 +351,15 @@ public class BlockRecipeScene {
         }
         builder.idle(10);
 
-        builder.overlay().showText(100)
+        builder.overlay()
+            .showText(100)
             .text("When the anvil strikes the red stone, a red stone EMP occurs, extinguishing the nearby red stone torches for an instant.")
             .pointAt(blockPos.getCenter())
             .attachKeyFrame()
             .placeNearTarget();
         builder.idle(110);
-        builder.overlay().showText(60)
+        builder.overlay()
+            .showText(60)
             .text("The higher the anvil falls, the larger the range.")
             .pointAt(anvilPos.getCenter())
             .attachKeyFrame()
@@ -368,7 +370,7 @@ public class BlockRecipeScene {
             builder.world().setBlock(pos, Blocks.AIR.defaultBlockState(), false);
         }
         builder.world().setBlock(blockPos, Blocks.AIR.defaultBlockState(), false);
-        builder.world().liftSection(anvilLink, 2);
+        builder.world().riseSection(anvilLink, 2);
         builder.idle(10);
 
         // 宝库重置
@@ -378,11 +380,12 @@ public class BlockRecipeScene {
         builder.world().showSection(util.select().position(leadPos), Direction.NORTH);
         builder.idle(20);
 
-        builder.world().dropSection(anvilLink);
+        builder.world().falldownSection(anvilLink);
         builder.world().setBlock(leadPos, Blocks.AIR.defaultBlockState(), false);
         builder.world().modifyBlock(blockPos, state -> state.setValue(VaultBlock.STATE, VaultState.ACTIVE), false);
-        builder.world().liftSection(anvilLink);
-        builder.overlay().showText(40)
+        builder.world().riseSection(anvilLink);
+        builder.overlay()
+            .showText(40)
             .text("Press the lead into the vault to reset it.")
             .pointAt(blockPos.getCenter())
             .attachKeyFrame()

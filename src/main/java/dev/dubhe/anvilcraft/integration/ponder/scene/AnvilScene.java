@@ -44,7 +44,8 @@ public class AnvilScene {
 
         builder.idle(40);
 
-        builder.overlay().showText(30)
+        builder.overlay()
+            .showText(30)
             .text("The anvil is the foundation for all processing in the AnvilCraft")
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
@@ -52,18 +53,11 @@ public class AnvilScene {
 
         builder.idle(40);
 
-        builder.world().moveSectionInterpolation(
-            anvilLink,
-            new Vec3(0, 2, 0),
-            Interpolation.acceleration(0.025)
-        );
-        builder.world().moveSectionInterpolation(
-            anvilLink,
-            new Vec3(0, -2, 0),
-            Interpolation.acceleration(0.025)
-        );
+        builder.world().moveSectionInterpolation(anvilLink, new Vec3(0, 2, 0), Interpolation.acceleration(0.025));
+        builder.world().moveSectionInterpolation(anvilLink, new Vec3(0, -2, 0), Interpolation.acceleration(0.025));
 
-        builder.overlay().showText(30)
+        builder.overlay()
+            .showText(30)
             .text("The anvil falls from a height to complete one anvil process.")
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
