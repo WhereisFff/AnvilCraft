@@ -321,12 +321,12 @@ public class BlockRecipeScene {
         }
         // 复位
         pigs.clear();
+        builder.world().hideSection(util.select().position(blockPos), Direction.NORTH);
         builder.world().riseSection(anvilLink);
         builder.idle(10);
 
-        builder.world().hideSection(util.select().position(blockPos), Direction.NORTH);
         // 红石EMP
-        Selection redstonePos = util.select().fromTo(0, 1, 1, 1, 1, 2);
+        Selection redstonePos = util.select().fromTo(0, 1, 1, 1, 1, 3);
 
         // 在每个位置放置红石火把
         builder.world().setBlocks(redstonePos, Blocks.REDSTONE_TORCH.defaultBlockState(), false);
@@ -337,9 +337,9 @@ public class BlockRecipeScene {
         builder.idle(20);
 
         builder.world().falldownSection(anvilLink);
-        builder.world().modifyBlocks(redstonePos, state -> state.setValue(RedstoneTorchBlock.LIT, true), false);
-        builder.idle(2);
         builder.world().modifyBlocks(redstonePos, state -> state.setValue(RedstoneTorchBlock.LIT, false), false);
+        builder.idle(2);
+        builder.world().modifyBlocks(redstonePos, state -> state.setValue(RedstoneTorchBlock.LIT, true), false);
         builder.idle(10);
 
         builder.overlay()
