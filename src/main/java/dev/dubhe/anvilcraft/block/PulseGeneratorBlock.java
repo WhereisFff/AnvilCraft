@@ -120,7 +120,7 @@ public class PulseGeneratorBlock extends HorizontalDirectionalBlock implements I
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!isMoving && !state.is(newState.getBlock())) {
+        if (!state.is(newState.getBlock())) {
             super.onRemove(state, level, pos, newState, false);
         }
         Direction facing = state.getValue(FACING);
