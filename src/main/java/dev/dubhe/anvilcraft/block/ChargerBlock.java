@@ -13,6 +13,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.Containers;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -28,6 +30,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,11 +47,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
      */
     public ChargerBlock(Properties properties) {
         super(properties);
-        registerDefaultState(
-            getStateDefinition().any()
-                .setValue(POWERED, false)
-                .setValue(OVERLOAD, true)
-        );
+        registerDefaultState(getStateDefinition().any().setValue(POWERED, false).setValue(OVERLOAD, true));
     }
 
     @Override
@@ -65,7 +64,10 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-        @NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+        @NotNull Level level,
+        @NotNull BlockState state,
+        @NotNull BlockEntityType<T> type
+    ) {
         if (level.isClientSide) {
             return null;
         }
@@ -83,7 +85,8 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
         @NotNull BlockPos pos,
         @NotNull Block neighborBlock,
         @NotNull BlockPos neighborPos,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (level.isClientSide) {
             return;
         }
@@ -112,7 +115,8 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
         @NotNull Level level,
         @NotNull BlockPos pos,
         @NotNull BlockState newState,
-        boolean movedByPiston) {
+        boolean movedByPiston
+    ) {
         if (state.is(newState.getBlock())) return;
         if (level.getBlockEntity(pos) instanceof ChargerBlockEntity entity) {
             Vec3 vec3 = entity.getBlockPos().getCenter();
@@ -126,11 +130,7 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
     }
 
     @Override
-    public void tick(
-        @NotNull BlockState state,
-        @NotNull ServerLevel level,
-        @NotNull BlockPos pos,
-        @NotNull RandomSource random) {
+    public void tick(@NotNull BlockState state, @NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull RandomSource random) {
         if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
             level.setBlock(pos, state.cycle(POWERED), 2);
         }
@@ -160,5 +160,47 @@ public class ChargerBlock extends BaseEntityBlock implements IHammerRemovable, I
     protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         return blockEntity instanceof ChargerBlockEntity charger ? charger.getAnalogRedstoneSignal() : 0;
+    }
+
+    @Override
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hit
+    ) {
+        if (level.getBlockEntity(pos) instanceof ChargerBlockEntity charger) {
+            // 玩家空手时尝试取出物品
+            if (stack.isEmpty()) {
+                // 优先从输出槽（槽位2）取物品，如果为空则从输入槽（槽位0）取
+                for (int slot : new int[]{
+                    2,
+                    0
+                }) {
+                    ItemStack itemInSlot = charger.getFilteredItemStackHandler().getStackInSlot(slot);
+                    if (!itemInSlot.isEmpty()) {
+                        if (!level.isClientSide) {
+                            ItemStack extracted = charger.getFilteredItemStackHandler().extractItem(slot, itemInSlot.getCount(), false);
+                            player.getInventory().placeItemBackInInventory(extracted);
+                        }
+                        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                    }
+                }
+            } else if (charger.containsValidItem(stack)) {
+                ItemStack result = charger.getFilteredItemStackHandler().insertItem(0, stack, true);
+                if (result.isEmpty() || result.getCount() < stack.getCount()) {
+                    if (!level.isClientSide) {
+                        int countDiff = stack.getCount() - (result.isEmpty() ? 0 : result.getCount());
+                        ItemStack toInsert = stack.split(countDiff);
+                        charger.getFilteredItemStackHandler().insertItem(0, toInsert, false);
+                    }
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide);
+                }
+            }
+        }
+        return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
     }
 }

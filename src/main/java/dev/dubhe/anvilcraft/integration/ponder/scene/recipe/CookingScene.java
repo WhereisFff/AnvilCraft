@@ -24,11 +24,7 @@ public class CookingScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<Item> helper = registrationHelper.withKeyFunction(BuiltInRegistries.ITEM::getKey);
         helper.forComponents(Items.CAULDRON, Items.CAMPFIRE)
-            .addStoryBoard(
-                "platform/555",
-                CookingScene::crafting,
-                AnvilCraftPonderTags.PROCESSING_COMPONENTS
-            );
+            .addStoryBoard("platform/5x", CookingScene::crafting, AnvilCraftPonderTags.PROCESSING_COMPONENTS);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {

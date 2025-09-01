@@ -28,9 +28,9 @@ public class ChuteScene {
     public static void register(PonderSceneRegistrationHelper<ResourceLocation> registrationHelper) {
         PonderSceneRegistrationHelper<ItemProviderEntry<?, ?>> helper = registrationHelper.withKeyFunction(RegistryEntry::getId);
         helper.forComponents(ModBlocks.CHUTE)
-            .addStoryBoard("platform/555", ChuteScene::basicOperation)
-            .addStoryBoard("platform/555", ChuteScene::simpleChute)
-            .addStoryBoard("platform/555", ChuteScene::filtering);
+            .addStoryBoard("platform/5x", ChuteScene::basicOperation)
+            .addStoryBoard("platform/5x", ChuteScene::simpleChute)
+            .addStoryBoard("platform/5x", ChuteScene::filtering);
     }
 
     // 基本操作展示：对比漏斗和溜槽，演示物品阻塞

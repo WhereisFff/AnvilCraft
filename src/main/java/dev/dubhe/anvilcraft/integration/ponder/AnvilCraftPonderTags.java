@@ -14,6 +14,8 @@ public class AnvilCraftPonderTags {
     public static final ResourceLocation ANVIL = AnvilCraft.of("anvil");
     public static final ResourceLocation MAGNET_BLOCK = AnvilCraft.of("magnet_block");
 
+    public static final ResourceLocation GIANT_ANVIL = AnvilCraft.of("giant_anvil");
+
     public static final ResourceLocation REDSTONE_COMPONENTS = AnvilCraft.of("redstone_components");
 
     public static final ResourceLocation POWER_COMPONENTS = AnvilCraft.of("power_components");

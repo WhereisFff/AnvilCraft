@@ -36,14 +36,8 @@ public class BlockRecipeScene {
                 Items.CHIPPED_ANVIL,
                 Items.DAMAGED_ANVIL
             )
-            .addStoryBoard(
-                "platform/555",
-                BlockRecipeScene::crafting
-            )
-            .addStoryBoard(
-                "platform/555",
-                BlockRecipeScene::processing
-            );
+            .addStoryBoard("platform/5x", BlockRecipeScene::crafting)
+            .addStoryBoard("platform/5x", BlockRecipeScene::processing);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
