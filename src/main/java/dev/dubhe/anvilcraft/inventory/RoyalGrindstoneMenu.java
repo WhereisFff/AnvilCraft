@@ -169,7 +169,8 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
         }
         if (repairTool.isEmpty()
             || repairMaterialSlotItem.isEmpty()
-            || this.currentRecipe == null) {
+            || this.currentRecipe == null)
+        {
             this.usedGold = 0;
             return ItemStack.EMPTY;
         };
