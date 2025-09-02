@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.integration.patchouli.page;
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
-import dev.dubhe.anvilcraft.util.RenderHelper;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Recipe;
@@ -39,24 +39,24 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
     protected void drawRecipe(GuiGraphics graphics, T recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
         boolean has2States = this.state2 != null;
         PatchouliRenderHelper.renderAnvilWithAnimation(parent, graphics, recipeX + 58, recipeY + 13 + (has2States ? 0 : 6));
-        RenderHelper.renderBlock(
+        RenderSupport.renderBlock(
             graphics,
             this.state1.apply(recipe),
             recipeX + 58,
             recipeY + 29 + (has2States ? 0 : 6),
             10,
             12,
-            RenderHelper.SINGLE_BLOCK
+            RenderSupport.SINGLE_BLOCK
         );
         if (has2States) {
-            RenderHelper.renderBlock(
+            RenderSupport.renderBlock(
                 graphics,
                 this.state2.apply(recipe),
                 recipeX + 58,
                 recipeY + 39,
                 0,
                 12,
-                RenderHelper.SINGLE_BLOCK
+                RenderSupport.SINGLE_BLOCK
             );
         }
 

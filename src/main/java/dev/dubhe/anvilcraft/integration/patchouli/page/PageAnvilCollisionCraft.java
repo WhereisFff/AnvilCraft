@@ -13,7 +13,7 @@ import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
-import dev.dubhe.anvilcraft.util.RenderHelper;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -47,7 +47,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             renderAnvil(parent, graphics, state, recipe.consume());
         }
         for (int i = 0; i < anvils.size(); i++) {
-            RenderHelper.renderBlock(graphics, anvils.get(i), 14 * i, 26, 0, 12, RenderHelper.SINGLE_BLOCK);
+            RenderSupport.renderBlock(graphics, anvils.get(i), 14 * i, 26, 0, 12, RenderSupport.SINGLE_BLOCK);
         }
 
         // 撞击方块
@@ -61,7 +61,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
                     .trySetValue(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER)
                     .trySetValue(GiantAnvilBlock.CUBE, GiantAnvilCube.CENTER);
             }
-            RenderHelper.renderBlock(graphics, state, COLLISION_LENGTH + 5, 0, 0, scale, RenderHelper.SINGLE_BLOCK);
+            RenderSupport.renderBlock(graphics, state, COLLISION_LENGTH + 5, 0, 0, scale, RenderSupport.SINGLE_BLOCK);
         }
 
         PatchouliRenderHelper.renderArray(graphics, COLLISION_LENGTH + 16, 0);
@@ -114,11 +114,11 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
                 BlockStatePredicate inputBlock = transformBlock.inputBlock();
                 List<BlockState> states = inputBlock.constructStatesForRender();
                 BlockState state = states.get((parent.ticksInBook / COLLISION_TIME) % states.size());
-                RenderHelper.renderBlock(graphics, state, 0, 0, 0, 12, RenderHelper.SINGLE_BLOCK);
+                RenderSupport.renderBlock(graphics, state, 0, 0, 0, 12, RenderSupport.SINGLE_BLOCK);
 
                 // 转化出方块
                 BlockState outputBlockState = transformBlock.outputBlock().state();
-                RenderHelper.renderBlock(graphics, outputBlockState, 0, 30, 0, 12, RenderHelper.SINGLE_BLOCK);
+                RenderSupport.renderBlock(graphics, outputBlockState, 0, 30, 0, 12, RenderSupport.SINGLE_BLOCK);
                 pose.popPose();
 
                 // 箭头
@@ -167,13 +167,13 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             anvilXOffset = (float) (COLLISION_LENGTH * Math.pow(1 - returnTime / 10.0, 2));
         }
         if (!(consume && time > 20)) {
-            RenderHelper.renderBlock(
+            RenderSupport.renderBlock(
                 guiGraphics, anvil,
                 anvilXOffset,
                 0,
                 20,
                 12,
-                RenderHelper.SINGLE_BLOCK);
+                RenderSupport.SINGLE_BLOCK);
         }
     }
 

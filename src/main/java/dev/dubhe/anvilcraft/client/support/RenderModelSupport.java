@@ -1,6 +1,7 @@
-package dev.dubhe.anvilcraft.util;
+package dev.dubhe.anvilcraft.client.support;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.Direction;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * 工具类，用于处理模型渲染相关操作，包括获取模型的包围盒大小以及解析模型顶点数据。
  */
-public class RenderModelUtil {
+public class RenderModelSupport {
     /**
      * 根据给定的方块状态和模型，计算该模型在世界中的包围盒（AABB）。
      *
@@ -36,14 +37,14 @@ public class RenderModelUtil {
         // 遍历所有方向的面，收集模型的顶点信息
         for (Direction side : Direction.values()) {
             for (BakedQuad quad : model.getQuads(state, side, rand)) {
-                vec3f.addAll(RenderModelUtil.getVertices(quad));
+                vec3f.addAll(RenderModelSupport.getVertices(quad));
             }
         }
         // 处理无方向的面
         for (BakedQuad quad : model.getQuads(state, null, rand)) {
-            vec3f.addAll(RenderModelUtil.getVertices(quad));
+            vec3f.addAll(RenderModelSupport.getVertices(quad));
         }
-        return RenderModelUtil.getSize(vec3f);
+        return RenderModelSupport.getSize(vec3f);
     }
 
     /**
@@ -61,14 +62,14 @@ public class RenderModelUtil {
         // 遍历所有方向的面，收集模型的顶点信息
         for (Direction side : Direction.values()) {
             for (BakedQuad quad : model.getQuads(null, side, rand)) {
-                vec3f.addAll(RenderModelUtil.getVertices(quad));
+                vec3f.addAll(RenderModelSupport.getVertices(quad));
             }
         }
         // 处理无方向的面
         for (BakedQuad quad : model.getQuads(null, null, rand)) {
-            vec3f.addAll(RenderModelUtil.getVertices(quad));
+            vec3f.addAll(RenderModelSupport.getVertices(quad));
         }
-        return RenderModelUtil.getSize(vec3f);
+        return RenderModelSupport.getSize(vec3f);
     }
 
     /**

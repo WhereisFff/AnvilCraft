@@ -8,7 +8,7 @@ import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
-import dev.dubhe.anvilcraft.util.RenderHelper;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.RecipeType;
@@ -49,22 +49,22 @@ public class ItemCrushCategory extends AbstractProgressCategory<ItemCrushRecipe>
         double mouseY) {
         ItemCrushRecipe recipe = recipeHolder.value();
         float anvilYOffset = JeiRenderHelper.getAnvilAnimationOffset(timer);
-        RenderHelper.renderBlock(
+        RenderSupport.renderBlock(
             guiGraphics,
             Blocks.ANVIL.defaultBlockState(),
             81,
             22 + anvilYOffset,
             20,
             12,
-            RenderHelper.SINGLE_BLOCK);
-        RenderHelper.renderBlock(
+            RenderSupport.SINGLE_BLOCK);
+        RenderSupport.renderBlock(
             guiGraphics,
             ModBlocks.CRUSHING_TABLE.getDefaultState(),
             81,
             40,
             10,
             12,
-            RenderHelper.SINGLE_BLOCK);
+            RenderSupport.SINGLE_BLOCK);
 
         arrowIn.draw(guiGraphics, 54, 30);
         arrowOutputFromBelow.draw(guiGraphics, 92, 29);

@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.SuperHeatingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
-import dev.dubhe.anvilcraft.util.RenderHelper;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.CauldronBlock;
@@ -33,11 +33,11 @@ public class PageSuperHeating extends PageAnvilItemProcess<SuperHeatingRecipe> {
         List<ChanceBlockState> blockResults = recipe.getResultBlocks();
         if (!recipe.getResultItems().isEmpty() || blockResults.isEmpty()) return;
         BlockState state = blockResults.get((parent.ticksInBook / 20) % blockResults.size()).state();
-        RenderHelper.renderBlock(
+        RenderSupport.renderBlock(
             graphics,
             state.getBlock() instanceof CauldronBlock ? CauldronUtil.fullState(state.getBlock()) : state,
             recipeX + 85, recipeY + 29, 10,
             12,
-            RenderHelper.SINGLE_BLOCK);
+            RenderSupport.SINGLE_BLOCK);
     }
 }
