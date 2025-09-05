@@ -20,24 +20,27 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 复制指定输入物品的数据。
+ * 复制并合并指定输入物品的数据。
  *
  * @param types 包含指定的输入物品和将要复制的数据组件类型的自定义数据组件。
  */
-public record CopyData(List<ICustomDataComponent<?>> types) implements IResultModifier {
-    public static final MapCodec<CopyData> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
-        ICustomDataComponent.CODEC.listOf().fieldOf("types").forGetter(CopyData::types)
-    ).apply(ins, CopyData::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, CopyData> STREAM_CODEC = StreamCodec.composite(
-        ICustomDataComponent.STREAM_CODEC.apply(ByteBufCodecs.list()), CopyData::types,
-        CopyData::new
+public record MergeData(List<ICustomDataComponent<?>> types) implements IResultModifier {
+    public static final MapCodec<MergeData> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
+        ICustomDataComponent.CODEC.listOf()
+            .fieldOf("types")
+            .forGetter(MergeData::types)
+    ).apply(ins, MergeData::new));
+    public static final StreamCodec<RegistryFriendlyByteBuf, MergeData> STREAM_CODEC = StreamCodec.composite(
+        ICustomDataComponent.STREAM_CODEC.apply(ByteBufCodecs.list()),
+        MergeData::types,
+        MergeData::new
     );
 
     public static Builder builder() {
         return new Builder();
     }
 
-    public static Builder copyData(ICustomDataComponent<?>... types) {
+    public static Builder mergeData(ICustomDataComponent<?>... types) {
         return new Builder().withTypes(types);
     }
 
@@ -45,13 +48,13 @@ public record CopyData(List<ICustomDataComponent<?>> types) implements IResultMo
     public void modify(ResultContext ctx) {
         Int2ObjectMap<ItemStack> cache = new Int2ObjectOpenHashMap<>();
         for (ICustomDataComponent<?> type : this.types) {
-            CopyData.wrapModify(ctx, type, cache);
+            MergeData.wrapModify(ctx, type, cache);
         }
     }
 
     @Override
     public Type type() {
-        return ModResultModifierTypes.COPY_DATA.get();
+        return ModResultModifierTypes.MERGE_DATA.get();
     }
 
     private static <T> void wrapModify(
@@ -66,17 +69,24 @@ public record CopyData(List<ICustomDataComponent<?>> types) implements IResultMo
                 "The value of type %s cannot be null in the No.%d input.".formatted(entry.getSecond(), entry.getFirst()));
             data.add(value);
         }
-        type.applyToStack(ctx.getResult(), type.make(data));
+        T newData = type.make(data);
+        T oldData = ctx.getResult().get(type.getDataComponentType());
+        if (oldData != null && newData != null) {
+            newData = type.merge(oldData, newData);
+        } else if (newData == null) {
+            newData = oldData;
+        }
+        type.applyToStack(ctx.getResult(), newData);
     }
 
-    public static class Type implements IResultModifier.Type<CopyData> {
+    public static class Type implements IResultModifier.Type<MergeData> {
         @Override
-        public MapCodec<CopyData> codec() {
+        public MapCodec<MergeData> codec() {
             return CODEC;
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, CopyData> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, MergeData> streamCodec() {
             return STREAM_CODEC;
         }
     }
@@ -105,8 +115,8 @@ public record CopyData(List<ICustomDataComponent<?>> types) implements IResultMo
             return this.withTypes(Arrays.asList(types));
         }
 
-        public CopyData build() {
-            return new CopyData(this.types.build());
+        public MergeData build() {
+            return new MergeData(this.types.build());
         }
     }
 }
