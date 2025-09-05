@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.anvil;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
@@ -32,7 +31,6 @@ public class BeaconConversionBehavior implements IAnvilBehavior {
     public boolean handle(Level level, BlockPos hitBlockPos, BlockState hitBlockState, float fallDistance, AnvilEvent.OnLand event) {
         BlockPos above = hitBlockPos.above();
         int beaconLevel = getBeaconLevel(level, hitBlockPos);
-        AnvilCraft.LOGGER.debug("beacon level: {}", beaconLevel);
         List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class, new AABB(above));
         BlockEntity blockEntity = level.getBlockEntity(hitBlockPos);
         if (!(blockEntity instanceof BeaconBlockEntity beaconBlockEntity)) {
