@@ -3507,7 +3507,12 @@ public class ModBlocks {
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
         .build()
-        .tag(Tags.Blocks.STORAGE_BLOCKS, ModBlockTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
+        .tag(
+            Tags.Blocks.STORAGE_BLOCKS,
+            ModBlockTags.STORAGE_BLOCKS_MULTIPHASE_MATTER,
+            BlockTags.NEEDS_DIAMOND_TOOL,
+            BlockTags.MINEABLE_WITH_PICKAXE
+        )
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
                 .pattern("AAA")
