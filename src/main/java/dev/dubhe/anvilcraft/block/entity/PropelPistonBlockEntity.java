@@ -12,6 +12,9 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
@@ -31,8 +34,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
     @Getter
     private int storedEnergy = 0;
 
-    private static int cooldown = 0;
-
     public PropelPistonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
@@ -45,21 +46,34 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
         PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()), new UpdatePropelPistonStoredEnergyPacket(getBlockPos(), storedEnergy));
     }
 
+    public void addEnergy(int energy) {
+        updateStoredEnergy(getStoredEnergy() + energy);
+    }
+
     public void tick(Level level, BlockPos pos, BlockState state) {
-        cooldown--;
         if (this.powerGrid != null && this.powerGrid.isWorking()) {
             if (this.storedEnergy < 80000) {
-                updateStoredEnergy(this.storedEnergy + 12);
+                addEnergy(12);
             }
         }
-        if (cooldown > 0) {
-            return;
-        }
-        if (this.storedEnergy > 0) {
-            check(level, pos, state);
-            cooldown = 4;
-        } else {
+        if (getStoredEnergy() <= 0) {
             level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, true));
+        } else {
+            level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, false));
+        }
+        if (!level.getBlockTicks().hasScheduledTick(pos, state.getBlock())) {
+            checkCanMove(level, pos, state);
+        }
+    }
+
+    private void checkCanMove(Level level, BlockPos pos, BlockState state) {
+        Direction direction = state.getValue(PropelPiston.FACING);
+        if (state.getValue(PropelPiston.MOVING)) {
+            if (new PistonStructureResolver(level, pos, direction, true).resolve()) {
+                level.blockEvent(pos, state.getBlock(), 0, state.getValue(PropelPiston.FACING).get3DDataValue());
+            } else {
+                level.setBlockAndUpdate(pos, state.setValue(PropelPiston.MOVING, false));
+            }
         }
     }
 
@@ -76,10 +90,19 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
     }
 
     @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        CompoundTag compound = new CompoundTag();
+        compound.putLong("storedEnergy", this.storedEnergy);
+        return compound;
+    }
+
+    @Override
+    public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
     public int getInputPower() {
-        if (this.storedEnergy >= 80000) {
-            return 0;
-        }
         return 256;
     }
 
@@ -117,17 +140,5 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
     @Override
     protected void collectImplicitComponents(DataComponentMap.Builder components) {
         components.set(ModComponents.STORED_ENERGY, this.storedEnergy);
-    }
-
-    private void check(Level level, BlockPos pos, BlockState state) {
-        Direction direction = state.getValue(PropelPiston.FACING);
-        boolean flag = state.getValue(PropelPiston.EXHAUSTED);
-        if (!flag) {
-            if (new PistonStructureResolver(level, pos, direction, true).resolve()) {
-                level.blockEvent(pos, getBlockState().getBlock(), 0, direction.get3DDataValue());
-            } else {
-                level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, true));
-            }
-        }
     }
 }

@@ -48,6 +48,7 @@ import java.util.Map;
 
 public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlock, IHammerRemovable, IHammerChangeable {
     public static final BooleanProperty EXHAUSTED = BooleanProperty.create("exhausted");
+    public static final BooleanProperty MOVING = BooleanProperty.create("moving");
 
     @Override
     protected MapCodec<? extends DirectionalBlock> codec() {
@@ -56,32 +57,43 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
 
     public PropelPiston(Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(EXHAUSTED, true).setValue(FACING, Direction.NORTH));
+        this.registerDefaultState(this.stateDefinition.any()
+            .setValue(EXHAUSTED, true)
+            .setValue(FACING, Direction.NORTH)
+            .setValue(MOVING, false));
+    }
+
+    @Override
+    public @Nullable PushReaction getPistonPushReaction(BlockState state) {
+        if (state.getValue(MOVING)) {
+            return PushReaction.BLOCK;
+        }
+        return PushReaction.NORMAL;
+    }
+
+    @Override
+    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
+        Direction clickedFace = context.getNearestLookingDirection().getOpposite();
+        Player player = context.getPlayer();
+        if (player != null && player.isShiftKeyDown()) {
+            return this.defaultBlockState().setValue(FACING, clickedFace.getOpposite());
+        }
+        return this.defaultBlockState().setValue(FACING, clickedFace);
     }
 
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
-        if (level.getBlockEntity(pos) instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
-            if (state.hasProperty(EXHAUSTED) && state.getValue(EXHAUSTED)) {
-                if (propelPistonBlockEntity.getStoredEnergy() > 5) {
-                    level.setBlockAndUpdate(pos, state.setValue(EXHAUSTED, false));
-                }
-            } else {
-                level.setBlockAndUpdate(pos, state.setValue(EXHAUSTED, true));
-                propelPistonBlockEntity.updateStoredEnergy(propelPistonBlockEntity.getStoredEnergy());
-            }
-        }
+        level.setBlockAndUpdate(pos, state.cycle(MOVING));
         return InteractionResult.SUCCESS;
     }
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
-        BlockEntity blockEntity = level.getBlockEntity(pos);
-        if (blockEntity instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
+        if (level.getBlockEntity(pos) instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
             int storedEnergy = propelPistonBlockEntity.getStoredEnergy();
             if (stack.is(ModItems.CAPACITOR)) {
                 if (storedEnergy < 76000) {
-                    propelPistonBlockEntity.updateStoredEnergy(storedEnergy + 4000);
+                    propelPistonBlockEntity.addEnergy(4000);
                     stack.consume(1, player);
                     player.addItem(ModItems.CAPACITOR_EMPTY.asStack());
                     return ItemInteractionResult.SUCCESS;
@@ -94,58 +106,23 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
                     return ItemInteractionResult.SUCCESS;
                 }
             }
-            if (state.hasProperty(EXHAUSTED) && state.getValue(EXHAUSTED)) {
-                if (propelPistonBlockEntity.getStoredEnergy() > 5) {
-                    level.setBlockAndUpdate(pos, state.setValue(EXHAUSTED, false));
-                }
-            } else {
-                level.setBlockAndUpdate(pos, state.setValue(EXHAUSTED, true));
-            }
-            propelPistonBlockEntity.updateStoredEnergy(propelPistonBlockEntity.getStoredEnergy());
         }
-        return ItemInteractionResult.SUCCESS;
-    }
-
-    @Override
-    public @Nullable PushReaction getPistonPushReaction(BlockState state) {
-        if (state.hasProperty(EXHAUSTED) && !state.getValue(EXHAUSTED)) {
-            return PushReaction.BLOCK;
-        }
-        return PushReaction.NORMAL;
+        level.setBlockAndUpdate(pos, state.cycle(MOVING));
+        return super.useItemOn(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override
     protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
-        if (level.getBlockEntity(pos) instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
-            if (state.hasProperty(EXHAUSTED) && state.getValue(EXHAUSTED)) {
-                if (level.hasNeighborSignal(pos)) {
-                    if (propelPistonBlockEntity.getStoredEnergy() > 5) {
-                        level.setBlockAndUpdate(pos, state.setValue(EXHAUSTED, false));
-                    }
-                }
+        if (level.hasNeighborSignal(pos)) {
+            if (!state.getValue(MOVING)) {
+                level.setBlockAndUpdate(pos, state.setValue(MOVING, true));
             }
         }
-    }
-
-    @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
-        Direction clickedFace = context.getNearestLookingDirection().getOpposite();
-        Player player = context.getPlayer();
-        if (player != null && player.isShiftKeyDown()) {
-            if (context.getLevel().hasNeighborSignal(context.getClickedPos())) {
-                return this.defaultBlockState().setValue(FACING, clickedFace.getOpposite()).setValue(EXHAUSTED, false);
-            }
-            return this.defaultBlockState().setValue(FACING, clickedFace.getOpposite());
-        }
-        if (context.getLevel().hasNeighborSignal(context.getClickedPos())) {
-            return this.defaultBlockState().setValue(FACING, clickedFace).setValue(EXHAUSTED, false);
-        }
-        return this.defaultBlockState().setValue(FACING, clickedFace);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(EXHAUSTED, FACING);
+        builder.add(EXHAUSTED, FACING, MOVING);
     }
 
     @Override
@@ -207,21 +184,19 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
     @Override
     protected boolean triggerEvent(BlockState state, Level level, BlockPos pos, int id, int param) {
         Direction direction = state.getValue(PropelPiston.FACING);
-        if (!level.isClientSide) {
-            boolean flag = state.getValue(EXHAUSTED);
-            if (flag) {
+        if (id == 0) {
+            if (net.neoforged.neoforge.event.EventHooks.onPistonMovePre(level, pos, direction, true)) {
+                level.setBlockAndUpdate(pos, state.setValue(MOVING, false));
                 return false;
             }
-        }
-
-        if (id == 0) {
-            if (net.neoforged.neoforge.event.EventHooks.onPistonMovePre(level, pos, direction, true)) return false;
             if (!this.moveBlocks(level, pos, direction)) {
+                level.setBlockAndUpdate(pos, state.setValue(MOVING, false));
                 return false;
             }
             level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
         }
         net.neoforged.neoforge.event.EventHooks.onPistonMovePost(level, pos, direction, (id == 0));
+        level.scheduleTick(pos, this, 4);
         return true;
     }
 
@@ -245,7 +220,15 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
             Map<BlockPos, BlockState> map = Maps.newHashMap();
             List<BlockPos> list = pistonstructureresolver.getToPush();
             List<BlockState> list1 = Lists.newArrayList();
-            list.add(pos);
+            list.addFirst(pos);
+
+            if (level.getBlockEntity(pos) instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
+                if (propelPistonBlockEntity.getStoredEnergy() < list.size() * 5) {
+                    return false;
+                } else {
+                    propelPistonBlockEntity.addEnergy(-(list.size() * 5));
+                }
+            }
 
             for (BlockPos blockPos1 : list) {
                 BlockState blockState = level.getBlockState(blockPos1);
@@ -279,10 +262,6 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
                 CompoundTag nbt = new CompoundTag();
                 if (list1.get(k).getBlock() instanceof IMoveableEntityBlock block) {
                     nbt = block.clearData(level, blockPos3.relative(facing.getOpposite()));
-                }
-                if (level.getBlockEntity(blockPos3.relative(facing.getOpposite())) instanceof PropelPistonBlockEntity) {
-                    int data = nbt.getInt("storedEnergyData");
-                    nbt.putInt("storedEnergyData", data - 5 * (list.size() - 1));
                 }
                 level.setBlock(blockPos3, blockState8, 68);
                 BlockEntity blockEntity = MovingPistonBlock.newMovingBlockEntity(blockPos3, blockState8, list1.get(k), facing, true, false);

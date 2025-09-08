@@ -27,7 +27,7 @@ public class PropelPistonTooltipProvider extends PowerComponentTooltipProvider {
         BlockPos pos = blockEntity.getBlockPos();
         if (level != null) {
             BlockState state = level.getBlockState(pos);
-            if (state.hasProperty(PropelPiston.EXHAUSTED) && !state.getValue(PropelPiston.EXHAUSTED)) {
+            if (state.getValue(PropelPiston.MOVING)) {
                 return List.of();
             }
         }
@@ -38,9 +38,9 @@ public class PropelPistonTooltipProvider extends PowerComponentTooltipProvider {
         }
         List<Component> tooltips = new ArrayList<>(super.tooltip(blockEntity));
         if (blockEntity instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
-            tooltips.add(Component.literal("推进活塞状态：").withStyle(ChatFormatting.BLUE));
-            tooltips.add(Component.literal("  储存的能量：")
-                .append(UnitUtil.energyUnit(propelPistonBlockEntity.getStoredEnergy(), original))
+            tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.state").withStyle(ChatFormatting.BLUE));
+            tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.stored_energy",
+                    UnitUtil.energyUnit(propelPistonBlockEntity.getStoredEnergy(), original))
                 .withStyle(ChatFormatting.GRAY));
         }
         return tooltips;
