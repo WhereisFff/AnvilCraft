@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.block.PropelPiston;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -23,12 +22,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-@Slf4j
 public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsumer {
     private PowerGrid powerGrid = null;
 
     /**
-     * 储存的能量 单位：MJ
+     * 储存的能量 单位：kJ
      */
     @Getter
     private int storedEnergy = 0;
@@ -47,7 +45,7 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
         PacketDistributor.sendToPlayersTrackingChunk(serverLevel, new ChunkPos(getBlockPos()), new UpdatePropelPistonStoredEnergyPacket(getBlockPos(), storedEnergy));
     }
 
-    public void tick(Level level, BlockPos pos, BlockState state, PropelPistonBlockEntity blockEntity) {
+    public void tick(Level level, BlockPos pos, BlockState state) {
         cooldown--;
         if (this.powerGrid != null && this.powerGrid.isWorking()) {
             if (this.storedEnergy < 80000) {
