@@ -14,6 +14,8 @@ import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
@@ -217,6 +219,7 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
             if (!this.moveBlocks(level, pos, direction)) {
                 return false;
             }
+            level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
         }
         net.neoforged.neoforge.event.EventHooks.onPistonMovePost(level, pos, direction, (id == 0));
         return true;

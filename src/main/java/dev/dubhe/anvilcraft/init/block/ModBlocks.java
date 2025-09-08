@@ -1586,7 +1586,9 @@ public class ModBlocks {
         .block("propel_piston", PropelPiston::new)
         .properties((properties) -> {
             return properties.mapColor(MapColor.TERRACOTTA_WHITE)
-                .strength(1.5f);
+                .requiresCorrectToolForDrops()
+                .strength(1.5f)
+                .noOcclusion();
         })
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(DataGenUtil::noExtraModelOrState)
