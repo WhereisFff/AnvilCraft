@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.block.PropelPiston;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -26,7 +27,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsumer {
-    private PowerGrid powerGrid = null;
+    @Getter
+    @Setter
+    private PowerGrid grid;
 
     /**
      * 储存的能量 单位：kJ
@@ -39,7 +42,7 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
     }
 
     public void updateStoredEnergy(Integer energy) {
-        this.storedEnergy = Math.min(energy, 80000);
+        this.storedEnergy = Math.clamp(energy, 0, 80000);
         if (level == null || !(level instanceof ServerLevel serverLevel)) {
             return;
         }
@@ -51,18 +54,18 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (this.powerGrid != null && this.powerGrid.isWorking()) {
-            if (this.storedEnergy < 80000) {
+        if (this.grid != null && this.grid.isWorking()) {
+            if (this.getInputPower() >= 256 && this.storedEnergy < 80000) {
                 addEnergy(12);
             }
         }
-        if (getStoredEnergy() <= 0) {
-            level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, true));
-        } else {
+        if (getStoredEnergy() > 0) {
             level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, false));
-        }
-        if (!level.getBlockTicks().hasScheduledTick(pos, state.getBlock())) {
-            checkCanMove(level, pos, state);
+            if (!level.getBlockTicks().hasScheduledTick(pos, state.getBlock())) {
+                checkCanMove(level, pos, state);
+            }
+        } else {
+            level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, true).setValue(PropelPiston.MOVING, false));
         }
     }
 
@@ -114,16 +117,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
     @Override
     public BlockPos getPos() {
         return this.getBlockPos();
-    }
-
-    @Override
-    public void setGrid(@Nullable PowerGrid grid) {
-        this.powerGrid = grid;
-    }
-
-    @Override
-    public @Nullable PowerGrid getGrid() {
-        return this.powerGrid;
     }
 
     @Override
