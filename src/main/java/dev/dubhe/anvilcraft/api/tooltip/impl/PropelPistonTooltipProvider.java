@@ -44,7 +44,7 @@ public class PropelPistonTooltipProvider extends PowerComponentTooltipProvider {
             tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.remaining_energy",
                     UnitUtil.energyUnit(storedEnergy, original))
                 .withStyle(ChatFormatting.GRAY));
-            tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.remaining_number_of_push", count)
+            tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.remaining_push", count)
                 .withStyle(ChatFormatting.GRAY));
         }
         return tooltips;

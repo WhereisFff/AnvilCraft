@@ -1206,7 +1206,7 @@
   "tooltip.anvilcraft.jade.ruby_prism.power": "Laser level: %d",
   "tooltip.anvilcraft.press_key": "Hold [%s] for information",
   "tooltip.anvilcraft.propel_piston.remaining_energy": "  Remaining Energy: %s",
-  "tooltip.anvilcraft.propel_piston.remaining_number_of_push": "  Remaining Number of Push: %s block-time",
+  "tooltip.anvilcraft.propel_piston.remaining_push": "  Remaining Push: %s block-time",
   "tooltip.anvilcraft.propel_piston.state": "Propel Piston State: ",
   "tooltip.anvilcraft.property.eternal": "Eternal: unbreakable, immune fire, explode, cactus, even the time and the void",
   "tooltip.anvilcraft.property.fire_reforging": "Reforging: mending in fire or lava",
