@@ -94,6 +94,7 @@
     },
     {
       "type": "patchouli:smithing",
+      "anchor": "ember_anvil",
       "recipe": "anvilcraft:smithing/ember_anvil",
       "text": "This anvil is similar to $(item)Royal Steel Anvil$(), but it can make you combine some conflict enchantments to items forcefully."
     },

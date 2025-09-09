@@ -94,6 +94,7 @@
     },
     {
       "type": "patchouli:smithing",
+      "anchor": "ember_anvil",
       "recipe": "anvilcraft:smithing/ember_anvil",
       "text": "这个铁砧的功能与$(item)皇家铁砧$()几乎一致，但是它可以让你在生存模式下给物品强行添加一些不兼容的附魔。"
     },
