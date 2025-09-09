@@ -105,11 +105,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
     }
 
     @Override
-    public int getInputPower() {
-        return 256;
-    }
-
-    @Override
     public @Nullable Level getCurrentLevel() {
         return this.getLevel();
     }
