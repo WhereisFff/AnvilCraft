@@ -1617,7 +1617,7 @@ public class ModBlocks {
                 .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR_EMPTY))
                 .unlockedBy("has_item", AnvilCraftDatagen.has(Items.IRON_INGOT))
                 .unlockedBy("has_item", AnvilCraftDatagen.has(Items.PISTON))
-                .save(provider, "empty_propel_piston");
+                .save(provider, "empty_propel_piston_0");
             ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, mj4)
                 .pattern("CDC")
                 .pattern("AEA")
@@ -1661,6 +1661,10 @@ public class ModBlocks {
                 .unlockedBy("has_item", AnvilCraftDatagen.has(Items.IRON_INGOT))
                 .unlockedBy("has_item", AnvilCraftDatagen.has(Items.PISTON))
                 .save(provider, "8mj_propel_piston");
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, ctx.get())
+                .requires(ctx.get())
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ctx.get()))
+                .save(provider, "empty_propel_piston_1");
         })
         .simpleItem()
         .register();

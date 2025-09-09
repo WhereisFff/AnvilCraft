@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "redstone",
+  "ingredients": [
+    {
+      "item": "anvilcraft:propel_piston"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:propel_piston"
+  }
+}

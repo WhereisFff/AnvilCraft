@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
+import dev.dubhe.anvilcraft.api.power.ILoadAwareConsumer;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.block.PropelPiston;
@@ -26,7 +26,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsumer {
+public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareConsumer {
     @Getter
     @Setter
     private PowerGrid grid;
@@ -55,7 +55,7 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (this.grid != null && this.grid.isWorking()) {
-            if (this.getInputPower() >= 256 && this.storedEnergy < 80000) {
+            if (this.getActive().get() && this.storedEnergy < 80000) {
                 addEnergy(12);
             }
         }
@@ -78,6 +78,11 @@ public class PropelPistonBlockEntity extends BlockEntity implements IPowerConsum
                 level.setBlockAndUpdate(pos, state.setValue(PropelPiston.MOVING, false));
             }
         }
+    }
+
+    @Override
+    public int getInputPower() {
+        return 256;
     }
 
     @Override

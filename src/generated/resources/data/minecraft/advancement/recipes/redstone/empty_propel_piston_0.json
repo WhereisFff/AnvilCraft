@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:empty_propel_piston"
+        "recipe": "minecraft:empty_propel_piston_0"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:empty_propel_piston"
+      "minecraft:empty_propel_piston_0"
     ]
   }
 }
