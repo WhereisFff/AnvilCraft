@@ -38,9 +38,13 @@ public class PropelPistonTooltipProvider extends PowerComponentTooltipProvider {
         }
         List<Component> tooltips = new ArrayList<>(super.tooltip(blockEntity));
         if (blockEntity instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
+            int storedEnergy = propelPistonBlockEntity.getStoredEnergy();
+            String count = String.format("%.0f", Math.ceil(storedEnergy / 5f));
             tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.state").withStyle(ChatFormatting.BLUE));
-            tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.stored_energy",
-                    UnitUtil.energyUnit(propelPistonBlockEntity.getStoredEnergy(), original))
+            tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.remaining_energy",
+                    UnitUtil.energyUnit(storedEnergy, original))
+                .withStyle(ChatFormatting.GRAY));
+            tooltips.add(Component.translatable("tooltip.anvilcraft.propel_piston.remaining_number_of_push", count)
                 .withStyle(ChatFormatting.GRAY));
         }
         return tooltips;
