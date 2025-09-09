@@ -196,7 +196,7 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
             level.playSound(null, pos, SoundEvents.PISTON_EXTEND, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.25F + 0.6F);
         }
         net.neoforged.neoforge.event.EventHooks.onPistonMovePost(level, pos, direction, (id == 0));
-        level.scheduleTick(pos.relative(direction), this, 4);
+        level.scheduleTick(pos.relative(direction), this, 6);
         return true;
     }
 
