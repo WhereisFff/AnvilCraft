@@ -28,6 +28,7 @@ import dev.dubhe.anvilcraft.block.entity.MobAmberBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.OverseerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PlasmaJetsBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PowerConverterBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.PropelPistonBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.RemoteTransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ResentfulAmberBlockEntity;
@@ -273,6 +274,11 @@ public class ModBlockEntities {
         "activator_sliding_rail",
         ActivatorSlidingRailBlockEntity::new
     ).validBlocks(ModBlocks.ACTIVATOR_SLIDING_RAIL).register();
+
+    public static final BlockEntityEntry<PropelPistonBlockEntity> PROPEL_PISTON = REGISTRATE
+        .blockEntity("propel_piston", PropelPistonBlockEntity::new)
+        .validBlock(ModBlocks.PROPEL_PISTON)
+        .register();
 
     public static void register() {
     }
