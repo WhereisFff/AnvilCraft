@@ -55,8 +55,8 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
 
     public void tick(Level level, BlockPos pos, BlockState state) {
         if (this.grid != null && this.grid.isWorking()) {
-            if (this.getActive().get() && this.storedEnergy < 80000) {
-                addEnergy(12);
+            if (!state.getValue(PropelPiston.MOVING) && this.getActive().get() && this.storedEnergy < 80000) {
+                addEnergy(3);
             }
         }
         if (getStoredEnergy() > 0) {
@@ -82,7 +82,7 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
 
     @Override
     public int getInputPower() {
-        return 256;
+        return 64;
     }
 
     @Override
