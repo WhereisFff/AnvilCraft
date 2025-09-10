@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.api.tooltip.impl;
 
+import dev.dubhe.anvilcraft.api.tooltip.providers.ITooltipProvider;
 import dev.dubhe.anvilcraft.block.PropelPiston;
 import dev.dubhe.anvilcraft.block.entity.PropelPistonBlockEntity;
 import dev.dubhe.anvilcraft.util.UnitUtil;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PropelPistonTooltipProvider extends PowerComponentTooltipProvider {
+public class PropelPistonTooltipProvider extends ITooltipProvider.BlockEntityTooltipProvider {
     @Override
     public boolean accepts(BlockEntity blockEntity) {
         return blockEntity instanceof PropelPistonBlockEntity;
@@ -36,7 +37,7 @@ public class PropelPistonTooltipProvider extends PowerComponentTooltipProvider {
         if (player != null && player.isShiftKeyDown()) {
             original = true;
         }
-        List<Component> tooltips = new ArrayList<>(super.tooltip(blockEntity));
+        List<Component> tooltips = new ArrayList<>();
         if (blockEntity instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
             int storedEnergy = propelPistonBlockEntity.getStoredEnergy();
             String count = String.format("%.0f", Math.ceil(storedEnergy / 5f));
@@ -52,6 +53,6 @@ public class PropelPistonTooltipProvider extends PowerComponentTooltipProvider {
 
     @Override
     public int priority() {
-        return -1;
+        return 0;
     }
 }
