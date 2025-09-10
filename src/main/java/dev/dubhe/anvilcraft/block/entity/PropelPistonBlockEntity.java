@@ -1,13 +1,9 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import dev.dubhe.anvilcraft.api.power.ILoadAwareConsumer;
-import dev.dubhe.anvilcraft.api.power.PowerComponentType;
-import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.block.PropelPiston;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -26,11 +22,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareConsumer {
-    @Getter
-    @Setter
-    private PowerGrid grid;
-
+public class PropelPistonBlockEntity extends BlockEntity {
     /**
      * 储存的能量 单位：kJ
      */
@@ -54,11 +46,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
     }
 
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (this.grid != null && this.grid.isWorking()) {
-            if (!state.getValue(PropelPiston.MOVING) && this.getActive().get() && this.storedEnergy < 80000) {
-                addEnergy(3);
-            }
-        }
         if (getStoredEnergy() > 0) {
             level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, false));
             if (!level.getBlockTicks().hasScheduledTick(pos, state.getBlock())) {
@@ -78,11 +65,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
                 level.setBlockAndUpdate(pos, state.setValue(PropelPiston.MOVING, false));
             }
         }
-    }
-
-    @Override
-    public int getInputPower() {
-        return 64;
     }
 
     @Override
@@ -107,21 +89,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public @Nullable Level getCurrentLevel() {
-        return this.getLevel();
-    }
-
-    @Override
-    public BlockPos getPos() {
-        return this.getBlockPos();
-    }
-
-    @Override
-    public PowerComponentType getComponentType() {
-        return PowerComponentType.CONSUMER;
     }
 
     @Override

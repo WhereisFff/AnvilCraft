@@ -161,6 +161,9 @@ public class PowerGrid {
         int oldConsume = this.consume;
         this.generate = 0;
         this.consume = 0;
+        for (IPowerComponent component : components) {
+            AnvilCraft.LOGGER.debug("component: {}", component);
+        }
         for (IPowerTransmitter transmitter : transmitters) {
             if (checkRemove(transmitter)) {
                 return true;
@@ -176,16 +179,7 @@ public class PowerGrid {
             if (checkRemove(consumer)) {
                 return true;
             }
-            if (consumer instanceof ILoadAwareConsumer loadAwareConsumer) {
-                if (this.generate - this.consume >= consumer.getInputPower()) {
-                    loadAwareConsumer.getActive().set(true);
-                    this.consume += consumer.getInputPower();
-                } else {
-                    loadAwareConsumer.getActive().set(false);
-                }
-            } else {
-                this.consume += consumer.getInputPower();
-            }
+            this.consume += consumer.getInputPower();
         }
 
         for (DynamicPowerComponent dynamicComponent : new ArrayList<>(this.dynamicComponents)) {
