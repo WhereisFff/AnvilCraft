@@ -15,18 +15,15 @@
       "item": "minecraft:piston"
     },
     "E": {
-      "item": "anvilcraft:capacitor"
+      "item": "anvilcraft:ruby"
     }
   },
   "pattern": [
     "CDC",
-    "AEA",
-    "ABA"
+    "ABA",
+    "AEA"
   ],
   "result": {
-    "components": {
-      "anvilcraft:stored_energy": 4000
-    },
     "count": 1,
     "id": "anvilcraft:propel_piston"
   }

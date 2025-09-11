@@ -15,22 +15,32 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-public class PropelPistonBlockEntity extends BlockEntity {
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+public class PropelPistonBlockEntity extends BaseLaserBlockEntity {
     /**
      * 储存的能量 单位：kJ
      */
     @Getter
     private int storedEnergy = 0;
+    private int delay = 0;
+    private int power = 0;
 
     public PropelPistonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    public Direction getFacing() {
+        return getBlockState().getValue(PropelPiston.FACING);
     }
 
     public void updateStoredEnergy(Integer energy) {
@@ -45,7 +55,26 @@ public class PropelPistonBlockEntity extends BlockEntity {
         updateStoredEnergy(getStoredEnergy() + energy);
     }
 
+    @Override
+    protected int getBaseLaserLevel() {
+        return 0;
+    }
+
     public void tick(Level level, BlockPos pos, BlockState state) {
+        updateLaserLevel(calculateLaserLevel());
+        if (changed) {
+            delay = 0;
+            power = laserLevel * 15;
+        }
+        if (!changed) {
+            if (storedEnergy < 80000) {
+                delay++;
+                if (delay >= 20) {
+                    delay = 0;
+                    addEnergy(power);
+                }
+            }
+        }
         if (getStoredEnergy() > 0) {
             level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, false));
             if (!level.getBlockTicks().hasScheduledTick(pos, state.getBlock())) {
@@ -54,6 +83,15 @@ public class PropelPistonBlockEntity extends BlockEntity {
         } else {
             level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, true).setValue(PropelPiston.MOVING, false));
         }
+        super.tick(level);
+        resetState();
+    }
+
+    @Override
+    public Set<Direction> getIgnoreFace() {
+        Set<Direction> directions = new HashSet<>(List.of(Direction.values()));
+        directions.remove(getBlockState().getValue(PropelPiston.FACING).getOpposite());
+        return directions;
     }
 
     private void checkCanMove(Level level, BlockPos pos, BlockState state) {
