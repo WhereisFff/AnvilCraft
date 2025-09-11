@@ -59,7 +59,7 @@ public class LaserReceiverBlockEntity extends BaseLaserBlockEntity implements IP
         super.tick(level);
         resetState();
     }
-
+    
     @Override
     protected int getBaseLaserLevel() {
         return 0;

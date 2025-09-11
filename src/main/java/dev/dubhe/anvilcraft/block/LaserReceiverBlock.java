@@ -124,7 +124,7 @@ public class LaserReceiverBlock extends BaseLaserBlock {
 
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction direction) {
-        if (direction == state.getValue(FACING)) {
+        if (state.getValue(FACING).getOpposite() != direction) {
             if (level.getBlockEntity(pos) instanceof LaserReceiverBlockEntity laserReceiverBlockEntity) {
                 int laserLevel = laserReceiverBlockEntity.getLaserLevel();
                 return Math.min(laserLevel, 15);
