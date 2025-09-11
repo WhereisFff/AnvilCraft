@@ -3,7 +3,6 @@
 	"credit": "Made by XeKr with Blockbench",
 	"parent": "minecraft:block/block",
 	"ambientocclusion": false,
-	"render_type": "minecraft:cutout",
 	"textures": {
 		"particle": "anvilcraft:block/propel_piston_side",
 		"side": "anvilcraft:block/propel_piston_side",
