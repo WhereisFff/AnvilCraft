@@ -161,9 +161,6 @@ public class PowerGrid {
         int oldConsume = this.consume;
         this.generate = 0;
         this.consume = 0;
-        for (IPowerComponent component : components) {
-            AnvilCraft.LOGGER.debug("component: {}", component);
-        }
         for (IPowerTransmitter transmitter : transmitters) {
             if (checkRemove(transmitter)) {
                 return true;

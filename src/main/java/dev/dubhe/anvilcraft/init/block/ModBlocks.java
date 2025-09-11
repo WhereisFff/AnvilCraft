@@ -62,6 +62,7 @@ import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
 import dev.dubhe.anvilcraft.block.JewelCraftingTable;
 import dev.dubhe.anvilcraft.block.LargeCakeBlock;
+import dev.dubhe.anvilcraft.block.LaserReceiverBlock;
 import dev.dubhe.anvilcraft.block.LavaCauldronBlock;
 import dev.dubhe.anvilcraft.block.LevitationPowderBlock;
 import dev.dubhe.anvilcraft.block.LoadMonitorBlock;
@@ -1157,6 +1158,32 @@ public class ModBlocks {
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .register();
+    public static final BlockEntry<LaserReceiverBlock> LASER_RECEIVER = REGISTRATE
+        .block("laser_receiver", LaserReceiverBlock::new)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .initialProperties(ModBlocks.RUBY_PRISM::get)
+        .properties((properties) -> properties
+            .noOcclusion()
+            .isRedstoneConductor(ModBlocks::never)
+        )
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get())
+                .pattern("AAA")
+                .pattern("ABA")
+                .pattern("DCD")
+                .define('A', ModItems.RUBY)
+                .define('B', ModBlocks.MAGNETO_ELECTRIC_CORE_BLOCK)
+                .define('C', Items.REDSTONE)
+                .define('D', ModItems.ROYAL_STEEL_INGOT)
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.RUBY))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModBlocks.MAGNETO_ELECTRIC_CORE_BLOCK))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.REDSTONE))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
+                .save(provider);
+        })
+        .simpleItem()
+        .register();
+
     public static final BlockEntry<BlockComparatorBlock> BLOCK_COMPARATOR = REGISTRATE.block("block_comparator", BlockComparatorBlock::new)
         .initialProperties(() -> Blocks.OBSERVER)
         .properties(BlockBehaviour.Properties::noOcclusion)
