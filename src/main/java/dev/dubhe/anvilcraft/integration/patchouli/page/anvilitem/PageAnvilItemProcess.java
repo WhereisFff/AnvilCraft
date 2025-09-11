@@ -1,8 +1,9 @@
-package dev.dubhe.anvilcraft.integration.patchouli.page;
+package dev.dubhe.anvilcraft.integration.patchouli.page.anvilitem;
 
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
+import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.item.ItemStack;
@@ -12,6 +13,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import vazkii.patchouli.client.book.gui.GuiBook;
+import vazkii.patchouli.client.book.gui.GuiBookEntry;
 import vazkii.patchouli.client.book.page.abstr.PageDoubleRecipeRegistry;
 
 import java.util.List;
@@ -91,16 +93,23 @@ public class PageAnvilItemProcess<T extends Recipe<?>> extends PageDoubleRecipeR
         }
 
         List<ChanceItemStack> results = this.results.apply(recipe);
-        if (results.size() == 1) {
-            PatchouliRenderHelper.render1x1(graphics, recipeX + 81, recipeY + 18);
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 22, mouseX, mouseY, results.getFirst().stack());
-        } else if (results.size() > 1) {
-            PatchouliRenderHelper.render2x1(graphics, recipeX + 81, recipeY + 8);
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 12, mouseX, mouseY, results.getFirst().stack());
-            parent.renderItemStack(graphics, recipeX + 85, recipeY + 31, mouseX, mouseY, results.get(1).stack());
-        }
+        renderResultItems(parent, graphics, results, recipeX + 71, recipeY + 8, mouseX, mouseY);
 
         this.drawExtra(graphics, recipe, recipeX, recipeY, mouseX, mouseY, second);
+    }
+
+    public static void renderResultItems(
+        GuiBookEntry parent, GuiGraphics graphics, List<ChanceItemStack> chanceItemStacks, int x, int y, int mouseX, int mouseY
+    ) {
+        if (chanceItemStacks.isEmpty()) return;
+        if (chanceItemStacks.size() == 1) {
+            PatchouliRenderHelper.render1x1(graphics, x + 10, y + 10);
+            parent.renderItemStack(graphics, x + 14, y + 14, mouseX, mouseY, PatchouliUtil.getStack(chanceItemStacks.getFirst()));
+        } else {
+            PatchouliRenderHelper.render2x1(graphics, x + 10, y);
+            parent.renderItemStack(graphics, x + 14, y + 4, mouseX, mouseY, PatchouliUtil.getStack(chanceItemStacks.getFirst()));
+            parent.renderItemStack(graphics, x + 14, y + 23, mouseX, mouseY, PatchouliUtil.getStack(chanceItemStacks.get(1)));
+        }
     }
 
     @SuppressWarnings("unused")

@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.integration.patchouli.page;
+package dev.dubhe.anvilcraft.integration.patchouli.page.anvilitem;
 
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BoilingRecipe;

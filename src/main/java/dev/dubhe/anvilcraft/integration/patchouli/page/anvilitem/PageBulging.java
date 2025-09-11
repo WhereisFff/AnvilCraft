@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.integration.patchouli.page;
+package dev.dubhe.anvilcraft.integration.patchouli.page.anvilitem;
 
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
 import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 

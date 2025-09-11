@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
+import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliUtil;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
@@ -34,7 +35,15 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
     }
 
     @Override
-    protected void drawRecipe(GuiGraphics graphics, AnvilCollisionCraftRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
+    protected void drawRecipe(
+        GuiGraphics graphics,
+        AnvilCollisionCraftRecipe recipe,
+        int recipeX,
+        int recipeY,
+        int mouseX,
+        int mouseY,
+        boolean second
+    ) {
         PoseStack pose = graphics.pose();
         pose.pushPose();
         pose.translate(recipeX, recipeY + 18, 50);
@@ -71,7 +80,8 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             ((ScreenAccessor) parent).getFont(),
             Component.translatable(
                 "gui.anvilcraft.category.anvil_collision_craft_speed",
-                recipe.speed()),
+                recipe.speed()
+            ),
             -4,
             26,
             0xFF000000,
@@ -93,9 +103,10 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
             PatchouliRenderHelper.render2x2(graphics, recipeX + COLLISION_LENGTH + 12, recipeY);
             for (int i = 0; i < 2; i++) {
                 for (int j = 0; j < 2 && i * 2 + j < results.size(); j++) {
-                    ItemStack itemStack = results.get(i * 2 + j).stack();
+                    ChanceItemStack itemStack = results.get(i * 2 + j);
                     parent.renderItemStack(graphics, recipeX + COLLISION_LENGTH + 16 + j * 19, recipeY + 4 + i * 19,
-                        mouseX, mouseY, itemStack);
+                        mouseX, mouseY, PatchouliUtil.getStack(itemStack)
+                    );
                 }
             }
         }
@@ -157,9 +168,9 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
     private void renderAnvil(GuiBookEntry parent, GuiGraphics guiGraphics, BlockState anvil, Boolean consume) {
         int time = parent.ticksInBook % COLLISION_TIME;
         float anvilXOffset;
-        if (time < 10)
+        if (time < 10) {
             anvilXOffset = 0;
-        else if (time < 20) {
+        } else if (time < 20) {
             float returnTime = time - 10;
             anvilXOffset = (float) (COLLISION_LENGTH * Math.pow(returnTime / 10.0, 2));
         } else {
@@ -173,7 +184,8 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
                 0,
                 20,
                 12,
-                RenderHelper.SINGLE_BLOCK);
+                RenderHelper.SINGLE_BLOCK
+            );
         }
     }
 
