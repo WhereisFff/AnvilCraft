@@ -103,15 +103,6 @@ public class LaserReceiverBlock extends BaseLaserBlock implements IHammerRemovab
     }
 
     @Override
-    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        if (level.getBlockEntity(pos) instanceof LaserReceiverBlockEntity laserReceiverBlockEntity) {
-            int laserLevel = laserReceiverBlockEntity.getLaserLevel();
-            return Math.min(laserLevel, 15);
-        }
-        return 0;
-    }
-
-    @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction clickedFace = context.getClickedFace();
         return this.defaultBlockState().setValue(FACING, clickedFace);

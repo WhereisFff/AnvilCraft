@@ -1167,6 +1167,7 @@ public class ModBlocks {
             .noOcclusion()
             .isRedstoneConductor(ModBlocks::never)
             .requiresCorrectToolForDrops()
+            .lightLevel((blockState) -> blockState.getValue(LaserReceiverBlock.ACTIVE) ? 15 : 0)
         )
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get())
