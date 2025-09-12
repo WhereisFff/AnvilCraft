@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.integration.patchouli.page;
+package dev.dubhe.anvilcraft.integration.patchouli.page.anvilitem;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;

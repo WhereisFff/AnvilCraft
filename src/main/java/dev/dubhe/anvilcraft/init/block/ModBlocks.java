@@ -62,6 +62,7 @@ import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
 import dev.dubhe.anvilcraft.block.JewelCraftingTable;
 import dev.dubhe.anvilcraft.block.LargeCakeBlock;
+import dev.dubhe.anvilcraft.block.LaserReceiverBlock;
 import dev.dubhe.anvilcraft.block.LavaCauldronBlock;
 import dev.dubhe.anvilcraft.block.LevitationPowderBlock;
 import dev.dubhe.anvilcraft.block.LoadMonitorBlock;
@@ -1157,6 +1158,35 @@ public class ModBlocks {
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .register();
+    public static final BlockEntry<LaserReceiverBlock> LASER_RECEIVER = REGISTRATE
+        .block("laser_receiver", LaserReceiverBlock::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .initialProperties(ModBlocks.RUBY_PRISM::get)
+        .properties((properties) -> properties
+            .noOcclusion()
+            .isRedstoneConductor(ModBlocks::never)
+            .requiresCorrectToolForDrops()
+            .lightLevel((blockState) -> blockState.getValue(LaserReceiverBlock.ACTIVE) ? 15 : 0)
+        )
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get())
+                .pattern("AAA")
+                .pattern("ABA")
+                .pattern("DCD")
+                .define('A', ModItems.RUBY)
+                .define('B', ModBlocks.MAGNETO_ELECTRIC_CORE_BLOCK)
+                .define('C', Items.REDSTONE)
+                .define('D', ModItems.ROYAL_STEEL_INGOT)
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.RUBY))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModBlocks.MAGNETO_ELECTRIC_CORE_BLOCK))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.REDSTONE))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
+                .save(provider);
+        })
+        .simpleItem()
+        .register();
+
     public static final BlockEntry<BlockComparatorBlock> BLOCK_COMPARATOR = REGISTRATE.block("block_comparator", BlockComparatorBlock::new)
         .initialProperties(() -> Blocks.OBSERVER)
         .properties(BlockBehaviour.Properties::noOcclusion)
@@ -1601,70 +1631,38 @@ public class ModBlocks {
                         .include(ModComponents.STORED_ENERGY))));
         })
         .recipe((ctx, provider) -> {
-            ItemStack mj8 = ctx.get().asItem().getDefaultInstance();
-            mj8.set(ModComponents.STORED_ENERGY, 8000);
-            ItemStack mj4 = ctx.get().asItem().getDefaultInstance();
-            mj4.set(ModComponents.STORED_ENERGY, 4000);
-            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get())
-                .pattern("CDC")
-                .pattern("ABA")
-                .pattern("ABA")
-                .define('A', ModItems.IONOCRAFT)
-                .define('B', ModItems.CAPACITOR_EMPTY)
-                .define('C', Items.IRON_INGOT)
-                .define('D', Items.PISTON)
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.IONOCRAFT))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR_EMPTY))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.IRON_INGOT))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.PISTON))
-                .save(provider, "empty_propel_piston_0");
-            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, mj4)
-                .pattern("CDC")
-                .pattern("AEA")
-                .pattern("ABA")
-                .define('A', ModItems.IONOCRAFT)
-                .define('B', ModItems.CAPACITOR_EMPTY)
-                .define('C', Items.IRON_INGOT)
-                .define('D', Items.PISTON)
-                .define('E', ModItems.CAPACITOR)
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.IONOCRAFT))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR_EMPTY))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.IRON_INGOT))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.PISTON))
-                .save(provider, "4mj_propel_piston_0");
-            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, mj4)
+            ItemStack itemStack = new ItemStack(ctx.get());
+            itemStack.set(ModComponents.STORED_ENERGY, 4000);
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, itemStack)
                 .pattern("CDC")
                 .pattern("ABA")
                 .pattern("AEA")
-                .define('A', ModItems.IONOCRAFT)
-                .define('B', ModItems.CAPACITOR_EMPTY)
-                .define('C', Items.IRON_INGOT)
-                .define('D', Items.PISTON)
-                .define('E', ModItems.CAPACITOR)
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.IONOCRAFT))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR_EMPTY))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.IRON_INGOT))
-                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.PISTON))
-                .save(provider, "4mj_propel_piston_1");
-            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, mj8)
-                .pattern("CDC")
-                .pattern("ABA")
-                .pattern("ABA")
                 .define('A', ModItems.IONOCRAFT)
                 .define('B', ModItems.CAPACITOR)
                 .define('C', Items.IRON_INGOT)
                 .define('D', Items.PISTON)
+                .define('E', ModItems.RUBY)
                 .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.IONOCRAFT))
                 .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR))
                 .unlockedBy("has_item", AnvilCraftDatagen.has(Items.IRON_INGOT))
                 .unlockedBy("has_item", AnvilCraftDatagen.has(Items.PISTON))
-                .save(provider, "8mj_propel_piston");
-            ShapelessRecipeBuilder.shapeless(RecipeCategory.REDSTONE, ctx.get())
-                .requires(ctx.get())
-                .unlockedBy("has_item", AnvilCraftDatagen.has(ctx.get()))
-                .save(provider, "empty_propel_piston_1");
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.RUBY))
+                .save(provider);
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get())
+                .pattern("CDC")
+                .pattern("ABA")
+                .pattern("AEA")
+                .define('A', ModItems.IONOCRAFT)
+                .define('B', ModItems.CAPACITOR_EMPTY)
+                .define('C', Items.IRON_INGOT)
+                .define('D', Items.PISTON)
+                .define('E', ModItems.RUBY)
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.IONOCRAFT))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.CAPACITOR_EMPTY))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.IRON_INGOT))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(Items.PISTON))
+                .unlockedBy("has_item", AnvilCraftDatagen.has(ModItems.RUBY))
+                .save(provider, "empty_propel_piston");
         })
         .simpleItem()
         .register();

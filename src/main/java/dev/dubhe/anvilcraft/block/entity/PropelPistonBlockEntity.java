@@ -1,13 +1,9 @@
 package dev.dubhe.anvilcraft.block.entity;
 
-import dev.dubhe.anvilcraft.api.power.ILoadAwareConsumer;
-import dev.dubhe.anvilcraft.api.power.PowerComponentType;
-import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.block.PropelPiston;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
 import lombok.Getter;
-import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -19,26 +15,32 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.piston.PistonStructureResolver;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareConsumer {
-    @Getter
-    @Setter
-    private PowerGrid grid;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
+public class PropelPistonBlockEntity extends BaseLaserBlockEntity {
     /**
      * 储存的能量 单位：kJ
      */
     @Getter
     private int storedEnergy = 0;
+    private int delay = 0;
+    private int power = 0;
 
     public PropelPistonBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
+    }
+
+    @Override
+    public Direction getFacing() {
+        return getBlockState().getValue(PropelPiston.FACING);
     }
 
     public void updateStoredEnergy(Integer energy) {
@@ -53,10 +55,24 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
         updateStoredEnergy(getStoredEnergy() + energy);
     }
 
+    @Override
+    protected int getBaseLaserLevel() {
+        return 0;
+    }
+
     public void tick(Level level, BlockPos pos, BlockState state) {
-        if (this.grid != null && this.grid.isWorking()) {
-            if (!state.getValue(PropelPiston.MOVING) && this.getActive().get() && this.storedEnergy < 80000) {
-                addEnergy(3);
+        updateLaserLevel(calculateLaserLevel());
+        if (changed) {
+            delay = 0;
+            power = laserLevel * 15;
+        }
+        if (!changed) {
+            if (storedEnergy < 80000) {
+                delay++;
+                if (delay >= 20) {
+                    delay = 0;
+                    addEnergy(power);
+                }
             }
         }
         if (getStoredEnergy() > 0) {
@@ -67,6 +83,15 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
         } else {
             level.setBlockAndUpdate(pos, state.setValue(PropelPiston.EXHAUSTED, true).setValue(PropelPiston.MOVING, false));
         }
+        super.tick(level);
+        resetState();
+    }
+
+    @Override
+    public Set<Direction> getIgnoreFace() {
+        Set<Direction> directions = new HashSet<>(List.of(Direction.values()));
+        directions.remove(getBlockState().getValue(PropelPiston.FACING).getOpposite());
+        return directions;
     }
 
     private void checkCanMove(Level level, BlockPos pos, BlockState state) {
@@ -78,11 +103,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
                 level.setBlockAndUpdate(pos, state.setValue(PropelPiston.MOVING, false));
             }
         }
-    }
-
-    @Override
-    public int getInputPower() {
-        return 64;
     }
 
     @Override
@@ -107,21 +127,6 @@ public class PropelPistonBlockEntity extends BlockEntity implements ILoadAwareCo
     @Override
     public @Nullable Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public @Nullable Level getCurrentLevel() {
-        return this.getLevel();
-    }
-
-    @Override
-    public BlockPos getPos() {
-        return this.getBlockPos();
-    }
-
-    @Override
-    public PowerComponentType getComponentType() {
-        return PowerComponentType.CONSUMER;
     }
 
     @Override

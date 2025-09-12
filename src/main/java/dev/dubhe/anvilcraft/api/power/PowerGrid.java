@@ -176,16 +176,7 @@ public class PowerGrid {
             if (checkRemove(consumer)) {
                 return true;
             }
-            if (consumer instanceof ILoadAwareConsumer loadAwareConsumer) {
-                if (this.generate - this.consume >= consumer.getInputPower()) {
-                    loadAwareConsumer.getActive().set(true);
-                    this.consume += consumer.getInputPower();
-                } else {
-                    loadAwareConsumer.getActive().set(false);
-                }
-            } else {
-                this.consume += consumer.getInputPower();
-            }
+            this.consume += consumer.getInputPower();
         }
 
         for (DynamicPowerComponent dynamicComponent : new ArrayList<>(this.dynamicComponents)) {

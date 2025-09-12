@@ -5,7 +5,7 @@
       "conditions": {
         "items": [
           {
-            "items": "minecraft:piston"
+            "items": "anvilcraft:royal_steel_ingot"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:4mj_propel_piston_1"
+        "recipe": "anvilcraft:laser_receiver"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:4mj_propel_piston_1"
+      "anvilcraft:laser_receiver"
     ]
   }
 }

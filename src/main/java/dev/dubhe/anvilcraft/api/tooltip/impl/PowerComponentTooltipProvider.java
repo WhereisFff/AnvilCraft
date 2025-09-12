@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.api.tooltip.impl;
 
-import dev.dubhe.anvilcraft.api.power.ILoadAwareConsumer;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.PowerComponentInfo;
 import dev.dubhe.anvilcraft.api.power.PowerComponentType;
@@ -71,12 +70,6 @@ public class PowerComponentTooltipProvider extends ITooltipProvider.BlockEntityT
         PowerComponentType type = componentInfo.type();
 
         int consumes = componentInfo.consumes();
-
-        if (e instanceof ILoadAwareConsumer loadAwareConsumer) {
-            if (!loadAwareConsumer.getActive().get()) {
-                consumes = 0;
-            }
-        }
 
         if (overloaded) {
             for (int i = 1; i <= 3; i++) {
