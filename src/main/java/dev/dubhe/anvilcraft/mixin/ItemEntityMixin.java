@@ -47,7 +47,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity.PoachingCollectorMap;
+import static dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity.POACHING_COLLECTOR_MAP;
 
 @Mixin(ItemEntity.class)
 abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
@@ -390,7 +390,7 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
     private void anvilcraft$poach() {
         Level level = this.level();
         if (level.isClientSide) return;
-        Map<ChunkPos, List<ItemCollectorBlockEntity>> map = PoachingCollectorMap.get(level);
+        Map<ChunkPos, List<ItemCollectorBlockEntity>> map = POACHING_COLLECTOR_MAP.get(level);
         if (map == null) return;
         ChunkPos chunkPos = this.chunkPosition();
         List<ItemCollectorBlockEntity> list = map.get(chunkPos);
