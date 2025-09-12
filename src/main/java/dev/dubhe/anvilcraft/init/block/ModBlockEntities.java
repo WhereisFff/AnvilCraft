@@ -21,6 +21,7 @@ import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.InductionLightBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ItemDetectorBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.LaserReceiverBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.LoadMonitorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MagneticChuteBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MineralFountainBlockEntity;
@@ -278,6 +279,11 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<PropelPistonBlockEntity> PROPEL_PISTON = REGISTRATE
         .blockEntity("propel_piston", PropelPistonBlockEntity::new)
         .validBlock(ModBlocks.PROPEL_PISTON)
+        .register();
+
+    public static final BlockEntityEntry<LaserReceiverBlockEntity> LASER_RECEIVER = REGISTRATE
+        .blockEntity("laser_receiver", LaserReceiverBlockEntity::new)
+        .validBlocks(ModBlocks.LASER_RECEIVER)
         .register();
 
     public static void register() {

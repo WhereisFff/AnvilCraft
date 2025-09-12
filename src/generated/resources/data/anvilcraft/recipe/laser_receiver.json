@@ -3,25 +3,25 @@
   "category": "redstone",
   "key": {
     "A": {
-      "item": "anvilcraft:ionocraft"
+      "item": "anvilcraft:ruby"
     },
     "B": {
-      "item": "anvilcraft:capacitor_empty"
+      "item": "anvilcraft:magnetoelectric_core"
     },
     "C": {
-      "item": "minecraft:iron_ingot"
+      "item": "minecraft:redstone"
     },
     "D": {
-      "item": "minecraft:piston"
+      "item": "anvilcraft:royal_steel_ingot"
     }
   },
   "pattern": [
-    "CDC",
+    "AAA",
     "ABA",
-    "ABA"
+    "DCD"
   ],
   "result": {
     "count": 1,
-    "id": "anvilcraft:propel_piston"
+    "id": "anvilcraft:laser_receiver"
   }
 }
