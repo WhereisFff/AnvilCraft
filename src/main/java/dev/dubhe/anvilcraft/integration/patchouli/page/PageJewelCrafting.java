@@ -6,7 +6,7 @@ import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
-import dev.dubhe.anvilcraft.util.RenderHelper;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -27,12 +27,12 @@ public class PageJewelCrafting extends PageDoubleRecipeRegistry<JewelCraftingRec
     protected void drawRecipe(
         GuiGraphics graphics, JewelCraftingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second
     ) {
-        RenderHelper.renderBlock(
+        RenderSupport.renderBlock(
             graphics,
             ModBlocks.JEWEL_CRAFTING_TABLE.getDefaultState(),
             recipeX + 50, recipeY + 15, 0,
             12,
-            RenderHelper.SINGLE_BLOCK
+            RenderSupport.SINGLE_BLOCK
         );
 
         PatchouliRenderHelper.render1x1(graphics, recipeX - 4, recipeY + 7);

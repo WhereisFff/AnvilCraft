@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.integration.patchouli.page.anvilitem;
 
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BulgingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
-import dev.dubhe.anvilcraft.util.RenderHelper;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,11 +23,14 @@ public class PageBulging extends PageAnvilItemProcess<BulgingRecipe> {
     @Override
     protected void drawExtra(GuiGraphics graphics, BulgingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
         if (!recipe.getResultItems().isEmpty()) return;
-        RenderHelper.renderBlock(
-            graphics, getCauldron(recipe),
-            recipeX + 90, recipeY + 29, 10,
+        RenderSupport.renderBlock(
+            graphics,
+            getCauldron(recipe),
+            recipeX + 90,
+            recipeY + 29,
+            10,
             12,
-            RenderHelper.SINGLE_BLOCK
+            RenderSupport.SINGLE_BLOCK
         );
     }
 
