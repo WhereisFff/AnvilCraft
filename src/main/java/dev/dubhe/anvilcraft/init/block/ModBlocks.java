@@ -1160,11 +1160,13 @@ public class ModBlocks {
         .register();
     public static final BlockEntry<LaserReceiverBlock> LASER_RECEIVER = REGISTRATE
         .block("laser_receiver", LaserReceiverBlock::new)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .initialProperties(ModBlocks.RUBY_PRISM::get)
         .properties((properties) -> properties
             .noOcclusion()
             .isRedstoneConductor(ModBlocks::never)
+            .requiresCorrectToolForDrops()
         )
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ctx.get())
