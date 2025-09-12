@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliRenderHelper;
+import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliUtil;
 import dev.dubhe.anvilcraft.mixin.accessor.ScreenAccessor;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
@@ -77,8 +78,7 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
         pose.scale(0.5f, 0.5f, 1);
         graphics.drawString(
             ((ScreenAccessor) parent).getFont(),
-            Component.translatable(
-                "gui.anvilcraft.category.anvil_collision_craft_speed", recipe.speed()),
+            Component.translatable("gui.anvilcraft.category.anvil_collision_craft_speed", recipe.speed()),
             -4,
             26,
             0xFF000000,
@@ -178,13 +178,11 @@ public class PageAnvilCollisionCraft extends PageDoubleRecipeRegistry<AnvilColli
         }
         if (!(consume && time > 20)) {
             RenderSupport.renderBlock(
-                guiGraphics,
-                anvil,
+                guiGraphics, anvil,
                 anvilXOffset,
                 0,
                 20,
-                12,
-                RenderSupport.SINGLE_BLOCK
+                12, RenderSupport.SINGLE_BLOCK
             );
         }
     }
