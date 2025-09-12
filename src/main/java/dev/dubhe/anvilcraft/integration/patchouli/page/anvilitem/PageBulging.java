@@ -16,17 +16,19 @@ public class PageBulging extends PageAnvilItemProcess<BulgingRecipe> {
             BulgingRecipe::getInputItems,
             BulgingRecipe::getResultItems,
             recipe -> CauldronUtil.fullState(Blocks.WATER_CAULDRON),
-            null);
+            null
+        );
     }
 
     @Override
     protected void drawExtra(GuiGraphics graphics, BulgingRecipe recipe, int recipeX, int recipeY, int mouseX, int mouseY, boolean second) {
-        if (!recipe.getResultItems().isEmpty() || getCauldron(recipe) == null) return;
+        if (!recipe.getResultItems().isEmpty()) return;
         RenderHelper.renderBlock(
             graphics, getCauldron(recipe),
             recipeX + 90, recipeY + 29, 10,
             12,
-            RenderHelper.SINGLE_BLOCK);
+            RenderHelper.SINGLE_BLOCK
+        );
     }
 
     static BlockState getCauldron(BulgingRecipe recipe) {

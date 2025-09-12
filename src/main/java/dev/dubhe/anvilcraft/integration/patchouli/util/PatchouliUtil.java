@@ -6,7 +6,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.loot.providers.number.BinomialDistributionGenerator;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import vazkii.patchouli.api.PatchouliAPI;
 
 public class PatchouliUtil {
@@ -18,8 +17,8 @@ public class PatchouliUtil {
         ItemStack itemStack = stack.stack().copy();
         if (stack.count() instanceof ConstantValue) {
             itemStack.setCount(stack.getMaxCount());
-        } else if (stack.count() instanceof BinomialDistributionGenerator(NumberProvider n, NumberProvider p)) {
-            if (p instanceof ConstantValue(float value) && value == 1) itemStack.setCount(stack.getMaxCount());
+        } else if (stack.count() instanceof BinomialDistributionGenerator count) {
+            if (count.p() instanceof ConstantValue(float value) && value == 1) itemStack.setCount(stack.getMaxCount());
         }
         return itemStack;
     }
