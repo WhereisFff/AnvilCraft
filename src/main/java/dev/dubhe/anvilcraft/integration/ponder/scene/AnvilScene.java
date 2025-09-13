@@ -1,6 +1,8 @@
 package dev.dubhe.anvilcraft.integration.ponder.scene;
 
 import dev.dubhe.anvilcraft.integration.ponder.AnvilCraftPonderTags;
+import dev.dubhe.anvilcraft.integration.ponder.api.AnvilCraftSceneBuilder;
+import dev.dubhe.anvilcraft.integration.ponder.api.instruction.Interpolation;
 import net.createmod.ponder.api.element.ElementLink;
 import net.createmod.ponder.api.element.WorldSectionElement;
 import net.createmod.ponder.api.registration.PonderSceneRegistrationHelper;
@@ -24,48 +26,45 @@ public class AnvilScene {
                 Items.CHIPPED_ANVIL,
                 Items.DAMAGED_ANVIL
             )
-            .addStoryBoard(
-                "platform/555",
-                AnvilScene::crafting,
-                AnvilCraftPonderTags.ANVIL
-            );
+            .addStoryBoard("platform/5x", AnvilScene::crafting, AnvilCraftPonderTags.ANVIL);
     }
 
     private static void crafting(SceneBuilder scene, SceneBuildingUtil util) {
-        scene.title("anvil", "Use anvil to craft");
-        scene.configureBasePlate(0, 0, 5);
+        AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
+        builder.title("anvil", "Use anvil to craft");
+        builder.configureBasePlate(0, 0, 5);
 
         Selection basePlate = util.select().fromTo(0, 0, 0, 5, 0, 5);
-        scene.world().showSection(basePlate, Direction.UP);
-        scene.idle(20);
+        builder.world().showSection(basePlate, Direction.UP);
+        builder.idle(20);
 
-        scene.world().setBlock(new BlockPos(2, 1, 2), Blocks.ANVIL.defaultBlockState(), false);
+        builder.world().setBlock(new BlockPos(2, 1, 2), Blocks.ANVIL.defaultBlockState(), false);
         Selection anvil = util.select().fromTo(2, 1, 2, 2, 1, 2);
         ElementLink<WorldSectionElement> anvilLink = scene.world().showIndependentSection(anvil, Direction.NORTH);
 
-        scene.idle(40);
+        builder.idle(40);
 
-        scene.overlay().showText(30)
+        builder.overlay()
+            .showText(30)
             .text("The anvil is the foundation for all processing in the AnvilCraft")
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
 
-        scene.idle(40);
+        builder.idle(40);
 
-        scene.world().moveSection(anvilLink, new Vec3(0, 1, 0), 7);
-        scene.idle(10);
-        scene.world().moveSection(anvilLink, new Vec3(0, -1, 0), 5);
-        scene.idle(10);
+        builder.world().moveSectionInterpolation(anvilLink, new Vec3(0, 2, 0), Interpolation.acceleration(0.025));
+        builder.world().moveSectionInterpolation(anvilLink, new Vec3(0, -2, 0), Interpolation.acceleration(0.025));
 
-        scene.overlay().showText(30)
+        builder.overlay()
+            .showText(30)
             .text("The anvil falls from a height to complete one anvil process.")
             .pointAt(util.vector().blockSurface(util.grid().at(2, 1, 2), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
 
-        scene.idle(40);
+        builder.idle(40);
 
-        scene.markAsFinished();
+        builder.markAsFinished();
     }
 }
