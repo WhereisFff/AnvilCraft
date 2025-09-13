@@ -46,8 +46,7 @@ abstract class RecipeManagerMixin {
         at = @At(
             value = "INVOKE",
             target = "Lcom/google/common/collect/ImmutableMultimap$Builder;put(Ljava/lang/Object;Ljava/lang/Object;)Lcom/google/common/collect/ImmutableMultimap$Builder;"
-        ),
-        cancellable = true
+        )
     )
     private static void onBuildRecipe(
         ResourceLocation resourceLocation,
@@ -58,9 +57,6 @@ abstract class RecipeManagerMixin {
         @Local Recipe<?> recipe,
         @Local RecipeHolder<?> recipeHolder
     ) {
-        if (recipeHolder.id().toString().equals("twilightforest:uncrafting_table")) {
-            ci.cancel();
-        }
         RecipeGenerator.handleVanillaRecipe(recipe.getType(), recipeHolder)
             .ifPresent(v -> {
                 byTypeBuilder.put(v.value().getType(), v);
