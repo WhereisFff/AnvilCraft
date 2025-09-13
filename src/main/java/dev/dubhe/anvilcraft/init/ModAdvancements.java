@@ -1,0 +1,565 @@
+package dev.dubhe.anvilcraft.init;
+
+import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.advancement.AdvancementLineHelper;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.init.loot.ModLootTables;
+import net.minecraft.advancements.AdvancementHolder;
+import net.minecraft.advancements.AdvancementType;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Blocks;
+
+import java.util.List;
+
+public class ModAdvancements {
+    public static final AdvancementHolder ROOT;
+
+    public static final AdvancementHolder CRAB_CLAW;
+    public static final AdvancementHolder PLACER;
+    public static final AdvancementHolder DEVOURER;
+
+    public static final AdvancementHolder GEODE;
+    public static final AdvancementHolder AMETHYST_PICKAXE;
+    public static final AdvancementHolder TOPAZ;
+    public static final AdvancementHolder LIFTING_ANVIL;
+
+    public static final AdvancementHolder REDSTONE_MILKER;
+    public static final AdvancementHolder REAL_LOOTING;
+    public static final AdvancementHolder IRON_METER_REVERSAL;
+
+    public static final AdvancementHolder DANG;
+    public static final AdvancementHolder STONE_CRUSHER;
+    public static final AdvancementHolder FOSSICK;
+    public static final AdvancementHolder ICE_MAKER;
+    public static final AdvancementHolder _4_TO_81;
+    public static final AdvancementHolder VANILLA_IRON_PLATE;
+    public static final AdvancementHolder RECYCLING_DIAMONDS;
+    public static final AdvancementHolder ALL_IN_ONE;
+    public static final AdvancementHolder HAMMER_AND_NAIL;
+    public static final AdvancementHolder SUPERKILL;
+    public static final AdvancementHolder HERTS_OF_IRON;
+    public static final AdvancementHolder NOT_BEACON;
+    public static final AdvancementHolder LIGHTER;
+    public static final AdvancementHolder NETWORKING;
+    public static final AdvancementHolder ELECTRIC_FIELD_RHYTHM;
+    public static final AdvancementHolder INDUSTRIAL_GRADE_SMELTING;
+    public static final AdvancementHolder NOBLE_METAL;
+    public static final AdvancementHolder OVERSEER;
+    public static final AdvancementHolder SMITHING_TABLE;
+    public static final AdvancementHolder DURABLE_GOODS;
+    public static final AdvancementHolder ROYAL_BLACKSMITH;
+    public static final AdvancementHolder WITHER;
+    public static final AdvancementHolder RIP_VAN_WINKLE;
+
+    static {
+        AdvancementLineHelper mainLine = new AdvancementLineHelper();
+        ROOT = mainLine.next()
+            .display(
+                ModBlocks.ROYAL_ANVIL.asItem(),
+                Component.translatable("advancements.anvilcraft.root.title"),
+                Component.translatable("advancements.anvilcraft.root.description"),
+                AnvilCraft.of("textures/gui/advancements/background.png"),
+                AdvancementType.TASK,
+                false,
+                true,
+                false
+            )
+            .playerFirstDetected("join")
+            .rewardLoot(ModLootTables.ADVANCEMENT_ROOT)
+            .build("root");
+
+        AdvancementLineHelper clawLine = mainLine.createBranch();
+        CRAB_CLAW = clawLine.next()
+            .display(
+                ModItems.CRAB_CLAW,
+                Component.translatable("advancements.anvilcraft.crab_claw.title"),
+                Component.translatable("advancements.anvilcraft.crab_claw.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .hasItems("has_crab_claw", ModItems.CRAB_CLAW)
+            .build("crab_claw");
+        PLACER = clawLine.next()
+            .display(
+                ModBlocks.BLOCK_PLACER.asItem(),
+                Component.translatable("advancements.anvilcraft.placer.title"),
+                Component.translatable("advancements.anvilcraft.placer.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .placerPlace("placer_place_placer", ModBlocks.BLOCK_PLACER)
+            .build("block_placer");
+        DEVOURER = clawLine.next()
+            .display(
+                ModBlocks.BLOCK_DEVOURER.asItem(),
+                Component.translatable("advancements.anvilcraft.devourer.title"),
+                Component.translatable("advancements.anvilcraft.devourer.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .devourerDevour("devourer_devour_devourer", ModBlocks.BLOCK_DEVOURER)
+            .build("block_devourer");
+
+        AdvancementLineHelper geodeLine = mainLine.createBranch();
+        GEODE = geodeLine.next()
+            .display(
+                ModItems.GEODE,
+                Component.translatable("advancements.anvilcraft.geode.title"),
+                Component.translatable("advancements.anvilcraft.geode.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .useItem("use_geode", ModItems.GEODE)
+            .build("geode");
+        AMETHYST_PICKAXE = geodeLine.next()
+            .display(
+                ModItems.AMETHYST_PICKAXE,
+                Component.translatable("advancements.anvilcraft.amethyst_pickaxe.title"),
+                Component.translatable("advancements.anvilcraft.amethyst_pickaxe.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .recipeAnc("crafting_amethyst_pickaxe", "amethyst_pickaxe")
+            .build("amethyst_pickaxe");
+        TOPAZ = geodeLine.next()
+            .display(
+                ModItems.TOPAZ,
+                Component.translatable("advancements.anvilcraft.topaz.title"),
+                Component.translatable("advancements.anvilcraft.topaz.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .useItem("use_topaz", ModItems.TOPAZ)
+            .build("topaz");
+        LIFTING_ANVIL = geodeLine.next()
+            .display(
+                ModBlocks.MAGNET_BLOCK,
+                Component.translatable("advancements.anvilcraft.lifting_anvil.title"),
+                Component.translatable("advancements.anvilcraft.lifting_anvil.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .liftingAnvil("lifting_anvil")
+            .anvilOnGround("anvil_on_ground")
+            .build("lifting_anvil");
+
+        AdvancementLineHelper autoLine = mainLine.createBranch();
+        REDSTONE_MILKER = autoLine.next()
+            .display(
+                Blocks.DISPENSER,
+                Component.translatable("advancements.anvilcraft.redstone_milker.title"),
+                Component.translatable("advancements.anvilcraft.redstone_milker.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .milk("milk")
+            .build("redstone_milker");
+        REAL_LOOTING = autoLine.next()
+            .display(
+                Blocks.ANVIL,
+                Component.translatable("advancements.anvilcraft.real_looting.title"),
+                Component.translatable("advancements.anvilcraft.real_looting.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .anvilLooting("anvil_looting")
+            .build("real_looting");
+        IRON_METER_REVERSAL = autoLine.next()
+            .display(
+                Blocks.IRON_BLOCK,
+                Component.translatable("advancements.anvilcraft.iron_meter_reversal.title"),
+                Component.translatable("advancements.anvilcraft.iron_meter_reversal.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .anvilLooting("anvil_looting_iron_golem", EntityType.IRON_GOLEM)
+            .repairIronGolem("repair_iron_golem")
+            .build("iron_meter_reversal");
+
+        DANG = mainLine.next()
+            .display(
+                Blocks.ANVIL,
+                Component.translatable("advancements.anvilcraft.dang.title"),
+                Component.translatable("advancements.anvilcraft.dang.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipe("anything_anvil_crafting")
+            .build("dang");
+
+        AdvancementLineHelper stoneLine = mainLine.createBranch();
+        STONE_CRUSHER = stoneLine.next()
+            .display(
+                Blocks.SAND,
+                Component.translatable("advancements.anvilcraft.stone_crusher.title"),
+                Component.translatable("advancements.anvilcraft.stone_crusher.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeAnc("crush_cobblestone", "block_crush/gravel")
+            .inWorldRecipeAnc("crush_gravel", "block_crush/sand")
+            .build("stone_crusher");
+        FOSSICK = stoneLine.next()
+            .display(
+                Items.GOLD_NUGGET,
+                Component.translatable("advancements.anvilcraft.fossick.title"),
+                Component.translatable("advancements.anvilcraft.fossick.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeAnc("mesh", "mesh/sand")
+            .build("fossick");
+
+        AdvancementLineHelper iceLine = mainLine.createBranch();
+        ICE_MAKER = iceLine.next()
+            .display(
+                Items.ICE,
+                Component.translatable("advancements.anvilcraft.ice_maker.title"),
+                Component.translatable("advancements.anvilcraft.ice_maker.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeAnc("make_ice", "squeezing/power_snow_from_ice")
+            .build("ice_maker");
+        _4_TO_81 = iceLine.next()
+            .display(
+                Items.BLUE_ICE,
+                Component.translatable("advancements.anvilcraft.four281.title"),
+                Component.translatable("advancements.anvilcraft.four281.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeAnc("packed_ice", "block_compress/packed_ice")
+            .inWorldRecipeAnc("blue_ice", "block_compress/blue_ice")
+            .build("4281");
+
+        AdvancementLineHelper stampingLine = mainLine.createBranch();
+        VANILLA_IRON_PLATE = stampingLine.next()
+            .display(
+                Items.HEAVY_WEIGHTED_PRESSURE_PLATE,
+                Component.translatable("advancements.anvilcraft.vanilla_iron_plate.title"),
+                Component.translatable("advancements.anvilcraft.vanilla_iron_plate.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeAnc("heavy_weighted_pressure_plate", "stamping/heavy_weighted_pressure_plate")
+            .build("vanilla_iron_plate");
+        RECYCLING_DIAMONDS = stampingLine.next()
+            .display(
+                Items.DIAMOND,
+                Component.translatable("advancements.anvilcraft.recycling_diamonds.title"),
+                Component.translatable("advancements.anvilcraft.recycling_diamonds.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .inWorldRecipeAnc("diamond_pickaxe", "item_crush/tool/diamond_pickaxe_2_diamond")
+            .inWorldRecipeAnc("diamond_axe", "item_crush/tool/diamond_axe_2_diamond")
+            .inWorldRecipeAnc("diamond_sword", "item_crush/tool/diamond_sword_2_diamond")
+            .inWorldRecipeAnc("diamond_hoe", "item_crush/tool/diamond_hoe_2_diamond")
+            .inWorldRecipeAnc("diamond_shovel", "item_crush/tool/diamond_shovel_2_diamond")
+            .inWorldRecipeAnc("diamond_helmet", "item_crush/armor/diamond_helmet_2_diamond")
+            .inWorldRecipeAnc("diamond_chestplate", "item_crush/armor/diamond_chestplate_2_diamond")
+            .inWorldRecipeAnc("diamond_leggings", "item_crush/armor/diamond_leggings_2_diamond")
+            .inWorldRecipeAnc("diamond_boots", "item_crush/armor/diamond_boots_2_diamond")
+            .inWorldRecipeAnc("diamond_horse_armor", "item_crush/armor/diamond_horse_armor_2_diamond")
+            .build("recycling_diamonds");
+
+        ALL_IN_ONE = mainLine.next()
+            .display(
+                ModItems.ANVIL_HAMMER,
+                Component.translatable("advancements.anvilcraft.all_in_one.title"),
+                Component.translatable("advancements.anvilcraft.all_in_one.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .recipeAnc("anvil_hammer", "anvil_hammer")
+            .recipeAnc("royal_anvil_hammer", "smithing/royal_anvil_hammer")
+            .recipeAnc("ember_anvil_hammer", "smithing/ember_anvil_hammer")
+            .recipeAnc("transcendence_anvil_hammer", "smithing/transcendence_anvil_hammer")
+            .hammerLeftClick("left_click")
+            .hammerRightClick("right_click")
+            .hammerShiftRightClick("shift_right_click")
+            .hammerHurt("hurt_entity")
+            .requireAdvs(
+                List.of("anvil_hammer", "royal_anvil_hammer", "ember_anvil_hammer", "transcendence_anvil_hammer"),
+                List.of("left_click"),
+                List.of("right_click"),
+                List.of("shift_right_click"),
+                List.of("hurt_entity")
+            )
+            .build("all_in_one");
+
+        AdvancementLineHelper killingLine = mainLine.createBranch();
+        HAMMER_AND_NAIL = killingLine.next()
+            .display(
+                ModItems.ANVIL_HAMMER,
+                Component.translatable("advancements.anvilcraft.hammer.title"),
+                Component.translatable("advancements.anvilcraft.hammer.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .hammerKill("kill_zombie", EntityType.ZOMBIE)
+            .hammerKill("kill_skeleton", EntityType.SKELETON)
+            .hammerKill("kill_creeper", EntityType.CREEPER)
+            .hammerKill("kill_spider", EntityType.SPIDER)
+            .hammerKill("kill_pig", EntityType.PIG)
+            .hammerKill("kill_cow", EntityType.COW)
+            .hammerKill("kill_sheep", EntityType.SHEEP)
+            .hammerKill("kill_chicken", EntityType.CHICKEN)
+            .build("hammer");
+        SUPERKILL = killingLine.next()
+            .display(
+                ModItems.ROYAL_ANVIL_HAMMER,
+                Component.translatable("advancements.anvilcraft.super_kill.title"),
+                Component.translatable("advancements.anvilcraft.super_kill.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .hammerHurt("super_kill", 80)
+            .build("super_kill");
+
+        HERTS_OF_IRON = mainLine.next()
+            .display(
+                ModBlocks.MAGNETO_ELECTRIC_CORE_BLOCK,
+                Component.translatable("advancements.anvilcraft.hearts_of_iron.title"),
+                Component.translatable("advancements.anvilcraft.hearts_of_iron.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .recipeAnc("craft_magnetoelectric_core", "magnetoelectric_core")
+            .build("hearts_of_iron");
+
+        AdvancementLineHelper generateElecLine = mainLine.createBranch();
+        NOT_BEACON = generateElecLine.next()
+            .display(
+                ModBlocks.CHARGE_COLLECTOR,
+                Component.translatable("advancements.anvilcraft.not_beacon.title"),
+                Component.translatable("advancements.anvilcraft.not_beacon.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .recipeAnc("craft_charge_collector", "charge_collector")
+            .playerPlace("place_charge_collector", ModBlocks.CHARGE_COLLECTOR)
+            .build("not_beacon");
+        LIGHTER = generateElecLine.next()
+            .display(
+                ModBlocks.PIEZOELECTRIC_CRYSTAL,
+                Component.translatable("advancements.anvilcraft.lighter.title"),
+                Component.translatable("advancements.anvilcraft.lighter.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .hitPiezoelectricCrystal("hit_piezoelectric_crystal")
+            .build("lighter");
+
+        NETWORKING = mainLine.next()
+            .display(
+                ModBlocks.TRANSMISSION_POLE,
+                Component.translatable("advancements.anvilcraft.networking.title"),
+                Component.translatable("advancements.anvilcraft.networking.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .recipeAnc("craft_transmission_pole", "transmission_pole")
+            .playerPlace("place_transmission_pole", ModBlocks.TRANSMISSION_POLE)
+            .build("networking");
+        ELECTRIC_FIELD_RHYTHM = mainLine.next()
+            .display(
+                ModItems.ANVIL_HAMMER,
+                Component.translatable("advancements.anvilcraft.electric_filed_rhythm.title"),
+                Component.translatable("advancements.anvilcraft.electric_filed_rhythm.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .wearHammer("wear_anvil_hammer")
+            .build("electric_filed_rhythm");
+        INDUSTRIAL_GRADE_SMELTING = mainLine.next()
+            .display(
+                ModBlocks.HEATER,
+                Component.translatable("advancements.anvilcraft.industrial_grade_smelting.title"),
+                Component.translatable("advancements.anvilcraft.industrial_grade_smelting.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeTypeAnc("super_heating", "super_heating")
+            .build("industrial_grade_smelting");
+        NOBLE_METAL = mainLine.next()
+            .display(
+                ModItems.ROYAL_STEEL_INGOT,
+                Component.translatable("advancements.anvilcraft.noble_metal.title"),
+                Component.translatable("advancements.anvilcraft.noble_metal.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeAnc("royal_metal", "super_heating/royal_steel_ingot")
+            .build("noble_metal");
+
+        OVERSEER = mainLine.createBranch().next()
+            .display(
+                ModBlocks.OVERSEER_BLOCK,
+                Component.translatable("advancements.anvilcraft.overseer.title"),
+                Component.translatable("advancements.anvilcraft.overseer.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .recipeAnc("craft_overseer", "overseer")
+            .build("overseer");
+
+        SMITHING_TABLE = mainLine.next()
+            .display(
+                ModBlocks.ROYAL_SMITHING_TABLE,
+                Component.translatable("advancements.anvilcraft.smithing_table.title"),
+                Component.translatable("advancements.anvilcraft.smithing_table.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .recipeAnc("craft_smithing", "smithing/royal_smithing_table")
+            .build("smithing_table");
+
+        DURABLE_GOODS = mainLine.createBranch().next()
+            .display(
+                ModItems.ROYAL_STEEL_PICKAXE,
+                Component.translatable("advancements.anvilcraft.durable_goods.title"),
+                Component.translatable("advancements.anvilcraft.durable_goods.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .recipeAnc("royal_steel_pickaxe", "smithing/royal_steel_pickaxe")
+            .recipeAnc("royal_steel_axe", "smithing/royal_steel_axe")
+            .recipeAnc("royal_steel_shovel", "smithing/royal_steel_shovel")
+            .recipeAnc("royal_steel_hoe", "smithing/royal_steel_hoe")
+            .recipeAnc("royal_steel_sword", "smithing/royal_steel_sword")
+            .build("durable_goods");
+
+        ROYAL_BLACKSMITH = mainLine.next()
+            .display(
+                ModBlocks.ROYAL_ANVIL,
+                Component.translatable("advancements.anvilcraft.royal_blacksmith.title"),
+                Component.translatable("advancements.anvilcraft.royal_blacksmith.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .hasItems("has_royal_anvil", ModBlocks.ROYAL_ANVIL)
+            .hasItems("has_royal_smithing_table", ModBlocks.ROYAL_SMITHING_TABLE)
+            .hasItems("has_royal_grindstone", ModBlocks.ROYAL_GRINDSTONE)
+            .build("royal_blacksmith");
+        WITHER = mainLine.next()
+            .display(
+                ModBlocks.CORRUPTED_BEACON,
+                Component.translatable("advancements.anvilcraft.wither.title"),
+                Component.translatable("advancements.anvilcraft.wither.description"),
+                null, AdvancementType.TASK,
+                true, true, false
+            )
+            .convertBeacon("convert_beacon")
+            .build("wither");
+        RIP_VAN_WINKLE = mainLine.next()
+            .display(
+                ModBlocks.CORRUPTED_BEACON,
+                Component.translatable("advancements.anvilcraft.ripVanWinkle.title"),
+                Component.translatable("advancements.anvilcraft.ripVanWinkle.description"),
+                null, AdvancementType.GOAL,
+                true, true, false
+            )
+            .inWorldRecipeTypeAnc("time_warp_recipe", "time_warp")
+            .build("rip_van_winkle");
+    }
+}

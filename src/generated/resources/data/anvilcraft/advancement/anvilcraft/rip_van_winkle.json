@@ -1,7 +1,7 @@
 {
   "parent": "anvilcraft:anvilcraft/wither",
   "criteria": {
-    "timewarp_recipe": {
+    "time_warp_recipe": {
       "conditions": {
         "recipeType": "anvilcraft:time_warp"
       },
@@ -23,7 +23,7 @@
   },
   "requirements": [
     [
-      "timewarp_recipe"
+      "time_warp_recipe"
     ]
   ],
   "sends_telemetry_event": true

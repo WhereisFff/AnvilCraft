@@ -1,65 +1,43 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
 import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
-import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.loot.ModLootTables;
-import net.minecraft.advancements.Advancement;
-import net.minecraft.advancements.AdvancementHolder;
-import net.minecraft.advancements.AdvancementRewards;
-import net.minecraft.advancements.AdvancementType;
-import net.minecraft.advancements.critereon.PlayerTrigger;
-import net.minecraft.network.chat.Component;
-
-import static dev.dubhe.anvilcraft.AnvilCraft.advancementOf;
+import dev.dubhe.anvilcraft.init.ModAdvancements;
 
 public class AnvilCraftAdvancement {
-    public static final AdvancementHolder root = Advancement.Builder.advancement()
-        .display(
-            ModBlocks.ROYAL_ANVIL.asItem(),
-            Component.translatable("advancements.anvilcraft.root.title"),
-            Component.translatable("advancements.anvilcraft.root.description"),
-            AnvilCraft.of("textures/gui/advancements/background.png"),
-            AdvancementType.TASK, false,
-            true, false)
-        .addCriterion("join", PlayerTrigger.TriggerInstance.tick())
-        .rewards(AdvancementRewards.Builder.loot(ModLootTables.ADVANCEMENT_ROOT))
-        .build(advancementOf("root"));
-
     public static void init(RegistrateAdvancementProvider provider) {
-        provider.accept(root);
-        provider.accept(CrabClawLine.crbClaw);
-        provider.accept(CrabClawLine.placer);
-        provider.accept(CrabClawLine.devourer);
-        provider.accept(GeodeLine.geode);
-        provider.accept(GeodeLine.amethystPickaxe);
-        provider.accept(GeodeLine.topaz);
-        provider.accept(GeodeLine.liftingAnvil);
-        provider.accept(AutomationLine.redstoneMilker);
-        provider.accept(AutomationLine.realLooting);
-        provider.accept(AutomationLine.ironMeterReversal);
-        provider.accept(AnvilProcessingLine.dang);
-        provider.accept(AnvilProcessingLine.stoneCrusher);
-        provider.accept(AnvilProcessingLine.fossick);
-        provider.accept(AnvilProcessingLine.iceMaker);
-        provider.accept(AnvilProcessingLine.four281);
-        provider.accept(AnvilProcessingLine.vanillaIronPlate);
-        provider.accept(AnvilProcessingLine.recyclingDiamonds);
-        provider.accept(AnvilProcessingLine.allInOne);
-        provider.accept(AnvilProcessingLine.heartsOfIron);
-        provider.accept(AnvilProcessingLine.notABeacon);
-        provider.accept(AnvilProcessingLine.lighter);
-        provider.accept(AnvilProcessingLine.networking);
-        provider.accept(AnvilProcessingLine.electricFiledRhythm);
-        provider.accept(AnvilProcessingLine.industrialGradeSmelting);
-        provider.accept(AnvilProcessingLine.nobleMetal);
-        provider.accept(AnvilProcessingLine.smithingTale);
-        provider.accept(AnvilProcessingLine.overseer);
-        provider.accept(AnvilProcessingLine.durableGoods);
-        provider.accept(AnvilProcessingLine.royalBlacksmith);
-        provider.accept(AnvilProcessingLine.wither);
-        provider.accept(AnvilProcessingLine.ripVanWinkle);
-        provider.accept(AnvilProcessingLine.hammer);
-        provider.accept(AnvilProcessingLine.superKill);
+        provider.accept(ModAdvancements.ROOT);
+        provider.accept(ModAdvancements.CRAB_CLAW);
+        provider.accept(ModAdvancements.PLACER);
+        provider.accept(ModAdvancements.DEVOURER);
+        provider.accept(ModAdvancements.GEODE);
+        provider.accept(ModAdvancements.AMETHYST_PICKAXE);
+        provider.accept(ModAdvancements.TOPAZ);
+        provider.accept(ModAdvancements.LIFTING_ANVIL);
+        provider.accept(ModAdvancements.REDSTONE_MILKER);
+        provider.accept(ModAdvancements.REAL_LOOTING);
+        provider.accept(ModAdvancements.IRON_METER_REVERSAL);
+        provider.accept(ModAdvancements.DANG);
+        provider.accept(ModAdvancements.STONE_CRUSHER);
+        provider.accept(ModAdvancements.FOSSICK);
+        provider.accept(ModAdvancements.ICE_MAKER);
+        provider.accept(ModAdvancements._4_TO_81);
+        provider.accept(ModAdvancements.VANILLA_IRON_PLATE);
+        provider.accept(ModAdvancements.RECYCLING_DIAMONDS);
+        provider.accept(ModAdvancements.ALL_IN_ONE);
+        provider.accept(ModAdvancements.HAMMER_AND_NAIL);
+        provider.accept(ModAdvancements.SUPERKILL);
+        provider.accept(ModAdvancements.HERTS_OF_IRON);
+        provider.accept(ModAdvancements.NOT_BEACON);
+        provider.accept(ModAdvancements.LIGHTER);
+        provider.accept(ModAdvancements.NETWORKING);
+        provider.accept(ModAdvancements.ELECTRIC_FIELD_RHYTHM);
+        provider.accept(ModAdvancements.INDUSTRIAL_GRADE_SMELTING);
+        provider.accept(ModAdvancements.NOBLE_METAL);
+        provider.accept(ModAdvancements.OVERSEER);
+        provider.accept(ModAdvancements.SMITHING_TABLE);
+        provider.accept(ModAdvancements.DURABLE_GOODS);
+        provider.accept(ModAdvancements.ROYAL_BLACKSMITH);
+        provider.accept(ModAdvancements.WITHER);
+        provider.accept(ModAdvancements.RIP_VAN_WINKLE);
     }
 }
