@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.item;
+package dev.dubhe.anvilcraft.block.item;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -13,7 +13,6 @@ import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 
 public class EndDustBlockItem extends BlockItem {
     public EndDustBlockItem(Block block, Properties properties) {
@@ -21,8 +20,8 @@ public class EndDustBlockItem extends BlockItem {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(
-        @NotNull Level level, @NotNull Player player, @NotNull InteractionHand usedHand) {
+    public InteractionResultHolder<ItemStack> use(
+        Level level, Player player, InteractionHand usedHand) {
         BlockPos blockPos = level.clip(new ClipContext(
                 player.getEyePosition(1f),
                 player.getEyePosition(1f).add(player.getViewVector(1f).scale(2.5)),

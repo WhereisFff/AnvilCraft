@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.item;
+package dev.dubhe.anvilcraft.block.item;
 
 import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
 import dev.dubhe.anvilcraft.block.heatable.HeatableBlock;
@@ -17,7 +17,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
@@ -102,7 +101,7 @@ public class HeliostatsItem extends BlockItem {
 
     @Override
     public void appendHoverText(
-        ItemStack stack, Item.TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+        ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
         super.appendHoverText(stack, context, tooltipComponents, isAdvanced);
         if (hasDataStored(stack)) {
             BlockPos pos = getData(stack);
@@ -116,6 +115,7 @@ public class HeliostatsItem extends BlockItem {
         return ModBlocks.HELIOSTATS.getDefaultState().getSoundType(world, pos, entity).getPlaceSound();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public InteractionResult useOn(UseOnContext context) {
         Level level = context.getLevel();
