@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.item;
+package dev.dubhe.anvilcraft.block.item;
 
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -16,7 +16,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 public class ResinBlockItem extends HasMobBlockItem {
     public ResinBlockItem(Block block, Properties properties) {
@@ -24,20 +23,22 @@ public class ResinBlockItem extends HasMobBlockItem {
     }
 
     @Override
-    public @NotNull InteractionResult useOn(@NotNull UseOnContext context) {
+    public InteractionResult useOn(UseOnContext context) {
         ItemStack stack = context.getItemInHand();
         if (!ResinBlockItem.hasMob(stack)) return super.useOn(context);
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos().relative(context.getClickedFace());
         Player player = context.getPlayer();
-        ResinBlockItem.spawnMobFromItem(level, player, pos, stack);
+        if (player != null) {
+            ResinBlockItem.spawnMobFromItem(level, player, pos, stack);
+        }
         return InteractionResult.SUCCESS;
     }
 
     /**
      * 右键实体
      */
-    public static InteractionResult useEntity(Player player, @NotNull Entity target, ItemStack stack) {
+    public static InteractionResult useEntity(Player player, Entity target, ItemStack stack) {
         if (!(target instanceof Mob mob)
             || target.getBbHeight() > 2.0
             || target.getBbWidth() > 1.5
@@ -48,7 +49,8 @@ public class ResinBlockItem extends HasMobBlockItem {
         return InteractionResult.SUCCESS;
     }
 
-    private static void spawnMobFromItem(@NotNull Level level, Player player, BlockPos pos, @NotNull ItemStack stack) {
+    @SuppressWarnings("deprecation")
+    private static void spawnMobFromItem(Level level, Player player, BlockPos pos, ItemStack stack) {
         ItemStack copy = stack.copy();
         stack.shrink(1);
         stack.remove(ModComponents.SAVED_ENTITY);
@@ -78,7 +80,8 @@ public class ResinBlockItem extends HasMobBlockItem {
         }
     }
 
-    public static ItemStack spawnMobFromItem(@NotNull Level level, BlockPos pos, @NotNull ItemStack stack) {
+    @SuppressWarnings("deprecation")
+    public static ItemStack spawnMobFromItem(Level level, BlockPos pos, ItemStack stack) {
         stack = stack.split(1);
         if (level.isClientSide()) {
             Item item = stack.getItem();
