@@ -15,6 +15,7 @@ import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlacerPlaceTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerKilledEntityByAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerWearAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.FireReforgeTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.UseItemTrigger;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementHolder;
@@ -23,14 +24,25 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.DisplayInfo;
+import net.minecraft.advancements.critereon.ContextAwarePredicate;
+import net.minecraft.advancements.critereon.DamagePredicate;
+import net.minecraft.advancements.critereon.DamageSourcePredicate;
+import net.minecraft.advancements.critereon.EntityPredicate;
 import net.minecraft.advancements.critereon.InventoryChangeTrigger;
+import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.ItemUsedOnLocationTrigger;
+import net.minecraft.advancements.critereon.MinMaxBounds;
+import net.minecraft.advancements.critereon.PlayerHurtEntityTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
+import net.minecraft.advancements.critereon.SlotsPredicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.inventory.SlotRanges;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -38,6 +50,9 @@ import net.minecraft.world.level.storage.loot.LootTable;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 public class AdvancementLineHelper {
@@ -144,6 +159,10 @@ public class AdvancementLineHelper {
 
         public AdvancementHelper playerFirstDetected(String key) {
             return this.addCriterion(key, PlayerTrigger.TriggerInstance.tick());
+        }
+
+        public AdvancementHelper hasItems(String key, TagKey<Item> tag) {
+            return this.addCriterion(key, InventoryChangeTrigger.TriggerInstance.hasItems(ItemPredicate.Builder.item().of(tag)));
         }
 
         public AdvancementHelper hasItems(String key, ItemLike... items) {
@@ -282,6 +301,38 @@ public class AdvancementLineHelper {
 
         public AdvancementHelper convertBeacon(String key) {
             return this.addCriterion(key, ConvertBeaconTrigger.TriggerInstance.convertBeacon());
+        }
+
+        public AdvancementHelper hurt(String key, ItemPredicate.Builder builder, float damage) {
+            return this.addCriterion(key, PlayerHurtEntityTrigger.TriggerInstance.playerHurtEntity(
+                DamagePredicate.Builder.damageInstance().takenDamage(MinMaxBounds.Doubles.atLeast(damage)),
+                Optional.of(
+                    EntityPredicate.Builder.entity()
+                        .slots(new SlotsPredicate(Map.of(Objects.requireNonNull(SlotRanges.nameToIds("weapon")), builder.build())))
+                        .build()
+                )
+            ));
+        }
+
+        public AdvancementHelper hurt(String key, float damage, ItemLike... items) {
+            return this.addCriterion(key, PlayerHurtEntityTrigger.TriggerInstance.playerHurtEntityWithDamage(
+                DamagePredicate.Builder.damageInstance()
+                    .type(
+                        DamageSourcePredicate.Builder.damageType()
+                            .source(
+                                EntityPredicate.Builder.entity()
+                                    .slots(new SlotsPredicate(Map.of(
+                                        Objects.requireNonNull(SlotRanges.nameToIds("weapon")),
+                                        ItemPredicate.Builder.item().of(items).build()
+                                    )))
+                            )
+                    )
+                    .takenDamage(MinMaxBounds.Doubles.atLeast(damage))
+            ));
+        }
+
+        public AdvancementHelper fireReforge(String key) {
+            return this.addCriterion(key, FireReforgeTrigger.TriggerInstance.fireReforge());
         }
 
         public AdvancementHolder build(String id) {

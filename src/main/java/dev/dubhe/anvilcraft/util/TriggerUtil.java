@@ -104,4 +104,12 @@ public class TriggerUtil {
             }
         }
     }
+
+    public static void fireReforge(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 5)) {
+                ModCriterionTriggers.FIRE_REFORGE.get().trigger(player);
+            }
+        }
+    }
 }

@@ -62,6 +62,12 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.all_in_one.title", "All in one");
         provider.add("advancements.anvilcraft.all_in_one.description", "Craft a hammer and try its various functions");
 
+        provider.add("advancements.anvilcraft.hammer.title", "Everyone's a nail to a hammer");
+        provider.add("advancements.anvilcraft.hammer.description", "Use an anvil hammer to kill mobs");
+
+        provider.add("advancements.anvilcraft.super_kill.title", "Super kill... almost");
+        provider.add("advancements.anvilcraft.super_kill.description", "Using a royal anvil hammer to deal 80 damage with one strike");
+
         provider.add("advancements.anvilcraft.hearts_of_iron.title", "Hearts of Iron");
         provider.add("advancements.anvilcraft.hearts_of_iron.description", "Craft a magnetoelectric core");
 
@@ -98,14 +104,29 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.wither.title", "Liberate the power of wither");
         provider.add("advancements.anvilcraft.wither.description", "Use curse gold to convert a beacon");
 
-        provider.add("advancements.anvilcraft.ripVanWinkle.title", "Rip Van Winkle");
-        provider.add("advancements.anvilcraft.ripVanWinkle.description", "Perform any time warp operation");
+        provider.add("advancements.anvilcraft.rip_van_winkle.title", "Rip Van Winkle");
+        provider.add("advancements.anvilcraft.rip_van_winkle.description", "Perform any time warp operation");
 
-        provider.add("advancements.anvilcraft.hammer.title", "Everyone's a nail to a hammer");
-        provider.add("advancements.anvilcraft.hammer.description", "Use an anvil hammer to kill mobs");
+        provider.add("advancements.anvilcraft.frost_metal.title", "Rome was not built in a day");
+        provider.add("advancements.anvilcraft.frost_metal.description", "Obtain any frost metal");
 
-        provider.add("advancements.anvilcraft.super_kill.title", "Super kill... almost");
-        provider.add("advancements.anvilcraft.super_kill.description", "Using a royal anvil hammer to deal 80 damage with one strike");
+        provider.add("advancements.anvilcraft.tai_shang_wang_qing.title", "Immortals beyond emotions");
+        provider.add("advancements.anvilcraft.tai_shang_wang_qing.description", "Using a frost metal tool or weapon to deal 49 damage with one strike");
+
+        provider.add("advancements.anvilcraft.for_aeons.title", "For aeons");
+        provider.add("advancements.anvilcraft.for_aeons.description", "Using time wrap to get oil");
+
+        provider.add("advancements.anvilcraft.forged_over_eons.title", "Forged over eons");
+        provider.add("advancements.anvilcraft.forged_over_eons.description", "Obtain any ember metal");
+
+        provider.add("advancements.anvilcraft.self_in_flaming.title", "Self in flaming");
+        provider.add("advancements.anvilcraft.self_in_flaming.description", "Using fire reforge to repair any ember metal tools or weapons");
+
+        provider.add("advancements.anvilcraft.giant_age.title", "The Age of Giants");
+        provider.add("advancements.anvilcraft.giant_age.description", "Convert a zombie holding anvil to a giant using the beam of corruption beacon to get giant anvil");
+
+        provider.add("advancements.anvilcraft.anvil_accelerator.title", "Anvil accelerator");
+        provider.add("advancements.anvilcraft.anvil_accelerator.description", "Craft acceleration ring and deflection ring");
         // endregion
 
         // region automation line

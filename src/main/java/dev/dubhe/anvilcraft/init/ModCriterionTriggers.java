@@ -15,6 +15,7 @@ import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlacerPlaceTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerKilledEntityByAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerWearAnvilHammerTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.FireReforgeTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.UseItemTrigger;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.registries.Registries;
@@ -70,6 +71,9 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, ConvertBeaconTrigger> CONVERT_BEACON =
         CT.register("convert_beacon", ConvertBeaconTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, FireReforgeTrigger> FIRE_REFORGE =
+        CT.register("fire_reforge", FireReforgeTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);

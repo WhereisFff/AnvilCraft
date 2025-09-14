@@ -54,6 +54,16 @@ public class ModAdvancements {
     public static final AdvancementHolder WITHER;
     public static final AdvancementHolder RIP_VAN_WINKLE;
 
+    public static final AdvancementHolder FROST_METAL;
+    public static final AdvancementHolder TAI_SHANG_WANG_QING;
+
+    public static final AdvancementHolder FOR_AEONS;
+    public static final AdvancementHolder FORGED_OVER_EONS;
+    public static final AdvancementHolder SELF_IN_FLAMING;
+
+    public static final AdvancementHolder GIANT_AGE;
+    public static final AdvancementHolder ANVIL_ACCELERATOR;
+
     static {
         AdvancementLineHelper mainLine = new AdvancementLineHelper();
         ROOT = mainLine.next()
@@ -546,20 +556,149 @@ public class ModAdvancements {
                 ModBlocks.CORRUPTED_BEACON,
                 Component.translatable("advancements.anvilcraft.wither.title"),
                 Component.translatable("advancements.anvilcraft.wither.description"),
-                null, AdvancementType.TASK,
-                true, true, false
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
             )
             .convertBeacon("convert_beacon")
             .build("wither");
         RIP_VAN_WINKLE = mainLine.next()
             .display(
                 ModBlocks.CORRUPTED_BEACON,
-                Component.translatable("advancements.anvilcraft.ripVanWinkle.title"),
-                Component.translatable("advancements.anvilcraft.ripVanWinkle.description"),
-                null, AdvancementType.GOAL,
-                true, true, false
+                Component.translatable("advancements.anvilcraft.rip_van_winkle.title"),
+                Component.translatable("advancements.anvilcraft.rip_van_winkle.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
             )
             .inWorldRecipeTypeAnc("time_warp_recipe", "time_warp")
             .build("rip_van_winkle");
+
+        AdvancementLineHelper frostLine = mainLine.createBranch();
+        FROST_METAL = frostLine.next()
+            .display(
+                ModItems.FROST_METAL_INGOT,
+                Component.translatable("advancements.anvilcraft.frost_metal.title"),
+                Component.translatable("advancements.anvilcraft.frost_metal.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .hasItems("has_frost_metal_block", ModBlocks.FROST_METAL_BLOCK)
+            .hasItems("has_frost_metal_ingot", ModItems.FROST_METAL_INGOT)
+            .hasItems("has_frost_metal_nugget", ModItems.FROST_METAL_NUGGET)
+            .build("frost_metal");
+        TAI_SHANG_WANG_QING = frostLine.next()
+            .display(
+                ModItems.FROST_METAL_SWORD,
+                Component.translatable("advancements.anvilcraft.tai_shang_wang_qing.title"),
+                Component.translatable("advancements.anvilcraft.tai_shang_wang_qing.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .hurt(
+                "hurt",
+                49,
+                ModItems.FROST_METAL_SWORD,
+                ModItems.FROST_METAL_AXE,
+                ModItems.FROST_METAL_PICKAXE,
+                ModItems.FROST_METAL_SHOVEL,
+                ModItems.FROST_METAL_HOE,
+                ModItems.FROST_METAL_HEAVY_HALBERD
+            )
+            .build("tai_shang_wang_qing");
+
+        AdvancementLineHelper emberLine = mainLine.createBranch();
+        FOR_AEONS = emberLine.next()
+            .display(
+                ModItems.OIL_BUCKET,
+                Component.translatable("advancements.anvilcraft.for_aeons.title"),
+                Component.translatable("advancements.anvilcraft.for_aeons.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .inWorldRecipeAnc("oil_from_raw_beef", "time_warp/oil_from_foods/raw_beef")
+            .inWorldRecipeAnc("oil_from_raw_chicken", "time_warp/oil_from_foods/raw_chicken")
+            .inWorldRecipeAnc("oil_from_raw_fish", "time_warp/oil_from_foods/raw_fish")
+            .inWorldRecipeAnc("oil_from_raw_mutton", "time_warp/oil_from_foods/raw_mutton")
+            .inWorldRecipeAnc("oil_from_raw_porkchop", "time_warp/oil_from_foods/raw_porkchop")
+            .inWorldRecipeAnc("oil_from_raw_rabbit", "time_warp/oil_from_foods/raw_rabbit")
+            .inWorldRecipeAnc("oil_from_piglin_head", "time_warp/oil_from_piglin_head")
+            .inWorldRecipeAnc("oil_from_rotten_flesh", "time_warp/oil_from_rotten_flesh")
+            .inWorldRecipeAnc("oil_from_spider_eye", "time_warp/oil_from_spider_eye")
+            .inWorldRecipeAnc("oil_from_zombie_head", "time_warp/oil_from_zombie_head")
+            .build("for_aeons");
+        FORGED_OVER_EONS = emberLine.next()
+            .display(
+                ModItems.EMBER_METAL_INGOT,
+                Component.translatable("advancements.anvilcraft.forged_over_eons.title"),
+                Component.translatable("advancements.anvilcraft.forged_over_eons.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .hasItems("has_ember_metal_block", ModBlocks.EMBER_METAL_BLOCK)
+            .hasItems("has_ember_metal_ingot", ModItems.EMBER_METAL_INGOT)
+            .hasItems("has_ember_metal_nugget", ModItems.EMBER_METAL_NUGGET)
+            .build("forged_over_eons");
+        SELF_IN_FLAMING = emberLine.next()
+            .display(
+                ModItems.EMBER_METAL_PICKAXE,
+                Component.translatable("advancements.anvilcraft.self_in_flaming.title"),
+                Component.translatable("advancements.anvilcraft.self_in_flaming.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .fireReforge("fire_reforge")
+            .build("self_in_flaming");
+
+        GIANT_AGE = mainLine.next()
+            .display(
+                ModBlocks.GIANT_ANVIL,
+                Component.translatable("advancements.anvilcraft.giant_age.title"),
+                Component.translatable("advancements.anvilcraft.giant_age.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .hasItems("has_giant_anvil", ModBlocks.GIANT_ANVIL)
+            .build("giant_age");
+        ANVIL_ACCELERATOR = mainLine.next()
+            .display(
+                ModBlocks.ACCELERATION_RING,
+                Component.translatable("advancements.anvilcraft.anvil_accelerator.title"),
+                Component.translatable("advancements.anvilcraft.anvil_accelerator.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .requireAll()
+            .hasItems("has_acceleration_ring", ModBlocks.ACCELERATION_RING)
+            .hasItems("has_deflection_ring", ModBlocks.DEFLECTION_RING)
+            .build("anvil_accelerator");
     }
 }
