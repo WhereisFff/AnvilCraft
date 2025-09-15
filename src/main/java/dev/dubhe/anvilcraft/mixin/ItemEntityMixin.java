@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.DamageTypeTags;
@@ -152,6 +153,7 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
             Block block = this.level().getBlockState(this.blockPosition()).getBlock();
             if (REPAIR_EFFICIENCY.containsKey(block)) {
                 this.getItem().setDamageValue(this.getItem().getDamageValue() - REPAIR_EFFICIENCY.get(block));
+                TriggerUtil.fireReforge(this.level(), this.anvilcraft$blockPos);
             }
         }
     }

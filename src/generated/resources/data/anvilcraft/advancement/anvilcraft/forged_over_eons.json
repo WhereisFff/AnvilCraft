@@ -1,31 +1,31 @@
 {
-  "parent": "anvilcraft:anvilcraft/smithing_table",
+  "parent": "anvilcraft:anvilcraft/for_aeons",
   "criteria": {
-    "has_royal_anvil": {
+    "has_ember_metal_block": {
       "conditions": {
         "items": [
           {
-            "items": "anvilcraft:royal_anvil"
+            "items": "anvilcraft:ember_metal_block"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_royal_grindstone": {
+    "has_ember_metal_ingot": {
       "conditions": {
         "items": [
           {
-            "items": "anvilcraft:royal_grindstone"
+            "items": "anvilcraft:ember_metal_ingot"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_royal_smithing_table": {
+    "has_ember_metal_nugget": {
       "conditions": {
         "items": [
           {
-            "items": "anvilcraft:royal_smithing_table"
+            "items": "anvilcraft:ember_metal_nugget"
           }
         ]
       },
@@ -34,25 +34,22 @@
   },
   "display": {
     "description": {
-      "translate": "advancements.anvilcraft.royal_blacksmith.description"
+      "translate": "advancements.anvilcraft.forged_over_eons.description"
     },
+    "frame": "goal",
     "icon": {
       "count": 1,
-      "id": "anvilcraft:royal_anvil"
+      "id": "anvilcraft:ember_metal_ingot"
     },
     "title": {
-      "translate": "advancements.anvilcraft.royal_blacksmith.title"
+      "translate": "advancements.anvilcraft.forged_over_eons.title"
     }
   },
   "requirements": [
     [
-      "has_royal_anvil"
-    ],
-    [
-      "has_royal_smithing_table"
-    ],
-    [
-      "has_royal_grindstone"
+      "has_ember_metal_block",
+      "has_ember_metal_ingot",
+      "has_ember_metal_nugget"
     ]
   ],
   "sends_telemetry_event": true
