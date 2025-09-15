@@ -3,12 +3,14 @@ package dev.dubhe.anvilcraft.init;
 import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.advancement.AdvancementLineHelper;
+import dev.dubhe.anvilcraft.block.entity.HeatCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.loot.ModLootTables;
 import net.minecraft.advancements.AdvancementHolder;
 import net.minecraft.advancements.AdvancementType;
+import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Items;
@@ -41,7 +43,7 @@ public class ModAdvancements {
     public static final AdvancementHolder RECYCLING_DIAMONDS;
     public static final AdvancementHolder ALL_IN_ONE;
     public static final AdvancementHolder HAMMER_AND_NAIL;
-    public static final AdvancementHolder SUPERKILL;
+    public static final AdvancementHolder SUPER_KILL;
     public static final AdvancementHolder HERTS_OF_IRON;
     public static final AdvancementHolder NOT_BEACON;
     public static final AdvancementHolder LIGHTER;
@@ -63,13 +65,20 @@ public class ModAdvancements {
     public static final AdvancementHolder FORGED_OVER_EONS;
     public static final AdvancementHolder SELF_IN_FLAMING;
 
+    public static final AdvancementHolder GEM_TRANSFORM;
+    public static final AdvancementHolder LASER;
+    public static final AdvancementHolder ORE_POINT;
+    public static final AdvancementHolder HEAT_UTILIZING;
+    public static final AdvancementHolder ISOTOPE_DECAY_BATTERY;
+    public static final AdvancementHolder SUPER_HEAT;
+
     public static final AdvancementHolder GIANT_AGE;
     public static final AdvancementHolder ANVIL_ACCELERATOR;
     public static final AdvancementHolder NEW_MATTER;
     public static final AdvancementHolder ANVILON;
     public static final AdvancementHolder OVERHEATED;
-    public static final AdvancementHolder TRANSCENDENCE;
     public static final AdvancementHolder NUCLEAR_POWER_10A;
+    public static final AdvancementHolder TRANSCENDENCE;
 
     static {
         AdvancementLineHelper mainLine = new AdvancementLineHelper();
@@ -385,7 +394,7 @@ public class ModAdvancements {
             .hammerKill("kill_sheep", EntityType.SHEEP)
             .hammerKill("kill_chicken", EntityType.CHICKEN)
             .build("hammer");
-        SUPERKILL = killingLine.next()
+        SUPER_KILL = killingLine.next()
             .display(
                 ModItems.ROYAL_ANVIL_HAMMER,
                 Component.translatable("advancements.anvilcraft.super_kill.title"),
@@ -678,6 +687,95 @@ public class ModAdvancements {
             )
             .fireReforge("fire_reforge")
             .build("self_in_flaming");
+
+        AdvancementLineHelper gemLine = mainLine.createBranch();
+        GEM_TRANSFORM = gemLine.next()
+            .display(
+                ModItems.RUBY,
+                Component.translatable("advancements.anvilcraft.gem_transform.title"),
+                Component.translatable("advancements.anvilcraft.gem_transform.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .inWorldRecipeAnc("emerald_block", "time_warp/emerald_block")
+            .inWorldRecipeAnc("ruby_block", "time_warp/ruby_block")
+            .inWorldRecipeAnc("sapphire_block", "time_warp/sapphire_block")
+            .inWorldRecipeAnc("topaz_block", "time_warp/topaz_block")
+            .build("gem_transform");
+
+        AdvancementLineHelper laserLine = gemLine.createBranch();
+        LASER = laserLine.next()
+            .display(
+                ModBlocks.RUBY_LASER,
+                Component.translatable("advancements.anvilcraft.laser.title"),
+                Component.translatable("advancements.anvilcraft.laser.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .hasItems("has_ruby_laser", ModBlocks.RUBY_LASER)
+            .build("laser");
+        ORE_POINT = laserLine.next()
+            .display(
+                ModBlocks.MINERAL_FOUNTAIN,
+                Component.translatable("advancements.anvilcraft.ore_point.title"),
+                Component.translatable("advancements.anvilcraft.ore_point.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .mineralFountainCreate("mineral_fountain_create")
+            .build("ore_point");
+
+        HEAT_UTILIZING = gemLine.next()
+            .display(
+                ModBlocks.HEAT_COLLECTOR,
+                Component.translatable("advancements.anvilcraft.heat_utilizing.title"),
+                Component.translatable("advancements.anvilcraft.heat_utilizing.description"),
+                null,
+                AdvancementType.TASK,
+                true,
+                true,
+                false
+            )
+            .hasItems("has_heat_collector", ModBlocks.HEAT_COLLECTOR)
+            .build("heat_utilizing");
+
+        ISOTOPE_DECAY_BATTERY = gemLine.createBranch().next()
+            .display(
+                ModBlocks.URANIUM_BLOCK,
+                Component.translatable("advancements.anvilcraft.isotope_decay_battery.title"),
+                Component.translatable("advancements.anvilcraft.isotope_decay_battery.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .heatCollectOn("nuclear_sources", BlockStatePredicate.builder().of(ModBlocks.URANIUM_BLOCK, ModBlocks.PLUTONIUM_BLOCK))
+            .build("isotope_decay_battery");
+
+        SUPER_HEAT = gemLine.next()
+            .display(
+                ModBlocks.HEAT_COLLECTOR,
+                Component.translatable("advancements.anvilcraft.super_heat.title"),
+                Component.translatable("advancements.anvilcraft.super_heat.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .heatCollectorOutput("super_heat", MinMaxBounds.Ints.atLeast(HeatCollectorBlockEntity.MAX_OUTPUT_POWER))
+            .build("super_heat");
 
         GIANT_AGE = mainLine.next()
             .display(

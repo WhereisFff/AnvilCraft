@@ -142,6 +142,24 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.nuclear_power_10a.title", "Nuclear power, piece of cake!");
         provider.add("advancements.anvilcraft.nuclear_power_10a.description", "Using heat collector to collect overheated blocks' heat");
+
+        provider.add("advancements.anvilcraft.gem_transform.title", "Gem transform");
+        provider.add("advancements.anvilcraft.gem_transform.description", "Dropping gem into melt gem cauldron and using time warp to make gem block");
+
+        provider.add("advancements.anvilcraft.laser.title", "Lazer");
+        provider.add("advancements.anvilcraft.laser.description", "Craft ruby laser");
+
+        provider.add("advancements.anvilcraft.ore_point.title", "Ore point");
+        provider.add("advancements.anvilcraft.ore_point.description", "Create a mineral fountain, and start producing ores continually");
+
+        provider.add("advancements.anvilcraft.heat_utilizing.title", "Heat utilizing");
+        provider.add("advancements.anvilcraft.heat_utilizing.description", "Craft heat collector");
+
+        provider.add("advancements.anvilcraft.isotope_decay_battery.title", "Isotope decay battery");
+        provider.add("advancements.anvilcraft.isotope_decay_battery.description", "Using heat collector to collect uranium or plutonium blocks' heat");
+
+        provider.add("advancements.anvilcraft.super_heat.title", "Super heat");
+        provider.add("advancements.anvilcraft.super_heat.description", "Making a heat collector reach the max efficiency");
         // endregion
 
         // region automation line

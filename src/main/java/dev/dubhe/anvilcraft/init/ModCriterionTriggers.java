@@ -13,6 +13,7 @@ import dev.dubhe.anvilcraft.advancements.criterion.HeatCollectorTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.MineralFountainCreateTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlacerPlaceTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerKilledEntityByAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerWearAnvilHammerTrigger;
@@ -78,6 +79,9 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, HeatCollectorTrigger> HEAT_COLLECTOR_COLLECT =
         CT.register("heat_collector_collect", HeatCollectorTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, MineralFountainCreateTrigger> MINERAL_FOUNTAIN_CREATE =
+        CT.register("mineral_fountain_crate", MineralFountainCreateTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);

@@ -14,6 +14,7 @@ import dev.dubhe.anvilcraft.advancements.criterion.HeatCollectorTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
+import dev.dubhe.anvilcraft.advancements.criterion.MineralFountainCreateTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlacerPlaceTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerKilledEntityByAnvilHammerTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.PlayerWearAnvilHammerTrigger;
@@ -342,6 +343,10 @@ public class AdvancementLineHelper {
 
         public AdvancementHelper heatCollectorOutput(String key, MinMaxBounds.Ints output) {
             return this.addCriterion(key, HeatCollectorTrigger.TriggerInstance.output(output));
+        }
+
+        public AdvancementHelper mineralFountainCreate(String key) {
+            return this.addCriterion(key, MineralFountainCreateTrigger.TriggerInstance.create());
         }
 
         public AdvancementHolder build(String id) {

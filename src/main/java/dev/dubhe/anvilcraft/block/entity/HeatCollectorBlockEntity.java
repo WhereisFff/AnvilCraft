@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProducer, IHasAffectRange {
-    private static final int MAX_OUTPUT_POWER = 4096;
+    public static final int MAX_OUTPUT_POWER = 4096;
     @Getter
     private int time = 0;
     @Getter
