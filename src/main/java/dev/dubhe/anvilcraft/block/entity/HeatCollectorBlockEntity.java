@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.api.power.IPowerProducer;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
@@ -66,6 +67,7 @@ public class HeatCollectorBlockEntity extends BlockEntity implements IPowerProdu
         this.outputPower = this.inputtingPower;
         if (this.outputPower > 0 && this.getBlockState().getBlock() instanceof HeatCollectorBlock collector) {
             collector.activate(this.level, this.getBlockPos(), this.getBlockState());
+            TriggerUtil.heatCollectorOutput(this.level, this.getBlockPos(), this.outputPower);
         }
         if (this.outputPower != oldPower && grid != null) grid.markChanged();
         this.inputtingPower = 0;

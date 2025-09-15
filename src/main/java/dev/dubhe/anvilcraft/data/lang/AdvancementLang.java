@@ -127,6 +127,21 @@ public class AdvancementLang {
 
         provider.add("advancements.anvilcraft.anvil_accelerator.title", "Anvil accelerator");
         provider.add("advancements.anvilcraft.anvil_accelerator.description", "Craft acceleration ring and deflection ring");
+
+        provider.add("advancements.anvilcraft.new_matter.title", "New Matter");
+        provider.add("advancements.anvilcraft.new_matter.description", "Using anvil collision to craft uranium, multiphase matter or negative matter");
+
+        provider.add("advancements.anvilcraft.anvilon.title", "Anvilon");
+        provider.add("advancements.anvilcraft.anvilon.description", "Using anvil collision to craft any type of confined anvilon");
+
+        provider.add("advancements.anvilcraft.overheated.title", "Overheated");
+        provider.add("advancements.anvilcraft.overheated.description", "Using anvil collision to make ember metal block overheated");
+
+        provider.add("advancements.anvilcraft.transcendence.title", "Transcendence");
+        provider.add("advancements.anvilcraft.transcendence.description", "Injecting an charged neutronium ingot into an overheated ember metal block to craft transcendium block");
+
+        provider.add("advancements.anvilcraft.nuclear_power_10a.title", "Nuclear power, piece of cake!");
+        provider.add("advancements.anvilcraft.nuclear_power_10a.description", "Using heat collector to collect overheated blocks' heat");
         // endregion
 
         // region automation line

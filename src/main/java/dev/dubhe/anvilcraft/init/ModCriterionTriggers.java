@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.advancements.criterion.AnvilOnGroundTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.ConvertBeaconTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.DevourerDevourTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.DispenserRepairIronGolem;
+import dev.dubhe.anvilcraft.advancements.criterion.HeatCollectorTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
@@ -74,6 +75,9 @@ public class ModCriterionTriggers {
 
     public static final DeferredHolder<CriterionTrigger<?>, FireReforgeTrigger> FIRE_REFORGE =
         CT.register("fire_reforge", FireReforgeTrigger::new);
+
+    public static final DeferredHolder<CriterionTrigger<?>, HeatCollectorTrigger> HEAT_COLLECTOR_COLLECT =
+        CT.register("heat_collector_collect", HeatCollectorTrigger::new);
 
     public static void register(IEventBus eventBus) {
         CT.register(eventBus);

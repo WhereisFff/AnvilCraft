@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.api.advancement;
 
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerClickBlockTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.AnvilHammerHurtEntityTrigger;
@@ -9,6 +10,7 @@ import dev.dubhe.anvilcraft.advancements.criterion.AnvilOnGroundTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.ConvertBeaconTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.DevourerDevourTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.DispenserRepairIronGolem;
+import dev.dubhe.anvilcraft.advancements.criterion.HeatCollectorTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.InWorldRecipeTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MagnetLiftingAnvilTrigger;
 import dev.dubhe.anvilcraft.advancements.criterion.MilkTrigger;
@@ -24,7 +26,6 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.AdvancementType;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.DisplayInfo;
-import net.minecraft.advancements.critereon.ContextAwarePredicate;
 import net.minecraft.advancements.critereon.DamagePredicate;
 import net.minecraft.advancements.critereon.DamageSourcePredicate;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -333,6 +334,14 @@ public class AdvancementLineHelper {
 
         public AdvancementHelper fireReforge(String key) {
             return this.addCriterion(key, FireReforgeTrigger.TriggerInstance.fireReforge());
+        }
+
+        public AdvancementHelper heatCollectOn(String key, BlockStatePredicate.Builder collecting) {
+            return this.addCriterion(key, HeatCollectorTrigger.TriggerInstance.collectOn(collecting));
+        }
+
+        public AdvancementHelper heatCollectorOutput(String key, MinMaxBounds.Ints output) {
+            return this.addCriterion(key, HeatCollectorTrigger.TriggerInstance.output(output));
         }
 
         public AdvancementHolder build(String id) {

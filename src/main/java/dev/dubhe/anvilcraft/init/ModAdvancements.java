@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.init;
 
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.advancement.AdvancementLineHelper;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.loot.ModLootTables;
@@ -63,6 +65,11 @@ public class ModAdvancements {
 
     public static final AdvancementHolder GIANT_AGE;
     public static final AdvancementHolder ANVIL_ACCELERATOR;
+    public static final AdvancementHolder NEW_MATTER;
+    public static final AdvancementHolder ANVILON;
+    public static final AdvancementHolder OVERHEATED;
+    public static final AdvancementHolder TRANSCENDENCE;
+    public static final AdvancementHolder NUCLEAR_POWER_10A;
 
     static {
         AdvancementLineHelper mainLine = new AdvancementLineHelper();
@@ -700,5 +707,86 @@ public class ModAdvancements {
             .hasItems("has_acceleration_ring", ModBlocks.ACCELERATION_RING)
             .hasItems("has_deflection_ring", ModBlocks.DEFLECTION_RING)
             .build("anvil_accelerator");
+
+        AdvancementLineHelper sideLine1 = mainLine.createBranch();
+        NEW_MATTER = sideLine1.next()
+            .display(
+                ModItems.MULTIPHASE_MATTER,
+                Component.translatable("advancements.anvilcraft.new_matter.title"),
+                Component.translatable("advancements.anvilcraft.new_matter.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .recipeAnc("uranium", "anvil_collision/anvil_tier_1_and_redstone_block_32")
+            .recipeAnc("multiphase_matter", "anvil_collision/ember_anvil_and_frost_metal_block_32")
+            .recipeAnc("negative_matter", "anvil_collision/anvil_tier_1_and_levitation_powder_block_32")
+            .build("new_matter");
+        ANVILON = sideLine1.next()
+            .display(
+                ModBlocks.CONFINED_SPACE_ANVILON,
+                Component.translatable("advancements.anvilcraft.anvilon.title"),
+                Component.translatable("advancements.anvilcraft.anvilon.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .recipeAnc("mass_16", "anvil_collision/anvil_tier_0_and_giant_anvil_32")
+            .recipeAnc("energy_8", "anvil_collision/anvil_tier_0_and_giant_anvil_128")
+            .recipeAnc("time_8", "anvil_collision/anvil_tier_0_and_corrupted_beacon_32")
+            .recipeAnc("energy_4_beacon", "anvil_collision/anvil_tier_0_and_corrupted_beacon_128")
+            .recipeAnc("space_8", "anvil_collision/anvil_tier_0_and_space_overcompressor_32")
+            .recipeAnc("energy_4_space", "anvil_collision/anvil_tier_0_and_space_overcompressor_128")
+            .build("anvilon");
+
+        OVERHEATED = mainLine.next()
+            .display(
+                ModBlocks.OVERHEATED_EMBER_METAL_BLOCK,
+                Component.translatable("advancements.anvilcraft.overheated.title"),
+                Component.translatable("advancements.anvilcraft.overheated.description"),
+                null,
+                AdvancementType.GOAL,
+                true,
+                true,
+                false
+            )
+            .requireAny()
+            .recipeAnc("uranium_heat", "anvil_collision/anvil_tier_2_and_uranium_block_256")
+            .recipeAnc("plutonium_heat", "anvil_collision/anvil_tier_2_and_plutonium_block_256")
+            .build("overheated");
+
+        NUCLEAR_POWER_10A = mainLine.createBranch().next()
+            .display(
+                ModBlocks.HEAT_COLLECTOR,
+                Component.translatable("advancements.anvilcraft.nuclear_power_10a.title"),
+                Component.translatable("advancements.anvilcraft.nuclear_power_10a.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .heatCollectOn("collect_overheated", BlockStatePredicate.builder().of(ModBlockTags.OVERHEATED_BLOCKS))
+            .build("nuclear_power_10a");
+
+        TRANSCENDENCE = mainLine.next()
+            .display(
+                ModBlocks.TRANSCENDIUM_BLOCK,
+                Component.translatable("advancements.anvilcraft.transcendence.title"),
+                Component.translatable("advancements.anvilcraft.transcendence.description"),
+                null,
+                AdvancementType.CHALLENGE,
+                true,
+                true,
+                false
+            )
+            .inWorldRecipeAnc("transcendium_block", "item_inject/transcendium_block")
+            .build("transcendence");
     }
 }
