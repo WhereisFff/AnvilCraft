@@ -91,13 +91,11 @@ public class PlayerEventListener {
     @SuppressWarnings("DataFlowIssue")
     @SubscribeEvent
     public static void onPlayerUsingTotem(LivingUseTotemEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player
-            && player.getItemInHand(event.getHandHolding()).is(ModItems.AMULET_BOX.asItem())
-        ) {
-            ItemStack availableItem = player.getItemInHand(event.getHandHolding());
-            BoxContents boxContents = availableItem.get(ModComponents.BOX_CONTENTS);
-            AmuletManager.INSTANCE.startRaffle(player, event.getSource(), !boxContents.totems().isEmpty());
-        }
+        if (!(event.getEntity() instanceof ServerPlayer player)) return;
+        ItemStack inHand = player.getItemInHand(event.getHandHolding());
+        if (!inHand.is(ModItems.AMULET_BOX.asItem())) return;
+        if (inHand.getOrDefault(ModComponents.BOX_CONTENTS, BoxContents.EMPTY).totems().isEmpty()) return;
+        AmuletManager.INSTANCE.startRaffle(player, event.getSource());
     }
 
     @SubscribeEvent
