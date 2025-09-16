@@ -92,9 +92,9 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
         IFocusGroup focuses) {
 
         Ingredient inputIngredient;
-        SpawnEggItem spawnEggItemInput = SpawnEggItem.byId(recipe.value().getInput());
+        SpawnEggItem spawnEggItemInput = SpawnEggItem.byId(recipe.value().input());
         if (spawnEggItemInput == null) {
-            String name = recipe.value().getInput().toShortString();
+            String name = recipe.value().input().toShortString();
             ItemStack x = Items.BARRIER.getDefaultInstance();
             x.set(DataComponents.CUSTOM_NAME, Component.literal(name));
             inputIngredient = Ingredient.of(x);
@@ -103,7 +103,7 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
         builder.addSlot(RecipeIngredientRole.INPUT, 21, 24).addIngredients(inputIngredient);
 
         List<ChanceItemStack> outputStacks = new ArrayList<>();
-        for (TransformResult result : recipe.value().getResults()) {
+        for (TransformResult result : recipe.value().results()) {
             SpawnEggItem spawnEggOutput = SpawnEggItem.byId(result.resultEntityType());
             if (spawnEggOutput == null) {
                 String name = result.resultEntityType().toShortString();
@@ -155,10 +155,10 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
         arrowDefault.draw(guiGraphics, 74, 22);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 1);
-        if (isChance(recipe.getResults())) {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slotChoice, recipe.getResults().size());
+        if (isChance(recipe.results())) {
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotChoice, recipe.results().size());
         } else {
-            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.getResults().size());
+            JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, recipe.results().size());
         }
 
         PoseStack pose = guiGraphics.pose();
