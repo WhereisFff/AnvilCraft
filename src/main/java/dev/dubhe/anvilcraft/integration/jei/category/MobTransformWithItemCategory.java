@@ -93,32 +93,32 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
     ) {
 
         List<ItemIngredientPredicate> inputIngredients = new ArrayList<>();
-        SpawnEggItem spawnEggItemInput = SpawnEggItem.byId(recipe.value().getInput());
+        SpawnEggItem spawnEggItemInput = SpawnEggItem.byId(recipe.value().input());
         if (spawnEggItemInput == null) {
             inputIngredients.add(
                 ItemIngredientPredicate.Builder.item().of(Items.BARRIER)
                     .hasComponents(
                         DataComponentPredicate.builder()
-                            .expect(DataComponents.CUSTOM_NAME, Component.literal(recipe.value().getInput().toShortString()))
+                            .expect(DataComponents.CUSTOM_NAME, Component.literal(recipe.value().input().toShortString()))
                             .build())
                     .build());
         } else {
             inputIngredients.add(ItemIngredientPredicate.Builder.item().of(spawnEggItemInput).build());
         }
-        inputIngredients.addAll(recipe.value().getItemIngredients());
+        inputIngredients.addAll(recipe.value().itemIngredients());
         JeiSlotUtil.addInputSlots(builder, inputIngredients);
 
         List<ChanceItemStack> outputStacks = new ArrayList<>();
-        SpawnEggItem spawnEggItemOutput = SpawnEggItem.byId(recipe.value().getSpecialResult().resultEntityType());
+        SpawnEggItem spawnEggItemOutput = SpawnEggItem.byId(recipe.value().specialResult().resultEntityType());
         if (spawnEggItemOutput == null) {
-            String name = recipe.value().getSpecialResult().resultEntityType().toShortString();
+            String name = recipe.value().specialResult().resultEntityType().toShortString();
             ItemStack x = Items.BARRIER.getDefaultInstance();
             x.set(DataComponents.CUSTOM_NAME, Component.literal(name));
             outputStacks.add(ChanceItemStack.of(x.copyWithCount(1)));
         } else {
             outputStacks.add(ChanceItemStack.of(spawnEggItemOutput.getDefaultInstance().copyWithCount(1)));
         }
-        outputStacks.add(ChanceItemStack.of(recipe.value().getItemResult().copyWithCount(1)));
+        outputStacks.add(ChanceItemStack.of(recipe.value().itemResult().copyWithCount(1)));
         JeiSlotUtil.addOutputSlots(builder, outputStacks);
 
         builder.addInvisibleIngredients(RecipeIngredientRole.CATALYST)
@@ -164,7 +164,7 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
         arrowDefault.draw(guiGraphics, 74, 22);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, 2);
-        if (recipe.chancePercentPerItem == 0) {
+        if (recipe.chancePercentPerItem() == 0) {
             JeiSlotUtil.drawOutputSlots(guiGraphics, slotDefault, 2);
         } else {
             JeiSlotUtil.drawOutputSlots(guiGraphics, slotProbability, 2);
@@ -175,7 +175,7 @@ public class MobTransformWithItemCategory implements IRecipeCategory<RecipeHolde
         pose.scale(0.8f, 0.8f, 1.0f);
         guiGraphics.drawString(
             Minecraft.getInstance().font,
-            Component.translatable(KEY_CHANCE, recipe.getChancePercentPerItem()),
+            Component.translatable(KEY_CHANCE, recipe.chancePercentPerItem()),
             0, 70, 0xFF000000, false
         );
         pose.popPose();
