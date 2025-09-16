@@ -119,6 +119,8 @@ import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
 import dev.dubhe.anvilcraft.block.heatable.NormalBlock;
 import dev.dubhe.anvilcraft.block.heatable.OverheatedEmberMetalBlock;
 import dev.dubhe.anvilcraft.block.heatable.RedhotBlock;
+import dev.dubhe.anvilcraft.block.item.HeliostatsItem;
+import dev.dubhe.anvilcraft.block.item.MengerSpongeBlockItem;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityCountPressurePlateBlock;
@@ -147,19 +149,18 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemGroups;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.item.ChuteBlockItem;
-import dev.dubhe.anvilcraft.item.EndDustBlockItem;
-import dev.dubhe.anvilcraft.item.FlexibleMultiPartBlockItem;
-import dev.dubhe.anvilcraft.item.HasMobBlockItem;
-import dev.dubhe.anvilcraft.item.HeliostatsItem;
-import dev.dubhe.anvilcraft.item.PlaceInWaterBlockItem;
-import dev.dubhe.anvilcraft.item.ResinBlockItem;
-import dev.dubhe.anvilcraft.item.SimpleMultiPartBlockItem;
+import dev.dubhe.anvilcraft.block.item.ChuteBlockItem;
+import dev.dubhe.anvilcraft.block.item.EndDustBlockItem;
+import dev.dubhe.anvilcraft.block.item.FlexibleMultiPartBlockItem;
+import dev.dubhe.anvilcraft.block.item.HasMobBlockItem;
+import dev.dubhe.anvilcraft.block.item.PlaceInWaterBlockItem;
+import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.block.item.SimpleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
-import dev.dubhe.anvilcraft.item.abnormal.CursedBlockItem;
-import dev.dubhe.anvilcraft.item.abnormal.LevitationBlockItem;
-import dev.dubhe.anvilcraft.item.abnormal.RadiationBlockItem;
-import dev.dubhe.anvilcraft.item.abnormal.SuperHeavyBlockItem;
+import dev.dubhe.anvilcraft.block.item.CursedBlockItem;
+import dev.dubhe.anvilcraft.block.item.LevitationBlockItem;
+import dev.dubhe.anvilcraft.block.item.RadiationBlockItem;
+import dev.dubhe.anvilcraft.block.item.SuperHeavyBlockItem;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
 import dev.dubhe.anvilcraft.util.DangerUtil;
@@ -1342,7 +1343,8 @@ public class ModBlocks {
         .properties(BlockBehaviour.Properties::noOcclusion)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_HOE)
-        .simpleItem()
+        .item(MengerSpongeBlockItem::new)
+        .build()
         .register();
     public static final BlockEntry<? extends Block> CHUTE = REGISTRATE.block("chute", ChuteBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
