@@ -115,14 +115,14 @@ public class ModDispenserBehavior {
         return stack1;
     }
 
-    private static ItemStack bowl(BlockSource blockSource, ItemStack stack) {
+    private static ItemStack bowl(BlockSource blockSource, ItemStack bowlStack) {
         MushroomCow mushroomCow = EntityUtil.getAnyEntityOfClass(
             blockSource.level(), MushroomCow.class,
             new AABB(blockSource.pos().relative(blockSource.state().getValue(DirectionalBlock.FACING))),
             m -> !m.isBaby()
         );
 
-        if (mushroomCow == null) return DEFAULT_BEHAVIOUR.dispense(blockSource, stack);
+        if (mushroomCow == null) return DEFAULT_BEHAVIOUR.dispense(blockSource, bowlStack);
 
         ItemStack stewItem;
         SoundEvent sound;
@@ -137,11 +137,12 @@ public class ModDispenserBehavior {
         }
         mushroomCow.playSound(sound, 1.0F, 1.0F);
 
-        stack.shrink(1);
-
-        blockSource.blockEntity().insertItem(stewItem);
-        if(!stewItem.isEmpty()) DEFAULT_BEHAVIOUR.dispense(blockSource, stewItem);
-        return stack;
+        bowlStack.shrink(1);
+        
+        if(bowlStack.isEmpty()) return stewItem;
+        ItemStack remainedStewItem = blockSource.blockEntity().insertItem(stewItem);
+        if (!remainedStewItem.isEmpty()) DEFAULT_BEHAVIOUR.dispense(blockSource, remainedStewItem);
+        return bowlStack;
     }
 
     private static ItemStack goldenApple(BlockSource blockSource, ItemStack stack) {
@@ -158,12 +159,15 @@ public class ModDispenserBehavior {
 
     private static ItemStack resinBlock(BlockSource blockSource, ItemStack resinBlockItem) {
         if (ResinBlockItem.hasMob(resinBlockItem)) {
-            ItemStack result = ResinBlockItem.spawnMobFromItem(
-                blockSource.level(), blockSource.pos().relative(blockSource.state().getValue(DirectionalBlock.FACING)), resinBlockItem);
-            Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-            DefaultDispenseItemBehavior.spawnItem(
-                blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
-            return result;
+            ItemStack resin = ResinBlockItem.spawnMobFromItem(
+                blockSource.level(), blockSource.pos().relative(blockSource.state().getValue(DirectionalBlock.FACING)), resinBlockItem
+            );
+            if (!resin.isEmpty()) {
+                DefaultDispenseItemBehavior.spawnItem(
+                    blockSource.level(), resin, 6, blockSource.state().getValue(DispenserBlock.FACING),
+                    DispenserBlock.getDispensePosition(blockSource)
+                );
+            }
         } else {
             Mob mob = EntityUtil.getAnyEntityOfClass(
                 blockSource.level(), Mob.class,
@@ -171,11 +175,20 @@ public class ModDispenserBehavior {
                 HasMobBlockItem::canMobBeSaved
             );
             if (mob == null) return DEFAULT_BEHAVIOUR.dispense(blockSource, resinBlockItem);
-            ItemStack result = ResinBlockItem.saveMobInItem(blockSource.level(), mob, resinBlockItem);
-            Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-            DefaultDispenseItemBehavior.spawnItem(
-                blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
-            return result;
+            ItemStack mobResin = ResinBlockItem.saveMobInItem(blockSource.level(), mob, resinBlockItem);
+            
+            if(resinBlockItem.isEmpty()) return mobResin;
+
+            ItemStack remainedMobResin = blockSource.blockEntity().insertItem(mobResin);
+
+            if (!remainedMobResin.isEmpty()) {
+                DefaultDispenseItemBehavior.spawnItem(
+                    blockSource.level(), remainedMobResin, 6,
+                    blockSource.state().getValue(DispenserBlock.FACING), 
+                    DispenserBlock.getDispensePosition(blockSource)
+                );
+            }
         }
+        return resinBlockItem;
     }
 }
