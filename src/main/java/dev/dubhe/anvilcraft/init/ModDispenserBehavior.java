@@ -1,9 +1,11 @@
 package dev.dubhe.anvilcraft.init;
 
 import com.tterrag.registrate.util.entry.ItemEntry;
+import dev.dubhe.anvilcraft.block.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.util.EntityUtil;
 import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
@@ -30,7 +32,6 @@ import net.minecraft.world.level.block.AbstractCauldronBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DirectionalBlock;
 import net.minecraft.world.level.block.DispenserBlock;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.phys.AABB;
 
@@ -119,31 +120,7 @@ public class ModDispenserBehavior {
                 }
             }
         );
-        DispenserBlock.registerBehavior(
-            ModBlocks.RESIN_BLOCK, new DefaultDispenseItemBehavior() {
-                @Override
-                protected ItemStack execute(BlockSource blockSource, ItemStack resinBlockItem) {
-                    Level level = blockSource.level();
-                    BlockPos pos = blockSource.pos();
-                    BlockState state = blockSource.state();
-                    if (ResinBlockItem.hasMob(resinBlockItem)) {
-                        ItemStack result = ResinBlockItem.spawnMobFromItem(
-                            level, pos.relative(state.getValue(DirectionalBlock.FACING)), resinBlockItem);
-                        Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-                        spawnItem(blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
-                    } else {
-                        List<Mob> entities = level.getEntitiesOfClass(
-                            Mob.class, new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))));
-                        if (entities.isEmpty() || entities.getFirst() == null) return super.execute(blockSource, resinBlockItem);
-                        Mob entity = entities.getFirst();
-                        ItemStack result = ResinBlockItem.saveMobInItem(level, entity, resinBlockItem);
-                        Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
-                        spawnItem(blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
-                    }
-                    return resinBlockItem;
-                }
-            }
-        );
+        DispenserBlock.registerBehavior(ModBlocks.RESIN_BLOCK, ModDispenserBehavior::resinBlock);
         DispenserBlock.registerBehavior(ModItems.OIL_BUCKET, BUCKET);
         DispenserBlock.registerBehavior(ModItems.MELT_GEM_BUCKET, BUCKET);
         DispenserBlock.registerBehavior(ModBlocks.MENGER_SPONGE, ModDispenserBehavior::mengerSponge);
@@ -187,5 +164,28 @@ public class ModDispenserBehavior {
             ModCriterionTriggers.REPAIR_IRON_GOLEM.get().trigger(player);
         }
         return stack1;
+    }
+    
+    private static ItemStack resinBlock(BlockSource blockSource, ItemStack resinBlockItem) {
+        if (ResinBlockItem.hasMob(resinBlockItem)) {
+            ItemStack result = ResinBlockItem.spawnMobFromItem(
+                blockSource.level(), blockSource.pos().relative(blockSource.state().getValue(DirectionalBlock.FACING)), resinBlockItem);
+            Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
+            DefaultDispenseItemBehavior.spawnItem(
+                blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
+            return result;
+        } else {
+            Mob mob = EntityUtil.getAnyEntityOfClass(
+                blockSource.level(), Mob.class,
+                new AABB(blockSource.pos().relative(blockSource.state().getValue(DirectionalBlock.FACING))),
+                HasMobBlockItem::canMobBeSaved
+            );
+            if (mob == null) return DEFAULT_BEHAVIOUR.dispense(blockSource, resinBlockItem);
+            ItemStack result = ResinBlockItem.saveMobInItem(blockSource.level(), mob, resinBlockItem);
+            Direction direction = blockSource.state().getValue(DispenserBlock.FACING);
+            DefaultDispenseItemBehavior.spawnItem(
+                blockSource.level(), result, 6, direction, DispenserBlock.getDispensePosition(blockSource));
+            return result;
+        }
     }
 }

@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.item;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.entity.HasMobBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
@@ -12,12 +13,10 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Mob;
-import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.entity.ai.memory.MemoryModuleType;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.npc.Villager;
@@ -107,13 +106,11 @@ public class HasMobBlockItem extends BlockItem {
         return savedEntity.toEntity(level);
     }
 
-    /**
-     * 向物品中存入实体
-     * 适用于来自玩家的请求
-     */
+
     @SuppressWarnings("deprecation")
-    public static void saveMobInItem(Level level, Mob entity, Player player, ItemStack stack) {
+    public static ItemStack saveMobInItem(Level level, Mob entity, @Nullable Player player, ItemStack stack) {
         if (level.isClientSide()) {
+            if(player == null) AnvilCraft.LOGGER.warn("why a dispenser run saveMobInItem in client side???");
             Item item = stack.getItem();
             if (item instanceof ResinBlockItem item1) {
                 BlockPos blockPos = entity.getOnPos();
@@ -127,16 +124,12 @@ public class HasMobBlockItem extends BlockItem {
                     (soundType.getVolume() + 1.0f) / 2.0f,
                     soundType.getPitch() * 0.8f);
             }
-            return;
+            return ItemStack.EMPTY;
         }
+        
         SavedEntity savedEntity = SavedEntity.fromMob(entity);
-        if (entity.getType().getCategory() == MobCategory.MONSTER) {
-            MobEffectInstance instance = entity.getEffect(MobEffects.WEAKNESS);
-            if (instance == null && !player.getAbilities().instabuild) return;
-        }
-        stack = stack.split(1);
-        stack.set(ModComponents.SAVED_ENTITY, savedEntity);
-        player.getInventory().placeItemBackInInventory(stack);
+        ItemStack newStack = stack.split(1);
+        newStack.set(ModComponents.SAVED_ENTITY, savedEntity);
         if (entity instanceof Villager villager) {
             villager.releasePoi(MemoryModuleType.HOME);
             villager.releasePoi(MemoryModuleType.JOB_SITE);
@@ -144,44 +137,22 @@ public class HasMobBlockItem extends BlockItem {
             villager.releasePoi(MemoryModuleType.MEETING_POINT);
         }
         entity.remove(Entity.RemovalReason.DISCARDED);
+        if (player != null) player.getInventory().placeItemBackInInventory(stack);
+        return newStack;
+    }
+    
+    public static ItemStack saveMobInItem(Level level, Mob entity, ItemStack stack) {
+        return saveMobInItem(level, entity, null, stack);
     }
 
-    /**
-     * 向物品中存入实体<br>
-     * 适用于不来自玩家的请求
-     */
-    @SuppressWarnings("deprecation")
-    public static ItemStack saveMobInItem(Level level, Mob entity, ItemStack stack) {
-        if (level.isClientSide()) {
-            Item item = stack.getItem();
-            if (item instanceof ResinBlockItem item1) {
-                BlockPos blockPos = entity.getOnPos();
-                BlockState blockState = item1.getBlock().defaultBlockState();
-                SoundType soundType = blockState.getSoundType();
-                level.playSound(
-                    null,
-                    blockPos,
-                    item1.getPlaceSound(blockState),
-                    SoundSource.BLOCKS,
-                    (soundType.getVolume() + 1.0f) / 2.0f,
-                    soundType.getPitch() * 0.8f);
-            }
-            return stack;
-        }
-        SavedEntity savedEntity = SavedEntity.fromMob(entity);
-        if (entity instanceof Monster monster) {
-            MobEffectInstance instance = monster.getEffect(MobEffects.WEAKNESS);
-            if (instance == null) return stack;
-        }
-        stack = stack.split(1);
-        stack.set(ModComponents.SAVED_ENTITY, savedEntity);
-        if (entity instanceof Villager villager) {
-            villager.releasePoi(MemoryModuleType.HOME);
-            villager.releasePoi(MemoryModuleType.JOB_SITE);
-            villager.releasePoi(MemoryModuleType.POTENTIAL_JOB_SITE);
-            villager.releasePoi(MemoryModuleType.MEETING_POINT);
-        }
-        entity.remove(Entity.RemovalReason.DISCARDED);
-        return stack;
+    public static boolean canMobBeSaved(Mob entity, @Nullable Player player) {
+        if (player != null && player.getAbilities().instabuild) return true;
+
+        if (entity.getBbHeight() > 2.0 || entity.getBbWidth() > 1.5) return false;
+        return !(entity instanceof Monster monster && !monster.hasEffect(MobEffects.WEAKNESS));
+    }
+
+    public static boolean canMobBeSaved(Mob entity) {
+        return canMobBeSaved(entity, null);
     }
 }
