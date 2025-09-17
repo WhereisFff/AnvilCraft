@@ -145,14 +145,15 @@ public class HasMobBlockItem extends BlockItem {
         return saveMobInItem(level, entity, null, stack);
     }
 
-    public static boolean canMobBeSaved(Mob entity, @Nullable Player player) {
+    public static boolean canMobBeSaved(Mob entity, @Nullable Player player, @Nullable ItemStack stack) {
         if (player != null && player.getAbilities().instabuild) return true;
 
+        if (stack != null && ResinBlockItem.hasMob(stack)) return false;
         if (entity.getBbHeight() > 2.0 || entity.getBbWidth() > 1.5) return false;
         return !(entity instanceof Monster monster && !monster.hasEffect(MobEffects.WEAKNESS));
     }
 
     public static boolean canMobBeSaved(Mob entity) {
-        return canMobBeSaved(entity, null);
+        return canMobBeSaved(entity, null, null);
     }
 }
