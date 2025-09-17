@@ -67,59 +67,8 @@ public class ModDispenserBehavior {
 
     public static void register() {
         DispenserBlock.registerBehavior(Items.IRON_INGOT, ModDispenserBehavior::ironIngot);
-        DispenserBlock.registerBehavior(
-            Items.BOWL, new DefaultDispenseItemBehavior() {
-                @Override
-                protected ItemStack execute(BlockSource blockSource, ItemStack bowlItem) {
-                    Level level = blockSource.level();
-                    BlockPos pos = blockSource.pos();
-                    BlockState state = blockSource.state();
-                    List<MushroomCow> mushroomCows = level.getEntitiesOfClass(
-                        MushroomCow.class,
-                        new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))),
-                        m -> !m.isBaby()
-                    );
-                    if (mushroomCows.isEmpty()) return super.execute(blockSource, bowlItem);
-                    MushroomCow mushroomCow = mushroomCows.getFirst();
-                    ItemStack stewItem;
-                    SoundEvent sound;
-                    if (mushroomCow.stewEffects != null) {
-                        stewItem = new ItemStack(Items.SUSPICIOUS_STEW);
-                        stewItem.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, mushroomCow.stewEffects);
-                        mushroomCow.stewEffects = null;
-                        sound = SoundEvents.MOOSHROOM_MILK_SUSPICIOUSLY;
-                    } else {
-                        stewItem = new ItemStack(Items.MUSHROOM_STEW);
-                        sound = SoundEvents.MOOSHROOM_MILK;
-                    }
-                    mushroomCow.playSound(sound, 1.0F, 1.0F);
-                    return this.consumeWithRemainder(blockSource, bowlItem, stewItem);
-                }
-            }
-        );
-        DispenserBlock.registerBehavior(
-            Items.GOLDEN_APPLE, new DefaultDispenseItemBehavior() {
-                @Override
-                protected ItemStack execute(BlockSource blockSource, ItemStack goldenAppleItem) {
-                    Level level = blockSource.level();
-                    BlockPos pos = blockSource.pos();
-                    BlockState state = blockSource.state();
-                    List<ZombieVillager> zombieVillagers = level.getEntitiesOfClass(
-                        ZombieVillager.class,
-                        new AABB(pos.relative(state.getValue(DirectionalBlock.FACING))),
-                        z -> z.hasEffect(MobEffects.WEAKNESS) && !z.isConverting()
-                    );
-                    if (zombieVillagers.isEmpty()) return super.execute(blockSource, goldenAppleItem);
-                    ZombieVillager zombieVillager = zombieVillagers.getFirst();
-                    zombieVillager.startConverting(
-                        ANVILCRAFT_DISPENSER,
-                        zombieVillager.getRandom().nextInt(2401) + 3600
-                    );
-                    goldenAppleItem.shrink(1);
-                    return goldenAppleItem;
-                }
-            }
-        );
+        DispenserBlock.registerBehavior(Items.BOWL, ModDispenserBehavior::bowl);
+        DispenserBlock.registerBehavior(Items.GOLDEN_APPLE, ModDispenserBehavior::goldenApple);
         DispenserBlock.registerBehavior(ModBlocks.RESIN_BLOCK, ModDispenserBehavior::resinBlock);
         DispenserBlock.registerBehavior(ModItems.OIL_BUCKET, BUCKET);
         DispenserBlock.registerBehavior(ModItems.MELT_GEM_BUCKET, BUCKET);
@@ -165,7 +114,48 @@ public class ModDispenserBehavior {
         }
         return stack1;
     }
-    
+
+    private static ItemStack bowl(BlockSource blockSource, ItemStack stack) {
+        MushroomCow mushroomCow = EntityUtil.getAnyEntityOfClass(
+            blockSource.level(), MushroomCow.class,
+            new AABB(blockSource.pos().relative(blockSource.state().getValue(DirectionalBlock.FACING))),
+            m -> !m.isBaby()
+        );
+
+        if (mushroomCow == null) return DEFAULT_BEHAVIOUR.dispense(blockSource, stack);
+
+        ItemStack stewItem;
+        SoundEvent sound;
+        if (mushroomCow.stewEffects == null) {
+            stewItem = new ItemStack(Items.MUSHROOM_STEW);
+            sound = SoundEvents.MOOSHROOM_MILK;
+        } else {
+            stewItem = new ItemStack(Items.SUSPICIOUS_STEW);
+            stewItem.set(DataComponents.SUSPICIOUS_STEW_EFFECTS, mushroomCow.stewEffects);
+            mushroomCow.stewEffects = null;
+            sound = SoundEvents.MOOSHROOM_MILK_SUSPICIOUSLY;
+        }
+        mushroomCow.playSound(sound, 1.0F, 1.0F);
+
+        stack.shrink(1);
+
+        blockSource.blockEntity().insertItem(stewItem);
+        if(!stewItem.isEmpty()) DEFAULT_BEHAVIOUR.dispense(blockSource, stewItem);
+        return stack;
+    }
+
+    private static ItemStack goldenApple(BlockSource blockSource, ItemStack stack) {
+        ZombieVillager zombieVillager = EntityUtil.getAnyEntityOfClass(
+            blockSource.level(), ZombieVillager.class,
+            new AABB(blockSource.pos().relative(blockSource.state().getValue(DirectionalBlock.FACING))),
+            z -> z.hasEffect(MobEffects.WEAKNESS) && !z.isConverting()
+        );
+        if (zombieVillager == null) return DEFAULT_BEHAVIOUR.dispense(blockSource, stack);
+        zombieVillager.startConverting(ANVILCRAFT_DISPENSER, zombieVillager.getRandom().nextInt(2401) + 3600);
+        stack.shrink(1);
+        return stack;
+    }
+
     private static ItemStack resinBlock(BlockSource blockSource, ItemStack resinBlockItem) {
         if (ResinBlockItem.hasMob(resinBlockItem)) {
             ItemStack result = ResinBlockItem.spawnMobFromItem(
