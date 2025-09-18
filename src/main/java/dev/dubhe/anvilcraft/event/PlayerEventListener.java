@@ -68,6 +68,9 @@ public class PlayerEventListener {
         if (item.is(ModItems.MAGNET)) {
             return;
         }
+        if (player.isShiftKeyDown()) {
+            return;
+        }
         if (!entities.isEmpty()) {
             MagnetizedNodeEntity first = entities.getFirst();
             ItemStack stack = item.copy();
