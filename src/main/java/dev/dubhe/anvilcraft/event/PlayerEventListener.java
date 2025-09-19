@@ -27,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingUseTotemEvent;
@@ -65,7 +66,7 @@ public class PlayerEventListener {
         ItemStack item = player.getItemInHand(hand);
         List<MagnetizedNodeEntity> entities = level.getEntitiesOfClass(MagnetizedNodeEntity.class,
             AABB.encapsulatingFullBlocks(pos, pos.above()));
-        if (item.is(ModItems.MAGNET)) {
+        if (item.is(ModItems.MAGNET) || item.is(Tags.Items.BUCKETS)) {
             return;
         }
         if (player.isShiftKeyDown()) {
