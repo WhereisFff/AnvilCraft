@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
@@ -66,7 +67,7 @@ public class PlayerEventListener {
         ItemStack item = player.getItemInHand(hand);
         List<MagnetizedNodeEntity> entities = level.getEntitiesOfClass(MagnetizedNodeEntity.class,
             AABB.encapsulatingFullBlocks(pos, pos.above()));
-        if (item.is(ModItems.MAGNET) || item.is(Tags.Items.BUCKETS)) {
+        if (item.is(ModItems.MAGNET) || (item.is(ModItems.MULTITOOL_ITEM) && MultitoolItem.getMode(item) == MultitoolItem.MAGNET_MODE) || item.is(Tags.Items.BUCKETS)) {
             return;
         }
         if (player.isShiftKeyDown()) {
