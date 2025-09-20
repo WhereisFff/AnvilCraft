@@ -49,8 +49,10 @@ public class HasMobBlockItem extends BlockItem {
         if (stack.has(ModComponents.SAVED_ENTITY)) return;
         if (
             !stack.is(ModBlocks.MOB_AMBER_BLOCK.asItem())
-                && !stack.is(ModBlocks.RESENTFUL_AMBER_BLOCK.asItem())
-        ) return;
+            && !stack.is(ModBlocks.RESENTFUL_AMBER_BLOCK.asItem())
+        ) {
+            return;
+        }
         ResourceLocation id;
         boolean isMonster = false;
         if (stack.is(ModBlocks.RESENTFUL_AMBER_BLOCK.asItem())) {
@@ -110,7 +112,7 @@ public class HasMobBlockItem extends BlockItem {
     @SuppressWarnings("deprecation")
     public static ItemStack saveMobInItem(Level level, Mob entity, @Nullable Player player, ItemStack stack) {
         if (level.isClientSide()) {
-            if(player == null) AnvilCraft.LOGGER.warn("why a dispenser run saveMobInItem in client side???");
+            if (player == null) AnvilCraft.LOGGER.warn("why a dispenser run saveMobInItem in client side???");
             Item item = stack.getItem();
             if (item instanceof ResinBlockItem item1) {
                 BlockPos blockPos = entity.getOnPos();
@@ -122,11 +124,12 @@ public class HasMobBlockItem extends BlockItem {
                     item1.getPlaceSound(blockState),
                     SoundSource.BLOCKS,
                     (soundType.getVolume() + 1.0f) / 2.0f,
-                    soundType.getPitch() * 0.8f);
+                    soundType.getPitch() * 0.8f
+                );
             }
             return ItemStack.EMPTY;
         }
-        
+
         SavedEntity savedEntity = SavedEntity.fromMob(entity);
         ItemStack newStack = stack.split(1);
         newStack.set(ModComponents.SAVED_ENTITY, savedEntity);
@@ -140,7 +143,7 @@ public class HasMobBlockItem extends BlockItem {
         if (player != null) player.getInventory().placeItemBackInInventory(stack);
         return newStack;
     }
-    
+
     public static ItemStack saveMobInItem(Level level, Mob entity, ItemStack stack) {
         return saveMobInItem(level, entity, null, stack);
     }

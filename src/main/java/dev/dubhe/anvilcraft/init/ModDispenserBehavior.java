@@ -2,14 +2,13 @@ package dev.dubhe.anvilcraft.init;
 
 import com.tterrag.registrate.util.entry.ItemEntry;
 import dev.dubhe.anvilcraft.block.item.HasMobBlockItem;
+import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.util.EntityUtil;
 import dev.dubhe.anvilcraft.util.PlayerUtil;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.dispenser.BlockSource;
 import net.minecraft.core.dispenser.DefaultDispenseItemBehavior;
@@ -138,8 +137,8 @@ public class ModDispenserBehavior {
         mushroomCow.playSound(sound, 1.0F, 1.0F);
 
         bowlStack.shrink(1);
-        
-        if(bowlStack.isEmpty()) return stewItem;
+
+        if (bowlStack.isEmpty()) return stewItem;
         ItemStack remainedStewItem = blockSource.blockEntity().insertItem(stewItem);
         if (!remainedStewItem.isEmpty()) DEFAULT_BEHAVIOUR.dispense(blockSource, remainedStewItem);
         return bowlStack;
@@ -176,15 +175,15 @@ public class ModDispenserBehavior {
             );
             if (mob == null) return DEFAULT_BEHAVIOUR.dispense(blockSource, resinBlockItem);
             ItemStack mobResin = ResinBlockItem.saveMobInItem(blockSource.level(), mob, resinBlockItem);
-            
-            if(resinBlockItem.isEmpty()) return mobResin;
+
+            if (resinBlockItem.isEmpty()) return mobResin;
 
             ItemStack remainedMobResin = blockSource.blockEntity().insertItem(mobResin);
 
             if (!remainedMobResin.isEmpty()) {
                 DefaultDispenseItemBehavior.spawnItem(
                     blockSource.level(), remainedMobResin, 6,
-                    blockSource.state().getValue(DispenserBlock.FACING), 
+                    blockSource.state().getValue(DispenserBlock.FACING),
                     DispenserBlock.getDispensePosition(blockSource)
                 );
             }
