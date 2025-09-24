@@ -8,7 +8,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("unused")
 public class ModItemTags {
@@ -186,19 +185,19 @@ public class ModItemTags {
 
     public static final Object2ObjectMap<Color, TagKey<Item>> DYED_COLORS = initDyedTags();
 
-    public static @NotNull TagKey<Item> bindC(String id) {
+    public static TagKey<Item> bindC(String id) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("c", id));
     }
 
-    public static @NotNull TagKey<Item> bindCurios(String id) {
+    public static TagKey<Item> bindCurios(String id) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath("curios", id));
     }
 
-    public static @NotNull TagKey<Item> bind(String id) {
+    public static TagKey<Item> bind(String id) {
         return TagKey.create(Registries.ITEM, AnvilCraft.of(id));
     }
 
-    public static @NotNull Object2ObjectMap<Color, TagKey<Item>> initDyedTags() {
+    public static Object2ObjectMap<Color, TagKey<Item>> initDyedTags() {
         Object2ObjectMap<Color, TagKey<Item>> map = new Object2ObjectOpenHashMap<>();
         for (Color color : Color.values()) {
             map.put(color, bindC("dyed/" + color));
