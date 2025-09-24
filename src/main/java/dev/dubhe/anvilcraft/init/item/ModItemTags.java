@@ -180,7 +180,7 @@ public class ModItemTags {
 
     public static final TagKey<Item> CURIOS_HEAD = bindCurios("head");
     public static final TagKey<Item> CURIOS_IONOCRAFT_BACKPACK = bindCurios("ionocraft_backpack");
-    public static final TagKey<Item> CURIOS_NECKLACE = bindCurios("necklace");
+    public static final TagKey<Item> CURIOS_CHARM = bindCurios("charm");
 
     public static final TagKey<Item> TOTEM = bind("totem");
 

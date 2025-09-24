@@ -105,4 +105,17 @@ public class NormalDataComponent<T> implements ICustomDataComponent<T> {
             ItemEnchantmentsData.enchantments(3),
         };
     }
+
+    public static ICustomDataComponent<?>[] normalEight() {
+        return new ICustomDataComponent[] {
+            ItemEnchantmentsData.enchantments(0),
+            ItemEnchantmentsData.enchantments(1),
+            ItemEnchantmentsData.enchantments(2),
+            ItemEnchantmentsData.enchantments(3),
+            ItemEnchantmentsData.enchantments(4),
+            ItemEnchantmentsData.enchantments(5),
+            ItemEnchantmentsData.enchantments(6),
+            ItemEnchantmentsData.enchantments(7),
+        };
+    }
 }
