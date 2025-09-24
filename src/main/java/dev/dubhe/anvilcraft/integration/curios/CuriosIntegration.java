@@ -55,7 +55,7 @@ public class CuriosIntegration {
         AmuletManager.INSTANCE.registerFinders((player, holders) -> {
             if (CuriosApi.getCuriosInventory(player).isPresent()) {
                 CuriosApi.getCuriosInventory(player).get()
-                    .getStacksHandler("necklace")
+                    .getStacksHandler("charm")
                     .map(ICurioStacksHandler::getStacks)
                     .map(handler -> getItems(handler, stack -> stack.getItem() instanceof AmuletItem))
                     .ifPresent(stacks -> stacks.forEach(stack -> AmuletManager.processFoundStack(stack, holders)));

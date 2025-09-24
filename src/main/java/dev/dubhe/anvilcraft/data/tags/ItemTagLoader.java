@@ -181,7 +181,7 @@ public class ItemTagLoader {
         provider.addTag(ModItemTags.CURIOS_HEAD)
             .replace(false)
             .addTag(ModItemTags.ANVIL_HAMMER);
-        provider.addTag(ModItemTags.CURIOS_NECKLACE)
+        provider.addTag(ModItemTags.CURIOS_CHARM)
             .replace(false)
             .addTag(ModItemTags.AMULET);
         provider.addTag(ModItemTags.CURIOS_IONOCRAFT_BACKPACK)
