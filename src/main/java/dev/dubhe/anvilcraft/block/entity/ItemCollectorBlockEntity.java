@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
 import dev.dubhe.anvilcraft.util.WatchableCyclingValue;
 import lombok.Getter;
@@ -35,6 +36,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -76,12 +78,29 @@ public class ItemCollectorBlockEntity extends BlockEntity
 
     public static final Map<Level, Map<ChunkPos, List<ItemCollectorBlockEntity>>> POACHING_COLLECTOR_MAP = new HashMap<>();
 
+    private boolean changed = false;
+
     private final FilteredItemStackHandler itemHandler = new FilteredItemStackHandler(9) {
         @Override
         public void onContentsChanged(int slot) {
-            ItemCollectorBlockEntity.this.setChanged();
+            ItemCollectorBlockEntity.this.changed = true;
+            if (ItemCollectorBlockEntity.this.level != null) {
+                ItemCollectorBlockEntity.this.level.scheduleTick(
+                    ItemCollectorBlockEntity.this.getBlockPos(),
+                    ModBlocks.ITEM_COLLECTOR.get(),
+                    0,
+                    TickPriority.VERY_LOW
+                );
+            }
         }
     };
+
+    public void checkChanged() {
+        if (this.changed) {
+            this.changed = false;
+            this.setChanged();
+        }
+    }
 
     public ItemCollectorBlockEntity(BlockEntityType<? extends BlockEntity> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
