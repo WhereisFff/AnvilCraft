@@ -6,9 +6,9 @@ import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.block.better.BetterBaseEntityBlock;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
@@ -121,9 +121,7 @@ public class ItemCollectorBlock extends BetterBaseEntityBlock implements IHammer
             return null;
         }
         return createTickerHelper(
-            type,
-            ModBlockEntities.ITEM_COLLECTOR.get(),
-            (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos));
+            type, ModBlockEntities.ITEM_COLLECTOR.get(), (level1, blockPos, blockState, blockEntity) -> blockEntity.tick(level1, blockPos));
     }
 
     @Override
@@ -187,14 +185,11 @@ public class ItemCollectorBlock extends BetterBaseEntityBlock implements IHammer
     }
 
     @Override
-    public void tick(
-        BlockState state,
-        ServerLevel level,
-        BlockPos pos,
-        RandomSource random) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
             level.setBlock(pos, state.cycle(POWERED), 2);
         }
+        level.getBlockEntity(pos, ModBlockEntities.ITEM_COLLECTOR.get()).ifPresent(ItemCollectorBlockEntity::checkChanged);
     }
 
     @Override
