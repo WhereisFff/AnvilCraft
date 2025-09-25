@@ -19,6 +19,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.jetbrains.annotations.NotNull;
@@ -103,6 +104,11 @@ public class ModComponents {
     public static final DataComponentType<FilterContent> FILTER_CONTENT = register(
         "filter_contents",
         b -> b.persistent(FilterContent.CODEC.codec()).networkSynchronized(FilterContent.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<ItemEnchantments> MERCILESS_ENCHANTMENTS = register(
+        "merciless_enchantments",
+        b -> b.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC)
     );
 
     private static <T> @NotNull DataComponentType<T> register(String name, @NotNull Consumer<DataComponentType.Builder<T>> customizer) {
