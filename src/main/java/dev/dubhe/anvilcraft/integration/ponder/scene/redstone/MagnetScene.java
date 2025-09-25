@@ -156,7 +156,7 @@ public class MagnetScene {
         builder.world().showIndependentSection(util.select().position(magnetPos), Direction.WEST);
         builder.idle(5);
 
-        builder.world().riseSection(anvilLink);;
+        builder.world().riseSection(anvilLink);
         builder.idle(5);
 
         builder.overlay()
