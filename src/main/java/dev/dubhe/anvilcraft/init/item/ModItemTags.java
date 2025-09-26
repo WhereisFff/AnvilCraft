@@ -12,11 +12,11 @@ import net.minecraft.world.item.Item;
 @SuppressWarnings("unused")
 public class ModItemTags {
     public static final TagKey<Item> RESIN = bindC("resin");
+    public static final TagKey<Item> WHEAT_FLOUR = bindC("flour/wheat");
+    public static final TagKey<Item> WHEAT_DOUGH = bindC("dough/wheat");
     public static final TagKey<Item> CREAM = bindC("foods/cream");
     public static final TagKey<Item> FLOUR = bindC("foods/flour");
-    public static final TagKey<Item> WHEAT_FLOUR = bindC("flour/wheat");
     public static final TagKey<Item> DOUGH = bindC("foods/dough");
-    public static final TagKey<Item> WHEAT_DOUGH = bindC("dough/wheat");
     public static final TagKey<Item> RAW_MUTTON = bindC("foods/raw_mutton");
     public static final TagKey<Item> RAW_BEEF = bindC("foods/raw_beef");
     public static final TagKey<Item> RAW_CHICKEN = bindC("foods/raw_chicken");
@@ -98,7 +98,6 @@ public class ModItemTags {
     public static final TagKey<Item> TRANSCENDIUM_NUGGETS = bindC("nuggets/transcendium");
     public static final TagKey<Item> FROST_METAL_NUGGETS = bindC("nuggets/frost_metal");
 
-    public static final TagKey<Item> ORES = bindC("ores");
     public static final TagKey<Item> ZINC_ORES = bindC("ores/zinc");
     public static final TagKey<Item> TIN_ORES = bindC("ores/tin");
     public static final TagKey<Item> TITANIUM_ORES = bindC("ores/titanium");
@@ -117,7 +116,6 @@ public class ModItemTags {
     public static final TagKey<Item> STORAGE_BLOCKS_RAW_SILVER = bindC("storage_blocks/raw_silver");
     public static final TagKey<Item> STORAGE_BLOCKS_RAW_URANIUM = bindC("storage_blocks/raw_uranium");
 
-    public static final TagKey<Item> RAW_ORES = bindC("raw_materials");
     public static final TagKey<Item> RAW_ZINC = bindC("raw_materials/zinc");
     public static final TagKey<Item> RAW_TIN = bindC("raw_materials/tin");
     public static final TagKey<Item> RAW_TITANIUM = bindC("raw_materials/titanium");
@@ -126,14 +124,8 @@ public class ModItemTags {
     public static final TagKey<Item> RAW_SILVER = bindC("raw_materials/silver");
     public static final TagKey<Item> RAW_URANIUM = bindC("raw_materials/uranium");
 
-    public static final TagKey<Item> BUCKETS = bindC("buckets");
     public static final TagKey<Item> OIL_BUCKETS = bindC("buckets/oil");
     public static final TagKey<Item> CEMENT_BUCKETS = bindC("buckets/cement");
-
-    public static final TagKey<Item> VEGETABLES = bindC("vegetables");
-    public static final TagKey<Item> SEEDS = bindC("seeds");
-    public static final TagKey<Item> BERRIES = bindC("berries");
-    public static final TagKey<Item> WRENCH = bindC("tools/wrench");
 
     public static final TagKey<Item> ROYAL_STEEL_PICKAXE_BASE = bind("royal_steel_pickaxe_base");
     public static final TagKey<Item> ROYAL_STEEL_AXE_BASE = bind("royal_steel_axe_base");
