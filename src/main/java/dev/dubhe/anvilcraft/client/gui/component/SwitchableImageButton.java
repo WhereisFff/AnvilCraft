@@ -7,7 +7,6 @@ import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -73,7 +72,7 @@ public class SwitchableImageButton extends ImageButton {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         ResourceLocation resourcelocation = this.sprites.get(this.status.get(), this.isHovered());
         guiGraphics.blitSprite(resourcelocation, this.getX(), this.getY(), this.width, this.height);
     }

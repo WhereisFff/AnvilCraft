@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.item;
 
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.container.FilterContainer;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
@@ -31,7 +31,7 @@ public class FilterItem extends Item {
                    ? ItemStack.isSameItemSameComponents(filter, stack)
                    : ItemStack.isSameItem(filter, stack)
                )
-               || FilterContent.filter(filter, stack, false);
+               || FilterContent.filter(filter, stack, false, false);
     }
 
     @Override

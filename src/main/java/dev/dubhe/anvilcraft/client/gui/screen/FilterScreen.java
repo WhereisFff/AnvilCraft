@@ -57,8 +57,8 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements
             container::setIncludeComponents,
             this::sync,
             List.of(
-                Component.translatable("screen.anvilcraft.filter.white_list"),
-                Component.translatable("screen.anvilcraft.filter.black_list")
+                Component.translatable("screen.anvilcraft.filter.mismatch_component"),
+                Component.translatable("screen.anvilcraft.filter.match_component")
             )
         ));
         this.addRenderableWidget(new SwitchableImageButton(
@@ -69,8 +69,8 @@ public class FilterScreen extends AbstractContainerScreen<FilterMenu> implements
             container::setBlackList,
             this::sync,
             List.of(
-                Component.translatable("screen.anvilcraft.filter.mismatch_nbt"),
-                Component.translatable("screen.anvilcraft.filter.match_nbt")
+                Component.translatable("screen.anvilcraft.filter.black_list"),
+                Component.translatable("screen.anvilcraft.filter.white_list")
             )
         ));
     }

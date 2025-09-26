@@ -247,7 +247,7 @@ public class ScreenLang {
 
         provider.add("screen.anvilcraft.filter.black_list", "Black List");
         provider.add("screen.anvilcraft.filter.white_list", "White List");
-        provider.add("screen.anvilcraft.filter.match_nbt", "Match Component");
-        provider.add("screen.anvilcraft.filter.mismatch_nbt", "Mismatch Component");
+        provider.add("screen.anvilcraft.filter.match_component", "Match Component");
+        provider.add("screen.anvilcraft.filter.mismatch_component", "Mismatch Component");
     }
 }
