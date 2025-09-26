@@ -173,7 +173,9 @@ public class MagnetBlock extends Block implements IHammerRemovable {
                 if (player.isShiftKeyDown()) {
                     player.addItem(ModItems.MAGNET_INGOT.get().getDefaultInstance());
                     BlockState blockState = ModBlocks.HOLLOW_MAGNET_BLOCK.get().defaultBlockState();
-                    blockState.setValue(LIT, state.getValue(LIT));
+                    if (blockState.hasProperty(LIT)) {
+                        blockState = blockState.setValue(LIT, level.hasNeighborSignal(pos));
+                    }
                     level.setBlockAndUpdate(pos, blockState);
                     level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0f, 1.0f);
                     return InteractionResult.SUCCESS;

@@ -36,7 +36,11 @@ public class FerriteCoreMagnetBlock extends MagnetBlock {
             if (serverLevel.getBlockState(blockPos.relative(face)).is(ModBlocks.MAGNET_BLOCK.get())) times++;
         }
         if (randomSource.nextInt(7) <= times) {
-            serverLevel.setBlockAndUpdate(blockPos, ModBlocks.MAGNET_BLOCK.get().defaultBlockState());
+            BlockState blockState1 = ModBlocks.MAGNET_BLOCK.get().defaultBlockState();
+            if (blockState1.hasProperty(LIT)) {
+                blockState1 = blockState1.setValue(LIT, serverLevel.hasNeighborSignal(blockPos));
+            }
+            serverLevel.setBlockAndUpdate(blockPos, blockState1);
         }
     }
 
@@ -47,7 +51,9 @@ public class FerriteCoreMagnetBlock extends MagnetBlock {
                 if (player.isShiftKeyDown()) {
                     player.addItem(Items.IRON_INGOT.getDefaultInstance());
                     BlockState blockState = ModBlocks.HOLLOW_MAGNET_BLOCK.get().defaultBlockState();
-                    blockState.setValue(LIT, state.getValue(LIT));
+                    if (blockState.hasProperty(LIT)) {
+                        blockState = blockState.setValue(LIT, level.hasNeighborSignal(pos));
+                    }
                     level.setBlockAndUpdate(pos, blockState);
                     level.playSound(null, pos, SoundEvents.ITEM_FRAME_REMOVE_ITEM, SoundSource.BLOCKS, 1.0f, 1.0f);
                     return InteractionResult.SUCCESS;
