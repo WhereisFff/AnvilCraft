@@ -15,6 +15,8 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.Collection;
 
+import static dev.dubhe.anvilcraft.block.MagnetBlock.LIT;
+
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class LightningEventListener {
     @SubscribeEvent
@@ -29,8 +31,11 @@ public class LightningEventListener {
         for (BlockPos blockPos : BlockPos.betweenClosed(pos.offset(radius, 0, radius), pos.offset(-radius, -depth, -radius))) {
             BlockState blockState = level.getBlockState(blockPos);
             if (blockState.is(Blocks.IRON_BLOCK)) {
-                level.setBlockAndUpdate(blockPos, ModBlocks.HOLLOW_MAGNET_BLOCK.getDefaultState());
-                level.updateNeighborsAt(blockPos.east(), level.getBlockState(blockPos.east()).getBlock());
+                BlockState blockState1 = ModBlocks.HOLLOW_MAGNET_BLOCK.get().defaultBlockState();
+                if (blockState1.hasProperty(LIT)) {
+                    blockState1 = blockState1.setValue(LIT, level.hasNeighborSignal(blockPos));
+                }
+                level.setBlockAndUpdate(blockPos, blockState1);
             }
         }
     }

@@ -189,7 +189,6 @@ public class ItemCollectorBlock extends BetterBaseEntityBlock implements IHammer
         if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
             level.setBlock(pos, state.cycle(POWERED), 2);
         }
-        level.getBlockEntity(pos, ModBlockEntities.ITEM_COLLECTOR.get()).ifPresent(ItemCollectorBlockEntity::checkChanged);
     }
 
     @Override

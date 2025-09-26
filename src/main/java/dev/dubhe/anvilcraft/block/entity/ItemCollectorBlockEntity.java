@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
 import dev.dubhe.anvilcraft.util.WatchableCyclingValue;
 import lombok.Getter;
@@ -36,7 +35,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.minecraft.world.ticks.TickPriority;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,24 +81,18 @@ public class ItemCollectorBlockEntity extends BlockEntity
     private final FilteredItemStackHandler itemHandler = new FilteredItemStackHandler(9) {
         @Override
         public void onContentsChanged(int slot) {
-            ItemCollectorBlockEntity.this.changed = true;
-            if (ItemCollectorBlockEntity.this.level != null) {
-                ItemCollectorBlockEntity.this.level.scheduleTick(
-                    ItemCollectorBlockEntity.this.getBlockPos(),
-                    ModBlocks.ITEM_COLLECTOR.get(),
-                    0,
-                    TickPriority.VERY_LOW
-                );
-            }
+            if (level == null || level.isClientSide || changed) return;
+            changed = true;
+            level.getServer().execute(() -> {
+                try {
+                    setChanged();
+                    flushState(level, getBlockPos());
+                } finally {
+                    changed = false;
+                }
+            });
         }
     };
-
-    public void checkChanged() {
-        if (this.changed) {
-            this.changed = false;
-            this.setChanged();
-        }
-    }
 
     public ItemCollectorBlockEntity(BlockEntityType<? extends BlockEntity> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
