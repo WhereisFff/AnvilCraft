@@ -1371,5 +1371,7 @@
   "title.anvilcraft.patchouli.machine.electricity_generation": "发电",
   "screen.anvilcraft.filter.black_list": "黑名单",
   "screen.anvilcraft.filter.white_list": "白名单",
-  "title.anvilcraft.patchouli.advanced.anvil_destroy": "铁砧挖掘"
+  "title.anvilcraft.patchouli.advanced.anvil_destroy": "铁砧挖掘",
+  "screen.anvilcraft.filter.match_component": "匹配组件",
+  "screen.anvilcraft.filter.mismatch_component": "不匹配组件"
 }
