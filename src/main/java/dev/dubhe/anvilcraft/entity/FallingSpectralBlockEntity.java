@@ -242,7 +242,10 @@ public class FallingSpectralBlockEntity extends FallingBlockEntity {
         }
         Predicate<Entity> predicate = EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.LIVING_ENTITY_STILL_ALIVE);
         float f = (float) Math.min(Mth.floor((float) dist * 2), 40);
-        this.level().getEntities(this, this.getBoundingBox(), predicate).forEach(entity -> entity.hurt(source, f));
+        this.level().getEntities(this, this.getBoundingBox(), predicate).forEach(entity -> {
+            entity.hurt(source, f);
+            NeoForge.EVENT_BUS.post(new AnvilEvent.HurtEntity(this, this.getOnPos(), this.level(), entity, f));
+        });
         boolean isAnvil = this.blockState.is(BlockTags.ANVIL);
         if (isAnvil && f > 0.0F && this.random.nextFloat() < 0.05F + (float) dist * 0.05F) {
             BlockState blockState = AnvilBlock.damage(this.blockState);
