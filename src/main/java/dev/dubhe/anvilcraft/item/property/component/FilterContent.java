@@ -88,9 +88,9 @@ public record FilterContent(NonNullList<ItemStack> list, boolean includeComponen
      * @param includeComponents 是否考虑组件信息进行匹配
      * @return 如果物品堆栈匹配过滤条件则返回true，否则返回false
      */
-    public static boolean filter(ItemStack filterStack, ItemStack stack, boolean includeComponents, boolean isBlackList) {
+    public static boolean filter(ItemStack filterStack, ItemStack stack, boolean includeComponents) {
         // 如果过滤器为空，则所有物品都匹配
-        if (filterStack.isEmpty()) return !isBlackList;
+        if (filterStack.isEmpty()) return true;
 
         // 检查过滤器是否包含自定义过滤组件
         if (!filterStack.has(ModComponents.FILTER_CONTENT)) {
@@ -107,14 +107,11 @@ public record FilterContent(NonNullList<ItemStack> list, boolean includeComponen
             }
 
             // 根据是否包含组件进行物品匹配
-            boolean flag = false;
             if (!includeComponents && ItemStack.isSameItem(filterStack, stack)) {
-                flag = true;
-            } else if (includeComponents && ItemStack.isSameItemSameComponents(filterStack, stack)) {
-                flag = true;
+                return true;
+            } else {
+                return includeComponents && ItemStack.isSameItemSameComponents(filterStack, stack);
             }
-            if (flag) return !isBlackList;
-            return isBlackList;
         }
 
         // 处理自定义过滤组件逻辑
@@ -125,7 +122,7 @@ public record FilterContent(NonNullList<ItemStack> list, boolean includeComponen
         // 遍历过滤列表中的每个物品进行匹配检查
         for (ItemStack itemStack : content.list()) {
             if (itemStack.isEmpty()) continue;
-            if (FilterContent.filter(itemStack, stack, content.includeComponents(), contentIsBlackList)) {
+            if (FilterContent.filter(itemStack, stack, content.includeComponents())) {
                 // 如果是白名单模式，找到匹配项则返回true；如果是黑名单模式，找到匹配项则返回false
                 return !contentIsBlackList;
             }
