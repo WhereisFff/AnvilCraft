@@ -141,6 +141,7 @@ public class AnvilEventListener {
         Entity hurtedEntity = event.getHurtedEntity();
         if (!(hurtedEntity instanceof LivingEntity entity)) return;
         if (!(hurtedEntity.level() instanceof ServerLevel serverLevel)) return;
+        if (entity.hurtTime > 0) return;
         float damage = event.getDamage();
         float maxHealth = entity.getMaxHealth();
         double rate = damage / maxHealth;
