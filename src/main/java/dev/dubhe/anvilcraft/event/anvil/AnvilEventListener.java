@@ -142,6 +142,7 @@ public class AnvilEventListener {
         if (!(hurtedEntity instanceof LivingEntity entity)) return;
         if (!(hurtedEntity.level() instanceof ServerLevel serverLevel)) return;
         if (!entity.isAlive()) return;
+        if (entity.isDeadOrDying()) return;
         if (entity.hurtTime > 0) return;
         float damage = event.getDamage();
         float maxHealth = entity.getMaxHealth();
@@ -149,6 +150,7 @@ public class AnvilEventListener {
         if (rate < 0.4) return;
         FallingBlockEntity eventEntity = event.getEntity();
         DamageSource source = entity.level().damageSources().anvil(eventEntity);
+        if (entity.isInvulnerableTo(source)) return;
         Vec3 pos = entity.position();
         LootParams.Builder builder = new LootParams.Builder(serverLevel)
             .withParameter(LootContextParams.DAMAGE_SOURCE, source)
