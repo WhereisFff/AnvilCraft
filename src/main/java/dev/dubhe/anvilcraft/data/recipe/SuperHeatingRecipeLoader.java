@@ -122,31 +122,31 @@ public class SuperHeatingRecipeLoader {
             .result(Items.GOLD_BLOCK, 2)
             .save(provider);
         SuperHeatingRecipe.builder()
-            .requires(ModBlocks.RAW_LEAD_BLOCK)
+            .requires(ModItemTags.STORAGE_BLOCKS_RAW_LEAD)
             .result(ModBlocks.LEAD_BLOCK, 2)
             .save(provider);
         SuperHeatingRecipe.builder()
-            .requires(ModBlocks.RAW_URANIUM_BLOCK)
+            .requires(ModItemTags.STORAGE_BLOCKS_RAW_URANIUM)
             .result(ModBlocks.URANIUM_BLOCK, 2)
             .save(provider);
         SuperHeatingRecipe.builder()
-            .requires(ModBlocks.RAW_TITANIUM_BLOCK)
+            .requires(ModItemTags.STORAGE_BLOCKS_RAW_TITANIUM)
             .result(ModBlocks.TITANIUM_BLOCK, 2)
             .save(provider);
         SuperHeatingRecipe.builder()
-            .requires(ModBlocks.RAW_SILVER_BLOCK)
+            .requires(ModItemTags.STORAGE_BLOCKS_RAW_SILVER)
             .result(ModBlocks.SILVER_BLOCK, 2)
             .save(provider);
         SuperHeatingRecipe.builder()
-            .requires(ModBlocks.RAW_ZINC_BLOCK)
+            .requires(ModItemTags.STORAGE_BLOCKS_RAW_ZINC)
             .result(ModBlocks.ZINC_BLOCK, 2)
             .save(provider);
         SuperHeatingRecipe.builder()
-            .requires(ModBlocks.RAW_TIN_BLOCK)
+            .requires(ModItemTags.STORAGE_BLOCKS_RAW_TIN)
             .result(ModBlocks.TIN_BLOCK, 2)
             .save(provider);
         SuperHeatingRecipe.builder()
-            .requires(ModBlocks.RAW_TUNGSTEN_BLOCK)
+            .requires(ModItemTags.STORAGE_BLOCKS_RAW_TUNGSTEN)
             .result(ModBlocks.TUNGSTEN_BLOCK, 2)
             .save(provider);
     }
