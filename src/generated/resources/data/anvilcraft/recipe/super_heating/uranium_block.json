@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:super_heating",
+  "ingredients": [
+    {
+      "items": "anvilcraft:raw_uranium_block"
+    }
+  ],
+  "results": [
+    {
+      "count": 2,
+      "id": "anvilcraft:uranium_block"
+    }
+  ]
+}

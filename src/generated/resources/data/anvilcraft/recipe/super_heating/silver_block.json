@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:super_heating",
+  "ingredients": [
+    {
+      "items": "anvilcraft:raw_silver_block"
+    }
+  ],
+  "results": [
+    {
+      "count": 2,
+      "id": "anvilcraft:silver_block"
+    }
+  ]
+}
