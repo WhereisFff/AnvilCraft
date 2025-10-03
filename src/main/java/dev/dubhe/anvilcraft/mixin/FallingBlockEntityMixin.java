@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.mixin.forge;
+package dev.dubhe.anvilcraft.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
@@ -28,7 +28,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.List;
 import java.util.function.Predicate;
 
-@SuppressWarnings("resource")
 @Mixin(FallingBlockEntity.class)
 abstract class FallingBlockEntityMixin extends Entity {
     @Unique
