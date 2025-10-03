@@ -2,7 +2,7 @@
   "type": "anvilcraft:super_heating",
   "ingredients": [
     {
-      "items": "anvilcraft:raw_silver_block"
+      "items": "#c:storage_blocks/raw_silver"
     }
   ],
   "results": [
