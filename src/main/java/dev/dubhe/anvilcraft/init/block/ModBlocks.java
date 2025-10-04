@@ -1085,7 +1085,8 @@ public class ModBlocks {
         .item()
         .properties(Item.Properties::fireResistant)
         .build()
-        .initialProperties(() -> Blocks.IRON_BLOCK).properties(p -> p.noOcclusion().isValidSpawn(Blocks::never))
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(p -> p.noOcclusion().isValidSpawn(Blocks::never).explosionResistance(1200f))
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .recipe((ctx, provider) -> {
@@ -1545,7 +1546,8 @@ public class ModBlocks {
             "void_energy_collector",
             VoidEnergyCollectorBlock::new
         )
-        .initialProperties(() -> Blocks.IRON_BLOCK).properties(p -> p.noOcclusion().isValidSpawn(Blocks::never))
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(p -> p.noOcclusion().isValidSpawn(Blocks::never).explosionResistance(1200f))
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE).simpleItem()
         .recipe((ctx, provider) -> {
