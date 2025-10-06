@@ -15,8 +15,7 @@ import net.minecraft.world.phys.Vec3;
 public record WeedingEffect(int range) implements EnchantmentEntityEffect {
     public static final MapCodec<WeedingEffect> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
         Codec.INT.optionalFieldOf("range", 3).forGetter(WeedingEffect::range)
-        ).apply(instance, WeedingEffect::new)
-    );
+    ).apply(instance, WeedingEffect::new));
 
     @Override
     public MapCodec<? extends EnchantmentEntityEffect> codec() {
