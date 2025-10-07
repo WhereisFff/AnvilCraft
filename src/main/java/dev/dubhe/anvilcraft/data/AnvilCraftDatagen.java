@@ -26,6 +26,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
@@ -38,7 +39,7 @@ import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class AnvilCraftDatagen {
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST) // Higher than Registrate
     public static void gatherData(GatherDataEvent event) {
         DataGenerator generator = event.getGenerator();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();

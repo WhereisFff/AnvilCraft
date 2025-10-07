@@ -264,7 +264,10 @@ public class BlockTagLoader {
         provider.addTag(ModBlockTags.SPECTRAL_CAN_THROUGH)
             .addTag(Tags.Blocks.GLASS_BLOCKS)
             .addTag(Tags.Blocks.GLASS_PANES)
-            .addTag(BlockTags.LEAVES);
+            .addTag(BlockTags.LEAVES)
+            .add(findResourceKey(Blocks.IRON_BARS))
+            .add(findResourceKey(Blocks.MANGROVE_ROOTS))
+            .add(findResourceKey(Blocks.COPPER_GRATE));
 
         provider.addTag(ModBlockTags.HEATABLE_BLOCKS)
             .add(findResourceKey(Blocks.NETHERITE_BLOCK));
