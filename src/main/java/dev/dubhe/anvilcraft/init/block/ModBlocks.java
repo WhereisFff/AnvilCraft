@@ -156,6 +156,7 @@ import dev.dubhe.anvilcraft.block.state.FragmentationDegree;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
+import dev.dubhe.anvilcraft.init.item.HeatableBlockItem;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemGroups;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
@@ -186,6 +187,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.ColorRGBA;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -3195,7 +3197,7 @@ public class ModBlocks {
     public static final BlockEntry<HeatedBlock> HEATED_NETHERITE_BLOCK = REGISTRATE.block("heated_netherite_block", HeatedBlock::new)
         .lang("Heated Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3206,7 +3208,7 @@ public class ModBlocks {
     public static final BlockEntry<HeatedBlock> HEATED_TUNGSTEN_BLOCK = REGISTRATE.block("heated_tungsten_block", HeatedBlock::new)
         .lang("Heated Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3218,7 +3220,7 @@ public class ModBlocks {
         .lang("Redhot Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 3))
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3230,7 +3232,7 @@ public class ModBlocks {
         .lang("Redhot Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 3))
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3242,7 +3244,7 @@ public class ModBlocks {
         .lang("Glowing Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 7))
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3254,7 +3256,7 @@ public class ModBlocks {
         .lang("Glowing Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 7))
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3269,7 +3271,7 @@ public class ModBlocks {
         .lang("Incandescent Block of Netherite")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .properties(p -> p.lightLevel(it -> 15))
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3284,7 +3286,7 @@ public class ModBlocks {
         .lang("Incandescent Block of Tungsten")
         .initialProperties(ModBlocks.TUNGSTEN_BLOCK)
         .properties(p -> p.lightLevel(it -> 15))
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS)
         .build()
@@ -3302,7 +3304,7 @@ public class ModBlocks {
             context.get(),
             DangerUtil.genConfiguredModel("block/overheated_ember_metal_block").get()
         ))
-        .item()
+        .item(HeatableBlockItem::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ModItemTags.HEATABLE_BLOCKS, ModItemTags.EXPLOSION_PROOF)
         .build()
