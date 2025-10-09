@@ -59,6 +59,7 @@ import dev.dubhe.anvilcraft.item.RoyalPickaxeItem;
 import dev.dubhe.anvilcraft.item.RoyalShovelItem;
 import dev.dubhe.anvilcraft.item.RoyalSwordItem;
 import dev.dubhe.anvilcraft.item.SeedsPackItem;
+import dev.dubhe.anvilcraft.item.SpectralSlingshotItem;
 import dev.dubhe.anvilcraft.item.StructureToolItem;
 import dev.dubhe.anvilcraft.item.SuperCapacitorItem;
 import dev.dubhe.anvilcraft.item.TopazItem;
@@ -712,6 +713,32 @@ public class ModItems {
         ItemTags.FISHING_ENCHANTABLE,
         ItemTags.STRIDER_TEMPT_ITEMS
     ).properties((properties) -> properties.durability(2031)).model(DataGenUtil::noExtraModelOrState).register();
+
+    public static final ItemEntry<? extends SpectralSlingshotItem> SPECTAL_SLINGSHOT = REGISTRATE
+        .item("spectral_slingshot", SpectralSlingshotItem::new)
+        .tag(
+            ItemTags.DURABILITY_ENCHANTABLE,
+            ItemTags.CROSSBOW_ENCHANTABLE,
+            ItemTags.BOW_ENCHANTABLE
+        )
+        .properties((properties) -> properties.durability(1561))
+        .model(DataGenUtil::noExtraModelOrState)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern("B B")
+                .pattern(" C ")
+                .define('A', Items.PHANTOM_MEMBRANE)
+                .define('B', ModBlocks.SPECTRAL_ANVIL.asItem())
+                .define('C', Items.CROSSBOW)
+                .group(ctx.getId().toString())
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.PHANTOM_MEMBRANE), RegistrateRecipeProvider.has(Items.PHANTOM_MEMBRANE))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.SPECTRAL_ANVIL), RegistrateRecipeProvider.has(ModBlocks.SPECTRAL_ANVIL))
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.CROSSBOW), RegistrateRecipeProvider.has(Items.CROSSBOW))
+                .save(provider);
+        })
+        .register();
+
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRATE.item("ionocraft", IonoCraftItem::new)
         .initialProperties(Item.Properties::new)
         .recipe((ctx, provider) -> {

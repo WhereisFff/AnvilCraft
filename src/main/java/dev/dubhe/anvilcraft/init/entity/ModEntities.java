@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.client.renderer.entity.IonocraftRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.MagnetizedNodeEntityRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SlidingBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SpectralBlockRenderer;
+import dev.dubhe.anvilcraft.client.renderer.entity.SpectralProjectileRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.ThrownHeavyHalberdRenderer;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
@@ -16,6 +17,7 @@ import dev.dubhe.anvilcraft.entity.IonocraftEntity;
 import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.MagnetizedNodeEntity;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
+import dev.dubhe.anvilcraft.entity.SpectralProjectileEntity;
 import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.ThrownEmberMetalHeavyHalberdEntity;
@@ -115,6 +117,11 @@ public class ModEntities {
         .<MagnetizedNodeEntity>entity("magnetized_node", MagnetizedNodeEntity::new, MobCategory.MISC)
         .properties(it -> it.eyeHeight(0f))
         .renderer(() -> MagnetizedNodeEntityRenderer::new)
+        .register();
+
+    public static final EntityEntry<? extends SpectralProjectileEntity> SPECTRAL_PROJECTILE = AnvilCraft.REGISTRATE
+        .entity("spectral_projectile", SpectralProjectileEntity::new, MobCategory.MISC)
+        .renderer(() -> SpectralProjectileRenderer::new)
         .register();
 
     public static void register() {
