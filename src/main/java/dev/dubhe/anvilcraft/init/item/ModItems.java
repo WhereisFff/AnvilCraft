@@ -718,8 +718,7 @@ public class ModItems {
         .item("spectral_slingshot", SpectralSlingshotItem::new)
         .tag(
             ItemTags.DURABILITY_ENCHANTABLE,
-            ItemTags.CROSSBOW_ENCHANTABLE,
-            ItemTags.BOW_ENCHANTABLE
+            ItemTags.CROSSBOW_ENCHANTABLE
         )
         .properties((properties) -> properties.durability(1561))
         .model(DataGenUtil::noExtraModelOrState)

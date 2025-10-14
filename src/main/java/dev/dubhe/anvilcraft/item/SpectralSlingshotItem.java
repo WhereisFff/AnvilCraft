@@ -1,27 +1,27 @@
 package dev.dubhe.anvilcraft.item;
 
 import com.google.common.collect.Lists;
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.entity.SpectralProjectileEntity;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ArrowItem;
 import net.minecraft.world.item.CrossbowItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -32,12 +32,14 @@ import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.component.ChargedProjectiles;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
@@ -53,10 +55,12 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
      */
     private boolean midLoadSoundPlayed = false;
 
-    //证明自己，比起织者，更像弩（指这里的音效从弩抄的）
+    //证明自己，比起弹弓，更像弩（指这里的音效从弩抄的）
     private static final CrossbowItem.ChargingSounds DEFAULT_SOUNDS = new CrossbowItem.ChargingSounds(
         Optional.of(SoundEvents.CROSSBOW_LOADING_START), Optional.of(SoundEvents.CROSSBOW_LOADING_MIDDLE), Optional.of(SoundEvents.CROSSBOW_LOADING_END)
     );
+
+    //TODO: ClientItem那边的渲染（手持动作）
 
     public SpectralSlingshotItem(Properties properties) {
         super(properties);
@@ -67,6 +71,12 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         return p -> true;
     }
 
+    /**
+     * 获取幻灵弹弓的弹药，即从另一只手获取物品
+     *
+     * @param player 玩家实体
+     * @return 弹药的物品堆，注意，这个东西返回的是一个引用！不是copy的值
+     */
     private static ItemStack getSlingShotAmmo(Player player) {
         ItemStack stack = player.getMainHandItem();
         ItemStack stack2 = player.getOffhandItem();
@@ -90,7 +100,20 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         ItemStack itemstack = player.getItemInHand(hand);
         ChargedProjectiles chargedprojectiles = itemstack.get(DataComponents.CHARGED_PROJECTILES);
         if (chargedprojectiles != null && !chargedprojectiles.isEmpty()) {
-            this.performShooting(level, player, hand, itemstack, getShootingPower(chargedprojectiles), 1.0F, null);
+            if (!player.isCrouching() && !player.getCooldowns().isOnCooldown(this)) {
+                this.performShooting(level, player, hand, itemstack, getShootingPower(chargedprojectiles), 1.0F, null);
+                //TODO: 把快速装填降低冷却写了
+                player.getCooldowns().addCooldown(this, 40);
+            } else {
+                //这个部分是卸载和替换弹药
+                ItemStack stack = chargedprojectiles.getItems().getFirst();
+                if (canTakeOutAmmo(itemstack)) player.addItem(stack); //如果能拿出来，那么拿出来
+                itemstack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);
+                //装载走正常的使用流程
+                this.startSoundPlayed = false;
+                this.midLoadSoundPlayed = false;
+                player.startUsingItem(hand);
+            }
             return InteractionResultHolder.consume(itemstack);
         } else if (!SpectralSlingshotItem.getSlingShotAmmo(player).isEmpty()) {
             //这里改了条件，因为获取装填的弹药的方式与传统弓弩不同
@@ -134,9 +157,17 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
     private static boolean tryLoadProjectiles(LivingEntity shooter, ItemStack crossbowStack) {
         if (shooter instanceof Player player) {
             //因为是从副手获取装填的弹药，所以稍微改改
-            List<ItemStack> list = draw(crossbowStack, SpectralSlingshotItem.getSlingShotAmmo(player), shooter);
+            ItemStack ammo = SpectralSlingshotItem.getSlingShotAmmo(player);
+            if (ammo.isEmpty()) return false;
+            //底下这两行是获取无限附魔
+            int infinity = crossbowStack.getEnchantmentLevel(player.level().holderLookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.INFINITY));
+            boolean notHasInfinity = !(infinity > 0);
+            //draw被换了个写法
+            List<ItemStack> list = SpectralSlingshotItem.spectralDraw(crossbowStack, shooter.getProjectile(crossbowStack), shooter);
             if (!list.isEmpty()) {
                 crossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(list));
+                //有无限的话填进去的是拿不出来的物品
+                crossbowStack.set(ModComponents.CAN_TAKE_OUT_AMMO, notHasInfinity);
                 return true;
             } else {
                 return false;
@@ -202,7 +233,8 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
             //因为不会消耗装填物，所以原版的weapon.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.EMPTY);改成了如下
             ChargedProjectiles chargedprojectiles = weapon.get(DataComponents.CHARGED_PROJECTILES);
             if (chargedprojectiles != null && !chargedprojectiles.isEmpty()) {
-                this.shoot(serverlevel, shooter, hand, weapon, chargedprojectiles.getItems(), velocity, inaccuracy, shooter instanceof Player, target);
+                //这里的替换是因为爆掉的时候要返还弹药
+                this.spectralShoot(serverlevel, shooter, hand, weapon, chargedprojectiles.getItems(), velocity, inaccuracy, shooter instanceof Player, target);
                 //触发器和进度相关的删掉了——因为它并不是弩。
             }
         }
@@ -217,14 +249,12 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         return 1.0F / (random.nextFloat() * 0.5F + 1.8F) + f;
     }
 
-    //TODO: 继续改后面的代码
-    //TODO: 别忘了把卸载/替换弹药也写了，也包括武器爆掉的时候
-
     /**
      * Called as the item is being used by an entity.
      */
     @Override
     public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int count) {
+        //这个应该只用来播放音效了，所以应该不用改
         if (!level.isClientSide) {
             CrossbowItem.ChargingSounds crossbowitem$chargingsounds = this.getChargingSounds(stack);
             float f = (float) (stack.getUseDuration(livingEntity) - count) / (float) getChargeDuration(stack, livingEntity);
@@ -304,9 +334,6 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         }
     }
 
-    /**
-     * If this stack's item is a crossbow
-     */
     @Override
     public boolean useOnRelease(ItemStack stack) {
         return stack.is(this);
@@ -317,15 +344,109 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         return 8;
     }
 
-    public static record ChargingSounds(Optional<Holder<SoundEvent>> start, Optional<Holder<SoundEvent>> mid, Optional<Holder<SoundEvent>> end) {
-        public static final Codec<CrossbowItem.ChargingSounds> CODEC = RecordCodecBuilder.create(
-            soundsInstance -> soundsInstance.group(
-                    SoundEvent.CODEC.optionalFieldOf("start").forGetter(CrossbowItem.ChargingSounds::start),
-                    SoundEvent.CODEC.optionalFieldOf("mid").forGetter(CrossbowItem.ChargingSounds::mid),
-                    SoundEvent.CODEC.optionalFieldOf("end").forGetter(CrossbowItem.ChargingSounds::end)
-                )
-                .apply(soundsInstance, CrossbowItem.ChargingSounds::new)
-        );
+    //这个是从原版的draw()改的
+    protected static List<ItemStack> spectralDraw(ItemStack weapon, ItemStack ammo, LivingEntity shooter) {
+        if (ammo.isEmpty()) {
+            return List.of();
+        } else {
+            Level var5 = shooter.level();
+            int var10000;
+            if (var5 instanceof ServerLevel serverlevel) {
+                //这是原版的东西，是能让多重射击正常生效的东西
+                var10000 = EnchantmentHelper.processProjectileCount(serverlevel, weapon, shooter, 1);
+            } else {
+                var10000 = 1;
+            }
+
+            int i = var10000;
+            List<ItemStack> list = new ArrayList<>(i);
+            ItemStack itemStack1 = ammo.copy();
+
+            for (int j = 0; j < i; ++j) {
+                ItemStack itemstack = SpectralSlingshotItem.useSpectralAmmo(weapon, j == 0 ? ammo : itemStack1, shooter, j > 0);
+                if (!itemstack.isEmpty()) {
+                    list.add(itemstack);
+                }
+            }
+
+            return list;
+        }
     }
 
+    //这个是从原版的useAmmo()改的
+    protected static ItemStack useSpectralAmmo(ItemStack weapon, ItemStack ammo, LivingEntity shooter, boolean intangible) {
+        int ammoCountToUse;
+        Level level = shooter.level();
+        if (!intangible && level instanceof ServerLevel serverlevel) {
+            Item ammoItem = ammo.getItem();
+            if (shooter.hasInfiniteMaterials()
+                || (ammoItem instanceof ArrowItem ai && ai.isInfinite(ammo, weapon, shooter))
+            ) {
+                ammoCountToUse = 0;
+            } else {
+                ammoCountToUse = EnchantmentHelper.processAmmoUse(serverlevel, weapon, ammo, 1);
+            }
+        } else {
+            ammoCountToUse = 0;
+        }
+
+        //特殊处理：如果有无限附魔，那么不消耗（插入的代码）
+        int infinity = weapon.getEnchantmentLevel(shooter.level().holderLookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.INFINITY));
+        if (infinity > 0) ammoCountToUse = 0;
+
+        int i = ammoCountToUse;
+        if (i > ammo.getCount()) {
+            return ItemStack.EMPTY;
+        } else {
+            ItemStack itemstack;
+            if (i == 0) {
+                itemstack = ammo.copyWithCount(1);
+                itemstack.set(DataComponents.INTANGIBLE_PROJECTILE, Unit.INSTANCE);
+            } else {
+                itemstack = ammo.split(i);
+                if (ammo.isEmpty() && shooter instanceof Player player) {
+                    player.getInventory().removeItem(ammo);
+                }
+            }
+            return itemstack;
+        }
+    }
+
+    //从shoot()改的
+    protected void spectralShoot(ServerLevel level, LivingEntity shooter, InteractionHand hand, ItemStack weapon, List<ItemStack> projectileItems, float velocity, float inaccuracy, boolean isCrit, @Nullable LivingEntity target) {
+        float f = EnchantmentHelper.processProjectileSpread(level, weapon, shooter, 0.0F);
+        float f1 = projectileItems.size() == 1 ? 0.0F : 2.0F * f / (float) (projectileItems.size() - 1);
+        float f2 = (float) ((projectileItems.size() - 1) % 2) * f1 / 2.0F;
+        float f3 = 1.0F;
+
+        for (int i = 0; i < projectileItems.size(); ++i) {
+            ItemStack itemstack = projectileItems.get(i);
+            if (!itemstack.isEmpty()) {
+                float f4 = f2 + f3 * (float) ((i + 1) / 2) * f1;
+                f3 = -f3;
+                Projectile projectile = this.createProjectile(level, shooter, weapon, itemstack, isCrit);
+                this.shootProjectile(shooter, projectile, i, velocity, inaccuracy, f4, target);
+                level.addFreshEntity(projectile);
+                //插入的代码，预存一下里面的东西
+                ChargedProjectiles chargedprojectiles = weapon.get(DataComponents.CHARGED_PROJECTILES);
+                boolean canTakeOut = canTakeOutAmmo(weapon);
+                ItemStack itemStack1 = ItemStack.EMPTY;
+                if (canTakeOut && chargedprojectiles != null) itemStack1 = chargedprojectiles.getItems().getFirst().copy();
+                //原版的hurtAndBreak()
+                weapon.hurtAndBreak(this.getDurabilityUse(itemstack), shooter, LivingEntity.getSlotForHand(hand));
+                //如果武器破坏，且里面有东西，那么吐出来
+                if (weapon.isEmpty() && !itemStack1.isEmpty()) {
+                    if (shooter instanceof Player player) {
+                            player.addItem(itemStack1);
+                    } else {
+                        new ItemEntity(level, shooter.getX(), shooter.getY(), shooter.getZ(), itemStack1);
+                    }
+                }
+                if (weapon.isEmpty()) {
+                    break;
+                }
+            }
+        }
+
+    }
 }
