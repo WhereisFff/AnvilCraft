@@ -55,12 +55,11 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
      */
     private boolean midLoadSoundPlayed = false;
 
+    //TODO: 第一人称的手持动画？装填弹药的额外渲染？
     //证明自己，比起弹弓，更像弩（指这里的音效从弩抄的）
     private static final CrossbowItem.ChargingSounds DEFAULT_SOUNDS = new CrossbowItem.ChargingSounds(
         Optional.of(SoundEvents.CROSSBOW_LOADING_START), Optional.of(SoundEvents.CROSSBOW_LOADING_MIDDLE), Optional.of(SoundEvents.CROSSBOW_LOADING_END)
     );
-
-    //TODO: ClientItem那边的渲染（手持动作）
 
     public SpectralSlingshotItem(Properties properties) {
         super(properties);
@@ -102,8 +101,9 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         if (chargedprojectiles != null && !chargedprojectiles.isEmpty()) {
             if (!player.isCrouching() && !player.getCooldowns().isOnCooldown(this)) {
                 this.performShooting(level, player, hand, itemstack, getShootingPower(chargedprojectiles), 1.0F, null);
-                //TODO: 把快速装填降低冷却写了
-                player.getCooldowns().addCooldown(this, 40);
+                int quickCharge = itemstack.getEnchantmentLevel(player.level().holderLookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.QUICK_CHARGE));
+                int cdBuff = Math.min(quickCharge * 5, 20); //5tick = 0.25s, 20tick = 1s
+                player.getCooldowns().addCooldown(this, 40 - cdBuff);
             } else {
                 //这个部分是卸载和替换弹药
                 ItemStack stack = chargedprojectiles.getItems().getFirst();

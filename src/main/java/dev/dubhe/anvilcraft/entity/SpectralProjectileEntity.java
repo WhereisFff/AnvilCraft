@@ -12,6 +12,7 @@ import net.minecraft.world.level.Level;
 
 public class SpectralProjectileEntity extends AbstractArrow {
 
+    //TODO：实现这东西的行为
     private static final EntityDataAccessor<ItemStack> AS_ITEM_STACK = SynchedEntityData.defineId(
         SpectralProjectileEntity.class, EntityDataSerializers.ITEM_STACK);
 
