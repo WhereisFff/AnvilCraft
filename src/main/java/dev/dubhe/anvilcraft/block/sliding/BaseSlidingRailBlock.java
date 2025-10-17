@@ -89,32 +89,27 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
         return this.canStickTo(pos, axis, otherPos, otherAxis);
     }
 
-    private boolean canStickTo(
-        BlockPos pos, @Nullable Direction.Axis axis,
-        BlockPos otherPos, @Nullable Direction.Axis otherAxis
-    ) {
+    private boolean canStickTo(BlockPos pos, @Nullable Direction.Axis axis, BlockPos otherPos, @Nullable Direction.Axis otherAxis) {
         if (axis == Direction.Axis.Y || otherAxis == Direction.Axis.Y) return true;
         boolean axisIsNotNull = axis != null;
         if (Objects.equals(otherAxis, axis) && axisIsNotNull) {
             return pos.relative(axis, -1).equals(otherPos) || pos.relative(axis, 1).equals(otherPos);
         }
         if (axisIsNotNull && otherAxis != null) return false;
-        return pos.relative(Direction.Axis.X, -1).equals(otherPos)
-               || pos.relative(Direction.Axis.X, 1).equals(otherPos)
-               || pos.relative(Direction.Axis.Y, -1).equals(otherPos)
-               || pos.relative(Direction.Axis.Y, 1).equals(otherPos)
-               || pos.relative(Direction.Axis.Z, -1).equals(otherPos)
-               || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
+        return pos.relative(Direction.Axis.X, -1).equals(otherPos) || pos.relative(Direction.Axis.X, 1).equals(otherPos) || pos.relative(
+            Direction.Axis.Y,
+            -1
+        ).equals(otherPos) || pos.relative(Direction.Axis.Y, 1).equals(otherPos) || pos.relative(
+            Direction.Axis.Z,
+            -1
+        ).equals(otherPos) || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
     }
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (level.isClientSide) return;
         if (entity instanceof ItemEntity) {
-            AABB railBox = new AABB(
-                pos.getX(), pos.getY(), pos.getZ(),
-                pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1
-            );
+            AABB railBox = new AABB(pos.getX(), pos.getY(), pos.getZ(), pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
             if (railBox.intersects(entity.getBoundingBox())) {
                 if (this instanceof DetectorSlidingRailBlock detectorRail) {
                     detectorRail.onItemEntitySlidingAbove(level, pos, state);

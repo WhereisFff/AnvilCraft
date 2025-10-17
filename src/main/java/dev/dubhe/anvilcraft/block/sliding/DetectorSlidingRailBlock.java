@@ -92,8 +92,10 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (state.getValue(POWERED) && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above()))
-            .isEmpty() && level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).isEmpty()) {
+        if (state.getValue(POWERED)
+            && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above()))
+            .isEmpty()
+            && level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).isEmpty()) {
             level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_ALL);
             level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get()).ifPresent(DetectorSlidingRailBlockEntity::cleanPower);
             level.updateNeighbourForOutputSignal(pos, this);
