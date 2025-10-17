@@ -10,6 +10,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -94,7 +95,8 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (state.getValue(POWERED) && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above())).isEmpty()) {
+        if (state.getValue(POWERED) && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above())).isEmpty() 
+            && level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).isEmpty()) {
             level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_ALL);
             level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get()).ifPresent(DetectorSlidingRailBlockEntity::cleanPower);
             level.updateNeighbourForOutputSignal(pos, this);
@@ -146,6 +148,14 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     public void onSlidingAbove(Level level, BlockPos pos, BlockState state, SlidingBlockEntity entity) {
         level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get())
             .ifPresent(detector -> detector.updatePower(entity.getBlockCount()));
+        level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
+        level.updateNeighbourForOutputSignal(pos, this);
+        level.scheduleTick(pos, this, 20);
+    }
+
+    public void onItemEntitySlidingAbove(Level level, BlockPos pos, BlockState state) {
+        level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get())
+            .ifPresent(detector -> detector.updatePower(1));
         level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
         level.updateNeighbourForOutputSignal(pos, this);
         level.scheduleTick(pos, this, 20);
