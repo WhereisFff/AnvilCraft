@@ -111,8 +111,10 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (level.isClientSide) return;
         if (entity instanceof ItemEntity) {
-            AABB railBox = new AABB(pos.getX(), pos.getY(), pos.getZ(), 
-                                   pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1);
+            AABB railBox = new AABB(
+                pos.getX(), pos.getY(), pos.getZ(),
+                pos.getX() + 1, pos.getY() + 1, pos.getZ() + 1
+            );
             if (railBox.intersects(entity.getBoundingBox())) {
                 if (this instanceof DetectorSlidingRailBlock detectorRail) {
                     detectorRail.onItemEntitySlidingAbove(level, pos, state);

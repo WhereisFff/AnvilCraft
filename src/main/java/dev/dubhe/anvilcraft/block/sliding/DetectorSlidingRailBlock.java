@@ -39,16 +39,19 @@ import java.util.stream.Stream;
 @ParametersAreNonnullByDefault
 public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, IMoveableEntityBlock {
     public static final VoxelShape AABB_X = Stream.of(
-        Block.box(0, 0, 0, 16, 6, 16),
-        Block.box(0, 6, 11, 16, 16, 16),
-        Block.box(0, 6, 0, 16, 16, 5)
-    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
-    public static final VoxelShape AABB_Z =
-        Stream.of(
+            Block.box(0, 0, 0, 16, 6, 16),
+            Block.box(0, 6, 11, 16, 16, 16),
+            Block.box(0, 6, 0, 16, 16, 5)
+        )
+        .reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR))
+        .get();
+    public static final VoxelShape AABB_Z = Stream.of(
             Block.box(0, 0, 0, 16, 6, 16),
             Block.box(11, 6, 0, 16, 16, 16),
             Block.box(0, 6, 0, 5, 16, 16)
-        ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
+        )
+        .reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR))
+        .get();
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
 
@@ -61,12 +64,11 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction facing = context.getHorizontalDirection();
-        if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) {
+        if (context.getPlayer() != null
+            && context.getPlayer().isShiftKeyDown()) {
             facing = facing.getOpposite();
         }
-        return this.defaultBlockState()
-            .setValue(FACING, facing)
-            .setValue(POWERED, false);
+        return this.defaultBlockState().setValue(FACING, facing).setValue(POWERED, false);
     }
 
     @Override
@@ -80,12 +82,7 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     }
 
     @Override
-    public VoxelShape getShape(
-        BlockState blockState,
-        BlockGetter blockGetter,
-        BlockPos blockPos,
-        CollisionContext collisionContext
-    ) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return switch (blockState.getValue(FACING).getAxis()) {
             case X -> AABB_X;
             case Z -> AABB_Z;
@@ -95,8 +92,8 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
 
     @Override
     protected void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
-        if (state.getValue(POWERED) && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above())).isEmpty() 
-            && level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).isEmpty()) {
+        if (state.getValue(POWERED) && level.getEntitiesOfClass(SlidingBlockEntity.class, new AABB(pos.above()))
+            .isEmpty() && level.getEntitiesOfClass(ItemEntity.class, new AABB(pos.above())).isEmpty()) {
             level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_ALL);
             level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get()).ifPresent(DetectorSlidingRailBlockEntity::cleanPower);
             level.updateNeighbourForOutputSignal(pos, this);
@@ -154,8 +151,7 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     }
 
     public void onItemEntitySlidingAbove(Level level, BlockPos pos, BlockState state) {
-        level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get())
-            .ifPresent(detector -> detector.updatePower(1));
+        level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get()).ifPresent(detector -> detector.updatePower(1));
         level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
         level.updateNeighbourForOutputSignal(pos, this);
         level.scheduleTick(pos, this, 20);
