@@ -98,13 +98,10 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
         if (axisIsNotNull && otherAxis != null) return false;
         return pos.relative(Direction.Axis.X, -1).equals(otherPos)
                || pos.relative(Direction.Axis.X, 1).equals(otherPos)
-               || pos.relative(
-            Direction.Axis.Y,
-            -1
-        ).equals(otherPos) || pos.relative(Direction.Axis.Y, 1).equals(otherPos) || pos.relative(
-            Direction.Axis.Z,
-            -1
-        ).equals(otherPos) || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
+               || pos.relative(Direction.Axis.Y, -1).equals(otherPos)
+               || pos.relative(Direction.Axis.Y, 1).equals(otherPos)
+               || pos.relative(Direction.Axis.Z, -1).equals(otherPos)
+               || pos.relative(Direction.Axis.Z, 1).equals(otherPos);
     }
 
     @Override
