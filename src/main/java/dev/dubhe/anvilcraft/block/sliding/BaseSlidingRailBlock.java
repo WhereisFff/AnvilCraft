@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -17,6 +18,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -112,6 +114,14 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
             if (railBox.intersects(entity.getBoundingBox())) {
                 if (this instanceof DetectorSlidingRailBlock detectorRail) {
                     detectorRail.onItemEntitySlidingAbove(level, pos, state);
+                }
+            }
+        }
+        if (entity instanceof LivingEntity) {
+            if (this instanceof PoweredSlidingRailBlock) {
+                if (level.getBlockState(pos).getValue(PoweredSlidingRailBlock.POWERED)) {
+                    Direction facing = level.getBlockState(pos).getValue(PoweredSlidingRailBlock.FACING);
+                    entity.setDeltaMovement(Vec3.ZERO.relative(facing, 0.35));
                 }
             }
         }
