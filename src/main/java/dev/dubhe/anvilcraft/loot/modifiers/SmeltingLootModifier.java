@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.loot.modifiers;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
+import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.util.Util;
@@ -25,6 +26,9 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
+
+import java.util.List;
+import java.util.Optional;
 
 public class SmeltingLootModifier extends LootModifier {
 
@@ -49,14 +53,17 @@ public class SmeltingLootModifier extends LootModifier {
         if (objectArrayList.size() == 1
             && objectArrayList.getFirst().is(ModItemTags.HEATABLE_BLOCKS)
             && Util.castSafely(objectArrayList.getFirst().getItem(), BlockItem.class).isPresent()) {
-            return ObjectArrayList.of(
-                HeatRecorder.getNextTierHeatableBlock(
-                        level,
+            Optional<HeatTier> tier = HeatRecorder.getTier(
+                level,
+                BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN)),
+                Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState());
+            return tier.map(heatTier -> ObjectArrayList.of(
+                HeatRecorder.getHeatableBlock(level,
                         BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN)),
-                        Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState()
-                    )
+                        Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState(),
+                        heatTier)
                     .map(block -> block.asItem().getDefaultInstance())
-                    .orElse(ItemStack.EMPTY));
+                    .orElse(ItemStack.EMPTY))).orElseGet(ObjectArrayList::of);
         }
         ObjectArrayList<ItemStack> smeltList = new ObjectArrayList<>();
         for (ItemStack item : objectArrayList) {
