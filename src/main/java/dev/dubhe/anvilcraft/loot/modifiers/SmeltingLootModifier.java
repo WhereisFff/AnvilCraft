@@ -27,7 +27,6 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.loot.IGlobalLootModifier;
 import net.neoforged.neoforge.common.loot.LootModifier;
 
-import java.util.List;
 import java.util.Optional;
 
 public class SmeltingLootModifier extends LootModifier {
