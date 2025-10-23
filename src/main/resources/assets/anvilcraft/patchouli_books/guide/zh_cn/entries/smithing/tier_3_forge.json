@@ -68,14 +68,15 @@
     },
     {
       "type": "patchouli:smithing",
-      "recipe": "anvilcraft:multiphase_transcendium",
-      "text": "锻造超限工具的关键材料 $(br2)赋予共振器和重戟$(l:advanced/tool_properties#multiphase)多相$(/l)属性"
+      "recipe": "anvilcraft:smithing/transcendence_anvil_hammer",
+      "recipe2": "anvilcraft:multiphase_transcendium",
+      "text": "锻造超限工具的关键材料 $(li)赋予共振器和重戟$(l:advanced/tool_properties#multiphase)多相$(/l)属性"
     },
     {
       "type": "patchouli:smithing",
+      "anchor": "transcendence_anvil",
       "recipe": "anvilcraft:smithing/transcendence_anvil",
-      "recipe2": "anvilcraft:smithing/transcendence_anvil_hammer",
-      "text": "类似的，超限合金也能合成对应的铁砧和铁砧锤，但无法制成普通的工具。"
+      "text": "继承了余烬铁砧的锻造能力 $(li)合并附魔时，无视附魔等级上限 $(li)挖掘方块时，自带时运V $(li)杀伤生物视为玩家杀伤，且掉落更多"
     },
     {
       "type": "anvilcraft:multiple_to_one_smithing",
@@ -83,9 +84,9 @@
       "recipe2": "anvilcraft:two_to_one_smithing/transcendence_heavy_halberd"
     },
     {
-      "type": "patchouli:crafting",
-      "recipe": "anvilcraft:transcendence_dragon_rod",
-      "text": "升级后拥有无限耐久，且挖掘冷却降低为原来的$(thing)20%%$()。$(br2)同样可以通过锻造升级。"
+      "type": "patchouli:smithing",
+      "recipe": "anvilcraft:smithing/transcendence_dragon_rod",
+      "text": "升级后拥有无限耐久，且挖掘冷却降低为原来的$(thing)20%%$() $(li)可以直接用超限铁砧锤和方块吞噬器合成"
     },
     {
       "type": "patchouli:relations",

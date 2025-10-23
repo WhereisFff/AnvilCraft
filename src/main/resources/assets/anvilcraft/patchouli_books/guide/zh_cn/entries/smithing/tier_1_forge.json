@@ -63,7 +63,7 @@
     {
       "type": "patchouli:smithing",
       "recipe": "anvilcraft:smithing/royal_steel_sword",
-      "recipe2": "anvilcraft:smithing/royal_anvil_pickaxe",
+      "recipe2": "anvilcraft:smithing/royal_steel_pickaxe",
       "text": "使用$(thing)皇家钢锭$()升级你的武器，这是它们成长路上的第一步。"
     },
     {

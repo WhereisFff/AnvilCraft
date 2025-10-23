@@ -63,7 +63,7 @@
     {
       "type": "patchouli:smithing",
       "recipe": "anvilcraft:smithing/royal_steel_sword",
-      "recipe2": "anvilcraft:smithing/royal_anvil_pickaxe",
+      "recipe2": "anvilcraft:smithing/royal_steel_pickaxe",
       "text": "Use Royal Steel Ingot to upgrade your tools. This is the first step of their growing path."
     },
     {

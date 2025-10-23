@@ -5,12 +5,12 @@
   "sortnum": 33008,
   "entry_color": "660066",
   "pages": [
-    "本页面展示了目前所有可用的$(thing)三阶材料$() $(li)$(l:smithing/tier_3_materials#multiphase_matter)多相物质$(/l) $(li)$(l:smithing/tier_3_materials#negative_matter)负物质$(/l) $(li)$(l:smithing/tier_3_materials#transcendium_ingot)超限合金$(/l)",
+    "本页面展示了目前所有可用的$(thing)三阶材料$() $(li)$(l:smithing/tier_3_materials#multiphase_matter)多相物质$(/l) $(li)$(l:smithing/tier_3_materials#negative_matter)负物质$(/l) $(li)$(l:smithing/tier_3_materials#nuclear)核燃料$(/l) $(li)$(l:smithing/tier_3_materials#transcendium_ingot)超限合金$(/l)",
     {
       "type": "anvilcraft:anvil_collision",
       "anchor": "multiphase_matter",
       "recipe": "anvilcraft:anvil_collision/ember_anvil_and_frost_metal_block_32",
-      "text": "用$(l:smithing/tier_2_materials#ember_anvil)余烬砧$(/l)撞击$(l:smithing/tier_2_materials#frost_metal_block_and_nugget)浮霜金属块$(/l)获得4个$(item)多相物质$() $(p)用于在$(item)余烬锻造台$()上参与多合一锻造"
+      "text": "用$(l:smithing/tier_2_forge#ember_anvil)余烬砧$(/l)撞击$(l:smithing/tier_2_materials#frost_metal)浮霜金属块$(/l)获得4个$(item)多相物质$() $(p)用于在$(item)余烬锻造台$()上参与多合一锻造"
     },
     {
       "type": "patchouli:crafting",
@@ -35,6 +35,29 @@
     },
     {
       "type": "patchouli:spotlight",
+      "anchor": "nuclear",
+      "item": "tag:anvilcraft:radiations",
+      "link_recipe": true,
+      "title": "核燃料",
+      "text": "铀、钚中蕴含了巨大的能量，可以将其释放为热能，并进一步转换为电能 $(li)可用于$(l:power/nuclear)发电$(/l) $(li)携带18组核燃料物品会受到凋零效果"
+    },
+    {
+      "type": "anvilcraft:anvil_collision",
+      "recipe": "anvilcraft:anvil_collision/anvil_tier_1_and_redstone_block_32",
+      "text": "一次撞击平均获得8.5个$(item)铀粒$() $(li)可以通过$(item)矿物涌泉$()量产 "
+    },
+    {
+      "type": "anvilcraft:item_compress",
+      "recipe": "anvilcraft:item_compress/plutonium_nugget_from_stable_neutronium_ingot",
+      "text": "中子锭不消耗 $(li)钚过于活跃而没有粗矿形式，无法通过$(item)矿物涌泉$()量产"
+    },
+    {
+      "type": "anvilcraft:time_warp",
+      "recipe": "anvilcraft:time_warp/raw_uranium_from_uranium_block",
+      "recipe2": "anvilcraft:time_warp/raw_uranium_from_plutonium_block"
+    },
+    {
+      "type": "patchouli:spotlight",
       "anchor": "transcendium_ingot",
       "item": [
         "anvilcraft:transcendium_ingot",
@@ -46,6 +69,7 @@
     },
     {
       "type": "anvilcraft:item_inject",
+      "title": "超限合金块",
       "recipe": "anvilcraft:item_inject/transcendium_block",
       "text": "将$(l:smithing/tier_2_materials#neutronium_ingot)充能中子锭$()压入$(l:advanced/special_heated_block)超温$(/l)状态下的$(l:smithing/tier_2_materials#ember_metal)余烬金属块$()来获得超限合金块。 $(br)有一半概率回收一个$(item)中子锭$()"
     },
