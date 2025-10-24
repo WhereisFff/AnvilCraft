@@ -369,7 +369,7 @@ public class GiantAnvilScene {
         builder.overlay()
             .showText(55)
             .text("Void Matter Blocks can add armor-piercing void damage")
-            .pointAt(util.vector().blockSurface(util.grid().at(15,0, 15), Direction.NORTH))
+            .pointAt(util.vector().blockSurface(util.grid().at(15, 0, 15), Direction.NORTH))
             .attachKeyFrame()
             .placeNearTarget();
         // 生成一群钻石套僵尸
@@ -447,7 +447,7 @@ public class GiantAnvilScene {
         builder.markAsFinished();
     }
 
-    private static void shockMode2 (SceneBuilder scene, SceneBuildingUtil util) {
+    private static void shockMode2 (SceneBuilder scene, SceneBuildingUtil util)  {
         // 使用builder
         AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
         // 场景名：破坏模式，标题：撼地的另一个模式——破坏模式
@@ -1077,7 +1077,8 @@ public class GiantAnvilScene {
             BlockPos plantPos = netherFarmBlocks[i].above();
             net.minecraft.world.level.block.Block plantBlock = (i < 2) ? Blocks.NETHER_WART : Blocks.SWEET_BERRY_BUSH;
             builder.world().setBlock(plantPos, plantBlock.defaultBlockState()
-                .setValue(plantBlock == Blocks.NETHER_WART ? 
+                .setValue(plantBlock == Blocks.NETHER_WART
+                          ?
                     net.minecraft.world.level.block.NetherWartBlock.AGE :
                     net.minecraft.world.level.block.SweetBerryBushBlock.AGE, 3), false);
             netherPlantLinks[i] = builder.world().showIndependentSection(util.select().position(plantPos), Direction.UP);
