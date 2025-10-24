@@ -447,7 +447,7 @@ public class GiantAnvilScene {
         builder.markAsFinished();
     }
 
-    private static void shockMode2 (SceneBuilder scene, SceneBuildingUtil util){
+    private static void shockMode2(SceneBuilder scene, SceneBuildingUtil util) {
         // 使用builder
         AnvilCraftSceneBuilder builder = new AnvilCraftSceneBuilder(scene);
         // 场景名：破坏模式，标题：撼地的另一个模式——破坏模式
