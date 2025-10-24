@@ -30,6 +30,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -144,14 +145,17 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
                 && checkState.getValue(DeflectionRingBlock.HALF) == DirectionCube3x3PartHalf.MID_CENTER
                 && checkState.getValue(DeflectionRingBlock.SWITCH) == IPowerComponent.Switch.ON
                 && !checkState.getValue(DeflectionRingBlock.OVERLOAD)) {
-            end =  getBlockPos().relative(direction.getOpposite(), 2);
+            end = getBlockPos().relative(direction.getOpposite(), 2);
             found = true;
         }
         if (!found) return;
         for (BlockPos pos : blockPoses) {
             BlockState fallState = level.getBlockState(pos);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);
-            FallingBlockEntity.fall(level, pos, fallState).setHurtsEntities(2.0F, 40);
+            FallingBlockEntity fallingEntity = FallingBlockEntity.fall(level, pos, fallState);
+            if (fallState.getBlock() instanceof FallingBlock fallingBlock) {
+                fallingBlock.falling(fallingEntity);
+            }
         }
         checkPos.move(direction, 2);
         AABB aabb = new AABB(
@@ -164,7 +168,7 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
         );
         List<Entity> entities = level.getEntitiesOfClass(Entity.class, aabb, AccelerationRingBlockEntity::canBeAccelerated);
         for (Entity entity : entities) {
-                if (entity instanceof Player && Math.abs(entity.getDeltaMovement().get(direction.getAxis())) > 20) {
+            if (entity instanceof Player && Math.abs(entity.getDeltaMovement().get(direction.getAxis())) > 20) {
                 entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
                 continue;
             }
@@ -188,7 +192,7 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
             else
                 entity.setPos(entity.position().add(fixMovement.multiply(5, 5, 5)));
             deltaMovement = deltaMovement.scale(1.0204081632653061).add(new Vec3(0.16f, 0.16f, 0.16f).multiply(Vec3.atLowerCornerOf(direction.getNormal())));
-                entity.setDeltaMovement(deltaMovement);
+            entity.setDeltaMovement(deltaMovement);
             entity.setDeltaMovement(entity.getDeltaMovement().add(0, entity.getGravity(), 0));
         }
     }
