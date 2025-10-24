@@ -207,6 +207,9 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         if (!state.getValue(POWERED)) {
             ISlidingRail.absorbEntity(pos, entity);
         } else {
+            if (entity instanceof Player player && player.isCrouching()) {
+                return;
+            }
             entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.35));
         }
     }
