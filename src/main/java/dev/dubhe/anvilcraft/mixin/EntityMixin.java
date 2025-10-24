@@ -147,6 +147,7 @@ public abstract class EntityMixin implements IEntityExtension {
             isFixed.set(true);
             anvil$fixedDeltaMovement = vec3.multiply(a, a, a);
             anvil$isDeflected = true;
+
             return;
         }
         anvil$isDeflected = false;
