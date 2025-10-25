@@ -496,11 +496,11 @@ public class GiantAnvilScene {
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(15, 0, 16), Direction.WEST))
-            .text("When anvils are placed on the four sides of the Heavy Iron Block, it triggers the destruction mode of shock");
+            .text("When a heavy iron block is surrounded on four sides by anvils, it triggers the destruction mode of shock.");
 
         builder.idle(60);
 
-        // 四个选择框，框住四个角，文本：改变四个角的方块可以改变破坏的目标，持续65gt
+        // 四个选择框，框住四个角，文本：改变四个角的方块可以改变破坏的目标
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(15, 0, 15, 17, 0, 17), 65)
             .attachKeyFrame()
@@ -522,7 +522,6 @@ public class GiantAnvilScene {
             builder.world().showSection(obsidian, Direction.DOWN);
         }
 
-        // 延时5gt
         builder.idle(5);
 
         // 在四角放置草方块
@@ -530,7 +529,6 @@ public class GiantAnvilScene {
             builder.world().setBlock(pos, Blocks.GRASS_BLOCK.defaultBlockState(), false);
         }
 
-        // 延时5gt
         builder.idle(5);
 
         // 在四角放置干草块
@@ -538,7 +536,6 @@ public class GiantAnvilScene {
             builder.world().setBlock(pos, Blocks.HAY_BLOCK.defaultBlockState(), false);
         }
 
-        // 延时5gt
         builder.idle(5);
 
         // 在四角放置橡木原木
@@ -546,7 +543,6 @@ public class GiantAnvilScene {
             builder.world().setBlock(pos, Blocks.OAK_LOG.defaultBlockState(), false);
         }
 
-        // 延时5gt
         builder.idle(5);
 
         // 在四角放置黑曜石
@@ -587,28 +583,28 @@ public class GiantAnvilScene {
             blockRowLinks[i] = builder.world().showIndependentSection(blockSelection, Direction.DOWN);
         }
 
-        // 选择框，文本：黑曜石撼地会破坏任意可破坏的方块
+        // 选择框，文本：底座四角为黑曜石时，撼地会破坏任意可破坏的方块
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(13, 1, 15, 13, 1, 17), 80)
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(13, 1, 15), Direction.WEST))
-            .text("Obsidian shock destroys any destructible blocks");
+            .text("When the base corners are obsidian, shock breaks any breakable block.");
 
         builder.idle(40);
 
         // 大铁砧下落
         builder.world().moveSectionInterpolation(giantAnvilLink, new Vec3(0, -10, 0), Interpolation.acceleration(0.05));
 
-        // 破坏石头生成圆石掉落物，破坏冰块，破坏金矿石生成粗金掉落物，不破坏基岩
+        // 破坏石头生成圆石掉落物，破坏冰块，破坏金矿石生成粗金掉落物
         builder.world().hideIndependentSection(blockRowLinks[0], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[1], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[2], Direction.UP);
-        // 破坏方块以产生粒子效果
+
         builder.world().setBlock(blockRowPositions[0], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[1], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[2], Blocks.AIR.defaultBlockState(), true);
-        // 产生掉落物
+
         itemLinks1[0] = builder.world().createItemEntity(util.vector().of(13, 1, 15), util.vector().of(0, 0.1, 0), 
             new net.minecraft.world.item.ItemStack(Blocks.COBBLESTONE));
         itemLinks1[1] = builder.world().createItemEntity(util.vector().of(13, 1, 16), util.vector().of(0, 0.1, 0), 
@@ -636,20 +632,20 @@ public class GiantAnvilScene {
 
         builder.idle(10);
 
-        // 在旁边（高度1）排成一行放置石头，冰块，金矿石
+        // 在旁边排成一行放置石头，冰块，金矿石
         ElementLink<EntityElement>[] itemLinks2 = new ElementLink[3];
         for (int i = 0; i < blockRowPositions.length; i++) {
             builder.world().setBlock(blockRowPositions[i], blocks[i].defaultBlockState(), false);
             blockRowLinks[i] = builder.world().showIndependentSection(util.select().position(blockRowPositions[i]), Direction.DOWN);
         }
 
-        // 选择框3x1x3，文本：皇家铁砧会带有精准采集效果
+        // 选择框，文本：当四边换为皇家铁砧时，撼地会带有精准采集效果
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(13, 1, 15, 13, 1, 17), 65)
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(13, 1, 15), Direction.WEST))
-            .text("Royal Anvil has Silk Touch effect");
+            .text("When the four sides are Royal Anvils, Shock gains Silk Touch effect.");
 
         builder.idle(40);
 
@@ -660,7 +656,7 @@ public class GiantAnvilScene {
         builder.world().hideIndependentSection(blockRowLinks[0], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[1], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[2], Direction.UP);
-        // 破坏方块以产生粒子效果
+
         builder.world().setBlock(blockRowPositions[0], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[1], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[2], Blocks.AIR.defaultBlockState(), true);
@@ -694,20 +690,20 @@ public class GiantAnvilScene {
 
         builder.idle(10);
 
-        // 在旁边放置石头，冰块，金矿石，基岩
-        ElementLink<EntityElement>[] itemLinks3 = new ElementLink[2]; // 添加物品链接数组
+        // 在旁边放置石头，冰块，金矿石
+        ElementLink<EntityElement>[] itemLinks3 = new ElementLink[2];
         for (int i = 0; i < blockRowPositions.length; i++) {
             builder.world().setBlock(blockRowPositions[i], blocks[i].defaultBlockState(), false);
             blockRowLinks[i] = builder.world().showIndependentSection(util.select().position(blockRowPositions[i]), Direction.DOWN);
         }
 
-        // 选择框，文本：余烬铁砧会带有自动熔炼效果
+        // 选择框，文本：当四边换为余烬铁砧时，撼地会带有自动熔炼效果
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(13, 1, 15, 13, 1, 17), 65)
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(13, 1, 15), Direction.WEST))
-            .text("Ember Anvil has Auto-Smelting effect");
+            .text("When the four sides are Ember Anvils, Shock gains Auto-Smelting effect.");
 
         builder.idle(40);
 
@@ -718,13 +714,13 @@ public class GiantAnvilScene {
         builder.world().hideIndependentSection(blockRowLinks[0], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[1], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[2], Direction.UP);
-        // 破坏方块以产生粒子效果
+
         builder.world().setBlock(blockRowPositions[0], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[1], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[2], Blocks.AIR.defaultBlockState(), true);
-        // 产生掉落物
+
         itemLinks3[0] = builder.world().createItemEntity(util.vector().of(13, 1, 15), util.vector().of(0, 0.1, 0), 
-            new net.minecraft.world.item.ItemStack(Blocks.STONE)); // 石头->石头（熔炼圆石）
+            new net.minecraft.world.item.ItemStack(Blocks.STONE));
         itemLinks3[1] = builder.world().createItemEntity(util.vector().of(13, 1, 16), util.vector().of(0, 0.1, 0), 
             new net.minecraft.world.item.ItemStack(Items.GOLD_INGOT));
 
@@ -760,19 +756,19 @@ public class GiantAnvilScene {
         builder.idle(10);
 
         // 在旁边排成一行放置石头，冰块，金矿石
-        ElementLink<EntityElement>[] itemLinks4 = new ElementLink[2]; // 添加物品链接数组
+        ElementLink<EntityElement>[] itemLinks4 = new ElementLink[2];
         for (int i = 0; i < blockRowPositions.length; i++) {
             builder.world().setBlock(blockRowPositions[i], blocks[i].defaultBlockState(), false);
             blockRowLinks[i] = builder.world().showIndependentSection(util.select().position(blockRowPositions[i]), Direction.DOWN);
         }
 
-        // 选择框3x1x3，文本：超限铁砧会带有时运V效果
+        // 选择框，文本：当四边换为超限铁砧时，撼地会带有时运V效果
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(13, 1, 15, 13, 1, 17), 65)
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(13, 1, 15), Direction.WEST))
-            .text("Netherite Anvil has Fortune V effect");
+            .text("When the four sides are transcendence anvils, Shock gains Fortune V effect.");
 
         builder.idle(40);
 
@@ -783,7 +779,7 @@ public class GiantAnvilScene {
         builder.world().hideIndependentSection(blockRowLinks[0], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[1], Direction.UP);
         builder.world().hideIndependentSection(blockRowLinks[2], Direction.UP);
-        // 破坏方块以产生粒子效果
+
         builder.world().setBlock(blockRowPositions[0], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[1], Blocks.AIR.defaultBlockState(), true);
         builder.world().setBlock(blockRowPositions[2], Blocks.AIR.defaultBlockState(), true);
@@ -815,20 +811,20 @@ public class GiantAnvilScene {
 
         builder.idle(10);
 
-        // 在旁边（高度1）排成一行放置石头，冰块，金矿石，基岩
+        // 在旁边排成一行放置石头，冰块，金矿石
         ElementLink<EntityElement>[] itemLinks5 = new ElementLink[2]; // 添加物品链接数组
         for (int i = 0; i < blockRowPositions.length; i++) {
             builder.world().setBlock(blockRowPositions[i], blocks[i].defaultBlockState(), false);
             blockRowLinks[i] = builder.world().showIndependentSection(util.select().position(blockRowPositions[i]), Direction.DOWN);
         }
 
-        // 选择框3x1x3，文本：幻灵铁砧在此处相当于普通铁砧
+        // 选择框，文本：幻灵铁砧在撼地的底座中，就相当于普通铁砧
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(13, 1, 15, 13, 1, 17), 65)
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(13, 1, 15), Direction.WEST))
-            .text("Soul Anvil acts as a normal anvil in this mode");
+            .text("In Shock’s base, a spectral anvil functions as a regular anvil.");
 
         builder.idle(40);
 
@@ -870,7 +866,8 @@ public class GiantAnvilScene {
 
         builder.idle(10);
 
-        // 在旁边（高度0）排成一行放置草方块、菌丝、沙子、耕地，并在上方依次放置虞美人、红蘑菇、枯萎的灌木、成熟的小麦
+        // 在旁边地面排成一行放置草方块、菌丝、沙子、耕地，并在上方依次放置虞美人、红蘑菇、枯萎的灌木、成熟的小麦
+        // 地面方块
         BlockPos[] groundBlocks = {
             new BlockPos(13, 0, 14),
             new BlockPos(13, 0, 15),
@@ -894,32 +891,32 @@ public class GiantAnvilScene {
 
         ElementLink<WorldSectionElement>[] groundBlockLinks = new ElementLink[groundBlocks.length];
         ElementLink<WorldSectionElement>[] plantBlockLinks = new ElementLink[plantBlocks.length];
-        ElementLink<EntityElement>[] itemLinks6 = new ElementLink[4]; // 添加物品链接数组
+        ElementLink<EntityElement>[] itemLinks6 = new ElementLink[4];
         
         for (int i = 0; i < groundBlocks.length; i++) {
             // 放置地面方块
             builder.world().setBlock(groundBlocks[i], groundBlockTypes[i].defaultBlockState(), false);
             groundBlockLinks[i] = builder.world().showIndependentSection(util.select().position(groundBlocks[i]), Direction.UP);
-            
+
             // 放置植物
             BlockPos plantPos = groundBlocks[i].above();
             net.minecraft.world.level.block.state.BlockState plantState = plantBlocks[i].defaultBlockState();
             if (plantBlocks[i] == Blocks.WHEAT) {
                 plantState = plantState.setValue(net.minecraft.world.level.block.CropBlock.AGE, 7);
             } else if (plantBlocks[i] == Blocks.RED_MUSHROOM || plantBlocks[i] == Blocks.DEAD_BUSH) {
-
+                // ↑懒得喷
             }
             builder.world().setBlock(plantPos, plantState, false);
             plantBlockLinks[i] = builder.world().showIndependentSection(util.select().position(plantPos), Direction.UP);
         }
 
-        // 选择框3x1x3，文本：草方块撼地为除草模式，会破坏花草、雪片等附着物
+            // 选择框，文本：四角为草方块时，撼地会破坏花草、雪片等附着物
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(13, 0, 14, 13, 1, 17), 65)
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(13, 1, 14), Direction.WEST))
-            .text("Grass Block shock is weeding mode, destroying flowers, snow layers and other attachments");
+            .text("When the corners are grass blocks, Shock breaks flowers, snow layers, and other attachments.");
 
         builder.idle(40);
 
@@ -977,10 +974,10 @@ public class GiantAnvilScene {
 
         builder.idle(10);
 
-        // 文本指向幻灵铁砧：不同铁砧在该模式下同样有不同的效果
+        // 文本指向幻灵铁砧：不论选择何种破坏目标，破坏附带的效果都会因底座铁砧的不同而改变
         builder.overlay()
             .showText(55)
-            .text("Different anvils have different effects in this mode as well")
+            .text("Regardless of the chosen target, the breaking effect changes with the base anvils.")
             .pointAt(util.vector().blockSurface(util.grid().at(15, 1, 16), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
@@ -1084,7 +1081,7 @@ public class GiantAnvilScene {
             netherPlantLinks[i] = builder.world().showIndependentSection(util.select().position(plantPos), Direction.UP);
         }
 
-        // 选择框3x1x3，文本：干草块撼地为收割模式，会收获各种农作物并自动补种
+        // 选择框，文本：四角为干草块时，撼地会破坏各种农作物并自动补种
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(13, 0, 14, 13, 1, 17)
                 .add(util.select().fromTo(19, 1, 17, 19, 3, 17))
@@ -1092,7 +1089,7 @@ public class GiantAnvilScene {
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(13, 1, 14), Direction.WEST))
-            .text("Hay Block shock is harvesting mode, harvesting crops and automatically replanting");
+            .text("Hay blocks at the corners make Shock harvest crops and replant them automatically.");
 
         builder.idle(40);
 
@@ -1268,7 +1265,7 @@ public class GiantAnvilScene {
             sugarcaneLinks[i] = builder.world().showIndependentSection(util.select().position(sugarcanePositions[i]), Direction.UP);
         }
 
-        // 选择框，文本：原木撼地为砍树模式，会破坏整棵树，以及菌柄、仙人掌、甘蔗、紫颂植株等
+        // 选择框，文本：四角为原木时，撼地会破坏整棵树，以及菌柄、仙人掌、甘蔗、紫颂植株等大型植物
         builder.overlay()
             .showOutlineWithText(util.select().fromTo(14, 1, 15, 12, 6, 15)
                 .add(util.select().fromTo(14, 1, 13, 14, 3, 13))
@@ -1276,7 +1273,7 @@ public class GiantAnvilScene {
             .attachKeyFrame()
             .placeNearTarget()
             .pointAt(util.vector().blockSurface(util.grid().at(12, 1, 13), Direction.WEST))
-            .text("Log shock is tree-cutting mode, destroying entire trees, as well as mushrooms, cacti, sugar canes, chorus plants, etc.");
+            .text("When the corners are logs, Shock breaks entire trees, as well as huge fungi stems, cacti, sugar canes, chorus plants, and other large plants.");
 
         builder.idle(40);
 
@@ -1300,10 +1297,10 @@ public class GiantAnvilScene {
 
         builder.idle(30);
 
-        // 文本指向甘蔗：在撼地平面之下留一格甘蔗以保持持续生长
+        // 文本指向甘蔗：对于持续生长的作物，种植在撼地平面以下以防它们被连根拔起
         builder.overlay()
             .showText(55)
-            .text("One sugar cane block is left below the shock plane to maintain continuous growth")
+            .text("For continuously growing crops, plant them one block below Shock’s plane to prevent being uprooted.")
             .pointAt(util.vector().blockSurface(util.grid().at(18, 0, 13), Direction.WEST))
             .attachKeyFrame()
             .placeNearTarget();
