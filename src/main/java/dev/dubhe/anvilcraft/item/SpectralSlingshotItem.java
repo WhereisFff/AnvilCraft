@@ -163,7 +163,7 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
             int infinity = crossbowStack.getEnchantmentLevel(player.level().holderLookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.INFINITY));
             boolean notHasInfinity = !(infinity > 0);
             //draw被换了个写法
-            List<ItemStack> list = SpectralSlingshotItem.spectralDraw(crossbowStack, shooter.getProjectile(crossbowStack), shooter);
+            List<ItemStack> list = SpectralSlingshotItem.spectralDraw(crossbowStack, ammo, shooter);
             if (!list.isEmpty()) {
                 crossbowStack.set(DataComponents.CHARGED_PROJECTILES, ChargedProjectiles.of(list));
                 //有无限的话填进去的是拿不出来的物品
