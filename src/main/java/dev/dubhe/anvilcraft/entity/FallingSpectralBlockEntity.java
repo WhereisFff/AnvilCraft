@@ -77,6 +77,16 @@ public class FallingSpectralBlockEntity extends FallingBlockEntity {
     }
 
     @Override
+    public boolean anvilcraft$isSpectral() {
+        return true;
+    }
+
+    @Override
+    public float anvilcraft$getFallDistance() {
+        return 1.0F;
+    }
+
+    @Override
     public void tick() {
         if (this.blockState.isAir()) {
             this.discard();
@@ -90,7 +100,7 @@ public class FallingSpectralBlockEntity extends FallingBlockEntity {
                 BlockPos blockPos = this.blockPosition();
                 if (this.onGround()) {
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
-                    AnvilEvent.OnLand event = new AnvilEvent.OnLand(this.level(), blockPos, this, 1);
+                    AnvilEvent.OnLand event = new AnvilEvent.OnLand(this.level(), blockPos, this, this.anvilcraft$getFallDistance());
                     NeoForge.EVENT_BUS.post(event);
                     this.level().playSound(null, blockPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1.0F, 1.0F);
                     this.discard();
