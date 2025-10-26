@@ -49,26 +49,34 @@ public class SmeltingLootModifier extends LootModifier {
         HolderLookup<Enchantment> lookup = level.holderLookup(Registries.ENCHANTMENT);
         int lvl = tool.getEnchantmentLevel(lookup.getOrThrow(ModEnchantments.SMELTING_KEY));
         if (lvl <= 0) return objectArrayList;
-        if (objectArrayList.size() == 1
+        if (
+            objectArrayList.size() == 1
             && objectArrayList.getFirst().is(ModItemTags.HEATABLE_BLOCKS)
-            && Util.castSafely(objectArrayList.getFirst().getItem(), BlockItem.class).isPresent()) {
+            && Util.castSafely(objectArrayList.getFirst().getItem(), BlockItem.class).isPresent()
+        ) {
             Optional<HeatTier> tier = HeatRecorder.getTier(
                 level,
                 BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN)),
-                Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState());
+                Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState()
+            );
             return tier.map(heatTier -> ObjectArrayList.of(
-                HeatRecorder.getHeatableBlock(level,
+                HeatRecorder.getHeatableBlock(
+                        level,
                         BlockPos.containing(lootContext.getParam(LootContextParams.ORIGIN)),
                         Block.byItem(objectArrayList.getFirst().getItem()).defaultBlockState(),
-                        heatTier)
+                        heatTier
+                    )
                     .map(block -> block.asItem().getDefaultInstance())
-                    .orElse(ItemStack.EMPTY))).orElseGet(ObjectArrayList::of);
+                    .orElse(ItemStack.EMPTY)
+            )).orElseGet(ObjectArrayList::of);
         }
         ObjectArrayList<ItemStack> smeltList = new ObjectArrayList<>();
         for (ItemStack item : objectArrayList) {
             boolean needDouble = false;
             SingleRecipeInput cont = new SingleRecipeInput(item);
-            RecipeHolder<SmeltingRecipe> h = level.getRecipeManager().getRecipeFor(RecipeType.SMELTING, cont, level).orElse(null);
+            RecipeHolder<SmeltingRecipe> h = level.getRecipeManager()
+                .getRecipeFor(RecipeType.SMELTING, cont, level)
+                .orElse(null);
             if (h == null) {
                 smeltList.add(item);
                 continue;

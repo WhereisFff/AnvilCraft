@@ -132,7 +132,7 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
         Level level = this.level();
         FallingBlockEntity fallingBlockEntity = Util.cast(this);
         Predicate<Entity> predicate = EntitySelector.NO_CREATIVE_OR_SPECTATOR.and(EntitySelector.LIVING_ENTITY_STILL_ALIVE);
-        int i = Mth.ceil(fallDistance - 1.0F);
+        int i = Mth.ceil(this.fallDistance - 1.0F);
         float f = (float) Math.min(Mth.floor((float) i * this.fallDamagePerDistance), this.fallDamageMax);
         if (fallingBlockEntity.getBlockState().is(BlockTags.ANVIL)) {
             List<Entity> entities = level.getEntities(this, this.getBoundingBox(), predicate);
