@@ -102,7 +102,7 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
             level.setBlock(pos, state.setValue(POWERED, false), Block.UPDATE_ALL);
             level.getBlockEntity(pos, ModBlockEntities.DETECTOR_SLIDING_RAIL.get()).ifPresent(DetectorSlidingRailBlockEntity::cleanPower);
             level.updateNeighbourForOutputSignal(pos, this);
-            updateNeighborsAtOutputDirections(level, pos, state);
+            updateNeighborsAt(level, pos);
         }
         super.tick(state, level, pos, random);
     }
@@ -115,13 +115,7 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
     @Override
     protected int getSignal(BlockState state, BlockGetter level, BlockPos pos, Direction side) {
         if (!state.getValue(POWERED)) return 0;
-        Direction facing = state.getValue(FACING);
-        Direction left = facing.getClockWise();
-        Direction right = facing.getCounterClockWise();
-        if (side == left || side == right || side == Direction.UP) {
-            return 15;
-        }
-        return 0;
+        return 15;
     }
 
     @Override
@@ -159,7 +153,7 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
         blockEntity.ifPresent(detector -> detector.updatePower(entity.getBlockCount()));
         level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
         level.updateNeighbourForOutputSignal(pos, this);
-        updateNeighborsAtOutputDirections(level, pos, state);
+        updateNeighborsAt(level, pos);
         level.scheduleTick(pos, this, 20);
     }
 
@@ -168,17 +162,14 @@ public class DetectorSlidingRailBlock extends BaseSlidingRailBlock implements IH
         blockEntity.ifPresent(detector -> detector.updatePower(1));
         level.setBlock(pos, state.setValue(POWERED, true), Block.UPDATE_ALL);
         level.updateNeighbourForOutputSignal(pos, this);
-        updateNeighborsAtOutputDirections(level, pos, state);
+        updateNeighborsAt(level, pos);
         level.scheduleTick(pos, this, 20);
     }
 
-    private void updateNeighborsAtOutputDirections(Level level, BlockPos pos, BlockState state) {
-        Direction facing = state.getValue(FACING);
-        Direction left = facing.getClockWise();
-        Direction right = facing.getCounterClockWise();
-        level.updateNeighborsAt(pos.relative(left), this);
-        level.updateNeighborsAt(pos.relative(right), this);
-        level.updateNeighborsAt(pos.below(), this);
+    private void updateNeighborsAt(Level level, BlockPos pos) {
+        for (Direction direction : Direction.values()) {
+            level.updateNeighborsAt(pos.relative(direction), this);
+        }
     }
 
     @Override
