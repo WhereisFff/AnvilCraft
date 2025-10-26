@@ -90,7 +90,7 @@ public class FallingSpectralBlockEntity extends FallingBlockEntity {
                 BlockPos blockPos = this.blockPosition();
                 if (this.onGround()) {
                     this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
-                    AnvilEvent.OnLand event = new AnvilEvent.OnLand(this.level(), blockPos, this, this.anvilcraft$getFallDistance());
+                    AnvilEvent.OnLand event = new AnvilEvent.OnLand(this.level(), blockPos, this, 1);
                     NeoForge.EVENT_BUS.post(event);
                     this.level().playSound(null, blockPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1.0F, 1.0F);
                     this.discard();
@@ -101,9 +101,10 @@ public class FallingSpectralBlockEntity extends FallingBlockEntity {
                 } else if (
                     !this.level().isClientSide()
                     && (
-                        this.time > 100 && (
-                            blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level()
-                                .getMaxBuildHeight()
+                        this.time > 100
+                        && (
+                            blockPos.getY() <= this.level().getMinBuildHeight()
+                            || blockPos.getY() > this.level().getMaxBuildHeight()
                         )
                         || this.time > 600
                     )
