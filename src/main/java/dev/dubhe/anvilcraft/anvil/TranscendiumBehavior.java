@@ -17,6 +17,7 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
+// TODO: 临时硬编码解决方案
 public class TranscendiumBehavior implements IAnvilBehavior {
     @Override
     public boolean handle(Level level, BlockPos hitBlockPos, BlockState hitBlockState, float fallDistance, AnvilEvent.OnLand event) {
