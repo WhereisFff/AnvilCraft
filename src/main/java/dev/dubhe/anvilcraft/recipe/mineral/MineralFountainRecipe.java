@@ -59,9 +59,9 @@ public class MineralFountainRecipe implements Recipe<MineralFountainRecipe.Input
 
     @Override
     public ItemStack assemble(Input input, HolderLookup.Provider provider) {
-        return this.toBlock.state().getBlock().asItem() == Items.AIR ?
-               ItemStack.EMPTY :
-               new ItemStack(this.needBlock.getStatesCache().getFirst().getBlock());
+        return this.toBlock.state().getBlock().asItem() == Items.AIR
+               ? ItemStack.EMPTY
+               : new ItemStack(this.needBlock.getStatesCache().getFirst().getBlock());
     }
 
     @Override
