@@ -43,26 +43,26 @@ public class TranscendiumBehavior implements IAnvilBehavior {
         int enchantmentCount = enchantments.size();
 
         level.setBlockAndUpdate(hitBlockPos, Blocks.AIR.defaultBlockState());
-        discardItemEntity(chargedNeutroniumIngotItemEntity);
+        this.discardItemEntity(chargedNeutroniumIngotItemEntity);
 
         if (enchantmentCount == 0) {
-            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
+            this.spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
         } else if (enchantmentCount >= 1 && enchantmentCount <= 10) {
             if (random.nextDouble() < 10 * enchantmentCount / 100f) {
-                spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+                this.spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
             }
-            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
-            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(3 * enchantmentCount));
+            this.spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
+            this.spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(3 * enchantmentCount));
         } else if (enchantmentCount >= 11 && enchantmentCount <= 14) {
-            spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
-            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
-            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(3 * enchantmentCount));
+            this.spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+            this.spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
+            this.spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(3 * enchantmentCount));
         } else if (enchantmentCount == 15) {
-            spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+            this.spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
             level.setBlockAndUpdate(hitBlockPos, ModBlocks.TRANSCENDIUM_BLOCK.getDefaultState());
         } else if (enchantmentCount >= 16) {
-            spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
-            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(enchantmentCount));
+            this.spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+            this.spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(enchantmentCount));
             level.setBlockAndUpdate(hitBlockPos, ModBlocks.TRANSCENDIUM_BLOCK.getDefaultState());
         }
         return true;
