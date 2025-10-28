@@ -1373,5 +1373,7 @@
   "screen.anvilcraft.filter.white_list": "白名单",
   "title.anvilcraft.patchouli.advanced.anvil_destroy": "铁砧挖掘",
   "screen.anvilcraft.filter.match_component": "匹配组件",
-  "screen.anvilcraft.filter.mismatch_component": "不匹配组件"
+  "screen.anvilcraft.filter.mismatch_component": "不匹配组件",
+  "title.anvilcraft.patchouli.advanced.template_dissociation": "模板解离",
+  "title.anvilcraft.patchouli.smithing.tier_3_materials": "三阶材料"
 }
