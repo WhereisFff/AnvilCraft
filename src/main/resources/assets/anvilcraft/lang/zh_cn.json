@@ -247,7 +247,7 @@
   "anvilcraft.ponder.block_recipe.text_8": "铁砧可以压榨方块",
   "anvilcraft.ponder.bulging.header": "物品膨发",
   "anvilcraft.ponder.bulging.text_1": "盛水的锅可以执行物品膨发配方",
-  "anvilcraft.ponder.chute_basics.header": "溜槽的基础使用",
+  "anvilcraft.ponder.chute_basics.header": "溜槽的基础用法",
   "anvilcraft.ponder.chute_basics.text_1": "一个正常的漏斗一次只能传输一个物品",
   "anvilcraft.ponder.chute_basics.text_2": "而溜槽可以一次传输一组物品",
   "anvilcraft.ponder.chute_basics.text_3": "并且可以将其丢出为掉落物",
@@ -1375,5 +1375,6 @@
   "screen.anvilcraft.filter.match_component": "匹配组件",
   "screen.anvilcraft.filter.mismatch_component": "不匹配组件",
   "title.anvilcraft.patchouli.advanced.template_dissociation": "模板解离",
-  "title.anvilcraft.patchouli.smithing.tier_3_materials": "三阶材料"
+  "title.anvilcraft.patchouli.smithing.tier_3_materials": "三阶材料",
+  "anvilcraft.ponder.dectruction_mode.text_12": "四角为原木时，撼地会破坏整棵树，以及菌柄、仙人掌、甘蔗、紫颂植株等大型植物"
 }
