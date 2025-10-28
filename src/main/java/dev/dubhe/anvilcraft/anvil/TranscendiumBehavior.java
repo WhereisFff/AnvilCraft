@@ -1,0 +1,82 @@
+package dev.dubhe.anvilcraft.anvil;
+
+import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
+import dev.dubhe.anvilcraft.api.event.AnvilEvent;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
+
+import java.util.List;
+
+public class TranscendiumBehavior implements IAnvilBehavior {
+    @Override
+    public boolean handle(Level level, BlockPos hitBlockPos, BlockState hitBlockState, float fallDistance, AnvilEvent.OnLand event) {
+        RandomSource random = level.getRandom();
+        List<ItemEntity> itemEntities = level.getEntitiesOfClass(ItemEntity.class, new AABB(hitBlockPos.above()));
+
+        if (!hitBlockState.is(ModBlocks.OVERHEATED_EMBER_METAL_BLOCK)) {
+            return false;
+        }
+
+        if (itemEntities.isEmpty()) {
+            return false;
+        }
+
+        ItemEntity chargedNeutroniumIngotItemEntity = itemEntities.getFirst();
+        ItemStack chargedNeutroniumIngotItem = chargedNeutroniumIngotItemEntity.getItem();
+
+        if (!chargedNeutroniumIngotItem.is(ModItems.CHARGED_NEUTRONIUM_INGOT) || chargedNeutroniumIngotItem.getCount() != 1) {
+            return false;
+        }
+
+        ItemEnchantments enchantments = chargedNeutroniumIngotItem.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+        int enchantmentCount = enchantments.size();
+
+        level.setBlockAndUpdate(hitBlockPos, Blocks.AIR.defaultBlockState());
+        discardItemEntity(chargedNeutroniumIngotItemEntity);
+
+        if (enchantmentCount == 0) {
+            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
+        } else if (enchantmentCount >= 1 && enchantmentCount <= 10) {
+            if (random.nextDouble() < 10 * enchantmentCount / 100f) {
+                spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+            }
+            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
+            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(3 * enchantmentCount));
+        } else if (enchantmentCount >= 11 && enchantmentCount <= 14) {
+            spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_INGOT.asStack(4));
+            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(3 * enchantmentCount));
+        } else if (enchantmentCount == 15) {
+            spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+            level.setBlockAndUpdate(hitBlockPos, ModBlocks.TRANSCENDIUM_BLOCK.getDefaultState());
+        } else if (enchantmentCount >= 16) {
+            spawnItemEntity(level, hitBlockPos, ModItems.NEUTRONIUM_INGOT.asStack());
+            spawnItemEntity(level, hitBlockPos, ModItems.TRANSCENDIUM_NUGGET.asStack(enchantmentCount));
+            level.setBlockAndUpdate(hitBlockPos, ModBlocks.TRANSCENDIUM_BLOCK.getDefaultState());
+        }
+        return true;
+    }
+
+    private void discardItemEntity(ItemEntity itemEntity) {
+        if (itemEntity.isAlive()) {
+            itemEntity.discard();
+        }
+    }
+
+    private void spawnItemEntity(Level level, BlockPos pos, ItemStack itemStack) {
+        if (!itemStack.isEmpty()) {
+            ItemEntity itemEntity = new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), itemStack);
+            level.addFreshEntity(itemEntity);
+        }
+    }
+}
