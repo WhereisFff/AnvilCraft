@@ -78,7 +78,7 @@ public class TranscendiumRecipeCategory implements IRecipeCategory<TranscendiumR
                 switch (recipeId) {
                     case 0 -> tooltip.add(Component.translatable("gui.anvilcraft.category.transcendium_recipe.enchantments_amount_0").withStyle(ChatFormatting.GOLD));
                     case 1 -> tooltip.add(Component.translatable("gui.anvilcraft.category.transcendium_recipe.enchantments_amount_1_10").withStyle(ChatFormatting.GOLD));
-                    case 2-> tooltip.add(Component.translatable("gui.anvilcraft.category.transcendium_recipe.enchantments_amount_11_14").withStyle(ChatFormatting.GOLD));
+                    case 2 -> tooltip.add(Component.translatable("gui.anvilcraft.category.transcendium_recipe.enchantments_amount_11_14").withStyle(ChatFormatting.GOLD));
                     case 3 -> tooltip.add(Component.translatable("gui.anvilcraft.category.transcendium_recipe.enchantments_amount_15").withStyle(ChatFormatting.GOLD));
                     case 4 -> tooltip.add(Component.translatable("gui.anvilcraft.category.transcendium_recipe.enchantments_amount_>16").withStyle(ChatFormatting.GOLD));
                 }
