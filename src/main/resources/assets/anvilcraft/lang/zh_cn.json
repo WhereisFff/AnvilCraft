@@ -1376,7 +1376,7 @@
   "screen.anvilcraft.filter.mismatch_component": "不匹配组件",
   "title.anvilcraft.patchouli.advanced.template_dissociation": "模板解离",
   "title.anvilcraft.patchouli.smithing.tier_3_materials": "三阶材料",
-  "anvilcraft.ponder.dectruction_mode.text_12": "四角为原木时，撼地会破坏整棵树，以及菌柄、仙人掌、甘蔗、紫颂植株等大型植物",
+  "anvilcraft.ponder.dectruction_mode.text_12": "当四周放置原木的时候，巨型铁砧落下破坏树木、大蘑菇、仙人掌、甘蔗、紫颂果以及其他大型植物",
   "gui.anvilcraft.category.transcendium_recipe": "超限合金配方",
   "gui.anvilcraft.category.transcendium_recipe.amount_is_1": "数量为附魔数量 x 1",
   "gui.anvilcraft.category.transcendium_recipe.amount_is_3": "数量为附魔数量 x 3",
