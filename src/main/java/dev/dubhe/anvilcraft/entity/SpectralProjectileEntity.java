@@ -5,10 +5,13 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+
+import javax.annotation.Nullable;
 
 public class SpectralProjectileEntity extends AbstractArrow {
 
@@ -21,9 +24,14 @@ public class SpectralProjectileEntity extends AbstractArrow {
         this.entityData.set(AS_ITEM_STACK, Items.ARROW.getDefaultInstance());
     }
 
-    public static SpectralProjectileEntity of(Level level, ItemStack stack) {
-        SpectralProjectileEntity sp = new SpectralProjectileEntity(ModEntities.SPECTRAL_PROJECTILE.get(), level);
-        sp.entityData.set(AS_ITEM_STACK, stack);
+    public SpectralProjectileEntity(Level level, LivingEntity owner, ItemStack pickupItemStack, @Nullable ItemStack firedFromWeapon) {
+        super(ModEntities.SPECTRAL_PROJECTILE.get(), owner, level, pickupItemStack, firedFromWeapon);
+        this.entityData.set(AS_ITEM_STACK, Items.ARROW.getDefaultInstance());
+    }
+
+    public static SpectralProjectileEntity of(Level level, LivingEntity owner, ItemStack asStack, @Nullable ItemStack firedFromWeapon) {
+        SpectralProjectileEntity sp = new SpectralProjectileEntity(level, owner, ItemStack.EMPTY, firedFromWeapon);
+        sp.entityData.set(AS_ITEM_STACK, asStack);
         return sp;
     }
 

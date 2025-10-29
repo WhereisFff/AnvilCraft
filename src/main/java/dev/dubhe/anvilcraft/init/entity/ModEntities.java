@@ -120,7 +120,7 @@ public class ModEntities {
         .register();
 
     public static final EntityEntry<? extends SpectralProjectileEntity> SPECTRAL_PROJECTILE = AnvilCraft.REGISTRATE
-        .entity("spectral_projectile", SpectralProjectileEntity::new, MobCategory.MISC)
+        .<SpectralProjectileEntity>entity("spectral_projectile", SpectralProjectileEntity::new, MobCategory.MISC)
         .properties(it -> it.sized(0.5F, 0.5F)
             .eyeHeight(0.13F)
             .clientTrackingRange(4)

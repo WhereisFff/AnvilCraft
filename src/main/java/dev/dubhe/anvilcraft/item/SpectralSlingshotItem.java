@@ -219,8 +219,11 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
     @Override
     protected Projectile createProjectile(Level level, LivingEntity shooter, ItemStack weapon, ItemStack ammo, boolean isCrit) {
         //这里完全另外写了，毕竟固定射出来一个特殊射弹
-        SpectralProjectileEntity projectile = SpectralProjectileEntity.of(level, ammo);
+        SpectralProjectileEntity projectile = SpectralProjectileEntity.of(level, shooter, ammo, weapon);
         projectile.setSoundEvent(SoundEvents.CROSSBOW_HIT);
+        if (isCrit) {
+            projectile.setCritArrow(true);
+        }
         return projectile;
     }
 
