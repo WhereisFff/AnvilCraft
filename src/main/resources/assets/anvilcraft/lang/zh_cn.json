@@ -1385,5 +1385,8 @@
   "gui.anvilcraft.category.transcendium_recipe.enchantments_amount_15": "附魔数量为15",
   "gui.anvilcraft.category.transcendium_recipe.enchantments_amount_1_10": "附魔数量为1-10",
   "gui.anvilcraft.category.transcendium_recipe.enchantments_amount_>16": "附魔数量为16及以上",
-  "gui.anvilcraft.category.transcendium_recipe.probability": "概率：(10 x (附魔数量)) / 100"
+  "gui.anvilcraft.category.transcendium_recipe.probability": "概率：(10 x (附魔数量)) / 100",
+  "anvilcraft.ponder.dectruction_mode.text_9": "四角为草块时，撼地会破坏花朵、雪层和其他附着物",
+  "anvilcraft.ponder.dectruction_mode.header": "另一种撼地模式：破坏模式",
+  "anvilcraft.ponder.dectruction_mode.text_11": "四角放置干草块撼地将收获农作物并补种"
 }
