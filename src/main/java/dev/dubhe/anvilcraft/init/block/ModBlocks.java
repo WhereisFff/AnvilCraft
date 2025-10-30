@@ -4613,7 +4613,6 @@ public class ModBlocks {
         "bronze",
         BRONZE_BLOCK,
         PlayerHungerPressurePlateBlock::new,
-
         ModItemTags.BRONZE_INGOTS
     );
 
