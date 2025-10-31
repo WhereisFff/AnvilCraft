@@ -65,13 +65,7 @@
         "anvilcraft:transcendium_nugget"
       ],
       "link_recipe": true,
-      "text": "$(item)超限合金$()是一种奇迹般的金属。 $(p)$(#888888)如果天空不再是极限……接下来会发生什么？$()"
-    },
-    {
-      "type": "anvilcraft:item_inject",
-      "title": "超限合金块",
-      "recipe": "anvilcraft:item_inject/transcendium_block",
-      "text": "将$(l:smithing/tier_2_materials#neutronium_ingot)充能中子锭$()压入$(l:advanced/special_heated_block)超温$(/l)状态下的$(l:smithing/tier_2_materials#ember_metal)余烬金属块$()来获得超限合金块。 $(br)有一半概率回收一个$(item)中子锭$()"
+      "text": "将$(l:smithing/tier_2_materials#neutronium_ingot)充能中子锭$()压入$(l:advanced/special_heated_block)超温$(/l)的$(l:smithing/tier_2_materials#ember_metal)余烬金属块$()可以获得4个$(item)超限合金锭$() $(li)$(item)充能中子锭$()每1种$(thing)附魔$()提供$(thing)10%%$()(上限$(thing)100%%$())概率返还$(item)中子锭$() $(li)每1种$(thing)附魔$()还会额外产出3个$(item)超限合金粒$()(前15条附魔)/1个$(item)粒$()(第16条附魔及以后) $(li)附魔数达到15条时，转为单独生成1个$(item)超限合金块$()"
     },
     {
       "type": "patchouli:relations",
