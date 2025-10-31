@@ -111,7 +111,14 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
         if (!(state.getBlock() instanceof PoweredSlidingRailBlock other)) return false;
         Direction otherFacing = state.getValue(FACING);
         if (facing != otherFacing) return false;
-        return level.hasNeighborSignal(pos)
+        boolean hasSideSignal = false;
+        for (Direction d : SIGNAL_SOURCE_SIDES) {
+            if (level.hasSignal(pos.relative(d), d)) {
+                hasSideSignal = true;
+                break;
+            }
+        }
+        return hasSideSignal
                || other.findPoweredSlidingRailSignal(level, pos, state, searchForward, recursionCount + 1);
     }
 
@@ -204,13 +211,15 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         if (entity.getType() != EntityType.ITEM && !(entity instanceof LivingEntity)) return;
+        boolean isSneakPlayer = entity instanceof Player player && player.isShiftKeyDown();
         if (!state.getValue(POWERED)) {
-            ISlidingRail.absorbEntity(pos, entity);
-        } else {
-            if (entity instanceof Player player && player.isCrouching()) {
-                return;
+            if (!isSneakPlayer) {
+                ISlidingRail.absorbEntity(pos, entity);
             }
-            entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.35));
+        } else {
+            if (!isSneakPlayer) {
+                entity.setDeltaMovement(Vec3.ZERO.relative(state.getValue(FACING), 0.35));
+            }
         }
     }
 
