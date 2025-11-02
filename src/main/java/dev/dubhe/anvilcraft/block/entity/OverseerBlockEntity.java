@@ -58,12 +58,12 @@ public class OverseerBlockEntity extends BlockEntity {
             boolean newRandomTick = this.waterLoggedBlockCount >= 4;
             if (newlevel == oldlevel && newRandomTick == oldRandomTick) {
                 return;
-            };
-            if (oldlevel >-1 || LevelLoadManager.checkRegistered(pos)) {
+            }
+            if (oldlevel > -1 || LevelLoadManager.checkRegistered(pos)) {
                 LevelLoadManager.unregister(pos, level);
                 oldlevel = -1;
                 oldRandomTick = false;
-            };
+            }
             if (newlevel >=0) {
                 LevelLoadManager.register(
                     pos,
