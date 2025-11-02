@@ -64,7 +64,7 @@ public class OverseerBlockEntity extends BlockEntity {
                 oldlevel = -1;
                 oldRandomTick = false;
             }
-            if (newlevel >=0) {
+            if (newlevel >= 0) {
                 LevelLoadManager.register(
                     pos,
                     LoadChuckData.createLoadChuckData(
@@ -120,7 +120,7 @@ public class OverseerBlockEntity extends BlockEntity {
             BlockPos pos = getBlockPos().relative(Direction.Axis.Y, i);
             BlockState state = level.getBlockState(pos);
             if (level.getBlockState(pos).is(ModBlocks.OVERSEER_BLOCK)) {
-                level.setBlock(pos, state.setValue(OverseerBlock.LEVEL, supportsLevel),2);
+                level.setBlock(pos, state.setValue(OverseerBlock.LEVEL, supportsLevel), 2);
             }
         }
         return supportsLevel >= 0;
