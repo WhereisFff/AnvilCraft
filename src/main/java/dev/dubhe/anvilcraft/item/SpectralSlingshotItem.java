@@ -94,6 +94,7 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
 
     //以下的代码大量从原版（neoforge融合后的）的弩物品的代码复制过来的
 
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemstack = player.getItemInHand(hand);
