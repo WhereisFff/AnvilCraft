@@ -3,7 +3,7 @@
   "category": "anvilcraft:power_system",
   "icon": "anvilcraft:uranium_ingot",
   "sortnum": 22010,
-  "entry_color": "661100",
+  "entry_color": "660066",
   "pages": [
     "本章节将会讲述：$(li)如何借助核能产生大量的电力 $(p)$(#880000)注意$():携带18组铀/钚(块/锭/粒)会受到凋零效果",
     {
