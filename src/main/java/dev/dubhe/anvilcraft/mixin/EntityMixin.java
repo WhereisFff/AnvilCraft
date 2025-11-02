@@ -269,6 +269,10 @@ public abstract class EntityMixin implements IEntityExtension {
     private void handlePortal(CallbackInfo ci) {
         //noinspection ConstantValue
         if (!(((Object) this) instanceof FallingBlockEntity fallingBlockEntity)) return;
+        if (fallingBlockEntity.anvilcraft$isSpectral()) {
+            fallingBlockEntity.discard();
+            return;
+        }
         if (!fallingBlockEntity.blockState.is(ModBlockTags.END_PORTAL_UNABLE_CHANGE)) {
             BlockState newState = ModBlocks.END_DUST.getDefaultState();
             if (fallingBlockEntity.blockState.is(BlockTags.ANVIL)) {

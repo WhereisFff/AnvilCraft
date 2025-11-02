@@ -299,7 +299,7 @@ public class FallingSpectralBlockEntity extends FallingBlockEntity {
         FallingSpectralBlockEntity fallingBlockEntity = new FallingSpectralBlockEntity(
             level,
             (double) pos.getX() + 0.5,
-            (double) pos.getY() - 0.96,
+            pos.getY(),
             (double) pos.getZ() + 0.5,
             blockState.hasProperty(BlockStateProperties.WATERLOGGED)
                 ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
