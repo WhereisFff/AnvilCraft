@@ -34,6 +34,7 @@ import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import dev.dubhe.anvilcraft.network.SlidingEntitySyncPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
+import dev.dubhe.anvilcraft.network.SlotFilterMaxStackSizeChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
 import dev.dubhe.anvilcraft.network.SwitchMultitoolModePacket;
 import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
@@ -69,6 +70,11 @@ public class ModNetworks {
             SlotFilterChangePacket.TYPE,
             SlotFilterChangePacket.STREAM_CODEC,
             SlotFilterChangePacket.HANDLER
+        );
+        registrar.playBidirectional(
+            SlotFilterMaxStackSizeChangePacket.TYPE,
+            SlotFilterMaxStackSizeChangePacket.STREAM_CODEC,
+            SlotFilterMaxStackSizeChangePacket.HANDLER
         );
         registrar.playToServer(
             SliderUpdatePacket.TYPE,

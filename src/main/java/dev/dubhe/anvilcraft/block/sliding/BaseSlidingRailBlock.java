@@ -22,6 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
 
 import java.util.Objects;
 
@@ -118,10 +119,20 @@ public abstract class BaseSlidingRailBlock extends Block implements ISlidingRail
             }
         }
         if (entity instanceof LivingEntity) {
-            if (this instanceof PoweredSlidingRailBlock) {
-                if (level.getBlockState(pos).getValue(PoweredSlidingRailBlock.POWERED)) {
-                    Direction facing = level.getBlockState(pos).getValue(PoweredSlidingRailBlock.FACING);
+            if (this instanceof PoweredSlidingRailBlock poweredRail) {
+                BlockState railState = level.getBlockState(pos);
+                if (railState.getValue(PoweredSlidingRailBlock.POWERED)) {
+                    Direction facing = railState.getValue(PoweredSlidingRailBlock.FACING);
                     entity.setDeltaMovement(Vec3.ZERO.relative(facing, 0.35));
+                } else {
+                    Vec3 blockPos = pos.getCenter();
+                    Vec3 entityPos = entity.position();
+                    Vector3f acceleration = blockPos.toVector3f()
+                        .sub(entityPos.toVector3f())
+                        .mul(0.15f)
+                        .div(0.98f)
+                        .mul(new Vector3f(1, 0, 1));
+                    entity.setDeltaMovement(entity.getDeltaMovement().multiply(0.8f, 0.8f, 0.8f).add(new Vec3(acceleration)));
                 }
             }
         }
