@@ -301,7 +301,8 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
 
         // 找到数量最少的序号
         int minIdx = itemIdxList.stream()
-            .min(Comparator.comparingInt(
+            .min(
+                Comparator.comparingInt(
                     (idx) -> itemHandler.getStackInSlot(idx).getCount()
                 )
             ).orElse(-1);
