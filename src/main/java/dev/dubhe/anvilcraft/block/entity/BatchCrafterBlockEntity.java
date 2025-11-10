@@ -48,6 +48,7 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.joml.Vector3f;
 
+import javax.annotation.Nullable;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -91,7 +92,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
     };
 
     @Getter
-    private ItemStack displayItemStack = null;
+    private @Nullable ItemStack displayItemStack = null;
 
     private boolean poweredBefore = false;
     private int cooldown = 0;
@@ -215,6 +216,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
         return false;
     }
 
+    @Nullable
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
@@ -315,6 +317,7 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
         return count == 1 ? 9 : 9 + ((count - 2) * (range - 1) + (maxStack - 2)) / (maxStack - 2);
     }
 
+    @Nullable
     @Override
     public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         if (player.isSpectator()) return null;
