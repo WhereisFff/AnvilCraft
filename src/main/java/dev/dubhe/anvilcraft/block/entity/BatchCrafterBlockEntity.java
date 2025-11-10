@@ -125,8 +125,10 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
         if (grid == null || !grid.isWorking()) return false;
         if (!itemHandler.isFilterEnabled()) return true;
         for (int i = 0; i < itemHandler.getSlots(); i++) {
-            if (itemHandler.getStackInSlot(i).isEmpty()
-                && !itemHandler.getFilter(i).isEmpty()) {
+            if (
+                itemHandler.getStackInSlot(i).isEmpty()
+                && !itemHandler.getFilter(i).isEmpty()
+            ) {
                 return false;
             }
         }
@@ -283,8 +285,10 @@ public class BatchCrafterBlockEntity extends BaseMachineBlockEntity
         for (int index = 0; index < itemHandler.getSlots(); index++) {
             ItemStack itemStack = itemHandler.getStackInSlot(index);
             // 槽位为未设置过滤的已禁用槽位
-            if (itemHandler.isSlotDisabled(index)
-                && itemHandler.getFilter(index).isEmpty()) {
+            if (
+                itemHandler.isSlotDisabled(index)
+                && itemHandler.getFilter(index).isEmpty()
+            ) {
                 strength++;
             }
             // 槽位上有物品
