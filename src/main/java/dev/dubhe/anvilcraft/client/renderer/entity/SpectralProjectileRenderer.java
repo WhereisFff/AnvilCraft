@@ -13,12 +13,18 @@ import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.HalfTransparentBlock;
+import net.minecraft.world.level.block.StainedGlassPaneBlock;
 import net.minecraft.world.phys.Vec2;
 import net.neoforged.neoforge.client.ClientHooks;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
+
+import java.util.Iterator;
 
 public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> extends ArrowRenderer<T> {
 
@@ -27,7 +33,7 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
     private static final float FLAT_ITEM_BUNDLE_OFFSET_X = 0.0F;
     private static final float FLAT_ITEM_BUNDLE_OFFSET_Y = 0.0F;
     private static final float FLAT_ITEM_BUNDLE_OFFSET_Z = 0.09375F;
-    private final RandomSource random = RandomSource.create();
+    //用不上的随机：private final RandomSource random = RandomSource.create();
 
     public SpectralProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -41,13 +47,15 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
 
     @Override
     public void render(T pEntity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
-        Level level = pEntity.level();
+        //用不上的level：Level level = pEntity.level();
         ItemStack itemStack = pEntity.getAsItemStack();
         if (itemStack.is(ItemTags.ARROWS)) {
+            //TODO: 之后可以给箭矢模式也加个半透明
             super.render(pEntity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
             return;
         }
-        BakedModel bakedModel = this.itemRenderer.getModel(itemStack, level, null, 0);
+        BakedModel bakedModel = this.itemRenderer.getItemModelShaper().getItemModel(itemStack);
+        //常规的方法是this.itemRenderer.getModel(itemStack, level, null, 0);，只不过我觉得三叉戟和望远镜还是用平面图合理点
         poseStack.pushPose();
         final boolean isGui3d = bakedModel.isGui3d();
         final int renderAmount = 1;
@@ -70,25 +78,11 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
             float oz = -FLAT_ITEM_BUNDLE_OFFSET_Z * (float) (renderAmount - 1) * 0.5F * groundScaleZ;
             poseStack.translate(ox, oy, oz);
         }
-
-        int targetAlpha = 128;
-        for (BakedModel model : bakedModel.getRenderPasses(itemStack, false)) {
-            for (RenderType renderType : model.getRenderTypes(itemStack, false)) {
-                VertexConsumer originalConsumer = bufferSource.getBuffer(renderType);
-                VertexConsumer translucentConsumer = new TranslucentVertexConsumer(originalConsumer, targetAlpha);
-                //这一块儿是抄的ItemRenderer.render
-                poseStack.pushPose();
-                BakedModel transformedModel = ClientHooks.handleCameraTransforms(poseStack, model, ItemDisplayContext.GROUND, false);
-                poseStack.translate(-0.5F, -0.5F, -0.5F);
-                this.itemRenderer.renderModelLists(transformedModel, itemStack, packedLight, OverlayTexture.NO_OVERLAY, poseStack, translucentConsumer);
-                poseStack.popPose();
-            }
-        }
-
         for (int i = 0; i < renderAmount; ++i) {
             poseStack.pushPose();
 
-            this.itemRenderer.render(
+            this.renderTranslucentItem(
+                128,
                 itemStack,
                 ItemDisplayContext.GROUND,
                 false,
@@ -107,6 +101,45 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
             }
         }
         poseStack.popPose();
+    }
+
+    public void renderTranslucentItem(int alpha, ItemStack itemStack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay, BakedModel bakedModel) {
+        if (!itemStack.isEmpty()) {
+            poseStack.pushPose();
+            boolean flag = displayContext == ItemDisplayContext.GUI || displayContext == ItemDisplayContext.GROUND || displayContext == ItemDisplayContext.FIXED;
+
+            bakedModel = ClientHooks.handleCameraTransforms(poseStack, bakedModel, displayContext, leftHand);
+            poseStack.translate(-0.5F, -0.5F, -0.5F);
+            if (!bakedModel.isCustomRenderer() && flag) {
+                boolean flag1;
+                label78: {
+                    if (displayContext != ItemDisplayContext.GUI && !displayContext.firstPerson()) {
+                        Item var12 = itemStack.getItem();
+                        if (var12 instanceof BlockItem blockitem) {
+                            Block block = blockitem.getBlock();
+                            flag1 = !(block instanceof HalfTransparentBlock) && !(block instanceof StainedGlassPaneBlock);
+                            break label78;
+                        }
+                    }
+
+                    flag1 = true;
+                }
+
+                for (BakedModel model : bakedModel.getRenderPasses(itemStack, flag1)) {
+                    VertexConsumer vertexconsumer;
+                    for (Iterator<RenderType> var13 = model.getRenderTypes(itemStack, flag1).iterator(); var13.hasNext(); this.itemRenderer.renderModelLists(model, itemStack, combinedLight, combinedOverlay, poseStack, vertexconsumer)) {
+                        RenderType rendertype = var13.next();
+                        VertexConsumer originalConsumer = bufferSource.getBuffer(rendertype);
+                        vertexconsumer = new TranslucentVertexConsumer(originalConsumer, alpha);
+                    }
+                }
+            } else {
+                IClientItemExtensions.of(itemStack).getCustomRenderer().renderByItem(itemStack, displayContext, poseStack, bufferSource, combinedLight, combinedOverlay);
+            }
+
+            poseStack.popPose();
+        }
+
     }
 
     public static class TranslucentVertexConsumer implements VertexConsumer {
