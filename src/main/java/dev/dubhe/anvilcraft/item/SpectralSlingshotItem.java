@@ -238,7 +238,8 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
             ChargedProjectiles chargedprojectiles = weapon.get(DataComponents.CHARGED_PROJECTILES);
             if (chargedprojectiles != null && !chargedprojectiles.isEmpty()) {
                 //这里的替换是因为爆掉的时候要返还弹药
-                this.spectralShoot(serverlevel, shooter, hand, weapon, chargedprojectiles.getItems(), velocity, inaccuracy, shooter instanceof Player, target);
+                //注意这里写的是isCrit = false，不会暴击
+                this.spectralShoot(serverlevel, shooter, hand, weapon, chargedprojectiles.getItems(), velocity, inaccuracy, false, target);
                 //触发器和进度相关的删掉了——因为它并不是弩。
             }
         }

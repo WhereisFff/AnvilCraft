@@ -1,9 +1,8 @@
 package dev.dubhe.anvilcraft.entity;
 
-import com.google.common.collect.Lists;
 import dev.dubhe.anvilcraft.init.entity.ModEntities;
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
-import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -16,8 +15,9 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.entity.projectile.ProjectileDeflection;
@@ -25,39 +25,43 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 
-
 import javax.annotation.Nullable;
-import java.util.Arrays;
-import java.util.List;
 
 public class SpectralProjectileEntity extends AbstractArrow {
 
-    //TODO：实现这东西的行为
     private static final EntityDataAccessor<ItemStack> AS_ITEM_STACK = SynchedEntityData.defineId(
         SpectralProjectileEntity.class, EntityDataSerializers.ITEM_STACK);
-    @Nullable
-    private IntOpenHashSet piercingIgnoreEntityIds;
 
     public SpectralProjectileEntity(EntityType<? extends AbstractArrow> entityType, Level level) {
         super(entityType, level);
-        this.entityData.set(AS_ITEM_STACK, Items.ARROW.getDefaultInstance());
+        this.entityData.set(AS_ITEM_STACK, ItemStack.EMPTY);
     }
 
     public SpectralProjectileEntity(Level level, LivingEntity owner, ItemStack pickupItemStack, @Nullable ItemStack firedFromWeapon) {
         super(ModEntities.SPECTRAL_PROJECTILE.get(), owner, level, pickupItemStack, firedFromWeapon);
-        this.entityData.set(AS_ITEM_STACK, Items.ARROW.getDefaultInstance());
+        this.entityData.set(AS_ITEM_STACK, ItemStack.EMPTY);
     }
 
     public static SpectralProjectileEntity of(Level level, LivingEntity owner, ItemStack asStack, @Nullable ItemStack firedFromWeapon) {
-        SpectralProjectileEntity sp = new SpectralProjectileEntity(level, owner, ItemStack.EMPTY, firedFromWeapon);
+        SpectralProjectileEntity sp = new SpectralProjectileEntity(level, owner, Items.SPECTRAL_ARROW.getDefaultInstance(), firedFromWeapon);
+        //pickup item不让为空，这里给光灵箭是在玩双关梗（）实际上它总是不让捡起来
         sp.entityData.set(AS_ITEM_STACK, asStack);
+        sp.pickup = Pickup.DISALLOWED;
         if (asStack.is(ItemTags.ARROWS)) sp.setBaseDamage(5.0);
         else {
             ItemAttributeModifiers modifiers = asStack.getAttributeModifiers();
-            double dmg = modifiers.compute(0, EquipmentSlot.MAINHAND);
+            double dmg = 0;
+            for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+                if (entry.attribute().equals(Attributes.ATTACK_DAMAGE)) {
+                    if (entry.modifier().operation().equals(AttributeModifier.Operation.ADD_VALUE)) {
+                        dmg += entry.modifier().amount();
+                    }
+                }
+            }
             if (dmg > 0) sp.setBaseDamage(dmg * 0.5);
         }
         return sp;
@@ -83,24 +87,35 @@ public class SpectralProjectileEntity extends AbstractArrow {
         if (this.inGroundTime > 4) {
             this.discard();
         }
+        this.setNoGravity(true);
+        this.pickup = Pickup.DISALLOWED;
         super.tick();
     }
 
     @Override
     protected void onHitEntity(EntityHitResult result) {
-        super.onHitEntity(result);
+        //super.onHitEntity(result);
         Entity entity = result.getEntity();
-        double d0 = this.getBaseDamage();
+
+        double d0 = getBaseDamage();
+        ItemStack asStack = this.getAsItemStack();
+
         Entity entity1 = this.getOwner();
-        DamageSource damagesource = this.damageSources().arrow(this, (Entity) (entity1 != null ? entity1 : this));
+        DamageSource damagesource = this.damageSources().arrow(this, (entity1 != null ? entity1 : this));
+        DamageSource meleeSource =
+            entity1 instanceof Player p1 ? entity1.damageSources().playerAttack(p1) :
+                (entity1 instanceof LivingEntity livingEntity ? entity1.damageSources().mobAttack(livingEntity) : damagesource);
         if (this.getWeaponItem() != null) {
             Level var9 = this.level();
             if (var9 instanceof ServerLevel serverlevel) {
-                d0 = (double) EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float) d0);
+                d0 = EnchantmentHelper.modifyDamage(serverlevel, asStack, entity, meleeSource, (float) d0);
+                int power = this.getWeaponItem().getEnchantmentLevel(serverlevel.holderLookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.POWER));
+                if (power > 0) d0 = d0 * (1.0 + power * 0.1);
+                //d0 = (double) EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float) d0);
             }
         }
 
-        int j = Mth.ceil(Mth.clamp(d0, 0.0, 2.147483647E9));
+        float j = (float) Mth.clamp(d0, 0.0, 2.147483647E9);
         if (this.getPierceLevel() > 0) {
             if (this.piercingIgnoreEntityIds == null) {
                 this.piercingIgnoreEntityIds = new IntOpenHashSet(5);
@@ -115,8 +130,8 @@ public class SpectralProjectileEntity extends AbstractArrow {
         }
 
         if (this.isCritArrow()) {
-            long k = this.random.nextInt(j / 2 + 2);
-            j = (int) Math.min(k + (long)j, 2147483647L);
+            long k = this.random.nextInt((int) Math.ceil(j / 2.0) + 2);
+            j = Math.min(k + (long) j, 2147483647L);
         }
 
         if (entity1 instanceof LivingEntity livingentity1) {
@@ -129,7 +144,7 @@ public class SpectralProjectileEntity extends AbstractArrow {
             entity.igniteForSeconds(5.0F);
         }
 
-        if (entity.hurt(damagesource, (float) j)) {
+        if (entity.hurt(damagesource, j)) {
             if (flag) {
                 return;
             }
@@ -157,11 +172,12 @@ public class SpectralProjectileEntity extends AbstractArrow {
             }
         } else {
             entity.setRemainingFireTicks(i);
-            this.deflect(ProjectileDeflection.REVERSE, entity, this.getOwner(), false);
+            this.deflect(ProjectileDeflection.NONE, entity, this.getOwner(), false);
             this.setDeltaMovement(this.getDeltaMovement().scale(0.2));
             if (!this.level().isClientSide && this.getDeltaMovement().lengthSqr() < 1.0E-7) {
                 if (this.pickup == AbstractArrow.Pickup.ALLOWED) {
-                    this.spawnAtLocation(this.getPickupItem(), 0.1F);
+                    this.pickup = AbstractArrow.Pickup.DISALLOWED;
+                    //this.spawnAtLocation(this.getPickupItem(), 0.1F);
                 }
 
                 this.discard();

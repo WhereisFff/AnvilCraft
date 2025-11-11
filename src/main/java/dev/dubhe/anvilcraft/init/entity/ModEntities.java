@@ -25,6 +25,7 @@ import dev.dubhe.anvilcraft.entity.ThrownFrostMetalHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.entity.ThrownTranscendenceHeavyHalberdEntity;
 import net.minecraft.client.renderer.entity.FallingBlockRenderer;
+import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.MobCategory;
 
 public class ModEntities {
@@ -126,6 +127,7 @@ public class ModEntities {
             .clientTrackingRange(4)
             .updateInterval(20))
         .renderer(() -> SpectralProjectileRenderer::new)
+        .tag(EntityTypeTags.ARROWS)
         .register();
 
     public static void register() {
