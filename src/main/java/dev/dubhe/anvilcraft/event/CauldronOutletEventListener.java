@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.entity.CauldronMouthEntity;
+import dev.dubhe.anvilcraft.entity.CauldronOutletEntity;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -21,7 +21,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import java.util.List;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
-public class CauldronMouthEventListener {
+public class CauldronOutletEventListener {
 
     @SubscribeEvent
     public static void onPlayerUseAnvilHammerOnCauldron(PlayerInteractEvent.RightClickBlock event) {
@@ -57,7 +57,7 @@ public class CauldronMouthEventListener {
         }
 
         // 检查该位置是否已有口，有就移除并播放音效
-        CauldronMouthEntity existingMouth = findExistingCauldronMouthAtPosition(level, blockPos, newPosition);
+        CauldronOutletEntity existingMouth = findExistingCauldronMouthAtPosition(level, blockPos, newPosition);
 
         if (existingMouth != null) {
             existingMouth.kill();
@@ -69,7 +69,7 @@ public class CauldronMouthEventListener {
         removeExistingCauldronMouth(level, blockPos);
 
         // 创建炼药锅口实体，播放音效
-        CauldronMouthEntity cauldronMouthEntity = new CauldronMouthEntity(level, newPosition, blockPos, direction);
+        CauldronOutletEntity cauldronMouthEntity = new CauldronOutletEntity(level, newPosition, blockPos, direction);
         level.addFreshEntity(cauldronMouthEntity);
         level.playSound(null, blockPos, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1.0F, 1.0F);
     }
@@ -83,7 +83,7 @@ public class CauldronMouthEventListener {
     }
 
 
-    private static List<CauldronMouthEntity> getCauldronMouths(Level level, BlockPos cauldronPos) {
+    private static List<CauldronOutletEntity> getCauldronMouths(Level level, BlockPos cauldronPos) {
         AABB searchBox = new AABB(
             cauldronPos.getX() - 2,
             cauldronPos.getY() - 2,
@@ -92,12 +92,12 @@ public class CauldronMouthEventListener {
             cauldronPos.getY() + 2,
             cauldronPos.getZ() + 2
         );
-        return level.getEntitiesOfClass(CauldronMouthEntity.class, searchBox, entity -> entity.getCauldronPos().equals(cauldronPos));
+        return level.getEntitiesOfClass(CauldronOutletEntity.class, searchBox, entity -> entity.getCauldronPos().equals(cauldronPos));
     }
 
-    private static CauldronMouthEntity findExistingCauldronMouthAtPosition(Level level, BlockPos cauldronPos, Vec3 position) {
-        List<CauldronMouthEntity> existingMouths = getCauldronMouths(level, cauldronPos);
-        for (CauldronMouthEntity mouth : existingMouths) {
+    private static CauldronOutletEntity findExistingCauldronMouthAtPosition(Level level, BlockPos cauldronPos, Vec3 position) {
+        List<CauldronOutletEntity> existingMouths = getCauldronMouths(level, cauldronPos);
+        for (CauldronOutletEntity mouth : existingMouths) {
             if (mouth.position().distanceTo(position) < 0.1) {
                 return mouth;
             }
@@ -106,8 +106,8 @@ public class CauldronMouthEventListener {
     }
 
     private static void removeExistingCauldronMouth(Level level, BlockPos cauldronPos) {
-        List<CauldronMouthEntity> existingMouths = getCauldronMouths(level, cauldronPos);
-        for (CauldronMouthEntity mouth : existingMouths) {
+        List<CauldronOutletEntity> existingMouths = getCauldronMouths(level, cauldronPos);
+        for (CauldronOutletEntity mouth : existingMouths) {
             mouth.kill();
         }
     }

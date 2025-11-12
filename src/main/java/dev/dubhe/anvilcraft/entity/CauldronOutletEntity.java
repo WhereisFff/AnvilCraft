@@ -22,17 +22,17 @@ import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-public class CauldronMouthEntity extends Entity {
+public class CauldronOutletEntity extends Entity {
     private static final EntityDataAccessor<BlockPos> DATA_CAULDRON_POS = SynchedEntityData.defineId(
-        CauldronMouthEntity.class,
+        CauldronOutletEntity.class,
         EntityDataSerializers.BLOCK_POS
     );
     private static final EntityDataAccessor<Direction> DATA_ATTACHED_DIRECTION = SynchedEntityData.defineId(
-        CauldronMouthEntity.class,
+        CauldronOutletEntity.class,
         EntityDataSerializers.DIRECTION
     );
     private static final EntityDataAccessor<BlockState> DATA_CAULDRON_STATE = SynchedEntityData.defineId(
-        CauldronMouthEntity.class,
+        CauldronOutletEntity.class,
         EntityDataSerializers.BLOCK_STATE
     );
 
@@ -41,13 +41,13 @@ public class CauldronMouthEntity extends Entity {
     private Direction attachedDirection = Direction.UP;
     private BlockState cauldronState;
 
-    public CauldronMouthEntity(EntityType<?> entityType, Level level) {
+    public CauldronOutletEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
         this.noPhysics = true;
         this.setInvulnerable(true);
     }
 
-    public CauldronMouthEntity(Level level, Vec3 pos, BlockPos cauldronPos, Direction attachedDirection) {
+    public CauldronOutletEntity(Level level, Vec3 pos, BlockPos cauldronPos, Direction attachedDirection) {
         super(ModEntities.CAULDRON_MOUTH.get(), level);
         this.setPos(pos);
         this.xo = pos.x;
