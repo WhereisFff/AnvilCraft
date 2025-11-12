@@ -19,6 +19,8 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -31,6 +33,7 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.item.component.ChargedProjectiles;
+import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -60,7 +63,6 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
      */
     private boolean midLoadSoundPlayed = false;
 
-    //TODO: 第一人称的手持动画？装填弹药的额外渲染？
     //证明自己，比起弹弓，更像弩（指这里的音效从弩抄的）
     private static final CrossbowItem.ChargingSounds DEFAULT_SOUNDS = new CrossbowItem.ChargingSounds(
         Optional.of(SoundEvents.CROSSBOW_LOADING_START), Optional.of(SoundEvents.CROSSBOW_LOADING_MIDDLE), Optional.of(SoundEvents.CROSSBOW_LOADING_END)
@@ -75,11 +77,32 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         return p -> true;
     }
 
+    //第一人称的手持动画、装填弹药的额外渲染等特殊代码在SpectralSlingshotRenderer等类中
     @Override
     @OnlyIn(Dist.CLIENT)
     @SuppressWarnings({"removal"})
     public void initializeClient(Consumer<IClientItemExtensions> consumer) {
         consumer.accept(SpectralSlingshotRenderer.SpectralSlingshotExtensions.of(SpectralSlingshotRenderer.getInstance()));
+    }
+
+    /**
+     * 检查物品是否可以被装载（用于判断箭矢或具有攻击伤害的物品）
+     *
+     * @param stack 要检查的物品堆堆
+     * @return 如果物品是箭矢或具有正攻击伤害属性则返回true，否则返回false
+     */
+    public static boolean checkLoadable(ItemStack stack) {
+        //装载箭矢的设定取消了：if (stack.is(ItemTags.ARROWS)) return true;
+        ItemAttributeModifiers modifiers = stack.getAttributeModifiers();
+        double dmg = 0;
+        for (ItemAttributeModifiers.Entry entry : modifiers.modifiers()) {
+            if (entry.attribute().equals(Attributes.ATTACK_DAMAGE)) {
+                if (entry.modifier().operation().equals(AttributeModifier.Operation.ADD_VALUE)) {
+                    dmg += entry.modifier().amount();
+                }
+            }
+        }
+        return (dmg > 0);
     }
 
     /**
@@ -91,8 +114,8 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
     private static ItemStack getSlingShotAmmo(Player player) {
         ItemStack stack = player.getMainHandItem();
         ItemStack stack2 = player.getOffhandItem();
-        if (stack.is(ModItems.SPECTRAL_SLINGSHOT.asItem())) return stack2;
-        if (stack2.is(ModItems.SPECTRAL_SLINGSHOT.asItem())) return stack;
+        if (stack.is(ModItems.SPECTRAL_SLINGSHOT.asItem()) && checkLoadable(stack2)) return stack2;
+        if (stack2.is(ModItems.SPECTRAL_SLINGSHOT.asItem()) && checkLoadable(stack)) return stack;
         return ItemStack.EMPTY;
     }
 

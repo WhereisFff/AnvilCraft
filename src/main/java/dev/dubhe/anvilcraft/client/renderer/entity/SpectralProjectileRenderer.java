@@ -50,7 +50,7 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
         //用不上的level：Level level = pEntity.level();
         ItemStack itemStack = pEntity.getAsItemStack();
         if (itemStack.is(ItemTags.ARROWS)) {
-            //TODO: 之后可以给箭矢模式也加个半透明
+            //由于不再能装载箭矢了，所以不半透明也无所谓了（）
             super.render(pEntity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
             return;
         }
