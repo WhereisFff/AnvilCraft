@@ -38,7 +38,7 @@ public class PillItem extends Item {
                 if (weakening) {
                     effect = new MobEffectInstance(
                         effect.getEffect(),
-                        effect.mapDuration(p_267926_ -> p_267926_ / 4),
+                        effect.mapDuration((duration) -> duration / 4),
                         effect.getAmplifier(),
                         effect.isAmbient(),
                         effect.isVisible()

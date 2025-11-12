@@ -49,7 +49,8 @@ public class PillRecipeExtension implements ICraftingCategoryExtension<PillRecip
             ItemStack stack = Items.SPLASH_POTION.getDefaultInstance();
             stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion1));
             return stack;
-        }).toList());potionList.addAll(potions.stream().map((potion1) -> {
+        }).toList());
+        potionList.addAll(potions.stream().map((potion1) -> {
             ItemStack stack = Items.LINGERING_POTION.getDefaultInstance();
             stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion1));
             return stack;
