@@ -3,14 +3,14 @@ package dev.dubhe.anvilcraft.init.entity;
 import com.tterrag.registrate.util.entry.EntityEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.renderer.entity.AscendingBlockRenderer;
-import dev.dubhe.anvilcraft.client.renderer.entity.CauldronMouthRenderer;
+import dev.dubhe.anvilcraft.client.renderer.entity.CauldronOutletRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.IonocraftRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.MagnetizedNodeEntityRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SlidingBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.SpectralBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.ThrownHeavyHalberdRenderer;
 import dev.dubhe.anvilcraft.entity.AnimateAscendingBlockEntity;
-import dev.dubhe.anvilcraft.entity.CauldronMouthEntity;
+import dev.dubhe.anvilcraft.entity.CauldronOutletEntity;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.entity.FallingSpectralBlockEntity;
 import dev.dubhe.anvilcraft.entity.FloatingBlockEntity;
@@ -119,10 +119,10 @@ public class ModEntities {
         .renderer(() -> MagnetizedNodeEntityRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends CauldronMouthEntity> CAULDRON_MOUTH = AnvilCraft.REGISTRATE
-        .<CauldronMouthEntity>entity("cauldron_mouth", CauldronMouthEntity::new, MobCategory.MISC)
+    public static final EntityEntry<? extends CauldronOutletEntity> CAULDRON_MOUTH = AnvilCraft.REGISTRATE
+        .<CauldronOutletEntity>entity("cauldron_mouth", CauldronOutletEntity::new, MobCategory.MISC)
         .properties(it -> it.eyeHeight(0f))
-        .renderer(() -> CauldronMouthRenderer::new)
+        .renderer(() -> CauldronOutletRenderer::new)
         .register();
 
     public static void register() {

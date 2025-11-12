@@ -7,8 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
-public class CauldronMouthRenderer<T extends net.minecraft.world.entity.Entity> extends EntityRenderer<T> {
-    public CauldronMouthRenderer(EntityRendererProvider.Context context) {
+public class CauldronOutletRenderer<T extends net.minecraft.world.entity.Entity> extends EntityRenderer<T> {
+    public CauldronOutletRenderer(EntityRendererProvider.Context context) {
         super(context);
     }
 
