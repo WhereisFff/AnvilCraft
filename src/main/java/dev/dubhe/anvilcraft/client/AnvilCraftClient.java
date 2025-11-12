@@ -14,9 +14,7 @@ import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModParticles;
-import dev.dubhe.anvilcraft.item.SpectralSlingshotItem;
 import net.minecraft.client.model.HumanoidModel;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +27,6 @@ import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsEvent;
-import org.jetbrains.annotations.Nullable;
 
 @Mod(value = AnvilCraft.MOD_ID, dist = Dist.CLIENT)
 public class AnvilCraftClient {
@@ -63,7 +60,6 @@ public class AnvilCraftClient {
         ModFluids.onRegisterFluidType(e);
         ItemExtensionImpl itemExtensionInstance = new ItemExtensionImpl();
         e.registerItem(itemExtensionInstance, ModItems.IONOCRAFT_BACKPACK);
-        e.registerItem(itemExtensionInstance, ModItems.SPECTAL_SLINGSHOT);
     }
 
     public static void registerCustomItemDecorations(RegisterItemDecorationsEvent e) {
@@ -86,15 +82,6 @@ public class AnvilCraftClient {
                 return ModModelLayers.getIonocraftBackpackModel();
             }
             return IClientItemExtensions.super.getHumanoidArmorModel(livingEntity, itemStack, equipmentSlot, original);
-        }
-
-        @Nullable
-        @Override
-        public HumanoidModel.ArmPose getArmPose(LivingEntity entityLiving, InteractionHand hand, ItemStack itemStack) {
-            if (itemStack.is(ModItems.SPECTAL_SLINGSHOT) && SpectralSlingshotItem.isCharged(itemStack)) {
-                return HumanoidModel.ArmPose.CROSSBOW_HOLD;
-            }
-            return IClientItemExtensions.super.getArmPose(entityLiving, hand, itemStack);
         }
     }
 }

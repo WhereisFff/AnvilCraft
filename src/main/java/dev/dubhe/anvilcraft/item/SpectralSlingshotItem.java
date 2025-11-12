@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import com.google.common.collect.Lists;
+import dev.dubhe.anvilcraft.client.renderer.item.SpectralSlingshotRenderer;
 import dev.dubhe.anvilcraft.entity.SpectralProjectileEntity;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -35,6 +36,9 @@ import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
 
@@ -42,6 +46,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class SpectralSlingshotItem extends ProjectileWeaponItem {
@@ -70,6 +75,13 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
         return p -> true;
     }
 
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    @SuppressWarnings({"removal"})
+    public void initializeClient(Consumer<IClientItemExtensions> consumer) {
+        consumer.accept(SpectralSlingshotRenderer.SpectralSlingshotExtensions.of(SpectralSlingshotRenderer.getInstance()));
+    }
+
     /**
      * 获取幻灵弹弓的弹药，即从另一只手获取物品
      *
@@ -79,8 +91,8 @@ public class SpectralSlingshotItem extends ProjectileWeaponItem {
     private static ItemStack getSlingShotAmmo(Player player) {
         ItemStack stack = player.getMainHandItem();
         ItemStack stack2 = player.getOffhandItem();
-        if (stack.is(ModItems.SPECTAL_SLINGSHOT.asItem())) return stack2;
-        if (stack2.is(ModItems.SPECTAL_SLINGSHOT.asItem())) return stack;
+        if (stack.is(ModItems.SPECTRAL_SLINGSHOT.asItem())) return stack2;
+        if (stack2.is(ModItems.SPECTRAL_SLINGSHOT.asItem())) return stack;
         return ItemStack.EMPTY;
     }
 

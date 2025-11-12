@@ -714,7 +714,7 @@ public class ModItems {
         ItemTags.STRIDER_TEMPT_ITEMS
     ).properties((properties) -> properties.durability(2031)).model(DataGenUtil::noExtraModelOrState).register();
 
-    public static final ItemEntry<? extends SpectralSlingshotItem> SPECTAL_SLINGSHOT = REGISTRATE
+    public static final ItemEntry<? extends SpectralSlingshotItem> SPECTRAL_SLINGSHOT = REGISTRATE
         .item("spectral_slingshot", SpectralSlingshotItem::new)
         .tag(
             ItemTags.DURABILITY_ENCHANTABLE,
