@@ -47,7 +47,12 @@ public class SpectralProjectileEntity extends AbstractArrow {
     }
 
     public static SpectralProjectileEntity of(Level level, LivingEntity owner, ItemStack asStack, @Nullable ItemStack firedFromWeapon) {
-        SpectralProjectileEntity sp = new SpectralProjectileEntity(level, owner, Items.SPECTRAL_ARROW.getDefaultInstance(), firedFromWeapon);
+        SpectralProjectileEntity sp = new SpectralProjectileEntity(
+            level,
+            owner,
+            Items.SPECTRAL_ARROW.getDefaultInstance(),
+            firedFromWeapon
+        );
         //pickup item不让为空，这里给光灵箭是在玩双关梗（）实际上它总是不让捡起来
         sp.entityData.set(AS_ITEM_STACK, asStack);
         sp.pickup = Pickup.DISALLOWED;
@@ -103,13 +108,21 @@ public class SpectralProjectileEntity extends AbstractArrow {
         Entity entity1 = this.getOwner();
         DamageSource damagesource = this.damageSources().arrow(this, (entity1 != null ? entity1 : this));
         DamageSource meleeSource =
-            entity1 instanceof Player p1 ? entity1.damageSources().playerAttack(p1) :
-                (entity1 instanceof LivingEntity livingEntity ? entity1.damageSources().mobAttack(livingEntity) : damagesource);
+            entity1 instanceof Player p1
+                ? entity1.damageSources().playerAttack(p1)
+                : (
+                    entity1 instanceof LivingEntity livingEntity
+                        ? entity1.damageSources().mobAttack(livingEntity)
+                        : damagesource
+                );
         if (this.getWeaponItem() != null) {
             Level var9 = this.level();
             if (var9 instanceof ServerLevel serverlevel) {
                 d0 = EnchantmentHelper.modifyDamage(serverlevel, asStack, entity, meleeSource, (float) d0);
-                int power = this.getWeaponItem().getEnchantmentLevel(serverlevel.holderLookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.POWER));
+                int power = this.getWeaponItem()
+                    .getEnchantmentLevel(
+                        serverlevel.holderLookup(Registries.ENCHANTMENT).getOrThrow(Enchantments.POWER)
+                    );
                 if (power > 0) d0 = d0 * (1.0 + power * 0.1);
                 //d0 = (double) EnchantmentHelper.modifyDamage(serverlevel, this.getWeaponItem(), entity, damagesource, (float) d0);
             }
@@ -162,7 +175,9 @@ public class SpectralProjectileEntity extends AbstractArrow {
 
                 this.doPostHurtEffects(livingentity);
                 if (livingentity != entity1 && livingentity instanceof Player && entity1 instanceof ServerPlayer && !this.isSilent()) {
-                    ((ServerPlayer) entity1).connection.send(new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F));
+                    ((ServerPlayer) entity1).connection.send(
+                        new ClientboundGameEventPacket(ClientboundGameEventPacket.ARROW_HIT_PLAYER, 0.0F)
+                    );
                 }
             }
 

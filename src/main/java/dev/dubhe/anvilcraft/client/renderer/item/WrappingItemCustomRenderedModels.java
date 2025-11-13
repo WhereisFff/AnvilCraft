@@ -40,8 +40,11 @@ public class WrappingItemCustomRenderedModels {
         //谢谢你，西米不比！
         //Method copied from Create Mod
         @Override
-        public BakedModel applyTransform(ItemDisplayContext cameraItemDisplayContext, PoseStack mat,
-                                         boolean leftHand) {
+        public BakedModel applyTransform(
+            ItemDisplayContext cameraItemDisplayContext,
+            PoseStack mat,
+            boolean leftHand
+        ) {
             // Super call returns originalModel, but we want to return this, else BEWLR
             // won't be used.
             super.applyTransform(cameraItemDisplayContext, mat, leftHand);

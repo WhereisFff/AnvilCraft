@@ -28,7 +28,9 @@ import java.util.Iterator;
 
 public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> extends ArrowRenderer<T> {
 
-    public static final ResourceLocation ARROW_LOCATION = ResourceLocation.withDefaultNamespace("textures/entity/projectiles/arrow.png");
+    public static final ResourceLocation ARROW_LOCATION = ResourceLocation.withDefaultNamespace(
+        "textures/entity/projectiles/arrow.png"
+    );
     private final ItemRenderer itemRenderer;
     private static final float FLAT_ITEM_BUNDLE_OFFSET_X = 0.0F;
     private static final float FLAT_ITEM_BUNDLE_OFFSET_Y = 0.0F;
@@ -46,7 +48,14 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
     }
 
     @Override
-    public void render(T pEntity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight) {
+    public void render(
+        T pEntity,
+        float entityYaw,
+        float partialTick,
+        PoseStack poseStack,
+        MultiBufferSource bufferSource,
+        int packedLight
+    ) {
         //用不上的level：Level level = pEntity.level();
         ItemStack itemStack = pEntity.getAsItemStack();
         if (itemStack.is(ItemTags.ARROWS)) {
@@ -97,16 +106,28 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
                 poseStack.translate(
                     FLAT_ITEM_BUNDLE_OFFSET_X * groundScaleX,
                     FLAT_ITEM_BUNDLE_OFFSET_Y * groundScaleY,
-                    FLAT_ITEM_BUNDLE_OFFSET_Z * groundScaleZ);
+                    FLAT_ITEM_BUNDLE_OFFSET_Z * groundScaleZ
+                );
             }
         }
         poseStack.popPose();
     }
 
-    public void renderTranslucentItem(int alpha, ItemStack itemStack, ItemDisplayContext displayContext, boolean leftHand, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay, BakedModel bakedModel) {
+    public void renderTranslucentItem(
+        int alpha,
+        ItemStack itemStack,
+        ItemDisplayContext displayContext,
+        boolean leftHand, PoseStack poseStack,
+        MultiBufferSource bufferSource,
+        int combinedLight,
+        int combinedOverlay,
+        BakedModel bakedModel
+    ) {
         if (!itemStack.isEmpty()) {
             poseStack.pushPose();
-            boolean flag = displayContext == ItemDisplayContext.GUI || displayContext == ItemDisplayContext.GROUND || displayContext == ItemDisplayContext.FIXED;
+            boolean flag = displayContext == ItemDisplayContext.GUI
+                || displayContext == ItemDisplayContext.GROUND
+                || displayContext == ItemDisplayContext.FIXED;
 
             bakedModel = ClientHooks.handleCameraTransforms(poseStack, bakedModel, displayContext, leftHand);
             poseStack.translate(-0.5F, -0.5F, -0.5F);
@@ -134,7 +155,10 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
                     }
                 }
             } else {
-                IClientItemExtensions.of(itemStack).getCustomRenderer().renderByItem(itemStack, displayContext, poseStack, bufferSource, combinedLight, combinedOverlay);
+                IClientItemExtensions
+                    .of(itemStack)
+                    .getCustomRenderer()
+                    .renderByItem(itemStack, displayContext, poseStack, bufferSource, combinedLight, combinedOverlay);
             }
 
             poseStack.popPose();

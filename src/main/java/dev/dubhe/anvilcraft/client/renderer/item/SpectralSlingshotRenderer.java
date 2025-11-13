@@ -45,7 +45,14 @@ public class SpectralSlingshotRenderer extends BlockEntityWithoutLevelRenderer {
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource buffer, int packedLight, int packedOverlay) {
+    public void renderByItem(
+        ItemStack stack,
+        ItemDisplayContext displayContext,
+        PoseStack poseStack,
+        MultiBufferSource buffer,
+        int packedLight,
+        int packedOverlay
+    ) {
         super.renderByItem(stack, displayContext, poseStack, buffer, packedLight, packedOverlay);
         ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
         if (stack.is(ModItems.SPECTRAL_SLINGSHOT)) {
@@ -78,23 +85,22 @@ public class SpectralSlingshotRenderer extends BlockEntityWithoutLevelRenderer {
                     packedOverlay,
                     bakedModel
                 );
-                /*itemRenderer.render(
-                    ammo,
-                    displayContext,
-                    false,
-                    poseStack,
-                    buffer,
-                    packedLight,
-                    packedOverlay,
-                    bakedModel
-                );*/
                 //poseStack.popPose();
                 poseStack.popPose();
             }
         }
     }
 
-    public static void renderItemAtCurrentPoseStack(ItemRenderer itemRenderer, ItemStack itemStack, ItemDisplayContext displayContext, PoseStack poseStack, MultiBufferSource bufferSource, int combinedLight, int combinedOverlay, BakedModel model) {
+    public static void renderItemAtCurrentPoseStack(
+        ItemRenderer itemRenderer,
+        ItemStack itemStack,
+        ItemDisplayContext displayContext,
+        PoseStack poseStack,
+        MultiBufferSource bufferSource,
+        int combinedLight,
+        int combinedOverlay,
+        BakedModel model
+    ) {
         boolean flag1;
         label78: {
             if (displayContext != ItemDisplayContext.GUI && !displayContext.firstPerson()) {
@@ -111,11 +117,14 @@ public class SpectralSlingshotRenderer extends BlockEntityWithoutLevelRenderer {
             VertexConsumer vertexconsumer;
             for (Iterator<RenderType> var13 = model1.getRenderTypes(itemStack, flag1).iterator();
                  var13.hasNext();
-                 itemRenderer.renderModelLists(model1,
+                 itemRenderer.renderModelLists(
+                     model1,
                      itemStack,
                      combinedLight,
                      combinedOverlay,
-                     poseStack, vertexconsumer)
+                     poseStack,
+                     vertexconsumer
+                 )
             ) {
                 RenderType rendertype = var13.next();
                 vertexconsumer = ItemRenderer.getFoilBuffer(bufferSource, rendertype, true, itemStack.hasFoil());
