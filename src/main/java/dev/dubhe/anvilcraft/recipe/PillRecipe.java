@@ -36,9 +36,11 @@ public class PillRecipe extends CustomRecipe {
     public boolean validatePotion(ItemStack item) {
         PotionContents potionContents = item.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
         Optional<Holder<Potion>> potion = potionContents.potion();
-        return (item.is(Items.POTION)
-            || item.is(Items.SPLASH_POTION)
-            || item.is(Items.LINGERING_POTION))
+        return (
+            item.is(Items.POTION)
+                || item.is(Items.SPLASH_POTION)
+                || item.is(Items.LINGERING_POTION)
+        )
             && potion.isPresent() && !potion.get().is(Potions.WATER);
     }
 
@@ -68,11 +70,9 @@ public class PillRecipe extends CustomRecipe {
     @Override
     public ItemStack assemble(CraftingInput input, HolderLookup.Provider registries) {
         for (ItemStack item : input.items()) {
-            if (
-                item.is(Items.POTION)
-                    || item.is(Items.SPLASH_POTION)
-                    || item.is(Items.LINGERING_POTION)
-            ) {
+            if (item.is(Items.POTION)
+                || item.is(Items.SPLASH_POTION)
+                || item.is(Items.LINGERING_POTION)) {
                 ItemStack stack = ModFoodItems.PILL.asStack();
                 stack.set(DataComponents.POTION_CONTENTS, item.get(DataComponents.POTION_CONTENTS));
                 if (item.is(Items.LINGERING_POTION)) {

@@ -54,7 +54,8 @@ public class ModItemGroups {
                     potion.listElements()
                         .filter((potion1) -> {
                             boolean enabled = potion1.value().isEnabled(ctx.enabledFeatures());
-                            return enabled && !potion1.is(Potions.WATER)
+                            return enabled
+                                && !potion1.is(Potions.WATER)
                                 && !potion1.is(Potions.MUNDANE)
                                 && !potion1.is(Potions.THICK)
                                 && !potion1.is(Potions.AWKWARD);

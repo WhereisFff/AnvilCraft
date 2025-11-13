@@ -35,10 +35,12 @@ public class PillRecipeExtension implements ICraftingCategoryExtension<PillRecip
     ) {
         List<Holder.Reference<Potion>> potions = RegistryUtil.getRegistry(Registries.POTION).asLookup()
             .listElements()
-            .filter((potion1) -> !potion1.is(Potions.WATER)
+            .filter((potion1) ->
+                !potion1.is(Potions.WATER)
                 && !potion1.is(Potions.MUNDANE)
                 && !potion1.is(Potions.THICK)
-                && !potion1.is(Potions.AWKWARD)).toList();
+                && !potion1.is(Potions.AWKWARD)
+            ).toList();
         List<ItemStack> potionList = new ArrayList<>();
         potionList.addAll(potions.stream().map((potion1) -> {
             ItemStack stack = Items.POTION.getDefaultInstance();
