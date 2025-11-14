@@ -505,7 +505,7 @@
             <!-- 组内按字母顺序排序导入 -->
             <property name="separateLineBetweenGroups" value="true"/>
             <!-- 组间用空行分隔 -->
-            <property name="customImportOrderRules" value="STATIC###THIRD_PARTY_PACKAGE"/>
+            <property name="customImportOrderRules" value="STATIC, THIRD_PARTY_PACKAGE, STANDARD_JAVA_PACKAGE"/>
             <!-- 自定义导入顺序规则 -->
             <property name="tokens" value="IMPORT, STATIC_IMPORT, PACKAGE_DEF"/>
             <!-- 令牌 -->
