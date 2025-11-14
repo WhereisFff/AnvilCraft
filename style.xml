@@ -465,17 +465,17 @@
         </module>
         <module name="Indentation">
             <!-- 缩进 -->
-            <property name="basicOffset" value="2"/>
+            <property name="basicOffset" value="4"/>
             <!-- 基本偏移量 -->
-            <property name="braceAdjustment" value="2"/>
+            <property name="braceAdjustment" value="4"/>
             <!-- 大括号调整 -->
-            <property name="caseIndent" value="2"/>
+            <property name="caseIndent" value="4"/>
             <!-- case缩进 -->
             <property name="throwsIndent" value="4"/>
             <!-- throws缩进 -->
             <property name="lineWrappingIndentation" value="4"/>
             <!-- 换行缩进 -->
-            <property name="arrayInitIndent" value="2"/>
+            <property name="arrayInitIndent" value="4"/>
             <!-- 数组初始化缩进 -->
         </module>
 
