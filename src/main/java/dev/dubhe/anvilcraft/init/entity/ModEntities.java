@@ -122,8 +122,8 @@ public class ModEntities {
         .renderer(() -> MagnetizedNodeEntityRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends CauldronOutletEntity> CAULDRON_MOUTH = AnvilCraft.REGISTRATE
-        .<CauldronOutletEntity>entity("cauldron_mouth", CauldronOutletEntity::new, MobCategory.MISC)
+    public static final EntityEntry<? extends CauldronOutletEntity> CAULDRON_OUTLET = AnvilCraft.REGISTRATE
+        .<CauldronOutletEntity>entity("cauldron_outlet", CauldronOutletEntity::new, MobCategory.MISC)
         .properties(it -> it.eyeHeight(0f))
         .renderer(() -> CauldronOutletRenderer::new)
         .register();
