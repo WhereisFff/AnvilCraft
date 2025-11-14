@@ -476,7 +476,7 @@
             <!-- case缩进 -->
             <property name="throwsIndent" value="4"/>
             <!-- throws缩进 -->
-            <property name="lineWrappingIndentation" value="4"/>
+            <property name="lineWrappingIndentation" value="0"/>
             <!-- 换行缩进 -->
             <property name="arrayInitIndent" value="4"/>
             <!-- 数组初始化缩进 -->
