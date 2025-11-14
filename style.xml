@@ -92,6 +92,8 @@
         <!-- 树遍历器 -->
         <module name="OuterTypeFilename"/>
         <!-- 外部类型文件名检查 -->
+        <module name="RequireThis"/>
+        <!-- 需要 THIS -->
         <module name="MatchXpath">
             <!-- XPath匹配 -->
             <property name="id" value="singleLineCommentStartWithSpace"/>
@@ -484,7 +486,7 @@
             <!-- 名称中的缩写 -->
             <property name="ignoreFinal" value="false"/>
             <!-- 忽略final -->
-            <property name="allowedAbbreviationLength" value="0"/>
+            <property name="allowedAbbreviationLength" value="3"/>
             <!-- 允许的缩写长度 -->
             <property name="tokens"
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, ANNOTATION_DEF, ANNOTATION_FIELD_DEF,
@@ -584,11 +586,12 @@
             <!-- 摘要Javadoc -->
             <property name="forbiddenSummaryFragments"
                       value="^@return the *|^This method returns |^A [{]@code [a-zA-Z0-9]+[}]( is a )"/>
+            <property name="period" value=""/>
             <!-- 禁止的摘要片段 -->
         </module>
         <module name="JavadocParagraph">
             <!-- Javadoc段落 -->
-            <property name="allowNewlineParagraph" value="false"/>
+            <property name="allowNewlineParagraph" value="true"/>
             <!-- 允许新段落换行 -->
         </module>
         <module name="RequireEmptyLineBeforeBlockTagGroup"/>
