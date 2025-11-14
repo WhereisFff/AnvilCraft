@@ -47,7 +47,6 @@ import dev.dubhe.anvilcraft.item.HeavyHalberdCoreItem;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import dev.dubhe.anvilcraft.item.IonoCraftItem;
 import dev.dubhe.anvilcraft.item.MagnetItem;
-import dev.dubhe.anvilcraft.item.ModFoods;
 import dev.dubhe.anvilcraft.item.MultiphaseMatterItem;
 import dev.dubhe.anvilcraft.item.MultiphaseTranscendiumItem;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
@@ -67,7 +66,6 @@ import dev.dubhe.anvilcraft.item.TranscendenceAnvilHammerItem;
 import dev.dubhe.anvilcraft.item.TranscendenceHeavyHalberdItem;
 import dev.dubhe.anvilcraft.item.TranscendenceResonatorItem;
 import dev.dubhe.anvilcraft.item.TranscendiumUpgradeTemplateItem;
-import dev.dubhe.anvilcraft.item.UtusanItem;
 import dev.dubhe.anvilcraft.item.abnormal.CursedItem;
 import dev.dubhe.anvilcraft.item.abnormal.LevitationItem;
 import dev.dubhe.anvilcraft.item.abnormal.RadiationItem;
@@ -1012,85 +1010,6 @@ public class ModItems {
         "supercapacitor_empty",
         EmptySuperCapacitorItem::new
     ).lang("Empty Supercapacitor").model(DataGenUtil::noExtraModelOrState).register();
-    public static final ItemEntry<Item> CHOCOLATE = REGISTRATE.item(
-        "chocolate",
-        properties -> new Item(properties.food(ModFoods.CHOCOLATE))
-    ).tag(Tags.Items.FOODS).recipe((ctx, provider) -> {
-        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, ctx.get(), 4)
-            .pattern("ABA")
-            .pattern("CDC")
-            .pattern("ABA")
-            .define('A', ModItems.COCOA_LIQUOR)
-            .define('B', ModItems.COCOA_BUTTER)
-            .define('C', ModItems.CREAM)
-            .define('D', Items.SUGAR)
-            .unlockedBy("has_cocoa_liquor", RegistrateRecipeProvider.has(ModItems.COCOA_LIQUOR))
-            .unlockedBy("has_cocoa_butter", RegistrateRecipeProvider.has(ModItems.COCOA_BUTTER))
-            .unlockedBy("has_cream", RegistrateRecipeProvider.has(ModItems.CREAM))
-            .unlockedBy("has_sugar", RegistrateRecipeProvider.has(Items.SUGAR))
-            .save(provider);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get(), 9)
-            .requires(ModBlocks.CHOCOLATE_BLOCK)
-            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CHOCOLATE_BLOCK), AnvilCraftDatagen.has(ModBlocks.CHOCOLATE_BLOCK))
-            .save(provider, AnvilCraft.of("chocolate_from_block"));
-    }).register();
-    public static final ItemEntry<Item> CHOCOLATE_BLACK = REGISTRATE.item(
-        "chocolate_black",
-        p -> new Item(p.food(ModFoods.CHOCOLATE_BLACK))
-    ).tag(Tags.Items.FOODS).recipe((ctx, provider) -> {
-        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, ctx.get(), 4)
-            .pattern("AAA")
-            .pattern("BCB")
-            .pattern("AAA")
-            .define('A', ModItems.COCOA_LIQUOR)
-            .define('B', ModItems.COCOA_BUTTER)
-            .define('C', Items.SUGAR)
-            .unlockedBy("has_cocoa_butter", RegistrateRecipeProvider.has(ModItems.COCOA_LIQUOR))
-            .unlockedBy("has_cream", RegistrateRecipeProvider.has(ModItems.CREAM))
-            .unlockedBy("has_sugar", RegistrateRecipeProvider.has(Items.SUGAR))
-            .save(provider);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get(), 9)
-            .requires(ModBlocks.BLACK_CHOCOLATE_BLOCK)
-            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.BLACK_CHOCOLATE_BLOCK), AnvilCraftDatagen.has(ModBlocks.BLACK_CHOCOLATE_BLOCK))
-            .save(provider, AnvilCraft.of("black_chocolate_from_block"));
-    }).register();
-    public static final ItemEntry<Item> CHOCOLATE_WHITE = REGISTRATE.item(
-        "chocolate_white",
-        p -> new Item(p.food(ModFoods.CHOCOLATE_WHITE))
-    ).tag(Tags.Items.FOODS).recipe((ctx, provider) -> {
-        ShapedRecipeBuilder.shaped(RecipeCategory.FOOD, ctx.get(), 4)
-            .pattern("AAA")
-            .pattern("BCB")
-            .pattern("AAA")
-            .define('A', ModItems.COCOA_BUTTER)
-            .define('B', ModItems.CREAM)
-            .define('C', Items.SUGAR)
-            .unlockedBy("has_butter", RegistrateRecipeProvider.has(ModItems.COCOA_BUTTER))
-            .unlockedBy("has_cream", RegistrateRecipeProvider.has(ModItems.CREAM))
-            .unlockedBy("has_sugar", RegistrateRecipeProvider.has(Items.SUGAR))
-            .save(provider);
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get(), 9)
-            .requires(ModBlocks.WHITE_CHOCOLATE_BLOCK)
-            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.WHITE_CHOCOLATE_BLOCK), AnvilCraftDatagen.has(ModBlocks.WHITE_CHOCOLATE_BLOCK))
-            .save(provider, AnvilCraft.of("white_chocolate_from_block"));
-    }).register();
-    public static final ItemEntry<Item> CREAMY_BREAD_ROLL = REGISTRATE.item(
-            "creamy_bread_roll",
-            p -> new Item(p.food(ModFoods.CREAMY_BREAD_ROLL))
-        )
-        .tag(Tags.Items.FOODS)
-        .recipe((ctx, provider) -> ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get())
-            .requires(Items.BREAD)
-            .requires(Items.SUGAR)
-            .requires(ModItems.CREAM)
-            .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModItems.CREAM))
-            .save(provider))
-        .register();
-    public static final ItemEntry<Item> BEEF_MUSHROOM_STEW = REGISTRATE.item(
-        "beef_mushroom_stew",
-        p -> new Item(p.food(ModFoods.BEEF_MUSHROOM_STEW))
-    ).properties(properties -> properties.stacksTo(1)).tag(Tags.Items.FOODS).register();
-    public static final ItemEntry<UtusanItem> UTUSAN = REGISTRATE.item("utusan", UtusanItem::new).register();
 
     public static final ItemEntry<Item> TIN_CAN = REGISTRATE.item("tin_can", Item::new).register();
     public static final ItemEntry<CannedFoodItem> CANNED_FOOD = REGISTRATE.item("canned_food", CannedFoodItem::new)
@@ -1120,25 +1039,6 @@ public class ModItems {
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_INGREDIENTS.getKey());
     }
-
-    public static final ItemEntry<Item> CREAM = REGISTRATE.item("cream", Item::new).tag(Tags.Items.FOODS, ModItemTags.CREAM).register();
-    public static final ItemEntry<Item> FLOUR = REGISTRATE.item("flour", Item::new)
-        .tag(Tags.Items.FOODS, ModItemTags.FLOUR, ModItemTags.WHEAT_FLOUR)
-        .register();
-    public static final ItemEntry<Item> DOUGH = REGISTRATE.item("dough", Item::new)
-        .tag(Tags.Items.FOODS, ModItemTags.DOUGH, ModItemTags.WHEAT_DOUGH)
-        .register();
-    public static final ItemEntry<Item> COCOA_LIQUOR = REGISTRATE.item("cocoa_liquor", Item::new).recipe((ctx, provider) -> {
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, ctx.get(), 2)
-            .requires(ModItems.COCOA_POWDER)
-            .requires(ModItems.COCOA_POWDER)
-            .requires(ModItems.COCOA_BUTTER)
-            .unlockedBy("has_coco_powder", RegistrateRecipeProvider.has(ModItems.COCOA_POWDER))
-            .unlockedBy("has_coco_butter", RegistrateRecipeProvider.has(ModItems.COCOA_BUTTER))
-            .save(provider);
-    }).register();
-    public static final ItemEntry<Item> COCOA_BUTTER = REGISTRATE.item("cocoa_butter", Item::new).register();
-    public static final ItemEntry<Item> COCOA_POWDER = REGISTRATE.item("cocoa_powder", Item::new).register();
 
     public static final ItemEntry<Item> MAGNET_INGOT = REGISTRATE.item("magnet_ingot", Item::new)
         .tag(Tags.Items.INGOTS, ModItemTags.MAGNET_INGOTS, ItemTags.BEACON_PAYMENT_ITEMS)
@@ -2083,5 +1983,6 @@ public class ModItems {
     ).tag(Tags.Items.BUCKETS).properties(p -> p.stacksTo(1).craftRemainder(Items.BUCKET)).model(ModelProviderUtil::bucket).register();
 
     public static void register() {
+        ModFoodItems.register();
     }
 }
