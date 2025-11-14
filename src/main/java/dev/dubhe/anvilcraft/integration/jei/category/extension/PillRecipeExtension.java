@@ -62,7 +62,11 @@ public class PillRecipeExtension implements ICraftingCategoryExtension<PillRecip
     }
 
     @Override
-    public void onDisplayedIngredientsUpdate(RecipeHolder<PillRecipe> recipeHolder, List<IRecipeSlotDrawable> recipeSlots, IFocusGroup focuses) {
+    public void onDisplayedIngredientsUpdate(
+        RecipeHolder<PillRecipe> recipeHolder,
+        List<IRecipeSlotDrawable> recipeSlots,
+        IFocusGroup focuses
+    ) {
         PillRecipe recipe = recipeHolder.value();
         ItemStack itemStack = recipeSlots.stream()
             .filter((slot) -> slot.getRole() == RecipeIngredientRole.INPUT)

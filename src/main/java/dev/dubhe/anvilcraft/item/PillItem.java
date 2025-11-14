@@ -59,7 +59,10 @@ public class PillItem extends Item {
 
     @Override
     public String getDescriptionId(ItemStack stack) {
-        return Potion.getName(stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion(), this.getDescriptionId() + ".effect.");
+        return Potion.getName(
+            stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion(),
+            this.getDescriptionId() + ".effect."
+        );
     }
 
     @Override

@@ -48,7 +48,10 @@ public class OtherLang {
         provider.add("effect.anvilcraft.rage", "Rage");
         provider.add("effect.anvilcraft.invulnerable", "Invulnerable");
 
-        provider.add("item.anvilcraft.pill.tooltip", "Pills made together with potion to achieve corresponding effects, can be taken quickly");
+        provider.add(
+            "item.anvilcraft.pill.tooltip",
+            "Pills made together with potion to achieve corresponding effects, can be taken quickly"
+        );
         provider.add("item.anvilcraft.pill.effect.empty", "Ineffective Pill");
         provider.add("item.anvilcraft.pill.effect.fire_resistance", "Pill of Fire Resistance");
         provider.add("item.anvilcraft.pill.effect.harming", "Pill of Harming");
