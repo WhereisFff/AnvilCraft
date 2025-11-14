@@ -32,8 +32,12 @@ public class CauldronOutletEventListener {
         BlockState blockState = level.getBlockState(blockPos);
 
         // 检查是否是炼药锅且手持铁砧锤
-        if (!blockState.is(Blocks.CAULDRON) && !blockState.is(Blocks.WATER_CAULDRON) && !blockState.is(Blocks.LAVA_CAULDRON) && !blockState.is(
-            Blocks.POWDER_SNOW_CAULDRON)) {
+        if (
+            !blockState.is(Blocks.CAULDRON)
+            && !blockState.is(Blocks.WATER_CAULDRON)
+            && !blockState.is(Blocks.LAVA_CAULDRON)
+            && !blockState.is(Blocks.POWDER_SNOW_CAULDRON)
+        ) {
             return;
         }
         if (!(itemStack.getItem() instanceof AnvilHammerItem)) {
@@ -81,7 +85,6 @@ public class CauldronOutletEventListener {
         }
         return clickedFace;
     }
-
 
     private static List<CauldronOutletEntity> getCauldronMouths(Level level, BlockPos cauldronPos) {
         AABB searchBox = new AABB(
