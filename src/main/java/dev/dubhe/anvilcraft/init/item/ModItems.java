@@ -18,7 +18,6 @@ import dev.dubhe.anvilcraft.item.AmethystPickaxeItem;
 import dev.dubhe.anvilcraft.item.AmethystShovelItem;
 import dev.dubhe.anvilcraft.item.AmethystSwordItem;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
-import dev.dubhe.anvilcraft.item.CannedFoodItem;
 import dev.dubhe.anvilcraft.item.CapacitorItem;
 import dev.dubhe.anvilcraft.item.CrabClawItem;
 import dev.dubhe.anvilcraft.item.DiskItem;
@@ -1038,9 +1037,6 @@ public class ModItems {
     ).lang("Empty Supercapacitor").model(DataGenUtil::noExtraModelOrState).register();
 
     public static final ItemEntry<Item> TIN_CAN = REGISTRATE.item("tin_can", Item::new).register();
-    public static final ItemEntry<CannedFoodItem> CANNED_FOOD = REGISTRATE.item("canned_food", CannedFoodItem::new)
-        .tag(Tags.Items.FOODS)
-        .register();
 
     public static final ItemEntry<RecoveryPearl> RECOVERY_PEARL = REGISTRATE.item("recovery_pearl", RecoveryPearl::new)
         .properties((properties) -> properties.stacksTo(16))
@@ -1063,6 +1059,7 @@ public class ModItems {
         .register();
 
     static {
+        ModFoodItems.register();
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_INGREDIENTS.getKey());
     }
 
@@ -2009,6 +2006,5 @@ public class ModItems {
     ).tag(Tags.Items.BUCKETS).properties(p -> p.stacksTo(1).craftRemainder(Items.BUCKET)).model(ModelProviderUtil::bucket).register();
 
     public static void register() {
-        ModFoodItems.register();
     }
 }
