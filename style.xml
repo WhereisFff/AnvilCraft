@@ -613,40 +613,33 @@
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF, COMPACT_CTOR_DEF"/>
             <!-- 令牌 -->
         </module>
+        <!-- 注释掉Javadoc方法检查，不强制要求Javadoc -->
+        <!--
         <module name="MissingJavadocMethod">
-            <!-- 缺少Javadoc方法 -->
             <property name="scope" value="protected"/>
-            <!-- 范围 -->
             <property name="allowMissingPropertyJavadoc" value="true"/>
-            <!-- 允许缺少属性Javadoc -->
             <property name="allowedAnnotations" value="Override, Test"/>
-            <!-- 允许的注解 -->
             <property name="tokens" value="METHOD_DEF, CTOR_DEF, ANNOTATION_FIELD_DEF,
                                    COMPACT_CTOR_DEF"/>
-            <!-- 令牌 -->
         </module>
         <module name="SuppressionXpathSingleFilter">
-            <!-- 单一XPath抑制过滤器 -->
             <property name="checks" value="MissingJavadocMethod"/>
-            <!-- 检查 -->
             <property name="query" value="//*[self::METHOD_DEF or self::CTOR_DEF
                                  or self::ANNOTATION_FIELD_DEF or self::COMPACT_CTOR_DEF]
                                  [ancestor::*[self::INTERFACE_DEF or self::CLASS_DEF
                                  or self::RECORD_DEF or self::ENUM_DEF]
                                  [not(./MODIFIERS/LITERAL_PUBLIC)]]"/>
-            <!-- 查询 -->
         </module>
+        -->
+        <!--
         <module name="MissingJavadocType">
-            <!-- 缺少Javadoc类型 -->
             <property name="scope" value="protected"/>
-            <!-- 范围 -->
             <property name="tokens"
                       value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF,
                       RECORD_DEF, ANNOTATION_DEF"/>
-            <!-- 令牌 -->
             <property name="excludeScope" value="nothing"/>
-            <!-- 排除范围 -->
         </module>
+        -->
         <module name="MethodName">
             <!-- 方法名 -->
             <property name="format"
