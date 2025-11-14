@@ -35,7 +35,7 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
     private static final float FLAT_ITEM_BUNDLE_OFFSET_X = 0.0F;
     private static final float FLAT_ITEM_BUNDLE_OFFSET_Y = 0.0F;
     private static final float FLAT_ITEM_BUNDLE_OFFSET_Z = 0.09375F;
-    //用不上的随机：private final RandomSource random = RandomSource.create();
+    // 用不上的随机：private final RandomSource random = RandomSource.create();
 
     public SpectralProjectileRenderer(EntityRendererProvider.Context context) {
         super(context);
@@ -48,23 +48,24 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
     }
 
     @Override
+    @SuppressWarnings("deprecation")
     public void render(
-        T pEntity,
+        T entity,
         float entityYaw,
         float partialTick,
         PoseStack poseStack,
         MultiBufferSource bufferSource,
         int packedLight
     ) {
-        //用不上的level：Level level = pEntity.level();
-        ItemStack itemStack = pEntity.getAsItemStack();
+        // 用不上的level：Level level = entity.level();
+        ItemStack itemStack = entity.getAsItemStack();
         if (itemStack.is(ItemTags.ARROWS)) {
-            //由于不再能装载箭矢了，所以不半透明也无所谓了（）
-            super.render(pEntity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
+            // 由于不再能装载箭矢了，所以不半透明也无所谓了（）
+            super.render(entity, entityYaw, partialTick, poseStack, bufferSource, packedLight);
             return;
         }
         BakedModel bakedModel = this.itemRenderer.getItemModelShaper().getItemModel(itemStack);
-        //常规的方法是this.itemRenderer.getModel(itemStack, level, null, 0);，只不过我觉得三叉戟和望远镜还是用平面图合理点
+        // 常规的方法是this.itemRenderer.getModel(itemStack, level, null, 0);，只不过我觉得三叉戟和望远镜还是用平面图合理点
         poseStack.pushPose();
         final boolean isGui3d = bakedModel.isGui3d();
         final int renderAmount = 1;
@@ -74,7 +75,7 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
             .scale
             .y();
         poseStack.translate(0F, 0.5F * transformedGroundScaleY - 0.1f, 0F);
-        Vec2 rotationVector = pEntity.getRotationVector();
+        Vec2 rotationVector = entity.getRotationVector();
         poseStack.mulPose(Axis.YP.rotationDegrees(rotationVector.y - 90));
         poseStack.mulPose(Axis.ZP.rotationDegrees(rotationVector.x - 45));
         float groundScaleX = bakedModel.getTransforms().ground.scale.x();
@@ -148,7 +149,11 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
 
                 for (BakedModel model : bakedModel.getRenderPasses(itemStack, flag1)) {
                     VertexConsumer vertexconsumer;
-                    for (Iterator<RenderType> var13 = model.getRenderTypes(itemStack, flag1).iterator(); var13.hasNext(); this.itemRenderer.renderModelLists(model, itemStack, combinedLight, combinedOverlay, poseStack, vertexconsumer)) {
+                    for (
+                        Iterator<RenderType> var13 = model.getRenderTypes(itemStack, flag1).iterator();
+                        var13.hasNext();
+                        this.itemRenderer.renderModelLists(model, itemStack, combinedLight, combinedOverlay, poseStack, vertexconsumer)
+                    ) {
                         RenderType rendertype = var13.next();
                         VertexConsumer originalConsumer = bufferSource.getBuffer(rendertype);
                         vertexconsumer = new TranslucentVertexConsumer(originalConsumer, alpha);
@@ -166,15 +171,13 @@ public class SpectralProjectileRenderer<T extends SpectralProjectileEntity> exte
 
     }
 
-    public static class TranslucentVertexConsumer implements VertexConsumer {
-        private final VertexConsumer delegate; // 原始顶点消费者（委托对象）
-        private final int alpha; // 目标半透明度（0-255，50% 对应 128）
-
-        public TranslucentVertexConsumer(VertexConsumer delegate, int alpha) {
-            this.delegate = delegate;
-            this.alpha = alpha;
-        }
-
+    /**
+     * 透明顶点消费者
+     *
+     * @param delegate 原始顶点消费者（委托对象）
+     * @param alpha    目标半透明度（0-255，50% 对应 128）
+     */
+    public record TranslucentVertexConsumer(VertexConsumer delegate, int alpha) implements VertexConsumer {
         @Override
         public VertexConsumer addVertex(float v, float v1, float v2) {
             return delegate.addVertex(v, v1, v2);

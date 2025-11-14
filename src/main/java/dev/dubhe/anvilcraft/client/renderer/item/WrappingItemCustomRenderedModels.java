@@ -37,8 +37,8 @@ public class WrappingItemCustomRenderedModels {
             return true;
         }
 
-        //谢谢你，西米不比！
-        //Method copied from Create Mod
+        // 谢谢你，西米不比！
+        // Method copied from Create Mod
         @Override
         public BakedModel applyTransform(
             ItemDisplayContext cameraItemDisplayContext,

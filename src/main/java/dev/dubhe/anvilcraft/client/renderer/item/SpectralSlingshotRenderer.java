@@ -33,10 +33,12 @@ public class SpectralSlingshotRenderer extends BlockEntityWithoutLevelRenderer {
     private static SpectralSlingshotRenderer instance;
 
     public static SpectralSlingshotRenderer getInstance() {
-        if (instance == null)
+        if (instance == null) {
             instance = new SpectralSlingshotRenderer(
                 Minecraft.getInstance().getBlockEntityRenderDispatcher(),
-                Minecraft.getInstance().getEntityModels());
+                Minecraft.getInstance().getEntityModels()
+            );
+        }
         return instance;
     }
 
@@ -69,12 +71,12 @@ public class SpectralSlingshotRenderer extends BlockEntityWithoutLevelRenderer {
             ChargedProjectiles cp = stack.get(DataComponents.CHARGED_PROJECTILES);
             if (cp != null && !cp.isEmpty()) {
                 ItemStack ammo = cp.getItems().getFirst();
-                BakedModel bakedModel = itemRenderer.getItemModelShaper().getItemModel(ammo);
                 poseStack.pushPose();
                 poseStack.translate(0f, 0.7f, 0.50F);
                 poseStack.mulPose(Axis.YP.rotationDegrees(90));
                 poseStack.mulPose(Axis.ZP.rotationDegrees(- 45));
-                //poseStack.pushPose();
+                // poseStack.pushPose();
+                BakedModel bakedModel = itemRenderer.getItemModelShaper().getItemModel(ammo);
                 renderItemAtCurrentPoseStack(
                     itemRenderer,
                     ammo,
@@ -85,7 +87,7 @@ public class SpectralSlingshotRenderer extends BlockEntityWithoutLevelRenderer {
                     packedOverlay,
                     bakedModel
                 );
-                //poseStack.popPose();
+                // poseStack.popPose();
                 poseStack.popPose();
             }
         }
