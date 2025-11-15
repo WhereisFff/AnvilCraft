@@ -50,25 +50,6 @@ public class AnvilCraftKubeJsPlugin implements KubeJSPlugin {
         bindings.add("IRecipeOutcome", IRecipeOutcome.class);
     }
 
-//    @Override
-//    public void registerRecipeComponents(RecipeComponentFactoryRegistry registry) {
-//        registry.register(AnvilCraftRecipeComponents.RESOURCE_LOCATION);
-//        registry.register(AnvilCraftRecipeComponents.TRIGGER);
-//        registry.register(AnvilCraftRecipeComponents.RECIPE_PREDICATE);
-//        registry.register(AnvilCraftRecipeComponents.RECIPE_OUTCOME);
-//        registry.register(AnvilCraftRecipeComponents.BLOCK_PATTERN);
-//        registry.register(AnvilCraftRecipeComponents.ENTITY_TYPE);
-//        registry.register(AnvilCraftRecipeComponents.TRANSFORM_RESULT);
-//        registry.register(AnvilCraftRecipeComponents.NUMERIC_TAG_VALUE_PREDICATE);
-//        registry.register(AnvilCraftRecipeComponents.TAG_MODIFICATION);
-//        registry.register(AnvilCraftRecipeComponents.TRANSFORM_OPTIONS);
-//
-//        registry.register(BlockStatePredicateComponent.INSTANCE);
-//        registry.register(ChanceBlockStateComponent.INSTANCE);
-//        registry.register(ChanceItemStackComponent.INSTANCE);
-//        registry.register(ItemIngredientPredicateComponent.INSTANCE);
-//    }
-
     @Override
     public void registerRecipeSchemas(RecipeSchemaRegistry registry) {
         registry.register(AnvilCraft.of("block_compress"), BlockCompressRecipeSchema.SCHEMA);
