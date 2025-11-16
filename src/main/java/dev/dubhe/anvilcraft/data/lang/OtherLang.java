@@ -48,6 +48,6 @@ public class OtherLang {
         provider.add("effect.anvilcraft.rage", "Rage");
 
         provider.add("item.anvilcraft.pill.tooltip",
-        "Pills made together with potion to achieve corresponding effects, can be taken quickly");
+            "Pills made together with potion to achieve corresponding effects, can be taken quickly");
     }
 }
