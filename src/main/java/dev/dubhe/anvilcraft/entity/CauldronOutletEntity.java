@@ -13,6 +13,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
@@ -63,7 +64,8 @@ public class CauldronOutletEntity extends Entity {
     @Override
     public void tick() {
         super.tick();
-        if (!this.level().isClientSide && !this.level().getBlockState(this.cauldronPos).is(this.cauldronState.getBlock())) {
+        BlockState currentState = this.level().getBlockState(this.cauldronPos);
+        if (!this.level().isClientSide && !currentState.is(BlockTags.CAULDRONS)) {
             this.kill();
             return;
         }
