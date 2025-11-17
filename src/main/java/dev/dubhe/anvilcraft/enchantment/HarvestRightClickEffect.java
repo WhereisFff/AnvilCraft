@@ -43,7 +43,7 @@ public record HarvestRightClickEffect(int range) implements EnchantmentEntityEff
         ItemStack itemStack = enchantedItemInUse.itemStack();
         BlockPos pos = BlockPos.containing(vec3);
         BlockState state = level.getBlockState(pos);
-        int r = Math.min(enchantmentLevel, 3);
+        int radius = Math.min(enchantmentLevel, 3);
         if (!(entity instanceof LivingEntity livingEntity)) {
             return;
         }
@@ -53,7 +53,7 @@ public record HarvestRightClickEffect(int range) implements EnchantmentEntityEff
         if (harvestable(state) == null) {
             return;
         }
-        Iterable<BlockPos> posIterable = BlockPos.betweenClosed(pos.offset(r, r, r), pos.offset(-r, -r, -r));
+        Iterable<BlockPos> posIterable = BlockPos.betweenClosed(pos.offset(radius, radius, radius), pos.offset(-radius, -radius, -radius));
         for (BlockPos blockPos : posIterable) {
             BlockState blockState = level.getBlockState(blockPos);
             Block harvestableBlock = harvestable(blockState);
@@ -71,7 +71,7 @@ public record HarvestRightClickEffect(int range) implements EnchantmentEntityEff
                         }
                     }
                 }
-                case NetherWartBlock ignored -> {// 下界莸
+                case NetherWartBlock ignored -> {
                     if (blockState.getValue(NetherWartBlock.AGE) == NetherWartBlock.MAX_AGE) {
                         level.setBlockAndUpdate(blockPos, blockState.setValue(NetherWartBlock.AGE, 0));
                         itemStack.hurtAndBreak(1, level, livingEntity, enchantedItemInUse.onBreak());
@@ -81,7 +81,7 @@ public record HarvestRightClickEffect(int range) implements EnchantmentEntityEff
                         }
                     }
                 }
-                case CocoaBlock ignored -> {// 可可豆
+                case CocoaBlock ignored -> {
                     if (blockState.getValue(CocoaBlock.AGE) == CocoaBlock.MAX_AGE) {
                         level.setBlockAndUpdate(blockPos, blockState.setValue(CocoaBlock.AGE, 0));
                         itemStack.hurtAndBreak(1, level, livingEntity, enchantedItemInUse.onBreak());
@@ -91,7 +91,7 @@ public record HarvestRightClickEffect(int range) implements EnchantmentEntityEff
                         }
                     }
                 }
-                case SweetBerryBushBlock ignored -> {// 甜浆果
+                case SweetBerryBushBlock ignored -> {
                     if (blockPos.equals(pos)) {
                         continue;
                     }

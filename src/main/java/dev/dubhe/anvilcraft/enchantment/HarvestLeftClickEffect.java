@@ -78,7 +78,7 @@ public record HarvestLeftClickEffect(int range) implements EnchantmentEntityEffe
                         BlockState state2 = level.getBlockState(below.relative(direction));
                         FluidState fluidState = level.getFluidState(below.relative(direction));
                         if (state2.canBeHydrated(level, below, fluidState, below.relative(direction))
-                        || state2.is(Blocks.FROSTED_ICE)) {
+                            || state2.is(Blocks.FROSTED_ICE)) {
                             flag = true;
                         }
                     }
