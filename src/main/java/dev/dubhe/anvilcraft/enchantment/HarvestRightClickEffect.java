@@ -43,7 +43,7 @@ public record HarvestRightClickEffect(int range) implements EnchantmentEntityEff
         ItemStack itemStack = enchantedItemInUse.itemStack();
         BlockPos pos = BlockPos.containing(vec3);
         BlockState state = level.getBlockState(pos);
-        int radius = Math.min(enchantmentLevel, 3);
+        final int radius = Math.min(enchantmentLevel, 3);
         if (!(entity instanceof LivingEntity livingEntity)) {
             return;
         }
