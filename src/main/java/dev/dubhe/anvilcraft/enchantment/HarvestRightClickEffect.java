@@ -134,11 +134,11 @@ public record HarvestRightClickEffect(int range) implements EnchantmentEntityEff
     private Block harvestable(BlockState state) {
         if (
             state.getBlock() instanceof CropBlock
-                || state.is(Blocks.NETHER_WART)
-                || state.is(Blocks.COCOA)
-                || state.is(Blocks.SWEET_BERRY_BUSH)
-                || state.is(Blocks.CAVE_VINES)
-                || state.is(Blocks.CAVE_VINES_PLANT)
+            || state.is(Blocks.NETHER_WART)
+            || state.is(Blocks.COCOA)
+            || state.is(Blocks.SWEET_BERRY_BUSH)
+            || state.is(Blocks.CAVE_VINES)
+            || state.is(Blocks.CAVE_VINES_PLANT)
         ) {
             return state.getBlock();
         }

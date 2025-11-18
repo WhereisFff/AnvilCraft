@@ -104,13 +104,13 @@ public record HarvestLeftClickEffect(int range) implements EnchantmentEntityEffe
     private Block harvestable(BlockState state) {
         if (
             state.is(Blocks.SUGAR_CANE)
-                || state.is(Blocks.KELP)
-                || state.is(Blocks.KELP_PLANT)
-                || state.is(Blocks.VINE)
-                || state.is(Blocks.WEEPING_VINES)
-                || state.is(Blocks.WEEPING_VINES_PLANT)
-                || state.is(Blocks.TWISTING_VINES)
-                || state.is(Blocks.TWISTING_VINES_PLANT)
+            || state.is(Blocks.KELP)
+            || state.is(Blocks.KELP_PLANT)
+            || state.is(Blocks.VINE)
+            || state.is(Blocks.WEEPING_VINES)
+            || state.is(Blocks.WEEPING_VINES_PLANT)
+            || state.is(Blocks.TWISTING_VINES)
+            || state.is(Blocks.TWISTING_VINES_PLANT)
         ) {
             return state.getBlock();
         }
