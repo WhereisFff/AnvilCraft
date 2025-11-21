@@ -214,11 +214,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 case DEFAULT -> null;
             };
             if (posPair == null) continue;
-            BlockPos pos = posPair.getFirst();
             ChargeCollectorManager instance = ChargeCollectorManager.getInstance(level);
-            instance.charge(256, pos);
-            pos = posPair.getSecond();
-            instance.charge(256, pos);
+            instance.charge(256, posPair.getFirst());
+            instance.charge(256, posPair.getSecond());
         }
     }
 
@@ -250,9 +248,11 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
             return;
         }
         for (int i = 1; i < 6; i++) {
-            if (level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)
+            if (
+                level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)
                 || level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.OIL_CAULDRON)
-                || level.getBlockState(this.getBlockPos().below(i)).is(Blocks.CAULDRON)) {
+                || level.getBlockState(this.getBlockPos().below(i)).is(Blocks.CAULDRON)
+            ) {
                 this.cauldronPos = this.getBlockPos().below(i);
                 break;
             }
@@ -263,7 +263,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         if (this.cauldronPos == null) {
             this.refreshCauldronPos(level);
         }
-        if (this.cauldronPos == null) return this.getBlockPos().getBottomCenter();
+        if (this.cauldronPos == null) {
+            return this.getBlockPos().getBottomCenter();
+        }
         return this.cauldronPos.getCenter();
     }
 
@@ -288,7 +290,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         this.duration = tag.getInt("duration");
         ListTag tubeWalls = tag.getList("tube_walls", Tag.TAG_COMPOUND);
         for (Tag tubeWallTag1 : tubeWalls) {
-            if (!(tubeWallTag1 instanceof CompoundTag tubeWallTag)) continue;
+            if (!(tubeWallTag1 instanceof CompoundTag tubeWallTag)) {
+                continue;
+            }
             this.tubeWalls.add(TubeWallLayer.CODEC.decode(NbtOps.INSTANCE, tubeWallTag).getOrThrow().getFirst());
         }
         this.cauldronPos = this.getBlockPos().below(this.tubeWalls.size() + 1);
@@ -322,7 +326,8 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
          *      {@link TriState#FALSE false} 说明 {@link TubeWallLayer#second() 第二对} 是可加热方块
          */
         public TriState isMagnet(Level level) {
-            if (level.getBlockState(this.second.getFirst()).is(ModBlockTags.MAGNET)
+            if (
+                level.getBlockState(this.second.getFirst()).is(ModBlockTags.MAGNET)
                 && level.getBlockState(this.second.getSecond()).is(ModBlockTags.MAGNET)
                 && level.getBlockState(this.first.getFirst()).is(ModBlockTags.HEATABLE_BLOCKS)
                 && level.getBlockState(this.first.getSecond()).is(ModBlockTags.HEATABLE_BLOCKS)
