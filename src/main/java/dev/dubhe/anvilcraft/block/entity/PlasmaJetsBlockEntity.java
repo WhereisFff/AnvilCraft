@@ -14,6 +14,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -71,10 +72,10 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         if (
             this.level != null
             && (
-                this.level.getBlockState(pos.north()).isAir()
-                || this.level.getBlockState(pos.south()).isAir()
-                || this.level.getBlockState(pos.east()).isAir()
-                || this.level.getBlockState(pos.west()).isAir()
+                !this.level.getBlockState(pos.north()).isFaceSturdy(level, pos.north(), Direction.SOUTH)
+                || !this.level.getBlockState(pos.south()).isFaceSturdy(level, pos.south(), Direction.NORTH)
+                || !this.level.getBlockState(pos.east()).isFaceSturdy(level, pos.east(), Direction.WEST)
+                || !this.level.getBlockState(pos.west()).isFaceSturdy(level, pos.west(), Direction.EAST)
             )
         ) {
             return false;
@@ -312,10 +313,10 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         }
 
         public boolean isBroken(Level level) {
-            return level.getBlockState(this.second.getFirst()).isAir()
-                   || level.getBlockState(this.second.getSecond()).isAir()
-                   || level.getBlockState(this.first.getFirst()).isAir()
-                   || level.getBlockState(this.first.getSecond()).isAir();
+            return !level.getBlockState(this.second.getFirst()).isFaceSturdy(level, this.second.getFirst(), Direction.WEST)
+                   || !level.getBlockState(this.second.getSecond()).isFaceSturdy(level, this.second.getSecond(), Direction.EAST)
+                   || !level.getBlockState(this.first.getFirst()).isFaceSturdy(level, this.first.getFirst(), Direction.SOUTH)
+                   || !level.getBlockState(this.first.getSecond()).isFaceSturdy(level, this.first.getSecond(), Direction.NORTH);
         }
 
         /**
