@@ -7,11 +7,11 @@ import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.HeaterBlock;
+import dev.dubhe.anvilcraft.init.ModHeaterInfos;
+import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModHeaterInfos;
-import dev.dubhe.anvilcraft.init.ModParticles;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -64,15 +64,22 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
 
     private boolean tryRaise() {
         if (this.tubeWalls.size() >= 4) return false;
-        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
-        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
+        if (this.level != null) {
+            HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
+            HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
+        }
         BlockPos pos = this.getBlockPos();
-        if (this.level != null
-            && (!this.level.getBlockState(pos.north()).isFaceSturdy(level, pos.north(), Direction.SOUTH)
+        if (
+            this.level != null
+            && (
+                !this.level.getBlockState(pos.north()).isFaceSturdy(level, pos.north(), Direction.SOUTH)
                 || !this.level.getBlockState(pos.south()).isFaceSturdy(level, pos.south(), Direction.NORTH)
                 || !this.level.getBlockState(pos.east()).isFaceSturdy(level, pos.east(), Direction.WEST)
-                || !this.level.getBlockState(pos.west()).isFaceSturdy(level, pos.west(), Direction.EAST))
-        ) return false;
+                || !this.level.getBlockState(pos.west()).isFaceSturdy(level, pos.west(), Direction.EAST)
+            )
+        ) {
+            return false;
+        }
         this.tubeWalls.add(TubeWallLayer.of(pos));
         this.level.removeBlock(pos, false);
         this.level.setBlock(pos.above(), ModBlocks.PLASMA_JETS.getDefaultState(), 3);
@@ -85,8 +92,11 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
     @Override
     public void setRemoved() {
         super.setRemoved();
-        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
-        HeaterManager.removeProducer(this.getBlockPos(), level, ModHeaterInfos.MAGNET_PLASMA_JETS);
+        if (this.level == null) {
+            return;
+        }
+        HeaterManager.removeProducer(this.getBlockPos(), this.level, ModHeaterInfos.NO_MAGNET_PLASMA_JETS);
+        HeaterManager.removeProducer(this.getBlockPos(), this.level, ModHeaterInfos.MAGNET_PLASMA_JETS);
     }
 
     public Pair<Set<BlockPos>, Set<BlockPos>> getHeatingPoses() {
@@ -205,28 +215,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
                 case DEFAULT -> null;
             };
             if (posPair == null) continue;
-            BlockPos pos = posPair.getFirst();
-            double uncharged = 256;
-            for (ChargeCollectorManager.Entry entry : ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos)) {
-                ChargeCollectorBlockEntity entity = entry.getBlockEntity();
-                if (ChargeCollectorManager.getInstance(level).canCollect(entity, pos)) {
-                    uncharged = entity.incomingCharge(uncharged, pos);
-                    if (uncharged == 0) {
-                        break;
-                    }
-                }
-            }
-            pos = posPair.getSecond();
-            uncharged = 256;
-            for (ChargeCollectorManager.Entry entry : ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos)) {
-                ChargeCollectorBlockEntity entity = entry.getBlockEntity();
-                if (ChargeCollectorManager.getInstance(level).canCollect(entity, pos)) {
-                    uncharged = entity.incomingCharge(uncharged, pos);
-                    if (uncharged == 0) {
-                        break;
-                    }
-                }
-            }
+            ChargeCollectorManager instance = ChargeCollectorManager.getInstance(level);
+            instance.charge(256, posPair.getFirst());
+            instance.charge(256, posPair.getSecond());
         }
     }
 
@@ -248,14 +239,21 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
     }
 
     protected void refreshCauldronPos(Level level) {
-        if (this.cauldronPos != null
-            && (level.getBlockState(this.cauldronPos).is(ModBlocks.FIRE_CAULDRON)
-                || level.getBlockState(this.cauldronPos).is(Blocks.CAULDRON))
-        ) return;
+        if (
+            this.cauldronPos != null
+            && (
+                level.getBlockState(this.cauldronPos).is(ModBlocks.FIRE_CAULDRON)
+                || level.getBlockState(this.cauldronPos).is(Blocks.CAULDRON)
+            )
+        ) {
+            return;
+        }
         for (int i = 1; i < 6; i++) {
-            if (level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)
+            if (
+                level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.FIRE_CAULDRON)
                 || level.getBlockState(this.getBlockPos().below(i)).is(ModBlocks.OIL_CAULDRON)
-                || level.getBlockState(this.getBlockPos().below(i)).is(Blocks.CAULDRON)) {
+                || level.getBlockState(this.getBlockPos().below(i)).is(Blocks.CAULDRON)
+            ) {
                 this.cauldronPos = this.getBlockPos().below(i);
                 break;
             }
@@ -266,7 +264,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         if (this.cauldronPos == null) {
             this.refreshCauldronPos(level);
         }
-        if (this.cauldronPos == null) return this.getBlockPos().getBottomCenter();
+        if (this.cauldronPos == null) {
+            return this.getBlockPos().getBottomCenter();
+        }
         return this.cauldronPos.getCenter();
     }
 
@@ -291,7 +291,9 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         this.duration = tag.getInt("duration");
         ListTag tubeWalls = tag.getList("tube_walls", Tag.TAG_COMPOUND);
         for (Tag tubeWallTag1 : tubeWalls) {
-            if (!(tubeWallTag1 instanceof CompoundTag tubeWallTag)) continue;
+            if (!(tubeWallTag1 instanceof CompoundTag tubeWallTag)) {
+                continue;
+            }
             this.tubeWalls.add(TubeWallLayer.CODEC.decode(NbtOps.INSTANCE, tubeWallTag).getOrThrow().getFirst());
         }
         this.cauldronPos = this.getBlockPos().below(this.tubeWalls.size() + 1);
@@ -318,12 +320,15 @@ public class PlasmaJetsBlockEntity extends BlockEntity {
         }
 
         /**
+         * 判断该层是否是磁铁层
+         *
          * @return {@link TriState#DEFAULT default} 说明该层不是磁铁层
-         * {@link TriState#TRUE true} 说明 {@link TubeWallLayer#first() 第一对} 是可加热方块
-         * {@link TriState#FALSE false} 说明 {@link TubeWallLayer#second() 第二对} 是可加热方块
+         *      {@link TriState#TRUE true} 说明 {@link TubeWallLayer#first() 第一对} 是可加热方块
+         *      {@link TriState#FALSE false} 说明 {@link TubeWallLayer#second() 第二对} 是可加热方块
          */
         public TriState isMagnet(Level level) {
-            if (level.getBlockState(this.second.getFirst()).is(ModBlockTags.MAGNET)
+            if (
+                level.getBlockState(this.second.getFirst()).is(ModBlockTags.MAGNET)
                 && level.getBlockState(this.second.getSecond()).is(ModBlockTags.MAGNET)
                 && level.getBlockState(this.first.getFirst()).is(ModBlockTags.HEATABLE_BLOCKS)
                 && level.getBlockState(this.first.getSecond()).is(ModBlockTags.HEATABLE_BLOCKS)
