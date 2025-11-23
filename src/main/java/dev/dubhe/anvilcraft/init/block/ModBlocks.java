@@ -158,6 +158,7 @@ import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.item.HeatableBlockItem;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItemGroups;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -2961,8 +2962,8 @@ public class ModBlocks {
             .pattern("AAA")
             .pattern("AAA")
             .pattern("AAA")
-            .define('A', ModItems.CHOCOLATE)
-            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE), AnvilCraftDatagen.has(ModItems.CHOCOLATE))
+            .define('A', ModFoodItems.CHOCOLATE)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModFoodItems.CHOCOLATE), AnvilCraftDatagen.has(ModFoodItems.CHOCOLATE))
             .save(provider))
         .register();
 
@@ -2980,8 +2981,8 @@ public class ModBlocks {
             .pattern("AAA")
             .pattern("AAA")
             .pattern("AAA")
-            .define('A', ModItems.CHOCOLATE_BLACK)
-            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE_BLACK), AnvilCraftDatagen.has(ModItems.CHOCOLATE_BLACK))
+            .define('A', ModFoodItems.CHOCOLATE_BLACK)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModFoodItems.CHOCOLATE_BLACK), AnvilCraftDatagen.has(ModFoodItems.CHOCOLATE_BLACK))
             .save(provider))
         .register();
 
@@ -2999,8 +3000,8 @@ public class ModBlocks {
             .pattern("AAA")
             .pattern("AAA")
             .pattern("AAA")
-            .define('A', ModItems.CHOCOLATE_WHITE)
-            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CHOCOLATE_WHITE), AnvilCraftDatagen.has(ModItems.CHOCOLATE_WHITE))
+            .define('A', ModFoodItems.CHOCOLATE_WHITE)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModFoodItems.CHOCOLATE_WHITE), AnvilCraftDatagen.has(ModFoodItems.CHOCOLATE_WHITE))
             .save(provider))
         .register();
 

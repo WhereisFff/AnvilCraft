@@ -1,41 +1,31 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_capacitor": {
+    "has_crossbow": {
       "conditions": {
         "items": [
           {
-            "items": "#anvilcraft:capacitor"
+            "items": "minecraft:crossbow"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_ionocraft": {
+    "has_phantom_membrane": {
       "conditions": {
         "items": [
           {
-            "items": "anvilcraft:ionocraft"
+            "items": "minecraft:phantom_membrane"
           }
         ]
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_leather_chestplate": {
+    "has_spectral_anvil": {
       "conditions": {
         "items": [
           {
-            "items": "minecraft:leather_chestplate"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
-    "has_plates/tin": {
-      "conditions": {
-        "items": [
-          {
-            "items": "#c:plates/tin"
+            "items": "anvilcraft:spectral_anvil"
           }
         ]
       },
@@ -43,7 +33,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:ionocraft_backpack"
+        "recipe": "anvilcraft:spectral_slingshot"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -51,15 +41,14 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_ionocraft",
-      "has_capacitor",
-      "has_plates/tin",
-      "has_leather_chestplate"
+      "has_phantom_membrane",
+      "has_spectral_anvil",
+      "has_crossbow"
     ]
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:ionocraft_backpack"
+      "anvilcraft:spectral_slingshot"
     ]
   }
 }

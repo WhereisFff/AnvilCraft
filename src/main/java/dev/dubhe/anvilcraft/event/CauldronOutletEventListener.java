@@ -19,6 +19,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 
 import java.util.List;
+import javax.annotation.Nullable;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class CauldronOutletEventListener {
@@ -32,8 +33,12 @@ public class CauldronOutletEventListener {
         BlockState blockState = level.getBlockState(blockPos);
 
         // 检查是否是炼药锅且手持铁砧锤
-        if (!blockState.is(Blocks.CAULDRON) && !blockState.is(Blocks.WATER_CAULDRON) && !blockState.is(Blocks.LAVA_CAULDRON) && !blockState.is(
-            Blocks.POWDER_SNOW_CAULDRON)) {
+        if (
+            !blockState.is(Blocks.CAULDRON)
+            && !blockState.is(Blocks.WATER_CAULDRON)
+            && !blockState.is(Blocks.LAVA_CAULDRON)
+            && !blockState.is(Blocks.POWDER_SNOW_CAULDRON)
+        ) {
             return;
         }
         if (!(itemStack.getItem() instanceof AnvilHammerItem)) {
@@ -82,7 +87,6 @@ public class CauldronOutletEventListener {
         return clickedFace;
     }
 
-
     private static List<CauldronOutletEntity> getCauldronMouths(Level level, BlockPos cauldronPos) {
         AABB searchBox = new AABB(
             cauldronPos.getX() - 2,
@@ -95,7 +99,7 @@ public class CauldronOutletEventListener {
         return level.getEntitiesOfClass(CauldronOutletEntity.class, searchBox, entity -> entity.getCauldronPos().equals(cauldronPos));
     }
 
-    private static CauldronOutletEntity findExistingCauldronMouthAtPosition(Level level, BlockPos cauldronPos, Vec3 position) {
+    private static @Nullable CauldronOutletEntity findExistingCauldronMouthAtPosition(Level level, BlockPos cauldronPos, Vec3 position) {
         List<CauldronOutletEntity> existingMouths = getCauldronMouths(level, cauldronPos);
         for (CauldronOutletEntity mouth : existingMouths) {
             if (mouth.position().distanceTo(position) < 0.1) {

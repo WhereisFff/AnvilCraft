@@ -111,6 +111,16 @@ public class ModComponents {
         b -> b.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC)
     );
 
+    public static final DataComponentType<Boolean> CAN_TAKE_OUT_AMMO = register(
+        "can_take_out_ammo",
+        it -> it.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DataComponentType<Boolean> WEAKENING = register(
+        "weakening",
+        b -> b.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
     private static <T> @NotNull DataComponentType<T> register(String name, @NotNull Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();
         customizer.accept(builder);

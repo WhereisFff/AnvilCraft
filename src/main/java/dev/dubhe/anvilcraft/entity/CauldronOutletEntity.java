@@ -48,7 +48,7 @@ public class CauldronOutletEntity extends Entity {
     }
 
     public CauldronOutletEntity(Level level, Vec3 pos, BlockPos cauldronPos, Direction attachedDirection) {
-        super(ModEntities.CAULDRON_MOUTH.get(), level);
+        super(ModEntities.CAULDRON_OUTLET.get(), level);
         this.setPos(pos);
         this.xo = pos.x;
         this.yo = pos.y;
