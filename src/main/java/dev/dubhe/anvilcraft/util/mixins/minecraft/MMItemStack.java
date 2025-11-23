@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.mixins.minecraft;
+package dev.dubhe.anvilcraft.util.mixins.minecraft;
 
 import dev.dubhe.anvilcraft.item.IntrinsicEnchantedItem;
 import lombok.experimental.UtilityClass;
