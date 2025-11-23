@@ -10,7 +10,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.Level;
 
@@ -55,14 +54,6 @@ public class PillItem extends Item {
             return InteractionResultHolder.success(itemStack);
         }
         return super.use(level, player, usedHand);
-    }
-
-    @Override
-    public String getDescriptionId(ItemStack stack) {
-        return Potion.getName(
-            stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY).potion(),
-            this.getDescriptionId() + ".effect."
-        );
     }
 
     @Override

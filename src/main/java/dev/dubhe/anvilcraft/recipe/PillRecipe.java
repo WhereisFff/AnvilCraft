@@ -41,7 +41,11 @@ public class PillRecipe extends CustomRecipe {
                 || item.is(Items.SPLASH_POTION)
                 || item.is(Items.LINGERING_POTION)
         )
-            && potion.isPresent() && !potion.get().is(Potions.WATER);
+            && potion.isPresent()
+            && !potion.get().is(Potions.WATER)
+            && !potion.get().is(Potions.MUNDANE)
+            && !potion.get().is(Potions.THICK)
+            && !potion.get().is(Potions.AWKWARD);
     }
 
     @Override
