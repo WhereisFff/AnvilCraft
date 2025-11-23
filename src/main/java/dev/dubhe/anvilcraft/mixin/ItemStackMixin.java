@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -8,6 +9,7 @@ import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import dev.dubhe.anvilcraft.item.property.component.Multiphase;
 import dev.dubhe.anvilcraft.util.Util;
+import dev.dubhe.anvilcraft.util.mixins.minecraft.MMItemStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentHolder;
@@ -27,8 +29,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
 import java.util.List;
+import javax.annotation.Nullable;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements DataComponentHolder {
@@ -110,5 +112,10 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             tooltip -> list.add(tooltip.copy().withColor(0x5F93A3)),
             tooltipFlag
         );
+    }
+
+    @ModifyReturnValue(method = "isEnchanted", at = @At("RETURN"))
+    private boolean intrinsicEnch(boolean original) {
+        return MMItemStack.intrinsicEnch((ItemStack) (Object) this, original);
     }
 }
