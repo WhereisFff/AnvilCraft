@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.init.item.ModComponents;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -61,7 +62,7 @@ public class PillItem extends Item {
         PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
         Boolean weakening = stack.getOrDefault(ModComponents.WEAKENING, false);
         if (potionContents.potion().isEmpty()) {
-            tooltipComponents.add(Component.translatable("item.anvilcraft.pill.tooltip"));
+            tooltipComponents.add(Component.translatable("item.anvilcraft.pill.tooltip").withStyle(ChatFormatting.GRAY));
         } else {
             if (weakening) {
                 potionContents.addPotionTooltip(tooltipComponents::add, 0.25F, context.tickRate());
