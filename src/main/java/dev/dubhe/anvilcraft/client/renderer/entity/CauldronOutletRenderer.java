@@ -24,10 +24,16 @@ public class CauldronOutletRenderer extends EntityRenderer<CauldronOutletEntity>
     }
 
     @Override
-    public void render(CauldronOutletEntity entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    public void render(
+        CauldronOutletEntity entity,
+        float entityYaw,
+        float partialTicks,
+        PoseStack poseStack,
+        MultiBufferSource buffer,
+        int packedLight
+    ) {
         poseStack.pushPose();
-        
-        // Position the outlet based on the attachment direction
+
         Direction direction = entity.getAttachedDirection();
         switch (direction) {
             case DOWN -> {
@@ -53,14 +59,11 @@ public class CauldronOutletRenderer extends EntityRenderer<CauldronOutletEntity>
                 poseStack.mulPose(Axis.ZP.rotationDegrees(-120));
             }
         }
-        
-        // Scale the model
         poseStack.scale(0.73f, 0.73f, 0.73f);
-        
-        // Render the model
+
         var consumer = buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity)));
         this.model.renderToBuffer(poseStack, consumer, packedLight, OverlayTexture.NO_OVERLAY, -1);
-        
+
         poseStack.popPose();
         super.render(entity, entityYaw, partialTicks, poseStack, buffer, packedLight);
     }

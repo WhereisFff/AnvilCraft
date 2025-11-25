@@ -10,7 +10,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-
 public class NeutronIrradiatorBlock extends Block implements IHammerRemovable {
     public static VoxelShape MODEL = Shapes.or(
         Block.box(0, 0, 0, 16, 10, 16),
@@ -22,23 +21,12 @@ public class NeutronIrradiatorBlock extends Block implements IHammerRemovable {
     );
 
     @Override
-    public VoxelShape getShape(
-        BlockState blockState,
-        BlockGetter blockGetter,
-        BlockPos blockPos,
-        CollisionContext collisionContext
-    ) {
+    public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
         return MODEL;
     }
 
     @Override
-    public void onPlace(
-        BlockState state,
-        Level level,
-        BlockPos pos,
-        BlockState oldState,
-        boolean movedByPiston
-    ) {
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         super.onPlace(state, level, pos, oldState, movedByPiston);
     }
 

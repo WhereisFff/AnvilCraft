@@ -134,6 +134,7 @@ public class CauldronOutletEntity extends Entity {
     public PushReaction getPistonPushReaction() {
         return PushReaction.IGNORE;
     }
+
     public Direction getAttachedDirection() {
         return this.entityData.get(DATA_ATTACHED_DIRECTION);
     }

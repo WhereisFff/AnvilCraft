@@ -25,7 +25,6 @@ import java.util.List;
 @Getter
 public class NeutronIrradiationRecipe extends AbstractProcessRecipe<NeutronIrradiationRecipe> {
 
-
     public NeutronIrradiationRecipe(
         List<ItemIngredientPredicate> itemIngredients,
         List<ChanceItemStack> results,
@@ -138,7 +137,7 @@ public class NeutronIrradiationRecipe extends AbstractProcessRecipe<NeutronIrrad
         }
 
         @Override
-        public void validate(ResourceLocation pId) {
+        public void validate(ResourceLocation pid) {
         }
 
         @Override
