@@ -58,6 +58,9 @@ public class CauldronOutletRenderer extends EntityRenderer<CauldronOutletEntity>
                 poseStack.translate(0.0, 0.18375, 0.0);
                 poseStack.mulPose(Axis.ZP.rotationDegrees(-120));
             }
+            default -> {
+                break;
+            }
         }
         poseStack.scale(0.73f, 0.73f, 0.73f);
 
