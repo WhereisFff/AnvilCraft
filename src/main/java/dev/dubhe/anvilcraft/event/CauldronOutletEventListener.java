@@ -119,6 +119,6 @@ public class CauldronOutletEventListener {
     }
 
     private static Vec3 calculateMouthPositionForBottom(BlockPos cauldronPos) {
-        return new Vec3(cauldronPos.getX() + 0.5, cauldronPos.getY() - 0.45, cauldronPos.getZ() + 0.5);
+        return new Vec3(cauldronPos.getX() + 0.5, cauldronPos.getY() + 0.05, cauldronPos.getZ() + 0.5);
     }
 }
