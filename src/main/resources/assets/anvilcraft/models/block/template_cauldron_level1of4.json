@@ -1,7 +1,6 @@
 {
 	"credit": "Made by XeKr with Blockbench",
 	"ambientocclusion": false,
-	"render_type": "minecraft:cutout",
 	"textures": {
 		"top": "minecraft:block/cauldron_top",
 		"bottom": "minecraft:block/cauldron_bottom",
