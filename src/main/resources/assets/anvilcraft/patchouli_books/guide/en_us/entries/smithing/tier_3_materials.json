@@ -31,7 +31,7 @@
     {
       "type": "anvilcraft:anvil_collision",
       "recipe": "anvilcraft:anvil_collision/anvil_tier_1_and_levitation_powder_block_32",
-      "text": "用等级至少为皇家的铁砧撞击$(l:basic/minerals#levitation_powder_block)漂浮粉块$(/l)有概率获得6~8个负物质粒"
+      "text": "用等级至少为皇家的铁砧撞击$(l:basic/minerals#levitation_powder_block)漂浮粉块$(/l)有概率获得6~10个负物质粒"
     },
     {
       "type": "patchouli:spotlight",
