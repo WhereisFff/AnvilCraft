@@ -60,7 +60,11 @@ public class NeutronIrradiatorBlock extends Block implements IHammerRemovable, E
 
     @Nullable
     @Override
-    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> blockEntityType) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
+        @NotNull Level level,
+        @NotNull BlockState state,
+        @NotNull BlockEntityType<T> blockEntityType
+    ) {
         return (level1, blockPos, blockState, blockEntity) -> {
             if (blockEntity instanceof NeutronIrradiatorBlockEntity neutronIrradiatorBlockEntity) {
                 NeutronIrradiatorBlockEntity.tick(level1, blockPos, blockState, neutronIrradiatorBlockEntity);

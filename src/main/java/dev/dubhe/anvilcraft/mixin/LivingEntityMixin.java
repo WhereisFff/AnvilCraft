@@ -238,7 +238,11 @@ public abstract class LivingEntityMixin extends Entity {
             }
         }
     }
-    @Inject(method = "jumpFromGround", at = @At("HEAD"), cancellable = true)
+    @Inject(
+        method = "jumpFromGround",
+        at = @At("HEAD"),
+        cancellable = true
+    )
     private void onJumpFromGround(CallbackInfo ci) {
         if (NeutronIrradiatorBlockEntity.isInIrradiatorRange(level(), blockPosition())) {
             ci.cancel();
