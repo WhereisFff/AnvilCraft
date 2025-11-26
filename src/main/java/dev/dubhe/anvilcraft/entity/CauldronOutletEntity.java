@@ -59,6 +59,7 @@ public class CauldronOutletEntity extends Entity {
         this.cauldronPos = cauldronPos;
         this.attachedDirection = attachedDirection;
         this.cauldronState = level.getBlockState(cauldronPos);
+        this.entityData.set(DATA_ATTACHED_DIRECTION, attachedDirection);
     }
 
     @Override
@@ -114,6 +115,7 @@ public class CauldronOutletEntity extends Entity {
         this.cauldronPos = NbtUtils.readBlockPos(compoundTag, "CauldronPos").orElse(BlockPos.ZERO);
         this.attachedDirection = Direction.from3DDataValue(compoundTag.getInt("AttachedDirection"));
         this.cauldronState = NbtUtils.readBlockState(this.level().holderLookup(Registries.BLOCK), compoundTag.getCompound("CauldronState"));
+        this.entityData.set(DATA_ATTACHED_DIRECTION, this.attachedDirection);
     }
 
     @Override
@@ -125,11 +127,15 @@ public class CauldronOutletEntity extends Entity {
 
     @Override
     protected AABB makeBoundingBox() {
-        return EntityDimensions.scalable(0.375f, 0.25f).makeBoundingBox(this.position());
+        return EntityDimensions.scalable(0.375f, 0.375f).makeBoundingBox(this.position());
     }
 
     @Override
     public PushReaction getPistonPushReaction() {
         return PushReaction.IGNORE;
+    }
+
+    public Direction getAttachedDirection() {
+        return this.entityData.get(DATA_ATTACHED_DIRECTION);
     }
 }

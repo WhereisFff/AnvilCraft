@@ -1,9 +1,6 @@
 {
-  "type": "anvilcraft:item_compress",
+  "type": "anvilcraft:neutron_irradiation",
   "ingredients": [
-    {
-      "items": "anvilcraft:neutronium_ingot"
-    },
     {
       "items": "#c:ingots/uranium"
     }
@@ -15,9 +12,6 @@
     },
     {
       "id": "anvilcraft:lime_powder"
-    },
-    {
-      "id": "anvilcraft:neutronium_ingot"
     }
   ]
 }
