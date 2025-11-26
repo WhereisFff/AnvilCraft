@@ -238,6 +238,7 @@ public abstract class LivingEntityMixin extends Entity {
             }
         }
     }
+
     @Inject(
         method = "jumpFromGround",
         at = @At("HEAD"),
