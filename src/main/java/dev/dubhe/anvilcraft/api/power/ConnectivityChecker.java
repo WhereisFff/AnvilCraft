@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.api.power;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectLists;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
+import javax.annotation.ParametersAreNonnullByDefault;
 
 @ParametersAreNonnullByDefault
 public abstract class ConnectivityChecker {
