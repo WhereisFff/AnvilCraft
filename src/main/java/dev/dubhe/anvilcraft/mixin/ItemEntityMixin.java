@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.util.GravityManager;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
@@ -108,9 +109,9 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
                 + "getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
         )
     )
-    private Vec3 slowDown(ItemEntity instance, Operation<Vec3> original) {
+    private Vec3 anomalousGravity(ItemEntity instance, Operation<Vec3> original) {
         Vec3 vec3 = original.call(instance);
-        double dy = 1;
+        double dy = GravityManager.getGravity(this);
         if (this.getItem().is(ModItemTags.LEVITATIONALS)) dy *= -0.005;
         if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK)) dy *= 0.2;
         if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)

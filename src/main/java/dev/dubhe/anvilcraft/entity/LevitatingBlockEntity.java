@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.init.entity.ModEntities;
+import dev.dubhe.anvilcraft.util.GravityManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -69,11 +70,11 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
             Block block = this.blockState.getBlock();
             ++this.time;
             BlockPos blockPos = this.blockPosition();
-
+            double g = GravityManager.getGravity(this);
             if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
             } else if (this.checkCanMove(this.level(), blockPos)) {
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04, 0.0));
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04 * g, 0.0));
             } else {
                 if (!this.level().isClientSide) {
                     BlockState blockState = this.level().getBlockState(blockPos);

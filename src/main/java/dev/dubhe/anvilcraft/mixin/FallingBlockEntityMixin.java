@@ -4,6 +4,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.api.injection.entity.IFallingBlockEntityExtension;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.util.GravityManager;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.BlockTags;
@@ -19,6 +20,7 @@ import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -181,5 +183,22 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
         if (hitResult.getType() != EntityHitResult.Type.ENTITY) return;
         float hurtAmount = (float) (this.getDeltaMovement().length() * DAMAGE_FACTOR);
         hitResult.getEntity().hurt(damageSources().anvil(this), hurtAmount);
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void anvilcraft$FallingBlockGravity(CallbackInfo ci) {
+
+        // 如果是无重力实体则返回
+        if (this.isNoGravity()) return;
+
+        // 获取运动向量和重力因子
+        Vec3 v = this.getDeltaMovement();
+        double g = GravityManager.getGravity(this);
+
+        if (v.y < 0) { // 下落的重力方块
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04 * g, 0.0));
+        } else if (v.y > 0) { // 上升的重力方块
+            this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04 * -g, 0.0));
+        }
     }
 }

@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.api.injection.entity.IEntityExtension;
 import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.util.GravityManager;
 import dev.dubhe.anvilcraft.util.SpectralAnvilConversionUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import it.unimi.dsi.fastutil.Pair;
@@ -22,7 +23,6 @@ import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Portal;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -282,6 +282,24 @@ public abstract class EntityMixin implements IEntityExtension {
                 }
             }
             fallingBlockEntity.blockState = newState;
+        }
+    }
+
+    @Inject(method = "tick", at = @At("TAIL"))
+    private void anvilcraft$Gravity(CallbackInfo ci) {
+        Entity entity = (Entity) (Object) this;
+
+        // 如果是无重力实体则返回
+        if (entity.isNoGravity()) return;
+
+        // 获取运动向量和重力因子
+        Vec3 v = entity.getDeltaMovement();
+        double g = GravityManager.getGravity(entity);
+
+        if (v.y < 0) { // 下落的实体
+            entity.setDeltaMovement(this.getDeltaMovement().add(0.0, g - 1.0, 0.0));
+        } else if (v.y > 0) { // 上升的实体
+            entity.setDeltaMovement(this.getDeltaMovement().add(0.0, -g - 1.0, 0.0));
         }
     }
 }
