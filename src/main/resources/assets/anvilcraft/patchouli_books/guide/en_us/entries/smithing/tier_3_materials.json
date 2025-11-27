@@ -46,11 +46,7 @@
       "recipe": "anvilcraft:anvil_collision/anvil_tier_1_and_redstone_block_32",
       "text": "一次撞击平均获得8.5个$(item)铀粒$() $(li)可以通过$(item)矿物涌泉$()量产 "
     },
-    {
-      "type": "anvilcraft:item_compress",
-      "recipe": "anvilcraft:item_compress/plutonium_nugget_from_stable_neutronium_ingot",
-      "text": "中子锭不消耗 $(li)钚过于活跃而没有粗矿形式，无法通过$(item)矿物涌泉$()量产"
-    },
+    "中子锭不消耗 $(li)钚过于活跃而没有粗矿形式，无法通过$(item)矿物涌泉$()量产",
     {
       "type": "anvilcraft:time_warp",
       "recipe": "anvilcraft:time_warp/raw_uranium_from_uranium_block",
