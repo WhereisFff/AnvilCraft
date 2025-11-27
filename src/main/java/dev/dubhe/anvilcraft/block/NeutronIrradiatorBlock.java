@@ -67,7 +67,7 @@ public class NeutronIrradiatorBlock extends Block implements IHammerRemovable, E
     ) {
         return (level1, blockPos, blockState, blockEntity) -> {
             if (blockEntity instanceof NeutronIrradiatorBlockEntity neutronIrradiatorBlockEntity) {
-                NeutronIrradiatorBlockEntity.tick(level1, blockPos, blockState, neutronIrradiatorBlockEntity);
+//                NeutronIrradiatorBlockEntity.tick(level1, blockPos, blockState, neutronIrradiatorBlockEntity);
             }
         };
     }
