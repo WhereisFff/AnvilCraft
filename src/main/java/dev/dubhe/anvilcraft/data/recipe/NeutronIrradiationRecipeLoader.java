@@ -17,7 +17,6 @@ public class NeutronIrradiationRecipeLoader {
         NeutronIrradiationRecipe.builder()
             .requires(ModItemTags.URANIUM_INGOTS)
             .result(ModItems.PLUTONIUM_NUGGET, 6)
-            .result(ModItems.LIME_POWDER)
             .save(provider);
 
         ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
