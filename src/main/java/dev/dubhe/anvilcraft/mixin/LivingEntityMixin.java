@@ -15,6 +15,7 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.loot.ModLootTables;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
+import dev.dubhe.anvilcraft.util.GravityManager;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
@@ -236,6 +237,17 @@ public abstract class LivingEntityMixin extends Entity {
             if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 cir.setReturnValue(false);
             }
+        }
+    }
+
+    @Inject(
+        method = "jumpFromGround",
+        at = @At("HEAD"),
+        cancellable = true
+    )
+    private void onJumpFromGround(CallbackInfo ci) {
+        if (GravityManager.isInNeutronIrradiatorRange(level(), blockPosition())) {
+            ci.cancel();
         }
     }
 }

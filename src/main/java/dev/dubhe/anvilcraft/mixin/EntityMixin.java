@@ -33,7 +33,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -98,9 +97,12 @@ public abstract class EntityMixin implements IEntityExtension {
     }
 
     @WrapOperation(
-        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(
-        value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V", ordinal = 1
-    )
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V",
+            ordinal = 1
+        )
     )
     public void anvilcraft$fixFallingBlockEntity(
         Entity instance,
@@ -159,20 +161,36 @@ public abstract class EntityMixin implements IEntityExtension {
     }
 
     @WrapOperation(
-        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(
-        value = "INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 0
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/Mth;equal(DD)Z",
+            ordinal = 0
+        )
     )
-    )
-    public boolean anvilcraft$cancelCollision1(double x, double y, Operation<Boolean> original, @Share("isFixed") LocalBooleanRef isFixed) {
+    public boolean anvilcraft$cancelCollision1(
+        double x,
+        double y,
+        Operation<Boolean> original,
+        @Share("isFixed") LocalBooleanRef isFixed
+    ) {
         return isFixed.get() || original.call(x, y);
     }
 
     @WrapOperation(
-        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(
-        value = "INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 1
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/util/Mth;equal(DD)Z",
+            ordinal = 1
+        )
     )
-    )
-    public boolean anvilcraft$cancelCollision2(double x, double y, Operation<Boolean> original, @Share("isFixed") LocalBooleanRef isFixed) {
+    public boolean anvilcraft$cancelCollision2(
+        double x,
+        double y,
+        Operation<Boolean> original,
+        @Share("isFixed") LocalBooleanRef isFixed
+    ) {
         return isFixed.get() || original.call(x, y);
     }
 
@@ -217,38 +235,36 @@ public abstract class EntityMixin implements IEntityExtension {
 
     @Inject(method = "move", at = @At("HEAD"))
     public void anvil$recordMovement(
-        MoverType type,
-        Vec3 pos,
-        CallbackInfo ci,
-        @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
+        MoverType type, Vec3 pos, CallbackInfo ci, @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
     ) {
         beforeBoundingMovement.set(this.getDeltaMovement());
     }
 
     @Inject(method = "move", at = @At("RETURN"))
     public void anvil$collisionCraft(
-        MoverType type,
-        Vec3 pos,
-        CallbackInfo ci,
-        @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
+        MoverType type, Vec3 pos, CallbackInfo ci, @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
     ) {
         Optional<FallingBlockEntity> entityOp = Util.castSafely(this, FallingBlockEntity.class);
         if (entityOp.isEmpty() || !this.horizontalCollision) return;
         FallingBlockEntity self = entityOp.get();
-        BlockPos blockPos = BlockPos.containing(this.position.add(beforeBoundingMovement.get()
-            .scale(0.55 / beforeBoundingMovement.get().length())
-            .multiply(1, 0, 1)));
+        BlockPos blockPos = BlockPos.containing(
+            this.position.add(
+                beforeBoundingMovement.get()
+                    .scale(0.55 / beforeBoundingMovement.get().length())
+                    .multiply(1, 0, 1)
+            )
+        );
         NeoForge.EVENT_BUS.post(new AnvilEvent.CollisionBlock(level, blockPos, self, beforeBoundingMovement.get().length()));
     }
 
     @Inject(
-        method = "handlePortal", at = @At(
-        value = "INVOKE",
-        target = "Lnet/minecraft/world/entity/Entity;changeDimension("
-                 + "Lnet/minecraft/world/level/portal/DimensionTransition;"
-                 + ")"
-                 + "Lnet/minecraft/world/entity/Entity;"
-    )
+        method = "handlePortal",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/world/entity/Entity;changeDimension("
+                     + "Lnet/minecraft/world/level/portal/DimensionTransition;"
+                     + ")Lnet/minecraft/world/entity/Entity;"
+        )
     )
     private void handlePortal(CallbackInfo ci) {
         // noinspection ConstantValue
@@ -270,49 +286,17 @@ public abstract class EntityMixin implements IEntityExtension {
     }
 
     @Inject(
-        method = "getGravity", at = @At("RETURN"), cancellable = true
+        method = "tick",
+        at = @At("TAIL")
     )
-    private void anvilcraft$ApplyGravity(CallbackInfoReturnable<Double> cir) {
-        Entity entity = (Entity) (Object) this;
-        Level level = entity.level();
+    private void anvilcraft$Gravity(CallbackInfo ci) {
+        Entity e = (Entity) (Object) this;
 
-        // 获取基础重力
-        double baseGravity = cir.getReturnValue();
+        // 如果是无重力实体则返回
+        if (e.isNoGravity()) return;
 
-        // 应用物质特殊属性
-        GravityManager.GravityType type = GravityManager.getGravityType(entity);
-        switch (type) {
-            case ANTI_GRAVITY -> baseGravity *= -1;
-            case MICRO_ANTI_GRAVITY -> baseGravity *= -0.005;
-            default -> {
-            }
-        }
-
-        // 维度重力 = 基础重力 * 维度系数
-        double dimensionGravity = baseGravity * GravityManager.getDimensionGravity(level);
-
-        // 实际重力 = 维度重力 - 引力向量.y
-        double newGravity = dimensionGravity - GravityManager.getGravityVector(entity).y;
-
-        // 返回实际重力
-        cir.setReturnValue(newGravity);
-    }
-
-    @Inject(
-        method = "tick", at = @At("TAIL")
-    )
-    private void anvilcraft$ApplyHorizontalGravity(CallbackInfo ci) {
-        Entity entity = (Entity) (Object) this;
-
-        // 排除无重力实体和创造飞行玩家
-        if (entity.isNoGravity() || (entity instanceof Player player && player.getAbilities().flying)) {
-            return;
-        }
-
-        // 应用引力向量的水平分量
-        Vec3 finalForce = GravityManager.getGravityVector(entity);
-        if (finalForce.x != 0 || finalForce.z != 0) {
-            entity.setDeltaMovement(entity.getDeltaMovement().add(finalForce.x, 0, finalForce.z));
-        }
+        // 获取重力常数并应用
+        double g = GravityManager.getGravity(e);
+        e.setDeltaMovement(this.getDeltaMovement().add(0.0, 1 - g, 0.0));
     }
 }

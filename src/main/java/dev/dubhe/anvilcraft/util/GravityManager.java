@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.util;
 
+import dev.dubhe.anvilcraft.block.NeutronIrradiatorBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-
-import java.lang.reflect.Method;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class GravityManager {
     // 重力设置
@@ -25,19 +25,16 @@ public class GravityManager {
         return DEFAULT_GRAVITY;
     }
 
-    private static boolean isInNeutronIrradiatorRange(Level level, BlockPos pos) {
-        // 引用中子辐照器的检查方法
-        try {
-            Class<?> neutronIrradiatorClass = Class.forName("dev.dubhe.anvilcraft.block.entity.NeutronIrradiatorBlockEntity");
-            Method isInIrradiatorRangeMethod = neutronIrradiatorClass.getMethod(
-                "isInIrradiatorRange",
-                Level.class,
-                BlockPos.class
-            );
-            return (boolean) isInIrradiatorRangeMethod.invoke(null, level, pos);
-        } catch (Exception e) {
-            return false;
+    public static boolean isInNeutronIrradiatorRange(Level level, BlockPos pos) {
+        for (int i = 0; i <= 7; i++) {
+            BlockPos belowPos = pos.below(i);
+            BlockState blockstate = level.getBlockState(belowPos);
+
+            if (blockstate.getBlock() instanceof NeutronIrradiatorBlock) {
+                return true;
+            }
         }
+        return false;
     }
 
     private static boolean isOnMun(Level level) {
