@@ -290,13 +290,13 @@ public abstract class EntityMixin implements IEntityExtension {
         at = @At("TAIL")
     )
     private void anvilcraft$Gravity(CallbackInfo ci) {
-        Entity e = (Entity) (Object) this;
-
-        // 如果是无重力实体则返回
-        if (e.isNoGravity()) return;
-
-        // 获取重力常数并应用
-        double g = GravityManager.getGravity(e);
-        e.setDeltaMovement(this.getDeltaMovement().add(0.0, 1 - g, 0.0));
+        Entity entity = (Entity) (Object) this;
+        // 如果是无重力实体或创造飞行玩家则返回
+        if (entity.isNoGravity() || (entity instanceof Player player && player.getAbilities().flying)) {
+            return;
+        }
+        // 根据重力方向调整移动向量
+        Vec3 movement = GravityManager.applyGravity(entity, this.getDeltaMovement());
+        entity.setDeltaMovement(movement);
     }
 }
