@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class NeutronIrradiatorBlock extends Block implements IHammerRemovable, EntityBlock {
@@ -54,20 +53,20 @@ public class NeutronIrradiatorBlock extends Block implements IHammerRemovable, E
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new NeutronIrradiatorBlockEntity(pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-        @NotNull Level level,
-        @NotNull BlockState state,
-        @NotNull BlockEntityType<T> blockEntityType
+        Level level,
+        BlockState state,
+        BlockEntityType<T> blockEntityType
     ) {
         return (level1, blockPos, blockState, blockEntity) -> {
             if (blockEntity instanceof NeutronIrradiatorBlockEntity neutronIrradiatorBlockEntity) {
-//                NeutronIrradiatorBlockEntity.tick(level1, blockPos, blockState, neutronIrradiatorBlockEntity);
+                // NeutronIrradiatorBlockEntity.tick(level1, blockPos, blockState, neutronIrradiatorBlockEntity);
             }
         };
     }
