@@ -89,7 +89,7 @@ body:
   - type: checkboxes
     id: know
     attributes:
-      label: This issue is unique - 这个issue是唯一的
+      label: Checks - 检查项
       options:
         - label: I have searched the [issue tracker](https://github.com/Anvil-Dev/AnvilCraft/issues) and confirmed that there is no identical issue. 我已经搜索[问题追踪器](https://github.com/Anvil-Dev/AnvilCraft/issues)并且确认没有相同的 issue。
           required: true
