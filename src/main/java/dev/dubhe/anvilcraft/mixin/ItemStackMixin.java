@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -9,7 +8,6 @@ import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
 import dev.dubhe.anvilcraft.item.property.component.Multiphase;
 import dev.dubhe.anvilcraft.util.Util;
-import dev.dubhe.anvilcraft.util.mixins.minecraft.MMItemStack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponentHolder;
@@ -44,16 +42,21 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         Multiphase multiphase = this.get(ModComponents.MULTIPHASE);
         if (multiphase == null) return;
         switch (value) {
-            case Component customName when component.equals(DataComponents.CUSTOM_NAME) ->
+            case Component customName when component.equals(DataComponents.CUSTOM_NAME) -> {
                 this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withCustomName(customName)));
-            case Component itemName when component.equals(DataComponents.ITEM_NAME) ->
+            }
+            case Component itemName when component.equals(DataComponents.ITEM_NAME) -> {
                 this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withItemName(itemName)));
-            case Integer repairCost when component.equals(DataComponents.REPAIR_COST) ->
+            }
+            case Integer repairCost when component.equals(DataComponents.REPAIR_COST) -> {
                 this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withRepairCost(repairCost)));
-            case ItemEnchantments enchantments when component.equals(EnchantmentHelper.getComponentType(Util.cast(this))) ->
+            }
+            case ItemEnchantments enchantments when component.equals(EnchantmentHelper.getComponentType(Util.cast(this))) -> {
                 this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withEnchantments(enchantments)));
-            case ItemEnchantments enchantments when component.equals(ModComponents.MERCILESS_ENCHANTMENTS) ->
+            }
+            case ItemEnchantments enchantments when component.equals(ModComponents.MERCILESS_ENCHANTMENTS) -> {
                 this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withStoredEnchantments(enchantments)));
+            }
             case null, default -> {
             }
         }
@@ -76,13 +79,13 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         method = "is(Lnet/minecraft/core/HolderSet;)Z",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/core/HolderSet;contains(Lnet/minecraft/core/Holder;)Z")
     )
-    private boolean tryUseResonatorVer2(HolderSet<Item> instance, Holder<Item> tHolder, Operation<Boolean> original) {
+    private boolean tryUseResonatorVer2(HolderSet<Item> instance, Holder<Item> holder0, Operation<Boolean> original) {
         if (instance instanceof MultitoolItem.MultitoolHolder holder) {
             return holder.is(MultitoolItem.getMode(Util.cast(this)), instance);
         } else if (instance instanceof ResonatorItem.ResonatorHolder holder) {
             return holder.is(ResonatorItem.getMode(Util.cast(this)), instance);
         }
-        return original.call(instance, tHolder);
+        return original.call(instance, holder0);
     }
 
     @Inject(
@@ -112,10 +115,5 @@ public abstract class ItemStackMixin implements DataComponentHolder {
             tooltip -> list.add(tooltip.copy().withColor(0x5F93A3)),
             tooltipFlag
         );
-    }
-
-    @ModifyReturnValue(method = "isEnchanted", at = @At("RETURN"))
-    private boolean intrinsicEnch(boolean original) {
-        return MMItemStack.intrinsicEnch((ItemStack) (Object) this, original);
     }
 }
