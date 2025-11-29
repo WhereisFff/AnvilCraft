@@ -3,8 +3,11 @@ package dev.dubhe.anvilcraft.init.item;
 import com.mojang.datafixers.util.Unit;
 import com.tterrag.registrate.Registrate;
 import com.tterrag.registrate.builders.ItemBuilder;
+import com.tterrag.registrate.providers.DataGenContext;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import com.tterrag.registrate.util.CreativeModeTabModifier;
 import com.tterrag.registrate.util.entry.ItemEntry;
+import com.tterrag.registrate.util.nullness.NonNullBiConsumer;
 import com.tterrag.registrate.util.nullness.NonNullConsumer;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
@@ -12,6 +15,7 @@ import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
 import dev.dubhe.anvilcraft.item.AmethystAxeItem;
 import dev.dubhe.anvilcraft.item.AmethystHoeItem;
 import dev.dubhe.anvilcraft.item.AmethystPickaxeItem;
@@ -88,6 +92,7 @@ import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -95,6 +100,7 @@ import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.ArmorItem;
@@ -110,24 +116,23 @@ import net.minecraft.world.item.ShovelItem;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.component.Unbreakable;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.NoSuchElementException;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 import static dev.dubhe.anvilcraft.AnvilCraft.of;
 
-@SuppressWarnings(
-    {
-        "unused",
-        "CodeBlock2Expr"
-    }
-)
+@SuppressWarnings({"unused", "CodeBlock2Expr"})
 public class ModItems {
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_TOOL.getKey());
@@ -165,8 +170,9 @@ public class ModItems {
         .register();
     public static final ItemEntry<GeodeItem> GEODE = REGISTRATE.item("geode", GeodeItem::new).register();
     public static final ItemEntry<? extends PickaxeItem> AMETHYST_PICKAXE = REGISTRATE.item("amethyst_pickaxe", AmethystPickaxeItem::new)
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), enchanting(Enchantments.FORTUNE, 3))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, enchanted(ctx.get(), Enchantments.FORTUNE, 3, provider.getProvider()))
                 .pattern("AAA")
                 .pattern(" B ")
                 .pattern(" B ")
@@ -179,11 +185,12 @@ public class ModItems {
         .tag(ItemTags.PICKAXES, ItemTags.CLUSTER_MAX_HARVESTABLES, Tags.Items.MINING_TOOL_TOOLS)
         .register();
     public static final ItemEntry<? extends AxeItem> AMETHYST_AXE = REGISTRATE.item("amethyst_axe", AmethystAxeItem::new)
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), enchanting(ModEnchantments.FELLING_KEY, 1))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern("AA ")
-                .pattern("AB ")
-                .pattern(" B ")
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, enchanted(ctx.get(), ModEnchantments.FELLING_KEY, 1, provider.getProvider()))
+                .pattern("AA")
+                .pattern("AB")
+                .pattern(" B")
                 .define('A', Items.AMETHYST_SHARD)
                 .define('B', Items.STICK)
                 .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.AMETHYST_SHARD))
@@ -193,11 +200,12 @@ public class ModItems {
         .tag(ItemTags.AXES, Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<? extends HoeItem> AMETHYST_HOE = REGISTRATE.item("amethyst_hoe", AmethystHoeItem::new)
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), enchanting(ModEnchantments.HARVEST_KEY, 1))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern("AA ")
-                .pattern(" B ")
-                .pattern(" B ")
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, enchanted(ctx.get(), ModEnchantments.HARVEST_KEY, 1, provider.getProvider()))
+                .pattern("AA")
+                .pattern(" B")
+                .pattern(" B")
                 .define('A', Items.AMETHYST_SHARD)
                 .define('B', Items.STICK)
                 .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.AMETHYST_SHARD))
@@ -207,11 +215,12 @@ public class ModItems {
         .tag(ItemTags.HOES)
         .register();
     public static final ItemEntry<? extends SwordItem> AMETHYST_SWORD = REGISTRATE.item("amethyst_sword", AmethystSwordItem::new)
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), enchanting(ModEnchantments.BEHEADING_KEY, 1))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern(" A ")
-                .pattern(" A ")
-                .pattern(" B ")
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, enchanted(ctx.get(), ModEnchantments.BEHEADING_KEY, 1, provider.getProvider()))
+                .pattern("A")
+                .pattern("A")
+                .pattern("B")
                 .define('A', Items.AMETHYST_SHARD)
                 .define('B', Items.STICK)
                 .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.AMETHYST_SHARD))
@@ -221,11 +230,12 @@ public class ModItems {
         .tag(ItemTags.SWORDS, Tags.Items.MELEE_WEAPON_TOOLS)
         .register();
     public static final ItemEntry<? extends ShovelItem> AMETHYST_SHOVEL = REGISTRATE.item("amethyst_shovel", AmethystShovelItem::new)
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), enchanting(Enchantments.EFFICIENCY, 3))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, ctx.get())
-                .pattern(" A ")
-                .pattern(" B ")
-                .pattern(" B ")
+            ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, enchanted(ctx.get(), Enchantments.EFFICIENCY, 3, provider.getProvider()))
+                .pattern("A")
+                .pattern("B")
+                .pattern("B")
                 .define('A', Items.AMETHYST_SHARD)
                 .define('B', Items.STICK)
                 .unlockedBy("hasitem", RegistrateRecipeProvider.has(Items.AMETHYST_SHARD))
@@ -1001,7 +1011,7 @@ public class ModItems {
         builder -> builder.requires(Items.ECHO_SHARD, 16)
     );
     public static final ItemEntry<? extends AmuletItem> ABNORMAL_AMULET = createAmuletItem(
-        "abnormal", () -> ModAmuletTypes.ABNORMAL, //TODO: 修改配方
+        "abnormal", () -> ModAmuletTypes.ABNORMAL, // TODO: 修改配方
         builder -> builder.requires(ModItems.CURSED_GOLD_INGOT, 1).requires(ModItems.LEVITATION_POWDER, 16)
     );
     public static final ItemEntry<? extends BigAmuletItem> GEM_AMULET = createBigAmuletItem("gem", () -> ModAmuletTypes.GEM).register();
@@ -1948,7 +1958,6 @@ public class ModItems {
         })
         .register();
 
-
     public static final ItemEntry<SuperHeavyItem> NEUTRONIUM_INGOT = REGISTRATE.item("neutronium_ingot", SuperHeavyItem::new)
         .tag(Tags.Items.INGOTS, ItemTags.BEACON_PAYMENT_ITEMS)
         .initialProperties(() -> new Item.Properties().fireResistant())
@@ -2006,5 +2015,26 @@ public class ModItems {
     ).tag(Tags.Items.BUCKETS).properties(p -> p.stacksTo(1).craftRemainder(Items.BUCKET)).model(ModelProviderUtil::bucket).register();
 
     public static void register() {
+    }
+
+    public static ItemStack enchanted(ItemLike item, ResourceKey<Enchantment> enchKey, int level, HolderLookup.Provider registries) {
+        var stack = item.asItem().getDefaultInstance();
+        var holder0 = registries.holder(enchKey);
+        if (holder0.isPresent()) {
+            stack.enchant(holder0.get(), level);
+        } else {
+            AnvilCraft.LOGGER.error("", new NoSuchElementException(enchKey.location().toString()));
+        }
+        // stack.enchant(registries.holderOrThrow(enchKey), level);
+        return stack;
+    }
+
+    public static <T extends Item> NonNullBiConsumer<DataGenContext<Item, T>, CreativeModeTabModifier> enchanting(
+        ResourceKey<Enchantment> enchKey,
+        int level
+    ) {
+        return (ctx, modifier) -> {
+            modifier.accept(enchanted(ctx.get(), enchKey, level, modifier.getParameters().holders()));
+        };
     }
 }
