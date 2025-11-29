@@ -1402,5 +1402,10 @@
   "item.anvilcraft.ionocraft_backpack.flight_time": "飞行时间：%d秒",
   "item.anvilcraft.pill": "药片",
   "item.anvilcraft.pill.tooltip": "与药水一同制成的药片，可快速服用以实现相应效果",
-  "item.anvilcraft.spectral_slingshot": "幻灵弹弓"
+  "item.anvilcraft.spectral_slingshot": "幻灵弹弓",
+  "title.anvilcraft.patchouli.apply.corrupted_beacon": "腐化信标",
+  "title.anvilcraft.patchouli.apply.neutron_irradiator": "中子辐照器",
+  "title.anvilcraft.patchouli.apply.space_overcompressor": "空间超压器",
+  "title.anvilcraft.patchouli.prop.pill": "药片",
+  "title.anvilcraft.patchouli.smithing.ranged_weapons": "远程武器"
 }
