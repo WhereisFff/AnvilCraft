@@ -193,6 +193,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
@@ -1160,6 +1161,7 @@ public class ModBlocks {
     public static final BlockEntry<BlockDevourerBlock> BLOCK_DEVOURER = REGISTRATE.block("block_devourer", BlockDevourerBlock::new)
         .item()
         .properties(Item.Properties::fireResistant)
+        .properties(p -> p.rarity(Rarity.UNCOMMON))
         .build()
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .properties(p -> p.noOcclusion().isValidSpawn(Blocks::never).explosionResistance(1200f))

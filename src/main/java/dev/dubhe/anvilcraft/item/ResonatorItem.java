@@ -32,7 +32,6 @@ import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
@@ -68,7 +67,6 @@ public abstract class ResonatorItem extends TieredItem {
             properties
                 .component(DataComponents.TOOL, createToolProperties(tier))
                 .fireResistant()
-                .rarity(Rarity.EPIC)
         );
     }
 
