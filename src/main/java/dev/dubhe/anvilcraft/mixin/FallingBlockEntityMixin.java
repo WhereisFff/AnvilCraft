@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -193,7 +192,6 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
         // 如果是无重力实体则返回
         if (this.isNoGravity()) return;
         // 根据重力方向调整移动向量
-        Vec3 movement = GravityManager.applyGravity(this, this.getDeltaMovement());
-        this.setDeltaMovement(movement);
+        this.setDeltaMovement(GravityManager.applyGravity(this, this.getDeltaMovement()));
     }
 }

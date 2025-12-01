@@ -1,58 +1,94 @@
 package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.block.NeutronIrradiatorBlock;
+import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static dev.dubhe.anvilcraft.util.GravityManager.GravitySourceManager.getGravityVector;
 
 public class GravityManager {
-    // 重力设置，默认重力1.0
-    public static final double NEUTRON_IRRADIATOR_GRAVITY = 10.0;
+    // 维度重力映射表
+    private static final Map<ResourceKey<Level>, Double> DIMENSION_GRAVITY_MAP = new HashMap<>();
 
     static {
-        GravitySourceManager.registerSource(NeutronIrradiatorBlock.class, 7, NEUTRON_IRRADIATOR_GRAVITY);
-        // 在这里注册更多重力源
+        GravitySourceManager.registerSource(NeutronIrradiatorBlock.class, 7, 10.0);
+        // 在这里注册更多重力源，strength -> 该重力源所在方块任意表面中心的重力是主世界重力的 strength 倍
+
+        registerDimensionGravity(Level.END, 0.5);
+        // 在这里注册更多维度重力，gravity -> 该维度重力是主世界重力的 gravity 倍
     }
 
-    private static boolean isNegativeMatterItem(ItemEntity itemEntity) {
-        return itemEntity.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET.get()) || itemEntity.getItem()
-            .is(ModItems.NEGATIVE_MATTER.get()) || itemEntity.getItem().is(ModBlocks.NEGATIVE_MATTER_BLOCK.get().asItem());
+    // 设置不同实体的重力系数
+    private static double getGravityFactor(Entity entity) {
+        return switch (entity) {
+            case FallingBlockEntity fallingBlockEntity -> -0.04; // 下落方块
+            case LivingEntity livingEntity -> -0.08; // 生物
+            case Projectile projectile -> -0.05; // 投掷物
+            case ItemEntity itemEntity -> -0.02; // 掉落物
+            default -> -0.08;
+        };
     }
-    private static boolean isLevitationPowder(ItemEntity itemEntity) {
-        return itemEntity.getItem().is(ModItems.LEVITATION_POWDER.get()) || itemEntity.getItem()
-            .is(ModBlocks.LEVITATION_POWDER_BLOCK.get().asItem());
-    }
-    // 在这里添加反重力物质
 
-    // 根据移动方向和重力源方向调整速度
+    // 应用重力并处理特殊实体
     public static Vec3 applyGravity(Entity entity, Vec3 movement) {
         Level level = entity.level();
-        Vec3 entityPos = entity.position();
         BlockPos blockPos = entity.blockPosition();
-        // 反重力物质处理
+        Vec3 entityPos = entity.position();
+        Vec3 gravityVector = getGravityVector(level, blockPos, entityPos);
+
+        // 维度重力处理，恒定向下重力
+        if (getDimensionGravity(level) != 1.0) {
+            gravityVector = gravityVector.add(0, getGravityFactor(entity) * (getDimensionGravity(level) - 1.0), 0);
+        }
+
+        // 物品实体处理，负物质反转重力，漂浮粉略有失重感
         if (entity instanceof ItemEntity itemEntity) {
-            if (isNegativeMatterItem(itemEntity)) { // 负物质：反转重力
-                Vec3 gravityVector = getGravityVector(entity.level(), entity.blockPosition(), entity.position());
-                if (isLevitationPowder(itemEntity)) { // 漂浮粉：轻微失重感
-                    return movement.subtract(gravityVector.scale(0.005));
-                }
-                return movement.subtract(gravityVector);
+            var item = itemEntity.getItem();
+            boolean isNegativeMatter = item.is(ModItems.NEGATIVE_MATTER_NUGGET.get()) || item.is(ModItems.NEGATIVE_MATTER.get()) || item.is(
+                ModBlocks.NEGATIVE_MATTER_BLOCK.get().asItem());
+
+            if (isNegativeMatter) {
+                boolean isLevitationPowder = item.is(ModItems.LEVITATION_POWDER.get()) || item.is(ModBlocks.LEVITATION_POWDER_BLOCK.get()
+                    .asItem());
+
+                return movement.subtract(isLevitationPowder ? gravityVector.scale(0.005) : gravityVector);
             }
         }
-        // 获取所有重力影响并应用到移动向量
-        Vec3 gravityForce = getGravityVector(level, blockPos, entityPos);
-        return movement.add(gravityForce);
+
+        // 漂浮粉块下落方块实体：反转重力
+        if (entity instanceof LevitatingBlockEntity levitatingBlock && levitatingBlock.getBlockState()
+            .is(ModBlocks.LEVITATION_POWDER_BLOCK.get())) {
+            return movement.subtract(gravityVector);
+        }
+
+        // 默认情况：正常加重力
+        return movement.add(gravityVector);
+    }
+
+    // 维度重力管理器
+    public static void registerDimensionGravity(ResourceKey<Level> dimension, double gravity) {
+        DIMENSION_GRAVITY_MAP.put(dimension, gravity);
+    }
+
+    public static double getDimensionGravity(Level level) {
+        return DIMENSION_GRAVITY_MAP.getOrDefault(level.dimension(), 1.0);
     }
 
     // 重力源类型定义
@@ -60,17 +96,21 @@ public class GravityManager {
         private final Class<? extends Block> blockClass;
         private final int radius;
         private final double strength;
+
         public GravitySourceType(Class<? extends Block> blockClass, int radius, double strength) {
             this.blockClass = blockClass;
             this.radius = radius;
             this.strength = strength;
         }
+
         public Class<? extends Block> getBlockClass() {
             return blockClass;
         }
+
         public int getRadius() {
             return radius;
         }
+
         public double getStrength() {
             return strength;
         }
@@ -80,6 +120,7 @@ public class GravityManager {
     public static class GravitySource {
         public final BlockPos pos;
         public final double strength;
+
         public GravitySource(BlockPos pos, double strength) {
             this.pos = pos;
             this.strength = strength;
@@ -89,9 +130,11 @@ public class GravityManager {
     // 重力源管理器
     public static class GravitySourceManager {
         private static final List<GravitySourceType> REGISTERED_SOURCES = new ArrayList<>();
+
         public static void registerSource(Class<? extends Block> blockClass, int radius, double strength) {
             REGISTERED_SOURCES.add(new GravitySourceType(blockClass, radius, strength));
         }
+
         // 计算实体所受的总重力（返回向量）
         public static Vec3 getGravityVector(Level level, BlockPos pos, Vec3 entityPos) {
             List<GravitySource> sources = new ArrayList<>();
@@ -103,6 +146,7 @@ public class GravityManager {
             }
             return gravityVector(sources, entityPos); // 否则计算合力
         }
+
         // 搜索重力源
         private static void findGravitySourcesInRange(Level level, BlockPos center, GravitySourceType type, List<GravitySource> sources) {
             int radius = type.getRadius(); // 读取重力源半径
@@ -120,13 +164,14 @@ public class GravityManager {
                 }
             }
         }
+
         // 计算来自所有重力源的合力
         public static Vec3 gravityVector(List<GravitySource> sources, Vec3 entityPosition) {
             double fx = 0, fy = 0, fz = 0;
             for (GravitySource source : sources) { // 遍历重力源累加引力
                 Vec3 direction = Vec3.atCenterOf(source.pos).subtract(entityPosition); // 每个重力源计算距离向量
                 double rSqr = direction.lengthSqr();
-                if (rSqr > 0.5) {
+                if (rSqr > 0.70710678) {
                     double r = Math.sqrt(rSqr); // 万有引力公式计算
                     double f = 0.0224964424376324 * source.strength / (rSqr); // 测量得 G 在0.0224964424376323和0.0224964424376324之间
                     fx += direction.x / r * f; // 累加各分量力返回总向量

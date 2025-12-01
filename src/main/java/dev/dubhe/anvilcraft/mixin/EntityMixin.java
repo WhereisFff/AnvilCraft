@@ -296,7 +296,6 @@ public abstract class EntityMixin implements IEntityExtension {
             return;
         }
         // 根据重力方向调整移动向量
-        Vec3 movement = GravityManager.applyGravity(entity, this.getDeltaMovement());
-        entity.setDeltaMovement(movement);
+        entity.setDeltaMovement(GravityManager.applyGravity(entity, this.getDeltaMovement()));
     }
 }
