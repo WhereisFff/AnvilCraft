@@ -45,7 +45,7 @@ public class AnvilCraftDestroyerFakePlayer {
     }
 
     @Data
-    public static final class Destroyer{
+    public static final class Destroyer {
         private final GameProfile profile;
         private final ServerPlayer player;
 
