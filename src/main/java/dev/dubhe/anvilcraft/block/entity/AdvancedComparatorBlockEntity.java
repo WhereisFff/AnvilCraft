@@ -2,15 +2,13 @@ package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.block.AdvancedComparatorBlock;
-import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.AdvancedComparatorMenu;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -32,13 +30,10 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 @Getter
 @Setter
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuProvider, IDiskCloneable {
     protected Mode compareMode = Mode.HYSTERESIS;
     private State state = State.OUTPUT_LOW;
@@ -162,8 +157,9 @@ public class AdvancedComparatorBlockEntity extends BlockEntity implements MenuPr
     @Override
     public @Nullable AbstractContainerMenu createMenu(int containerId, Inventory inventory, Player player) {
         if (player.isSpectator()) return null;
-        if (player.level().getBlockEntity(getBlockPos()) instanceof AdvancedComparatorBlockEntity blockEntity)
+        if (player.level().getBlockEntity(getBlockPos()) instanceof AdvancedComparatorBlockEntity blockEntity) {
             return new AdvancedComparatorMenu(ModMenuTypes.ADVANCED_COMPARATOR.get(), containerId, inventory, blockEntity);
+        }
         return null;
     }
 

@@ -47,9 +47,6 @@ import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ModNetworks {
-    /**
-     *
-     */
     public static void init(PayloadRegistrar registrar) {
         registrar.playBidirectional(
             MachineOutputDirectionPacket.TYPE,

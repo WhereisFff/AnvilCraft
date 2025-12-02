@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.provider.loot;
 
-import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.loot.ModLootTables;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.loot.conditions.MatchDataComponent;
@@ -28,10 +28,8 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWit
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.function.BiConsumer;
 
-@ParametersAreNonnullByDefault
 public class BeheadingLootSubProvider implements LootTableSubProvider {
     private final HolderLookup.Provider provider;
 

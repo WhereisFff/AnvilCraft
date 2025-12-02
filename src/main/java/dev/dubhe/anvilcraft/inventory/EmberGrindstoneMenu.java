@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.inventory;
 
 import com.google.common.collect.Collections2;
 import com.mojang.datafixers.util.Pair;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.util.EnchantmentUtil;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import lombok.Getter;
@@ -30,13 +30,11 @@ import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-@ParametersAreNonnullByDefault
 public class EmberGrindstoneMenu extends AbstractContainerMenu {
     private final Container tool;
     private final Container book;

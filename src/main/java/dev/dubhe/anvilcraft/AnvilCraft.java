@@ -12,7 +12,7 @@ import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
 import dev.dubhe.anvilcraft.config.AnvilCraftServerConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.dfu.AnvilCraftDfu;
-import dev.dubhe.anvilcraft.init.ModAttatchments;
+import dev.dubhe.anvilcraft.init.ModAttachments;
 import dev.dubhe.anvilcraft.init.ModCommands;
 import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
@@ -82,7 +82,7 @@ public class AnvilCraft {
 
     public AnvilCraft(IEventBus modEventBus, ModContainer modContainer) {
         MOD_BUS = modEventBus;
-        ModAttatchments.register(modEventBus);
+        ModAttachments.register(modEventBus);
         ModItemGroups.register(modEventBus);
         ModBlocks.register();
         ModFluids.register(modEventBus);

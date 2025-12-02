@@ -11,7 +11,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -24,7 +23,6 @@ import net.minecraft.world.level.storage.loot.LootParams;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -32,8 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class RecipeUtil {
     public static LootContext emptyLootContext(ServerLevel level) {
         return new LootContext.Builder(new LootParams(level, Map.of(), Map.of(), 0)).create(Optional.empty());
@@ -165,8 +161,7 @@ public class RecipeUtil {
                 for (int z = size - 1; z >= 0; z--) {
                     BlockPredicateWithState predicate = pattern.getPredicate(x, y, z);
                     BlockState state = predicate.getDefaultState();
-                    if (state.isAir() && Math.max(levelLike.horizontalSize(), levelLike.verticalSize()) >= size)
-                        continue;
+                    if (state.isAir() && Math.max(levelLike.horizontalSize(), levelLike.verticalSize()) >= size) continue;
                     levelLike.setBlockState(new BlockPos(x, y, z), state);
                 }
             }
