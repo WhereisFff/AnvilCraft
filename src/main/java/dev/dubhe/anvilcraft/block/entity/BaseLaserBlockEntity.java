@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.entity.ModDamageTypes;
 import dev.dubhe.anvilcraft.init.ModHeaterInfos;
 import dev.dubhe.anvilcraft.network.LaserEmitPacket;
+import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -203,11 +204,9 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         if (tickCount >= cooldown) {
             tickCount = 0;
             if (irradiateBlock.is(Tags.Blocks.ORES)) {
-                List<ItemStack> drops = Block.getDrops(
-                    irradiateBlock,
+                List<ItemStack> drops = BreakBlockUtil.drop(
                     serverLevel,
-                    irradiateBlockPos,
-                    level.getBlockEntity(irradiateBlockPos)
+                    irradiateBlockPos
                 );
                 deliverItem(drops, direction, irradiateBlockPos);
             }
