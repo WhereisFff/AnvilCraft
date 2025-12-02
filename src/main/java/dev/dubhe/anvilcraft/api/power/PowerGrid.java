@@ -13,7 +13,6 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,9 +62,10 @@ public class PowerGrid {
         this.level = level;
     }
 
-    /**
-     *
-     */
+    static {
+        ConnectivityChecker.register(new FastCollisionConnectivityChecker());
+    }
+
     public void update(boolean forced) {
         if (forced || changed) {
             PacketDistributor.sendToPlayersTrackingChunk(
@@ -76,16 +76,10 @@ public class PowerGrid {
         }
     }
 
-    /**
-     * @return 获取电网中的元件数量
-     */
     public int getComponentCount() {
         return this.transmitters.size() + this.producers.size() + this.consumers.size() + this.storages.size();
     }
 
-    /**
-     * @return 该电网是否为空电网
-     */
     public boolean isEmpty() {
         return this.getComponentCount() <= 0;
     }
@@ -157,8 +151,8 @@ public class PowerGrid {
     }
 
     public boolean flush() {
-        int oldGenerate = this.generate;
-        int oldConsume = this.consume;
+        final int oldGenerate = this.generate;
+        final int oldConsume = this.consume;
         this.generate = 0;
         this.consume = 0;
         for (IPowerTransmitter transmitter : transmitters) {
@@ -265,7 +259,7 @@ public class PowerGrid {
      *
      * @param components 元件
      */
-    public static void removeComponent(IPowerComponent @NotNull ... components) {
+    public static void removeComponent(IPowerComponent... components) {
         try {
             if (PowerGrid.isServerClosing) return;
             for (IPowerComponent component : components) {
@@ -283,12 +277,12 @@ public class PowerGrid {
      *
      * @param components 电力元件
      */
-    public void remove(IPowerComponent @NotNull ... components) {
+    public void remove(IPowerComponent... components) {
         this.markedRemoval = true;
         for (IPowerComponent component : this.components) {
             component.setGrid(null);
         }
-        Set<IPowerComponent> set = new HashSet<>(this.components);
+        final Set<IPowerComponent> set = new HashSet<>(this.components);
         this.transmitters.clear();
         this.storages.clear();
         this.producers.clear();
@@ -301,7 +295,7 @@ public class PowerGrid {
         PowerGrid.addComponent(set.toArray(IPowerComponent[]::new));
     }
 
-    private boolean clearGrid(@NotNull IPowerComponent component) {
+    private boolean clearGrid(IPowerComponent component) {
         component.setGrid(null);
         return true;
     }
@@ -311,7 +305,7 @@ public class PowerGrid {
      *
      * @param grid 电网
      */
-    public void merge(@NotNull PowerGrid grid) {
+    public void merge(PowerGrid grid) {
         grid.producers.forEach(this::add);
         grid.consumers.forEach(this::add);
         grid.storages.forEach(this::add);
@@ -320,11 +314,13 @@ public class PowerGrid {
     }
 
     /**
+     * 判断元件是否在电网范围内
+     *
      * @param component 元件
      * @return 元件是否在电网范围内
      */
-    public boolean isInRange(@NotNull IPowerComponent component) {
-        return collideFast(component.getShape());
+    public boolean isInRange(IPowerComponent component) {
+        return ConnectivityChecker.check(this, component);
     }
 
     /**
@@ -332,7 +328,7 @@ public class PowerGrid {
      *
      * @param components 元件
      */
-    public static void addComponent(IPowerComponent @NotNull ... components) {
+    public static void addComponent(IPowerComponent... components) {
         for (IPowerComponent component : components) {
             MANAGER.addComponent(component);
         }

@@ -21,7 +21,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -37,7 +36,7 @@ public class GiantAnvilShockEventListener {
         TreeNode<ShockContext> root = TreeNode.<ShockContext>predicatedExecutable(
             it -> it.unwrap().level().getBlockState(it.unwrap().centerPos()).is(ModBlocks.HEAVY_IRON_BLOCK)
         ).then(
-            //break mode
+            // break mode
             TreeNode.<ShockContext>executes(it -> {
                 if (it.has(DESTROY_MODE) && it.has(DESTROY_TYPE)) {
                     DestroyMode mode = it.getAttachment(DESTROY_MODE, DestroyMode.class);
@@ -45,7 +44,7 @@ public class GiantAnvilShockEventListener {
                     type.accept(it.unwrap(), it.unwrap().rangePosList(), mode);
                 }
             }).then(
-                //test anvil type
+                // test anvil type
                 TreeNode.multiple(
                     TreeNode.<ShockContext>predicatedExecutable(it ->
                         (it.unwrap().testBorder(AnvilBlock.class) || it.unwrap().testBorder(ModBlocks.SPECTRAL_ANVIL))
@@ -64,7 +63,7 @@ public class GiantAnvilShockEventListener {
                     ).executes(it -> it.putAttachment(DESTROY_MODE, DestroyMode.FORTUNE))
                 )
             ).then(
-                //test block type
+                // test block type
                 TreeNode.multiple(
                     TreeNode.<ShockContext>predicatedExecutable(it ->
                         it.unwrap().testCorner(BlockTags.LOGS)
@@ -73,11 +72,16 @@ public class GiantAnvilShockEventListener {
                         it.unwrap().testCorner(Blocks.HAY_BLOCK)
                     ).executes(it -> it.putAttachment(DESTROY_TYPE, DestroyType.HARVESTING)),
                     TreeNode.<ShockContext>predicatedExecutable(it ->
-                        it.unwrap().testCorner(Blocks.GRASS_BLOCK) || it.unwrap().testCorner(Blocks.MYCELIUM) || it.unwrap().testCorner(Blocks.PODZOL)
+                        it.unwrap().testCorner(Blocks.GRASS_BLOCK)
+                        || it.unwrap().testCorner(Blocks.MYCELIUM)
+                        || it.unwrap().testCorner(Blocks.PODZOL)
                     ).executes(it -> it.putAttachment(DESTROY_TYPE, DestroyType.CLEANING)),
                     TreeNode.<ShockContext>predicatedExecutable(it ->
                         it.unwrap().testCorner(Blocks.OBSIDIAN)
-                    ).executes(it -> it.putAttachment(DESTROY_TYPE, DestroyType.GENERAL))
+                    ).executes(it -> it.putAttachment(DESTROY_TYPE, DestroyType.GENERAL)),
+                    TreeNode.<ShockContext>predicatedExecutable(it ->
+                        it.unwrap().testCorner(Blocks.AMETHYST_BLOCK)
+                    ).executes(it -> it.putAttachment(DESTROY_TYPE, DestroyType.BROKEN_CRYSTALS))
                 )
             )
         ).then(
@@ -149,7 +153,7 @@ public class GiantAnvilShockEventListener {
     }
 
     @SubscribeEvent
-    public static void onLand(@NotNull AnvilEvent.GiantOnLand event) {
+    public static void onLand(AnvilEvent.GiantOnLand event) {
         ShockContext context = ShockContext.inflate(event);
         behaviorTree.run(context);
     }

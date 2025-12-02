@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -15,7 +14,6 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -31,11 +29,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class MagnetBlock extends Block implements IHammerRemovable {
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
 
@@ -108,6 +103,7 @@ public class MagnetBlock extends Block implements IHammerRemovable {
                 level.setBlockAndUpdate(currentPos, Blocks.AIR.defaultBlockState());
 
                 AnimateAscendingBlockEntity.animate(level, currentPos, state1, magnetPos.below());
+                TriggerUtil.liftingAnvil(level, currentPos);
                 break;
             }
             List<FallingBlockEntity> entities =
@@ -117,12 +113,12 @@ public class MagnetBlock extends Block implements IHammerRemovable {
                 if (state2.is(BlockTags.ANVIL) && !state2.is(ModBlockTags.NON_MAGNETIC)) {
                     level.destroyBlock(magnetPos.below(), true);
                     level.setBlockAndUpdate(magnetPos.below(), state2);
-                    entity.remove(Entity.RemovalReason.DISCARDED);
+                    entity.discard();
                     AnimateAscendingBlockEntity.animate(level, currentPos, state2, magnetPos.below());
+                    TriggerUtil.liftingAnvil(level, currentPos);
                     break checkAnvil;
                 }
             }
-            TriggerUtil.liftingAnvil(level, currentPos);
             BlockState blockState = level.getBlockState(currentPos);
             if (level.isEmptyBlock(currentPos) || blockState.getBlock() instanceof LiquidBlock) {
                 continue;
@@ -130,8 +126,7 @@ public class MagnetBlock extends Block implements IHammerRemovable {
             return;
         }
     }
-
-
+    
     @Override
     public void onRemove(
         BlockState state,

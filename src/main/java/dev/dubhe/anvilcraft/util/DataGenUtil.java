@@ -66,7 +66,10 @@ public class DataGenUtil {
 
     public static void diodeBlock(@NotNull RegistrateBlockstateProvider provider, @NotNull ResourceLocation id, DiodeBlock block) {
         ModelFile diode = new ModelFile.ExistingModelFile(id.withPrefix("block/"), provider.models().existingFileHelper);
-        ModelFile diodeOn = new ModelFile.ExistingModelFile(id.withPrefix("block/").withSuffix("_on"), provider.models().existingFileHelper);
+        ModelFile diodeOn = new ModelFile.ExistingModelFile(
+            id.withPrefix("block/").withSuffix("_on"),
+            provider.models().existingFileHelper
+        );
 
         provider.getVariantBuilder(block)
             .partialState()
@@ -108,13 +111,12 @@ public class DataGenUtil {
             provider.models().existingFileHelper
         );
 
-        provider.getVariantBuilder(context.get())
-            .forAllStates(
-                state -> ConfiguredModel.builder()
-                    .modelFile(model)
-                    .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
-                    .build()
-            );
+        provider.getVariantBuilder(context.get()).forAllStates(
+            state -> ConfiguredModel.builder()
+                .modelFile(model)
+                .rotationY(((int) state.getValue(BlockStateProperties.HORIZONTAL_FACING).toYRot() + 180) % 360)
+                .build()
+        );
     }
 
     @SuppressWarnings("unused")

@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.data.lang;
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 
 public class JeiLang {
+    @SuppressWarnings("checkstyle:LineLength")
     public static void init(RegistrateLangProvider provider) {
         provider.add("gui.anvilcraft.category.chance", "Chance: %s%%");
         provider.add("gui.anvilcraft.category.average_output", "Average: %s");
@@ -51,6 +52,8 @@ public class JeiLang {
         provider.add("gui.anvilcraft.category.time_warp.consume_fluid", "Consume: %1$d mB of %2$s");
         provider.add("gui.anvilcraft.category.time_warp.produce_fluid", "Produce: %1$d mB of %2$s");
         provider.add("gui.anvilcraft.category.time_warp.need_activated", "Need Activated");
+
+        provider.add("gui.anvilcraft.category.neutron_irradiation", "Neutron Irradiation");
 
         provider.add("gui.anvilcraft.category.multiblock", "Multiblock Crafting");
         provider.add("gui.anvilcraft.category.multiblock.all_layers", "All Layers Visible");

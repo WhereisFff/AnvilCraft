@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.recipe;
 
+import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
@@ -14,21 +14,18 @@ import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class CanningFoodRecipe extends CustomRecipe {
     public CanningFoodRecipe(CraftingBookCategory category) {
         super(category);
     }
 
     public boolean isFood(ItemStack foodStack) {
-        if (foodStack.is(ModItems.CANNED_FOOD)) return false;
-        return foodStack.has(DataComponents.FOOD) && !foodStack.is(ModItems.CANNED_FOOD);
+        if (foodStack.is(ModFoodItems.CANNED_FOOD)) return false;
+        return foodStack.has(DataComponents.FOOD) && !foodStack.is(ModFoodItems.CANNED_FOOD);
     }
 
     public boolean matches(CraftingInput input, Level level) {
@@ -72,7 +69,7 @@ public class CanningFoodRecipe extends CustomRecipe {
             }
         }
 
-        return ModItems.CANNED_FOOD.get().setFood(ModItems.CANNED_FOOD.asStack(), food);
+        return ModFoodItems.CANNED_FOOD.get().setFood(ModFoodItems.CANNED_FOOD.asStack(), food);
     }
 
     @Override

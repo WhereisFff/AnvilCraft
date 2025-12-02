@@ -42,15 +42,14 @@ public class Util {
     };
 
     /**
+     * 判断给定的 {@code modId} 对应的模组是否加载
+     *
      * @return 模组是否加载
      */
-    public static boolean isLoaded(String modid) {
-        return ModList.get().isLoaded(modid);
+    public static boolean isLoaded(String modId) {
+        return ModList.get().isLoaded(modId);
     }
 
-    /**
-     *
-     */
     public static Function<InteractionResult, ItemInteractionResult> interactionResultConverter() {
         return it -> switch (it) {
             case SUCCESS, SUCCESS_NO_ITEM_USED -> ItemInteractionResult.SUCCESS;

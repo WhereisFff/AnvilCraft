@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.init.enchantment;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.enchantment.FellingEffect;
-import dev.dubhe.anvilcraft.enchantment.HarvestEffect;
-import dev.dubhe.anvilcraft.enchantment.WeedingEffect;
+import dev.dubhe.anvilcraft.enchantment.HarvestLeftClickEffect;
+import dev.dubhe.anvilcraft.enchantment.HarvestRightClickEffect;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -28,9 +28,6 @@ public class ModEnchantments {
         return ResourceKey.create(Registries.ENCHANTMENT, AnvilCraft.of(name));
     }
 
-    /**
-     *
-     */
     public static void bootstrap(BootstrapContext<Enchantment> context) {
         HolderGetter<DamageType> damageTypeHolderGetter = context.lookup(Registries.DAMAGE_TYPE);
         HolderGetter<Enchantment> enchantmentHolderGetter = context.lookup(Registries.ENCHANTMENT);
@@ -73,14 +70,11 @@ public class ModEnchantments {
                 )
             ).withEffect(
                 ModEnchantmentEffectComponents.USE_ON_BLOCK,
-                new HarvestEffect(5),
-                MatchTool.toolMatches(
-                    ItemPredicate.Builder.item()
-                        .of(ItemTags.HOES)
-                )
+                new HarvestRightClickEffect(5),
+                MatchTool.toolMatches(ItemPredicate.Builder.item().of(ItemTags.HOES))
             ).withEffect(
                 ModEnchantmentEffectComponents.POST_BREAK_BLOCK,
-                new WeedingEffect(5),
+                new HarvestLeftClickEffect(5),
                 MatchTool.toolMatches(ItemPredicate.Builder.item().of(ItemTags.HOES))
             )
         );

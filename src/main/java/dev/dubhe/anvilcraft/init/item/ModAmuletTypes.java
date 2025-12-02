@@ -64,12 +64,12 @@ public class ModAmuletTypes {
                 if (effect == null) {
                     player.addEffect(new MobEffectInstance(
                         MobEffects.FIRE_RESISTANCE,
-                        2, 0, false, false
+                        3, 0, false, false
                     ));
                 } else if (effect.getDuration() < 3600) {
                     player.addEffect(new MobEffectInstance(
                         MobEffects.FIRE_RESISTANCE,
-                        effect.getDuration() + 2, effect.getAmplifier(),
+                        effect.getDuration() + 3, effect.getAmplifier(),
                         effect.isAmbient(), effect.isVisible()
                     ));
                 }
@@ -87,12 +87,12 @@ public class ModAmuletTypes {
                 if (effect == null) {
                     player.addEffect(new MobEffectInstance(
                         MobEffects.CONDUIT_POWER,
-                        2, 0, false, false
+                        3, 0, false, false
                     ));
                 } else if (effect.getDuration() < 3600) {
                     player.addEffect(new MobEffectInstance(
                         MobEffects.CONDUIT_POWER,
-                        effect.getDuration() + 2, effect.getAmplifier(),
+                        effect.getDuration() + 3, effect.getAmplifier(),
                         effect.isAmbient(), effect.isVisible()
                     ));
                 }
@@ -110,13 +110,17 @@ public class ModAmuletTypes {
                         .flatMap(entity -> Util.castSafely(entity, FallingBlockEntity.class)))
                     .map(fbe -> fbe.getBlockState().is(BlockTags.ANVIL))
                     .orElse(false)
-                ) return true;
+                ) {
+                    return true;
+                }
                 if (Optional.ofNullable(source.getEntity())
                     .map(entity -> Util.instanceOfAny(entity, FallingGiantAnvilEntity.class))
                     .or(() -> Optional.ofNullable(source.getDirectEntity())
                         .map(entity -> Util.instanceOfAny(entity, FallingGiantAnvilEntity.class)))
                     .orElse(false)
-                ) return true;
+                ) {
+                    return true;
+                }
                 return Optional.ofNullable(source.getWeaponItem())
                     .map(stack -> stack.is(ModItemTags.ANVIL_HAMMER))
                     .orElse(false);
@@ -144,7 +148,7 @@ public class ModAmuletTypes {
             .obtain((player, source) -> {
                 if (
                     source.typeHolder().is(DamageTypes.FALL)
-                    && Optional.ofNullable(source.getEntity())
+                        && Optional.ofNullable(source.getEntity())
                         .map(entity -> Util.instanceOfAny(entity, FallingGiantAnvilEntity.class))
                         .or(() -> Optional.ofNullable(source.getDirectEntity())
                             .map(entity -> Util.instanceOfAny(entity, FallingGiantAnvilEntity.class)))
@@ -185,9 +189,9 @@ public class ModAmuletTypes {
         type -> AmuletType.builder()
             .obtainByDamage(type)
             .obtain((player, source) -> IAbnormal.getAbnormalCount(player, ICursed.class) > 0
-                    && IAbnormal.getAbnormalCount(player, ILevitation.class) >= 64
-                    && IAbnormal.getAbnormalCount(player, ISuperHeavy.class) > 0
-                    && IAbnormal.getAbnormalCount(player, IRadiation.class) >= 1152)
+                && IAbnormal.getAbnormalCount(player, ILevitation.class) >= 64
+                && IAbnormal.getAbnormalCount(player, ISuperHeavy.class) > 0
+                && IAbnormal.getAbnormalCount(player, IRadiation.class) >= 1152)
             .amulet(ModItems.ABNORMAL_AMULET)
     );
     public static final DeferredHolder<AmuletType, ? extends AmuletType> GEM = registerFour(
@@ -205,6 +209,10 @@ public class ModAmuletTypes {
         )
     );
 
+    public static void register(IEventBus eventBus) {
+        REGISTER.register(eventBus);
+    }
+
     private static DeferredHolder<AmuletType, ? extends AmuletType> register(String typeId, Function<String, AmuletType.Builder> builder) {
         return REGISTER.register(typeId, builder.apply(typeId)::build);
     }
@@ -213,9 +221,5 @@ public class ModAmuletTypes {
         String typeId, Supplier<? extends FourToOneAmuletType> getter
     ) {
         return REGISTER.register(typeId, getter);
-    }
-
-    public static void register(IEventBus eventBus) {
-        REGISTER.register(eventBus);
     }
 }
