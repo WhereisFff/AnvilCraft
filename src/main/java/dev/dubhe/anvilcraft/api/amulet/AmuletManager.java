@@ -3,10 +3,10 @@ package dev.dubhe.anvilcraft.api.amulet;
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Sets;
 import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
-import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
-import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.ModRegistries;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.util.CollectionUtil;
@@ -93,8 +93,8 @@ public class AmuletManager {
         return List.copyOf(this.getAmuletsFromInventory(player).keySet());
     }
 
-    public Optional<Holder<AmuletType>> getTypeMatchedDamage(ServerPlayer player, DamageSource source, HolderLookup.Provider registryAccess) {
-        Optional<HolderLookup.RegistryLookup<AmuletType>> lookupOptional = registryAccess.lookup(ModRegistries.AMULET_TYPE_KEY);
+    public Optional<Holder<AmuletType>> getTypeMatchedDamage(ServerPlayer player, DamageSource source, HolderLookup.Provider registries) {
+        Optional<HolderLookup.RegistryLookup<AmuletType>> lookupOptional = registries.lookup(ModRegistries.AMULET_TYPE_KEY);
         return lookupOptional.flatMap(lookup -> lookup.listElements()
             .filter(reference -> reference.value().canObtain(player, source))
             .findFirst());

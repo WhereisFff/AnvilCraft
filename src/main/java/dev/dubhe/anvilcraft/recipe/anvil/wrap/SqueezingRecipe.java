@@ -2,11 +2,11 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import lombok.Getter;
@@ -22,9 +22,8 @@ import net.minecraft.world.level.block.Block;
 
 /**
  * 压榨配方类
- * <p>
- * 该配方用于在铁砧下落时压榨方块，需要在铁砧下方放置炼药锅作为收集容器
- * </p>
+ *
+ * <p>该配方用于在铁砧下落时压榨方块，需要在铁砧下方放置炼药锅作为收集容器</p>
  */
 @Getter
 public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
@@ -280,7 +279,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
         }
 
         @Override
-        public void validate(ResourceLocation pId) {
+        public void validate(ResourceLocation id) {
         }
 
         @Override

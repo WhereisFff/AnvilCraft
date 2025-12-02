@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.item.property.component;
 
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.util.InventoryUtil;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
@@ -43,7 +43,7 @@ public record Merciless(boolean enabled) {
                 "InventoryUtil.getItems(Inventory, Predicate<ItemStack>) method has some problem. The predicate didn't work."
             ).enabled();
             int levelSum = 0;
-            float attackDamage;
+            final float attackDamage;
             float miningEfficiency = 0;
 
             ItemEnchantments.Mutable enchantmentsMutable = new ItemEnchantments.Mutable(

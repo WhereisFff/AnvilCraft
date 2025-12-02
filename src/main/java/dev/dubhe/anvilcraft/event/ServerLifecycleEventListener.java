@@ -27,9 +27,6 @@ public class ServerLifecycleEventListener {
         LevelLoadManager.notifyServerStarted();
     }
 
-    /**
-     * @param event 服务器刻事件
-     */
     @SubscribeEvent
     public static void onTick(@NotNull ServerTickEvent.Pre event) {
         PowerGrid.tickGrid();
@@ -38,9 +35,6 @@ public class ServerLifecycleEventListener {
         RandomChuckTickLoadManager.tick();
     }
 
-    /**
-     * @param event 服务器关闭事件
-     */
     @SubscribeEvent
     public static void onServerStopped(@NotNull ServerStoppedEvent event) {
         PowerGrid.isServerClosing = false;
@@ -48,9 +42,6 @@ public class ServerLifecycleEventListener {
         RecipeCaches.unload();
     }
 
-    /**
-     * @param event 服务器关闭事件
-     */
     @SubscribeEvent
     public static void onServerStopping(ServerStoppingEvent event) {
         PowerGrid.isServerClosing = true;

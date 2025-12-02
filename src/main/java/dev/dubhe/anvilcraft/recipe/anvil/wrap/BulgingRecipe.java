@@ -2,12 +2,12 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
-import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
-import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,9 +25,8 @@ import java.util.List;
 
 /**
  * 膨发配方类
- * <p>
- * 该配方用于在铁砧下落时使物品在炼药锅中膨发，需要在铁砧下方放置炼药锅作为触发条件
- * </p>
+ *
+ * <p>该配方用于在铁砧下落时使物品在炼药锅中膨发，需要在铁砧下方放置炼药锅作为触发条件</p>
  */
 @Getter
 public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
@@ -228,7 +227,7 @@ public class BulgingRecipe extends AbstractProcessRecipe<BulgingRecipe> {
         }
 
         @Override
-        public void validate(ResourceLocation pId) {
+        public void validate(ResourceLocation id) {
         }
 
         @Override
