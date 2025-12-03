@@ -99,10 +99,10 @@ public class AnvilHammerItem extends Item implements Equipable {
         state = level.getBlockState(pos);
         block = state.getBlock();
         BlockPos posToRemove = pos;
+        final List<ItemStack> drops = player.isCreative() ? List.of() : BreakBlockUtil.dropSilkTouch(level, pos);
         block.playerWillDestroy(level, posToRemove, state, player);
         level.destroyBlock(posToRemove, false);
         if (player.isCreative()) return;
-        List<ItemStack> drops = player.isCreative() ? List.of() : BreakBlockUtil.dropSilkTouch(level, pos);
         if (!player.isAlive() && player.hasDisconnected()) {
             drops.forEach(drop -> Block.popResource(level, posToRemove, drop));
             state.spawnAfterBreak(level, posToRemove, tool, true);
