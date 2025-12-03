@@ -33,6 +33,7 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -286,16 +287,47 @@ public abstract class EntityMixin implements IEntityExtension {
     }
 
     @Inject(
+        method = "getGravity",
+        at = @At("RETURN"),
+        cancellable = true
+    )
+    private void anvilcraft$ModifyGravity(CallbackInfoReturnable<Double> cir) {
+        Entity entity = (Entity) (Object) this;
+        Level level = entity.level();
+
+        // 获取基础重力
+        double baseGravity = cir.getReturnValue();
+        // 应用物质特殊属性
+        GravityManager.GravityType type = GravityManager.getGravityType(entity);
+        switch (type) {
+            case ANTI_GRAVITY -> baseGravity *= -1;
+            case MICRO_ANTI_GRAVITY -> baseGravity *= -0.005;
+            case NORMAL -> {}
+        }
+        // 维度重力 = 基础重力 * 维度系数
+        double dimensionGravity = baseGravity * GravityManager.getDimensionGravity(level);
+        // 实际重力 = 维度重力 - 引力向量.y
+        double newGravity = dimensionGravity - GravityManager.getGravityVector(entity).y;
+        // 返回实际重力
+        cir.setReturnValue(newGravity);
+    }
+
+    @Inject(
         method = "tick",
         at = @At("TAIL")
     )
-    private void anvilcraft$Gravity(CallbackInfo ci) {
+    private void anvilcraft$ApplyHorizontalGravity(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
-        // 如果是无重力实体或创造飞行玩家则返回
+
+        // 排除无重力实体和创造飞行玩家
         if (entity.isNoGravity() || (entity instanceof Player player && player.getAbilities().flying)) {
             return;
         }
-        // 根据重力方向调整移动向量
-        entity.setDeltaMovement(GravityManager.applyGravity(entity, this.getDeltaMovement()));
+
+        // 应用引力向量的水平分量
+        Vec3 finalForce = GravityManager.getGravityVector(entity);
+        if (finalForce.x != 0 || finalForce.z != 0) {
+            entity.setDeltaMovement(entity.getDeltaMovement().add(finalForce.x, 0, finalForce.z));
+        }
     }
 }

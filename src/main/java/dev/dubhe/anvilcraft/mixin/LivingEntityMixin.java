@@ -50,8 +50,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import static dev.dubhe.anvilcraft.block.entity.NeutronIrradiatorBlockEntity.isInNeutronIrradiatorRange;
-
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity {
     @Unique
@@ -238,17 +236,6 @@ public abstract class LivingEntityMixin extends Entity {
             if (!source.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) {
                 cir.setReturnValue(false);
             }
-        }
-    }
-
-    @Inject(
-        method = "jumpFromGround",
-        at = @At("HEAD"),
-        cancellable = true
-    )
-    private void onJumpFromGround(CallbackInfo ci) {
-        if (isInNeutronIrradiatorRange(level(), blockPosition())) {
-           ci.cancel();
         }
     }
 }

@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.init.entity.ModEntities;
-import dev.dubhe.anvilcraft.util.GravityManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -53,8 +52,8 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
             pos.getY(),
             (double) pos.getZ() + 0.5,
             blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-                ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
-                : blockState
+            ? blockState.setValue(BlockStateProperties.WATERLOGGED, false)
+            : blockState
         );
         level.setBlock(pos, blockState.getFluidState().createLegacyBlock(), 3);
         level.addFreshEntity(levitating);
@@ -64,71 +63,68 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
     @Override
     public void tick() {
         this.setNoGravity(true);
-
         if (this.blockState.isAir()) {
             this.discard();
-            return;
-        }
+        } else {
+            Block block = this.blockState.getBlock();
+            ++this.time;
+            BlockPos blockPos = this.blockPosition();
 
-        Block block = this.blockState.getBlock();
-        ++this.time;
-        BlockPos blockPos = this.blockPosition();
-        int y = blockPos.getY();
-
-        if (y <= this.level().getMinBuildHeight() || y > this.level().getMaxBuildHeight() + 64) {
-            this.discard();
-            return;
-        }
-
-        Vec3 movement = GravityManager.applyGravity(this, this.getDeltaMovement());
-
-        if (this.checkCanMove(this.level(), blockPos)) {
-            this.setDeltaMovement(movement.add(0.0, 0.04, 0.0));
-        } else if (!this.level().isClientSide) {
-            BlockState blockState = this.level().getBlockState(blockPos);
-            this.setDeltaMovement(movement.multiply(0.7, -0.5, 0.7));
-
-            if (!blockState.is(Blocks.MOVING_PISTON)) {
-                if (this.cancelDrop) {
-                    this.discard();
-                    this.callOnBrokenAfterFall(block, blockPos);
-                } else {
-                    handleBlockPlacementOrDrop(block, blockPos, blockState);
-                }
-            }
-        }
-
-        this.move(MoverType.SELF, this.getDeltaMovement());
-        this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
-    }
-
-    private void handleBlockPlacementOrDrop(Block block, BlockPos pos, BlockState currentState) {
-        boolean canBeReplaced = currentState.canBeReplaced(
-            new DirectionalPlaceContext(this.level(), pos, Direction.DOWN, ItemStack.EMPTY, Direction.UP)
-        );
-        boolean canSurvive = this.blockState.canSurvive(this.level(), pos);
-
-        if (canBeReplaced && canSurvive) {
-            if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED)
-                && this.level().getFluidState(pos).getType() == Fluids.WATER) {
-                this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, true);
-            }
-
-            if (this.level().setBlock(pos, this.blockState, 3)) {
-                ((ServerLevel) this.level()).getChunkSource().chunkMap
-                    .broadcast(this, new ClientboundBlockUpdatePacket(pos, this.level().getBlockState(pos)));
+            if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
-                if (block instanceof Fallable fallable) {
-                    fallable.onLand(this.level(), pos, this.blockState, currentState, this);
-                }
-                return;
-            }
-        }
+            } else if (this.checkCanMove(this.level(), blockPos)) {
+                this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04, 0.0));
+            } else {
+                if (!this.level().isClientSide) {
+                    BlockState blockState = this.level().getBlockState(blockPos);
+                    this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
+                    if (!blockState.is(Blocks.MOVING_PISTON)) {
+                        if (!this.cancelDrop) {
+                            boolean canBeReplaced = blockState.canBeReplaced(new DirectionalPlaceContext(
+                                this.level(),
+                                blockPos,
+                                Direction.DOWN,
+                                ItemStack.EMPTY,
+                                Direction.UP
+                            ));
+                            boolean canSurvive = this.blockState.canSurvive(this.level(), blockPos);
+                            if (canBeReplaced && canSurvive) {
+                                if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED) && this.level()
+                                                                                                         .getFluidState(blockPos)
+                                                                                                         .getType() == Fluids.WATER) {
+                                    this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, true);
+                                }
 
-        this.discard();
-        if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-            this.callOnBrokenAfterFall(block, pos);
-            this.spawnAtLocation(block);
+                                if (this.level().setBlock(blockPos, this.blockState, 3)) {
+                                    ((ServerLevel) this.level()).getChunkSource().chunkMap.broadcast(
+                                        this,
+                                        new ClientboundBlockUpdatePacket(blockPos, this.level().getBlockState(blockPos))
+                                    );
+                                    this.discard();
+                                    if (block instanceof Fallable) {
+                                        ((Fallable) block).onLand(this.level(), blockPos, this.blockState, blockState, this);
+                                    }
+                                } else if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                                    this.discard();
+                                    this.callOnBrokenAfterFall(block, blockPos);
+                                    this.spawnAtLocation(block);
+                                }
+                            } else {
+                                this.discard();
+                                if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                                    this.callOnBrokenAfterFall(block, blockPos);
+                                    this.spawnAtLocation(block);
+                                }
+                            }
+                        } else {
+                            this.discard();
+                            this.callOnBrokenAfterFall(block, blockPos);
+                        }
+                    }
+                }
+            }
+            this.move(MoverType.SELF, this.getDeltaMovement());
+            this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
         }
     }
 

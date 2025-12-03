@@ -7,11 +7,9 @@ import dev.dubhe.anvilcraft.api.injection.entity.IItemEntityExtension;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.util.GravityManager;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
@@ -98,30 +96,6 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
             ));
         }
         this.anvilcraft$blockPos = blockPos;
-    }
-
-    @WrapOperation(
-        method = "tick",
-        at = @At(
-            value = "INVOKE",
-            target =
-                "Lnet/minecraft/world/entity/item/ItemEntity;"
-                + "getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
-        )
-    )
-    private Vec3 anomalousGravity(ItemEntity instance, Operation<Vec3> original) {
-        Vec3 vec3 = original.call(instance);
-        vec3 = GravityManager.applyGravity(instance, vec3);
-        double dy = 1;
-        if (this.getItem().is(ModItemTags.LEVITATIONALS)) dy *= -0.005;
-        if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)
-            || this.getItem().is(ModItems.NEGATIVE_MATTER)
-            || this.getItem().is(ModBlocks.NEGATIVE_MATTER_BLOCK.asItem())) {
-            if (this.position().y <= this.level().getMaxBuildHeight()) {
-                if (vec3.y < 0) dy *= -1;
-            }
-        }
-        return new Vec3(vec3.x, vec3.y * dy, vec3.z);
     }
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
