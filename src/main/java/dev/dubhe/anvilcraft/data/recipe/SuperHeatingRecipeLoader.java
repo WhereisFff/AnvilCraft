@@ -107,17 +107,17 @@ public class SuperHeatingRecipeLoader {
         limePowder(provider, ModItemTags.DEAD_CORAL_BLOCKS, 4);
         limePowder(provider, ModItemTags.DEAD_CORALS, 1);
 
-        // craftRaw
-        craftRaw(provider, Tags.Items.RAW_MATERIALS_COPPER, Items.COPPER_INGOT);
-        craftRaw(provider, Tags.Items.RAW_MATERIALS_IRON, Items.IRON_INGOT);
-        craftRaw(provider, Tags.Items.RAW_MATERIALS_GOLD, Items.GOLD_INGOT);
-        craftRaw(provider, ModItemTags.RAW_ZINC, ModItems.ZINC_INGOT);
-        craftRaw(provider, ModItemTags.RAW_TIN, ModItems.TIN_INGOT);
-        craftRaw(provider, ModItemTags.RAW_TITANIUM, ModItems.TITANIUM_INGOT);
-        craftRaw(provider, ModItemTags.RAW_TUNGSTEN, ModItems.TUNGSTEN_INGOT);
-        craftRaw(provider, ModItemTags.RAW_LEAD, ModItems.LEAD_INGOT);
-        craftRaw(provider, ModItemTags.RAW_SILVER, ModItems.SILVER_INGOT);
-        craftRaw(provider, ModItemTags.RAW_URANIUM, ModItems.URANIUM_INGOT);
+        // ingotFromEarth
+        ingotFromEarth(provider, Tags.Items.RAW_MATERIALS_COPPER, Items.COPPER_INGOT);
+        ingotFromEarth(provider, Tags.Items.RAW_MATERIALS_IRON, Items.IRON_INGOT);
+        ingotFromEarth(provider, Tags.Items.RAW_MATERIALS_GOLD, Items.GOLD_INGOT);
+        ingotFromEarth(provider, ModItemTags.RAW_ZINC, ModItems.ZINC_INGOT);
+        ingotFromEarth(provider, ModItemTags.RAW_TIN, ModItems.TIN_INGOT);
+        ingotFromEarth(provider, ModItemTags.RAW_TITANIUM, ModItems.TITANIUM_INGOT);
+        ingotFromEarth(provider, ModItemTags.RAW_TUNGSTEN, ModItems.TUNGSTEN_INGOT);
+        ingotFromEarth(provider, ModItemTags.RAW_LEAD, ModItems.LEAD_INGOT);
+        ingotFromEarth(provider, ModItemTags.RAW_SILVER, ModItems.SILVER_INGOT);
+        ingotFromEarth(provider, ModItemTags.RAW_URANIUM, ModItems.URANIUM_INGOT);
     }
 
     private static void metalBlockFromRaw(RegistrateRecipeProvider provider, TagKey<Item> raw, ItemLike result) {
@@ -127,7 +127,7 @@ public class SuperHeatingRecipeLoader {
             .save(provider, AnvilCraft.of("super_heating/metal_block/%s_from_%s".formatted(getName(result), getName(raw))));
     }
 
-    private static void craftRaw(RegistrateRecipeProvider provider, TagKey<Item> raw, ItemLike result) {
+    private static void ingotFromEarth(RegistrateRecipeProvider provider, TagKey<Item> raw, ItemLike result) {
         SuperHeatingRecipe.builder()
             .requires(raw, 8)
             .requires(ModItems.EARTH_CORE_SHARD)
