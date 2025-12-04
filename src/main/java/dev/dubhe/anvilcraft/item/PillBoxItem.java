@@ -37,9 +37,15 @@ public class PillBoxItem extends Item {
         return InteractionResultHolder.success(itemStack);
     }
 
-    // 鼠标指针在药盒上
     @Override
-    public boolean overrideOtherStackedOnMe(ItemStack stack, ItemStack other, Slot slot, ClickAction action, Player player, SlotAccess access) {
+    public boolean overrideOtherStackedOnMe(
+        ItemStack stack,
+        ItemStack other,
+        Slot slot,
+        ClickAction action,
+        Player player,
+        SlotAccess access
+    ) {
         if (!slot.allowModification(player)) {
             return false;
         }
@@ -63,7 +69,6 @@ public class PillBoxItem extends Item {
         return false;
     }
 
-    // 药盒在其他物品上
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
         if (!slot.allowModification(player)) {

@@ -40,21 +40,6 @@ public class PillItem extends Item {
         return super.use(level, player, usedHand);
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        Boolean weakening = stack.getOrDefault(ModComponents.WEAKENING, false);
-        if (potionContents.potion().isEmpty()) {
-            tooltipComponents.add(Component.translatable("item.anvilcraft.pill.tooltip").withStyle(ChatFormatting.GRAY));
-        } else {
-            if (weakening) {
-                potionContents.addPotionTooltip(tooltipComponents::add, 0.25F, context.tickRate());
-            } else {
-                potionContents.addPotionTooltip(tooltipComponents::add, 1.0F, context.tickRate());
-            }
-        }
-    }
-
     public static void use(ItemStack itemStack, Player player) {
         PotionContents potionContents = itemStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
         Boolean weakening = itemStack.getOrDefault(ModComponents.WEAKENING, false);
@@ -74,5 +59,20 @@ public class PillItem extends Item {
                 player.addEffect(effect);
             }
         });
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        Boolean weakening = stack.getOrDefault(ModComponents.WEAKENING, false);
+        if (potionContents.potion().isEmpty()) {
+            tooltipComponents.add(Component.translatable("item.anvilcraft.pill.tooltip").withStyle(ChatFormatting.GRAY));
+        } else {
+            if (weakening) {
+                potionContents.addPotionTooltip(tooltipComponents::add, 0.25F, context.tickRate());
+            } else {
+                potionContents.addPotionTooltip(tooltipComponents::add, 1.0F, context.tickRate());
+            }
+        }
     }
 }
