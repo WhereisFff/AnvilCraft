@@ -1,10 +1,12 @@
 package dev.dubhe.anvilcraft.client;
 
+import com.mojang.blaze3d.pipeline.RenderTarget;
 import dev.anvilcraft.lib.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.event.GuiLayerRegistrationEventListener;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;
 import dev.dubhe.anvilcraft.client.init.ModModelLayers;
+import dev.dubhe.anvilcraft.client.init.ModRenderTargets;
 import dev.dubhe.anvilcraft.client.init.ModShaders;
 import dev.dubhe.anvilcraft.client.init.ModTooltipComponents;
 import dev.dubhe.anvilcraft.client.particle.PlasmaJetsParticle;
@@ -14,15 +16,20 @@ import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
 import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.RegisterItemDecorationsEvent;
 import net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent;
 import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
@@ -47,6 +54,7 @@ public class AnvilCraftClient {
         modBus.addListener(ModModelLayers::createModel);
         modBus.addListener(ModTooltipComponents::register);
         modBus.addListener(AnvilCraftClient::clientSetup);
+        modBus.addListener(AnvilCraftClient::onLoadingComplete);
         InspectionSupport.initializeClient();
     }
 
@@ -68,6 +76,16 @@ public class AnvilCraftClient {
 
     public static void registerParticleProviders(RegisterParticleProvidersEvent e) {
         e.registerSpriteSet(ModParticles.PLASMA_JETS.get(), PlasmaJetsParticle.Provider::new);
+    }
+
+    public static void onLoadingComplete(FMLLoadCompleteEvent event) {
+        event.enqueueWork(() -> {
+            if (Minecraft.getInstance().getMainRenderTarget().isStencilEnabled()) {
+//                for (RenderTarget value : ModShaders.getBloomChain().customRenderTargets.values()) {
+//                    value.enableStencil();
+//                }
+            }
+        });
     }
 
     public static class ItemExtensionImpl implements IClientItemExtensions {
