@@ -1227,5 +1227,7 @@
   "title.anvilcraft.patchouli.apply.neutron_irradiator": "中子辐照器",
   "title.anvilcraft.patchouli.apply.space_overcompressor": "空间超压器",
   "title.anvilcraft.patchouli.prop.pill": "药片",
-  "title.anvilcraft.patchouli.smithing.ranged_weapons": "远程武器"
+  "title.anvilcraft.patchouli.smithing.ranged_weapons": "远程武器",
+  "anvilcraft.configuration.clean_fluid_after_update_menger_sponge": "门格海绵受到更新后清理流体",
+  "anvilcraft.configuration.clean_fluid_after_update_menger_sponge.tooltip": "门格海绵受到更新后是否清理流体"
 }
