@@ -54,7 +54,6 @@ public class AnvilCraftClient {
         modBus.addListener(ModModelLayers::createModel);
         modBus.addListener(ModTooltipComponents::register);
         modBus.addListener(AnvilCraftClient::clientSetup);
-        modBus.addListener(AnvilCraftClient::onLoadingComplete);
         InspectionSupport.initializeClient();
     }
 
@@ -76,16 +75,6 @@ public class AnvilCraftClient {
 
     public static void registerParticleProviders(RegisterParticleProvidersEvent e) {
         e.registerSpriteSet(ModParticles.PLASMA_JETS.get(), PlasmaJetsParticle.Provider::new);
-    }
-
-    public static void onLoadingComplete(FMLLoadCompleteEvent event) {
-        event.enqueueWork(() -> {
-            if (Minecraft.getInstance().getMainRenderTarget().isStencilEnabled()) {
-//                for (RenderTarget value : ModShaders.getBloomChain().customRenderTargets.values()) {
-//                    value.enableStencil();
-//                }
-            }
-        });
     }
 
     public static class ItemExtensionImpl implements IClientItemExtensions {
