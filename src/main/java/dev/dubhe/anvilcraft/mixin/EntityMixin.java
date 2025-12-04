@@ -98,12 +98,9 @@ public abstract class EntityMixin implements IEntityExtension {
     }
 
     @WrapOperation(
-        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V",
-            ordinal = 1
-        )
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(
+        value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;setPos(DDD)V", ordinal = 1
+    )
     )
     public void anvilcraft$fixFallingBlockEntity(
         Entity instance,
@@ -162,36 +159,20 @@ public abstract class EntityMixin implements IEntityExtension {
     }
 
     @WrapOperation(
-        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/util/Mth;equal(DD)Z",
-            ordinal = 0
-        )
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(
+        value = "INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 0
     )
-    public boolean anvilcraft$cancelCollision1(
-        double x,
-        double y,
-        Operation<Boolean> original,
-        @Share("isFixed") LocalBooleanRef isFixed
-    ) {
+    )
+    public boolean anvilcraft$cancelCollision1(double x, double y, Operation<Boolean> original, @Share("isFixed") LocalBooleanRef isFixed) {
         return isFixed.get() || original.call(x, y);
     }
 
     @WrapOperation(
-        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/util/Mth;equal(DD)Z",
-            ordinal = 1
-        )
+        method = "move(Lnet/minecraft/world/entity/MoverType;Lnet/minecraft/world/phys/Vec3;)V", at = @At(
+        value = "INVOKE", target = "Lnet/minecraft/util/Mth;equal(DD)Z", ordinal = 1
     )
-    public boolean anvilcraft$cancelCollision2(
-        double x,
-        double y,
-        Operation<Boolean> original,
-        @Share("isFixed") LocalBooleanRef isFixed
-    ) {
+    )
+    public boolean anvilcraft$cancelCollision2(double x, double y, Operation<Boolean> original, @Share("isFixed") LocalBooleanRef isFixed) {
         return isFixed.get() || original.call(x, y);
     }
 
@@ -236,36 +217,35 @@ public abstract class EntityMixin implements IEntityExtension {
 
     @Inject(method = "move", at = @At("HEAD"))
     public void anvil$recordMovement(
-        MoverType type, Vec3 pos, CallbackInfo ci, @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
+        MoverType type,
+        Vec3 pos,
+        CallbackInfo ci,
+        @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
     ) {
         beforeBoundingMovement.set(this.getDeltaMovement());
     }
 
     @Inject(method = "move", at = @At("RETURN"))
     public void anvil$collisionCraft(
-        MoverType type, Vec3 pos, CallbackInfo ci, @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
+        MoverType type,
+        Vec3 pos,
+        CallbackInfo ci,
+        @Share("beforeBoundingMovement") LocalRef<Vec3> beforeBoundingMovement
     ) {
         Optional<FallingBlockEntity> entityOp = Util.castSafely(this, FallingBlockEntity.class);
         if (entityOp.isEmpty() || !this.horizontalCollision) return;
         FallingBlockEntity self = entityOp.get();
-        BlockPos blockPos = BlockPos.containing(
-            this.position.add(
-                beforeBoundingMovement.get()
-                    .scale(0.55 / beforeBoundingMovement.get().length())
-                    .multiply(1, 0, 1)
-            )
-        );
+        BlockPos blockPos = BlockPos.containing(this.position.add(beforeBoundingMovement.get()
+            .scale(0.55 / beforeBoundingMovement.get().length())
+            .multiply(1, 0, 1)));
         NeoForge.EVENT_BUS.post(new AnvilEvent.CollisionBlock(level, blockPos, self, beforeBoundingMovement.get().length()));
     }
 
     @Inject(
-        method = "handlePortal",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/Entity;changeDimension("
-                     + "Lnet/minecraft/world/level/portal/DimensionTransition;"
-                     + ")Lnet/minecraft/world/entity/Entity;"
-        )
+        method = "handlePortal", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/world/entity/Entity;changeDimension(" + "Lnet/minecraft/world/level/portal/DimensionTransition;" + ")Lnet/minecraft/world/entity/Entity;"
+    )
     )
     private void handlePortal(CallbackInfo ci) {
         // noinspection ConstantValue
@@ -287,34 +267,36 @@ public abstract class EntityMixin implements IEntityExtension {
     }
 
     @Inject(
-        method = "getGravity",
-        at = @At("RETURN"),
-        cancellable = true
+        method = "getGravity", at = @At("RETURN"), cancellable = true
     )
-    private void anvilcraft$ModifyGravity(CallbackInfoReturnable<Double> cir) {
+    private void anvilcraft$ApplyGravity(CallbackInfoReturnable<Double> cir) {
         Entity entity = (Entity) (Object) this;
         Level level = entity.level();
 
         // 获取基础重力
         double baseGravity = cir.getReturnValue();
+
         // 应用物质特殊属性
         GravityManager.GravityType type = GravityManager.getGravityType(entity);
         switch (type) {
             case ANTI_GRAVITY -> baseGravity *= -1;
             case MICRO_ANTI_GRAVITY -> baseGravity *= -0.005;
-            case NORMAL -> {}
+            case NORMAL -> {
+            }
         }
+
         // 维度重力 = 基础重力 * 维度系数
         double dimensionGravity = baseGravity * GravityManager.getDimensionGravity(level);
+
         // 实际重力 = 维度重力 - 引力向量.y
         double newGravity = dimensionGravity - GravityManager.getGravityVector(entity).y;
+
         // 返回实际重力
         cir.setReturnValue(newGravity);
     }
 
     @Inject(
-        method = "tick",
-        at = @At("TAIL")
+        method = "tick", at = @At("TAIL")
     )
     private void anvilcraft$ApplyHorizontalGravity(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.phys.Vec3;
@@ -83,6 +84,16 @@ public class GravityManager {
             GravitySourceType type = GravitySourceManager.getType(event.getState().getBlock());
             if (type != null) {
                 GravitySourceManager.addSource(level, event.getPos(), type);
+                int r = type.radius;
+                // 遍历黑洞影响范围内的方块
+                BlockPos.betweenClosedStream(event.getPos().offset(-r, -r, -r), event.getPos().offset(r, r, r))
+                    .forEach(pos -> {
+                        BlockState state = level.getBlockState(pos);
+                        // 如果是下落方块，给计划刻让它更新
+                        if (state.getBlock() instanceof FallingBlock) {
+                            level.scheduleTick(pos, state.getBlock(), 2);
+                        }
+                    });
             }
         }
     }
@@ -94,6 +105,16 @@ public class GravityManager {
             GravitySourceType type = GravitySourceManager.getType(event.getState().getBlock());
             if (type != null) {
                 GravitySourceManager.removeSource(level, event.getPos());
+                int r = type.radius;
+                // 遍历黑洞影响范围内的方块
+                BlockPos.betweenClosedStream(event.getPos().offset(-r, -r, -r), event.getPos().offset(r, r, r))
+                    .forEach(pos -> {
+                        BlockState state = level.getBlockState(pos);
+                        // 如果是下落方块，给计划刻让它更新
+                        if (state.getBlock() instanceof FallingBlock) {
+                            level.scheduleTick(pos, state.getBlock(), 2);
+                        }
+                    });
             }
         }
     }
@@ -127,6 +148,13 @@ public class GravityManager {
         }
 
         return GravityType.NORMAL;
+    }
+
+    public static GravityType getFallingBlockGravityType(Block block) {
+        if (block.equals(ModBlocks.LEVITATION_POWDER_BLOCK.get())) {
+            return GravityType.ANTI_GRAVITY; // 漂浮粉块
+        }
+        return GravityType.NORMAL; // 普通下落方块
     }
 
     // 处理特殊实体，最终得到重力向量
@@ -235,12 +263,11 @@ public class GravityManager {
             };
         }
 
-        public static Vec3 calculateGravityVector(Entity e) {
-            var cache = GRAVITY_CACHE.get(e.level().dimension());
+        public static Vec3 calculateGravityVector(Level level, Vec3 p, double G) {
+            var cache = GRAVITY_CACHE.get(level.dimension());
             if (cache == null) return Vec3.ZERO;
 
-            Vec3 p = e.position();
-            double G = getEntityG(e), fx = 0, fy = 0, fz = 0;
+            double fx = 0, fy = 0, fz = 0;
             int cx = ((int) Math.floor(p.x)) >> 4, cz = ((int) Math.floor(p.z)) >> 4;
 
             for (int x = -1; x <= 1; x++) {
@@ -248,10 +275,13 @@ public class GravityManager {
                     var list = cache.get(ChunkPos.asLong(cx + x, cz + z));
                     if (list == null) continue;
                     for (var s : list) {
-                        double dx = s.pos.getX() + 0.5 - p.x, dy = s.pos.getY() + 0.5 - p.y, dz = s.pos.getZ() + 0.5 - p.z;
+                        double dx = s.pos.getX() + 0.5 - p.x;
+                        double dy = s.pos.getY() + 0.5 - p.y;
+                        double dz = s.pos.getZ() + 0.5 - p.z;
                         double rSq = dx * dx + dy * dy + dz * dz;
 
                         if (rSq <= s.type.radiusSqr) {
+                            // 使用传入的 G
                             double f = (G * s.type.strength) / (Math.max(rSq, 1.0) * Math.sqrt(rSq));
                             fx += dx * f;
                             fy += dy * f;
@@ -261,6 +291,10 @@ public class GravityManager {
                 }
             }
             return new Vec3(fx, fy, fz);
+        }
+
+        public static Vec3 calculateGravityVector(Entity entity) {
+            return calculateGravityVector(entity.level(), entity.getBoundingBox().getCenter(), getEntityG(entity));
         }
     }
 }

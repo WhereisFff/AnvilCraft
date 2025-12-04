@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForge;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -55,13 +56,11 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
     }
 
     @Inject(
-        method = "tick",
-        at =
-        @At(
-            value = "INVOKE",
-            ordinal = 0,
-            target = "Lnet/minecraft/world/entity/item/FallingBlockEntity;level()Lnet/minecraft/world/level/Level;"
-        )
+        method = "tick", at = @At(
+        value = "INVOKE",
+        ordinal = 0,
+        target = "Lnet/minecraft/world/entity/item/FallingBlockEntity;level()Lnet/minecraft/world/level/Level;"
+    )
     )
     private void anvilPerFallOnGround(CallbackInfo ci) {
         if (this.level().isClientSide()) return;
@@ -76,19 +75,10 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
 
     @SuppressWarnings("UnreachableCode")
     @Inject(
-        method = "tick",
-        at =
-        @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/block/Fallable;"
-                     + "onLand("
-                     + "Lnet/minecraft/world/level/Level;"
-                     + "Lnet/minecraft/core/BlockPos;"
-                     + "Lnet/minecraft/world/level/block/state/BlockState;"
-                     + "Lnet/minecraft/world/level/block/state/BlockState;"
-                     + "Lnet/minecraft/world/entity/item/FallingBlockEntity;"
-                     + ")V"
-        )
+        method = "tick", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/world/level/block/Fallable;" + "onLand(" + "Lnet/minecraft/world/level/Level;" + "Lnet/minecraft/core/BlockPos;" + "Lnet/minecraft/world/level/block/state/BlockState;" + "Lnet/minecraft/world/level/block/state/BlockState;" + "Lnet/minecraft/world/entity/item/FallingBlockEntity;" + ")V"
+    )
     )
     private void anvilFallOnGround(CallbackInfo ci, @Local BlockPos blockPos) {
         if (this.level().isClientSide()) return;
@@ -97,9 +87,7 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
         AnvilEvent.OnLand event = new AnvilEvent.OnLand(this.level(), blockPos, entity, this.anvilcraft$fallDistance);
         NeoForge.EVENT_BUS.post(event);
         if (event.isAnvilDamage()) {
-            BlockState state = this.blockState.is(ModBlocks.ROYAL_ANVIL.get())
-                               ? this.blockState
-                               : AnvilBlock.damage(this.blockState);
+            BlockState state = this.blockState.is(ModBlocks.ROYAL_ANVIL.get()) ? this.blockState : AnvilBlock.damage(this.blockState);
             if (state != null) {
                 this.level().setBlockAndUpdate(blockPos, state);
             } else {
@@ -112,17 +100,10 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
 
     @SuppressWarnings("UnreachableCode")
     @Inject(
-        method = "causeFallDamage",
-        at =
-        @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/level/Level;"
-                     + "getEntities("
-                     + "Lnet/minecraft/world/entity/Entity;"
-                     + "Lnet/minecraft/world/phys/AABB;"
-                     + "Ljava/util/function/Predicate;"
-                     + ")Ljava/util/List;"
-        )
+        method = "causeFallDamage", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/world/level/Level;" + "getEntities(" + "Lnet/minecraft/world/entity/Entity;" + "Lnet/minecraft/world/phys/AABB;" + "Ljava/util/function/Predicate;" + ")Ljava/util/List;"
+    )
     )
     private void anvilHurtEntity(
         float fallDistance,
@@ -144,38 +125,27 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
     }
 
     @Inject(
-        method = "tick",
-        at =
-        @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/world/entity/item/FallingBlockEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V",
-            ordinal = 1
-        )
+        method = "tick", at = @At(
+        value = "INVOKE",
+        target = "Lnet/minecraft/world/entity/item/FallingBlockEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V",
+        ordinal = 1
+    )
     )
     private void hurtEntity(CallbackInfo ci) {
-        if (
-            this.getDeltaMovement().multiply(1, 0, 1).length() < 0.75
-            && this.getDeltaMovement().y < 2.5
-        ) {
+        if (this.getDeltaMovement().multiply(1, 0, 1).length() < 0.75 && this.getDeltaMovement().y < 2.5) {
             return;
         }
         if (!this.blockState.is(BlockTags.ANVIL)) return;
         EntityHitResult hitResult = ProjectileUtil.getEntityHitResult(
             this.level(),
             this,
-            this.position().subtract(0, 0.5, 0).subtract(
-                this.anvilcraft$isDeflected() ? this.anvilcraft$getFixedDeltaMovement() : this.getDeltaMovement()
-            ),
+            this.position()
+                .subtract(0, 0.5, 0)
+                .subtract(this.anvilcraft$isDeflected() ? this.anvilcraft$getFixedDeltaMovement() : this.getDeltaMovement()),
             this.position().subtract(0, 0.5, 0),
-            this.getBoundingBox()
-                .expandTowards(
-                    (
-                        this.anvilcraft$isDeflected()
-                        ? this.anvilcraft$getFixedDeltaMovement()
-                        : this.getDeltaMovement()
-                    ).multiply(-1, -1, -1)
-                )
-                .inflate(1.0),
+            this.getBoundingBox().expandTowards((
+                this.anvilcraft$isDeflected() ? this.anvilcraft$getFixedDeltaMovement() : this.getDeltaMovement()
+            ).multiply(-1, -1, -1)).inflate(1.0),
             Entity::isAttackable
         );
         if (hitResult == null) return;
@@ -188,10 +158,11 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
         method = "tick",
         at = @At("TAIL")
     )
-    private void anvilcraft$FallingBlockGravity(CallbackInfo ci) {
+    private void anvilcraft$ApplyFallingBlockGravity(CallbackInfo ci) {
         // 如果是无重力实体则返回
         if (this.isNoGravity()) return;
-        // 根据重力方向调整移动向量
-        this.setDeltaMovement(GravityManager.getGravityVector(this));
+        // 应用引力向量的水平分量
+        Vec3 gravityVector = GravityManager.getGravityVector(this);
+        this.setDeltaMovement(this.getDeltaMovement().add(gravityVector.x, 0, gravityVector.z));
     }
 }

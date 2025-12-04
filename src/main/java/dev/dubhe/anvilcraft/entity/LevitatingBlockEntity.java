@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.entity;
 
 import dev.dubhe.anvilcraft.init.entity.ModEntities;
+import dev.dubhe.anvilcraft.util.GravityManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
@@ -28,7 +29,8 @@ import org.jetbrains.annotations.NotNull;
 public class LevitatingBlockEntity extends FallingBlockEntity {
     public LevitatingBlockEntity(EntityType<? extends FallingBlockEntity> entityType, Level level) {
         super(entityType, level);
-        this.setNoGravity(true);
+        // 1. 移除 setNoGravity(true)，让物理系统接管 (虽然 FallingBlock 不走标准 tick，但保持状态一致是好的)
+        this.setNoGravity(false);
         this.refreshDimensions();
     }
 
@@ -62,82 +64,114 @@ public class LevitatingBlockEntity extends FallingBlockEntity {
 
     @Override
     public void tick() {
-        this.setNoGravity(true);
+
         if (this.blockState.isAir()) {
             this.discard();
         } else {
             Block block = this.blockState.getBlock();
             ++this.time;
+            Vec3 externalGravity = GravityManager.getGravityVector(this);
+
+            Vec3 naturalBuoyancy = new Vec3(0, 0.04, 0);
+
+            Vec3 finalAcceleration = naturalBuoyancy.add(externalGravity);
+
+            this.setDeltaMovement(this.getDeltaMovement().add(finalAcceleration));
+
+            this.move(MoverType.SELF, this.getDeltaMovement());
+
             BlockPos blockPos = this.blockPosition();
+
+            boolean landed = this.onGround() || (this.verticalCollision && this.getDeltaMovement().y > 0);
 
             if (blockPos.getY() <= this.level().getMinBuildHeight() || blockPos.getY() > this.level().getMaxBuildHeight() + 64) {
                 this.discard();
-            } else if (this.checkCanMove(this.level(), blockPos)) {
-                this.setDeltaMovement(this.getDeltaMovement().add(0.0, 0.04, 0.0));
             } else {
-                if (!this.level().isClientSide) {
-                    BlockState blockState = this.level().getBlockState(blockPos);
-                    this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
-                    if (!blockState.is(Blocks.MOVING_PISTON)) {
-                        if (!this.cancelDrop) {
-                            boolean canBeReplaced = blockState.canBeReplaced(new DirectionalPlaceContext(
-                                this.level(),
-                                blockPos,
-                                Direction.DOWN,
-                                ItemStack.EMPTY,
-                                Direction.UP
-                            ));
-                            boolean canSurvive = this.blockState.canSurvive(this.level(), blockPos);
-                            if (canBeReplaced && canSurvive) {
-                                if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED) && this.level()
-                                                                                                         .getFluidState(blockPos)
-                                                                                                         .getType() == Fluids.WATER) {
-                                    this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, true);
-                                }
+                if (!landed && this.checkCanMove(this.level(), blockPos)) {
+                } else {
+                    if (!this.level().isClientSide) {
+                        BlockState blockState = this.level().getBlockState(blockPos);
 
-                                if (this.level().setBlock(blockPos, this.blockState, 3)) {
-                                    ((ServerLevel) this.level()).getChunkSource().chunkMap.broadcast(
-                                        this,
-                                        new ClientboundBlockUpdatePacket(blockPos, this.level().getBlockState(blockPos))
-                                    );
-                                    this.discard();
-                                    if (block instanceof Fallable) {
-                                        ((Fallable) block).onLand(this.level(), blockPos, this.blockState, blockState, this);
+                        this.setDeltaMovement(this.getDeltaMovement().multiply(0.7, -0.5, 0.7));
+
+                        if (!blockState.is(Blocks.MOVING_PISTON)) {
+                            if (!this.cancelDrop) {
+
+                                Direction placeDirection = this.getDeltaMovement().y > 0 ? Direction.DOWN : Direction.UP;
+
+                                boolean canBeReplaced = blockState.canBeReplaced(new DirectionalPlaceContext(
+                                    this.level(),
+                                    blockPos,
+                                    placeDirection,
+                                    ItemStack.EMPTY,
+                                    placeDirection.getOpposite()
+                                ));
+                                boolean canSurvive = this.blockState.canSurvive(this.level(), blockPos);
+
+                                if (canBeReplaced && canSurvive) {
+                                    if (this.blockState.hasProperty(BlockStateProperties.WATERLOGGED) && this.level()
+                                                                                                             .getFluidState(blockPos)
+                                                                                                             .getType() == Fluids.WATER) {
+                                        this.blockState = this.blockState.setValue(BlockStateProperties.WATERLOGGED, true);
                                     }
-                                } else if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+
+                                    if (this.level().setBlock(blockPos, this.blockState, 3)) {
+                                        ((ServerLevel) this.level()).getChunkSource().chunkMap.broadcast(
+                                            this,
+                                            new ClientboundBlockUpdatePacket(blockPos, this.level().getBlockState(blockPos))
+                                        );
+                                        this.discard();
+                                        if (block instanceof Fallable) {
+                                            ((Fallable) block).onLand(this.level(), blockPos, this.blockState, blockState, this);
+                                        }
+                                    } else if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                                        this.discard();
+                                        this.callOnBrokenAfterFall(block, blockPos);
+                                        this.spawnAtLocation(block);
+                                    }
+                                } else {
                                     this.discard();
-                                    this.callOnBrokenAfterFall(block, blockPos);
-                                    this.spawnAtLocation(block);
+                                    if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
+                                        this.callOnBrokenAfterFall(block, blockPos);
+                                        this.spawnAtLocation(block);
+                                    }
                                 }
                             } else {
                                 this.discard();
-                                if (this.dropItem && this.level().getGameRules().getBoolean(GameRules.RULE_DOENTITYDROPS)) {
-                                    this.callOnBrokenAfterFall(block, blockPos);
-                                    this.spawnAtLocation(block);
-                                }
+                                this.callOnBrokenAfterFall(block, blockPos);
                             }
-                        } else {
-                            this.discard();
-                            this.callOnBrokenAfterFall(block, blockPos);
                         }
                     }
                 }
             }
-            this.move(MoverType.SELF, this.getDeltaMovement());
+
+            // 5. 空气阻力 (原版是 0.98)
             this.setDeltaMovement(this.getDeltaMovement().scale(0.98));
         }
     }
 
     private boolean checkCanMove(Level level, BlockPos pos) {
+        // 这里的逻辑主要是为了防止方块实体在生成时如果卡在方块里，给它一点时间移出去，或者判定是否有路可走
+        // 针对漂浮粉，我们主要关心上方
+
         if (this.time > 1 && this.getDeltaMovement().equals(Vec3.ZERO)) return false;
-        if (level.getBlockState(pos.above()).isAir()) return true;
-        if (level.getBlockState(pos.above()).liquid()) return true;
-        if (level.getBlockState(pos.above()).getCollisionShape(this.level(), pos.above()).equals(Shapes.empty())) return true;
-        if (level.getBlockState(pos).getBlock() instanceof Fallable) return true;
-        if (level.getBlockState(pos.above()).getBlock() instanceof Fallable) return true;
+
+        // 简化的碰撞检查：
+        // 如果我们是向上飞的，检查上面
+        // 如果是向下掉的，检查下面 (原版逻辑)
+        // 这里保留原始逻辑作为一个宽泛的“是否被完全堵死”的检查
+
+        BlockPos checkPos = this.getDeltaMovement().y > 0 ? pos.above() : pos.below();
+
+        if (level.getBlockState(checkPos).isAir()) return true;
+        if (level.getBlockState(checkPos).liquid()) return true;
+        if (level.getBlockState(checkPos).getCollisionShape(this.level(), checkPos).equals(Shapes.empty())) return true;
+        if (level.getBlockState(pos).getBlock() instanceof Fallable) return true; // 自己占的位置
+
+        // 检查路径上是否有其他下落方块
         return !this.level().getEntitiesOfClass(
             FallingBlockEntity.class,
-            new AABB(this.position(), this.position()).expandTowards(-0.2, 0, -0.2).expandTowards(0.2, 1.7, 0.2),
+            new AABB(this.position(), this.position()).inflate(0.2, 0.2, 0.2), // 稍微扩大一点检测范围
             entity -> !entity.equals(this) && entity.getBlockState().getBlock() instanceof Fallable
         ).isEmpty();
     }
