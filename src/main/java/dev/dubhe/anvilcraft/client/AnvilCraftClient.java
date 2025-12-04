@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.client.init.ModTooltipComponents;
 import dev.dubhe.anvilcraft.client.particle.PlasmaJetsParticle;
 import dev.dubhe.anvilcraft.client.renderer.item.decoration.IonoCraftBackpackDecoration;
 import dev.dubhe.anvilcraft.client.support.InspectionSupport;
+import dev.dubhe.anvilcraft.client.support.PillSelectorSupport;
 import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
 import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
@@ -33,6 +34,7 @@ public class AnvilCraftClient {
     public static IEventBus modEventBus = null;
     public static ModContainer modContainer = null;
     public static final AnvilCraftClientConfig CONFIG = AnvilCraft.CLIENT_CONFIG;
+    public static PillSelectorSupport pillSelectorSupport = PillSelectorSupport.INSTANCE;
 
     public AnvilCraftClient(IEventBus modBus, ModContainer container) {
         modEventBus = modBus;
