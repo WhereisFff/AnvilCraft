@@ -359,35 +359,11 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         anvilcraft$mergeCooldown = cooldown;
     }
 
-    @Inject(
-        method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V",
-        at = @At("TAIL")
-    )
-    public void itemCollectorPoach0(CallbackInfo ci) {
-        this.anvilcraft$poach();
-    }
-
-    @Inject(
-        method = "<init>(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;DDD)V",
-        at = @At("TAIL")
-    )
-    public void itemCollectorPoach1(CallbackInfo ci) {
-        this.anvilcraft$poach();
-    }
-
-    @Inject(
-        method = "<init>(Lnet/minecraft/world/entity/item/ItemEntity;)V",
-        at = @At("TAIL")
-    )
-    public void itemCollectorPoach2(CallbackInfo ci) {
-        this.anvilcraft$poach();
-    }
-
     @Unique
     public boolean anvilcraft$discarded = false;
 
     @Unique
-    private void anvilcraft$poach() {
+    public void anvilcraft$poach() {
         Level level = this.level();
         if (level.isClientSide) return;
         Map<ChunkPos, List<ItemCollectorBlockEntity>> map = ItemCollectorBlockEntity.POACHING_COLLECTOR_MAP.get(level);

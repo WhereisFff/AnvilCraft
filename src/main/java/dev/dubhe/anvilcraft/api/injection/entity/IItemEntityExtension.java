@@ -16,4 +16,8 @@ public interface IItemEntityExtension {
     default void anvilcraft$setMergeCooldown(int cooldown) {
         throw new AssertionError();
     }
+
+    default void anvilcraft$poach() {
+        throw new AssertionError();
+    }
 }
