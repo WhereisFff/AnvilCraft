@@ -35,28 +35,65 @@ public abstract class FallingBlockMixin extends Block {
         at = @At("HEAD"),
         cancellable = true
     )
-    private void anvilcraft$SmartFallingLogic(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
-        // 获取重力方向和大小
+    private void anvilcraft$FallingLogic(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+        // 1. 计算净重力
         GravityManager.GravityType gravityType = GravityManager.getFallingBlockGravityType(state.getBlock());
-        double gravity = (gravityType == GravityManager.GravityType.ANTI_GRAVITY) ? 0.04 : -0.04;
+        Vec3 netGravity = GravityManager.getNetGravityVectorForFallingBlock(level, Vec3.atCenterOf(pos), gravityType);
+        double gravitySq = netGravity.lengthSqr();
 
-        // G取0.04计算重力大小
-        Vec3 gravityVector = GravityManager.GravitySourceManager.calculateGravityVector(level, Vec3.atCenterOf(pos), 0.04);
-
-        // 漂浮粉块反向重力
-        if (gravityType == GravityManager.GravityType.ANTI_GRAVITY) {
-            gravityVector = gravityVector.reverse();
+        // 如果受力极小，忽略
+        if (gravitySq < 1.0E-5) {
+            return;
         }
 
-        // 计算合力 Y 分量
-        double gravityVectorY = gravity + gravityVector.y;
+        // 2. 寻找主受力方向
+        Direction primaryDir = Direction.getNearest(netGravity.x, netGravity.y, netGravity.z);
+        BlockPos targetPos = pos.relative(primaryDir);
+        BlockState targetState = level.getBlockState(targetPos);
 
-        // 如果合力向上，检查上方是否为空；如果合力向下，检查下方是否为空
-        Direction direction = gravityVectorY > 0 ? Direction.UP : Direction.DOWN;
-        BlockPos blockPos = pos.relative(direction);
+        // 3. 判断是否可以直接移动
+        boolean canMove = false;
 
-        // 检查目标位置是否可以让方块移动
-        if (isFree(level.getBlockState(blockPos))) {
+        if (isFree(targetState)) {
+            // 主方向是空的，直接起飞
+            canMove = true;
+        } else {
+            // 主方向被阻挡，检查是否可以克服摩擦力滑行
+            double normalForce = Math.abs(netGravity.get(primaryDir.getAxis()));
+            double tangentialForce = Math.sqrt(Math.max(0, gravitySq - normalForce * normalForce));
+
+            // 获取阻挡方块的摩擦系数
+            float friction = targetState.getFriction(level, targetPos, null);
+            double grip = 1.0 - friction;
+
+            // 只有切向力足够大，才能克服摩擦力开始滑动
+            if (tangentialForce > normalForce * grip * 2.0) {
+                // 摩擦力无法束缚，检查滑动方向是否有空位
+                // 遍历其它轴寻找出路
+
+                // 检查 X 轴
+                if (!canMove && Math.abs(netGravity.x) > 1.0E-5) {
+                    Direction dir = netGravity.x > 0 ? Direction.EAST : Direction.WEST;
+                    if (dir != primaryDir && isFree(level.getBlockState(pos.relative(dir)))) canMove = true;
+                }
+                // 检查 Y 轴
+                if (!canMove && Math.abs(netGravity.y) > 1.0E-5) {
+                    Direction dir = netGravity.y > 0 ? Direction.UP : Direction.DOWN;
+                    if (dir != primaryDir && isFree(level.getBlockState(pos.relative(dir)))) canMove = true;
+                }
+                // 检查 Z 轴
+                if (!canMove && Math.abs(netGravity.z) > 1.0E-5) {
+                    Direction dir = netGravity.z > 0 ? Direction.SOUTH : Direction.NORTH;
+                    if (dir != primaryDir && isFree(level.getBlockState(pos.relative(dir)))) canMove = true;
+                }
+            } else {
+                // 摩擦力太大，被死死按在墙上/地板上/天花板上
+                canMove = false;
+            }
+        }
+
+        // 5. 执行转换
+        if (canMove) {
             if (state.is(ModBlocks.LEVITATION_POWDER_BLOCK.get())) {
                 LevitatingBlockEntity.levitate(level, pos, state);
             } else {

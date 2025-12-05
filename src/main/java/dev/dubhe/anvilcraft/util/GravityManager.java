@@ -48,8 +48,7 @@ public class GravityManager {
     public static void onChunkLoad(ChunkEvent.Load event) {
         if (event.getLevel() instanceof Level level && !level.isClientSide && event.getChunk() instanceof LevelChunk chunk) {
             for (BlockPos pos : chunk.getBlockEntitiesPos()) {
-                BlockState state = chunk.getBlockState(pos);
-                GravitySourceType type = GravitySourceManager.getType(state.getBlock());
+                GravitySourceType type = GravitySourceManager.getType(chunk.getBlockState(pos).getBlock());
                 if (type != null) {
                     GravitySourceManager.addSource(level, pos, type);
                 }
@@ -61,10 +60,9 @@ public class GravityManager {
     @SubscribeEvent
     public static void onChunkUnload(ChunkEvent.Unload event) {
         if (event.getLevel() instanceof Level level && !level.isClientSide) {
-            long chunkKey = event.getChunk().getPos().toLong();
             Map<Long, List<GravitySource>> dimCache = GRAVITY_CACHE.get(level.dimension());
             if (dimCache != null) {
-                dimCache.remove(chunkKey);
+                dimCache.remove(event.getChunk().getPos().toLong());
             }
         }
     }
@@ -81,19 +79,17 @@ public class GravityManager {
     @SubscribeEvent
     public static void onBlockPlace(BlockEvent.EntityPlaceEvent event) {
         if (event.getLevel() instanceof Level level && !level.isClientSide) {
+
             GravitySourceType type = GravitySourceManager.getType(event.getState().getBlock());
             if (type != null) {
                 GravitySourceManager.addSource(level, event.getPos(), type);
                 int r = type.radius;
-                // 遍历黑洞影响范围内的方块
-                BlockPos.betweenClosedStream(event.getPos().offset(-r, -r, -r), event.getPos().offset(r, r, r))
-                    .forEach(pos -> {
-                        BlockState state = level.getBlockState(pos);
-                        // 如果是下落方块，给计划刻让它更新
-                        if (state.getBlock() instanceof FallingBlock) {
-                            level.scheduleTick(pos, state.getBlock(), 2);
-                        }
-                    });
+                BlockPos.betweenClosedStream(event.getPos().offset(-r, -r, -r), event.getPos().offset(r, r, r)).forEach(p -> {
+                    BlockState s = level.getBlockState(p);
+                    if (s.getBlock() instanceof FallingBlock) {
+                        level.scheduleTick(p, s.getBlock(), 2);
+                    }
+                });
             }
         }
     }
@@ -106,15 +102,11 @@ public class GravityManager {
             if (type != null) {
                 GravitySourceManager.removeSource(level, event.getPos());
                 int r = type.radius;
-                // 遍历黑洞影响范围内的方块
-                BlockPos.betweenClosedStream(event.getPos().offset(-r, -r, -r), event.getPos().offset(r, r, r))
-                    .forEach(pos -> {
-                        BlockState state = level.getBlockState(pos);
-                        // 如果是下落方块，给计划刻让它更新
-                        if (state.getBlock() instanceof FallingBlock) {
-                            level.scheduleTick(pos, state.getBlock(), 2);
-                        }
-                    });
+                BlockPos.betweenClosedStream(event.getPos().offset(-r, -r, -r), event.getPos().offset(r, r, r)).forEach(pos -> {
+                    if (level.getBlockState(pos).getBlock() instanceof FallingBlock) {
+                        level.scheduleTick(pos, level.getBlockState(pos).getBlock(), 2);
+                    }
+                });
             }
         }
     }
@@ -157,7 +149,7 @@ public class GravityManager {
         return GravityType.NORMAL; // 普通下落方块
     }
 
-    // 处理特殊实体，最终得到重力向量
+    // 得到重力向量
     public static Vec3 getGravityVector(Entity entity) {
         // 获取计算的引力
         Vec3 gravityVector = GravitySourceManager.calculateGravityVector(entity);
@@ -176,6 +168,31 @@ public class GravityManager {
             case MICRO_ANTI_GRAVITY -> gravityVector.scale(-0.005);
             default -> gravityVector;
         };
+    }
+
+    // 得到含维度的总体重力向量（用于下落方块）
+    public static Vec3 getNetGravityVectorForFallingBlock(Level level, Vec3 pos, GravityType gravityType) {
+        // 确定基础重力的大小和方向
+        double baseGravity = 0.04 * getDimensionGravity(level);
+
+        // 根据物质类型调整基础重力的方向
+        double baseGravityY = (gravityType == GravityType.ANTI_GRAVITY) ? baseGravity : -baseGravity;
+        Vec3 baseGravityVector = new Vec3(0, baseGravityY, 0);
+
+        // 计算局部重力源的引力
+        Vec3 localGravityVector = GravitySourceManager.calculateGravityVector(level, pos, Math.abs(baseGravity));
+
+        // 根据物质类型调整重力向量方向
+        if (gravityType == GravityType.ANTI_GRAVITY) {
+            localGravityVector = localGravityVector.reverse();
+        }
+
+        // 返回向量用于下落方块计算
+        return baseGravityVector.add(localGravityVector);
+    }
+
+    public static Vec3 getNetGravityVectorForFallingBlock(Entity entity) {
+        return getNetGravityVectorForFallingBlock(entity.level(), entity.getBoundingBox().getCenter(), getGravityType(entity));
     }
 
     // 应用维度重力
