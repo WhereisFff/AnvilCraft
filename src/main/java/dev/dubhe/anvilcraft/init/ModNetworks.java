@@ -44,6 +44,7 @@ import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDeflectionRingLastEntitySpeedPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
+import dev.dubhe.anvilcraft.network.UsePillBoxPacket;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ModNetworks {
@@ -265,6 +266,11 @@ public class ModNetworks {
             UpdatePropelPistonStoredEnergyPacket.TYPE,
             UpdatePropelPistonStoredEnergyPacket.STREAM_CODEC,
             UpdatePropelPistonStoredEnergyPacket.HANDLER
+        );
+        registrar.playToServer(
+            UsePillBoxPacket.TYPE,
+            UsePillBoxPacket.STREAM_CODEC,
+            UsePillBoxPacket.HANDLER
         );
     }
 }

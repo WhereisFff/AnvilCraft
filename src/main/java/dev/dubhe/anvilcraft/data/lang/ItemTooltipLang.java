@@ -2,16 +2,10 @@ package dev.dubhe.anvilcraft.data.lang;
 
 import com.tterrag.registrate.providers.RegistrateLangProvider;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
-import org.jetbrains.annotations.NotNull;
 
 public class ItemTooltipLang {
-    /**
-     * 初始化物品 tooltip 语言
-     *
-     * @param provider 提供器
-     */
     @SuppressWarnings("checkstyle:LineLength")
-    public static void init(@NotNull RegistrateLangProvider provider) {
+    public static void init(RegistrateLangProvider provider) {
         ItemTooltipManager.NEED_TOOLTIP_ITEM.forEach(
             (item, s) -> provider.add(ItemTooltipManager.getTranslationKey(item), s));
         provider.add("tooltip.anvilcraft.item.reinforced_concrete", "Creeper proof");
@@ -45,5 +39,8 @@ public class ItemTooltipLang {
         provider.add("tooltip.anvilcraft.item.amulet_box.fullness", "Fullness: %1$d / %2$d");
 
         provider.add("tooltip.anvilcraft.press_key", "Hold [%s] for information");
+
+        // 中文 储存药片，右键时会把储存的药片各吃一片，在物品栏时也可以按 [V] 使用
+        provider.add("tooltip.anvilcraft.pill_box", "Store pills, right-click to take one pill each, and press [V] to use them in the inventory");
     }
 }
