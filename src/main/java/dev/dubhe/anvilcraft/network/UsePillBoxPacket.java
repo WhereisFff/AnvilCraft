@@ -2,10 +2,10 @@ package dev.dubhe.anvilcraft.network;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.item.PillBoxItem;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -35,11 +35,12 @@ public record UsePillBoxPacket() implements CustomPacketPayload {
         Inventory inventory = player.getInventory();
         for (int i = 0; i < inventory.items.size(); i++) {
             ItemStack item = inventory.getItem(i);
+            AnvilCraft.LOGGER.debug("item: {}", item);
             if (item.is(ModItems.PILL_BOX)) {
                 if (player.getCooldowns().isOnCooldown(item.getItem())) {
                     return;
                 }
-                item.use(player.level(), player, InteractionHand.MAIN_HAND);
+                PillBoxItem.use(item, player);
                 player.containerMenu.sendAllDataToRemote();
             }
         }

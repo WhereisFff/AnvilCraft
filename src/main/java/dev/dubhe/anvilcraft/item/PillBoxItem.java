@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.property.component.PillBocContents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -26,15 +27,22 @@ public class PillBoxItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        PillBocContents contents = itemStack.getOrDefault(ModComponents.PILL_BOC_CONTENTS, PillBocContents.EMPTY);
+        return use(itemStack, player);
+    }
+
+    public static InteractionResultHolder<ItemStack> use(ItemStack pillBox, Player player) {
+        if (!pillBox.is(ModItems.PILL_BOX)) {
+            return InteractionResultHolder.pass(pillBox);
+        }
+        PillBocContents contents = pillBox.getOrDefault(ModComponents.PILL_BOC_CONTENTS, PillBocContents.EMPTY);
         if (contents.pills().isEmpty()) {
-            return InteractionResultHolder.pass(itemStack);
+            return InteractionResultHolder.pass(pillBox);
         }
         PillBocContents.Mutable mutable = contents.mutable();
         mutable.useAll(player);
-        itemStack.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
-        player.getCooldowns().addCooldown(this, 40);
-        return InteractionResultHolder.success(itemStack);
+        pillBox.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
+        player.getCooldowns().addCooldown(ModItems.PILL_BOX.asItem(), 40);
+        return InteractionResultHolder.success(pillBox);
     }
 
     @Override
