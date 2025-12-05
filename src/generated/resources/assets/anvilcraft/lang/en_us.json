@@ -849,6 +849,7 @@
   "key.anvilcraft.switch_phase": "Switch Phase",
   "key.anvilcraft.switch_resonate_mode": "Switch Resonate Mode",
   "key.anvilcraft.toggle_goggle": "Toggle Goggle Mode",
+  "key.anvilcraft.use_pill_box": "Use Pill Box",
   "key.categories.anvilcraft": "AnvilCraft",
   "message.anvilcraft.chute.cannot_place": "Chute cannot face this direction",
   "message.anvilcraft.code_gen_check": "Please check if the selected area is a cube and if the output slot has items.",

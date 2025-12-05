@@ -29,7 +29,7 @@ public class ModKeyMappings {
     public static final Lazy<KeyMapping> USE_PILL_BOX = register(
         "use_pill_box",
         KeyConflictContext.IN_GAME,
-        Type.MOUSE,
+        Type.KEYSYM,
         GLFW.GLFW_KEY_V
     );
 
