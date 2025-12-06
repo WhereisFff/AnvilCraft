@@ -54,6 +54,7 @@ public class ModEntities {
 
     public static final EntityEntry<? extends LevitatingBlockEntity> LEVITATING_BLOCK = AnvilCraft.REGISTRATE
         .entity("levitating_block", LevitatingBlockEntity::new, MobCategory.MISC)
+        .properties(builder -> builder.sized(0.98f, 0.98f))
         .renderer(() -> FallingBlockRenderer::new)
         .register();
 

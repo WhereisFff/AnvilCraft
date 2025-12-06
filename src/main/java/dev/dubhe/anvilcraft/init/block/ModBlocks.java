@@ -13,6 +13,7 @@ import dev.dubhe.anvilcraft.block.ArrowBlock;
 import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
 import dev.dubhe.anvilcraft.block.BerryCakeBlock;
 import dev.dubhe.anvilcraft.block.BerryCreamBlock;
+import dev.dubhe.anvilcraft.block.BlackHoleBlock;
 import dev.dubhe.anvilcraft.block.BlockComparatorBlock;
 import dev.dubhe.anvilcraft.block.BlockDevourerBlock;
 import dev.dubhe.anvilcraft.block.BlockPlacerBlock;
@@ -380,7 +381,7 @@ public class ModBlocks {
                 .pattern("NIN")
                 .pattern("NVN")
                 .pattern("BBB")
-                .define('I', ModItems.NEUTRONIUM_INGOT)
+                .define('I', ModItemTags.UNCHARGED_NEUTRONIUM_INGOTS)
                 .define('N', ModItems.NEGATIVE_MATTER)
                 .define('B', ModBlocks.NEGATIVE_MATTER_BLOCK)
                 .define('V', ModItems.VOID_MATTER)
@@ -4747,6 +4748,14 @@ public class ModBlocks {
         PlayerHungerPressurePlateBlock::new,
         ModItemTags.BRONZE_INGOTS
     );
+
+    public static final BlockEntry<BlackHoleBlock> BLACK_HOLE = REGISTRATE.block("black_hole", BlackHoleBlock::new)
+        .initialProperties(() -> Blocks.OBSIDIAN)
+        .properties(p -> p.strength(10000.0F, 10000.0F))
+        .blockstate((ctx, provider) -> {
+        })
+        .simpleItem()
+        .register();
 
     public static void register() {
     }

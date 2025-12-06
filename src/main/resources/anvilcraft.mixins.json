@@ -26,6 +26,7 @@
     "EntityTypeBuilderMixin",
     "ExplosionMixin",
     "FallingBlockEntityMixin",
+    "FallingBlockMixin",
     "FlyingHitEntityMixin",
     "GrowingPlantBlockMixin",
     "HolderReferenceMixin",
