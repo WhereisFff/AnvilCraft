@@ -42,7 +42,7 @@ public class GravityManager {
         GravitySourceManager.registerSourceType(BlackHoleBlock.class, 7, 10.0);
         // 在这里注册更多重力源，strength -> 距离该重力源 1 格处的重力是主世界重力的 strength 倍
 
-        registerDimensionGravity(Level.END, 0.1653061224489796);
+        // registerDimensionGravity(Level.MUN, 0.1653061224489796);
         // 在这里注册更多维度重力，gravity -> 该维度重力是主世界重力的 gravity 倍
     }
 
