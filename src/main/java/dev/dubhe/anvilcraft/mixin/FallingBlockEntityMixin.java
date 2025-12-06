@@ -284,7 +284,14 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
     @Inject(
         method = "tick", at = @At(
         value = "INVOKE",
-        target = "Lnet/minecraft/world/level/block/Fallable;" + "onLand(" + "Lnet/minecraft/world/level/Level;" + "Lnet/minecraft/core/BlockPos;" + "Lnet/minecraft/world/level/block/state/BlockState;" + "Lnet/minecraft/world/level/block/state/BlockState;" + "Lnet/minecraft/world/entity/item/FallingBlockEntity;" + ")V"
+        target = "Lnet/minecraft/world/level/block/Fallable;"
+                 + "onLand("
+                 + "Lnet/minecraft/world/level/Level;"
+                 + "Lnet/minecraft/core/BlockPos;"
+                 + "Lnet/minecraft/world/level/block/state/BlockState;"
+                 + "Lnet/minecraft/world/level/block/state/BlockState;"
+                 + "Lnet/minecraft/world/entity/item/FallingBlockEntity;"
+                 + ")V"
     )
     )
     private void anvilFallOnGround(CallbackInfo ci, @Local BlockPos blockPos) {
@@ -309,7 +316,12 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
     @Inject(
         method = "causeFallDamage", at = @At(
         value = "INVOKE",
-        target = "Lnet/minecraft/world/level/Level;" + "getEntities(" + "Lnet/minecraft/world/entity/Entity;" + "Lnet/minecraft/world/phys/AABB;" + "Ljava/util/function/Predicate;" + ")Ljava/util/List;"
+        target = "Lnet/minecraft/world/level/Level;"
+                 + "getEntities("
+                 + "Lnet/minecraft/world/entity/Entity;"
+                 + "Lnet/minecraft/world/phys/AABB;"
+                 + "Ljava/util/function/Predicate;"
+                 + ")Ljava/util/List;"
     )
     )
     private void anvilHurtEntity(float fallDistance, float multiplier, DamageSource source, CallbackInfoReturnable<Boolean> cir) {

@@ -244,7 +244,10 @@ public abstract class EntityMixin implements IEntityExtension {
     @Inject(
         method = "handlePortal", at = @At(
         value = "INVOKE",
-        target = "Lnet/minecraft/world/entity/Entity;changeDimension(" + "Lnet/minecraft/world/level/portal/DimensionTransition;" + ")Lnet/minecraft/world/entity/Entity;"
+        target = "Lnet/minecraft/world/entity/Entity;changeDimension("
+                 + "Lnet/minecraft/world/level/portal/DimensionTransition;"
+                 + ")"
+                 + "Lnet/minecraft/world/entity/Entity;"
     )
     )
     private void handlePortal(CallbackInfo ci) {
@@ -281,7 +284,7 @@ public abstract class EntityMixin implements IEntityExtension {
         switch (type) {
             case ANTI_GRAVITY -> baseGravity *= -1;
             case MICRO_ANTI_GRAVITY -> baseGravity *= -0.005;
-            case NORMAL -> {
+            default -> {
             }
         }
 

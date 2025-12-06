@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.block.BlackHoleBlock;
 import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
-import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.Entity;
@@ -23,7 +23,10 @@ import net.neoforged.neoforge.event.level.BlockEvent;
 import net.neoforged.neoforge.event.level.ChunkEvent;
 import net.neoforged.neoforge.event.level.LevelEvent;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @EventBusSubscriber(modid = "anvilcraft", bus = EventBusSubscriber.Bus.GAME)
@@ -280,12 +283,15 @@ public class GravityManager {
             };
         }
 
-        public static Vec3 calculateGravityVector(Level level, Vec3 p, double G) {
+        public static Vec3 calculateGravityVector(Level level, Vec3 p, double g) {
             var cache = GRAVITY_CACHE.get(level.dimension());
             if (cache == null) return Vec3.ZERO;
 
-            double fx = 0, fy = 0, fz = 0;
-            int cx = ((int) Math.floor(p.x)) >> 4, cz = ((int) Math.floor(p.z)) >> 4;
+            double fx = 0;
+            double fy = 0;
+            double fz = 0;
+            int cx = ((int) Math.floor(p.x)) >> 4;
+            int cz = ((int) Math.floor(p.z)) >> 4;
 
             for (int x = -1; x <= 1; x++) {
                 for (int z = -1; z <= 1; z++) {
@@ -295,11 +301,11 @@ public class GravityManager {
                         double dx = s.pos.getX() + 0.5 - p.x;
                         double dy = s.pos.getY() + 0.5 - p.y;
                         double dz = s.pos.getZ() + 0.5 - p.z;
-                        double rSq = dx * dx + dy * dy + dz * dz;
+                        double radiusSquare = dx * dx + dy * dy + dz * dz;
 
-                        if (rSq <= s.type.radiusSqr) {
-                            // 使用传入的 G
-                            double f = (G * s.type.strength) / (Math.max(rSq, 1.0) * Math.sqrt(rSq));
+                        if (radiusSquare <= s.type.radiusSqr) {
+                            // 使用传入的 g
+                            double f = (g * s.type.strength) / (Math.max(radiusSquare, 1.0) * Math.sqrt(radiusSquare));
                             fx += dx * f;
                             fy += dy * f;
                             fz += dz * f;
