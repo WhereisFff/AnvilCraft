@@ -71,14 +71,14 @@ public class CauldronOutletRenderer extends EntityRenderer<CauldronOutletEntity>
         // 找到了关联活塞，进行视觉修正
         if (targetPiston != null) {
             // 获取平滑移动进度
-            float xOff = targetPiston.getXOff(partialTicks);
-            float yOff = targetPiston.getYOff(partialTicks);
-            float zOff = targetPiston.getZOff(partialTicks);
+            float xoff = targetPiston.getXOff(partialTicks);
+            float yoff = targetPiston.getYOff(partialTicks);
+            float zoff = targetPiston.getZOff(partialTicks);
 
             // 计算位移差值：目标位置 - 当前位置 + 动画偏移
-            double dx = (pistonPos.getX() - currentPos.getX()) + xOff;
-            double dy = (pistonPos.getY() - currentPos.getY()) + yOff;
-            double dz = (pistonPos.getZ() - currentPos.getZ()) + zOff;
+            double dx = (pistonPos.getX() - currentPos.getX()) + xoff;
+            double dy = (pistonPos.getY() - currentPos.getY()) + yoff;
+            double dz = (pistonPos.getZ() - currentPos.getZ()) + zoff;
 
             poseStack.translate(dx, dy, dz);
         }

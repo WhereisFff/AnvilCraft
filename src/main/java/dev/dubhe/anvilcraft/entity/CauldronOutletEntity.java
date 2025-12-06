@@ -82,20 +82,14 @@ public class CauldronOutletEntity extends Entity {
             if (this.targetPos != null) {
                 BlockState targetState = this.level().getBlockState(this.targetPos);
 
-                // A：目标已经变成了炼药锅 -> 移动结束，落地
-                if (targetState.is(BlockTags.CAULDRONS)) {
+                if (targetState.is(BlockTags.CAULDRONS)) { // A：目标已经变成了炼药锅 -> 移动结束，落地
                     moveToBlock(this.targetPos, targetState);
                     // 落地瞬间暂不处理物品
                     return;
-                }
-                // B：目标还是移动活塞 -> 正在动画中，原地等待
-                else if (targetState.is(Blocks.MOVING_PISTON)) {
-                    // 保持 wasMoving 为 true，防止被误杀
+                } else if (targetState.is(Blocks.MOVING_PISTON)) { // B：目标还是移动活塞 -> 正在动画中，原地等待
                     this.wasMoving = true;
                     return;
-                }
-                // C：目标变成了空气或其他 -> 追踪丢失 ，进入下面的步骤 3 尝试找回
-                else {
+                } else { // C：目标变成了空气或其他 -> 追踪丢失 ，进入下面的步骤 3 尝试找回
                     this.targetPos = null;
                 }
             }
