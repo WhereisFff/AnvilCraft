@@ -8,6 +8,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -31,11 +32,9 @@ public abstract class FallingBlockMixin extends Block {
     }
 
     @Inject(
-        method = "tick",
-        at = @At("HEAD"),
-        cancellable = true
+        method = "tick", at = @At("HEAD"), cancellable = true
     )
-    private void anvilcraft$FallingLogic(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
+    private void anvilcraft$fall(BlockState state, ServerLevel level, BlockPos pos, RandomSource random, CallbackInfo ci) {
         // 1. 计算净重力
         GravityManager.GravityType gravityType = GravityManager.getFallingBlockGravityType(state.getBlock());
         Vec3 netGravity = GravityManager.getNetGravityVectorForFallingBlock(level, Vec3.atCenterOf(pos), gravityType);
@@ -51,7 +50,7 @@ public abstract class FallingBlockMixin extends Block {
         BlockPos targetPos = pos.relative(primaryDir);
         BlockState targetState = level.getBlockState(targetPos);
 
-        // 3. 判断是否可以直接移动
+        // 3. 判断是否可以移动
         boolean canMove = false;
 
         if (isFree(targetState)) {
