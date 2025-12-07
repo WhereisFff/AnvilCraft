@@ -375,7 +375,7 @@ public class ModBlocks {
     public static final BlockEntry<? extends Block> NEUTRON_IRRADIATOR = REGISTRATE.block("neutron_irradiator", NeutronIrradiatorBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
-        .properties(p -> p.strength(50.0f, 1200f))
+        .properties(p -> p.strength(50.0f, 1200f).lightLevel(state -> 7).emissiveRendering(ModBlocks::always))
         .recipe((ctx, provider) -> {
             ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
                 .pattern("NIN")
@@ -4751,7 +4751,7 @@ public class ModBlocks {
 
     public static final BlockEntry<BlackHoleBlock> BLACK_HOLE = REGISTRATE.block("black_hole", BlackHoleBlock::new)
         .initialProperties(() -> Blocks.OBSIDIAN)
-        .properties(p -> p.strength(10000.0F, 10000.0F))
+        .properties(p -> p.strength(10000.0F, 10000.0F).lightLevel(state -> 15).emissiveRendering(ModBlocks::always))
         .blockstate((ctx, provider) -> {
         })
         .simpleItem()
