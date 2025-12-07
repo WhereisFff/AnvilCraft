@@ -45,4 +45,9 @@ public class BlackHoleBlock extends Block implements EntityBlock {
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BlackHoleBlockEntity(pos, state);
     }
+    
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        return 15;
+    }
 }
