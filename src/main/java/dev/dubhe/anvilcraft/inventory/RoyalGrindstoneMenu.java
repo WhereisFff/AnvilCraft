@@ -152,6 +152,10 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
         this.repairMaterial = repairMaterialSlotItem.getItem();
         ItemStack result = repairTool.copy();
         this.currentRecipe = REPAIR_COST_RECIPES.getOrDefault(repairMaterialSlotItem.getItem(), null);
+        if (!resultMaterialSlotItem.isEmpty() && this.currentRecipe != null && resultMaterialSlotItem.getItem() != this.currentRecipe.item) {
+            this.usedGold = 0;
+            return ItemStack.EMPTY;
+        }
         int repairCost = repairTool.getOrDefault(DataComponents.REPAIR_COST, 0);
         this.totalRepairCost = repairCost;
         DataComponentType<ItemEnchantments> enchantmentComponent = result.is(Items.ENCHANTED_BOOK)
