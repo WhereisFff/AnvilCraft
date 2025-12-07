@@ -77,9 +77,28 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         BlockState curState = cache.getBlockState(blockPos);
         if (!curState.is(BlockTags.CAULDRONS)) return false;
         Block fluidCauldron = this.getFluidCauldron();
+        Block transformCauldron = this.getTransformCauldron();
+        
+        // 检查是否是目标炼药锅类型
         if (curState.is(fluidCauldron)) return true;
-        if (HasCauldron.isNotEmpty(this.fluid())) return false;
-        if (!HasCauldron.isNotEmpty(this.transform())) return false;
+        
+        // 如果不需要特定液体且不需要转换，则允许空炼药锅
+        if (!HasCauldron.isNotEmpty(this.fluid()) && !HasCauldron.isNotEmpty(this.transform())) {
+            return curState.is(Blocks.CAULDRON);
+        }
+        
+        // 处理压榨配方特殊情况：如果会产生新的液体（consume < 0），但炼药锅中已含有其他类型液体，则不允许执行
+        if (this.consume() < 0 && HasCauldron.isNotEmpty(this.transform())) {
+            // 如果炼药锅不是空的，也不是目标类型的炼药锅，则不允许执行
+            return curState.is(Blocks.CAULDRON) || curState.is(transformCauldron);
+        }
+        
+        // 检查是否是转换后的炼药锅类型
+        if (curState.is(transformCauldron)) {
+            return true;
+        }
+        
+        // 其他情况，检查是否是空炼药锅且可以接收液体
         Block targetCauldron = this.getTransformCauldron();
         BlockState targetState = targetCauldron.defaultBlockState();
         Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
