@@ -90,13 +90,13 @@ public class SuperHeatingRecipeLoader {
         metalBlockFromRaw(provider, Tags.Items.STORAGE_BLOCKS_RAW_COPPER, Items.COPPER_BLOCK);
         metalBlockFromRaw(provider, Tags.Items.STORAGE_BLOCKS_RAW_IRON, Items.IRON_BLOCK);
         metalBlockFromRaw(provider, Tags.Items.STORAGE_BLOCKS_RAW_GOLD, Items.GOLD_BLOCK);
-        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_ZINC, ModItems.ZINC_INGOT);
-        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_TIN, ModItems.TIN_INGOT);
-        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_TITANIUM, ModItems.TITANIUM_INGOT);
-        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_TUNGSTEN, ModItems.TUNGSTEN_INGOT);
-        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_LEAD, ModItems.LEAD_INGOT);
-        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_SILVER, ModItems.SILVER_INGOT);
-        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_URANIUM, ModItems.URANIUM_INGOT);
+        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_ZINC, ModBlocks.ZINC_BLOCK);
+        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_TIN, ModBlocks.TIN_BLOCK);
+        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_TITANIUM, ModBlocks.TITANIUM_BLOCK);
+        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_TUNGSTEN, ModBlocks.TUNGSTEN_BLOCK);
+        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_LEAD, ModBlocks.LEAD_BLOCK);
+        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_SILVER, ModBlocks.SILVER_BLOCK);
+        metalBlockFromRaw(provider, ModItemTags.STORAGE_BLOCKS_RAW_URANIUM, ModBlocks.URANIUM_BLOCK);
 
         // limePowder
         limePowder(provider, ModItems.CRAB_CLAW, 1);

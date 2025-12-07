@@ -51,9 +51,8 @@ public class HealthPercentPressurePlateBlock extends PowerLevelPressurePlateBloc
             ));
         }
 
-        float healthPercent = HealthPercentPressurePlateBlock.getLargestHealthPercent(entities);
-
         try {
+            float healthPercent = getLargestHealthPercent(entities);
             return new Pair<>(Math.max(healthPercent, 0), Math.min(healthPercent, 1));
         } catch (NoSuchElementException ignored) {
             return new Pair<>(0F, 0F);

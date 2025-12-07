@@ -2,13 +2,13 @@
   "type": "anvilcraft:super_heating",
   "ingredients": [
     {
-      "items": "#c:storage_blocks/raw_tungsten"
+      "items": "#c:storage_blocks/raw_zinc"
     }
   ],
   "results": [
     {
       "count": 2,
-      "id": "anvilcraft:tungsten_ingot"
+      "id": "anvilcraft:zinc_block"
     }
   ]
 }

@@ -2,13 +2,13 @@
   "type": "anvilcraft:super_heating",
   "ingredients": [
     {
-      "items": "#c:storage_blocks/raw_zinc"
+      "items": "#c:storage_blocks/raw_tin"
     }
   ],
   "results": [
     {
       "count": 2,
-      "id": "anvilcraft:zinc_ingot"
+      "id": "anvilcraft:tin_block"
     }
   ]
 }
