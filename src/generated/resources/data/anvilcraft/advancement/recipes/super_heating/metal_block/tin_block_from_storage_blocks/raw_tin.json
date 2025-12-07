@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:super_heating/metal_block/silver_ingot_from_storage_blocks/raw_silver"
+        "recipe": "anvilcraft:super_heating/metal_block/tin_block_from_storage_blocks/raw_tin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:super_heating/metal_block/silver_ingot_from_storage_blocks/raw_silver"
+      "anvilcraft:super_heating/metal_block/tin_block_from_storage_blocks/raw_tin"
     ]
   }
 }

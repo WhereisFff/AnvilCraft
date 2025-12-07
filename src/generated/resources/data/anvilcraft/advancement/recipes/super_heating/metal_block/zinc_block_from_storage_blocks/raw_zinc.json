@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:super_heating/metal_block/uranium_ingot_from_storage_blocks/raw_uranium"
+        "recipe": "anvilcraft:super_heating/metal_block/zinc_block_from_storage_blocks/raw_zinc"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:super_heating/metal_block/uranium_ingot_from_storage_blocks/raw_uranium"
+      "anvilcraft:super_heating/metal_block/zinc_block_from_storage_blocks/raw_zinc"
     ]
   }
 }
