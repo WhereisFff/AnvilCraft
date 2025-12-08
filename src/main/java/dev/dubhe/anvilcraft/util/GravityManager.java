@@ -2,6 +2,8 @@ package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.block.BlackHoleBlock;
 import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
+import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
+import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.core.BlockPos;
@@ -116,33 +118,42 @@ public class GravityManager {
 
     // 特殊物质定义不同引力类型
     public enum GravityType {
-        NORMAL, // 正常实体正常重力
-        ANTI_GRAVITY, // 负物质反转重力
-        MICRO_ANTI_GRAVITY // 漂浮粉略有失重感
+        NORMAL, // 正常重力 1
+        ANTI_GRAVITY, // 反转重力 -1
+        MICRO_ANTI_GRAVITY, // 略有失重感 -0.005
+        LOW_GRAVITY // 低重力 0.5
+
     }
 
     public static GravityType getGravityType(Entity entity) {
         if (entity instanceof ItemEntity itemEntity) {
             var item = itemEntity.getItem();
 
-            // 判断负物质
             boolean isNegativeMatter = item.is(ModItems.NEGATIVE_MATTER_NUGGET.get()) || item.is(ModItems.NEGATIVE_MATTER.get()) || item.is(
                 ModBlocks.NEGATIVE_MATTER_BLOCK.get().asItem());
-            if (isNegativeMatter) return GravityType.ANTI_GRAVITY;
+            if (isNegativeMatter) return GravityType.ANTI_GRAVITY; // 负物质
 
-            // 判断漂浮粉
             boolean isLevitationPowder = item.is(ModItems.LEVITATION_POWDER.get()) || item.is(ModBlocks.LEVITATION_POWDER_BLOCK.get()
                 .asItem());
-            if (isLevitationPowder) return GravityType.MICRO_ANTI_GRAVITY;
+            if (isLevitationPowder) return GravityType.MICRO_ANTI_GRAVITY; // 漂浮粉
+
+            // 在这里注册物品的重力类型
         }
 
-        // 判断漂浮粉方块实体
-        if (entity instanceof LevitatingBlockEntity levitatingBlock && levitatingBlock.getBlockState()
-            .is(ModBlocks.LEVITATION_POWDER_BLOCK.get())) {
+        if (entity instanceof LevitatingBlockEntity) { // 漂浮粉块
             return GravityType.ANTI_GRAVITY;
         }
 
-        return GravityType.NORMAL;
+        if (entity instanceof StandableFallingBlockEntity) { // 下降的可控沙
+            return GravityType.LOW_GRAVITY;
+        }
+
+        if (entity instanceof StandableLevitatingBlockEntity) { // 上升的可控沙
+            return GravityType.ANTI_GRAVITY;
+        }
+        // 在这里注册下落方块的重力类型
+
+        return GravityType.NORMAL; // 默认
     }
 
     public static GravityType getFallingBlockGravityType(Block block) {
@@ -169,11 +180,12 @@ public class GravityManager {
         return switch (type) {
             case ANTI_GRAVITY -> gravityVector.reverse();
             case MICRO_ANTI_GRAVITY -> gravityVector.scale(-0.005);
+            case LOW_GRAVITY -> gravityVector.scale(0.5);
             default -> gravityVector;
         };
     }
 
-    // 得到含维度的总体重力向量（用于下落方块）
+    // 得到含维度的总体重力向量（仅用于下落方块方块）
     public static Vec3 getNetGravityVectorForFallingBlock(Level level, Vec3 pos, GravityType gravityType) {
         // 确定基础重力的大小和方向
         double baseGravity = 0.04 * getDimensionGravity(level);

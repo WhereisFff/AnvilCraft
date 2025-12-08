@@ -11,7 +11,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.Connection;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -321,8 +320,7 @@ public abstract class BaseChuteBlockEntity
      * 收到包 -> 读取NBT -> 覆盖本地数据
      */
     @Override
-    public void onDataPacket(
-        Connection net,
+    public void onDataPacket(net.minecraft.network.Connection net,
         ClientboundBlockEntityDataPacket pkt,
         HolderLookup.Provider lookupProvider
     ) {

@@ -225,7 +225,7 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
         Vec3 blockGravity = GravityManager.getNetGravityVectorForFallingBlock(
             instance.level(),
             Vec3.atCenterOf(pos),
-            GravityManager.getFallingBlockGravityType(instance.blockState.getBlock())
+            GravityManager.getGravityType(instance)
         );
 
         // 如果方块位置无重力，认为是稳定的

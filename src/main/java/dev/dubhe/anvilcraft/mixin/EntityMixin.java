@@ -284,6 +284,7 @@ public abstract class EntityMixin implements IEntityExtension {
         switch (type) {
             case ANTI_GRAVITY -> baseGravity *= -1;
             case MICRO_ANTI_GRAVITY -> baseGravity *= -0.005;
+            case LOW_GRAVITY -> baseGravity *= 0.5;
             default -> {
             }
         }
