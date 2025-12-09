@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.util.mixin.ref;
+package dev.dubhe.anvilcraft.util.mixin;
 
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;

@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.mixin.providence;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.dubhe.anvilcraft.util.mixin.ref.ProvidenceRef;
+import dev.dubhe.anvilcraft.util.mixin.ProvidenceRef;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
