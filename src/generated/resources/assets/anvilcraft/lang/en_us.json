@@ -798,6 +798,8 @@
   "item.anvilcraft.silver_ingot": "Silver Ingot",
   "item.anvilcraft.silver_nugget": "Silver Nugget",
   "item.anvilcraft.spectral_slingshot": "Spectral Slingshot",
+  "item.anvilcraft.spectral_slingshot.unload_return": "Returned when Unloaded",
+  "item.anvilcraft.spectral_slingshot.unload_vanish": "Vanishes when Unloaded",
   "item.anvilcraft.sponge_gemmule": "Sponge Gemmule",
   "item.anvilcraft.stable_neutronium_ingot": "Stable Neutronium Ingot",
   "item.anvilcraft.structure_tool": "Structure Tool",
