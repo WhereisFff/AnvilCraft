@@ -562,6 +562,7 @@
   "entity.anvilcraft.thrown_frost_metal_heavy_halberd": "Thrown Frost Metal Heavy Halberd",
   "entity.anvilcraft.thrown_transcendence_heavy_halberd": "Thrown Transcendence Heavy Halberd",
   "entity.minecraft.villager.anvilcraft.jeweler": "Jeweler",
+  "fluid.anvilcraft.fire": "Burning Oil (The content of Fire Cauldron)",
   "gui.anvilcraft.category.anvil_collision": "Anvil Collision",
   "gui.anvilcraft.category.anvil_collision.consume": "Consume Anvil: %d",
   "gui.anvilcraft.category.anvil_collision.maxcount": "Max Count: %s",

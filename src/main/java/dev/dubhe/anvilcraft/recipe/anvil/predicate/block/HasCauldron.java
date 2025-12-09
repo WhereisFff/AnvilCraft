@@ -80,7 +80,15 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         Block transformCauldron = this.getTransformCauldron();
         
         // 检查是否是目标炼药锅类型
-        if (curState.is(fluidCauldron)) return true;
+        if (curState.is(fluidCauldron)) {
+            Optional<Tuple<IntegerProperty, Integer>> optionalCur = HasCauldron.getFluidLevel(curState);
+            // 检查是否为空炼药锅或炼药锅内液体量足够执行配方
+            return curState.is(Blocks.CAULDRON)
+                   || HasCauldron.layer2Mb(
+                       optionalCur.map(Tuple::getA).orElse(IntegerProperty.create("level", 0, 1)),
+                       optionalCur.map(Tuple::getB).orElse(0)
+            ) >= this.consume;
+        }
         
         // 如果不需要特定液体且不需要转换，则允许空炼药锅
         if (!HasCauldron.isNotEmpty(this.fluid()) && !HasCauldron.isNotEmpty(this.transform())) {
