@@ -738,6 +738,8 @@
   "item.anvilcraft.ionocraft": "Ionocraft",
   "item.anvilcraft.ionocraft_backpack": "Ionocraft Backpack",
   "item.anvilcraft.ionocraft_backpack.flight_time": "Flight Time: %ds",
+  "item.anvilcraft.ionocraft_backpack.flight_time_energy": "Remaining Energy: %sMJ, Flight Time: %ss",
+  "item.anvilcraft.ionocraft_backpack.reallocate_power": "Re-wear to adjust charging",
   "item.anvilcraft.lead_ingot": "Lead Ingot",
   "item.anvilcraft.lead_nugget": "Lead Nugget",
   "item.anvilcraft.levitation_powder": "Levitation Powder",
