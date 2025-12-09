@@ -150,8 +150,7 @@ public class RoyalGrindstoneMenu extends AbstractContainerMenu {
         final ItemStack resultMaterialSlotItem = resultMaterialSlots.getItem(0);
         this.repairMaterial = repairMaterialSlotItem.getItem();
         this.currentRecipe = REPAIR_COST_RECIPES.getOrDefault(repairMaterialSlotItem.getItem(), null);
-        if (
-            !resultMaterialSlotItem.isEmpty()
+        if (!resultMaterialSlotItem.isEmpty()
             && this.currentRecipe != null
             && resultMaterialSlotItem.getItem() != this.currentRecipe.item
         ) {

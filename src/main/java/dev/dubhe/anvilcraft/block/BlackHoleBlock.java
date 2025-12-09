@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
-import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.block.entity.NeutronIrradiatorBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.BlackHoleBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -10,19 +9,11 @@ import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class NeutronIrradiatorBlock extends Block implements IHammerRemovable, EntityBlock {
-    public static VoxelShape MODEL = Shapes.or(
-        Block.box(0, 0, 0, 16, 10, 16),
-        Block.box(13, 10, 0, 16, 12, 3),
-        Block.box(0, 10, 0, 3, 12, 3),
-        Block.box(0, 10, 13, 3, 12, 16),
-        Block.box(13, 10, 13, 16, 12, 16),
-        Block.box(4, 10, 4, 12, 16, 12)
-    );
+public class BlackHoleBlock extends Block implements EntityBlock {
+    public static final VoxelShape MODEL = Block.box(4, 4, 4, 12, 12, 12);
 
     @Override
     public VoxelShape getShape(BlockState blockState, BlockGetter blockGetter, BlockPos blockPos, CollisionContext collisionContext) {
@@ -45,13 +36,13 @@ public class NeutronIrradiatorBlock extends Block implements IHammerRemovable, E
     ) {
     }
 
-    public NeutronIrradiatorBlock(Properties properties) {
+    public BlackHoleBlock(Properties properties) {
         super(properties);
     }
 
     @Nullable
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return new NeutronIrradiatorBlockEntity(pos, state);
+        return new BlackHoleBlockEntity(pos, state);
     }
 }
