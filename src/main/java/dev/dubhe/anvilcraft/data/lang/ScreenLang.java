@@ -249,5 +249,7 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.filter.white_list", "White List");
         provider.add("screen.anvilcraft.filter.match_component", "Match Component");
         provider.add("screen.anvilcraft.filter.mismatch_component", "Mismatch Component");
+
+        provider.add("screen.anvilcraft.filter.scroll_wheel_to_change_stack_limit", "Scroll mouse wheel to change stack limit");
     }
 }
