@@ -42,5 +42,8 @@ public class ItemTooltipLang {
 
         // 中文 储存药片，右键时会把储存的药片各吃一片，在物品栏时也可以按 [V] 使用
         provider.add("tooltip.anvilcraft.pill_box", "Store pills, right-click to take one pill each, and press [V] to use them in the inventory");
+
+        provider.add("item.anvilcraft.ionocraft_backpack.flight_time_energy", "Remaining Energy: %sMJ, Flight Time: %ss");
+        provider.add("item.anvilcraft.ionocraft_backpack.reallocate_power", "Re-wear to adjust charging");
     }
 }
