@@ -1231,5 +1231,9 @@
   "anvilcraft.configuration.clean_fluid_after_update_menger_sponge": "门格海绵受到更新后清理流体",
   "anvilcraft.configuration.clean_fluid_after_update_menger_sponge.tooltip": "门格海绵受到更新后是否清理流体",
   "item.anvilcraft.pill_box": "药盒",
-  "tooltip.anvilcraft.pill_box": "储存药片，右键时会把储存的药片各吃一片，在物品栏时也可以按 [V] 使用"
+  "tooltip.anvilcraft.pill_box": "储存药片，右键时会把储存的药片各吃一片，在物品栏时也可以按 [V] 使用",
+  "key.anvilcraft.use_pill_box": "使用药盒",
+  "block.anvilcraft.black_hole": "黑洞",
+  "item.anvilcraft.spectral_slingshot.unload_return": "取出返还",
+  "item.anvilcraft.spectral_slingshot.unload_vanish": "取出消失"
 }
