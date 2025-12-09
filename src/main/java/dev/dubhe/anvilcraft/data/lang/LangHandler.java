@@ -18,5 +18,6 @@ public class LangHandler {
         ToolPropertyLang.init(provider);
         CommandLang.init(provider);
         KeyMappingLang.init(provider);
+        FluidLang.init(provider);
     }
 }
