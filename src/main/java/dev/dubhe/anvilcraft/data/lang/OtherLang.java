@@ -11,6 +11,8 @@ public class OtherLang {
 
         provider.add("item.anvilcraft.geode.find", "Suspected amethyst geode, located %s");
         provider.add("item.anvilcraft.disk.stored_from", "Stored from: %s");
+        provider.add("item.anvilcraft.spectral_slingshot.unload_return", "Returned when Unloaded");
+        provider.add("item.anvilcraft.spectral_slingshot.unload_vanish", "Vanishes when Unloaded");
 
         provider.add("entity.minecraft.villager.anvilcraft.jeweler", "Jeweler");
 
