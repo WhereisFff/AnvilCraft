@@ -363,7 +363,11 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
     public boolean anvilcraft$discarded = false;
 
     @Unique
+    public boolean anvilcraft$shouldPoach = true;
+
+    @Unique
     public void anvilcraft$poach() {
+        if (!anvilcraft$shouldPoach) return;
         Level level = this.level();
         if (level.isClientSide) return;
         Map<ChunkPos, List<ItemCollectorBlockEntity>> map = ItemCollectorBlockEntity.POACHING_COLLECTOR_MAP.get(level);
@@ -398,6 +402,11 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
     @Override
     public boolean anvilcraft$getDiscarded() {
         return anvilcraft$discarded;
+    }
+
+    @Override
+    public void anvilcraft$setShouldPoach(boolean shouldPoach) {
+        this.anvilcraft$shouldPoach = shouldPoach;
     }
 
     @Override

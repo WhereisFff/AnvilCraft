@@ -73,6 +73,9 @@
     "piglin.PiglinMixin",
     "piston.PistonBaseBlockMixin",
     "piston.PistonMovingBlockEntityMixin",
+    "poachfixers.GiveCommandMixin",
+    "poachfixers.ArchitecturyItemStackHooksMixin",
+    "poachfixers.JeiServerCommandUtilMixin",
     "providence.ApplyBonusCountMixin",
     "providence.DamageEntityMixin",
     "providence.EnchantedCountIncreaseFunctionMixin"

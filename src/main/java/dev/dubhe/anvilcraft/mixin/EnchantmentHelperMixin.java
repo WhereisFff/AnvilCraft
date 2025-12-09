@@ -4,7 +4,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
-import dev.dubhe.anvilcraft.util.mixin.ref.ProvidenceRef;
+import dev.dubhe.anvilcraft.util.mixin.ProvidenceRef;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
