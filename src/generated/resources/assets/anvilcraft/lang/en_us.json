@@ -1233,5 +1233,7 @@
   "tooltip.anvilcraft.redstone.title": "Redstone Stats:",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s",
   "tooltip.anvilcraft.working_progress.progress": "  %1$s %2$s%%",
-  "tooltip.anvilcraft.working_progress.title": "Working progress:"
+  "tooltip.anvilcraft.working_progress.title": "Working progress:",
+  "item.anvilcraft.ionocraft_backpack.flight_time_energy": "Remaining Energy: %sMJ, Flight Time: %ss",
+  "item.anvilcraft.ionocraft_backpack.reallocate_power": "Re-wear to adjust charging"
 }
