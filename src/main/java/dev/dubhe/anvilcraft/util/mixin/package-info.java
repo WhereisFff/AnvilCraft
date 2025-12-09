@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.util.mixin.ref;
+package dev.dubhe.anvilcraft.util.mixin;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 
