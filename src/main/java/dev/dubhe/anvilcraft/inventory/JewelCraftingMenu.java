@@ -123,7 +123,11 @@ public class JewelCraftingMenu extends AbstractContainerMenu {
                                 return ItemStack.EMPTY;
                             }
                         }
+                    } else {
+                        this.slotsChanged(craftingContainer);
                     }
+                } else {
+                    this.slotsChanged(sourceContainer);
                 }
             }
             if (copyOfSourceStack.isEmpty()) {
