@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.DragonRodItem;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
@@ -34,6 +35,7 @@ import net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingUseTotemEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
+import net.neoforged.neoforge.event.entity.player.UseItemOnBlockEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
@@ -88,6 +90,19 @@ public class PlayerEventListener {
         itemEntity.setPickUpDelay(60);
         level.addFreshEntity(itemEntity);
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public static void preventUseWhenRocketJump(UseItemOnBlockEvent event) {
+        var player = event.getPlayer();
+        if (
+            event.getUsePhase() == UseItemOnBlockEvent.UsePhase.ITEM_AFTER_BLOCK
+            && event.getHand() == InteractionHand.OFF_HAND
+            && player.getMainHandItem().is(ModItemTags.ANVIL_HAMMER)
+            && AnvilHammerItem.canRocketJump(player)
+        ) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent

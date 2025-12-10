@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.init.item;
+package dev.dubhe.anvilcraft.block.item;
 
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
 import dev.dubhe.anvilcraft.block.heatable.HeatableBlock;
@@ -16,6 +16,7 @@ public class HeatableBlockItem extends BlockItem {
 
     @Override
     protected @Nullable BlockState getPlacementState(BlockPlaceContext context) {
+        if (context.getPlayer().isCreative()) return super.getPlacementState(context);
         return Optional.ofNullable(this.getBlock().getStateForPlacement(context))
             .flatMap(state -> HeatRecorder.getPrevTierHeatableBlock(context.getLevel(), context.getClickedPos(), state))
             .map(block -> block.getStateForPlacement(context))
