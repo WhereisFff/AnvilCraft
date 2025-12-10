@@ -1235,5 +1235,10 @@
   "key.anvilcraft.use_pill_box": "使用药盒",
   "block.anvilcraft.black_hole": "黑洞",
   "item.anvilcraft.spectral_slingshot.unload_return": "取出返还",
-  "item.anvilcraft.spectral_slingshot.unload_vanish": "取出消失"
+  "item.anvilcraft.spectral_slingshot.unload_vanish": "取出消失",
+  "item.anvilcraft.ionocraft_backpack.flight_time_energy": "剩余能量：%s MJ，飞行时间：%s 秒",
+  "tooltip.anvilcraft.item.capacitor": "储存了4000kJ能量",
+  "tooltip.anvilcraft.item.capacitor_empty": "可以储存4000kJ能量",
+  "tooltip.anvilcraft.item.supercapacitor": "储存了80MJ能量",
+  "tooltip.anvilcraft.item.supercapacitor_empty": "可以储存80MJ能量"
 }
