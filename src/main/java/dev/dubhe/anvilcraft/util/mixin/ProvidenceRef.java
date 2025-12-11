@@ -4,27 +4,19 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.enchantment.EnchantedItemInUse;
 import net.minecraft.world.level.Level;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class ProvidenceRef {
-    private static final List<ProvidenceData> SHOULD_TRIGGER = new ArrayList<>();
+    private static final ThreadLocal<Boolean> SHOULD_TRIGGER = new ThreadLocal<>();
 
-    public static void shouldTrigger(
-        ResourceKey<Level> dimension, int enchantmentLevel, EnchantedItemInUse item, int entityId
-    ) {
-        SHOULD_TRIGGER.add(new ProvidenceData(dimension, enchantmentLevel, item, entityId));
+    public static void shouldTrigger() {
+        SHOULD_TRIGGER.set(true);
     }
 
-    public static boolean shouldItTrigger(
-        ResourceKey<Level> dimension, int enchantmentLevel, EnchantedItemInUse item, int entityId
-    ) {
-        int index = SHOULD_TRIGGER.indexOf(new ProvidenceData(dimension, enchantmentLevel, item, entityId));
-        if (index != -1) {
-            SHOULD_TRIGGER.remove(index);
-            return true;
-        }
-        return false;
+    public static boolean shouldItTrigger() {
+        return SHOULD_TRIGGER.get();
+    }
+
+    public static void reset() {
+        SHOULD_TRIGGER.remove();
     }
 
     record ProvidenceData(ResourceKey<Level> dimension, int enchantmentLevel, EnchantedItemInUse item, int entityId) {
