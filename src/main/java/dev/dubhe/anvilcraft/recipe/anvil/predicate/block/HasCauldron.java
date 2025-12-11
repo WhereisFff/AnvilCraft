@@ -32,7 +32,7 @@ import java.util.Optional;
  *
  * <p>用于检查指定位置是否存在特定炼药锅的谓词条件，并在配方完成后处理炼药锅中的流体</p>
  *
- * @param fluid     流体ID
+ * @param fluid     转换时锅中必须存在的流体ID
  * @param consume   消耗量（负数表示产生）
  * @param transform 转换后的流体ID
  */
@@ -102,7 +102,7 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         }
         
         // 检查是否是转换后的炼药锅类型
-        if (curState.is(transformCauldron)) {
+        if (curState.is(HasCauldron.isNull(this.transform) ? fluidCauldron : transformCauldron)) {
             return true;
         }
         
@@ -180,7 +180,15 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
     }
 
     public static boolean isNotEmpty(ResourceLocation fluid) {
-        return !fluid.equals(HasCauldron.NULL) && !fluid.equals(HasCauldron.EMPTY);
+        return !HasCauldron.isNull(fluid) && !HasCauldron.isEmpty(fluid);
+    }
+
+    public static boolean isNull(ResourceLocation fluid) {
+        return fluid.equals(HasCauldron.NULL);
+    }
+
+    public static boolean isEmpty(ResourceLocation fluid) {
+        return fluid.equals(HasCauldron.EMPTY);
     }
 
     public static Optional<Tuple<IntegerProperty, Integer>> getFluidLevel(BlockState state) {
