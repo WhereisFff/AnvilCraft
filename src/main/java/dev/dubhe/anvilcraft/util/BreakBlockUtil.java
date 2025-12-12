@@ -54,7 +54,9 @@ public class BreakBlockUtil {
             .withParameter(LootContextParams.TOOL, tool)
             .withOptionalParameter(LootContextParams.THIS_ENTITY, fakePlayer)
             .withOptionalParameter(LootContextParams.BLOCK_ENTITY, level.getBlockEntity(pos));
-        return state.getDrops(builder);
+        List<ItemStack> itemStacks = state.getDrops(builder);
+        AnvilCraftFakePlayers.anvilcraftDestroyer.disable(fakePlayer);
+        return itemStacks;
     }
 
     public static List<ItemStack> drop(ServerLevel level, BlockPos pos) {
