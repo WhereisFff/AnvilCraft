@@ -41,8 +41,12 @@ public record HammerChangeBlockPacket(
         context.enqueueWork(() -> {
             Level level = context.player().level();
             if (level.isLoaded(pos)) {
-                if (state.getBlock() instanceof FlexibleMultiPartBlock<?,?,?> block) {
-                    block.change(pos, level, blockState -> blockState.setValue(BlockStateProperties.FACING, direction));
+                if (state.getBlock() instanceof FlexibleMultiPartBlock<?, ?, ?> block) {
+                    block.change(
+                        pos,
+                        level,
+                        blockState -> blockState.setValue(BlockStateProperties.FACING, direction)
+                    );
                 } else {
                     level.setBlock(pos, state, Block.UPDATE_ALL_IMMEDIATE);
                 }

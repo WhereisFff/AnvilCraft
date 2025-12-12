@@ -167,7 +167,9 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                         detectionEnd,
                         state,
                         state.getBlock() instanceof IMultiPartBlockModelHolder holder
-                            ? withPropertyValue(holder.mapRealModelHolderBlock(this.replacementLevel, this.targetBlockPos, state), this.property, state)
+                            ? withPropertyValue(holder.mapRealModelHolderBlock(this.replacementLevel, this.targetBlockPos, state),
+                            this.property,
+                            state)
                             : state,
                         Component.literal(
                             "%s".formatted(
