@@ -24,7 +24,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record Merciless(boolean enabled) {
-    public static final Merciless DEFAULT = new Merciless(true);
+    public static final Merciless DEFAULT = new Merciless(false);
     public static final Merciless DISABLED = new Merciless(false);
     public static final ResourceLocation MERCILESS_ID = AnvilCraft.of("merciless");
     public static final Codec<Merciless> CODEC = Codec.BOOL.xmap(Merciless::new, Merciless::enabled);
