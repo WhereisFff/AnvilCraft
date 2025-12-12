@@ -34,7 +34,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.*;
+import net.minecraft.world.item.HoeItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.SwordItem;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
@@ -260,7 +267,8 @@ public abstract class ResonatorItem extends TieredItem {
                 // 只在服务端执行播放声音逻辑，确保来源一致，便于后续发送停止包
                 if (!context.getLevel().isClientSide) {
                     // 播放蓄力声音 (信标环境音，高音调)
-                    context.getLevel().playSound(null, context.getClickedPos(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 1.0F, 2.0F);
+                    context.getLevel()
+                        .playSound(null, context.getClickedPos(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 1.0F, 2.0F);
                 }
                 player.startUsingItem(context.getHand());
                 return InteractionResult.CONSUME;
