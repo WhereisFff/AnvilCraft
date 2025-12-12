@@ -18,16 +18,14 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
-import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.GameRules;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.NeoForge;
@@ -60,8 +58,6 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
     private int fallDamageMax;
     @Unique
     private float anvilcraft$fallDistance;
-    @Unique
-    private BlockPos anvilcraft$cachedSupportPos;
 
     public FallingBlockEntityMixin(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -74,7 +70,7 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
     private BlockPos anvilcraft$redirectBelowInTick(BlockPos instance, Operation<BlockPos> original) {
         Vec3 netGravityVector = GravityManager.getNetGravityVectorForFallingBlock(this);
         // 如果重力向下且没有显著水平分量，使用原版逻辑
-        if (netGravityVector.y < -0.01 && Math.abs(netGravityVector.x) < 0.1 && Math.abs(netGravityVector.z) < 0.1) {
+        if (netGravityVector.y < -0.01 && Math.abs(netGravityVector.x) < 0.01 && Math.abs(netGravityVector.z) < 0.01) {
             return original.call(instance);
         }
         // 卡在方块里则当前坐标是下方
@@ -82,8 +78,7 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
             return instance;
         }
         // 总重力向量的方向是下落方块的下方
-        Direction gravityDirection = Direction.getNearest(netGravityVector.x, netGravityVector.y, netGravityVector.z);
-        return instance.relative(gravityDirection);
+        return instance.relative(Direction.getNearest(netGravityVector.x, netGravityVector.y, netGravityVector.z));
     }
 
     /**
@@ -100,81 +95,54 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
         BlockPos pos = BlockPos.containing(instance.position());
         BlockPos supportPos = pos.relative(gravityDir);
         BlockState supportState = level.getBlockState(supportPos);
-        BlockHitResult hitResult = this.anvilcraft$hitResult(instance, gravityDir);
 
-        // 0. 平衡环境保持实体状态（大概也许可能可以叫拉格朗日点？）
+        // 0. 平衡环境
         if (gravityVec.lengthSqr() < 1.0E-5) return false;
 
         // 1. 碰撞检测
-        if (!this.anvilcraft$checkCollision(instance, gravityDir, original)) {
-            return false;
-        }
-
-        // 如果撞了但是射线检测为空就是撞了硬实体
-        if (hitResult.getType() == HitResult.Type.MISS) {
-
-            // 重力向上的方块需要处理因为实体位置是底面中心
-            if (gravityDir == Direction.UP) {
-                supportPos = supportPos.above();
-                pos = pos.above();
-            }
-
-            // 如果1格内就是地面就着陆，否则碎裂
-            if (!FallingBlock.isFree(level.getBlockState(supportPos))) {
-                if (level.setBlock(pos, instance.blockState, 3)) {
+        if (!this.anvilcraft$checkCollision(instance, gravityDir, original)) return false;
+        // 没撞到就用很短的AABB扫描硬实体
+        AABB checkArea = instance.getBoundingBox().expandTowards(Vec3.atLowerCornerOf(gravityDir.getNormal()).scale(0.025)).inflate(1.0E-7);
+        if (!level.getEntities(instance, checkArea, e -> e.canBeCollidedWith() && !e.isSpectator()).isEmpty()) {
+            // 如果有实体就判断离地距离
+            if (!FallingBlock.isFree(level.getBlockState(gravityDir != Direction.DOWN ? supportPos.relative(gravityDir) : supportPos))) {
+                // 重力朝下如果1格内就是地面就着陆否则碎裂，重力不朝下延伸一格
+                if (gravityDir == Direction.DOWN) return true;
+                else {
+                    instance.dropItem = false;
+                    level.setBlockAndUpdate(supportPos, instance.getBlockState());
+                    AnvilEvent.OnLand event = new AnvilEvent.OnLand(this.level(), supportPos, instance, this.anvilcraft$fallDistance);
+                    NeoForge.EVENT_BUS.post(event);
                     instance.discard();
-                } else {
-                    this.anvilcraft$breakEntity(instance);
                 }
-            } else {
-                this.anvilcraft$breakEntity(instance);
-            }
-            return false;
+            } else this.anvilcraft$breakEntity(instance);
         }
 
-        // 2. 摩擦力与滑行检查
+        // 2. 摩擦力与滑行检查，被摩擦力抓住且速度慢 -> 着陆，速度快或没被摩擦力抓住且有路可走 -> 滑行
         float friction = supportState.isAir() ? 0.6F : supportState.getFriction(level, supportPos, instance);
         boolean isMovingSlowly = instance.getDeltaMovement().lengthSqr() < 0.04;
-
-        // 如果速度慢且被摩擦力抓住 -> 着陆，否则 -> 滑行
         boolean heldByFriction = isMovingSlowly && this.anvilcraft$isHeldByFriction(gravityVec, gravityDir, friction);
-
-        // 如果没被摩擦力抓住 且 有路可走 -> 滑行
-        if (!heldByFriction && this.anvilcraft$hasSlidingPath(level, pos, gravityVec, gravityDir)) {
-            return false;
-        }
+        if (!heldByFriction && this.anvilcraft$hasSlidingPath(level, pos, gravityVec, gravityDir)) return false;
 
         // 3. 稳定性预判
-        // 模拟变成方块后的受力，防止变成方块后立刻又变成实体
-        if (!this.anvilcraft$predictStability(instance, pos)) {
-            return false;
-        }
+        if (!this.anvilcraft$predictStability(instance, pos)) return false;
 
-        // 4. 不完整方块检查
+        // 4. 落地检查
         if (!supportState.isFaceSturdy(level, supportPos, gravityDir.getOpposite())) {
             // 如果面不完整，检查碰撞箱
             VoxelShape shape = supportState.getCollisionShape(level, supportPos);
             boolean isFullHeight;
-
             // 根据重力方向判断检查最大值还是最小值
             if (gravityDir.getAxisDirection() == Direction.AxisDirection.NEGATIVE) {
-                // 向下落撞击顶面，检查 shape.max(axis) 是否接近 1.0
-                isFullHeight = shape.max(gravityDir.getAxis()) >= 1.0 - 1.0E-5;
-            } else {
-                // 向上飞撞击底面，检查 shape.min(axis) 是否接近 0.0
-                isFullHeight = shape.min(gravityDir.getAxis()) <= 1.0E-5;
-            }
-
-            if (!isFullHeight) {
-                this.anvilcraft$breakEntity(instance);
-                return false;
-            }
+                isFullHeight = shape.max(gravityDir.getAxis()) == 1;
+            } else isFullHeight = shape.min(gravityDir.getAxis()) == 0;
+            if (!isFullHeight) this.anvilcraft$breakEntity(instance);
         }
         return true;
     }
 
     /**
-     * 辅助方法：检查特定方向是否发生了碰撞
+     * 辅助方法：检查某方向是否发生了碰撞
      */
     @Unique
     private boolean anvilcraft$checkCollision(FallingBlockEntity entity, Direction gravityDir, Operation<Boolean> original) {
@@ -217,19 +185,11 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
      */
     @Unique
     private boolean anvilcraft$checkAxisSlide(
-        Level level,
-        BlockPos pos,
-        double component,
-        Direction posDir,
-        Direction negDir,
-        Direction forbiddenDir
+        Level level, BlockPos pos, double component, Direction posDir, Direction negDir, Direction forbiddenDir
     ) {
         if (Math.abs(component) <= 1.0E-5) return false;
-
         Direction targetDir = component > 0 ? posDir : negDir;
-        // 不能向地板滑行
-        if (targetDir == forbiddenDir) return false;
-
+        if (targetDir == forbiddenDir) return false; // 不能向地板滑行
         return FallingBlock.isFree(level.getBlockState(pos.relative(targetDir)));
     }
 
@@ -241,16 +201,11 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
     @Unique
     private boolean anvilcraft$predictStability(FallingBlockEntity instance, BlockPos pos) {
         // 如果在方块里直接稳定
-        if (!FallingBlock.isFree(instance.level().getBlockState(pos))) {
-            return true;
-        }
+        if (!FallingBlock.isFree(instance.level().getBlockState(pos))) return true;
 
         Vec3 blockGravity = GravityManager.getNetGravityVectorForFallingBlock(
-            instance.level(),
-            Vec3.atCenterOf(pos),
-            GravityManager.getGravityType(instance)
+            instance.level(), Vec3.atCenterOf(pos), GravityManager.getGravityType(instance)
         );
-
         // 如果方块位置无重力，认为是稳定的
         if (blockGravity.lengthSqr() <= 1.0E-5) return true;
 
@@ -266,12 +221,7 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
 
         // 被摩擦力抓住则稳定，没被抓住则不稳定
         boolean heldByFriction = this.anvilcraft$isHeldByFriction(blockGravity, dir, friction);
-
-        if (!heldByFriction && this.anvilcraft$hasSlidingPath(instance.level(), pos, blockGravity, dir)) {
-            return false;
-        }
-
-        return true;
+        return heldByFriction || !this.anvilcraft$hasSlidingPath(instance.level(), pos, blockGravity, dir);
     }
 
     /**
@@ -283,18 +233,6 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
             instance.spawnAtLocation(instance.getBlockState().getBlock());
         }
         instance.discard();
-    }
-
-    /**
-     * 辅助方法：射线检测判断撞的是方块还是实体
-     */
-    @Unique
-    private BlockHitResult anvilcraft$hitResult(FallingBlockEntity entity, Direction gravityDir) {
-        Vec3 start = entity.getBoundingBox().getCenter();
-        Vec3 end = start.add(Vec3.atLowerCornerOf(gravityDir.getNormal()));
-        return entity.level().clip(new ClipContext(
-            start, end, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity
-        ));
     }
 
     @Inject(
