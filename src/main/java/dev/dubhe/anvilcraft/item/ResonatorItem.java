@@ -5,6 +5,7 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,7 +13,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundStopSoundPacket;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -28,13 +34,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.HoeItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.SwordItem;
-import net.minecraft.world.item.Tier;
-import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.*;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
@@ -42,9 +42,14 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.storage.loot.LootParams;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Range;
@@ -68,6 +73,24 @@ public abstract class ResonatorItem extends TieredItem {
                 .component(DataComponents.TOOL, createToolProperties(tier))
                 .fireResistant()
         );
+    }
+
+    protected boolean isTranscendence(ItemStack stack) {
+        ResourceLocation key = BuiltInRegistries.ITEM.getKey(stack.getItem());
+        return key != null && key.getPath().contains("transcendence_resonator");
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+
+        if (isTranscendence(stack)) {
+            tooltipComponents.add(Component.translatable("tooltip.anvilcraft.resonator.mining_desc")
+                .withStyle(ChatFormatting.GRAY));
+        } else {
+            tooltipComponents.add(Component.translatable("tooltip.anvilcraft.resonator.desc")
+                .withStyle(net.minecraft.ChatFormatting.GRAY));
+        }
     }
 
     public static ItemAttributeModifiers createAttributes(Tier tier, float attackDamage, float attackSpeed) {
@@ -224,15 +247,88 @@ public abstract class ResonatorItem extends TieredItem {
         return stack.getDamageValue() >= stack.getMaxDamage() - 1;
     }
 
+    // --- 共振挖掘相关逻辑 ---
+
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        return switch (ResonatorItem.getMode(context.getItemInHand())) {
+        ItemStack stack = context.getItemInHand();
+        int mode = ResonatorItem.getMode(stack);
+
+        if (mode == AUTO_MODE && isTranscendence(stack) && !isTooDamagedToUse(stack)) {
+            Player player = context.getPlayer();
+            if (player != null) {
+                // 只在服务端执行播放声音逻辑，确保来源一致，便于后续发送停止包
+                if (!context.getLevel().isClientSide) {
+                    // 播放蓄力声音 (信标环境音，高音调)
+                    context.getLevel().playSound(null, context.getClickedPos(), SoundEvents.BEACON_AMBIENT, SoundSource.PLAYERS, 1.0F, 2.0F);
+                }
+                player.startUsingItem(context.getHand());
+                return InteractionResult.CONSUME;
+            }
+        }
+
+        return switch (mode) {
             case AXE_MODE -> this.useOnAsAxe(context);
             case SHOVEL_MODE -> this.useOnAsShovel(context);
             case HOE_MODE -> this.useOnAsHoe(context);
             case PICKAXE_MODE -> this.useOnAsPickaxe(context);
             default -> super.useOn(context);
         };
+    }
+
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return 72000;
+    }
+
+    @Override
+    public void releaseUsing(ItemStack stack, Level level, LivingEntity livingEntity, int timeCharged) {
+        // 松开右键或停止使用时，向客户端发送停止声音的数据包
+        if (!level.isClientSide && livingEntity instanceof ServerPlayer player) {
+            player.connection.send(new ClientboundStopSoundPacket(SoundEvents.BEACON_AMBIENT.getLocation(), SoundSource.PLAYERS));
+        }
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
+        if (level.isClientSide || !(livingEntity instanceof ServerPlayer player)) return;
+
+        // 0.5秒 = 10 ticks
+        if (getUseDuration(stack, livingEntity) - remainingUseDuration >= 10) {
+            // 获取视线方块
+            if (player.pick(player.blockInteractionRange(), 0f, false) instanceof BlockHitResult hit) {
+                BlockPos pos = hit.getBlockPos();
+                BlockState state = level.getBlockState(pos);
+                // 检查是否可破坏 (硬度 >= 0)
+                if (state.getDestroySpeed(level, pos) >= 0) {
+                    performResonanceMining(level, player, pos, state, stack);
+                }
+            }
+            // 停止使用
+            player.stopUsingItem();
+        }
+    }
+
+    private void performResonanceMining(Level level, ServerPlayer player, BlockPos pos, BlockState state, ItemStack tool) {
+        // 1. 停止蓄力音效
+        player.connection.send(new ClientboundStopSoundPacket(SoundEvents.BEACON_AMBIENT.getLocation(), SoundSource.PLAYERS));
+
+        // 2. 获取并生成掉落物
+        LootParams.Builder lootParams = new LootParams.Builder((ServerLevel) level)
+            .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
+            .withParameter(LootContextParams.TOOL, tool)
+            .withOptionalParameter(LootContextParams.THIS_ENTITY, player)
+            .withOptionalParameter(LootContextParams.BLOCK_ENTITY, level.getBlockEntity(pos));
+
+        state.getDrops(lootParams).forEach(drop -> Block.popResource(level, pos, drop));
+
+        // 3. 播放音效和粒子
+        level.playSound(null, pos, SoundEvents.BEACON_DEACTIVATE, SoundSource.PLAYERS, 1.0F, 1.0F);
+        level.levelEvent(2001, pos, Block.getId(state));
+
+        // 4. 破坏方块并扣除耐久
+        level.destroyBlock(pos, false);
+        tool.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
     }
 
     public InteractionResult useOnAsAxe(UseOnContext context) {
