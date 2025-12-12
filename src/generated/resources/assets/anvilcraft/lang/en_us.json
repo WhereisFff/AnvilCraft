@@ -1241,6 +1241,8 @@
   "tooltip.anvilcraft.redstone.output_power": "  Output Power: %d",
   "tooltip.anvilcraft.redstone.power": "  Power: %d",
   "tooltip.anvilcraft.redstone.title": "Redstone Stats:",
+  "tooltip.anvilcraft.resonator.desc": "Press [Alt] to switch modes. Auto mode supports all tools",
+  "tooltip.anvilcraft.resonator.mining_desc": "Press [Alt] to change modes. Auto mode supports all tools and can “resonance‑mine” most blocks when holding right‑click",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s",
   "tooltip.anvilcraft.working_progress.progress": "  %1$s %2$s%%",
   "tooltip.anvilcraft.working_progress.title": "Working progress:"
