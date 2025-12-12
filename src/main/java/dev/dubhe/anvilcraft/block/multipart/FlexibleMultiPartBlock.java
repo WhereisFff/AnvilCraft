@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block.multipart;
 
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.block.state.IFlexibleMultiPartBlockState;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
@@ -18,7 +19,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -74,7 +74,7 @@ public abstract class FlexibleMultiPartBlock<
     }
 
     @Override
-    public Vec3i getOffset(@NotNull BlockState state) {
+    public Vec3i getOffset(BlockState state) {
         return state.getValue(this.getPart()).getOffset(state.getValue(this.getAdditionalProperty()));
     }
 
@@ -87,6 +87,11 @@ public abstract class FlexibleMultiPartBlock<
     public BlockPos getMainPartPos(BlockPos pos, BlockState state) {
         return pos.subtract(this.getOffset(state))
                 .offset(this.mainPart.getOffset(state.getValue(this.getAdditionalProperty())));
+    }
+
+    @Override
+    public BlockState mapRealModelHolderBlock(Level level, BlockPos blockPos, BlockState original) {
+        return level.getBlockState(this.getMainPartPos(blockPos, original));
     }
 
     /**
@@ -160,5 +165,14 @@ public abstract class FlexibleMultiPartBlock<
             BlockHitResult hit
     ) {
         return InteractionResult.PASS;
+    }
+
+    public void change(BlockPos blockPos, Level level, NonNullFunction<BlockState, BlockState> factory) {
+        BlockState blockState = level.getBlockState(blockPos);
+        for (P part : this.getParts()) {
+            BlockPos offset = blockPos.offset(this.offsetFrom(blockState, part));
+            BlockState blockState1 = this.placedState(part, factory.apply(blockState));
+            level.setBlockAndUpdate(offset, blockState1);
+        }
     }
 }

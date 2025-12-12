@@ -45,6 +45,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
@@ -166,7 +167,9 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                         detectionEnd,
                         state,
                         state.getBlock() instanceof IMultiPartBlockModelHolder holder
-                            ? holder.mapRealModelHolderBlock(state)
+                            ? withPropertyValue(holder.mapRealModelHolderBlock(this.replacementLevel, this.targetBlockPos, state),
+                            this.property,
+                            state)
                             : state,
                         Component.literal(
                             "%s".formatted(
@@ -192,6 +195,10 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                 .mul(RADIUS),
             -this.targetAngle
         ).mul(1, -1);
+    }
+
+    private <T extends Comparable<T>> BlockState withPropertyValue(BlockState state, Property<T> property, BlockState blockState) {
+        return state.trySetValue(property, blockState.getValue(property));
     }
 
     @Override
@@ -389,14 +396,25 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                 .add(centerX, centerY);
             float x = center.x;
             float y = center.y;
-            renderRotatedBlock(
-                poseStack,
-                value.modelBlock,
-                x,
-                y,
-                100,
-                ZOOM
-            );
+            if (value.state.getBlock() instanceof IMultiPartBlockModelHolder) {
+                renderRotatedBlock(
+                    poseStack,
+                    value.modelBlock,
+                    x + 5,
+                    y - 4,
+                    100,
+                    5
+                );
+            } else {
+                renderRotatedBlock(
+                    poseStack,
+                    value.modelBlock,
+                    x,
+                    y,
+                    100,
+                    ZOOM
+                );
+            }
             final int textAlpha = (int) (progress * 0xff) << 24;
             poseStack.pushPose();
             float coordinateScale = 0.7f;
@@ -461,14 +479,25 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         for (SelectionItem value : this.items) {
             float x = value.center.x;
             float y = value.center.y;
-            renderRotatedBlock(
-                poseStack,
-                value.modelBlock,
-                x,
-                y,
-                -100,
-                ZOOM
-            );
+            if (value.state.getBlock() instanceof IMultiPartBlockModelHolder) {
+                renderRotatedBlock(
+                    poseStack,
+                    value.modelBlock,
+                    x + 4,
+                    y - 4,
+                    -100,
+                    5
+                );
+            } else {
+                renderRotatedBlock(
+                    poseStack,
+                    value.modelBlock,
+                    x,
+                    y,
+                    -100,
+                    ZOOM
+                );
+            }
             poseStack.pushPose();
             float coordinateScale = 0.7f;
             float offsetX = 0.1f * this.width;
@@ -602,9 +631,11 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                 Block.UPDATE_CLIENTS,
                 0
             );
-            PacketDistributor.sendToServer(new HammerChangeBlockPacket(this.targetBlockPos, this.currentBlockState
-                )
-            );
+            PacketDistributor.sendToServer(new HammerChangeBlockPacket(
+                this.targetBlockPos,
+                this.currentBlockState,
+                this.currentBlockState.getValue(BlockStateProperties.FACING)
+            ));
         } else {
             PacketDistributor.sendToServer(new HammerUsePacket(this.targetBlockPos, this.hand, this.hitVec));
             super.removed();
