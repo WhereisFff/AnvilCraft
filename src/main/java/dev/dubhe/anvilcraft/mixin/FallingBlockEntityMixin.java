@@ -146,9 +146,13 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
      */
     @Unique
     private boolean anvilcraft$checkCollision(FallingBlockEntity entity, Direction gravityDir, Operation<Boolean> original) {
-        if (gravityDir == Direction.DOWN) return original.call(entity);
-        else if (gravityDir == Direction.UP) return entity.verticalCollision && !original.call(entity);
-        else return entity.horizontalCollision;
+        if (gravityDir == Direction.DOWN) {
+            return original.call(entity);
+        } else if (gravityDir == Direction.UP) {
+            return entity.verticalCollision && !original.call(entity);
+        } else {
+            return entity.horizontalCollision;
+        }
     }
 
     /**
