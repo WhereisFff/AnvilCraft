@@ -44,6 +44,17 @@ public class AnvilCraftDestroyerFakePlayer {
         player.setItemInHand(InteractionHand.MAIN_HAND, DUMMY_BREAK_TOOL.copy());
     }
 
+    public void disable(ServerPlayer player) {
+        ENABLED_DESTROYERS.stream()
+            .filter(destroyer -> destroyer.getUUID().equals(player.getUUID()))
+            .findFirst()
+            .ifPresent(destroyer -> {
+                destroyer.getPlayer().setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                DISABLED_DESTROYERS.offer(destroyer);
+                ENABLED_DESTROYERS.remove(destroyer);
+            });
+    }
+
     @Data
     public static final class Destroyer {
         private final GameProfile profile;
