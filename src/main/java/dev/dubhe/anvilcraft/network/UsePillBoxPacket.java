@@ -35,7 +35,6 @@ public record UsePillBoxPacket() implements CustomPacketPayload {
         Inventory inventory = player.getInventory();
         for (int i = 0; i < inventory.items.size(); i++) {
             ItemStack item = inventory.getItem(i);
-            AnvilCraft.LOGGER.debug("item: {}", item);
             if (item.is(ModItems.PILL_BOX)) {
                 if (player.getCooldowns().isOnCooldown(item.getItem())) {
                     return;
