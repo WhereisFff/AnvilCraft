@@ -1240,5 +1240,7 @@
   "tooltip.anvilcraft.item.capacitor": "储存了4000kJ能量",
   "tooltip.anvilcraft.item.capacitor_empty": "可以储存4000kJ能量",
   "tooltip.anvilcraft.item.supercapacitor": "储存了80MJ能量",
-  "tooltip.anvilcraft.item.supercapacitor_empty": "可以储存80MJ能量"
+  "tooltip.anvilcraft.item.supercapacitor_empty": "可以储存80MJ能量",
+  "tooltip.anvilcraft.resonator.desc": "按 [Alt] 切换工具类型，自动模式兼容所有工具类型",
+  "tooltip.anvilcraft.resonator.mining_desc": "按 [Alt] 切换工具类型，自动模式兼容所有工具类型且长按右键可以“共振挖掘”绝大多数方块"
 }
