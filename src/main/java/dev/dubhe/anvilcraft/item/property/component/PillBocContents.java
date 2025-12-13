@@ -91,6 +91,9 @@ public record PillBocContents(int index, List<ItemStack> pills) {
         }
 
         public Optional<ItemStack> get() {
+            if (this.index == -1 && !this.pills.isEmpty()) {
+                return Optional.of(this.pills.removeFirst());
+            }
             if (this.index < 0 || this.index > this.pills.size() - 1) {
                 return Optional.empty();
             }

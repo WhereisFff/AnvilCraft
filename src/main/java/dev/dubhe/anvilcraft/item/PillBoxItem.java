@@ -54,51 +54,63 @@ public class PillBoxItem extends Item {
         Player player,
         SlotAccess access
     ) {
+        final PillBocContents contents = stack.getOrDefault(ModComponents.PILL_BOC_CONTENTS, PillBocContents.EMPTY);
+        final PillBocContents.Mutable mutable = contents.mutable();
         if (!slot.allowModification(player)) {
             return false;
         }
-        PillBocContents contents = stack.getOrDefault(ModComponents.PILL_BOC_CONTENTS, PillBocContents.EMPTY);
-        PillBocContents.Mutable mutable = contents.mutable();
-        if (other.isEmpty()) {
-            Optional<ItemStack> stackOptional = mutable.get();
-            if (stackOptional.isPresent()) {
-                ItemStack itemStack = stackOptional.get();
-                if (!itemStack.isEmpty()) {
-                    access.set(itemStack);
+        if (action == ClickAction.PRIMARY) {
+            if (!other.isEmpty()) {
+                if (mutable.insert(other)) {
                     stack.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
+                    access.set(ItemStack.EMPTY);
                     return true;
                 }
             }
-        } else if (mutable.insert(other)) {
-            stack.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
-            access.set(ItemStack.EMPTY);
-            return true;
+        } else if (action == ClickAction.SECONDARY) {
+            if (other.isEmpty()) {
+                Optional<ItemStack> stackOptional = mutable.get();
+                if (stackOptional.isPresent()) {
+                    ItemStack itemStack = stackOptional.get();
+                    if (!itemStack.isEmpty()) {
+                        access.set(itemStack);
+                        stack.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
 
     @Override
     public boolean overrideStackedOnOther(ItemStack stack, Slot slot, ClickAction action, Player player) {
+        final PillBocContents contents = stack.getOrDefault(ModComponents.PILL_BOC_CONTENTS, PillBocContents.EMPTY);
+        final PillBocContents.Mutable mutable = contents.mutable();
+        final ItemStack other = slot.getItem();
         if (!slot.allowModification(player)) {
             return false;
         }
-        PillBocContents contents = stack.getOrDefault(ModComponents.PILL_BOC_CONTENTS, PillBocContents.EMPTY);
-        PillBocContents.Mutable mutable = contents.mutable();
-        ItemStack other = slot.getItem();
-        if (other.isEmpty()) {
-            Optional<ItemStack> stackOptional = mutable.get();
-            if (stackOptional.isPresent()) {
-                ItemStack itemStack = stackOptional.get();
-                if (!itemStack.isEmpty()) {
-                    slot.set(itemStack);
+        if (action == ClickAction.PRIMARY) {
+            if (!other.isEmpty()) {
+                if (mutable.insert(other)) {
                     stack.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
+                    slot.set(ItemStack.EMPTY);
                     return true;
                 }
             }
-        } else if (mutable.insert(other)) {
-            stack.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
-            slot.set(ItemStack.EMPTY);
-            return true;
+        } else if (action == ClickAction.SECONDARY) {
+            if (other.isEmpty()) {
+                Optional<ItemStack> stackOptional = mutable.get();
+                if (stackOptional.isPresent()) {
+                    ItemStack itemStack = stackOptional.get();
+                    if (!itemStack.isEmpty()) {
+                        slot.set(itemStack);
+                        stack.set(ModComponents.PILL_BOC_CONTENTS, mutable.immutable());
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
