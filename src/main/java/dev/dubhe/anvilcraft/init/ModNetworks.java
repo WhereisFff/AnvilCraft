@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
 import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
+import dev.dubhe.anvilcraft.network.HammerChangeFlexibleMultiPartBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
@@ -101,6 +102,11 @@ public class ModNetworks {
             HammerChangeBlockPacket.TYPE,
             HammerChangeBlockPacket.STREAM_CODEC,
             HammerChangeBlockPacket::handle
+        );
+        registrar.playToServer(
+            HammerChangeFlexibleMultiPartBlockPacket.TYPE,
+            HammerChangeFlexibleMultiPartBlockPacket.STREAM_CODEC,
+            HammerChangeFlexibleMultiPartBlockPacket::handle
         );
         registrar.playToServer(
             CyclingValueSyncPacket.TYPE,
