@@ -13,15 +13,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
-import javax.annotation.Nullable;
-
 public record HammerChangeFlexibleMultiPartBlockPacket(
     BlockPos pos,
     BlockState state,
-    @Nullable
     Direction direction
 ) implements CustomPacketPayload {
-    public static final Type<HammerChangeFlexibleMultiPartBlockPacket> TYPE = new Type<>(AnvilCraft.of("hammer_change_flexible_multi_part_block"));
+    public static final Type<HammerChangeFlexibleMultiPartBlockPacket> TYPE =
+        new Type<>(AnvilCraft.of("hammer_change_flexible_multi_part_block"));
 
     public static final StreamCodec<RegistryFriendlyByteBuf, HammerChangeFlexibleMultiPartBlockPacket> STREAM_CODEC =
         StreamCodec.composite(

@@ -633,7 +633,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                 Block.UPDATE_CLIENTS,
                 0
             );
-            if (this.currentBlockState.getBlock() instanceof FlexibleMultiPartBlock<?,?,?>) {
+            if (this.currentBlockState.getBlock() instanceof FlexibleMultiPartBlock<?, ?, ?>) {
                 PacketDistributor.sendToServer(new HammerChangeFlexibleMultiPartBlockPacket(
                     this.targetBlockPos,
                     this.currentBlockState,
