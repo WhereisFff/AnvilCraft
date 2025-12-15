@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliUtil;
+// import dev.dubhe.anvilcraft.integration.patchouli.util.PatchouliUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -22,7 +22,7 @@ public class GuideBookItem extends Item {
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         if (player instanceof ServerPlayer serverPlayer) {
             if (Util.isLoaded("patchouli")) {
-                PatchouliUtil.openBook(serverPlayer);
+                // PatchouliUtil.openBook(serverPlayer);
                 return new InteractionResultHolder<>(InteractionResult.CONSUME, player.getItemInHand(usedHand));
             } else {
                 serverPlayer.sendSystemMessage(Component.translatable("message.anvilcraft.need_patchouli_installed")

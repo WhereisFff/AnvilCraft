@@ -17,7 +17,6 @@ import dev.dubhe.anvilcraft.block.multipart.IMultiPartBlockModelHolder;
 import dev.dubhe.anvilcraft.client.init.ModRenderTypes;
 import dev.dubhe.anvilcraft.client.init.ModShaders;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
-import dev.dubhe.anvilcraft.integration.create.VisualizationUnsupported;
 import dev.dubhe.anvilcraft.integration.iris.IrisState;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeFlexibleMultiPartBlockPacket;
@@ -112,7 +111,6 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     private final List<BlockState> possibleStates;
     private final Camera camera;
 
-    private final Level replacementLevel = VisualizationUnsupported.wrap(Objects.requireNonNull(minecraft.level));
     private final BlockAndTintGetter fullBrightLevel = new FullBrightLevelProxy(minecraft.level);
     private BlockState currentBlockState;
     private final List<SelectionItem> items = new ArrayList<>();
@@ -169,10 +167,12 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                         detectionEnd,
                         state,
                         state.getBlock() instanceof IMultiPartBlockModelHolder holder
-                            ? withPropertyValue(holder.mapRealModelHolderBlock(this.replacementLevel, this.targetBlockPos, state),
+                        ? withPropertyValue(
+                            holder.mapRealModelHolderBlock(this.minecraft.level, this.targetBlockPos, state),
                             this.property,
-                            state)
-                            : state,
+                            state
+                        )
+                        : state,
                         Component.literal(
                             "%s".formatted(
                                 PROPERTY_TOSTRING.invokeWithArguments(
@@ -272,7 +272,12 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         renderProgressAnimation(guiGraphics, progress, centerX, centerY);
     }
 
-    @SuppressWarnings({"SameParameterValue", "deprecation"})
+    @SuppressWarnings(
+        {
+            "SameParameterValue",
+            "deprecation"
+        }
+    )
     private void renderRotatedBlock(
         PoseStack poseStack,
         BlockState block,
@@ -339,7 +344,6 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
             if (renderer != null) {
                 final Level originalLevel = blockEntity.getLevel();
                 final BlockState originalBlockState = blockEntity.getBlockState();
-                blockEntity.setLevel(replacementLevel);
                 blockEntity.setBlockState(block);
                 renderer.render(
                     blockEntity,

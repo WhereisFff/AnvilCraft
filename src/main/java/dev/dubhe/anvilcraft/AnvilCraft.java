@@ -42,7 +42,6 @@ import dev.dubhe.anvilcraft.init.loot.ModLootItemFunctions;
 import dev.dubhe.anvilcraft.init.loot.ModLootModifiers;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeInits;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
-import dev.dubhe.anvilcraft.integration.top.AnvilCraftTopPlugin;
 import dev.dubhe.anvilcraft.recipe.anvil.cache.RecipeCaches;
 import dev.dubhe.anvilcraft.util.ModInteractionMap;
 import dev.dubhe.anvilcraft.util.Util;
@@ -176,10 +175,6 @@ public class AnvilCraft {
         event.enqueueWork(() -> {
             ModDispenserBehavior.register();
             ModInteractionMap.initInteractionMap();
-            if (Util.isLoaded("theoneprobe")) {
-                LOGGER.info("TheOneProbe found. Loading AnvilCraft TheOneProbe plugin...");
-                AnvilCraftTopPlugin.init();
-            }
             if (Util.isLoaded("apothic_enchanting")) {
                 LOGGER.info(
                     "Apothic Enchanting found. Set royalAnvilBeyondMaxLevel, "
