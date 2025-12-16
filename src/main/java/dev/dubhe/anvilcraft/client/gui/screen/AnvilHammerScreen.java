@@ -111,7 +111,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     private final List<BlockState> possibleStates;
     private final Camera camera;
 
-    private final BlockAndTintGetter fullBrightLevel = new FullBrightLevelProxy(minecraft.level);
+    private final BlockAndTintGetter fullBrightLevel = new FullBrightLevelProxy(this.minecraft.level);
     private BlockState currentBlockState;
     private final List<SelectionItem> items = new ArrayList<>();
     private long displayTime = System.currentTimeMillis();
@@ -272,12 +272,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         renderProgressAnimation(guiGraphics, progress, centerX, centerY);
     }
 
-    @SuppressWarnings(
-        {
-            "SameParameterValue",
-            "deprecation"
-        }
-    )
+    @SuppressWarnings({"SameParameterValue", "deprecation"})
     private void renderRotatedBlock(
         PoseStack poseStack,
         BlockState block,
