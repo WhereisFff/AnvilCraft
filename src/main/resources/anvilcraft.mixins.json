@@ -72,8 +72,6 @@
     "invoker.BlockItemInvoker",
     "piglin.AbstractPiglinMixin",
     "piglin.PiglinMixin",
-    "piston.PistonBaseBlockMixin",
-    "piston.PistonMovingBlockEntityMixin",
     "poachfixers.GiveCommandMixin",
     "poachfixers.ArchitecturyItemStackHooksMixin",
     "poachfixers.JeiServerCommandUtilMixin",
