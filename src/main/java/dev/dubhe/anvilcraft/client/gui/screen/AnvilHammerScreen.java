@@ -12,6 +12,7 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.math.Axis;
 import dev.dubhe.anvilcraft.api.hammer.IHasHammerEffect;
 import dev.dubhe.anvilcraft.api.input.IMouseHandlerExtension;
+import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.multipart.IMultiPartBlockModelHolder;
 import dev.dubhe.anvilcraft.client.init.ModRenderTypes;
 import dev.dubhe.anvilcraft.client.init.ModShaders;
@@ -19,6 +20,7 @@ import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.integration.create.VisualizationUnsupported;
 import dev.dubhe.anvilcraft.integration.iris.IrisState;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
+import dev.dubhe.anvilcraft.network.HammerChangeFlexibleMultiPartBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.util.FullBrightLevelProxy;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -631,11 +633,18 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                 Block.UPDATE_CLIENTS,
                 0
             );
-            PacketDistributor.sendToServer(new HammerChangeBlockPacket(
-                this.targetBlockPos,
-                this.currentBlockState,
-                this.currentBlockState.getValue(BlockStateProperties.FACING)
-            ));
+            if (this.currentBlockState.getBlock() instanceof FlexibleMultiPartBlock<?, ?, ?>) {
+                PacketDistributor.sendToServer(new HammerChangeFlexibleMultiPartBlockPacket(
+                    this.targetBlockPos,
+                    this.currentBlockState,
+                    this.currentBlockState.getValue(BlockStateProperties.FACING)
+                ));
+            } else {
+                PacketDistributor.sendToServer(new HammerChangeBlockPacket(
+                    this.targetBlockPos,
+                    this.currentBlockState
+                ));
+            }
         } else {
             PacketDistributor.sendToServer(new HammerUsePacket(this.targetBlockPos, this.hand, this.hitVec));
             super.removed();
