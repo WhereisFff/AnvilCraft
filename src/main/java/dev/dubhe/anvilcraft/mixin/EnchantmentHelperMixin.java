@@ -35,7 +35,10 @@ abstract class EnchantmentHelperMixin {
         Operation<Void> original,
         @Local Holder<Enchantment> enchantment
     ) {
-        if (!enchantment.is(ModEnchantmentTags.PROVIDENCE_BONUS)) return;
+        if (!enchantment.is(ModEnchantmentTags.PROVIDENCE_BONUS)) {
+            original.call(instance, holder, i, enchantedItemInUse);
+            return;
+        }
         ProvidenceRef.shouldTrigger();
         original.call(instance, holder, i, enchantedItemInUse);
         ProvidenceRef.reset();
