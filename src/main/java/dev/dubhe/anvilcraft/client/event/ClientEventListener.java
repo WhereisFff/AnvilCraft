@@ -15,8 +15,8 @@ import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
-import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.network.UsePillBoxPacket;
+import dev.dubhe.anvilcraft.network.multiple.MultiphasePackets;
 import dev.dubhe.anvilcraft.util.BlockHighlightUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -86,12 +86,12 @@ public class ClientEventListener {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player == null) return;
                 ItemStack stack = player.getMainHandItem();
-                if (stack.has(ModComponents.MULTIPHASE)) {
+                if (stack.has(ModComponents.MULTIPHASE) && !stack.get(ModComponents.MULTIPHASE).isEmpty()) {
                     Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.MAIN_HAND));
                     return;
                 }
                 stack = player.getOffhandItem();
-                if (stack.has(ModComponents.MULTIPHASE)) {
+                if (stack.has(ModComponents.MULTIPHASE) && !stack.get(ModComponents.MULTIPHASE).isEmpty()) {
                     Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.OFF_HAND));
                 }
             }
@@ -100,7 +100,7 @@ public class ClientEventListener {
                 break switchPhase;
             }
             if (lastSwitchPhasePressAction == InputConstants.PRESS) {
-                PacketDistributor.sendToServer(new SwitchPhasePacket());
+                PacketDistributor.sendToServer(new MultiphasePackets.SwitchPhase());
             } else if (
                 lastSwitchPhasePressAction == InputConstants.REPEAT
                 && Minecraft.getInstance().screen instanceof MultiphaseScreen screen

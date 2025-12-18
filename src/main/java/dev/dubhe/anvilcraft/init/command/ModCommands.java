@@ -1,8 +1,10 @@
-package dev.dubhe.anvilcraft.init;
+package dev.dubhe.anvilcraft.init.command;
 
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import dev.dubhe.anvilcraft.command.MultiphaseCommand;
 import dev.dubhe.anvilcraft.command.PowergridCommand;
+import dev.dubhe.anvilcraft.init.ModInspections;
 import net.minecraft.commands.CommandSourceStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +15,7 @@ public class ModCommands {
         LiteralArgumentBuilder<CommandSourceStack> root = literal("anvilcraft");
         ModInspections.INSTANCE.registerCommand(root);
         PowergridCommand.registerCommand(root);
+        MultiphaseCommand.registerCommand(root);
         dispatcher.register(root);
     }
 }
