@@ -1,9 +1,5 @@
 package dev.dubhe.anvilcraft.util.mixin;
 
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.enchantment.EnchantedItemInUse;
-import net.minecraft.world.level.Level;
-
 public class ProvidenceRef {
     private static final ThreadLocal<Boolean> SHOULD_TRIGGER = new ThreadLocal<>();
 
@@ -17,8 +13,5 @@ public class ProvidenceRef {
 
     public static void reset() {
         SHOULD_TRIGGER.remove();
-    }
-
-    record ProvidenceData(ResourceKey<Level> dimension, int enchantmentLevel, EnchantedItemInUse item, int entityId) {
     }
 }
