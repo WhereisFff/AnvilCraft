@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
 import com.google.common.collect.Multimap;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.LinkedList;
@@ -33,5 +34,13 @@ public class CollectionUtil {
 
     public static <T> LinkedList<T> newLinkedList(int ignored) {
         return new LinkedList<>();
+    }
+
+    public static <T> @Nullable T get(Collection<T> collection, int index) {
+        int i = 0;
+        for (T t : collection) {
+            if (i++ == index) return t;
+        }
+        return null;
     }
 }
