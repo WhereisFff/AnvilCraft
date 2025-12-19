@@ -19,5 +19,6 @@ public class LangHandler {
         CommandLang.init(provider);
         KeyMappingLang.init(provider);
         FluidLang.init(provider);
+        IntegrationScreenLang.init(provider);
     }
 }
