@@ -161,7 +161,7 @@ public class IntegrationScreen extends Screen {
             PoseStack pose = guiGraphics.pose();
             pose.pushPose();
             pose.translate(x, y, 0);
-            pose.scale(1.5f, 1.5f, 1.0f);
+            pose.scale(1.25f, 1.25f, 1.0f);
             Minecraft minecraft = Minecraft.getInstance();
             guiGraphics.drawString(minecraft.font, this.label.getFirst(), 0, 0, -1, false);
             pose.popPose();

@@ -9,6 +9,8 @@ public class ThoughtManager {
     private static boolean onThought = false;
     @Getter
     private static long lastThoughtTime = -1L;
+    @Getter
+    private static final double MAX_SECONDS = 1.0;
 
     public static void onThought() {
         boolean checked = ThoughtManager.check();

@@ -26,7 +26,7 @@ public interface Thinkable {
         long curTime = minecraft.gui.getGuiTicks();
         long deltaTime = curTime - lastThoughtTime;
         final int maxPlaceholderCount = 20;
-        final double maxSeconds = 1.5;
+        final double maxSeconds = ThoughtManager.getMAX_SECONDS();
         int placeholderCount = (int) Math.floor(Math.min(deltaTime, 20 * maxSeconds) / (20 * maxSeconds) * maxPlaceholderCount);
         int blankCount = maxPlaceholderCount - placeholderCount;
         StringBuilder builder = new StringBuilder("[");
