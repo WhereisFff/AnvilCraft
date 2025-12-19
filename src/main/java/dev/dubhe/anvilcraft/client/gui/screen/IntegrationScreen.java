@@ -23,9 +23,12 @@ import net.minecraft.client.gui.narration.NarratedElementType;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 
 import java.net.URI;
@@ -60,17 +63,25 @@ public class IntegrationScreen extends Screen {
     final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
     @Nullable
     private IntegrationList integrationList;
+    private final Screen lastScreen;
 
-    public IntegrationScreen() {
+    public IntegrationScreen(@Nullable Screen screen) {
         super(IntegrationScreen.TITLE);
+        this.lastScreen = screen;
     }
 
     @Override
     protected void init() {
+        Minecraft minecraft = Minecraft.getInstance();
+        minecraft.getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BOOK_PAGE_TURN, 1.0F));
         this.layout.addTitleHeader(TITLE, this.font);
         this.integrationList = this.layout.addToContents(new IntegrationList());
         LinearLayout linearlayout = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
-        linearlayout.addChild(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose()).build());
+        linearlayout.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
+            if (this.lastScreen != null) {
+                minecraft.setScreen(this.lastScreen);
+            }
+        }).build());
         this.layout.visitWidgets(this::addRenderableWidget);
         this.repositionElements();
     }

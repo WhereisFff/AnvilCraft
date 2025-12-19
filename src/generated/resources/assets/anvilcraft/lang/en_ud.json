@@ -880,6 +880,7 @@
   "jei.anvilcraft.tooltip.not_consumed": "pǝɯnsuoƆ ʇoN",
   "key.anvilcraft.switch_phase": "ǝsɐɥԀ ɥɔʇıʍS",
   "key.anvilcraft.switch_resonate_mode": "ǝpoW ǝʇɐuosǝᴚ ɥɔʇıʍS",
+  "key.anvilcraft.thought": "ʇɥbnoɥ⟘",
   "key.anvilcraft.toggle_goggle": "ǝpoW ǝןbbo⅁ ǝןbbo⟘",
   "key.anvilcraft.use_pill_box": "xoᗺ ןןıԀ ǝs∩",
   "key.categories.anvilcraft": "ʇɟɐɹƆןıʌuⱯ",
@@ -1288,6 +1289,7 @@
   "tooltip.anvilcraft.resonator.desc": "sןooʇ ןןɐ sʇɹoddns ǝpoɯ oʇnⱯ ˙sǝpoɯ ɥɔʇıʍs oʇ ]ʇןⱯ[ ssǝɹԀ",
   "tooltip.anvilcraft.resonator.mining_desc": "ʞɔıןɔ‑ʇɥbıɹ buıpןoɥ uǝɥʍ sʞɔoןq ʇsoɯ ”ǝuıɯ‑ǝɔuɐuosǝɹ“ uɐɔ puɐ sןooʇ ןןɐ sʇɹoddns ǝpoɯ oʇnⱯ ˙sǝpoɯ ǝbuɐɥɔ oʇ ]ʇןⱯ[ ssǝɹԀ",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "%s :ssɐW pǝɹoʇS",
+  "tooltip.anvilcraft.thought": "˙ʇɥbnoɥʇ oʇ ]%s[ ssǝɹԀ",
   "tooltip.anvilcraft.working_progress.progress": "%2$s%% %1$s  ",
   "tooltip.anvilcraft.working_progress.title": ":ssǝɹboɹd buıʞɹoM"
 }

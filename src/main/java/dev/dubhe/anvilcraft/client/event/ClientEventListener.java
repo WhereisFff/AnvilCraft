@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.client.AnvilCraftClient;
+import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.MultiphaseScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.MultitoolScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ResonatorScreen;
@@ -12,6 +13,7 @@ import dev.dubhe.anvilcraft.client.support.AmuletSelectorSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.integration.IntegrationUtil;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
@@ -31,8 +33,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.ClientTickEvent;
 import net.neoforged.neoforge.client.event.ContainerScreenEvent;
-import net.neoforged.neoforge.client.event.InputEvent.Key;
+import net.neoforged.neoforge.client.event.InputEvent;
 import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import net.neoforged.neoforge.client.event.RenderTooltipEvent;
@@ -72,7 +75,7 @@ public class ClientEventListener {
     private static int lastSwitchPhasePressAction = 0;
 
     @SubscribeEvent
-    public static void onKeyPress(Key event) {
+    public static void onKeyPress(InputEvent.Key event) {
         if (ModKeyMappings.TOGGLE_GOGGLE.get().isDown()) AnvilHammerItem.goggleEnabled = !AnvilHammerItem.goggleEnabled;
         if (Minecraft.getInstance().level == null) return;
 
@@ -86,11 +89,13 @@ public class ClientEventListener {
                 LocalPlayer player = Minecraft.getInstance().player;
                 if (player == null) return;
                 ItemStack stack = player.getMainHandItem();
+                // noinspection DataFlowIssue
                 if (stack.has(ModComponents.MULTIPHASE) && !stack.get(ModComponents.MULTIPHASE).isEmpty()) {
                     Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.MAIN_HAND));
                     return;
                 }
                 stack = player.getOffhandItem();
+                // noinspection DataFlowIssue
                 if (stack.has(ModComponents.MULTIPHASE) && !stack.get(ModComponents.MULTIPHASE).isEmpty()) {
                     Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.OFF_HAND));
                 }
@@ -155,6 +160,35 @@ public class ClientEventListener {
                     connection.send(new UsePillBoxPacket());
                 }
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onScreenKeyPressed(ScreenEvent.KeyPressed.Post event) {
+        if (event.getKeyCode() == ModKeyMappings.THOUGHT.get().getKey().getValue()) {
+            IntegrationUtil.onThought();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onScreenKeyReleased(ScreenEvent.KeyReleased.Post event) {
+        if (event.getKeyCode() == ModKeyMappings.THOUGHT.get().getKey().getValue()) {
+            IntegrationUtil.onEndThought();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent.Post event) {
+        long lastThoughtTime = IntegrationUtil.getLastThoughtTime();
+        if (lastThoughtTime < 0) {
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        long curTime = minecraft.gui.getGuiTicks();
+        long deltaTime = curTime - lastThoughtTime;
+        final double maxSeconds = 1.5;
+        if (deltaTime > maxSeconds * 20) {
+            minecraft.setScreen(new IntegrationScreen(minecraft.screen));
         }
     }
 

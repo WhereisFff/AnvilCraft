@@ -34,10 +34,11 @@ public class OpenIntegrationScreenPacket implements CustomPacketPayload {
 
     public void clientHandler(IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (Minecraft.getInstance().screen instanceof IntegrationScreen) {
+            Minecraft minecraft = Minecraft.getInstance();
+            if (minecraft.screen instanceof IntegrationScreen) {
                 return;
             }
-            Minecraft.getInstance().setScreen(new IntegrationScreen());
+            minecraft.setScreen(new IntegrationScreen(minecraft.screen));
         });
     }
 }

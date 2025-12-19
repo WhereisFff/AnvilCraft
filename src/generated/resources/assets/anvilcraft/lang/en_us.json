@@ -880,6 +880,7 @@
   "jei.anvilcraft.tooltip.not_consumed": "Not Consumed",
   "key.anvilcraft.switch_phase": "Switch Phase",
   "key.anvilcraft.switch_resonate_mode": "Switch Resonate Mode",
+  "key.anvilcraft.thought": "Thought",
   "key.anvilcraft.toggle_goggle": "Toggle Goggle Mode",
   "key.anvilcraft.use_pill_box": "Use Pill Box",
   "key.categories.anvilcraft": "AnvilCraft",
@@ -1288,6 +1289,7 @@
   "tooltip.anvilcraft.resonator.desc": "Press [Alt] to switch modes. Auto mode supports all tools",
   "tooltip.anvilcraft.resonator.mining_desc": "Press [Alt] to change modes. Auto mode supports all tools and can “resonance‑mine” most blocks when holding right‑click",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s",
+  "tooltip.anvilcraft.thought": "Press [%s] to thought.",
   "tooltip.anvilcraft.working_progress.progress": "  %1$s %2$s%%",
   "tooltip.anvilcraft.working_progress.title": "Working progress:"
 }
