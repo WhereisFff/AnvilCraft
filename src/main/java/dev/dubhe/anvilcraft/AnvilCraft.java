@@ -13,7 +13,6 @@ import dev.dubhe.anvilcraft.config.AnvilCraftServerConfig;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.dfu.AnvilCraftDfu;
 import dev.dubhe.anvilcraft.init.ModAttachments;
-import dev.dubhe.anvilcraft.init.ModCommands;
 import dev.dubhe.anvilcraft.init.ModCriterionTriggers;
 import dev.dubhe.anvilcraft.init.ModDataAttachments;
 import dev.dubhe.anvilcraft.init.ModDispenserBehavior;
@@ -23,9 +22,11 @@ import dev.dubhe.anvilcraft.init.ModMobEffects;
 import dev.dubhe.anvilcraft.init.ModNetworks;
 import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.ModResultModifierTypes;
+import dev.dubhe.anvilcraft.init.ModUuidProviders;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
+import dev.dubhe.anvilcraft.init.command.ModCommands;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentEffectComponents;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentEffects;
 import dev.dubhe.anvilcraft.init.entity.ModEntities;
@@ -97,6 +98,7 @@ public class AnvilCraft {
         ModMobEffects.register(modEventBus);
         ModInspections.initialize();
         ModItemSubPredicates.initialize(modEventBus);
+        ModUuidProviders.register(modEventBus);
 
         ModCriterionTriggers.register(modEventBus);
         ModLootContextParamSets.registerAll();

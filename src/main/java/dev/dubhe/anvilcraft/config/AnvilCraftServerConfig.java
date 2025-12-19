@@ -156,4 +156,7 @@ public class AnvilCraftServerConfig {
 
     @Comment("Whether to clean fluid after updating Menger Sponge")
     public boolean cleanFluidAfterUpdateMengerSponge = false;
+
+    @Comment("The max size of the entries in multiphases' recover station")
+    public int multiphaseRecoverMaxSize = 20;
 }

@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.api.injection.block.entity;
+package dev.dubhe.anvilcraft.network.multiple;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

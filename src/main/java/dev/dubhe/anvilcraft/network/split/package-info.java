@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.mixin.piston;
+package dev.dubhe.anvilcraft.network.split;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

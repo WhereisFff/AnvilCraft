@@ -9,7 +9,7 @@ import dev.dubhe.anvilcraft.item.property.component.Eternal;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.item.property.component.HeliostatsData;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
-import dev.dubhe.anvilcraft.item.property.component.Multiphase;
+import dev.dubhe.anvilcraft.item.property.component.MultiphaseRef;
 import dev.dubhe.anvilcraft.item.property.component.PillBocContents;
 import dev.dubhe.anvilcraft.item.property.component.Providence;
 import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
@@ -73,9 +73,9 @@ public class ModComponents {
 
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
-    public static final DataComponentType<Multiphase> MULTIPHASE = register(
+    public static final DataComponentType<MultiphaseRef> MULTIPHASE = register(
         "multiphase",
-        b -> b.persistent(Multiphase.CODEC).networkSynchronized(Multiphase.STREAM_CODEC)
+        b -> b.persistent(MultiphaseRef.CODEC.codec()).networkSynchronized(MultiphaseRef.STREAM_CODEC)
     );
 
     public static final DataComponentType<Merciless> MERCILESS = register(
