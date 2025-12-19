@@ -3,11 +3,14 @@ package dev.dubhe.anvilcraft.api.thought;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforgespi.Environment;
 
 import java.util.List;
 
 public interface Thinkable {
+    @OnlyIn(Dist.CLIENT)
     default void appendHoverText(List<Component> tooltipComponents) {
         if (!Environment.get().getDist().isClient()) {
             return;
@@ -35,6 +38,7 @@ public interface Thinkable {
         tooltipComponents.add(Component.literal(builder.append("]").toString()).withStyle(ChatFormatting.GRAY));
     }
 
+    @OnlyIn(Dist.CLIENT)
     default void onThought() {
     }
 }
