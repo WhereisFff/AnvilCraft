@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.thought.Thinkable;
 import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
+import dev.dubhe.anvilcraft.integration.IntegrationUtil;
 import dev.dubhe.anvilcraft.network.OpenIntegrationScreenPacket;
 import dev.dubhe.anvilcraft.util.ModEventUtil;
 import net.minecraft.client.Minecraft;
@@ -48,7 +49,6 @@ public class GuideBookItem extends Item implements Thinkable {
     @Override
     @OnlyIn(Dist.CLIENT)
     public void onThought() {
-        Minecraft minecraft = Minecraft.getInstance();
-        minecraft.setScreen(new IntegrationScreen(minecraft.screen));
+        IntegrationUtil.openIntegrationScreen();
     }
 }

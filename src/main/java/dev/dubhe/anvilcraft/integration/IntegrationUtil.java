@@ -9,6 +9,8 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 
@@ -209,5 +211,11 @@ public class IntegrationUtil {
         LOADED,
         NOT_LOADED,
         NOT_FOUND
+    }
+
+    public static void openIntegrationScreen() {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.screen instanceof IntegrationScreen) return;
+        minecraft.setScreen(new IntegrationScreen(minecraft.screen));
     }
 }

@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.network;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
-import net.minecraft.client.Minecraft;
+import dev.dubhe.anvilcraft.integration.IntegrationUtil;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -33,10 +32,6 @@ public class OpenIntegrationScreenPacket implements CustomPacketPayload {
     }
 
     public void clientHandler(IPayloadContext context) {
-        Minecraft minecraft = Minecraft.getInstance();
-        context.enqueueWork(() -> {
-            if (minecraft.screen instanceof IntegrationScreen) return;
-            minecraft.setScreen(new IntegrationScreen(minecraft.screen));
-        });
+        context.enqueueWork(IntegrationUtil::openIntegrationScreen);
     }
 }
