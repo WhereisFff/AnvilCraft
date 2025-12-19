@@ -128,7 +128,7 @@ public class AnvilCollisionCraftRecipeLoader {
             .save(provider);
     }
 
-    private static void forEachAnvil(Consumer<Block> block, Block ... anvils) {
+    private static void forEachAnvil(Consumer<Block> block, Block... anvils) {
         for (Block anvil : anvils) {
             block.accept(anvil);
         }
