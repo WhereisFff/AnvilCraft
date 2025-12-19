@@ -10,7 +10,6 @@ import dev.dubhe.anvilcraft.saved.multiphase.Multiphase;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -20,7 +19,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -114,7 +112,7 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
         return repairCost instanceof Integer it ? it : 0;
     }
 
-    private static @NotNull ItemEnchantments processItemEnchantments(@Nullable Object enchantments) {
+    private static ItemEnchantments processItemEnchantments(@Nullable Object enchantments) {
         return enchantments instanceof ItemEnchantments it ? it : ItemEnchantments.EMPTY;
     }
 
@@ -273,12 +271,12 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
             .map(MultiphaseData::fromType, MultiphaseData::type).cast();
 
         @Override
-        public @NotNull MapCodec<MultiphaseData> codec() {
+        public MapCodec<MultiphaseData> codec() {
             return Type.CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, MultiphaseData> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, MultiphaseData> streamCodec() {
             return Type.STREAM_CODEC;
         }
     }

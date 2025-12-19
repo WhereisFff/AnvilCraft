@@ -1,11 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.api.thought.Thinkable;
-import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
 import dev.dubhe.anvilcraft.integration.IntegrationUtil;
 import dev.dubhe.anvilcraft.network.OpenIntegrationScreenPacket;
 import dev.dubhe.anvilcraft.util.ModEventUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;

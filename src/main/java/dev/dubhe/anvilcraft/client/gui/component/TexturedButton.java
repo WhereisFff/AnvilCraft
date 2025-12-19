@@ -4,7 +4,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 public class TexturedButton extends Button {
     private final int texYDiff;
@@ -32,7 +31,7 @@ public class TexturedButton extends Button {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         this.isHovered = this.isMouseOver(mouseX, mouseY);
         int offsetV = 0;
         if (this.isHovered) {

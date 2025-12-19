@@ -6,12 +6,11 @@ import dev.dubhe.anvilcraft.command.MultiphaseCommand;
 import dev.dubhe.anvilcraft.command.PowergridCommand;
 import dev.dubhe.anvilcraft.init.ModInspections;
 import net.minecraft.commands.CommandSourceStack;
-import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.commands.Commands.literal;
 
 public class ModCommands {
-    public static void register(@NotNull CommandDispatcher<CommandSourceStack> dispatcher) {
+    public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         LiteralArgumentBuilder<CommandSourceStack> root = literal("anvilcraft");
         ModInspections.INSTANCE.registerCommand(root);
         PowergridCommand.registerCommand(root);

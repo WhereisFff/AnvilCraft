@@ -8,7 +8,6 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.util.thread.SidedThreadGroups;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -63,15 +62,15 @@ public class Util {
         return Optional.of(collection);
     }
 
-    public static @NotNull String generateUniqueRecipeSuffix() {
+    public static String generateUniqueRecipeSuffix() {
         return "_generated_" + generateRandomString(8, true, false);
     }
 
-    public static @NotNull String generateRandomString(int len) {
+    public static String generateRandomString(int len) {
         return generateRandomString(len, true, true);
     }
 
-    public static @NotNull String generateRandomString(int len, boolean hasInteger, boolean hasUpperLetter) {
+    public static String generateRandomString(int len, boolean hasInteger, boolean hasUpperLetter) {
         String ch = "abcdefghijklmnopqrstuvwxyz" + (hasUpperLetter ? "ABCDEFGHIGKLMNOPQRSTUVWXYZ" : "")
             + (hasInteger ? "0123456789" : "");
         StringBuilder stringBuffer = new StringBuilder();
@@ -139,7 +138,7 @@ public class Util {
      * @throws ClassCastException 当无法将传入的值强转时抛出
      */
     @SuppressWarnings("unchecked")
-    public static <T> T cast(@NotNull Object o) {
+    public static <T> T cast(Object o) {
         return (T) o;
     }
 

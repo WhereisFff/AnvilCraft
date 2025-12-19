@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
 import dev.dubhe.anvilcraft.api.thought.ThoughtManager;
 import dev.dubhe.anvilcraft.client.AnvilCraftClient;
-import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.MultiphaseScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.MultitoolScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ResonatorScreen;
