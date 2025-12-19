@@ -660,10 +660,12 @@
   "gui.anvilcraft.category.void_decay.random_tick": "ʞɔıʇ ɯopuɐɹ pǝʌıǝɔǝɹ uǝɥʍ pǝʇɹǝʌuoɔ ǝq ןןıʍ ɹǝʇuǝɔ ʇɐ ʞɔoןq ǝɥ⟘",
   "hud.anvilcraft.ionocraft_backpack_power": "%d%% :ɹǝʍoԀ ʞɔɐdʞɔɐᗺ ʇɟɐɹɔouoI",
   "integration.anvilcraft.additional.skyland": "puɐןʎʞS",
+  "integration.anvilcraft.compatible.better_beacons": "suoɔɐǝᗺ ɹǝʇʇǝᗺ sNOᗺᴚƎƆ",
   "integration.anvilcraft.guide.guideme": "ƎWǝpın⅁",
   "integration.anvilcraft.guide.patchouli": "ıןnoɥɔʇɐԀ",
   "integration.anvilcraft.guide.ponder": "ɹǝpuoԀ",
   "integration.anvilcraft.info_hud.jade": "ǝpɐſ",
+  "integration.anvilcraft.interaction.ae2": "ᄅ sɔıʇsıbɹǝuƎ pǝıןddⱯ",
   "integration.anvilcraft.interaction.create": "ǝʇɐǝɹƆ",
   "integration.anvilcraft.modify.kubejs": "Sſǝqnʞ",
   "integration.anvilcraft.recipe_query.jei": "IƎſ",
@@ -1289,7 +1291,7 @@
   "tooltip.anvilcraft.resonator.desc": "sןooʇ ןןɐ sʇɹoddns ǝpoɯ oʇnⱯ ˙sǝpoɯ ɥɔʇıʍs oʇ ]ʇןⱯ[ ssǝɹԀ",
   "tooltip.anvilcraft.resonator.mining_desc": "ʞɔıןɔ‑ʇɥbıɹ buıpןoɥ uǝɥʍ sʞɔoןq ʇsoɯ ”ǝuıɯ‑ǝɔuɐuosǝɹ“ uɐɔ puɐ sןooʇ ןןɐ sʇɹoddns ǝpoɯ oʇnⱯ ˙sǝpoɯ ǝbuɐɥɔ oʇ ]ʇןⱯ[ ssǝɹԀ",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "%s :ssɐW pǝɹoʇS",
-  "tooltip.anvilcraft.thought": "˙ʇɥbnoɥʇ oʇ ]%s[ ssǝɹԀ",
+  "tooltip.anvilcraft.thought": "˙ʞuıɥʇ oʇ ]%s[ ssǝɹԀ",
   "tooltip.anvilcraft.working_progress.progress": "%2$s%% %1$s  ",
   "tooltip.anvilcraft.working_progress.title": ":ssǝɹboɹd buıʞɹoM"
 }

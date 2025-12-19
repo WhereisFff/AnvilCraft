@@ -29,6 +29,8 @@ public class IntegrationScreenLang {
         provider.add("integration.anvilcraft.info_hud.jade", "Jade");
         provider.add("integration.anvilcraft.modify.kubejs", "KubeJS");
         provider.add("integration.anvilcraft.interaction.create", "Create");
+        provider.add("integration.anvilcraft.interaction.ae2", "Applied Energistics 2");
+        provider.add("integration.anvilcraft.compatible.better_beacons", "CERBONs Better Beacons");
         provider.add("integration.anvilcraft.additional.skyland", "Skyland");
     }
 }

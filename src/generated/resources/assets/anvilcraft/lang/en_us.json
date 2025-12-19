@@ -660,10 +660,12 @@
   "gui.anvilcraft.category.void_decay.random_tick": "The block at center will be converted when received random tick",
   "hud.anvilcraft.ionocraft_backpack_power": "Ionocraft Backpack Power: %d%%",
   "integration.anvilcraft.additional.skyland": "Skyland",
+  "integration.anvilcraft.compatible.better_beacons": "CERBONs Better Beacons",
   "integration.anvilcraft.guide.guideme": "GuideME",
   "integration.anvilcraft.guide.patchouli": "Patchouli",
   "integration.anvilcraft.guide.ponder": "Ponder",
   "integration.anvilcraft.info_hud.jade": "Jade",
+  "integration.anvilcraft.interaction.ae2": "Applied Energistics 2",
   "integration.anvilcraft.interaction.create": "Create",
   "integration.anvilcraft.modify.kubejs": "KubeJS",
   "integration.anvilcraft.recipe_query.jei": "JEI",
@@ -1289,7 +1291,7 @@
   "tooltip.anvilcraft.resonator.desc": "Press [Alt] to switch modes. Auto mode supports all tools",
   "tooltip.anvilcraft.resonator.mining_desc": "Press [Alt] to change modes. Auto mode supports all tools and can “resonance‑mine” most blocks when holding right‑click",
   "tooltip.anvilcraft.space_overcompressor.stored_mass": "Stored Mass: %s",
-  "tooltip.anvilcraft.thought": "Press [%s] to thought.",
+  "tooltip.anvilcraft.thought": "Press [%s] to think.",
   "tooltip.anvilcraft.working_progress.progress": "  %1$s %2$s%%",
   "tooltip.anvilcraft.working_progress.title": "Working progress:"
 }

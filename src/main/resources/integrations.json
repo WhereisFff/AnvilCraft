@@ -233,9 +233,80 @@
             }
           ]
         }
+      },
+      {
+        "id": "ae2",
+        "type": "extra",
+        "name": [
+          {
+            "translate": "integration.anvilcraft.interaction.ae2"
+          }
+        ],
+        "links": {
+          "target": [
+            {
+              "type": "mcmod",
+              "url": "https://www.mcmod.cn/class/260.html"
+            },
+            {
+              "type": "curseforge",
+              "url": "https://www.curseforge.com/minecraft/mc-mods/applied-energistics-2"
+            },
+            {
+              "type": "modrinth",
+              "url": "https://modrinth.com/mod/ae2"
+            },
+            {
+              "type": "github",
+              "url": "https://github.com/AppliedEnergistics/Applied-Energistics-2"
+            }
+          ],
+          "extra": [
+            {
+              "type": "github",
+              "url": "https://github.com/Anvil-Dev/AppliedAnvilstics"
+            }
+          ]
+        }
       }
     ],
-    "compatible": []
+    "compatible": [
+      {
+        "id": "better_beacons",
+        "type": "extra",
+        "name": [
+          {
+            "translate": "integration.anvilcraft.compatible.better_beacons"
+          }
+        ],
+        "links": {
+          "target": [
+            {
+              "type": "mcmod",
+              "url": "https://www.mcmod.cn/class/13660.html"
+            },
+            {
+              "type": "curseforge",
+              "url": "https://www.curseforge.com/minecraft/mc-mods/cerbons-better-beacons"
+            },
+            {
+              "type": "modrinth",
+              "url": "https://modrinth.com/mod/cerbons-better-beacons"
+            },
+            {
+              "type": "github",
+              "url": "https://github.com/CERBON-MODS/CERBONs-Better-Beacons"
+            }
+          ],
+          "extra": [
+            {
+              "type": "github",
+              "url": "https://github.com/Anvil-Dev/AnvilCraft-Better-Beacons-Compatible"
+            }
+          ]
+        }
+      }
+    ]
   },
   "additional": [
     {

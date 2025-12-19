@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.item;
 import dev.dubhe.anvilcraft.integration.IntegrationUtil;
 import dev.dubhe.anvilcraft.network.OpenIntegrationScreenPacket;
 import dev.dubhe.anvilcraft.util.ModEventUtil;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -44,7 +45,12 @@ public class GuideBookItem extends Item {
         }
         long lastThoughtTime = IntegrationUtil.getLastThoughtTime();
         if (lastThoughtTime <= 0) {
-            tooltipComponents.add(Component.translatable("tooltip.anvilcraft.thought", Component.keybind("key.anvilcraft.thought")));
+            tooltipComponents.add(
+                Component.translatable(
+                    "tooltip.anvilcraft.thought",
+                    Component.keybind("key.anvilcraft.thought")
+                ).withStyle(ChatFormatting.GRAY)
+            );
             super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
             return;
         }
@@ -58,7 +64,7 @@ public class GuideBookItem extends Item {
         StringBuilder builder = new StringBuilder("[");
         builder.append("||".repeat(Math.max(0, placeholderCount)));
         builder.append(" ".repeat(Math.max(0, blankCount)));
-        tooltipComponents.add(Component.literal(builder.append("]").toString()));
+        tooltipComponents.add(Component.literal(builder.append("]").toString()).withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
     }
 }
