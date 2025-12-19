@@ -32,7 +32,6 @@ import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -64,7 +63,7 @@ public class DataGenUtil {
             .partialState().with(PowerLevelPressurePlateBlock.POWER, 15).addModels(new ConfiguredModel(pressurePlateDown));
     }
 
-    public static void diodeBlock(@NotNull RegistrateBlockstateProvider provider, @NotNull ResourceLocation id, DiodeBlock block) {
+    public static void diodeBlock(RegistrateBlockstateProvider provider, ResourceLocation id, DiodeBlock block) {
         ModelFile diode = new ModelFile.ExistingModelFile(id.withPrefix("block/"), provider.models().existingFileHelper);
         ModelFile diodeOn = new ModelFile.ExistingModelFile(
             id.withPrefix("block/").withSuffix("_on"),
@@ -103,8 +102,8 @@ public class DataGenUtil {
     }
 
     public static <T extends RegistrateBlockstateProvider> void horizontalFacingBlock(
-        @NotNull DataGenContext<Block, ?> context,
-        @NotNull T provider
+        DataGenContext<Block, ?> context,
+        T provider
     ) {
         ModelFile model = new ModelFile.ExistingModelFile(
             context.getId().withPrefix("block/"),

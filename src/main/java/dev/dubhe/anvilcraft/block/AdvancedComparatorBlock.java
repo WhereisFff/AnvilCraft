@@ -43,7 +43,6 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.event.EventHooks;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumSet;
@@ -303,14 +302,14 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
     }
 
     @Override
-    public @NotNull CompoundTag clearData(@NotNull Level level, @NotNull BlockPos pos) {
+    public CompoundTag clearData(Level level, BlockPos pos) {
         return level.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get())
             .map(AdvancedComparatorBlockEntity::exportMoveData)
             .orElseGet(CompoundTag::new);
     }
 
     @Override
-    public void setData(@NotNull Level level, @NotNull BlockPos pos, @NotNull CompoundTag tag) {
+    public void setData(Level level, BlockPos pos, CompoundTag tag) {
         level.getBlockEntity(pos, ModBlockEntities.ADVANCED_COMPARATOR.get())
             .ifPresent(be -> be.applyMoveData(level, pos, level.getBlockState(pos), tag));
     }
