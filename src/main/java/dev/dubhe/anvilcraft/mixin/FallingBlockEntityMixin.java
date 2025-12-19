@@ -133,10 +133,12 @@ abstract class FallingBlockEntityMixin extends Entity implements IFallingBlockEn
             VoxelShape shape = supportState.getCollisionShape(level, supportPos);
             boolean isFullHeight;
             // 根据重力方向判断检查最大值还是最小值
-            if (gravityDir.getAxisDirection() == Direction.AxisDirection.NEGATIVE) {
-                isFullHeight = shape.max(gravityDir.getAxis()) == 1;
-            } else isFullHeight = shape.min(gravityDir.getAxis()) == 0;
-            if (!isFullHeight) this.anvilcraft$breakEntity(instance);
+            if (gravityDir.getAxisDirection() == Direction.AxisDirection.NEGATIVE) isFullHeight = shape.max(gravityDir.getAxis()) == 1;
+            else isFullHeight = shape.min(gravityDir.getAxis()) == 0;
+            if (!isFullHeight) {
+                this.anvilcraft$breakEntity(instance);
+                return false;
+            }
         }
         return true;
     }
