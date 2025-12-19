@@ -94,9 +94,7 @@ public class AdvancedComparatorBlock extends HorizontalDirectionalBlock implemen
 
     @Override
     public boolean canConnectRedstone(BlockState state, BlockGetter level, BlockPos pos, @Nullable Direction direction) {
-        if (direction == null) return false;
-        if (!(state.getBlock() instanceof AdvancedComparatorBlock)) return false;
-        return state.getValue(FACING).getAxis().equals(direction.getAxis());
+        return direction != null && direction != Direction.DOWN && direction != Direction.UP;
     }
 
     @Override
