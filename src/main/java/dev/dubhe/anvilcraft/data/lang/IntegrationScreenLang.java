@@ -32,5 +32,6 @@ public class IntegrationScreenLang {
         provider.add("integration.anvilcraft.interaction.ae2", "Applied Energistics 2");
         provider.add("integration.anvilcraft.compatible.better_beacons", "CERBONs Better Beacons");
         provider.add("integration.anvilcraft.additional.skyland", "Skyland");
+        provider.add("integration.anvilcraft.additional.anvilcraft_delta", "AnvilCraft: Delta");
     }
 }

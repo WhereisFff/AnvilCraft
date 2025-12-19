@@ -328,6 +328,30 @@
           }
         ]
       }
+    },
+    {
+      "id": "anvilcraft_delta",
+      "name": [
+        {
+          "translate": "integration.anvilcraft.additional.anvilcraft_delta"
+        }
+      ],
+      "links": {
+        "target": [
+          {
+            "type": "curseforge",
+            "url": "https://www.curseforge.com/minecraft/mc-mods/anvilcraft-delta"
+          },
+          {
+            "type": "modrinth",
+            "url": "https://modrinth.com/mod/anvilcraft-delta"
+          },
+          {
+            "type": "github",
+            "url": "https://github.com/Anvil-Dev/AnvilCraft-Delta"
+          }
+        ]
+      }
     }
   ]
 }
