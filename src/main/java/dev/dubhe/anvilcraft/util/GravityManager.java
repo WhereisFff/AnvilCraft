@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.util;
 
 import dev.dubhe.anvilcraft.block.BlackHoleBlock;
+import dev.dubhe.anvilcraft.block.WhiteHoleBlock;
 import dev.dubhe.anvilcraft.entity.LevitatingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableFallingBlockEntity;
 import dev.dubhe.anvilcraft.entity.StandableLevitatingBlockEntity;
@@ -41,7 +42,8 @@ public class GravityManager {
     private static final Map<ResourceKey<Level>, Double> DIMENSION_GRAVITY_MAP = new HashMap<>();
 
     static {
-        GravitySourceManager.registerSourceType(BlackHoleBlock.class, 7, 10.0);
+        GravitySourceManager.registerSourceType(BlackHoleBlock.class, 7, 10);
+        GravitySourceManager.registerSourceType(WhiteHoleBlock.class, 7, -10);
         // 在这里注册更多重力源，strength -> 距离该重力源 1 格处的重力是主世界重力的 strength 倍
 
         // registerDimensionGravity(Level.MUN, 0.1653061224489796);
