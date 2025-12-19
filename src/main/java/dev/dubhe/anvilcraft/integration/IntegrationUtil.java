@@ -9,13 +9,8 @@ import com.mojang.serialization.JsonOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.item.GuideBookItem;
-import lombok.Getter;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
-import net.minecraft.world.inventory.Slot;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -214,33 +209,5 @@ public class IntegrationUtil {
         LOADED,
         NOT_LOADED,
         NOT_FOUND
-    }
-
-    private static boolean onThought = false;
-    @Getter
-    private static long lastThoughtTime = -1L;
-
-    public static void onThought() {
-        boolean checked = check();
-        if (!checked) {
-            IntegrationUtil.onEndThought();
-            return;
-        }
-        if (IntegrationUtil.onThought) return;
-        IntegrationUtil.onThought = true;
-        IntegrationUtil.lastThoughtTime = Minecraft.getInstance().gui.getGuiTicks();
-    }
-
-    private static boolean check() {
-        if (!(Minecraft.getInstance().screen instanceof AbstractContainerScreen<?> screen)) return false;
-        Slot slot = screen.getSlotUnderMouse();
-        if (slot == null) return false;
-        return slot.hasItem() && slot.getItem().getItem() instanceof GuideBookItem;
-    }
-
-    public static void onEndThought() {
-        if (!IntegrationUtil.onThought) return;
-        IntegrationUtil.onThought = false;
-        IntegrationUtil.lastThoughtTime = -1L;
     }
 }

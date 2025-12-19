@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.event;
 import com.mojang.blaze3d.platform.InputConstants;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.sound.SoundHelper;
+import dev.dubhe.anvilcraft.api.thought.ThoughtManager;
 import dev.dubhe.anvilcraft.client.AnvilCraftClient;
 import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.MultiphaseScreen;
@@ -13,7 +14,6 @@ import dev.dubhe.anvilcraft.client.support.AmuletSelectorSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.integration.IntegrationUtil;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
@@ -166,20 +166,20 @@ public class ClientEventListener {
     @SubscribeEvent
     public static void onScreenKeyPressed(ScreenEvent.KeyPressed.Post event) {
         if (event.getKeyCode() == ModKeyMappings.THOUGHT.get().getKey().getValue()) {
-            IntegrationUtil.onThought();
+            ThoughtManager.onThought();
         }
     }
 
     @SubscribeEvent
     public static void onScreenKeyReleased(ScreenEvent.KeyReleased.Post event) {
         if (event.getKeyCode() == ModKeyMappings.THOUGHT.get().getKey().getValue()) {
-            IntegrationUtil.onEndThought();
+            ThoughtManager.onEndThought();
         }
     }
 
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent.Post event) {
-        long lastThoughtTime = IntegrationUtil.getLastThoughtTime();
+        long lastThoughtTime = ThoughtManager.getLastThoughtTime();
         if (lastThoughtTime < 0) {
             return;
         }
@@ -188,7 +188,7 @@ public class ClientEventListener {
         long deltaTime = curTime - lastThoughtTime;
         final double maxSeconds = 1.5;
         if (deltaTime > maxSeconds * 20) {
-            minecraft.setScreen(new IntegrationScreen(minecraft.screen));
+            ThoughtManager.onPostThought();
         }
     }
 

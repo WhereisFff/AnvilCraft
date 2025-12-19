@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.integration.IntegrationUtil;
+import dev.dubhe.anvilcraft.api.thought.Thinkable;
+import dev.dubhe.anvilcraft.client.gui.screen.IntegrationScreen;
 import dev.dubhe.anvilcraft.network.OpenIntegrationScreenPacket;
 import dev.dubhe.anvilcraft.util.ModEventUtil;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -15,11 +15,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.neoforgespi.Environment;
 
 import java.util.List;
 
-public class GuideBookItem extends Item {
+public class GuideBookItem extends Item implements Thinkable {
     public GuideBookItem(Properties properties) {
         super(properties);
     }
@@ -39,32 +38,13 @@ public class GuideBookItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        if (!Environment.get().getDist().isClient()) {
-            super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-            return;
-        }
-        long lastThoughtTime = IntegrationUtil.getLastThoughtTime();
-        if (lastThoughtTime <= 0) {
-            tooltipComponents.add(
-                Component.translatable(
-                    "tooltip.anvilcraft.thought",
-                    Component.keybind("key.anvilcraft.thought")
-                ).withStyle(ChatFormatting.GRAY)
-            );
-            super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-            return;
-        }
-        Minecraft minecraft = Minecraft.getInstance();
-        long curTime = minecraft.gui.getGuiTicks();
-        long deltaTime = curTime - lastThoughtTime;
-        final int maxPlaceholderCount = 20;
-        final double maxSeconds = 1.5;
-        int placeholderCount = (int) Math.floor(Math.min(deltaTime, 20 * maxSeconds) / (20 * maxSeconds) * maxPlaceholderCount);
-        int blankCount = maxPlaceholderCount - placeholderCount;
-        StringBuilder builder = new StringBuilder("[");
-        builder.append("||".repeat(Math.max(0, placeholderCount)));
-        builder.append(" ".repeat(Math.max(0, blankCount)));
-        tooltipComponents.add(Component.literal(builder.append("]").toString()).withStyle(ChatFormatting.GRAY));
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        this.appendHoverText(tooltipComponents);
+    }
+
+    @Override
+    public void onThought() {
+        Minecraft minecraft = Minecraft.getInstance();
+        minecraft.setScreen(new IntegrationScreen(minecraft.screen));
     }
 }
