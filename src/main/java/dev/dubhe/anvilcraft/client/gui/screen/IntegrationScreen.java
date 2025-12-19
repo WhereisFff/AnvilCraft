@@ -27,7 +27,6 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 
@@ -77,11 +76,7 @@ public class IntegrationScreen extends Screen {
         this.layout.addTitleHeader(TITLE, this.font);
         this.integrationList = this.layout.addToContents(new IntegrationList());
         LinearLayout linearlayout = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
-        linearlayout.addChild(Button.builder(CommonComponents.GUI_DONE, button -> {
-            if (this.lastScreen != null) {
-                minecraft.setScreen(this.lastScreen);
-            }
-        }).build());
+        linearlayout.addChild(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose()).build());
         this.layout.visitWidgets(this::addRenderableWidget);
         this.repositionElements();
     }
@@ -97,6 +92,15 @@ public class IntegrationScreen extends Screen {
     @Override
     public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public void onClose() {
+        if (this.minecraft != null && this.lastScreen != null) {
+            this.minecraft.setScreen(this.lastScreen);
+        } else {
+            super.onClose();
+        }
     }
 
     public abstract class AbstractIntegrationEntry extends ContainerObjectSelectionList.Entry<AbstractIntegrationEntry> {
