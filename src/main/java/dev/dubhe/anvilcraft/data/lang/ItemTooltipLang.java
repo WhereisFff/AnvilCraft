@@ -56,15 +56,11 @@ public class ItemTooltipLang {
         );
 
         provider.add("item.anvilcraft.ionocraft_backpack.flight_time_energy", "Remaining Energy: %sMJ, Flight Time: %ss");
-        provider.add("item.anvilcraft.ionocraft_backpack.reallocate_power", "Re-wear to adjust charging");
-        provider.add("tooltip.anvilcraft.item.capacitor", "4000kJ stored");
-        provider.add("tooltip.anvilcraft.item.capacitor_empty", "4000kJ capacity");
-        provider.add("tooltip.anvilcraft.item.supercapacitor", "80MJ stored");
-        provider.add("tooltip.anvilcraft.item.supercapacitor_empty", "80MJ capacity");
 
         provider.add("tooltip.anvilcraft.resonator.desc", "Press [%s] to switch modes. Auto mode supports all tools");
         provider.add("tooltip.anvilcraft.resonator.mining_desc", "Press [%s] to change modes. Auto mode supports all tools and can “resonance‑mine” most blocks when holding right‑click");
 
         provider.add("tooltip.anvilcraft.thought", "Press [%s] for more info");
+        provider.add("tooltip.anvilcraft.item.amulet_box.desc", "Stores multiple active amulets or totems");
     }
 }
