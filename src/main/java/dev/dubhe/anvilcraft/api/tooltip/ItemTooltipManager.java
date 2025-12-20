@@ -167,38 +167,35 @@ public class ItemTooltipManager {
         map.put(ModItems.CAPACITOR_EMPTY.asItem(), "4000kJ capacity");
         map.put(ModItems.SUPER_CAPACITOR.asItem(), "80MJ stored");
         map.put(ModItems.SUPER_CAPACITOR_EMPTY.asItem(), "80MJ capacity");
-        map.put(ModBlocks.BLACK_HOLE.asItem(), "Dev Block");
-        map.put(ModBlocks.WHITE_HOLE.asItem(), "Dev Block");
+        map.put(ModBlocks.BLACK_HOLE.asItem(), "Dev Block with intense gravitational attraction");
+        map.put(ModBlocks.WHITE_HOLE.asItem(), "Dev Block with intense gravitational repulsion");
+        map.put(ModBlocks.CHARGER.asItem(), "Charges items. Supports manual or automated input");
+        map.put(ModBlocks.DISCHARGER.asItem(), "Discharges capacitors. Supports manual or automated input");
+        map.put(ModBlocks.LASER_RECEIVER.asItem(), "Generates power and output signal from received lasers");
 
         shiftMap.put(ModBlocks.SPECTRAL_ANVIL.asItem(),
             "When the upper magnet is demagnetized, a phantom shadow is created and falls downward. "
             + "It can pass through transparent blocks, and no matter the actual height, the impact is always treated as a 2‑block fall");
         shiftMap.put(ModBlocks.BLOCK_PLACER.asItem(), """
-            Redstone activation placed a block in front of this, but was hit by an anvil and placed further away.
-            There is no stock available and items need to be retrieved from the blocks behind, fallen objects, or physical inventory""");
+            When powered by redstone, this block places a block in front of it.
+            If struck by a falling anvil, the placement distance increases — the farther the anvil falls, the farther the block is placed.
+            No internal inventory and must obtain blocks from dropped items or container inventories behind it""");
         shiftMap.put(ModBlocks.BLOCK_DEVOURER.asItem(), """
-            Activated by redstone:
-                Swallows blocks in a 3*3 range in front.
-            Activated by an anvil:
-                1 block -> 5 * 5
-                2 blocks -> 7 * 7
-            There is no inventory, and items will be inputted into the block or physical inventory behind or form falling objects behind.
-            World base blocks such as stones, mud, lower bound rocks, and terminal stones will not drop 100%""");
+            When powered by redstone, this block instantly breaks a 3×3 area of blocks in front of it.
+            If struck by a falling anvil, the breaking range increases — the farther the anvil falls, the larger the area it destroys.
+            No internal inventory. Outputs items behind it — into containers, as dropped items, or at the break location if blocked.
+            Base world blocks such as stone, dirt, and deepslate drop only small amounts""");
         shiftMap.put(ModBlocks.INDUCTION_LIGHT.asItem(), """
-            Lighting, with a power consumption of 1 kW
-            Right click on this with Redstone to change it to ripening mode
-            Right click on this with Glowstone Dust to change it to anti-monster spawning mode
-            Right click on this with Void Matter to change it to anti-animal spawning mode
-            The power consumption of the above three modes will become 16 kW""");
+            Provides lighting with a power consumption of 1 kW
+            Right‑click with Redstone to switch to Growth Acceleration Mode
+            Right‑click with Glowstone to switch to Anti‑Monster Spawning Mode
+            Right‑click with Void Matter to switch to Anti‑Animal Spawning Mode
+            All three special modes consume 16 kW of power""");
         shiftMap.put(ModBlocks.HELIOSTATS.asItem(), """
-            Right click on the Netherite Block or Tungsten Block of the handheld heliostat to determine the irradiation point
-            After placing it, it will heat the irradiated block during the day""");
-        shiftMap.put(ModItems.IONOCRAFT_BACKPACK.asItem(), """
-            When equipping to start flying like gamemode creative
-            The backpack requires power supply from the grid or capacitors in the inventory for use""");
-        shiftMap.put(ModBlocks.CHARGER.asItem(), "Charges items. Supports manual or automated input");
-        shiftMap.put(ModBlocks.DISCHARGER.asItem(), "Discharges capacitors. Supports manual or automated input");
-        shiftMap.put(ModBlocks.LASER_RECEIVER.asItem(), "Generates power and output signal from received lasers");
+            Right‑click a Netherite Block or Tungsten Block with the handheld heliostat to set target block.
+            After placing the heliostat, it will heat the targeted block during the day, as well as the blocks above it""");
+        shiftMap.put(ModItems.IONOCRAFT_BACKPACK.asItem(),
+            "Allows creative flight while equipped. Requires power supplied from the energy grid or from capacitors in the inventory");
         shiftMap.put(ModBlocks.BLOCK_COMPARATOR.asItem(),
             "Output signal when side blocks are the same. Right-click to switch to precise state detection mode");
         shiftMap.put(ModBlocks.ITEM_DETECTOR.asItem(), "Detects specific items behind (drops/containers) to output signal");
