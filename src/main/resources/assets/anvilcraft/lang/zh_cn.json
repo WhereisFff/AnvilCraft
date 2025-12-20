@@ -1293,7 +1293,6 @@
   "command.anvilcraft.multiphase.remove.success": "成功移除多相 %1$s。\n你可以通过“%2$s”将其恢复",
   "command.anvilcraft.universe.no_id": "没有提供 ID，也无法从手持物品中找到 ID",
   "fluid.anvilcraft.fire": "燃烧的原油（燃烧的炼药锅的内容物）",
-  "item.anvilcraft.ionocraft_backpack.reallocate_power": "重新穿戴以调整充电功率",
   "screen.anvilcraft.filter.scroll_wheel_to_change_stack_limit": "滚动滚轮调整堆叠上限",
   "tooltip.anvilcraft.property.multiphase.id": "多相存储 ID：%s"
 }
