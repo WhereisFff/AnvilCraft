@@ -528,7 +528,7 @@
   "command.anvilcraft.multiphase.info.enchantments": " :sʇuǝɯʇuɐɥɔuƎ",
   "command.anvilcraft.multiphase.info.item_name": " :ǝɯɐN ɯǝʇI",
   "command.anvilcraft.multiphase.info.merciless_enchantments": " :sʇuǝɯʇuɐɥɔuƎ ssǝןıɔɹǝW",
-  "command.anvilcraft.multiphase.info.multiphase_id": " :ᗡI ǝsɐɥdıʇןnW",
+  "command.anvilcraft.multiphase.info.multiphase_id": "%s :ᗡI ǝsɐɥdıʇןnW",
   "command.anvilcraft.multiphase.info.name.empty": "ʎʇdɯƎ",
   "command.anvilcraft.multiphase.info.phases": " :sǝsɐɥԀ",
   "command.anvilcraft.multiphase.info.repair_cost": " :ʇsoƆ ɹıɐdǝᴚ",
