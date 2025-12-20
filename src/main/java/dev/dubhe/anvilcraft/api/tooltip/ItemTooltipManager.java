@@ -167,7 +167,12 @@ public class ItemTooltipManager {
         map.put(ModItems.CAPACITOR_EMPTY.asItem(), "4000kJ capacity");
         map.put(ModItems.SUPER_CAPACITOR.asItem(), "80MJ stored");
         map.put(ModItems.SUPER_CAPACITOR_EMPTY.asItem(), "80MJ capacity");
+        map.put(ModBlocks.BLACK_HOLE.asItem(), "Dev Block");
+        map.put(ModBlocks.WHITE_HOLE.asItem(), "Dev Block");
 
+        shiftMap.put(ModBlocks.SPECTRAL_ANVIL.asItem(),
+            "When the upper magnet is demagnetized, a phantom shadow is created and falls downward. "
+            + "It can pass through transparent blocks, and no matter the actual height, the impact is always treated as a 2‑block fall");
         shiftMap.put(ModBlocks.BLOCK_PLACER.asItem(), """
             Redstone activation placed a block in front of this, but was hit by an anvil and placed further away.
             There is no stock available and items need to be retrieved from the blocks behind, fallen objects, or physical inventory""");
