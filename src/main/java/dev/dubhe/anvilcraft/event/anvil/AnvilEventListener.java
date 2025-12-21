@@ -138,10 +138,9 @@ public class AnvilEventListener {
     @SubscribeEvent
     public static void onAnvilHurtEntity(AnvilEvent.HurtEntity event) {
         Entity hurtedEntity = event.getHurtedEntity();
-        if (!(hurtedEntity instanceof LivingEntity entity)) return;
+        if (!(hurtedEntity instanceof LivingEntity entity) || entity.isBaby()) return;
         if (!(hurtedEntity.level() instanceof ServerLevel serverLevel)) return;
         if (!entity.isAlive()) return;
-        if (!entity.isBaby()) return;
         if (entity.isDeadOrDying()) return;
         if (entity.hurtTime > 0) return;
         float damage = event.getDamage();
