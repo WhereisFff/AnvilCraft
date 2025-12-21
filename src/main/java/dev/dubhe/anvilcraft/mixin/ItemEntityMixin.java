@@ -382,20 +382,25 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
     static {
         // 1. 定义材质关键词及其减速 (数值越小越慢)
         MATERIAL_MAP.put("iron", 0.50);
+        MATERIAL_MAP.put("magnet", 0.50);
         MATERIAL_MAP.put("steel", 0.75);
 
         MATERIAL_MAP.put("silver", 0.25);
         MATERIAL_MAP.put("copper", 0.27);
         MATERIAL_MAP.put("gold", 0.28);
+        MATERIAL_MAP.put("netherite", 0.30);
+        MATERIAL_MAP.put("ember", 0.30);
         MATERIAL_MAP.put("aluminum", 0.30);
         MATERIAL_MAP.put("tungsten", 0.38);
         MATERIAL_MAP.put("zinc", 0.40);
         MATERIAL_MAP.put("brass", 0.42);
         MATERIAL_MAP.put("bronze", 0.45);
+        MATERIAL_MAP.put("royal", 0.50);
         MATERIAL_MAP.put("tin", 0.55);
         MATERIAL_MAP.put("lead", 0.65);
         MATERIAL_MAP.put("uranium", 0.80);
         MATERIAL_MAP.put("titanium", 0.88);
+        MATERIAL_MAP.put("frost_metal", 0.90);
         MATERIAL_MAP.put("plutonium", 0.99);
         // 在这里继续添加材料...
 
@@ -410,13 +415,9 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         SPECIAL_MAP.put("chain", "iron");
         SPECIAL_MAP.put("chute", "iron");
         SPECIAL_MAP.put("compass", "iron");
-        SPECIAL_MAP.put("magnet", "iron");
         // 在这里继续添加特判...
     }
 
-    /**
-     * 解析物品材质Key，如果返回 null 则表示非金属/无反应
-     */
     @SuppressWarnings("checkstyle:NeedBraces")
     @Unique
     private String anvilcraft$getMaterialKey(ItemStack stack) {
@@ -429,20 +430,49 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         return null;
     }
 
-    /**
-     * AABB碰撞检测
-     */
     @Unique
-    private boolean anvilcraft$isTouching(Block targetBlock) {
+    private boolean anvilcraft$isMagnetBlock(BlockState state) {
+        return state.is(ModBlocks.MAGNET_BLOCK.get())
+               || state.is(ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get())
+               || state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get());
+    }
+
+    @Unique
+    private boolean anvilcraft$isTouchingMagnet() {
         AABB box = this.getBoundingBox().inflate(0.01);
         return BlockPos.betweenClosedStream(box).anyMatch(p -> {
             BlockState s = this.level().getBlockState(p);
-            return s.is(targetBlock) && !s.getCollisionShape(this.level(), p).isEmpty()
+            return anvilcraft$isMagnetBlock(s) && !s.getCollisionShape(this.level(), p).isEmpty()
                    && s.getCollisionShape(this.level(), p).toAabbs().stream().anyMatch(b -> b.move(p).intersects(box));
         });
     }
 
-    @SuppressWarnings({"checkstyle:WhitespaceAfter", "checkstyle:LeftCurly", "checkstyle:OneStatementPerLine"})
+    @Unique
+    private Vec3 anvilcraft$magnetAttraction() {
+        Vec3 center = this.getBoundingBox().getCenter();
+        AABB area = this.getBoundingBox().inflate(0.5);
+        Object[] result = {null, Double.MAX_VALUE};
+        BlockPos.betweenClosedStream(area).forEach(pos -> {
+            BlockState state = this.level().getBlockState(pos);
+            if (!anvilcraft$isMagnetBlock(state)) return;
+            for (AABB box : state.getCollisionShape(this.level(), pos).toAabbs()) {
+                AABB wb = box.move(pos);
+                Vec3 p = new Vec3(
+                    Mth.clamp(center.x, wb.minX, wb.maxX),
+                    Mth.clamp(center.y, wb.minY, wb.maxY),
+                    Mth.clamp(center.z, wb.minZ, wb.maxZ)
+                );
+                double dist = center.distanceToSqr(p);
+                if (dist < (double) result[1]) {
+                    result[1] = dist;
+                    result[0] = p;
+                }
+            }
+        });
+        return result[0] != null && (double) result[1] > 1.0E-7 ? ((Vec3) result[0]).subtract(center).normalize().scale(0.05) : Vec3.ZERO;
+    }
+
+    @SuppressWarnings({"checkstyle:NeedBraces", "checkstyle:LeftCurly", "checkstyle:OneStatementPerLine"})
     @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
     private void anvilcraft$magnetLogic(CallbackInfo ci) {
         if (this.isRemoved()) return;
@@ -451,34 +481,38 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         BlockState state = this.level().getBlockState(pos);
         ItemStack stack = this.getItem();
         String matKey = anvilcraft$getMaterialKey(stack);
-
-        if (matKey == null) return; // 非目标物品直接跳过
-
-        if ("iron".equals(matKey)) {
-            // 1. 铁锭 + 空芯磁铁块 → 铁芯磁铁块
+        // 不是金属直接跳过
+        if (matKey == null) return;
+        // 1. 空芯磁铁块转化
+        if ("iron".equals(matKey) || "magnet".equals(matKey)) {
             if (!this.level().isClientSide && state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())
                 && stack.getDescriptionId().contains("ingot")) {
-                this.level().setBlockAndUpdate(pos, ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get().defaultBlockState());
-                stack.shrink(1);
-                if (stack.isEmpty()) { this.discard(); ci.cancel(); }
-                return;
+
+                Block targetBlock = null;
+                if ("iron".equals(matKey)) targetBlock = ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get(); // 铁锭 -> 铁芯磁铁块
+                else if ("magnet".equals(matKey)) targetBlock = ModBlocks.MAGNET_BLOCK.get(); // 磁铁锭 -> 磁铁块
+
+                if (targetBlock != null) {
+                    this.level().setBlockAndUpdate(pos, targetBlock.defaultBlockState());
+                    stack.shrink(1);
+                    if (stack.isEmpty()) { this.discard(); ci.cancel(); }
+                    return;
+                }
             }
-            // 2. 吸铁石就应该吸铁
-            boolean touching = anvilcraft$isTouching(ModBlocks.MAGNET_BLOCK.get())
-                               || anvilcraft$isTouching(ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get())
-                               || anvilcraft$isTouching(ModBlocks.HOLLOW_MAGNET_BLOCK.get());
-            if (touching) {
+            // 2. 吸铁石就要吸铁
+            if (anvilcraft$isTouchingMagnet()) {
                 this.setDeltaMovement(Vec3.ZERO);
                 this.setNoGravity(true);
                 this.setOnGround(true);
-                return; // 吸住后直接返回，不执行下面的通用减速
-            } else if (this.isNoGravity() && !stack.has(ModComponents.ETERNAL)) {
-                this.setNoGravity(false);
+                return;
+            } else {
+                if (this.isNoGravity() && !stack.has(ModComponents.ETERNAL)) this.setNoGravity(false);
+                if (anvilcraft$magnetAttraction().lengthSqr() > 0) this.addDeltaMovement(anvilcraft$magnetAttraction());
             }
         }
-        // 3. 表里的金属，在空心磁铁内都会减速，铁如果悬空穿过没接触到磁铁壁，也会执行这里的减速逻辑
+        // 3. 涡流减速
         if (state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())) {
-            Double speedFactor = MATERIAL_MAP.get(matKey); // 查表获取对应的减速倍率
+            Double speedFactor = MATERIAL_MAP.get(matKey);
             if (speedFactor != null) this.setDeltaMovement(this.getDeltaMovement().scale(speedFactor));
         }
     }
