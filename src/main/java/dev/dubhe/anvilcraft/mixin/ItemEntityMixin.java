@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.api.injection.entity.IItemEntityExtension;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -371,6 +372,114 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
             this.remove(Entity.RemovalReason.DISCARDED);
             this.discard();
             anvilcraft$discarded = true;
+        }
+    }
+
+    @Unique private static final Map<String, Double> MATERIAL_MAP = new HashMap<>();
+    @Unique private static final Map<String, String> SPECIAL_MAP = new HashMap<>();
+    @Unique private static final List<String> SPECIAL_BLACKLIST = List.of("spawn_egg", "waxed");
+
+    static {
+        // 1. 定义材质关键词及其减速 (数值越小越慢)
+        MATERIAL_MAP.put("iron", 0.50);
+        MATERIAL_MAP.put("steel", 0.75);
+
+        MATERIAL_MAP.put("silver", 0.25);
+        MATERIAL_MAP.put("copper", 0.27);
+        MATERIAL_MAP.put("gold", 0.28);
+        MATERIAL_MAP.put("aluminum", 0.30);
+        MATERIAL_MAP.put("tungsten", 0.38);
+        MATERIAL_MAP.put("zinc", 0.40);
+        MATERIAL_MAP.put("brass", 0.42);
+        MATERIAL_MAP.put("bronze", 0.45);
+        MATERIAL_MAP.put("tin", 0.55);
+        MATERIAL_MAP.put("lead", 0.65);
+        MATERIAL_MAP.put("uranium", 0.80);
+        MATERIAL_MAP.put("titanium", 0.88);
+        MATERIAL_MAP.put("plutonium", 0.99);
+        // 在这里继续添加材料...
+
+        // 2. 将不含关键词的物品映射到上述材质
+        SPECIAL_MAP.put("lightning_rod", "copper");
+        SPECIAL_MAP.put("bucket", "iron");
+        SPECIAL_MAP.put("hopper", "iron");
+        SPECIAL_MAP.put("shears", "iron");
+        SPECIAL_MAP.put("anvil", "iron");
+        SPECIAL_MAP.put("minecart", "iron");
+        SPECIAL_MAP.put("tripwire_hook", "iron");
+        SPECIAL_MAP.put("chain", "iron");
+        SPECIAL_MAP.put("chute", "iron");
+        SPECIAL_MAP.put("compass", "iron");
+        SPECIAL_MAP.put("magnet", "iron");
+        // 在这里继续添加特判...
+    }
+
+    /**
+     * 解析物品材质Key，如果返回 null 则表示非金属/无反应
+     */
+    @SuppressWarnings("checkstyle:NeedBraces")
+    @Unique
+    private String anvilcraft$getMaterialKey(ItemStack stack) {
+        String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+        for (String black : SPECIAL_BLACKLIST) if (id.contains(black)) return null; // 黑名单检查
+        if (SPECIAL_MAP.containsKey(id)) return SPECIAL_MAP.get(id); // 别名/特判检查
+        for (String key : MATERIAL_MAP.keySet()) { // 关键词匹配
+            if (id.contains(key)) return key;
+        }
+        return null;
+    }
+
+    /**
+     * AABB碰撞检测
+     */
+    @Unique
+    private boolean anvilcraft$isTouching(Block targetBlock) {
+        AABB box = this.getBoundingBox().inflate(0.01);
+        return BlockPos.betweenClosedStream(box).anyMatch(p -> {
+            BlockState s = this.level().getBlockState(p);
+            return s.is(targetBlock) && !s.getCollisionShape(this.level(), p).isEmpty()
+                   && s.getCollisionShape(this.level(), p).toAabbs().stream().anyMatch(b -> b.move(p).intersects(box));
+        });
+    }
+
+    @SuppressWarnings({"checkstyle:WhitespaceAfter", "checkstyle:LeftCurly", "checkstyle:OneStatementPerLine"})
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    private void anvilcraft$magnetLogic(CallbackInfo ci) {
+        if (this.isRemoved()) return;
+
+        BlockPos pos = this.blockPosition();
+        BlockState state = this.level().getBlockState(pos);
+        ItemStack stack = this.getItem();
+        String matKey = anvilcraft$getMaterialKey(stack);
+
+        if (matKey == null) return; // 非目标物品直接跳过
+
+        if ("iron".equals(matKey)) {
+            // 1. 铁锭 + 空芯磁铁块 → 铁芯磁铁块
+            if (!this.level().isClientSide && state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())
+                && stack.getDescriptionId().contains("ingot")) {
+                this.level().setBlockAndUpdate(pos, ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get().defaultBlockState());
+                stack.shrink(1);
+                if (stack.isEmpty()) { this.discard(); ci.cancel(); }
+                return;
+            }
+            // 2. 吸铁石就应该吸铁
+            boolean touching = anvilcraft$isTouching(ModBlocks.MAGNET_BLOCK.get())
+                               || anvilcraft$isTouching(ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get())
+                               || anvilcraft$isTouching(ModBlocks.HOLLOW_MAGNET_BLOCK.get());
+            if (touching) {
+                this.setDeltaMovement(Vec3.ZERO);
+                this.setNoGravity(true);
+                this.setOnGround(true);
+                return; // 吸住后直接返回，不执行下面的通用减速
+            } else if (this.isNoGravity() && !stack.has(ModComponents.ETERNAL)) {
+                this.setNoGravity(false);
+            }
+        }
+        // 3. 表里的金属，在空心磁铁内都会减速，铁如果悬空穿过没接触到磁铁壁，也会执行这里的减速逻辑
+        if (state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())) {
+            Double speedFactor = MATERIAL_MAP.get(matKey); // 查表获取对应的减速倍率
+            if (speedFactor != null) this.setDeltaMovement(this.getDeltaMovement().scale(speedFactor));
         }
     }
 
