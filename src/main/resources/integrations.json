@@ -94,6 +94,14 @@
             {
               "type": "github",
               "url": "https://github.com/Anvil-Dev/AnvilCraft-Patchouli"
+            },
+            {
+              "type": "modrinth",
+              "url": "https://modrinth.com/project/anvilcraft-patchouli"
+            },
+            {
+              "type": "curseforge",
+              "url": "https://www.curseforge.com/minecraft/mc-mods/anvilcraft-patchouli"
             }
           ]
         }
