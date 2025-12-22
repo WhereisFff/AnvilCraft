@@ -36,9 +36,11 @@ abstract class AnvilBlockMixin extends FallingBlock {
         BlockPos pos,
         RandomSource random
     ) {
-        if (anvilcraft$isAttracts(level.getBlockState(pos.above()))
+        if (
+            anvilcraft$isAttracts(level.getBlockState(pos.above()))
             || !FallingBlock.isFree(level.getBlockState(pos.below()))
-            || pos.getY() < level.getMinBuildHeight()) {
+            || pos.getY() < level.getMinBuildHeight()
+        ) {
             return;
         }
         super.tick(state, level, pos, random);
