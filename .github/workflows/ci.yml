@@ -84,7 +84,7 @@ jobs:
           version-type: ${{ env.VERSION_TYPE }}
           java: 21
           fail-mode: skip
-          changelog: ${{ github.event.release.body }}
+          changelog: Fixed some previously existing issues. 修复了部分此前存在的问题。
 
           modrinth-id: vuISAWPc
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
