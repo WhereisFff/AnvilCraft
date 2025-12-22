@@ -710,7 +710,7 @@
   "item.anvilcraft.inherent_enchantment.tooltip": "固有附魔：",
   "item.anvilcraft.ionocraft": "飘升机",
   "item.anvilcraft.ionocraft_backpack": "飘升机背包",
-  "tooltip.anvilcraft.item.ionocraft_backpack": "装备时允许创意飞行。需要从能量网格或物品栏中的电容器获取电力供应。",
+  "tooltip.anvilcraft.item.ionocraft_backpack": "装备时允许创造飞行。需要从能量网格或物品栏中的电容器获取电力供应。",
   "item.anvilcraft.lead_ingot": "铅锭",
   "item.anvilcraft.lead_nugget": "铅粒",
   "item.anvilcraft.levitation_powder": "飘浮粉",
