@@ -7,10 +7,9 @@ on:
       - dev/**
     paths:
       - src/**
-      - common/**
-      - fabric/**
-      - forge/**
+      - gradle/**
       - build.gradle
+      - dependencies.gradle
       - gradle.properties
       - settings.gradle
 
@@ -19,7 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI_BUILD: true
+      HOTFIX_BUILD: true
       PR_BUILD: false
+      VERSION_TYPE: beta
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -69,6 +70,29 @@ jobs:
 
       - name: gametest
         uses: Anvil-Dev/dedicated-server-launch-test@1.21.1-neoforge
+        continue-on-error: false
         with:
           mod: build/libs/anvilcraft-neoforge-${{ steps.version.outputs.version }}.jar
-          extra-mods: patchouli:1.21-87-neoforge cloth-config:15.0.140+neoforge
+
+      - name: publish neoforge mc mod
+        uses: Kir-Antipov/mc-publish@v3.3
+        continue-on-error: true
+        with:
+          name: "${{ steps.properties.outputs.mod_name }} For NeoForge v${{ steps.version.outputs.version }}"
+          version: ${{ steps.version.outputs.version }}
+          game-versions: 1.21.1
+          version-type: ${{ env.VERSION_TYPE }}
+          java: 21
+          fail-mode: skip
+          changelog: ${{ github.event.release.body }}
+
+          modrinth-id: vuISAWPc
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          modrinth-featured: true
+
+          curseforge-id: 986251
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+
+          files: |
+            build/libs/anvilcraft-neoforge-${{ steps.version.outputs.version }}.jar
+            build/libs/anvilcraft-neoforge-${{ steps.version.outputs.version }}-sources.jar
