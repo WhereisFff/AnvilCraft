@@ -24,6 +24,14 @@
             {
               "type": "github",
               "url": "https://github.com/Anvil-Dev/AnvilCraft-Ponder"
+            },
+            {
+              "type": "modrinth",
+              "url": "https://modrinth.com/project/anvilcraft-ponder"
+            },
+            {
+              "type": "curseforge",
+              "url": "https://www.curseforge.com/minecraft/mc-mods/anvilcraft-ponder"
             }
           ]
         }
