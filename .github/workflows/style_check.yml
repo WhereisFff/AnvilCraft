@@ -15,7 +15,9 @@ jobs:
       - name: checkout pr
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh pr checkout ${{ github.event.number }}
+        run: |
+          git remote prune origin
+          gh pr checkout ${{ github.event.number }}
       - name: Setup Java 17
         uses: actions/setup-java@v3.6.0
         with:
