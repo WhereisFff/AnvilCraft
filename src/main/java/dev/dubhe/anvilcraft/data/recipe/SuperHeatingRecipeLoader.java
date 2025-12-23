@@ -35,14 +35,14 @@ public class SuperHeatingRecipeLoader {
             .requires(Items.DIAMOND)
             .requires(Items.AMETHYST_SHARD)
             .requires(ModItemTags.GEMS)
-            .result(ModItems.ROYAL_STEEL_INGOT)
+            .result(ModItems.ROYAL_STEEL_INGOT, 3)
             .save(provider);
         SuperHeatingRecipe.builder()
             .requires(Blocks.IRON_BLOCK, 3)
             .requires(Blocks.DIAMOND_BLOCK)
             .requires(Blocks.AMETHYST_BLOCK, 2)
             .requires(ModItemTags.GEM_BLOCKS)
-            .result(ModBlocks.ROYAL_STEEL_BLOCK)
+            .result(ModBlocks.ROYAL_STEEL_BLOCK, 3)
             .save(provider);
         SuperHeatingRecipe.builder()
             .requires(ModBlocks.QUARTZ_SAND, 8)
