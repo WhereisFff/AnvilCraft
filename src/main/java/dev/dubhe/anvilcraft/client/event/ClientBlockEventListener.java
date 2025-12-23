@@ -44,8 +44,8 @@ public class ClientBlockEventListener {
         }
         if (event.getLevel().isClientSide() && clientHandle(event, state, hand, event.getHitVec())) {
             event.setCancellationResult(InteractionResult.SUCCESS);
-            event.setCanceled(true);
         }
+        event.setCanceled(true);
     }
 
     private static boolean clientHandle(
