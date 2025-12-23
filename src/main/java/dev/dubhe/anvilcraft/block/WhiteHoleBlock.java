@@ -37,7 +37,7 @@ public class WhiteHoleBlock extends Block implements EntityBlock {
     }
 
     public WhiteHoleBlock(Properties properties) {
-        super(properties);
+        super(properties.forceSolidOn());
     }
 
     @Nullable
