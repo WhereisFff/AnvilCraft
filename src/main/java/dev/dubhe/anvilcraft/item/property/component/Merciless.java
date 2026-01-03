@@ -114,12 +114,11 @@ public record Merciless(boolean enabled) {
             stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY)
         );
         ItemEnchantments.Mutable mercilessEnchsMut = new ItemEnchantments.Mutable(mercilessEnchs);
-        for (Iterator<Holder<Enchantment>> it = mercilessEnchsMut.keySet().iterator(); it.hasNext(); ) {
-            Holder<Enchantment> enchantment = it.next();
+        for (Holder<Enchantment> enchantment : mercilessEnchsMut.keySet()) {
             enchsMut.set(enchantment, mercilessEnchsMut.getLevel(enchantment));
-            it.remove();
         }
         stack.set(DataComponents.ENCHANTMENTS, enchsMut.toImmutable());
+        stack.set(ModComponents.MERCILESS_ENCHANTMENTS, ItemEnchantments.EMPTY);
 
         // 移除属性修饰符
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
