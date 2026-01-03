@@ -4,10 +4,8 @@
   "fluid": "minecraft:powder_snow",
   "ingredients": [
     {
-      "items": "#c:ingots/titanium"
-    },
-    {
-      "items": "#c:ingots/silver"
+      "count": 3,
+      "items": "anvilcraft:royal_steel_ingot"
     },
     {
       "items": "minecraft:iron_ingot"
@@ -15,6 +13,7 @@
   ],
   "results": [
     {
+      "count": 2,
       "id": "anvilcraft:frost_metal_ingot"
     }
   ]

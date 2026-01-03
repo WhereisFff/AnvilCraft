@@ -14,6 +14,7 @@ import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
 import dev.dubhe.anvilcraft.block.BerryCakeBlock;
 import dev.dubhe.anvilcraft.block.BerryCreamBlock;
 import dev.dubhe.anvilcraft.block.BlackHoleBlock;
+import dev.dubhe.anvilcraft.block.FrostMetalBlock;
 import dev.dubhe.anvilcraft.block.WhiteHoleBlock;
 import dev.dubhe.anvilcraft.block.BlockComparatorBlock;
 import dev.dubhe.anvilcraft.block.BlockDevourerBlock;
@@ -1922,8 +1923,10 @@ public class ModBlocks {
         })
         .register();
 
-    public static final BlockEntry<Block> FROST_METAL_BLOCK = REGISTRATE.block("frost_metal_block", Block::new)
+    public static final BlockEntry<FrostMetalBlock> FROST_METAL_BLOCK = REGISTRATE
+        .block("frost_metal_block", FrostMetalBlock::new)
         .lang("Block of Frost Metal")
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .tag(
             BlockTags.MINEABLE_WITH_PICKAXE,
