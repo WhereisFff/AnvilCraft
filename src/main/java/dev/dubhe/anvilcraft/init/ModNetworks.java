@@ -8,7 +8,9 @@ import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
+import dev.dubhe.anvilcraft.network.EmberGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
+import dev.dubhe.anvilcraft.network.FrostGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeFlexibleMultiPartBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
@@ -39,7 +41,6 @@ import dev.dubhe.anvilcraft.network.SlotFilterMaxStackSizeChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
 import dev.dubhe.anvilcraft.network.SwitchMultitoolModePacket;
 import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
-import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDeflectionRingLastEntitySpeedPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
@@ -142,9 +143,9 @@ public class ModNetworks {
             AdvancedComparatorUpdatePacket.HANDLER
         );
         registrar.playToServer(
-            SyncEmberGrindstonePacket.TYPE,
-            SyncEmberGrindstonePacket.STREAM_CODEC,
-            SyncEmberGrindstonePacket.HANDLER
+            EmberGrindstoneSyncPacket.TYPE,
+            EmberGrindstoneSyncPacket.STREAM_CODEC,
+            EmberGrindstoneSyncPacket.HANDLER
         );
         registrar.playToServer(
             DragonRodDevourPacket.TYPE,
@@ -278,5 +279,10 @@ public class ModNetworks {
         );
         PacketSplitter.registerSplitPackets(registrar);
         MultiphasePackets.register(registrar);
+        registrar.playToServer(
+            FrostGrindstoneSyncPacket.TYPE,
+            FrostGrindstoneSyncPacket.STREAM_CODEC,
+            FrostGrindstoneSyncPacket.HANDLER
+        );
     }
 }

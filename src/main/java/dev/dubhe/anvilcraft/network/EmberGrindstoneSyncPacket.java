@@ -10,24 +10,26 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-public record SyncEmberGrindstonePacket(int selectedIndex) implements CustomPacketPayload {
-    public static final Type<SyncEmberGrindstonePacket> TYPE = new Type<>(AnvilCraft.of("sync_ember_grindstone"));
-    public static final StreamCodec<ByteBuf, SyncEmberGrindstonePacket> STREAM_CODEC = ByteBufCodecs.VAR_INT.map(
-        SyncEmberGrindstonePacket::new, SyncEmberGrindstonePacket::selectedIndex
+public record EmberGrindstoneSyncPacket(int index) implements CustomPacketPayload {
+    public static final Type<EmberGrindstoneSyncPacket> TYPE = new Type<>(AnvilCraft.of("ember_grindstone_sync"));
+    public static final StreamCodec<ByteBuf, EmberGrindstoneSyncPacket> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.VAR_INT,
+        EmberGrindstoneSyncPacket::index,
+        EmberGrindstoneSyncPacket::new
     );
-    public static final IPayloadHandler<SyncEmberGrindstonePacket> HANDLER = SyncEmberGrindstonePacket::serverHandler;
+    public static final IPayloadHandler<EmberGrindstoneSyncPacket> HANDLER = EmberGrindstoneSyncPacket::serverHandler;
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<EmberGrindstoneSyncPacket> type() {
         return TYPE;
     }
 
-    public static void serverHandler(SyncEmberGrindstonePacket data, IPayloadContext context) {
+    public void serverHandler(IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {
             if (!player.hasContainerOpen()) return;
             if (!(player.containerMenu instanceof EmberGrindstoneMenu menu)) return;
-            menu.setSelectedEnchantment(data.selectedIndex);
+            menu.setSelectedEnchantment(this.index);
         });
     }
 }

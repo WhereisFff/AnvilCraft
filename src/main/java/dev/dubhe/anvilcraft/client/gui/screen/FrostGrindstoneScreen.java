@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
-import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
-import dev.dubhe.anvilcraft.network.EmberGrindstoneSyncPacket;
+import dev.dubhe.anvilcraft.inventory.FrostGrindstoneMenu;
+import dev.dubhe.anvilcraft.network.FrostGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.util.EnchantmentData;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -14,24 +14,21 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindstoneMenu> {
+public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindstoneMenu> {
     private static final ResourceLocation BACKGROUND =
-        AnvilCraft.of("textures/gui/container/smithing/background/ember_grindstone.png");
+        AnvilCraft.of("textures/gui/container/smithing/background/frost_grindstone.png");
 
     private static final ResourceLocation BUTTON =
-        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_button.png");
+        AnvilCraft.of("textures/gui/container/smithing/frost_grindstone_button.png");
     private static final ResourceLocation SLIDER =
-        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_slider.png");
+        AnvilCraft.of("textures/gui/container/smithing/frost_grindstone_slider.png");
 
-    private final EmberGrindstoneMenu menu;
-    private final Player player;
+    private final FrostGrindstoneMenu menu;
     private final Scrollable scrollable = new Scrollable() {
         @Override
         public int row() {
@@ -45,7 +42,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
 
         @Override
         public int size() {
-            return EmberGrindstoneScreen.this.menu.getEnchantments().size();
+            return FrostGrindstoneScreen.this.menu.getEnchantments().size();
         }
 
         @Override
@@ -58,16 +55,15 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
 
         @Override
         public void scrollTo() {
-            EmberGrindstoneScreen.this.head = this.calculateRowCount() * this.column();
+            FrostGrindstoneScreen.this.head = this.calculateRowCount() * this.column();
         }
     };
     private int head = 0;
     private ItemStack renderingTooltipEnchantedBook;
 
-    public EmberGrindstoneScreen(EmberGrindstoneMenu menu, Inventory playerInventory, @SuppressWarnings("unused") Component title) {
-        super(menu, playerInventory, Component.translatable("screen.anvilcraft.ember_grindstone.title"));
+    public FrostGrindstoneScreen(FrostGrindstoneMenu menu, Inventory playerInventory, @SuppressWarnings("unused") Component title) {
+        super(menu, playerInventory, Component.translatable("screen.anvilcraft.frost_grindstone.title"));
         this.menu = menu;
-        this.player = playerInventory.player;
     }
 
     @Override
@@ -93,8 +89,8 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
     @Override
     protected void renderTooltip(GuiGraphics guiGraphics, int x, int y) {
         if (this.menu.getCarried().isEmpty() && this.hoveredSlot != null && this.hoveredSlot.hasItem()) {
-            ItemStack itemstack = this.hoveredSlot.getItem();
-            guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, x, y);
+            ItemStack stack = this.hoveredSlot.getItem();
+            guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(stack), stack.getTooltipImage(), stack, x, y);
         } else if (this.renderingTooltipEnchantedBook != null) {
             guiGraphics.renderTooltip(
                 this.font, this.getTooltipFromContainerItem(this.renderingTooltipEnchantedBook),
@@ -121,7 +117,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
             }
 
             boolean selected = false;
-            if (this.menu.getSelectedIndex() == i) {
+            if (this.menu.getSelectedIndexes().contains(i)) {
                 offsetV = 18;
                 selected = true;
             }
@@ -131,28 +127,6 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
         }
     }
 
-    @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        super.renderLabels(guiGraphics, mouseX, mouseY);
-
-        int cost = this.menu.getCost();
-        if (cost <= 0) return;
-
-        Slot result = this.menu.getSlot(2);
-        if (!result.hasItem()) return;
-
-        Component component = Component.translatable("screen.anvilcraft.ember_grindstone.cost", cost);
-        int textColor = 0x80ff20;
-        if (!result.mayPickup(this.player)) {
-            textColor = 0xff6060;
-        }
-
-        int k = this.imageWidth - 1 - this.font.width(component) - 2;
-        guiGraphics.fill(k - 2, 65, this.imageWidth - 1, 76, 0x4f000000);
-        guiGraphics.drawString(this.font, component, k, 66, textColor);
-    }
-
-    @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         RenderSupport.renderItemWithTransparency(
@@ -163,7 +137,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
             0.5F
         );
 
-        if (this.menu.canScroll()) {
+        if (this.scrollable.canScroll()) {
             int left = this.leftPos + 122;
             int top = this.topPos + 23;
             int down = top + 36;
@@ -194,13 +168,14 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                 int y = this.topPos + 23 + 18 * ((i - this.head) / 3);
 
                 if (!MathUtil.isInRange(mouseX, mouseY, x, y, x + 18, y + 18)) continue;
-                if (this.menu.getSelectedIndex() == this.head) {
-                    this.menu.setSelectedEnchantment(-1);
-                    PacketDistributor.sendToServer(new EmberGrindstoneSyncPacket(-1));
+                if (this.menu.getSelectedIndexes().contains(i)) {
+                    this.menu.unselect(i);
+                    PacketDistributor.sendToServer(new FrostGrindstoneSyncPacket(i, false));
                 } else {
-                    this.menu.setSelectedEnchantment(this.head);
-                    PacketDistributor.sendToServer(new EmberGrindstoneSyncPacket(this.head));
+                    this.menu.select(i);
+                    PacketDistributor.sendToServer(new FrostGrindstoneSyncPacket(i, true));
                 }
+                return true;
             }
         }
 

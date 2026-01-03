@@ -1,18 +1,15 @@
 package dev.dubhe.anvilcraft.block;
 
-import dev.dubhe.anvilcraft.api.block.IEmberBlock;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.better.BetterGrindstoneBlock;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
-import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
+import dev.dubhe.anvilcraft.inventory.FrostGrindstoneMenu;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
@@ -25,11 +22,10 @@ import net.minecraft.world.phys.BlockHitResult;
 
 @Getter
 @Setter
-public class EmberGrindstoneBlock extends BetterGrindstoneBlock implements IHammerRemovable, IEmberBlock {
+public class FrostGrindstoneBlock extends BetterGrindstoneBlock implements IHammerRemovable {
     private static final Component CONTAINER_TITLE = Component.translatable("container.grindstone_title");
-    private BlockState checkBlockState;
 
-    public EmberGrindstoneBlock(Properties properties) {
+    public FrostGrindstoneBlock(Properties properties) {
         super(properties);
     }
 
@@ -51,25 +47,8 @@ public class EmberGrindstoneBlock extends BetterGrindstoneBlock implements IHamm
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
-            (i, inventory, player) -> new EmberGrindstoneMenu(i, inventory, ContainerLevelAccess.create(level, pos)),
-            EmberGrindstoneBlock.CONTAINER_TITLE
+            (i, inventory, player) -> new FrostGrindstoneMenu(i, inventory, ContainerLevelAccess.create(level, pos)),
+            FrostGrindstoneBlock.CONTAINER_TITLE
         );
-    }
-
-    @Override
-    public boolean isRandomlyTicking(BlockState state) {
-        return true;
-    }
-
-    @Override
-    public void randomTick(
-        BlockState state,
-        ServerLevel level,
-        BlockPos pos,
-        RandomSource random
-    ) {
-        if (random.nextDouble() <= 0.5) {
-            this.tryAbsorbWater(level, pos);
-        }
     }
 }

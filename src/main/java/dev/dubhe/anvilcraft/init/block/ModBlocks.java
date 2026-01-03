@@ -14,8 +14,6 @@ import dev.dubhe.anvilcraft.block.BatchCrafterBlock;
 import dev.dubhe.anvilcraft.block.BerryCakeBlock;
 import dev.dubhe.anvilcraft.block.BerryCreamBlock;
 import dev.dubhe.anvilcraft.block.BlackHoleBlock;
-import dev.dubhe.anvilcraft.block.FrostMetalBlock;
-import dev.dubhe.anvilcraft.block.WhiteHoleBlock;
 import dev.dubhe.anvilcraft.block.BlockComparatorBlock;
 import dev.dubhe.anvilcraft.block.BlockDevourerBlock;
 import dev.dubhe.anvilcraft.block.BlockPlacerBlock;
@@ -47,6 +45,8 @@ import dev.dubhe.anvilcraft.block.EndDustBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.FlintBlock;
+import dev.dubhe.anvilcraft.block.FrostGrindstoneBlock;
+import dev.dubhe.anvilcraft.block.FrostMetalBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.GunpowderBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
@@ -117,6 +117,7 @@ import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
 import dev.dubhe.anvilcraft.block.VoidEnergyCollectorBlock;
 import dev.dubhe.anvilcraft.block.VoidMatterBlock;
+import dev.dubhe.anvilcraft.block.WhiteHoleBlock;
 import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.heatable.HeatedBlock;
 import dev.dubhe.anvilcraft.block.heatable.IncandescentBlock;
@@ -476,6 +477,24 @@ public class ModBlocks {
         .blockstate(DataGenUtil::noExtraModelOrState)
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
+        .register();
+
+    public static final BlockEntry<FrostGrindstoneBlock> FROST_GRINDSTONE = REGISTRATE.block("frost_grindstone", FrostGrindstoneBlock::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModBlocks.ROYAL_GRINDSTONE),
+                    Ingredient.of(ModBlocks.FROST_METAL_BLOCK),
+                    RecipeCategory.MISC,
+                    ctx.get().asItem()
+                )
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("smithing/frost_grindstone"));
+        })
+        .tag(BlockTags.WITHER_IMMUNE, BlockTags.DRAGON_IMMUNE, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL)
+        .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .simpleItem()
         .register();
 
     public static final BlockEntry<EmberAnvilBlock> EMBER_ANVIL = REGISTRATE.block("ember_anvil", EmberAnvilBlock::new)
