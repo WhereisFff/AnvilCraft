@@ -47,7 +47,7 @@ public record Merciless(boolean enabled) {
         int levels = 0;
 
         // 将已无情的魔咒的等级添至总等级
-        ItemEnchantments mercilessEnchs = stack.get(ModComponents.MERCILESS_ENCHANTMENTS);
+        ItemEnchantments mercilessEnchs = stack.getOrDefault(ModComponents.MERCILESS_ENCHANTMENTS, ItemEnchantments.EMPTY);
         for (Holder<Enchantment> enchantment : mercilessEnchs.keySet()) {
             levels += mercilessEnchs.getLevel(enchantment);
         }
@@ -119,6 +119,7 @@ public record Merciless(boolean enabled) {
             enchsMut.set(enchantment, mercilessEnchsMut.getLevel(enchantment));
             it.remove();
         }
+        stack.set(DataComponents.ENCHANTMENTS, enchsMut.toImmutable());
 
         // 移除属性修饰符
         ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
