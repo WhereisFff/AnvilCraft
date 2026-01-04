@@ -24,9 +24,9 @@ public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindsto
         AnvilCraft.of("textures/gui/container/smithing/background/frost_grindstone.png");
 
     private static final ResourceLocation BUTTON =
-        AnvilCraft.of("textures/gui/container/smithing/frost_grindstone_button.png");
+        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_button.png");
     private static final ResourceLocation SLIDER =
-        AnvilCraft.of("textures/gui/container/smithing/frost_grindstone_slider.png");
+        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_slider.png");
 
     private final FrostGrindstoneMenu menu;
     private final Scrollable scrollable = new Scrollable() {

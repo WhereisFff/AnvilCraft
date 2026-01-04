@@ -45,6 +45,7 @@ import dev.dubhe.anvilcraft.block.EndDustBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.FlintBlock;
+import dev.dubhe.anvilcraft.block.FrostAnvilBlock;
 import dev.dubhe.anvilcraft.block.FrostGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.FrostMetalBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
@@ -477,6 +478,36 @@ public class ModBlocks {
         .blockstate(DataGenUtil::noExtraModelOrState)
         .simpleItem()
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
+        .register();
+
+    public static final BlockEntry<FrostAnvilBlock> FROST_ANVIL = REGISTRATE
+        .block("frost_anvil", FrostAnvilBlock::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModBlocks.ROYAL_ANVIL),
+                    Ingredient.of(ModBlocks.FROST_METAL_BLOCK),
+                    RecipeCategory.MISC,
+                    ctx.get().asItem()
+                )
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("smithing/frost_anvil"));
+        })
+        .initialProperties(() -> Blocks.ANVIL)
+        .tag(
+            BlockTags.WITHER_IMMUNE,
+            BlockTags.DRAGON_IMMUNE,
+            BlockTags.ANVIL,
+            ModBlockTags.CANT_BROKEN_ANVIL,
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_DIAMOND_TOOL
+        )
+        .properties(properties -> properties.isValidSpawn(Blocks::never).lightLevel(state -> 9).noOcclusion().strength(50.0f, 1200f))
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ItemTags.ANVIL)
+        .build()
         .register();
 
     public static final BlockEntry<FrostGrindstoneBlock> FROST_GRINDSTONE = REGISTRATE.block("frost_grindstone", FrostGrindstoneBlock::new)

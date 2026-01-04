@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.client.gui.screen.EmberAnvilScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberGrindstoneScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberSmithingScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.FilterScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.FrostAnvilScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.FrostGrindstoneScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemCollectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemDetectorScreen;
@@ -30,6 +31,7 @@ import dev.dubhe.anvilcraft.inventory.EmberAnvilMenu;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import dev.dubhe.anvilcraft.inventory.EmberSmithingMenu;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
+import dev.dubhe.anvilcraft.inventory.FrostAnvilMenu;
 import dev.dubhe.anvilcraft.inventory.FrostGrindstoneMenu;
 import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
 import dev.dubhe.anvilcraft.inventory.ItemDetectorMenu;
@@ -138,8 +140,8 @@ public class ModMenuTypes {
         .menu("transcendence_anvil", (type, id, inv) -> new TranscendenceAnvilMenu(id, inv), () -> TranscendenceAnvilScreen::new)
         .register();
 
-    public static final MenuEntry<EmberAnvilMenu> FROST_ANVIL = REGISTRATE
-        .menu("frost_anvil", (type, id, inv) -> new EmberAnvilMenu(id, inv), () -> EmberAnvilScreen::new)
+    public static final MenuEntry<FrostAnvilMenu> FROST_ANVIL = REGISTRATE
+        .menu("frost_anvil", (type, id, inv) -> new FrostAnvilMenu(id, inv), () -> FrostAnvilScreen::new)
         .register();
     public static final MenuEntry<FrostGrindstoneMenu> FROST_GRINDSTONE = REGISTRATE
         .menu(

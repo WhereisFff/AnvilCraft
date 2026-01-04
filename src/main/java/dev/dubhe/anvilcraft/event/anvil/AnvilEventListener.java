@@ -8,19 +8,21 @@ import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
+import dev.dubhe.anvilcraft.block.FrostAnvilBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
+import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
-import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
@@ -38,8 +40,6 @@ import net.neoforged.fml.common.EventBusSubscriber;
 
 import java.util.List;
 import java.util.Optional;
-
-import static dev.dubhe.anvilcraft.util.AnvilUtil.dropItems;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class AnvilEventListener {
@@ -97,24 +97,42 @@ public class AnvilEventListener {
         // noinspection deprecation
         if (state.getBlock().getExplosionResistance() >= 1200.0) event.setAnvilDamage(true);
         if (state.getDestroySpeed(level, pos) < 0) return;
-        boolean smeltDrop = Optional.of(event.getEntity())
+
+        final boolean noDropButExp = Optional.of(event.getEntity())
+            .map(FallingBlockEntity::getBlockState)
+            .map(b -> b.getBlock() instanceof FrostAnvilBlock)
+            .orElse(false);
+        final boolean smeltDrop = Optional.of(event.getEntity())
             .map(FallingBlockEntity::getBlockState)
             .map(b -> b.getBlock() instanceof EmberAnvilBlock)
             .orElse(false);
-        boolean silkTouch = Optional.of(event.getEntity())
+        final boolean silkTouch = Optional.of(event.getEntity())
             .map(FallingBlockEntity::getBlockState)
             .map(b -> b.getBlock() instanceof RoyalAnvilBlock)
             .orElse(false);
-        boolean fortune5 = Optional.of(event.getEntity())
+        final boolean fortune5 = Optional.of(event.getEntity())
             .map(FallingBlockEntity::getBlockState)
             .map(b -> b.getBlock() instanceof TranscendenceAnvilBlock)
             .orElse(false);
-        ItemStack dummyTool = silkTouch ? BreakBlockUtil.getDummySilkTouchTool(serverLevel)
-                                        : fortune5 ? BreakBlockUtil.getDummyFortune5Tool(serverLevel)
-                                                   : ItemStack.EMPTY;
-        state.spawnAfterBreak(serverLevel, pos, dummyTool, false);
+
+        ItemStack dummyTool;
+        if (noDropButExp) {
+            dummyTool = BreakBlockUtil.getDummyDisintegrationTool(serverLevel);
+        } else if (silkTouch) {
+            dummyTool = BreakBlockUtil.getDummySilkTouchTool(serverLevel);
+        } else if (fortune5) {
+            dummyTool = BreakBlockUtil.getDummyFortune5Tool(serverLevel);
+        } else {
+            dummyTool = ItemStack.EMPTY;
+        }
+        state.spawnAfterBreak(serverLevel, pos, dummyTool, noDropButExp);
         if (state.getBlock() instanceof IHasMultiBlock multiBlock) {
             multiBlock.onRemove(level, pos, state);
+        }
+
+        if (noDropButExp) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            return;
         }
         List<ItemStack> drops;
         if (smeltDrop) {
@@ -126,7 +144,7 @@ public class AnvilEventListener {
         } else {
             drops = BreakBlockUtil.drop(serverLevel, pos);
         }
-        dropItems(drops, level, pos.getCenter());
+        AnvilUtil.dropItems(drops, level, pos.getCenter());
         level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
     }
 
@@ -158,23 +176,82 @@ public class AnvilEventListener {
             .withParameter(LootContextParams.THIS_ENTITY, entity)
             .withParameter(LootContextParams.ORIGIN, pos);
         Block anvil = eventEntity.getBlockState().getBlock();
+        switch (anvil) {
+            case FrostAnvilBlock ignored -> AnvilEventListener.dropExps(
+                serverLevel,
+                entity,
+                pos,
+                rate
+            );
+            case EmberAnvilBlock ignored -> AnvilEventListener.dropItems(
+                serverLevel,
+                entity,
+                pos,
+                rate,
+                builder,
+                true,
+                false
+            );
+            case TranscendenceAnvilBlock ignored -> AnvilEventListener.dropItems(
+                serverLevel,
+                entity,
+                pos,
+                rate,
+                builder,
+                true,
+                true
+            );
+            default -> AnvilEventListener.dropItems(
+                serverLevel,
+                entity,
+                pos,
+                rate,
+                builder,
+                false,
+                false
+            );
+        }
+        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos), entity);
+    }
+
+    private static void dropItems(
+        ServerLevel level,
+        LivingEntity entity,
+        Vec3 pos,
+        double rate,
+        LootParams.Builder builder,
+        boolean enableKiller,
+        boolean enableLooting5
+    ) {
         Optional<ServerPlayer> killerOp = Optional.empty();
-        if (Util.instanceOfAny(anvil, EmberAnvilBlock.class, TranscendenceAnvilBlock.class)) {
-            ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer(serverLevel);
+        if (enableKiller) {
+            ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer(level);
             builder.withParameter(LootContextParams.DAMAGE_SOURCE, entity.level().damageSources().playerAttack(killer))
                 .withParameter(LootContextParams.ATTACKING_ENTITY, killer)
                 .withParameter(LootContextParams.LAST_DAMAGE_PLAYER, killer);
-            if (anvil instanceof TranscendenceAnvilBlock) {
-                AnvilCraftFakePlayers.anvilcraftKiller.enableLooting5(serverLevel, killer);
-            }
+            if (enableLooting5) AnvilCraftFakePlayers.anvilcraftKiller.enableLooting5(level, killer);
             killerOp = Optional.of(killer);
         }
         LootParams lootParams = builder.create(LootContextParamSets.ENTITY);
-        LootTable lootTable = serverLevel.getServer().reloadableRegistries().getLootTable(entity.getLootTable());
-        dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
-        if (rate >= 0.6) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
-        if (rate >= 0.8) dropItems(lootTable.getRandomItems(lootParams), serverLevel, pos);
+        LootTable lootTable = level.getServer().reloadableRegistries().getLootTable(entity.getLootTable());
+        AnvilUtil.dropItems(lootTable.getRandomItems(lootParams), level, pos);
+        if (rate >= 0.6) AnvilUtil.dropItems(lootTable.getRandomItems(lootParams), level, pos);
+        if (rate >= 0.8) AnvilUtil.dropItems(lootTable.getRandomItems(lootParams), level, pos);
         killerOp.ifPresent(killer -> AnvilCraftFakePlayers.anvilcraftKiller.disable(killer));
-        TriggerUtil.anvilLooting(serverLevel, BlockPos.containing(pos), entity);
+    }
+
+    private static void dropExps(
+        ServerLevel level,
+        LivingEntity entity,
+        Vec3 pos,
+        double rate
+    ) {
+        ServerPlayer killer = AnvilCraftFakePlayers.anvilcraftKiller.offerPlayer(level);
+        AnvilCraftFakePlayers.anvilcraftKiller.enableDisintegration(level, killer);
+
+        ExperienceOrb.award(level, pos, entity.getExperienceReward(level, killer));
+        if (rate >= 0.6) ExperienceOrb.award(level, pos, entity.getExperienceReward(level, killer));
+        if (rate >= 0.8) ExperienceOrb.award(level, pos, entity.getExperienceReward(level, killer));
+        AnvilCraftFakePlayers.anvilcraftKiller.disable(killer);
     }
 }
