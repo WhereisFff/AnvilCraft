@@ -504,10 +504,9 @@ public class ModBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_DIAMOND_TOOL
         )
-        .properties(properties -> properties.isValidSpawn(Blocks::never).strength(50.0f, 1200f))
+        .properties(properties -> properties.isValidSpawn(Blocks::never).lightLevel(state -> 9).noOcclusion().strength(50.0f, 1200f))
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item()
-        // .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ItemTags.ANVIL)
         .build()
         .register();
@@ -527,11 +526,9 @@ public class ModBlocks {
         })
         .tag(BlockTags.WITHER_IMMUNE, BlockTags.DRAGON_IMMUNE, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
         .blockstate(DataGenUtil::noExtraModelOrState)
         .simpleItem()
-        // .item()
-        // .initialProperties(() -> new Item.Properties().fireResistant())
-        // .build()
         .register();
 
     public static final BlockEntry<FrostSmithingTableBlock> FROST_SMITHING_TABLE = REGISTRATE
@@ -549,11 +546,9 @@ public class ModBlocks {
         })
         .tag(BlockTags.WITHER_IMMUNE, BlockTags.DRAGON_IMMUNE, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL)
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion())
         .blockstate(DataGenUtil::noExtraModelOrState)
         .simpleItem()
-        // .item()
-        // .initialProperties(() -> new Item.Properties().fireResistant())
-        // .build()
         .register();
 
     public static final BlockEntry<EmberAnvilBlock> EMBER_ANVIL = REGISTRATE.block("ember_anvil", EmberAnvilBlock::new)
@@ -2015,7 +2010,10 @@ public class ModBlocks {
             ModBlockTags.HAMMER_REMOVABLE,
             ModBlockTags.STORAGE_BLOCKS_FROST_METAL
         )
-        .blockstate((context, provider) -> provider.simpleBlock(context.get()))
+        .blockstate((context, provider) -> provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/frost_metal_block").get()
+        ))
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_FROST_METAL)
         .build()

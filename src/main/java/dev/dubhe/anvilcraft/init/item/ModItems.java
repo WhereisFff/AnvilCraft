@@ -826,9 +826,19 @@ public class ModItems {
             .define('E', ModItems.EARTH_CORE_SHARD)
             .define('T', ModItemTags.TEMPLATES)
             .define('V', ModItems.VOID_MATTER)
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModBlocks.FROST_SMITHING_TABLE),
+                RegistrateRecipeProvider.has(ModBlocks.FROST_SMITHING_TABLE)
+            )
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.EARTH_CORE_SHARD), RegistrateRecipeProvider.has(ModItems.EARTH_CORE_SHARD))
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.VOID_MATTER), RegistrateRecipeProvider.has(ModItems.VOID_MATTER))
             .save(provider);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
             .requires(ModItems.DEFORMATION_TEMPLATE_ITEM)
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModItems.DEFORMATION_TEMPLATE_ITEM),
+                RegistrateRecipeProvider.has(ModItems.DEFORMATION_TEMPLATE_ITEM)
+            )
             .save(provider, AnvilCraft.of("shapeless/deform_to_permut"));
     }).initialProperties(() -> new Item.Properties().fireResistant()).tag(ModItemTags.TEMPLATES, ModItemTags.EXPLOSION_PROOF).register();
     public static final ItemEntry<DeformationTemplateItem> DEFORMATION_TEMPLATE_ITEM = REGISTRATE.item(
@@ -842,9 +852,19 @@ public class ModItems {
             .define('E', ModItems.EARTH_CORE_SHARD)
             .define('T', ModItemTags.TEMPLATES)
             .define('V', ModItems.VOID_MATTER)
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModBlocks.FROST_SMITHING_TABLE),
+                RegistrateRecipeProvider.has(ModBlocks.FROST_SMITHING_TABLE)
+            )
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.EARTH_CORE_SHARD), RegistrateRecipeProvider.has(ModItems.EARTH_CORE_SHARD))
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.VOID_MATTER), RegistrateRecipeProvider.has(ModItems.VOID_MATTER))
             .save(provider);
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get())
             .requires(ModItems.PERMUTATION_TEMPLATE_ITEM)
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModItems.PERMUTATION_TEMPLATE_ITEM),
+                RegistrateRecipeProvider.has(ModItems.PERMUTATION_TEMPLATE_ITEM)
+            )
             .save(provider, AnvilCraft.of("shapeless/permut_to_deform"));
     }).initialProperties(() -> new Item.Properties().fireResistant()).tag(ModItemTags.TEMPLATES, ModItemTags.EXPLOSION_PROOF).register();
 

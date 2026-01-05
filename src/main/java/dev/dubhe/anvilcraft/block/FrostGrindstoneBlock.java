@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
+import dev.dubhe.anvilcraft.api.block.IFrostBlock;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.better.BetterGrindstoneBlock;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
@@ -22,7 +23,7 @@ import net.minecraft.world.phys.BlockHitResult;
 
 @Getter
 @Setter
-public class FrostGrindstoneBlock extends BetterGrindstoneBlock implements IHammerRemovable {
+public class FrostGrindstoneBlock extends BetterGrindstoneBlock implements IHammerRemovable, IFrostBlock {
     private static final Component CONTAINER_TITLE = Component.translatable("container.grindstone_title");
 
     public FrostGrindstoneBlock(Properties properties) {

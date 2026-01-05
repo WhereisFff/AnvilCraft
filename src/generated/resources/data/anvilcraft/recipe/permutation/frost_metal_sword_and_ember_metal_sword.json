@@ -1,0 +1,8 @@
+{
+  "type": "anvilcraft:permutation",
+  "inputA": "anvilcraft:frost_metal_sword",
+  "inputB": "anvilcraft:ember_metal_sword",
+  "material": {
+    "items": "anvilcraft:multiphase_matter"
+  }
+}

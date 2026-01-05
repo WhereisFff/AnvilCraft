@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
+import dev.dubhe.anvilcraft.api.block.IFrostBlock;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.inventory.FrostSmithingMenu;
 import net.minecraft.core.BlockPos;
@@ -11,7 +12,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.SmithingTableBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class FrostSmithingTableBlock extends SmithingTableBlock implements IHammerRemovable {
+public class FrostSmithingTableBlock extends SmithingTableBlock implements IHammerRemovable, IFrostBlock {
     private static final Component CONTAINER_TITLE = Component.translatable("container.upgrade");
 
     public FrostSmithingTableBlock(Properties properties) {

@@ -1,7 +1,5 @@
 package dev.dubhe.anvilcraft.recipe.frost;
 
-import com.mojang.datafixers.util.Either;
-import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
@@ -20,8 +18,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
@@ -37,7 +33,6 @@ import java.util.Set;
 public record PermutationRecipe(
     ItemIngredientPredicate template,
     ItemIngredientPredicate material,
-    Component missingInput,
     Item inputA,
     Item inputB
 ) implements IFrostSmithingRecipe {
@@ -111,10 +106,6 @@ public record PermutationRecipe(
             ItemIngredientPredicate.CODEC
                 .fieldOf("material")
                 .forGetter(PermutationRecipe::material),
-            Codec.either(ComponentSerialization.CODEC, ComponentSerialization.FLAT_CODEC)
-                .fieldOf("material")
-                .xmap(Either::unwrap, Either::left)
-                .forGetter(PermutationRecipe::missingInput),
             CodecUtil.ITEM_CODEC
                 .fieldOf("inputA")
                 .forGetter(PermutationRecipe::inputA),
@@ -128,8 +119,6 @@ public record PermutationRecipe(
             PermutationRecipe::template,
             ItemIngredientPredicate.STREAM_CODEC,
             PermutationRecipe::material,
-            ComponentSerialization.STREAM_CODEC,
-            PermutationRecipe::missingInput,
             CodecUtil.ITEM_STREAM_CODEC,
             PermutationRecipe::inputA,
             CodecUtil.ITEM_STREAM_CODEC,
@@ -153,7 +142,6 @@ public record PermutationRecipe(
     public static class Builder extends AbstractRecipeBuilder<PermutationRecipe> {
         private ItemIngredientPredicate template = PermutationRecipe.DEFAULT_TEMPLATE;
         private ItemIngredientPredicate material;
-        private Component missingInput;
         private final Item inputA;
         private final Item inputB;
 
@@ -231,7 +219,6 @@ public record PermutationRecipe(
             return new PermutationRecipe(
                 this.template,
                 this.material,
-                this.missingInput,
                 this.inputA,
                 this.inputB
             );
@@ -241,9 +228,6 @@ public record PermutationRecipe(
         public void validate(ResourceLocation id) {
             if (this.material.items().isEmpty()) {
                 throw new IllegalArgumentException("The material of permutation recipe must not be empty, RecipeId: " + id);
-            }
-            if (this.missingInput == null) {
-                throw new IllegalArgumentException("The tooltip of missing input of permutation recipe must not be empty, RecipeId: " + id);
             }
         }
 

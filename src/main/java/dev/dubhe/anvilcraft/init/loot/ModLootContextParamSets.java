@@ -24,14 +24,6 @@ public class ModLootContextParamSets {
             .required(LootContextParams.TOOL)
     );
 
-    public static final LootContextParamSet POST_BREAK_BLOCK = register(
-        "post_break_block",
-        it -> it.required(LootContextParams.THIS_ENTITY)
-            .required(LootContextParams.ORIGIN)
-            .required(LootContextParams.ATTACKING_ENTITY)
-            .required(LootContextParams.TOOL)
-    );
-
     private static LootContextParamSet register(String registryName, Consumer<LootContextParamSet.Builder> builderConsumer) {
         LootContextParamSet.Builder builder = new LootContextParamSet.Builder();
         builderConsumer.accept(builder);

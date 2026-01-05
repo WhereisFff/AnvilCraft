@@ -22,78 +22,93 @@ public class DeformationRecipeLoader {
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            ResourceLocation.withDefaultNamespace("wood")
+            ResourceLocation.withDefaultNamespace("wooden"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            ResourceLocation.withDefaultNamespace("stone")
+            ResourceLocation.withDefaultNamespace("stone"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            ResourceLocation.withDefaultNamespace("iron")
+            ResourceLocation.withDefaultNamespace("iron"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            ResourceLocation.withDefaultNamespace("gold")
+            ResourceLocation.withDefaultNamespace("golden"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            ResourceLocation.withDefaultNamespace("diamond")
+            ResourceLocation.withDefaultNamespace("diamond"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            ResourceLocation.withDefaultNamespace("netherite")
+            ResourceLocation.withDefaultNamespace("netherite"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            AnvilCraft.of("amethyst")
+            AnvilCraft.of("amethyst"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            AnvilCraft.of("royal_steel")
+            AnvilCraft.of("royal_steel"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            AnvilCraft.of("frost_metal")
+            AnvilCraft.of("frost_metal"),
+            "weapons_and_tools"
         );
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
-            AnvilCraft.of("ember_metal")
+            AnvilCraft.of("ember_metal"),
+            "weapons_and_tools"
         );
 
         DeformationRecipeLoader.register(
             provider,
             DeformationRecipeLoader.ARMORS,
-            ResourceLocation.withDefaultNamespace("chainmail")
+            ResourceLocation.withDefaultNamespace("chainmail"),
+            "armors"
         );
         DeformationRecipeLoader.register(
             provider,
             DeformationRecipeLoader.ARMORS,
-            ResourceLocation.withDefaultNamespace("iron")
+            ResourceLocation.withDefaultNamespace("iron"),
+            "armors"
         );
         DeformationRecipeLoader.register(
             provider,
             DeformationRecipeLoader.ARMORS,
-            ResourceLocation.withDefaultNamespace("gold")
+            ResourceLocation.withDefaultNamespace("golden"),
+            "armors"
         );
         DeformationRecipeLoader.register(
             provider,
             DeformationRecipeLoader.ARMORS,
-            ResourceLocation.withDefaultNamespace("diamond")
+            ResourceLocation.withDefaultNamespace("diamond"),
+            "armors"
         );
         DeformationRecipeLoader.register(
             provider,
             DeformationRecipeLoader.ARMORS,
-            ResourceLocation.withDefaultNamespace("netherite")
+            ResourceLocation.withDefaultNamespace("netherite"),
+            "armors"
         );
 
         DeformationRecipe.builder()
@@ -105,13 +120,14 @@ public class DeformationRecipeLoader {
     private static void register(
         RegistrateRecipeProvider provider,
         List<String> bases,
-        ResourceLocation id
+        ResourceLocation id,
+        String suffix
     ) {
         var builder = DeformationRecipe.builder();
         for (String base : bases) {
             Item input = BuiltInRegistries.ITEM.get(id.withSuffix("_" + base));
             builder.input(input);
         }
-        builder.save(provider, id);
+        builder.save(provider, id.withSuffix("_" + suffix));
     }
 }

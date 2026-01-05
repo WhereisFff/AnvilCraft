@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.frost.PermutationRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
@@ -66,8 +67,8 @@ public class PermutationRecipeLoader {
             provider,
             PermutationRecipeLoader.WORKSTATIONS,
             ModBlocks.MULTIPHASE_MATTER_BLOCK,
-            AnvilCraft.of("frost_metal"),
-            AnvilCraft.of("ember_metal")
+            AnvilCraft.of("frost"),
+            AnvilCraft.of("ember")
         );
     }
 
