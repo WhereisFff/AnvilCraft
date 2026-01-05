@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.dubhe.anvilcraft.api.event.ItemEntityEvent;
 import dev.dubhe.anvilcraft.api.injection.entity.IItemEntityExtension;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
+import dev.dubhe.anvilcraft.block.MagnetBlock;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
@@ -442,7 +443,9 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         AABB box = this.getBoundingBox().inflate(0.01);
         return BlockPos.betweenClosedStream(box).anyMatch(p -> {
             BlockState s = this.level().getBlockState(p);
-            return anvilcraft$isMagnetBlock(s) && !s.getCollisionShape(this.level(), p).isEmpty()
+            return anvilcraft$isMagnetBlock(s)
+                   && !s.getValue(MagnetBlock.LIT)
+                   && !s.getCollisionShape(this.level(), p).isEmpty()
                    && s.getCollisionShape(this.level(), p).toAabbs().stream().anyMatch(b -> b.move(p).intersects(box));
         });
     }

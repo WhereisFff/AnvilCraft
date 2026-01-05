@@ -1,0 +1,8 @@
+{
+  "type": "anvilcraft:permutation",
+  "inputA": "anvilcraft:frost_metal_pickaxe",
+  "inputB": "anvilcraft:ember_metal_pickaxe",
+  "material": {
+    "items": "anvilcraft:multiphase_matter"
+  }
+}

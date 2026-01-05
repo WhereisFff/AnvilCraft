@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.data.tags;
 
 import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
@@ -31,5 +32,9 @@ public class TagsHandler {
 
     public static void initEntityType(RegistrateTagsProvider<EntityType<?>> provider) {
         EntityTypeTagLoader.init(provider);
+    }
+
+    public static void initDataComponentType(RegistrateTagsProvider<DataComponentType<?>> provider) {
+        DataComponentTypeTagLoader.init(provider);
     }
 }

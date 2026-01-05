@@ -44,7 +44,7 @@ public class EightToOneSmithingRecipe extends BaseMultipleToOneSmithingRecipe {
 
     public static class Builder extends BaseBuilder<EightToOneSmithingRecipe> {
         protected Builder(ItemIngredientPredicate template) {
-            super(template, 2);
+            super(template, 8);
         }
 
         protected Builder() {

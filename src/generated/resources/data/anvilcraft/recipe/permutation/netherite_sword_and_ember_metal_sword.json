@@ -1,0 +1,8 @@
+{
+  "type": "anvilcraft:permutation",
+  "inputA": "minecraft:netherite_sword",
+  "inputB": "anvilcraft:ember_metal_sword",
+  "material": {
+    "items": "anvilcraft:ember_metal_ingot"
+  }
+}

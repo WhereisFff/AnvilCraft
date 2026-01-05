@@ -1,0 +1,8 @@
+{
+  "type": "anvilcraft:permutation",
+  "inputA": "anvilcraft:frost_metal_heavy_halberd",
+  "inputB": "anvilcraft:ember_metal_heavy_halberd",
+  "material": {
+    "items": "anvilcraft:multiphase_matter"
+  }
+}
