@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.item.template;
+package dev.dubhe.anvilcraft.item.template.mto;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.network.chat.Component;

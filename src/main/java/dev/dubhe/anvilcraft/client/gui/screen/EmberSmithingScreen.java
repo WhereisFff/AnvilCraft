@@ -3,7 +3,7 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IMultipleMaterial;
 import dev.dubhe.anvilcraft.inventory.EmberSmithingMenu;
-import dev.dubhe.anvilcraft.item.template.BaseMultipleToOneTemplateItem;
+import dev.dubhe.anvilcraft.item.template.mto.BaseMultipleToOneTemplateItem;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
 import net.minecraft.client.gui.screens.inventory.ItemCombinerScreen;
@@ -32,7 +32,8 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
 
     // tooltips
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable(
-        "screen.anvilcraft.ember_smithing.tooltip.missing_template");
+        "screen.anvilcraft.ember_smithing.tooltip.missing_template"
+    );
     private static final Component ERROR_TOOLTIP = Component.translatable("container.upgrade.error_tooltip");
 
     public static final List<ResourceLocation> EMPTY_SLOT_SMITHING_TEMPLATES = List.of(
@@ -74,14 +75,14 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
     @Override
     public void containerTick() {
         super.containerTick();
-        Optional<BaseMultipleToOneTemplateItem> templateOptional = this.getTemplateItem();
-        Optional<ItemStack> materialOptional = this.getMaterialItem();
-        if (templateOptional.isPresent()) {
-            this.materialIcon.tick(templateOptional.get().getEmptySlotTextures());
-            if (materialOptional.isPresent() && materialOptional.get().getItem() instanceof IMultipleMaterial material) {
-                this.inputIcons.forEach(
-                    icon -> icon.tick(material.getEmptySlotTextures(
-                        this.menu.getSlot(0).getItem(), icon.slotIndex - 2, this.menu.getInputStacks())));
+        Optional<BaseMultipleToOneTemplateItem> templateOp = this.getTemplateItem();
+        if (templateOp.isPresent()) {
+            Optional<ItemStack> materialOp = this.getMaterialItem();
+            this.materialIcon.tick(templateOp.get().getEmptySlotTextures());
+            if (materialOp.isPresent() && materialOp.get().getItem() instanceof IMultipleMaterial material) {
+                this.inputIcons.forEach(icon -> icon.tick(material.getEmptySlotTextures(
+                    this.menu.getSlot(0).getItem(), icon.slotIndex - 2, this.menu.getInputStacks()
+                )));
             } else {
                 this.inputIcons.forEach(icon -> icon.tick(List.of()));
             }

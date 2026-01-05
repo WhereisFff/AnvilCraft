@@ -18,10 +18,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class RoyalGrindstone extends BetterGrindstoneBlock implements IHammerRemovable {
+public class RoyalGrindstoneBlock extends BetterGrindstoneBlock implements IHammerRemovable {
     private static final Component CONTAINER_TITLE = Component.translatable("container.grindstone_title");
 
-    public RoyalGrindstone(Properties properties) {
+    public RoyalGrindstoneBlock(Properties properties) {
         super(properties);
     }
 

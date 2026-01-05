@@ -24,6 +24,8 @@ import dev.dubhe.anvilcraft.recipe.anvil.wrap.StampingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.SuperHeatingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.UnpackRecipe;
+import dev.dubhe.anvilcraft.recipe.frost.DeformationRecipe;
+import dev.dubhe.anvilcraft.recipe.frost.PermutationRecipe;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainChanceRecipe;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockConversionRecipe;
@@ -195,6 +197,15 @@ public class ModRecipeTypes {
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<? extends EightToOneSmithingRecipe>>
         EIGHT_TO_ONE_SMITHING_SERIALIZER =
         RECIPE_SERIALIZERS.register("eight_to_one_smithing", EightToOneSmithingRecipe.Serializer::new);
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<PermutationRecipe>> PERMUTATION_TYPE =
+        registerType("permutation");
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<PermutationRecipe>> PERMUTATION_SERIALIZER =
+        RECIPE_SERIALIZERS.register("permutation", PermutationRecipe.Serializer::new);
+    public static final DeferredHolder<RecipeType<?>, RecipeType<DeformationRecipe>> DEFORMATION_TYPE =
+        registerType("deformation");
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<DeformationRecipe>> DEFORMATION_SERIALIZER =
+        RECIPE_SERIALIZERS.register("deformation", DeformationRecipe.Serializer::new);
 
     private static <T extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<T>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> new RecipeType<>() {

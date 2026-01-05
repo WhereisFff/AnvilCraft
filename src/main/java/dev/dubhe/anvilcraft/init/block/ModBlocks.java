@@ -48,6 +48,7 @@ import dev.dubhe.anvilcraft.block.FlintBlock;
 import dev.dubhe.anvilcraft.block.FrostAnvilBlock;
 import dev.dubhe.anvilcraft.block.FrostGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.FrostMetalBlock;
+import dev.dubhe.anvilcraft.block.FrostSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.GunpowderBlock;
 import dev.dubhe.anvilcraft.block.HeatCollectorBlock;
@@ -97,7 +98,7 @@ import dev.dubhe.anvilcraft.block.ResentfulAmberBlock;
 import dev.dubhe.anvilcraft.block.ResinBlock;
 import dev.dubhe.anvilcraft.block.RottenFleshBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
-import dev.dubhe.anvilcraft.block.RoyalGrindstone;
+import dev.dubhe.anvilcraft.block.RoyalGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.RoyalSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.RubyLaserBlock;
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
@@ -134,6 +135,7 @@ import dev.dubhe.anvilcraft.block.item.HeatableBlockItem;
 import dev.dubhe.anvilcraft.block.item.HeliostatsItem;
 import dev.dubhe.anvilcraft.block.item.LevitationBlockItem;
 import dev.dubhe.anvilcraft.block.item.MengerSpongeBlockItem;
+import dev.dubhe.anvilcraft.block.item.MultiphaseMatterBlockItem;
 import dev.dubhe.anvilcraft.block.item.PlaceInWaterBlockItem;
 import dev.dubhe.anvilcraft.block.item.RadiationBlockItem;
 import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
@@ -439,7 +441,7 @@ public class ModBlocks {
         .tag(BlockTags.ANVIL, ModBlockTags.CANT_BROKEN_ANVIL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
         .register();
 
-    public static final BlockEntry<? extends Block> ROYAL_GRINDSTONE = REGISTRATE.block("royal_grindstone", RoyalGrindstone::new)
+    public static final BlockEntry<? extends Block> ROYAL_GRINDSTONE = REGISTRATE.block("royal_grindstone", RoyalGrindstoneBlock::new)
         .recipe((ctx, provider) -> {
             SmithingTransformRecipeBuilder.smithing(
                     Ingredient.of(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE),
@@ -502,15 +504,16 @@ public class ModBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_DIAMOND_TOOL
         )
-        .properties(properties -> properties.isValidSpawn(Blocks::never).lightLevel(state -> 9).noOcclusion().strength(50.0f, 1200f))
+        .properties(properties -> properties.isValidSpawn(Blocks::never).strength(50.0f, 1200f))
         .blockstate(DataGenUtil::noExtraModelOrState)
         .item()
-        .initialProperties(() -> new Item.Properties().fireResistant())
+        // .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(ItemTags.ANVIL)
         .build()
         .register();
 
-    public static final BlockEntry<FrostGrindstoneBlock> FROST_GRINDSTONE = REGISTRATE.block("frost_grindstone", FrostGrindstoneBlock::new)
+    public static final BlockEntry<FrostGrindstoneBlock> FROST_GRINDSTONE = REGISTRATE
+        .block("frost_grindstone", FrostGrindstoneBlock::new)
         .recipe((ctx, provider) -> {
             SmithingTransformRecipeBuilder.smithing(
                     Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
@@ -526,6 +529,31 @@ public class ModBlocks {
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .simpleItem()
+        // .item()
+        // .initialProperties(() -> new Item.Properties().fireResistant())
+        // .build()
+        .register();
+
+    public static final BlockEntry<FrostSmithingTableBlock> FROST_SMITHING_TABLE = REGISTRATE
+        .block("frost_smithing_table", FrostSmithingTableBlock::new)
+        .recipe((ctx, provider) -> {
+            SmithingTransformRecipeBuilder.smithing(
+                    Ingredient.of(ModItems.FROST_METAL_UPGRADE_SMITHING_TEMPLATE),
+                    Ingredient.of(ModBlocks.ROYAL_SMITHING_TABLE),
+                    Ingredient.of(ModBlocks.FROST_METAL_BLOCK),
+                    RecipeCategory.MISC,
+                    ctx.get().asItem()
+                )
+                .unlocks("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("smithing/frost_smithing_table"));
+        })
+        .tag(BlockTags.WITHER_IMMUNE, BlockTags.DRAGON_IMMUNE, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_DIAMOND_TOOL)
+        .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .simpleItem()
+        // .item()
+        // .initialProperties(() -> new Item.Properties().fireResistant())
+        // .build()
         .register();
 
     public static final BlockEntry<EmberAnvilBlock> EMBER_ANVIL = REGISTRATE.block("ember_anvil", EmberAnvilBlock::new)
@@ -3767,14 +3795,15 @@ public class ModBlocks {
         )
         .register();
 
-    public static final BlockEntry<? extends Block> MULTIPHASE_MATTER_BLOCK = REGISTRATE.block("multiphase_matter_block", Block::new)
+    public static final BlockEntry<? extends Block> MULTIPHASE_MATTER_BLOCK = REGISTRATE
+        .block("multiphase_matter_block", Block::new)
         .lang("Block of Multiphase Matter")
         .initialProperties(() -> Blocks.DIAMOND_BLOCK)
         .blockstate((ctx, provider) -> provider.simpleBlock(
             ctx.get(),
             DangerUtil.genConfiguredModel("block/multiphase_matter_block").get()
         ))
-        .item()
+        .item(MultiphaseMatterBlockItem::new)
         .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
         .build()
         .tag(

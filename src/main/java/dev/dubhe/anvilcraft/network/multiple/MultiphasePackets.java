@@ -61,7 +61,7 @@ public class MultiphasePackets {
         );
     }
 
-    public static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> of(String path) {
+    private static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> of(String path) {
         return new CustomPacketPayload.Type<>(AnvilCraft.of("multiphase_" + path));
     }
 
@@ -75,7 +75,7 @@ public class MultiphasePackets {
             return TYPE;
         }
 
-        public static void serverHandler(SwitchPhase data, IPayloadContext context) {
+        public void serverHandler(IPayloadContext context) {
             ServerPlayer player = (ServerPlayer) context.player();
             context.enqueueWork(() -> {
                 if (!(player.level() instanceof ServerLevel)) return;

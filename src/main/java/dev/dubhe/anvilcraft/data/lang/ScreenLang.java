@@ -165,6 +165,7 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.ember_smithing.multiphase_matter.missing_tools", "Add a Shear, a Flint and Steel, a Brush, a Spyglass, a Magnet, a Fishing Rod, a Carrot on a Stick and a Warped Fungus on a Stick");
         provider.add("screen.anvilcraft.ember_smithing.heavy_halberd_core.missing_tools", "Add a sword and an axe of the same type, a Trident and a Mace");
         provider.add("screen.anvilcraft.ember_smithing.resonator_core.missing_tools", "Add same Ember or Frost metal tools");
+        provider.add("screen.anvilcraft.ember_smithing.frost_metal_block.missing_tools", "Add Amulets in same category");
         provider.add("screen.anvilcraft.ember_smithing.multiphase_transcendium.missing_tools", "Add a Ember Metal Resonator or Heavy Halberd and a Frost Metal Resonator or Heavy Halberd");
         provider.add("screen.anvilcraft.ember_smithing.multiphase_transcendium.resonator_missing_tools", "Add a Ember Metal Resonator and a Frost Metal Resonator");
         provider.add("screen.anvilcraft.ember_smithing.multiphase_transcendium.heavy_halberd_missing_tools", "Add a Ember Metal Heavy Halberd and a Frost Metal Heavy Halberd");
@@ -191,5 +192,13 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.filter.mismatch_component", "Mismatch Component");
 
         provider.add("screen.anvilcraft.filter.scroll_wheel_to_change_stack_limit", "Scroll mouse wheel to change stack limit");
+
+        provider.add("screen.anvilcraft.frost_smithing.tooltip.missing_template", "Add Permutation Template or Deformation Template");
+        provider.add("screen.anvilcraft.frost_smithing.permutation.missing", "Add Royal Steel Ingot, Ember Metal Ingot, Multiphase Matter or Multiphase Matter Block");
+        provider.add("screen.anvilcraft.frost_smithing.deformation.missing_tools", "Add any type of Swords, tools, armors or bow-likes");
+        provider.add("screen.anvilcraft.frost_smithing.royal_steel_ingot.missing_tools", "Add Diamond weapons or tools or Royal Steel weapons or tools");
+        provider.add("screen.anvilcraft.frost_smithing.ember_metal_ingot.missing_tools", "Add Netherite weapons or tools or Ember Metal weapons or tools");
+        provider.add("screen.anvilcraft.frost_smithing.multiphase_matter.missing_tools", "Add Frost Metal weapons or tools or Ember Metal weapons or tools");
+        provider.add("screen.anvilcraft.frost_smithing.multiphase_matter_block.missing_tools", "Add Frost workstations or Ember workstations");
     }
 }

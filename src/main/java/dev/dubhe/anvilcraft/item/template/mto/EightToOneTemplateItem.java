@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.item.template;
+package dev.dubhe.anvilcraft.item.template.mto;
 
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;

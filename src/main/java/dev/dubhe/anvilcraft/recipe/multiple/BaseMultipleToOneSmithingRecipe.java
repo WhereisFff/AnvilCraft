@@ -92,7 +92,8 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
     public ItemStack assemble(MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
         return this.result.getResult(new ResultContext(
             registries,
-            input.template(), input.material(),
+            input.template(),
+            input.material(),
             input.inputs(),
             this.result.getResult().copy()
         ));
