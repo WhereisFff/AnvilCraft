@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
+import dev.dubhe.anvilcraft.constant.TexturesConstant;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import dev.dubhe.anvilcraft.network.EmberGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.util.EnchantmentData;
@@ -24,11 +25,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindstoneMenu> {
     private static final ResourceLocation BACKGROUND =
         AnvilCraft.of("textures/gui/container/smithing/background/ember_grindstone.png");
-
-    private static final ResourceLocation BUTTON =
-        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_button.png");
-    private static final ResourceLocation SLIDER =
-        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_slider.png");
 
     private final EmberGrindstoneMenu menu;
     private final Player player;
@@ -126,7 +122,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                 selected = true;
             }
 
-            guiGraphics.blit(BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
+            guiGraphics.blit(TexturesConstant.EMBER_GRINDSTONE_BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
             guiGraphics.renderItem(willRender, x + 1, y + (selected ? 1 : 0), (int) (partialTick * 100));
         }
     }
@@ -168,9 +164,15 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
             int top = this.topPos + 23;
             int down = top + 36;
             guiGraphics.blit(
-                SLIDER,
-                left, top + (int) ((down - top - 12) * this.scrollable.getScrollOffs()),
-                0, 0, 4, 12, 8, 12
+                TexturesConstant.EMBER_GRINDSTONE_SLIDER,
+                left,
+                top + (int) ((down - top - 12) * this.scrollable.getScrollOffs()),
+                0,
+                0,
+                4,
+                12,
+                8,
+                12
             );
         }
     }

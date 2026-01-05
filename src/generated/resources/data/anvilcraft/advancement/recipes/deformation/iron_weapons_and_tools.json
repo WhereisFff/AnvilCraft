@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:permutation/netherite_sword_and_ember_metal_sword"
+        "recipe": "anvilcraft:deformation/iron_weapons_and_tools"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:permutation/netherite_sword_and_ember_metal_sword"
+      "anvilcraft:deformation/iron_weapons_and_tools"
     ]
   }
 }

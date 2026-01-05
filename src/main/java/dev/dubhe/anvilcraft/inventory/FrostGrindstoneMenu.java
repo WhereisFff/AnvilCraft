@@ -81,7 +81,13 @@ public class FrostGrindstoneMenu extends AbstractContainerMenu {
         this.addSlot(new Slot(this.input, 0, 25, 34) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.isDamageableItem() || stack.is(Items.ENCHANTED_BOOK) || stack.isEnchanted();
+                for (DataComponentType<ItemEnchantments> type : CompatUtil.ENCHANTMENTS_TYPES) {
+                    if (!stack.getOrDefault(type, ItemEnchantments.EMPTY).isEmpty()) return true;
+                }
+                return stack.isDamageableItem()
+                       || stack.isEnchanted()
+                       || !stack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY).isEmpty()
+                       || !stack.getOrDefault(ModComponents.MERCILESS_ENCHANTMENTS, ItemEnchantments.EMPTY).isEmpty();
             }
 
             @Override
@@ -106,29 +112,7 @@ public class FrostGrindstoneMenu extends AbstractContainerMenu {
                     level.levelEvent(1042, pos, 0);
                 });
 
-                ItemStack inputItem = FrostGrindstoneMenu.this.input.getItem(0);
-                Map<DataComponentType<ItemEnchantments>, ItemEnchantments.Mutable> mutableMap = new HashMap<>();
-                for (int selected : FrostGrindstoneMenu.this.selectedIndexes) {
-                    EnchantmentData data = ListUtil.safelyGet(FrostGrindstoneMenu.this.enchantments, selected).orElse(null);
-                    if (data == null) continue;
-
-                    mutableMap.computeIfAbsent(
-                        data.type(),
-                        type -> new ItemEnchantments.Mutable(
-                            inputItem.getOrDefault(type, ItemEnchantments.EMPTY)
-                        )
-                    ).removeIf(holder -> holder.equals(data.enchantment()));
-                }
-
-                for (Map.Entry<DataComponentType<ItemEnchantments>, ItemEnchantments.Mutable> entry : mutableMap.entrySet()) {
-                    inputItem.set(entry.getKey(), entry.getValue().toImmutable());
-                }
-                inputItem.set(
-                    DataComponents.REPAIR_COST,
-                    AnvilMenu.calculateIncreasedRepairCost(inputItem.getOrDefault(DataComponents.REPAIR_COST, 0))
-                );
-                FrostGrindstoneMenu.this.input.setItem(0, inputItem);
-
+                FrostGrindstoneMenu.this.input.setItem(0, ItemStack.EMPTY);
                 FrostGrindstoneMenu.this.refreshEnchantments();
                 FrostGrindstoneMenu.this.selectedIndexes.clear();
                 FrostGrindstoneMenu.this.result.setItem(0, ItemStack.EMPTY);
@@ -175,19 +159,19 @@ public class FrostGrindstoneMenu extends AbstractContainerMenu {
 
     private ItemStack createResult() {
         if (!this.hasSelectedEnchantment() || this.input.isEmpty()) return ItemStack.EMPTY;
-        ItemStack inputItem = this.input.getItem(0);
+        ItemStack inputItem = this.input.getItem(0).copy();
 
         Map<DataComponentType<ItemEnchantments>, ItemEnchantments.Mutable> mutableMap = new HashMap<>();
         int cost = 0;
         for (int i = 0; i < this.enchantments.size(); i++) {
-            if (this.selectedIndexes.contains(i)) continue;
             EnchantmentData data = ListUtil.safelyGet(this.enchantments, i).orElse(null);
             if (data == null) continue;
 
             ItemEnchantments.Mutable newMut = mutableMap.computeIfAbsent(
                 data.type(),
-                type -> new ItemEnchantments.Mutable(inputItem.getOrDefault(type, ItemEnchantments.EMPTY))
+                type -> new ItemEnchantments.Mutable(ItemEnchantments.EMPTY)
             );
+            if (this.selectedIndexes.contains(i)) continue;
             newMut.set(data.enchantment(), data.level());
 
             cost = AnvilMenu.calculateIncreasedRepairCost(cost);
@@ -278,15 +262,14 @@ public class FrostGrindstoneMenu extends AbstractContainerMenu {
                 int remain = clickedItem.getCount() - clickedItem.getMaxStackSize();
                 this.getSlot(index).setByPlayer(remain > 0 ? clickedItem.copyWithCount(remain) : ItemStack.EMPTY);
             }
-            return ItemStack.EMPTY;
         } else {
-            if (!stack.isDamageableItem() && !stack.is(Items.ENCHANTED_BOOK) && !stack.isEnchanted()) return ItemStack.EMPTY;
+            if (!this.getSlot(0).mayPlace(clickedItem)) return ItemStack.EMPTY;
             if (!this.getSlot(0).hasItem()) {
                 this.getSlot(0).setByPlayer(stack);
                 this.getSlot(index).setByPlayer(ItemStack.EMPTY);
             }
-            return ItemStack.EMPTY;
         }
+        return ItemStack.EMPTY;
     }
 
     @Override

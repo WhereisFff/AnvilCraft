@@ -138,20 +138,14 @@ public class ModEnchantments {
             ).withEffect(
                 EnchantmentEffectComponents.BLOCK_EXPERIENCE,
                 AllOf.valueEffects(
-                    InRangeModifyEffect.max(0, new SetValue(new LevelBasedValue.Constant(1))),
-                    InRangeModifyEffect.min(1, new MultiplyValue(new LevelBasedValue.Constant(4)))
-                )
-            ).withEffect(
-                EnchantmentEffectComponents.BLOCK_EXPERIENCE,
-                AllOf.valueEffects(
-                    InRangeModifyEffect.max(0, new SetValue(new LevelBasedValue.Constant(1))),
-                    InRangeModifyEffect.min(1, new MultiplyValue(new LevelBasedValue.Constant(4)))
+                    InRangeModifyEffect.min(1, new MultiplyValue(new LevelBasedValue.Constant(4))),
+                    InRangeModifyEffect.max(0, new SetValue(new LevelBasedValue.Constant(1)))
                 )
             ).withEffect(
                 EnchantmentEffectComponents.MOB_EXPERIENCE,
                 AllOf.valueEffects(
-                    InRangeModifyEffect.max(0, new SetValue(new LevelBasedValue.Constant(1))),
-                    InRangeModifyEffect.min(1, new MultiplyValue(new LevelBasedValue.Constant(4)))
+                    InRangeModifyEffect.min(1, new MultiplyValue(new LevelBasedValue.Constant(4))),
+                    InRangeModifyEffect.max(0, new SetValue(new LevelBasedValue.Constant(1)))
                 )
             )
         );

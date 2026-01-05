@@ -46,7 +46,7 @@ public record DeformationRecipe(
 
     @Override
     public boolean isMaterial(ItemStack material) {
-        return false;
+        return material.isEmpty();
     }
 
     @Override

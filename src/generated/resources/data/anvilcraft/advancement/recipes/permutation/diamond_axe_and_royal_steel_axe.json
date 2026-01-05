@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:netherite_weapons_and_tools"
+        "recipe": "anvilcraft:permutation/diamond_axe_and_royal_steel_axe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:netherite_weapons_and_tools"
+      "anvilcraft:permutation/diamond_axe_and_royal_steel_axe"
     ]
   }
 }

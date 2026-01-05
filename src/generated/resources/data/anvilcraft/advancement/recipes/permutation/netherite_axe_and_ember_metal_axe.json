@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:golden_weapons_and_tools"
+        "recipe": "anvilcraft:permutation/netherite_axe_and_ember_metal_axe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:golden_weapons_and_tools"
+      "anvilcraft:permutation/netherite_axe_and_ember_metal_axe"
     ]
   }
 }

@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:stone_weapons_and_tools"
+        "recipe": "anvilcraft:deformation/netherite_armors"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:stone_weapons_and_tools"
+      "anvilcraft:deformation/netherite_armors"
     ]
   }
 }

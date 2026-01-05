@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.item.template.frost;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -14,12 +15,12 @@ public class DeformationTemplateItem extends Item {
         ResourceLocation.withDefaultNamespace("item/empty_slot_pickaxe"),
         ResourceLocation.withDefaultNamespace("item/empty_slot_shovel"),
         ResourceLocation.withDefaultNamespace("item/empty_slot_hoe"),
-        ResourceLocation.withDefaultNamespace("item/empty_slot_helmet"),
-        ResourceLocation.withDefaultNamespace("item/empty_slot_chestplate"),
-        ResourceLocation.withDefaultNamespace("item/empty_slot_leggings"),
-        ResourceLocation.withDefaultNamespace("item/empty_slot_boots"),
-        ResourceLocation.withDefaultNamespace("item/empty_slot_bow"),
-        ResourceLocation.withDefaultNamespace("item/empty_slot_crossbow")
+        AnvilCraft.of("item/empty_slot_helmet"),
+        AnvilCraft.of("item/empty_slot_chestplate"),
+        AnvilCraft.of("item/empty_slot_leggings"),
+        AnvilCraft.of("item/empty_slot_boots"),
+        AnvilCraft.of("item/empty_slot_bow"),
+        AnvilCraft.of("item/empty_slot_crossbow")
     );
 
     public DeformationTemplateItem(Properties properties) {

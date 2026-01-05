@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:permutation/diamond_hoe_and_royal_steel_hoe"
+        "recipe": "anvilcraft:deformation/frost_metal_weapons_and_tools"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:permutation/diamond_hoe_and_royal_steel_hoe"
+      "anvilcraft:deformation/frost_metal_weapons_and_tools"
     ]
   }
 }

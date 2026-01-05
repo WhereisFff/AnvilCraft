@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:amethyst_weapons_and_tools"
+        "recipe": "anvilcraft:deformation/netherite_weapons_and_tools"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:amethyst_weapons_and_tools"
+      "anvilcraft:deformation/netherite_weapons_and_tools"
     ]
   }
 }

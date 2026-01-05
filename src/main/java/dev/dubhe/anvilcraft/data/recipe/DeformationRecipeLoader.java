@@ -128,6 +128,6 @@ public class DeformationRecipeLoader {
             Item input = BuiltInRegistries.ITEM.get(id.withSuffix("_" + base));
             builder.input(input);
         }
-        builder.save(provider, id.withSuffix("_" + suffix));
+        builder.save(provider, id.withSuffix("_" + suffix).getPath());
     }
 }

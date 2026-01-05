@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:permutation/netherite_axe_and_ember_metal_axe"
+        "recipe": "anvilcraft:permutation/netherite_sword_and_ember_metal_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:permutation/netherite_axe_and_ember_metal_axe"
+      "anvilcraft:permutation/netherite_sword_and_ember_metal_sword"
     ]
   }
 }

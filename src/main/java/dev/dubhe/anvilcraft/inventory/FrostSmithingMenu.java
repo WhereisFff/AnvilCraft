@@ -5,10 +5,13 @@ import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.network.multiple.FrostSmithingPackets;
 import dev.dubhe.anvilcraft.recipe.frost.DeformationRecipe;
 import dev.dubhe.anvilcraft.recipe.frost.FrostSmithingRecipeInput;
 import dev.dubhe.anvilcraft.recipe.frost.IFrostSmithingRecipe;
 import dev.dubhe.anvilcraft.recipe.frost.PermutationRecipe;
+import dev.dubhe.anvilcraft.util.Util;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerLevelAccess;
@@ -21,6 +24,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
@@ -32,12 +36,10 @@ public class FrostSmithingMenu extends ItemCombinerMenu {
 
     @Nullable
     private RecipeHolder<? extends IFrostSmithingRecipe> selectedRecipe;
-    private int selected = -1;
+    public int selected = -1;
     @Unmodifiable
     @Nullable
-    private List<Item> results = null;
-    @Nullable
-    private ItemStack[] resultsCache = null;
+    public List<Item> results = null;
 
     private final List<RecipeHolder<? extends IFrostSmithingRecipe>> recipes;
 
@@ -83,12 +85,15 @@ public class FrostSmithingMenu extends ItemCombinerMenu {
                 1,
                 44,
                 48,
-                stack -> this.recipes.stream().anyMatch(recipe -> recipe.value().isMaterial(stack))
+                stack -> this.inputSlots.getItem(0).is(ModItems.PERMUTATION_TEMPLATE_ITEM)
+                         && this.recipes.stream().anyMatch(recipe -> recipe.value().isMaterial(stack))
             ).withSlot(
                 2,
                 62,
                 48,
-                stack -> this.recipes.stream().anyMatch(recipe -> recipe.value().isInput(stack))
+                stack -> !this.inputSlots.getItem(0).isEmpty()
+                         && (!this.inputSlots.getItem(0).is(ModItems.PERMUTATION_TEMPLATE_ITEM) || !this.inputSlots.getItem(1).isEmpty())
+                         && this.recipes.stream().anyMatch(recipe -> recipe.value().isInput(stack))
             ).withResultSlot(3, 106, 48)
             .build();
     }
@@ -113,11 +118,33 @@ public class FrostSmithingMenu extends ItemCombinerMenu {
     }
 
     @Override
+    public void slotsChanged(Container inventory) {
+        super.slotsChanged(inventory);
+        if (inventory == this.inputSlots) {
+            if (this.inputSlots.getItem(0).isEmpty()) {
+                for (int i = 1; i < 3; i++) {
+                    ItemStack stack = this.inputSlots.getItem(i);
+                    if (!stack.isEmpty()) {
+                        this.inputSlots.removeItemNoUpdate(i);
+                        this.moveItemStackTo(stack, 4, 40, false);
+                    }
+                }
+            } else if (this.inputSlots.getItem(0).is(ModItems.PERMUTATION_TEMPLATE_ITEM) && this.inputSlots.getItem(1).isEmpty()) {
+                ItemStack stack = this.inputSlots.getItem(2);
+                if (!stack.isEmpty()) {
+                    this.inputSlots.removeItemNoUpdate(2);
+                    this.moveItemStackTo(stack, 4, 40, false);
+                }
+            }
+        }
+    }
+
+    @Override
     protected void onTake(Player player, ItemStack stack) {
         stack.onCraftedBy(player.level(), player, stack.getCount());
         this.resultSlots.awardUsedRecipes(player, this.getRelevantItems());
-        this.shrinkStackInSlot(1);
         this.shrinkStackInSlot(2);
+        this.shrinkStackInSlot(1);
         this.access.execute((level, blockPos) -> level.levelEvent(1044, blockPos, 0));
     }
 
@@ -155,7 +182,11 @@ public class FrostSmithingMenu extends ItemCombinerMenu {
         if (!deforms.isEmpty()) {
             RecipeHolder<DeformationRecipe> holder = deforms.getFirst();
             this.selectedRecipe = holder;
-            this.initDeformRecipe(holder);
+            this.selected = 0;
+            this.results = holder.value().getResults(this.getSlot(2).getItem());
+            if (!this.level.isClientSide) {
+                PacketDistributor.sendToPlayer(Util.cast(this.player), new FrostSmithingPackets.OriginalSync(this.selected, this.results));
+            }
             this.resultSlots.setRecipeUsed(holder);
             this.resultSlots.setItem(0, this.createDeformResult());
             return;
@@ -169,20 +200,14 @@ public class FrostSmithingMenu extends ItemCombinerMenu {
     private void resetDeformRecipe() {
         this.selected = -1;
         this.results = null;
-        this.resultsCache = null;
-    }
-
-    private void initDeformRecipe(RecipeHolder<DeformationRecipe> holder) {
-        this.selected = 0;
-        this.results = holder.value().getResults(this.getSlot(2).getItem());
-        this.resultsCache = new ItemStack[this.results.size()];
+        if (!this.level.isClientSide) {
+            PacketDistributor.sendToPlayer(Util.cast(this.player), new FrostSmithingPackets.OriginalSync(this.selected, List.of()));
+        }
     }
 
     private ItemStack createDeformResult() {
-        if (this.selected == -1 || this.results == null || this.resultsCache == null) return ItemStack.EMPTY;
-        if (this.resultsCache[this.selected] != null) return this.resultsCache[this.selected];
-        return this.resultsCache[this.selected] = this.getSlot(0).getItem()
-            .transmuteCopy(this.results.get(this.selected));
+        if (this.selected == -1 || this.results == null) return ItemStack.EMPTY;
+        return this.getSlot(2).getItem().transmuteCopy(this.results.get(this.selected));
     }
 
     @SuppressWarnings("OptionalGetWithoutIsPresent")
@@ -215,22 +240,15 @@ public class FrostSmithingMenu extends ItemCombinerMenu {
             .anyMatch(Optional::isPresent);
     }
 
-    public boolean canCreateResult() {
-        ItemStack template = this.getSlot(0).getItem();
-
-        if (template.is(ModItems.DEFORMATION_TEMPLATE_ITEM)) {
-            if (this.getSlot(1).getItem().isEmpty()) return false;
-        }
-
-        return this.getSlot(0).hasItem() && this.getSlot(2).hasItem();
-    }
-
-    public void sync(int selected) {
+    public void sync(int selected, List<Item> results) {
         this.selected = selected;
+        this.results = results.isEmpty() ? null : results;
     }
 
-    public void sync(List<Item> results) {
-        this.results = results;
-        this.resultsCache = new ItemStack[results.size()];
+    public void turn(boolean left) {
+        if (this.selected == -1 || this.results == null) return;
+        this.selected = (this.selected + (left ? -1 : 1)) % this.results.size();
+        if (this.selected < 0) this.selected += this.results.size();
+        this.resultSlots.setItem(0, this.createDeformResult());
     }
 }

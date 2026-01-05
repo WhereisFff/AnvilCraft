@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:royal_steel_weapons_and_tools"
+        "recipe": "anvilcraft:permutation/diamond_sword_and_royal_steel_sword"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:royal_steel_weapons_and_tools"
+      "anvilcraft:permutation/diamond_sword_and_royal_steel_sword"
     ]
   }
 }

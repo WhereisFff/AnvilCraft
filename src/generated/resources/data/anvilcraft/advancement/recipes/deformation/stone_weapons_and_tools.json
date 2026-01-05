@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:diamond_weapons_and_tools"
+        "recipe": "anvilcraft:deformation/stone_weapons_and_tools"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:diamond_weapons_and_tools"
+      "anvilcraft:deformation/stone_weapons_and_tools"
     ]
   }
 }

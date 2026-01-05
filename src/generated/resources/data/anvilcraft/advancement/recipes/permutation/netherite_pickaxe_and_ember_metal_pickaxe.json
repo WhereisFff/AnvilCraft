@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:permutation/diamond_pickaxe_and_royal_steel_pickaxe"
+        "recipe": "anvilcraft:permutation/netherite_pickaxe_and_ember_metal_pickaxe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:permutation/diamond_pickaxe_and_royal_steel_pickaxe"
+      "anvilcraft:permutation/netherite_pickaxe_and_ember_metal_pickaxe"
     ]
   }
 }

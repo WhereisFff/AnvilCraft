@@ -66,7 +66,7 @@ public record PermutationRecipe(
 
     @Override
     public ItemStack assemble(FrostSmithingRecipeInput input, HolderLookup.Provider registries) {
-        ItemStack result = input.input().transmuteCopy(input.input().is(this.inputA) ? this.inputA : this.inputB);
+        ItemStack result = input.input().transmuteCopy(input.input().is(this.inputA) ? this.inputB : this.inputA);
         if (!PermutationRecipe.specialsValid) {
             var lookup = registries.lookup(Registries.DATA_COMPONENT_TYPE).orElseThrow();
             var specials = lookup.getOrThrow(ModComponentTags.TOOLS_SPECIAL);
@@ -251,10 +251,10 @@ public record PermutationRecipe(
             this.save(output, Builder.defaultId(this.inputA, this.inputB));
         }
 
-        private static ResourceLocation defaultId(Item inputA, Item inputB) {
+        private static String defaultId(Item inputA, Item inputB) {
             ResourceLocation inputAId = BuiltInRegistries.ITEM.getKey(inputA);
             String inputBPath = BuiltInRegistries.ITEM.getKey(inputB).getPath();
-            return inputAId.withPrefix("permutation/").withSuffix("_and_" + inputBPath);
+            return inputAId.withSuffix("_and_" + inputBPath).getPath();
         }
     }
 }

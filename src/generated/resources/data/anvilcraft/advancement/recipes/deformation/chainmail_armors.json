@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:permutation/diamond_shovel_and_royal_steel_shovel"
+        "recipe": "anvilcraft:deformation/chainmail_armors"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:permutation/diamond_shovel_and_royal_steel_shovel"
+      "anvilcraft:deformation/chainmail_armors"
     ]
   }
 }

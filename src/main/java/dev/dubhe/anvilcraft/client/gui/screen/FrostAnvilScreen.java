@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.TexturesConstant;
 import dev.dubhe.anvilcraft.inventory.FrostAnvilMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -23,8 +24,6 @@ public class FrostAnvilScreen extends ItemCombinerScreen<FrostAnvilMenu> {
         AnvilCraft.of("textures/gui/container/smithing/text_field.png");
     private static final ResourceLocation TEXT_DISABLE_LOCATION =
         AnvilCraft.of("textures/gui/container/smithing/text_field_disabled.png");
-    public static final ResourceLocation ERROR_SPRITE =
-        AnvilCraft.of("textures/gui/container/smithing/error.png");
     private EditBox name;
     private final Player player;
 
@@ -135,7 +134,7 @@ public class FrostAnvilScreen extends ItemCombinerScreen<FrostAnvilMenu> {
     protected void renderErrorIcon(GuiGraphics guiGraphics, int x, int y) {
         if ((this.menu.getSlot(0).hasItem() || this.menu.getSlot(1).hasItem())
             && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()) {
-            guiGraphics.blit(ERROR_SPRITE, x + 103, y + 47, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(TexturesConstant.ERROR_SPRITE, x + 103, y + 47, 0, 0, 16, 16, 16, 16);
         }
     }
 

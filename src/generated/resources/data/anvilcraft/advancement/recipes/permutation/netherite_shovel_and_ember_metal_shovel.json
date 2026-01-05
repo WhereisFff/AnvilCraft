@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:ember_metal_weapons_and_tools"
+        "recipe": "anvilcraft:permutation/netherite_shovel_and_ember_metal_shovel"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:ember_metal_weapons_and_tools"
+      "anvilcraft:permutation/netherite_shovel_and_ember_metal_shovel"
     ]
   }
 }

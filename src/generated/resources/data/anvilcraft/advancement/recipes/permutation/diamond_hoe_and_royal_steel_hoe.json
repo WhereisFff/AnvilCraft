@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:diamond_armors"
+        "recipe": "anvilcraft:permutation/diamond_hoe_and_royal_steel_hoe"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:diamond_armors"
+      "anvilcraft:permutation/diamond_hoe_and_royal_steel_hoe"
     ]
   }
 }

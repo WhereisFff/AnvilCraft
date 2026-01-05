@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:iron_weapons_and_tools"
+        "recipe": "anvilcraft:deformation/wooden_weapons_and_tools"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:iron_weapons_and_tools"
+      "anvilcraft:deformation/wooden_weapons_and_tools"
     ]
   }
 }

@@ -2,9 +2,12 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IPermutationMaterial;
+import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
+import dev.dubhe.anvilcraft.constant.TexturesConstant;
 import dev.dubhe.anvilcraft.inventory.FrostSmithingMenu;
 import dev.dubhe.anvilcraft.item.template.frost.DeformationTemplateItem;
 import dev.dubhe.anvilcraft.item.template.frost.PermutationTemplateItem;
+import dev.dubhe.anvilcraft.network.multiple.FrostSmithingPackets;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
@@ -19,6 +22,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -29,15 +33,17 @@ import java.util.Optional;
 public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
     private static final ResourceLocation SMITHING_LOCATION =
         AnvilCraft.of("textures/gui/container/smithing/background/frost_smithing_table.png");
-    private static final ResourceLocation ERROR = AnvilCraft.of("textures/gui/container/smithing/error.png");
+
+    private static final ResourceLocation LEFT = AnvilCraft.of("textures/gui/container/smithing/frost_smithing_table_button_left.png");
+    private static final ResourceLocation RIGHT = AnvilCraft.of("textures/gui/container/smithing/frost_smithing_table_button_right.png");
 
     private static final ResourceLocation EMPTY_SLOT_PERMUTATION_SMITHING_TEMPLATE =
-        ResourceLocation.withDefaultNamespace("item/empty_slot_permutation_smithing_template");
+        AnvilCraft.of("item/empty_slot_permutation_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_DEFORMATION_SMITHING_TEMPLATE =
-        ResourceLocation.withDefaultNamespace("item/empty_slot_deformation_smithing_template");
+        AnvilCraft.of("item/empty_slot_deformation_smithing_template");
 
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable(
-        "screen.anvilcraft.ember_smithing.tooltip.missing_template"
+        "screen.anvilcraft.frost_smithing.tooltip.missing_template"
     );
     private static final Component ERROR_TOOLTIP = Component.translatable("container.upgrade.error_tooltip");
 
@@ -50,6 +56,9 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
     private final CyclingSlotBackground templateIcon = new CyclingSlotBackground(0);
     private final CyclingSlotBackground materialIcon = new CyclingSlotBackground(1);
     private final CyclingSlotBackground inputIcon = new CyclingSlotBackground(2);
+
+    private TexturedButton left;
+    private TexturedButton right;
 
     @Nullable
     private ArmorStand armorStandPreview;
@@ -69,6 +78,38 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
     protected void init() {
         super.init();
         this.titleLabelX = (this.imageWidth - this.font.width(this.title)) / 2;
+
+        this.left = this.addRenderableWidget(new TexturedButton(
+            this.leftPos + 102,
+            this.topPos + 32,
+            7,
+            11,
+            LEFT,
+            11,
+            7,
+            22,
+            button -> {
+                this.menu.turn(true);
+                PacketDistributor.sendToServer(new FrostSmithingPackets.ClickButton(true));
+                this.updateArmorStandPreview(this.menu.getSlot(3).getItem());
+            }
+        ));
+        this.right = this.addRenderableWidget(new TexturedButton(
+            this.leftPos + 119,
+            this.topPos + 32,
+            7,
+            11,
+            RIGHT,
+            11,
+            7,
+            22,
+            button -> {
+                this.menu.turn(false);
+                PacketDistributor.sendToServer(new FrostSmithingPackets.ClickButton(false));
+                this.updateArmorStandPreview(this.menu.getSlot(3).getItem());
+            }
+        ));
+        this.modifyDeformButtons(false);
     }
 
     @Override
@@ -95,7 +136,13 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
             this.inputIcon.tick(this.getMaterialItem().map(IPermutationMaterial::getEmptySlotTextures).orElse(List.of()));
             return;
         }
-        this.getDeformTemplateItem().ifPresent(deformation -> this.inputIcon.tick(deformation.getEmptySlotTextures()));
+        this.materialIcon.tick(List.of());
+        var deform = this.getDeformTemplateItem();
+        if (deform.isPresent()) {
+            this.inputIcon.tick(deform.get().getEmptySlotTextures());
+        } else {
+            this.inputIcon.tick(List.of());
+        }
     }
 
     private Optional<PermutationTemplateItem> getPermutTemplateItem() {
@@ -128,6 +175,14 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
         this.templateIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
         this.materialIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
         this.inputIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
+
+        if (this.getDeformTemplateItem().isPresent()) {
+            guiGraphics.blit(TexturesConstant.DISABLED_SLOT, this.leftPos + 44, this.topPos + 48, 0, 0, 16, 16, 16, 16);
+            this.modifyDeformButtons(this.menu.selected != -1 && this.menu.results.size() != 1);
+        } else {
+            this.modifyDeformButtons(false);
+        }
+
         if (this.armorStandPreview == null) return;
         InventoryScreen.renderEntityInInventory(
             guiGraphics,
@@ -139,6 +194,13 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
             null,
             this.armorStandPreview
         );
+    }
+
+    private void modifyDeformButtons(boolean enabled) {
+        this.left.active = enabled;
+        this.left.visible = enabled;
+        this.right.active = enabled;
+        this.right.visible = enabled;
     }
 
     @Override
@@ -164,13 +226,20 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
 
     @Override
     protected void renderErrorIcon(GuiGraphics guiGraphics, int x, int y) {
-        if (!this.menu.canCreateResult()) {
-            guiGraphics.blit(ERROR, x + 123, y + 48, 0, 0, 16, 16, 16, 16);
+        if (
+            (this.menu.getSlot(0).hasItem() && this.menu.getSlot(2).hasItem())
+            && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()
+        ) {
+            guiGraphics.blit(TexturesConstant.ERROR_SPRITE, x + 83, y + 48, 0, 0, 16, 16, 16, 16);
         }
     }
 
     private void renderOnboardingTooltips(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (!this.menu.canCreateResult() && this.isHovering(83, 48, 16, 16, mouseX, mouseY)) {
+        if (
+            (this.menu.getSlot(0).hasItem() && this.menu.getSlot(2).hasItem())
+            && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()
+            && this.isHovering(83, 48, 16, 16, mouseX, mouseY)
+        ) {
             graphics.renderTooltip(this.font, this.font.split(ERROR_TOOLTIP, 115), mouseX, mouseY);
             return;
         }

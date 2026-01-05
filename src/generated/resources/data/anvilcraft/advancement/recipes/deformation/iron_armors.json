@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:permutation/diamond_axe_and_royal_steel_axe"
+        "recipe": "anvilcraft:deformation/iron_armors"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:permutation/diamond_axe_and_royal_steel_axe"
+      "anvilcraft:deformation/iron_armors"
     ]
   }
 }

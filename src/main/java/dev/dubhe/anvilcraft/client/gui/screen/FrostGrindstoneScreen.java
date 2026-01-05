@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.client.support.RenderSupport;
+import dev.dubhe.anvilcraft.constant.TexturesConstant;
 import dev.dubhe.anvilcraft.inventory.FrostGrindstoneMenu;
 import dev.dubhe.anvilcraft.network.FrostGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.util.EnchantmentData;
@@ -16,17 +16,11 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.EnchantedBookItem;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindstoneMenu> {
     private static final ResourceLocation BACKGROUND =
         AnvilCraft.of("textures/gui/container/smithing/background/frost_grindstone.png");
-
-    private static final ResourceLocation BUTTON =
-        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_button.png");
-    private static final ResourceLocation SLIDER =
-        AnvilCraft.of("textures/gui/container/smithing/ember_grindstone_slider.png");
 
     private final FrostGrindstoneMenu menu;
     private final Scrollable scrollable = new Scrollable() {
@@ -122,29 +116,28 @@ public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindsto
                 selected = true;
             }
 
-            guiGraphics.blit(BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
+            guiGraphics.blit(TexturesConstant.EMBER_GRINDSTONE_BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
             guiGraphics.renderItem(willRender, x + 1, y + (selected ? 1 : 0), (int) (partialTick * 100));
         }
     }
 
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         guiGraphics.blit(BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
-        RenderSupport.renderItemWithTransparency(
-            Items.BOOK.getDefaultInstance(),
-            guiGraphics.pose(),
-            this.leftPos + 25,
-            this.topPos + 42,
-            0.5F
-        );
 
         if (this.scrollable.canScroll()) {
             int left = this.leftPos + 122;
             int top = this.topPos + 23;
             int down = top + 36;
             guiGraphics.blit(
-                SLIDER,
-                left, top + (int) ((down - top - 12) * this.scrollable.getScrollOffs()),
-                0, 0, 4, 12, 8, 12
+                TexturesConstant.EMBER_GRINDSTONE_SLIDER,
+                left,
+                top + (int) ((down - top - 12) * this.scrollable.getScrollOffs()),
+                0,
+                0,
+                4,
+                12,
+                8,
+                12
             );
         }
     }
@@ -184,7 +177,7 @@ public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindsto
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+        if (button == 0 && this.scrollable.isScrolling()) {
             this.scrollable.notScrolling();
             return true;
         }

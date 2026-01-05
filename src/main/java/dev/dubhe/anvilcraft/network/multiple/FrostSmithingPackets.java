@@ -16,7 +16,16 @@ import java.util.List;
 
 public class FrostSmithingPackets {
     public static void register(PayloadRegistrar registrar) {
-
+        registrar.playToClient(
+            OriginalSync.TYPE,
+            OriginalSync.STREAM_CODEC,
+            OriginalSync.HANDLER
+        );
+        registrar.playToServer(
+            ClickButton.TYPE,
+            ClickButton.STREAM_CODEC,
+            ClickButton.HANDLER
+        );
     }
 
     private static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> of(String path) {
@@ -42,8 +51,29 @@ public class FrostSmithingPackets {
         public void clientHandler(IPayloadContext ctx) {
             ctx.enqueueWork(() -> {
                 if (!(ctx.player().containerMenu instanceof FrostSmithingMenu menu)) return;
-                menu.sync(this.selected);
-                menu.sync(this.results);
+                menu.sync(this.selected, this.results);
+            });
+        }
+    }
+
+    public record ClickButton(boolean left) implements CustomPacketPayload {
+        public static final Type<ClickButton> TYPE = FrostSmithingPackets.of("click_button");
+        public static final StreamCodec<RegistryFriendlyByteBuf, ClickButton> STREAM_CODEC = StreamCodec.composite(
+            ByteBufCodecs.BOOL,
+            ClickButton::left,
+            ClickButton::new
+        );
+        public static final IPayloadHandler<ClickButton> HANDLER = ClickButton::serverHandler;
+
+        @Override
+        public Type<ClickButton> type() {
+            return TYPE;
+        }
+
+        public void serverHandler(IPayloadContext ctx) {
+            ctx.enqueueWork(() -> {
+                if (!(ctx.player().containerMenu instanceof FrostSmithingMenu menu)) return;
+                menu.turn(this.left);
             });
         }
     }

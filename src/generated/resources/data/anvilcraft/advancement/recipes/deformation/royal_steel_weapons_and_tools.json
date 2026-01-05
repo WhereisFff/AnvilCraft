@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:golden_armors"
+        "recipe": "anvilcraft:deformation/royal_steel_weapons_and_tools"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:golden_armors"
+      "anvilcraft:deformation/royal_steel_weapons_and_tools"
     ]
   }
 }

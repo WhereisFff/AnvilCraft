@@ -26,6 +26,7 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -98,10 +99,32 @@ public class AnvilEventListener {
         if (state.getBlock().getExplosionResistance() >= 1200.0) event.setAnvilDamage(true);
         if (state.getDestroySpeed(level, pos) < 0) return;
 
-        final boolean noDropButExp = Optional.of(event.getEntity())
+        if (// noDropsButExp
+            Optional.of(event.getEntity())
             .map(FallingBlockEntity::getBlockState)
-            .map(b -> b.getBlock() instanceof FrostAnvilBlock)
-            .orElse(false);
+            .map(b1 -> b1.getBlock() instanceof FrostAnvilBlock)
+            .orElse(false)
+        ) {
+            ServerPlayer destroyer = AnvilCraftFakePlayers.anvilcraftDestroyer.offerPlayer(serverLevel);
+            ItemStack dummyTool = BreakBlockUtil.getDummyDisintegrationTool(serverLevel);
+            AnvilCraftFakePlayers.anvilcraftDestroyer.enabledDestroy(destroyer, dummyTool);
+            ExperienceOrb.award(
+                serverLevel,
+                pos.getCenter(),
+                EnchantmentHelper.processBlockExperience(
+                    serverLevel,
+                    dummyTool,
+                    state.getExpDrop(level, pos, level.getBlockEntity(pos), destroyer, dummyTool)
+                )
+            );
+            state.spawnAfterBreak(serverLevel, pos, dummyTool, true);
+            if (state.getBlock() instanceof IHasMultiBlock multiBlock) {
+                multiBlock.onRemove(level, pos, state);
+            }
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            AnvilCraftFakePlayers.anvilcraftDestroyer.disable(destroyer);
+            return;
+        }
         final boolean smeltDrop = Optional.of(event.getEntity())
             .map(FallingBlockEntity::getBlockState)
             .map(b -> b.getBlock() instanceof EmberAnvilBlock)
@@ -116,24 +139,18 @@ public class AnvilEventListener {
             .orElse(false);
 
         ItemStack dummyTool;
-        if (noDropButExp) {
-            dummyTool = BreakBlockUtil.getDummyDisintegrationTool(serverLevel);
-        } else if (silkTouch) {
+        if (silkTouch) {
             dummyTool = BreakBlockUtil.getDummySilkTouchTool(serverLevel);
         } else if (fortune5) {
             dummyTool = BreakBlockUtil.getDummyFortune5Tool(serverLevel);
         } else {
             dummyTool = ItemStack.EMPTY;
         }
-        state.spawnAfterBreak(serverLevel, pos, dummyTool, noDropButExp);
+        state.spawnAfterBreak(serverLevel, pos, dummyTool, false);
         if (state.getBlock() instanceof IHasMultiBlock multiBlock) {
             multiBlock.onRemove(level, pos, state);
         }
 
-        if (noDropButExp) {
-            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
-            return;
-        }
         List<ItemStack> drops;
         if (smeltDrop) {
             drops = BreakBlockUtil.dropSmelt(serverLevel, pos);

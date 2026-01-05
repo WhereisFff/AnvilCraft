@@ -172,6 +172,9 @@ public class ItemTooltipManager {
         map.put(ModBlocks.CHARGER.asItem(), "Charges items. Supports manual or automated input");
         map.put(ModBlocks.DISCHARGER.asItem(), "Discharges capacitors. Supports manual or automated input");
         map.put(ModBlocks.LASER_RECEIVER.asItem(), "Generates power and output signal from received lasers");
+        map.put(ModBlocks.FROST_ANVIL.asItem(), "Wither proof");
+        map.put(ModBlocks.FROST_GRINDSTONE.asItem(), "Wither proof");
+        map.put(ModBlocks.FROST_SMITHING_TABLE.asItem(), "Wither proof");
 
         shiftMap.put(ModBlocks.SPECTRAL_ANVIL.asItem(),
             "When the upper magnet is demagnetized, a phantom shadow is created and falls downward. "

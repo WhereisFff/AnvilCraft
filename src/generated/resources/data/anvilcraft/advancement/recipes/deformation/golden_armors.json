@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:permutation/netherite_hoe_and_ember_metal_hoe"
+        "recipe": "anvilcraft:deformation/golden_armors"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:permutation/netherite_hoe_and_ember_metal_hoe"
+      "anvilcraft:deformation/golden_armors"
     ]
   }
 }
