@@ -27,29 +27,6 @@
             }
           ]
         }
-      },
-      {
-        "effect": {
-          "type": "minecraft:all_of",
-          "effects": [
-            {
-              "type": "anvilcraft:in_range_modify",
-              "min": 1.0,
-              "modifier": {
-                "type": "minecraft:multiply",
-                "factor": 4.0
-              }
-            },
-            {
-              "type": "anvilcraft:in_range_modify",
-              "max": 0.0,
-              "modifier": {
-                "type": "minecraft:set",
-                "value": 1.0
-              }
-            }
-          ]
-        }
       }
     ],
     "minecraft:mob_experience": [

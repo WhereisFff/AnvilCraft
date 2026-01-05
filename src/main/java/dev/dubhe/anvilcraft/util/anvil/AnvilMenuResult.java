@@ -28,12 +28,13 @@ public class AnvilMenuResult {
     private final boolean allowBeyondMaxLevel;
     private final boolean allowEnchantingMultipleItems;
     private final boolean allowUsingFrostMetalToRepair;
-    private final boolean noCostInRenaming;
+    public final boolean noCostInRenaming;
     private final boolean noTaxInRepairUsingItem;
     private final boolean useNewRepairCostAlgorithm;
     public int xpCost = 0;
     public int repairItemCountCost = 0;
     public ItemStack result = ItemStack.EMPTY;
+    public boolean onlyRenaming;
     private boolean shouldCancel;
 
     private AnvilMenuResult(
@@ -65,11 +66,18 @@ public class AnvilMenuResult {
         @Nullable String itemName,
         LongPredicate onAnvilChangeEventSender
     ) {
+        this.shouldCancel = false;
+        this.onlyRenaming = false;
+
         // 左侧为空或无法存储魔咒，则返回
-        if (inputLeft.isEmpty() || !EnchantmentHelper.canStoreEnchantments(inputLeft)) return;
+        if (inputLeft.isEmpty() || !EnchantmentHelper.canStoreEnchantments(inputLeft)) {
+            this.result = ItemStack.EMPTY;
+            return;
+        }
         
         // 变量初始化
         int price = 0;
+        int repairingCost = 0;
         long tax = (long) inputLeft.getOrDefault(DataComponents.REPAIR_COST, 0)
                   + (long) inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
         ItemStack result = inputLeft.copy();
@@ -77,13 +85,19 @@ public class AnvilMenuResult {
         boolean usingBook = false;
 
         // 发送事件，若事件取消，则返回
-        if (!onAnvilChangeEventSender.test(tax)) return;
+        if (!onAnvilChangeEventSender.test(tax)) {
+            this.result = ItemStack.EMPTY;
+            return;
+        }
 
         // 若右侧为命名牌，则尝试获取特殊格式，否则进入魔咒逻辑
         ChatFormatting extraFormat = null;
         if (inputRight.is(Items.NAME_TAG)) {
             extraFormat = this.computeExtraFormatting(inputRight);
-            if (this.shouldCancel) return;
+            if (this.shouldCancel) {
+                this.result = ItemStack.EMPTY;
+                return;
+            }
         } else if (!inputRight.isEmpty()) {
             usingBook = inputRight.has(DataComponents.STORED_ENCHANTMENTS);
             
@@ -114,7 +128,8 @@ public class AnvilMenuResult {
                 } else {
                     nextComputer = result1 -> result1.getMaxDamage() / 4;
                 }
-                price = this.repairUsingItem(inputRight, result, price, nextComputer);
+                repairingCost = this.repairUsingItem(inputRight, result, nextComputer);
+                price += repairingCost;
             } else {
                 // 若未使用附魔书且左右不是同种物品或左侧不可损失耐久度，则返回
                 if (!usingBook && (!result.is(inputRight.getItem()) || !result.isDamageableItem())) return;
@@ -125,7 +140,10 @@ public class AnvilMenuResult {
 
                 price = this.applyEnchantment(player, inputLeft, inputRight, enchantments, usingBook, price);
             }
-            if (this.shouldCancel) return;
+            if (this.shouldCancel) {
+                this.result = ItemStack.EMPTY;
+                return;
+            }
         }
         this.xpCost = 1;
 
@@ -140,21 +158,33 @@ public class AnvilMenuResult {
         );
 
         // 若左侧不可使用附魔书附魔且右侧为附魔书，则返回
-        if (usingBook && !result.isBookEnchantable(inputRight)) return;
+        if (usingBook && !result.isBookEnchantable(inputRight)) {
+            this.result = ItemStack.EMPTY;
+            return;
+        }
 
         // 计算最终经验消耗
         price = Math.clamp(tax + (long) renamingResult.price(), 0, Integer.MAX_VALUE);
         this.xpCost = price;
-        // 若经验消耗为空，则返回
-        if (price <= 0) return;
+        // 若重命名不消耗经验但没有重命名，或经验消耗为空，则返回
+        if ((!this.noCostInRenaming || !this.onlyRenaming) && price - tax <= 0) {
+            this.result = ItemStack.EMPTY;
+            return;
+        }
 
         // 检查仅重命名时，惩罚是否超出上限（40级）
-        this.checkRenamingCostOverflow(price, renamingResult.namingCost());
+        this.checkRenamingCostOverflow(price, tax, renamingResult.namingCost());
 
-        if (result.isEmpty()) return;
+        if (result.isEmpty()) {
+            this.result = ItemStack.EMPTY;
+            return;
+        }
 
         // 计算最终惩罚并应用到结果
-        result.set(DataComponents.REPAIR_COST, this.calculateFinalRepairCost(inputRight, result, renamingResult, price));
+        result.set(
+            DataComponents.REPAIR_COST,
+            this.calculateFinalRepairCost(inputRight, result, renamingResult.namingCost, repairingCost, price)
+        );
         EnchantmentHelper.setEnchantments(result, enchantments.toImmutable());
         this.result = result;
     }
@@ -180,13 +210,14 @@ public class AnvilMenuResult {
         return ChatFormatting.getByCode(format.substring(1, 2).charAt(0));
     }
 
-    private int repairUsingItem(ItemStack inputRight, ItemStack result, int price, ToIntFunction<ItemStack> nextComputer) {
+    private int repairUsingItem(ItemStack inputRight, ItemStack result, ToIntFunction<ItemStack> nextComputer) {
         int repairAmount = Math.min(result.getDamageValue(), nextComputer.applyAsInt(result));
         if (repairAmount <= 0) {
             this.shouldCancel = true;
-            return price;
+            return 0;
         }
 
+        int xpCost = 0;
         int repairItemCountCost;
         for (
             repairItemCountCost = 0;
@@ -195,12 +226,12 @@ public class AnvilMenuResult {
         ) {
             repairAmount = result.getDamageValue() - repairAmount;
             result.setDamageValue(repairAmount);
-            if (this.noTaxInRepairUsingItem) ++price;
+            ++xpCost;
             repairAmount = Math.min(result.getDamageValue(), nextComputer.applyAsInt(result));
         }
 
         this.repairItemCountCost = repairItemCountCost;
-        return price;
+        return xpCost;
     }
 
     private int combineDurability(ItemStack inputLeft, ItemStack inputRight, ItemStack result, int price) {
@@ -296,7 +327,7 @@ public class AnvilMenuResult {
     ) {
         int namingCost = 0;
         if (extraFormat != null) {
-            if (this.noCostInRenaming) {
+            if (!this.noCostInRenaming) {
                 namingCost = 1;
                 price += inputLeft.getCount() * inputRight.getCount();
             }
@@ -307,22 +338,25 @@ public class AnvilMenuResult {
                 currentName = Component.literal(itemName);
             }
             result.set(DataComponents.CUSTOM_NAME, currentName.copy().withStyle(extraFormat));
+            this.onlyRenaming = true;
         } else if (itemName != null && !StringUtil.isBlank(itemName)) {
             if (!itemName.equals(inputLeft.getHoverName().getString())) {
-                if (this.noCostInRenaming) {
+                if (!this.noCostInRenaming) {
                     namingCost = 1;
                     price += namingCost;
                 }
                 Component name = Component.literal(itemName);
                 result.set(DataComponents.CUSTOM_NAME, name);
+                this.onlyRenaming = true;
             }
         } else {
             if (inputLeft.has(DataComponents.CUSTOM_NAME)) {
-                if (this.noCostInRenaming) {
+                if (!this.noCostInRenaming) {
                     namingCost = 1;
                     price += namingCost;
                 }
                 result.remove(DataComponents.CUSTOM_NAME);
+                this.onlyRenaming = true;
             }
         }
         return new RenamingResult(price, namingCost);
@@ -331,29 +365,35 @@ public class AnvilMenuResult {
     private record RenamingResult(int price, int namingCost) {
     }
 
-    private void checkRenamingCostOverflow(int price, int namingCost) {
-        if (namingCost == price && namingCost > 0 && this.xpCost >= 40) {
+    private void checkRenamingCostOverflow(int price, long tax, int namingCost) {
+        if (this.noCostInRenaming && this.onlyRenaming && (namingCost == price || namingCost == price - tax)) {
+            this.xpCost = 0;
+        } else if (namingCost == price && namingCost > 0 && this.xpCost >= 40) {
             this.xpCost = 39;
+        } else {
+            this.onlyRenaming = false;
         }
     }
 
-    private int calculateFinalRepairCost(ItemStack inputRight, ItemStack result, RenamingResult renamingResult, int price) {
-        int baseCost;
+    private int calculateFinalRepairCost(ItemStack inputRight, ItemStack result, int namingCost, int repairingCost, int price) {
+        if (price == 0) return 0;
         if (!this.useNewRepairCostAlgorithm) {
-            baseCost = result.getOrDefault(DataComponents.REPAIR_COST, 0);
+            int baseCost = result.getOrDefault(DataComponents.REPAIR_COST, 0);
             if (baseCost < inputRight.getOrDefault(DataComponents.REPAIR_COST, 0)) {
                 baseCost = inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
             }
 
-            if (renamingResult.namingCost() != price || renamingResult.namingCost() == 0) {
-                baseCost = AnvilMenu.calculateIncreasedRepairCost(baseCost);
+            if (namingCost == price || namingCost == price - baseCost || this.noTaxInRepairUsingItem && repairingCost == price - baseCost) {
+                return baseCost;
             }
+            return AnvilMenu.calculateIncreasedRepairCost(baseCost);
         } else {
-            baseCost = result.getOrDefault(DataComponents.REPAIR_COST, 0)
-                       + inputRight.getOrDefault(DataComponents.REPAIR_COST, 0)
-                       + 1;
+            int baseCost = result.getOrDefault(DataComponents.REPAIR_COST, 0)
+                       + inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
+            return namingCost == price || namingCost == price - baseCost || this.noTaxInRepairUsingItem && repairingCost == price - baseCost
+                   ? baseCost
+                   : ++baseCost;
         }
-        return baseCost;
     }
     
     @Accessors(fluent = true)

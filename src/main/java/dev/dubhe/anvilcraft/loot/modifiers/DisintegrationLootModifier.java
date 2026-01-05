@@ -29,7 +29,7 @@ public class DisintegrationLootModifier extends LootModifier {
 
     @Override
     protected ObjectArrayList<ItemStack> doApply(ObjectArrayList<ItemStack> generatedLoot, LootContext ctx) {
-        ServerLevel level = ctx.getLevel();
+        final ServerLevel level = ctx.getLevel();
         ItemStack tool = ctx.getParamOrNull(LootContextParams.TOOL);
         if (tool == null) {
             tool = Optional.ofNullable(ctx.getParamOrNull(LootContextParams.DIRECT_ATTACKING_ENTITY))

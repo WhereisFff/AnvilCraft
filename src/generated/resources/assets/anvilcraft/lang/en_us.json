@@ -127,6 +127,8 @@
   "anvilcraft.configuration.ember_anvil_beyond_max_level.tooltip": "Combining items with Enchanted Books beyond max level in Ember Anvil",
   "anvilcraft.configuration.felling_block_per_level": "Felling Block Per Level",
   "anvilcraft.configuration.felling_block_per_level.tooltip": "The maximum number of logs that can be cut per level of Felling enchantment",
+  "anvilcraft.configuration.frost_anvil_beyond_max_level": "Frost Anvil Beyond Max Level",
+  "anvilcraft.configuration.frost_anvil_beyond_max_level.tooltip": "Combining items with Enchanted Books beyond max level in Frost Anvil",
   "anvilcraft.configuration.geode_cooldown": "Geode Search Cooldown",
   "anvilcraft.configuration.geode_cooldown.tooltip": "The search cooldown of the geode (in seconds)",
   "anvilcraft.configuration.geode_interval": "Geode Search Interval",

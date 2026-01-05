@@ -1,23 +1,21 @@
 package dev.dubhe.anvilcraft.inventory;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
-import dev.dubhe.anvilcraft.item.abnormal.IAbnormal;
-import dev.dubhe.anvilcraft.item.abnormal.ICursed;
 import dev.dubhe.anvilcraft.util.anvil.AnvilMenuResult;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.CommonHooks;
 
 public class FrostAnvilMenu extends AnvilMenu {
-    private final AnvilMenuResult result = AnvilMenuResult.builder()
-        .ignoreEnchantmentCompatible()
+    public final AnvilMenuResult result = AnvilMenuResult.builder()
+        .allowBeyondMaxLevel(AnvilCraft.CONFIG.frostAnvilBeyondMaxLevel)
+        .allowUsingFrostMetalToRepair()
+        .noCostInRenaming()
         .noTaxInRepairUsingItem()
         .useNewRepairCostAlgorithm()
         .create();
@@ -33,6 +31,11 @@ public class FrostAnvilMenu extends AnvilMenu {
     @Override
     public MenuType<?> getType() {
         return ModMenuTypes.FROST_ANVIL.get();
+    }
+
+    @Override
+    protected boolean mayPickup(Player player, boolean hasStack) {
+        return super.mayPickup(player, hasStack) || this.result.noCostInRenaming && this.result.onlyRenaming;
     }
 
     @Override

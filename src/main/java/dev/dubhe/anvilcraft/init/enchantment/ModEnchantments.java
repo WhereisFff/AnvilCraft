@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.enchantment.HarvestRightClickEffect;
 import dev.dubhe.anvilcraft.enchantment.InRangeModifyEffect;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
@@ -24,8 +23,6 @@ import net.minecraft.world.item.enchantment.effects.SetValue;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
-import net.neoforged.neoforge.registries.holdersets.AnyHolderSet;
-import net.neoforged.neoforge.registries.holdersets.HolderSetType;
 
 public class ModEnchantments {
 
