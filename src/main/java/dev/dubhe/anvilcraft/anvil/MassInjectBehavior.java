@@ -4,7 +4,7 @@ import dev.anvilcraft.lib.AnvilLib;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.item.ItemEntity;

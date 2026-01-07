@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.init.reicpe;
+package dev.dubhe.anvilcraft.init.recipe;
 
 import dev.anvilcraft.lib.init.LibRegistries;
 import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;

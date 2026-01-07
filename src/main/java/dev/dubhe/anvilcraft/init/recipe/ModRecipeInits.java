@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.init.reicpe;
+package dev.dubhe.anvilcraft.init.recipe;
 
 import net.neoforged.bus.api.IEventBus;
 

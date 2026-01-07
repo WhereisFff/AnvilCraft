@@ -7,7 +7,7 @@ import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.api.data.ICustomDataComponent;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.multiple.result.MultipleToOneResult;
 import dev.dubhe.anvilcraft.recipe.multiple.result.ResultContext;

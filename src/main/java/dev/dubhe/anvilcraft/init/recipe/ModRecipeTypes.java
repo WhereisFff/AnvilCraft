@@ -1,4 +1,4 @@
-package dev.dubhe.anvilcraft.init.reicpe;
+package dev.dubhe.anvilcraft.init.recipe;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
