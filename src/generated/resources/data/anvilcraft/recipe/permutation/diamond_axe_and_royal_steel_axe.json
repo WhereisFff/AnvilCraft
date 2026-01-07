@@ -1,7 +1,9 @@
 {
   "type": "anvilcraft:permutation",
-  "inputA": "minecraft:diamond_axe",
-  "inputB": "anvilcraft:royal_steel_axe",
+  "inputs": [
+    "minecraft:diamond_axe",
+    "anvilcraft:royal_steel_axe"
+  ],
   "material": {
     "items": "anvilcraft:royal_steel_ingot"
   }

@@ -1,7 +1,9 @@
 {
   "type": "anvilcraft:permutation",
-  "inputA": "anvilcraft:frost_smithing_table",
-  "inputB": "anvilcraft:ember_smithing_table",
+  "inputs": [
+    "anvilcraft:frost_smithing_table",
+    "anvilcraft:ember_smithing_table"
+  ],
   "material": {
     "items": "anvilcraft:multiphase_matter_block"
   }

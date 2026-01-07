@@ -91,7 +91,7 @@ public class MultipleToOneSmithingCategory implements IRecipeCategory<RecipeHold
                 .addIngredients(Ingredient.of(smithingRecipe.getInputs().get(i).getItems()));
         }
         builder.addSlot(RecipeIngredientRole.OUTPUT, OUTPUT_X, OUTPUT_Y)
-            .addItemStack(smithingRecipe.getResult().getResult());
+            .addItemStack(smithingRecipe.getResult().result().getDefaultInstance());
     }
 
     @Override

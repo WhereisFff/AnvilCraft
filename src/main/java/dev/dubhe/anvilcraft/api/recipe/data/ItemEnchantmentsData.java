@@ -1,14 +1,12 @@
-package dev.dubhe.anvilcraft.api.data;
+package dev.dubhe.anvilcraft.api.recipe.data;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModCustomDataComponents;
 import dev.dubhe.anvilcraft.util.Util;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
@@ -22,15 +20,16 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode
 public class ItemEnchantmentsData implements ICustomDataComponent<ItemEnchantments> {
-    private final Object2BooleanMap<Pair<Integer, DataComponentType<?>>> requiredOthers;
+    private final List<RequiredEntry> required;
     private final int input;
     private final DataComponentType<ItemEnchantments> dataComponentType;
 
     private ItemEnchantmentsData(int input, DataComponentType<?> type) {
         this.input = input;
         this.dataComponentType = Util.cast(type);
-        this.requiredOthers = Object2BooleanMaps.singleton(new Pair<>(input, type), true);
+        this.required = List.of(new RequiredEntry(input, type, true));
     }
 
     public static ItemEnchantmentsData custom(int input, DataComponentType<ItemEnchantments> type) {

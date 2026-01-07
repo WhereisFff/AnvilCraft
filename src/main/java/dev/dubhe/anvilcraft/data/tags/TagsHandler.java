@@ -33,8 +33,4 @@ public class TagsHandler {
     public static void initEntityType(RegistrateTagsProvider<EntityType<?>> provider) {
         EntityTypeTagLoader.init(provider);
     }
-
-    public static void initDataComponentType(RegistrateTagsProvider<DataComponentType<?>> provider) {
-        DataComponentTypeTagLoader.init(provider);
-    }
 }

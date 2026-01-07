@@ -1,14 +1,13 @@
-package dev.dubhe.anvilcraft.recipe.multiple.result.modifier;
+package dev.dubhe.anvilcraft.api.recipe.result.modifier;
 
 import com.google.common.collect.ImmutableList;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.api.data.ICustomDataComponent;
-import dev.dubhe.anvilcraft.api.data.NormalDataComponent;
-import dev.dubhe.anvilcraft.init.ModResultModifierTypes;
-import dev.dubhe.anvilcraft.recipe.multiple.result.ResultContext;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import dev.dubhe.anvilcraft.api.recipe.data.ICustomDataComponent;
+import dev.dubhe.anvilcraft.api.recipe.data.NormalDataComponent;
+import dev.dubhe.anvilcraft.api.recipe.result.ResultContext;
+import dev.dubhe.anvilcraft.api.recipe.slot.RecipeInputSlot;
+import dev.dubhe.anvilcraft.init.recipe.ModResultModifierTypes;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -16,8 +15,9 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 复制并合并指定输入物品的数据。
@@ -46,7 +46,7 @@ public record MergeData(List<ICustomDataComponent<?>> types) implements IResultM
 
     @Override
     public void modify(ResultContext ctx) {
-        Int2ObjectMap<ItemStack> cache = new Int2ObjectOpenHashMap<>();
+        Map<RecipeInputSlot, ItemStack> cache = new HashMap<>();
         for (ICustomDataComponent<?> type : this.types) {
             MergeData.wrapModify(ctx, type, cache);
         }
@@ -58,15 +58,15 @@ public record MergeData(List<ICustomDataComponent<?>> types) implements IResultM
     }
 
     private static <T> void wrapModify(
-        ResultContext ctx, ICustomDataComponent<T> type, Int2ObjectMap<ItemStack> cache
+        ResultContext ctx, ICustomDataComponent<T> type, Map<RecipeInputSlot, ItemStack> cache
     ) {
-        var required = type.getRequiredOthers();
+        var required = type.getRequired();
         List<Object> data = new ArrayList<>();
-        for (var entry : required.keySet()) {
-            ItemStack source = cache.computeIfAbsent(entry.getFirst(), input -> IResultModifier.getInput(ctx, input));
-            Object value = source.get(entry.getSecond());
-            if (value == null && !required.getBoolean(entry)) throw new IllegalArgumentException(
-                "The value of type %s cannot be null in the No.%d input.".formatted(entry.getSecond(), entry.getFirst()));
+        for (var entry : required) {
+            ItemStack source = cache.computeIfAbsent(entry.slot(), slot -> IResultModifier.getInput(ctx, slot));
+            Object value = source.get(entry.component());
+            if (value == null && !entry.isNullable()) throw new IllegalArgumentException(
+                "The value of type %s cannot be null in the %s.".formatted(entry.component(), entry.slot().getSerializedName()));
             data.add(value);
         }
         T newData = type.make(data);
@@ -112,7 +112,10 @@ public record MergeData(List<ICustomDataComponent<?>> types) implements IResultM
         }
 
         public Builder withTypes(ICustomDataComponent<?>... types) {
-            return this.withTypes(Arrays.asList(types));
+            for (ICustomDataComponent<?> type : types) {
+                this.types.add(type);
+            }
+            return this;
         }
 
         public MergeData build() {

@@ -1,13 +1,11 @@
-package dev.dubhe.anvilcraft.api.data;
+package dev.dubhe.anvilcraft.api.recipe.data;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.dubhe.anvilcraft.init.item.ModCustomDataComponents;
 import dev.dubhe.anvilcraft.util.Util;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMaps;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
@@ -18,15 +16,16 @@ import net.minecraft.network.codec.StreamCodec;
 import java.util.List;
 
 @Getter
+@EqualsAndHashCode
 public class NormalDataComponent<T> implements ICustomDataComponent<T> {
-    private final Object2BooleanMap<Pair<Integer, DataComponentType<?>>> map;
+    private final List<RequiredEntry> required;
     private final int input;
     private final DataComponentType<T> dataComponentType;
 
     private NormalDataComponent(int input, DataComponentType<T> type) {
         this.input = input;
         this.dataComponentType = type;
-        this.map = Object2BooleanMaps.singleton(new Pair<>(input, type), true);
+        this.required = List.of(new RequiredEntry(input, type, true));
     }
 
     public static <T> NormalDataComponent<T> of(int input, DataComponentType<T> type) {
@@ -36,11 +35,6 @@ public class NormalDataComponent<T> implements ICustomDataComponent<T> {
     @Override
     public Type getType() {
         return ModCustomDataComponents.NORMAL.get();
-    }
-
-    @Override
-    public Object2BooleanMap<Pair<Integer, DataComponentType<?>>> getRequiredOthers() {
-        return this.map;
     }
 
     @Override

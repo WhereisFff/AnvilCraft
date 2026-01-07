@@ -74,10 +74,6 @@ public class AnvilCraftDatagen {
             TagsHandler::initDamageType
         );
         REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, TagsHandler::initEntityType);
-        REGISTRATE.addDataGenerator(
-            ProviderType.registerDynamicTag("tags/data_component_type", "data_component_type", Registries.DATA_COMPONENT_TYPE),
-            TagsHandler::initDataComponentType
-        );
         REGISTRATE.addDataGenerator(ProviderType.LANG, LangHandler::init);
         REGISTRATE.addDataGenerator(ProviderType.RECIPE, RecipeHandler::init);
         REGISTRATE.addDataGenerator(ProviderType.ADVANCEMENT, AdvancementHandler::init);

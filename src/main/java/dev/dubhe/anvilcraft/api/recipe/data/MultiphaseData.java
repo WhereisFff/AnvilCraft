@@ -1,6 +1,5 @@
-package dev.dubhe.anvilcraft.api.data;
+package dev.dubhe.anvilcraft.api.recipe.data;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
@@ -8,8 +7,7 @@ import dev.dubhe.anvilcraft.init.item.ModCustomDataComponents;
 import dev.dubhe.anvilcraft.item.property.component.MultiphaseRef;
 import dev.dubhe.anvilcraft.saved.multiphase.Multiphase;
 import dev.dubhe.anvilcraft.util.ListUtil;
-import it.unimi.dsi.fastutil.objects.Object2BooleanArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2BooleanMap;
+import lombok.EqualsAndHashCode;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -21,13 +19,15 @@ import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+@EqualsAndHashCode
 public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseRef> {
-    private final Object2BooleanMap<Pair<Integer, DataComponentType<?>>> required;
+    private final List<RequiredEntry> required;
 
-    private MultiphaseData(Object2BooleanMap<Pair<Integer, DataComponentType<?>>> required) {
+    private MultiphaseData(List<RequiredEntry> required) {
         this.required = required;
     }
 
@@ -63,7 +63,7 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
     }
 
     @Override
-    public Object2BooleanMap<Pair<Integer, DataComponentType<?>>> getRequiredOthers() {
+    public List<RequiredEntry> getRequired() {
         return this.required;
     }
 
@@ -117,7 +117,7 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
     }
 
     private static class Two extends MultiphaseData {
-        private static final Object2BooleanMap<Pair<Integer, DataComponentType<?>>> REQUIRED = new Object2BooleanArrayMap<>();
+        private static final List<RequiredEntry> REQUIRED = new ArrayList<>();
         public static final String TYPE = "two";
 
         Two() {
@@ -125,13 +125,13 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
         }
 
         @SuppressWarnings("SameReturnValue")
-        private static Object2BooleanMap<Pair<Integer, DataComponentType<?>>> getOrFillRequired() {
+        private static List<RequiredEntry> getOrFillRequired() {
             if (!Two.REQUIRED.isEmpty()) return Two.REQUIRED;
             for (int i = 0; i < 2; i++) {
-                Two.REQUIRED.put(new Pair<>(i, DataComponents.CUSTOM_NAME), true);
-                Two.REQUIRED.put(new Pair<>(i, DataComponents.REPAIR_COST), true);
-                Two.REQUIRED.put(new Pair<>(i, DataComponents.ENCHANTMENTS), true);
-                Two.REQUIRED.put(new Pair<>(i, ModComponents.MERCILESS_ENCHANTMENTS), true);
+                Two.REQUIRED.add(new RequiredEntry(i, DataComponents.CUSTOM_NAME, true));
+                Two.REQUIRED.add(new RequiredEntry(i, DataComponents.REPAIR_COST, true));
+                Two.REQUIRED.add(new RequiredEntry(i, DataComponents.ENCHANTMENTS, true));
+                Two.REQUIRED.add(new RequiredEntry(i, ModComponents.MERCILESS_ENCHANTMENTS, true));
             }
             return Two.REQUIRED;
         }
@@ -159,7 +159,7 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
     }
 
     private static class Four extends MultiphaseData {
-        private static final Object2BooleanMap<Pair<Integer, DataComponentType<?>>> REQUIRED = new Object2BooleanArrayMap<>();
+        private static final List<RequiredEntry> REQUIRED = new ArrayList<>();
         public static final String TYPE = "four";
 
         Four() {
@@ -167,14 +167,14 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
         }
 
         @SuppressWarnings("SameReturnValue")
-        private static Object2BooleanMap<Pair<Integer, DataComponentType<?>>> getOrFillRequired() {
+        private static List<RequiredEntry> getOrFillRequired() {
             if (!Four.REQUIRED.isEmpty()) return Four.REQUIRED;
-            Four.REQUIRED.put(new Pair<>(0, DataComponents.CUSTOM_NAME), true);
-            Four.REQUIRED.put(new Pair<>(2, DataComponents.CUSTOM_NAME), true);
+            Four.REQUIRED.add(new RequiredEntry(0, DataComponents.CUSTOM_NAME, true));
+            Four.REQUIRED.add(new RequiredEntry(2, DataComponents.CUSTOM_NAME, true));
             for (int i = 0; i < 4; i++) {
-                Four.REQUIRED.put(new Pair<>(i, DataComponents.REPAIR_COST), true);
-                Four.REQUIRED.put(new Pair<>(i, DataComponents.ENCHANTMENTS), true);
-                Four.REQUIRED.put(new Pair<>(i, ModComponents.MERCILESS_ENCHANTMENTS), true);
+                Four.REQUIRED.add(new RequiredEntry(i, DataComponents.REPAIR_COST, true));
+                Four.REQUIRED.add(new RequiredEntry(i, DataComponents.ENCHANTMENTS, true));
+                Four.REQUIRED.add(new RequiredEntry(i, ModComponents.MERCILESS_ENCHANTMENTS, true));
             }
             return Four.REQUIRED;
         }
@@ -209,7 +209,7 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
     }
 
     private static class Eight extends MultiphaseData {
-        private static final Object2BooleanMap<Pair<Integer, DataComponentType<?>>> REQUIRED = new Object2BooleanArrayMap<>();
+        private static final List<RequiredEntry> REQUIRED = new ArrayList<>();
         public static final String TYPE = "eight";
 
         Eight() {
@@ -217,14 +217,14 @@ public abstract class MultiphaseData implements ICustomDataComponent<MultiphaseR
         }
 
         @SuppressWarnings("SameReturnValue")
-        private static Object2BooleanMap<Pair<Integer, DataComponentType<?>>> getOrFillRequired() {
+        private static List<RequiredEntry> getOrFillRequired() {
             if (!Eight.REQUIRED.isEmpty()) return Eight.REQUIRED;
-            Eight.REQUIRED.put(new Pair<>(0, DataComponents.CUSTOM_NAME), true);
-            Eight.REQUIRED.put(new Pair<>(4, DataComponents.CUSTOM_NAME), true);
+            Eight.REQUIRED.add(new RequiredEntry(0, DataComponents.CUSTOM_NAME, true));
+            Eight.REQUIRED.add(new RequiredEntry(4, DataComponents.CUSTOM_NAME, true));
             for (int i = 0; i < 8; i++) {
-                Eight.REQUIRED.put(new Pair<>(i, DataComponents.REPAIR_COST), true);
-                Eight.REQUIRED.put(new Pair<>(i, DataComponents.ENCHANTMENTS), true);
-                Eight.REQUIRED.put(new Pair<>(i, ModComponents.MERCILESS_ENCHANTMENTS), true);
+                Eight.REQUIRED.add(new RequiredEntry(i, DataComponents.REPAIR_COST, true));
+                Eight.REQUIRED.add(new RequiredEntry(i, DataComponents.ENCHANTMENTS, true));
+                Eight.REQUIRED.add(new RequiredEntry(i, ModComponents.MERCILESS_ENCHANTMENTS, true));
             }
             return Eight.REQUIRED;
         }

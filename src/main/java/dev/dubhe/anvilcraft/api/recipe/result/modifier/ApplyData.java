@@ -1,9 +1,9 @@
-package dev.dubhe.anvilcraft.recipe.multiple.result.modifier;
+package dev.dubhe.anvilcraft.api.recipe.result.modifier;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.dubhe.anvilcraft.init.ModResultModifierTypes;
-import dev.dubhe.anvilcraft.recipe.multiple.result.ResultContext;
+import dev.dubhe.anvilcraft.api.recipe.result.ResultContext;
+import dev.dubhe.anvilcraft.init.recipe.ModResultModifierTypes;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.component.PatchedDataComponentMap;
@@ -46,7 +46,7 @@ public record ApplyData(DataComponentPatch patch) implements IResultModifier {
         }
     }
 
-    public static class Builder extends BaseBuilder<Builder> {
+    public static class Builder {
         private final PatchedDataComponentMap map;
 
         public Builder(ItemLike item) {
@@ -58,13 +58,13 @@ public record ApplyData(DataComponentPatch patch) implements IResultModifier {
             return this;
         }
 
-        public ApplyData build() {
-            return new ApplyData(this.map.asPatch());
+        public <T> Builder withData(DataComponentPatch patch) {
+            this.map.applyPatch(patch);
+            return this;
         }
 
-        @Override
-        Builder getThis() {
-            return this;
+        public ApplyData build() {
+            return new ApplyData(this.map.asPatch());
         }
     }
 }

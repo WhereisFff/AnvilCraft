@@ -1,6 +1,5 @@
-package dev.dubhe.anvilcraft.api.data;
+package dev.dubhe.anvilcraft.api.recipe.data;
 
-import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import dev.anvilcraft.lib.recipe.util.ISerializer;
 import dev.dubhe.anvilcraft.init.ModRegistries;
@@ -41,22 +40,18 @@ public interface ICustomDataComponent<T> {
     Type<? extends ICustomDataComponent<?>> getType();
 
     /**
-     * 获取该数据组件所必需的数据组件类型。<br>
-     * {@code Integer} 值决定了这个数据组件来自于哪个输入材料。<br>
-     * {@code boolean} 值决定了这个数据组件是否可为 {@code null}。<br><br>
-     * 由于 {@link ICustomDataComponent#make(List)} 方法强依赖于该方法返回的 {@link Object2BooleanMap} 的顺序，
-     * 该 {@link Object2BooleanMap} 必须为有顺序的，且建议其顺序为已知可控的。<br>
-     * 否则可能导致代码复杂度提升。
+     * 获取构建该数据组件所必需的其它已有的数据组件类型。<br><br>
+     * 由于 {@link ICustomDataComponent#make(List)} 方法强依赖于该方法返回的 {@link List} 的顺序，
+     * 返回的 {@link List} 顺序敏感。
      *
      * @return 一个包含所有必需的数据组件类型和其值是否可为 {@code null} 的 {@link Object2BooleanMap}
      */
-    Object2BooleanMap<Pair<Integer, DataComponentType<?>>> getRequiredOthers();
+    List<RequiredEntry> getRequired();
 
     /**
      * 使用所有必需的数据组件构建一个该数据组件。
      *
-     * @param data 所有必需的数据组件。顺序由 {@link ICustomDataComponent#getRequiredOthers()} 方法中返回的 {@link Object2BooleanMap} 控制。
-     *
+     * @param data 所有必需的数据组件。顺序由 {@link ICustomDataComponent#getRequired()} 方法中返回的 {@link List} 控制。
      * @return 一个全新的该数据组件
      */
     @Nullable

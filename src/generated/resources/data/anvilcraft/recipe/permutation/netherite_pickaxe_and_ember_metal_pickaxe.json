@@ -1,7 +1,19 @@
 {
   "type": "anvilcraft:permutation",
-  "inputA": "minecraft:netherite_pickaxe",
-  "inputB": "anvilcraft:ember_metal_pickaxe",
+  "inputs": [
+    {
+      "modifiers": [
+        {
+          "type": "anvilcraft:remove_data",
+          "types": [
+            "anvilcraft:reforging"
+          ]
+        }
+      ],
+      "result": "minecraft:netherite_pickaxe"
+    },
+    "anvilcraft:ember_metal_pickaxe"
+  ],
   "material": {
     "items": "anvilcraft:ember_metal_ingot"
   }

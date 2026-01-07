@@ -1,7 +1,36 @@
 {
   "type": "anvilcraft:permutation",
-  "inputA": "anvilcraft:frost_metal_axe",
-  "inputB": "anvilcraft:ember_metal_axe",
+  "inputs": [
+    {
+      "modifiers": [
+        {
+          "type": "anvilcraft:remove_data",
+          "types": [
+            "anvilcraft:reforging"
+          ]
+        }
+      ],
+      "result": "anvilcraft:frost_metal_axe"
+    },
+    {
+      "modifiers": [
+        {
+          "type": "anvilcraft:remove_data",
+          "types": [
+            "anvilcraft:merciless",
+            "anvilcraft:merciless_enchantments"
+          ]
+        },
+        {
+          "type": "anvilcraft:remove_attribute",
+          "attrs": [
+            "anvilcraft:merciless"
+          ]
+        }
+      ],
+      "result": "anvilcraft:ember_metal_axe"
+    }
+  ],
   "material": {
     "items": "anvilcraft:multiphase_matter"
   }

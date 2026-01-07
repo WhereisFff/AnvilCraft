@@ -1,6 +1,6 @@
 @MethodsReturnNonnullByDefault
 @ParametersAreNonnullByDefault
-package dev.dubhe.anvilcraft.recipe.multiple.result.modifier;
+package dev.dubhe.anvilcraft.api.recipe.data;
 
 import net.minecraft.MethodsReturnNonnullByDefault;
 

@@ -5,12 +5,13 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import com.tterrag.registrate.util.entry.ItemProviderEntry;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
-import dev.dubhe.anvilcraft.api.data.ICustomDataComponent;
+import dev.dubhe.anvilcraft.api.recipe.data.ICustomDataComponent;
+import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
+import dev.dubhe.anvilcraft.api.recipe.result.ResultContext;
+import dev.dubhe.anvilcraft.api.recipe.slot.RecipeInputSlot;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
-import dev.dubhe.anvilcraft.recipe.multiple.result.MultipleToOneResult;
-import dev.dubhe.anvilcraft.recipe.multiple.result.ResultContext;
 import lombok.Getter;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPredicate;
@@ -37,11 +38,11 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
     protected final ItemIngredientPredicate template;
     protected final ItemIngredientPredicate material;
     protected final List<ItemIngredientPredicate> inputs;
-    protected final MultipleToOneResult result;
+    protected final RecipeResult result;
 
     protected BaseMultipleToOneSmithingRecipe(
         ItemIngredientPredicate template, ItemIngredientPredicate material, List<ItemIngredientPredicate> inputs,
-        MultipleToOneResult result
+        RecipeResult result
     ) {
         this.template = template;
         this.material = material;
@@ -88,15 +89,20 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         return ingredientsCloned.isEmpty();
     }
 
+    @Deprecated
     @Override
     public ItemStack assemble(MultipleToOneSmithingRecipeInput input, HolderLookup.Provider registries) {
-        return this.result.getResult(new ResultContext(
-            registries,
-            input.template(),
-            input.material(),
-            input.inputs(),
-            this.result.getResult().copy()
-        ));
+        return ItemStack.EMPTY;
+    }
+
+    public ItemStack assemble(MultipleToOneSmithingRecipeInput input, Level level) {
+        var builder = ResultContext.builder(level.registryAccess(), level.getRandom(), this.result.result().getDefaultInstance())
+            .slot(RecipeInputSlot.TEMPLATE, input.template())
+            .slot(RecipeInputSlot.MATERIAL, input.material());
+        for (int i = 0; i < input.inputs().size(); i++) {
+            builder.input(i, input.getInputItem(i));
+        }
+        return this.result.getResult(builder.build());
     }
 
     @Override
@@ -106,7 +112,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
 
     @Override
     public ItemStack getResultItem(HolderLookup.Provider registries) {
-        return this.result.getResult();
+        return this.result.result().getDefaultInstance();
     }
 
     @Override
@@ -148,7 +154,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         ItemIngredientPredicate template,
         ItemIngredientPredicate material,
         List<ItemIngredientPredicate> inputs,
-        MultipleToOneResult result
+        RecipeResult result
     ) {
         public static final MapCodec<Data> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
             ItemIngredientPredicate.CODEC
@@ -160,8 +166,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
             ItemIngredientPredicate.CODEC.listOf()
                 .fieldOf("inputs")
                 .forGetter(Data::inputs),
-            MultipleToOneResult.CODEC
-                .fieldOf("result")
+            RecipeResult.DIRECT_CODEC
                 .forGetter(Data::result)
         ).apply(ins, Data::new));
 
@@ -169,7 +174,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
             ItemIngredientPredicate.STREAM_CODEC, Data::template,
             ItemIngredientPredicate.STREAM_CODEC, Data::material,
             ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()), Data::inputs,
-            MultipleToOneResult.STREAM_CODEC, Data::result,
+            RecipeResult.STREAM_CODEC, Data::result,
             Data::new
         );
     }
@@ -195,7 +200,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         protected ItemIngredientPredicate material;
         protected final ImmutableList.Builder<ItemIngredientPredicate> inputs;
         protected final int inputSize;
-        protected MultipleToOneResult result;
+        protected RecipeResult result;
 
         protected BaseBuilder(ItemIngredientPredicate template, int inputSize) {
             this.template = template;
@@ -244,7 +249,8 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
             return this.input(
                 ItemIngredientPredicate.of(input.getItem())
                     .withCount(count)
-                    .hasComponents(DataComponentPredicate.allOf(input.getComponents())));
+                    .hasComponents(DataComponentPredicate.allOf(input.getComponents()))
+            );
         }
 
         public final BaseBuilder<R> input(ItemStack input) {
@@ -267,29 +273,13 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
             return this.input(1, inputTag);
         }
 
-        public final BaseBuilder<R> result(MultipleToOneResult.Builder resultBuilder) {
+        public final BaseBuilder<R> result(RecipeResult.Builder resultBuilder) {
             this.result = resultBuilder.build();
             return this;
         }
 
-        public final BaseBuilder<R> result(int count, ItemStack result) {
-            return this.result(MultipleToOneResult.builder().result(result.copyWithCount(count)));
-        }
-
-        public final BaseBuilder<R> result(ItemStack result) {
-            return this.result(1, result);
-        }
-
-        public final BaseBuilder<R> result(int count, ItemProviderEntry<?, ?> result) {
-            return this.result(MultipleToOneResult.builder().result(result, count));
-        }
-
-        public final BaseBuilder<R> result(ItemProviderEntry<?, ?> result) {
-            return this.result(MultipleToOneResult.builder().result(result));
-        }
-
         public final BaseBuilder<R> result(int count, ItemLike result) {
-            return this.result(MultipleToOneResult.builder().result(result, count));
+            return this.result(RecipeResult.builder().result(result, count));
         }
 
         public final BaseBuilder<R> result(ItemLike result) {
@@ -297,15 +287,15 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         }
 
         public final BaseBuilder<R> resultCopy(int count, ItemProviderEntry<?, ?> result, ICustomDataComponent<?>... data) {
-            return this.result(MultipleToOneResult.builder().result(result, count).copyData(data));
+            return this.result(RecipeResult.builder().result(result, count).copyData(data));
         }
 
         public final BaseBuilder<R> resultCopy(ItemProviderEntry<?, ?> result, ICustomDataComponent<?>... data) {
-            return this.result(MultipleToOneResult.builder().result(result).copyData(data));
+            return this.result(RecipeResult.builder().result(result).copyData(data));
         }
 
         public final BaseBuilder<R> resultCopy(int count, ItemLike result, ICustomDataComponent<?>... data) {
-            return this.result(MultipleToOneResult.builder().result(result, count).copyData(data));
+            return this.result(RecipeResult.builder().result(result, count).copyData(data));
         }
 
         public final BaseBuilder<R> resultCopy(ItemLike result, ICustomDataComponent<?>... data) {
@@ -313,15 +303,15 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         }
 
         public final BaseBuilder<R> resultMerge(int count, ItemProviderEntry<?, ?> result, ICustomDataComponent<?>... data) {
-            return this.result(MultipleToOneResult.builder().result(result, count).mergeData(data));
+            return this.result(RecipeResult.builder().result(result, count).mergeData(data));
         }
 
         public final BaseBuilder<R> resultMerge(ItemProviderEntry<?, ?> result, ICustomDataComponent<?>... data) {
-            return this.result(MultipleToOneResult.builder().result(result).mergeData(data));
+            return this.result(RecipeResult.builder().result(result).mergeData(data));
         }
 
         public final BaseBuilder<R> resultMerge(int count, ItemLike result, ICustomDataComponent<?>... data) {
-            return this.result(MultipleToOneResult.builder().result(result, count).mergeData(data));
+            return this.result(RecipeResult.builder().result(result, count).mergeData(data));
         }
 
         public final BaseBuilder<R> resultMerge(ItemLike result, ICustomDataComponent<?>... data) {
@@ -332,7 +322,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
             ItemIngredientPredicate template,
             ItemIngredientPredicate material,
             List<ItemIngredientPredicate> inputs,
-            MultipleToOneResult result
+            RecipeResult result
         );
 
         @Override
@@ -370,7 +360,7 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
 
         @Override
         public Item getResult() {
-            return this.result.getResult().getItem();
+            return this.result.result();
         }
     }
 }
