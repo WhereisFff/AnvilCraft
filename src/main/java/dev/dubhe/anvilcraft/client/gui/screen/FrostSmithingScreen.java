@@ -41,6 +41,8 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
         AnvilCraft.of("item/empty_slot_permutation_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_DEFORMATION_SMITHING_TEMPLATE =
         AnvilCraft.of("item/empty_slot_deformation_smithing_template");
+    private static final ResourceLocation EMPTY_SLOT_INGOT =
+        ResourceLocation.withDefaultNamespace("item/empty_slot_ingot");
 
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable(
         "screen.anvilcraft.frost_smithing.tooltip.missing_template"
@@ -50,6 +52,9 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
     private static final List<ResourceLocation> EMPTY_SLOT_SMITHING_TEMPLATES = List.of(
         EMPTY_SLOT_PERMUTATION_SMITHING_TEMPLATE,
         EMPTY_SLOT_DEFORMATION_SMITHING_TEMPLATE
+    );
+    private static final List<ResourceLocation> EMPTY_SLOT_DEFORM_MATERIAL = List.of(
+        EMPTY_SLOT_INGOT
     );
     public static final Quaternionf ARMOR_STAND_ANGLE = new Quaternionf().rotationXYZ(0.43633232f, 0.0f, (float) Math.PI);
 
@@ -109,7 +114,7 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
                 this.updateArmorStandPreview(this.menu.getSlot(3).getItem());
             }
         ));
-        this.modifyDeformButtons(false);
+        this.modifyButtons(false);
     }
 
     @Override
@@ -129,6 +134,7 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
     @Override
     public void containerTick() {
         super.containerTick();
+
         this.templateIcon.tick(EMPTY_SLOT_SMITHING_TEMPLATES);
         var permut = this.getPermutTemplateItem();
         if (permut.isPresent()) {
@@ -136,11 +142,12 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
             this.inputIcon.tick(this.getMaterialItem().map(IPermutationMaterial::getEmptySlotTextures).orElse(List.of()));
             return;
         }
-        this.materialIcon.tick(List.of());
         var deform = this.getDeformTemplateItem();
         if (deform.isPresent()) {
+            this.materialIcon.tick(EMPTY_SLOT_DEFORM_MATERIAL);
             this.inputIcon.tick(deform.get().getEmptySlotTextures());
         } else {
+            this.materialIcon.tick(List.of());
             this.inputIcon.tick(List.of());
         }
     }
@@ -176,11 +183,10 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
         this.materialIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
         this.inputIcon.render(this.menu, guiGraphics, partialTick, this.leftPos, this.topPos);
 
-        if (this.getDeformTemplateItem().isPresent()) {
-            guiGraphics.blit(TexturesConstant.DISABLED_SLOT, this.leftPos + 44, this.topPos + 48, 0, 0, 16, 16, 16, 16);
-            this.modifyDeformButtons(this.menu.selected != -1 && this.menu.results.size() != 1);
+        if (!this.menu.getSlot(0).getItem().isEmpty()) {
+            this.modifyButtons(this.menu.selected != -1 && this.menu.results.size() != 1);
         } else {
-            this.modifyDeformButtons(false);
+            this.modifyButtons(false);
         }
 
         if (this.armorStandPreview == null) return;
@@ -196,7 +202,7 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
         );
     }
 
-    private void modifyDeformButtons(boolean enabled) {
+    private void modifyButtons(boolean enabled) {
         this.left.active = enabled;
         this.left.visible = enabled;
         this.right.active = enabled;

@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.network.multiple;
 
 import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
 import dev.dubhe.anvilcraft.inventory.FrostSmithingMenu;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -32,12 +33,12 @@ public class FrostSmithingPackets {
         return new CustomPacketPayload.Type<>(AnvilCraft.of("frost_smithing_" + path));
     }
 
-    public record OriginalSync(int selected, List<Item> results) implements CustomPacketPayload {
+    public record OriginalSync(int selected, List<RecipeResult> results) implements CustomPacketPayload {
         public static final Type<OriginalSync> TYPE = FrostSmithingPackets.of("sync");
         public static final StreamCodec<RegistryFriendlyByteBuf, OriginalSync> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             OriginalSync::selected,
-            CodecUtil.ITEM_STREAM_CODEC.apply(ByteBufCodecs.list()),
+            RecipeResult.STREAM_CODEC.apply(ByteBufCodecs.list()),
             OriginalSync::results,
             OriginalSync::new
         );

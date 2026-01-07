@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
 import dev.dubhe.anvilcraft.recipe.frost.DeformationRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -126,7 +127,7 @@ public class DeformationRecipeLoader {
         var builder = DeformationRecipe.builder();
         for (String base : bases) {
             Item input = BuiltInRegistries.ITEM.get(id.withSuffix("_" + base));
-            builder.input(input);
+            builder.input(RecipeResult.simple(input));
         }
         builder.save(provider, id.withSuffix("_" + suffix).getPath());
     }

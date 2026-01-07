@@ -1,7 +1,19 @@
 {
   "type": "anvilcraft:permutation",
-  "inputA": "minecraft:netherite_hoe",
-  "inputB": "anvilcraft:ember_metal_hoe",
+  "inputs": [
+    {
+      "modifiers": [
+        {
+          "type": "anvilcraft:remove_data",
+          "types": [
+            "anvilcraft:reforging"
+          ]
+        }
+      ],
+      "result": "minecraft:netherite_hoe"
+    },
+    "anvilcraft:ember_metal_hoe"
+  ],
   "material": {
     "items": "anvilcraft:ember_metal_ingot"
   }

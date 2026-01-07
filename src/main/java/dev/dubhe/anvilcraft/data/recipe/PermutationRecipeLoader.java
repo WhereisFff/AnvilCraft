@@ -2,8 +2,11 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.recipe.frost.PermutationRecipe;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -11,6 +14,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.List;
+import java.util.function.BiFunction;
 
 public class PermutationRecipeLoader {
     static final List<String> WEAPONS_AND_TOOLS = List.of(
@@ -44,7 +48,15 @@ public class PermutationRecipeLoader {
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
             ModItems.EMBER_METAL_INGOT,
             ResourceLocation.withDefaultNamespace("netherite"),
-            AnvilCraft.of("ember_metal")
+            AnvilCraft.of("ember_metal"),
+            (netherite, ember) -> PermutationRecipe.builder().input(
+                RecipeResult.builder()
+                    .result(netherite)
+                    .removeData(ModComponents.FIRE_REFORGING)
+            ).input(
+                RecipeResult.builder()
+                    .result(ember)
+            )
         );
 
         PermutationRecipeLoader.register(
@@ -52,14 +64,34 @@ public class PermutationRecipeLoader {
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
             ModItems.MULTIPHASE_MATTER,
             AnvilCraft.of("frost_metal"),
-            AnvilCraft.of("ember_metal")
+            AnvilCraft.of("ember_metal"),
+            (frost, ember) -> PermutationRecipe.builder().input(
+                RecipeResult.builder()
+                    .result(frost)
+                    .removeData(ModComponents.FIRE_REFORGING)
+            ).input(
+                RecipeResult.builder()
+                    .result(ember)
+                    .removeData(ModComponents.MERCILESS, ModComponents.MERCILESS_ENCHANTMENTS)
+                    .removeAttribute(Merciless.MERCILESS_ID)
+            )
         );
         PermutationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.ANC_WEAPONS_AND_TOOLS,
             ModItems.MULTIPHASE_MATTER,
             AnvilCraft.of("frost_metal"),
-            AnvilCraft.of("ember_metal")
+            AnvilCraft.of("ember_metal"),
+            (frost, ember) -> PermutationRecipe.builder().input(
+                RecipeResult.builder()
+                    .result(frost)
+                    .removeData(ModComponents.FIRE_REFORGING)
+            ).input(
+                RecipeResult.builder()
+                    .result(ember)
+                    .removeData(ModComponents.MERCILESS, ModComponents.MERCILESS_ENCHANTMENTS)
+                    .removeAttribute(Merciless.MERCILESS_ID)
+            )
         );
 
         PermutationRecipeLoader.register(
@@ -69,6 +101,14 @@ public class PermutationRecipeLoader {
             AnvilCraft.of("frost"),
             AnvilCraft.of("ember")
         );
+
+        PermutationRecipe.builder()
+            .material(ModItems.MULTIPHASE_MATTER)
+            .input(ModItems.EMERALD_AMULET)
+            .input(ModItems.TOPAZ_AMULET)
+            .input(ModItems.RUBY_AMULET)
+            .input(ModItems.SAPPHIRE_AMULET)
+            .save(provider, "gem_amulets");
     }
 
     private static void register(
@@ -81,9 +121,34 @@ public class PermutationRecipeLoader {
         for (String base : bases) {
             Item inputA = BuiltInRegistries.ITEM.get(idA.withSuffix("_" + base));
             Item inputB = BuiltInRegistries.ITEM.get(idB.withSuffix("_" + base));
-            PermutationRecipe.builder(inputA, inputB)
+            PermutationRecipe.builder()
                 .material(material)
-                .save(provider);
+                .input(inputA)
+                .input(inputB)
+                .save(provider, PermutationRecipeLoader.defaultId(inputA, inputB));
         }
+    }
+
+    private static void register(
+        RegistrateRecipeProvider provider,
+        List<String> bases,
+        ItemLike material,
+        ResourceLocation idA,
+        ResourceLocation idB,
+        BiFunction<Item, Item, PermutationRecipe.Builder> builderFactory
+    ) {
+        for (String base : bases) {
+            Item inputA = BuiltInRegistries.ITEM.get(idA.withSuffix("_" + base));
+            Item inputB = BuiltInRegistries.ITEM.get(idB.withSuffix("_" + base));
+            builderFactory.apply(inputA, inputB)
+                .material(material)
+                .save(provider, PermutationRecipeLoader.defaultId(inputA, inputB));
+        }
+    }
+
+    private static String defaultId(Item inputA, Item inputB) {
+        ResourceLocation inputAId = BuiltInRegistries.ITEM.getKey(inputA);
+        String inputBPath = BuiltInRegistries.ITEM.getKey(inputB).getPath();
+        return inputAId.withSuffix("_and_" + inputBPath).getPath();
     }
 }

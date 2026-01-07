@@ -1,7 +1,36 @@
 {
   "type": "anvilcraft:permutation",
-  "inputA": "anvilcraft:frost_metal_heavy_halberd",
-  "inputB": "anvilcraft:ember_metal_heavy_halberd",
+  "inputs": [
+    {
+      "modifiers": [
+        {
+          "type": "anvilcraft:remove_data",
+          "types": [
+            "anvilcraft:reforging"
+          ]
+        }
+      ],
+      "result": "anvilcraft:frost_metal_heavy_halberd"
+    },
+    {
+      "modifiers": [
+        {
+          "type": "anvilcraft:remove_data",
+          "types": [
+            "anvilcraft:merciless",
+            "anvilcraft:merciless_enchantments"
+          ]
+        },
+        {
+          "type": "anvilcraft:remove_attribute",
+          "attrs": [
+            "anvilcraft:merciless"
+          ]
+        }
+      ],
+      "result": "anvilcraft:ember_metal_heavy_halberd"
+    }
+  ],
   "material": {
     "items": "anvilcraft:multiphase_matter"
   }

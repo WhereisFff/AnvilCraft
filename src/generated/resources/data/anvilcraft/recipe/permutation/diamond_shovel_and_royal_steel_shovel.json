@@ -1,7 +1,9 @@
 {
   "type": "anvilcraft:permutation",
-  "inputA": "minecraft:diamond_shovel",
-  "inputB": "anvilcraft:royal_steel_shovel",
+  "inputs": [
+    "minecraft:diamond_shovel",
+    "anvilcraft:royal_steel_shovel"
+  ],
   "material": {
     "items": "anvilcraft:royal_steel_ingot"
   }
