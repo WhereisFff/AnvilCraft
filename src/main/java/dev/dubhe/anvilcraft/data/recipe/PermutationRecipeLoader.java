@@ -2,12 +2,15 @@ package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.recipe.data.ItemEnchantmentsData;
 import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
+import dev.dubhe.anvilcraft.api.recipe.slot.RecipeInputSlot;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.recipe.frost.PermutationRecipe;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -72,7 +75,8 @@ public class PermutationRecipeLoader {
             ).input(
                 RecipeResult.builder()
                     .result(ember)
-                    .removeData(ModComponents.MERCILESS, ModComponents.MERCILESS_ENCHANTMENTS)
+                    .removeData(ModComponents.MERCILESS)
+                    .changeDataType(RecipeInputSlot.input(0), ModComponents.MERCILESS_ENCHANTMENTS, ItemEnchantmentsData.enchantments(0))
                     .removeAttribute(Merciless.MERCILESS_ID)
             )
         );
@@ -89,7 +93,8 @@ public class PermutationRecipeLoader {
             ).input(
                 RecipeResult.builder()
                     .result(ember)
-                    .removeData(ModComponents.MERCILESS, ModComponents.MERCILESS_ENCHANTMENTS)
+                    .removeData(ModComponents.MERCILESS)
+                    .changeDataType(RecipeInputSlot.input(0), ModComponents.MERCILESS_ENCHANTMENTS, ItemEnchantmentsData.enchantments(0))
                     .removeAttribute(Merciless.MERCILESS_ID)
             )
         );

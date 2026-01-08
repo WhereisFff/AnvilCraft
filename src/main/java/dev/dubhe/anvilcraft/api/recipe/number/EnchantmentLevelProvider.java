@@ -20,7 +20,6 @@ public record EnchantmentLevelProvider(
 ) implements INumberProvider {
     public static final MapCodec<EnchantmentLevelProvider> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
         RecipeInputSlot.CODEC
-            .fieldOf("slot")
             .forGetter(EnchantmentLevelProvider::slot),
         ResourceKey.codec(Registries.ENCHANTMENT)
             .fieldOf("enchantment")

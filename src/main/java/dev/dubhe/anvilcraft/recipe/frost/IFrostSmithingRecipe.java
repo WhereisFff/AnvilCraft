@@ -9,6 +9,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentPredicate;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
@@ -63,7 +64,14 @@ public interface IFrostSmithingRecipe extends Recipe<FrostSmithingRecipeInput> {
 
     default ItemStack assemble(int selected, FrostSmithingRecipeInput inputting, Level level) {
         RecipeResult input = this.inputs(inputting.input()).get(selected);
-        var builder = ResultContext.builder(level.registryAccess(), level.getRandom(), inputting.input().transmuteCopy(input.result()))
+        ItemStack result = inputting.input().transmuteCopy(input.result());
+        if (input.result().components().keySet().contains(DataComponents.TOOL)) {
+            result.set(DataComponents.TOOL, input.result().components().get(DataComponents.TOOL));
+        }
+        if (input.result().components().keySet().contains(DataComponents.ATTRIBUTE_MODIFIERS)) {
+            result.set(DataComponents.ATTRIBUTE_MODIFIERS, input.result().components().get(DataComponents.ATTRIBUTE_MODIFIERS));
+        }
+        var builder = ResultContext.builder(level.registryAccess(), level.getRandom(), result)
             .slot(RecipeInputSlot.TEMPLATE, inputting.template())
             .slot(RecipeInputSlot.MATERIAL, inputting.material())
             .input(0, inputting.input());
