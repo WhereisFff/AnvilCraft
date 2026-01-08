@@ -23,6 +23,7 @@ import net.minecraft.world.item.enchantment.effects.SetValue;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
 import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
+import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 
 public class ModEnchantments {
 
@@ -121,7 +122,7 @@ public class ModEnchantments {
             DISINTEGRATION_KEY,
             Enchantment.enchantment(
                 Enchantment.definition(
-                    new AndHolderSet<>(
+                    new OrHolderSet<>(
                         itemHolderGetter.getOrThrow(ItemTags.MINING_LOOT_ENCHANTABLE),
                         itemHolderGetter.getOrThrow(ItemTags.WEAPON_ENCHANTABLE)
                     ),

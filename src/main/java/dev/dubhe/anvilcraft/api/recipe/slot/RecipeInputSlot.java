@@ -15,7 +15,7 @@ import net.minecraft.util.StringRepresentable;
 public class RecipeInputSlot implements StringRepresentable {
     public static final MapCodec<RecipeInputSlot> CODEC = RecordCodecBuilder.mapCodec(ins -> ins.group(
         Codec.STRING
-            .fieldOf("value")
+            .fieldOf("input")
             .forGetter(RecipeInputSlot::getSerializedName)
     ).apply(ins, RecipeInputSlot::new));
     public static final StreamCodec<ByteBuf, RecipeInputSlot> STREAM_CODEC = StreamCodec.composite(
@@ -32,7 +32,6 @@ public class RecipeInputSlot implements StringRepresentable {
     // 实例&构建
     public static final RecipeInputSlot TEMPLATE = new RecipeInputSlot("template");
     public static final RecipeInputSlot MATERIAL = new RecipeInputSlot("material");
-    public static final RecipeInputSlot INPUT = new RecipeInputSlot("input");
 
     public static RecipeInputSlot input(int index) {
         return new RecipeInputSlot("input." + index);

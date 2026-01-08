@@ -68,7 +68,7 @@
     "mainhand"
   ],
   "supported_items": {
-    "type": "neoforge:and",
+    "type": "neoforge:or",
     "values": [
       "#minecraft:enchantable/mining_loot",
       "#minecraft:enchantable/weapon"

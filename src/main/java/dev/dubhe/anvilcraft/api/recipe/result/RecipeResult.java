@@ -9,12 +9,14 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.anvilcraft.lib.util.CodecUtil;
 import dev.dubhe.anvilcraft.api.recipe.data.ICustomDataComponent;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.ApplyData;
+import dev.dubhe.anvilcraft.api.recipe.result.modifier.ChangeDataType;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.CopyData;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.IResultModifier;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.MergeData;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.ModifyCount;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.RemoveAttribute;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.RemoveData;
+import dev.dubhe.anvilcraft.api.recipe.slot.RecipeInputSlot;
 import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -181,6 +183,15 @@ public record RecipeResult(Item result, @Unmodifiable List<IResultModifier> modi
 
         public Builder removeAttribute(ResourceLocation... attrs) {
             return this.removeAttribute(RemoveAttribute.removeAttr(attrs));
+        }
+
+        public <T> Builder changeDataType(ChangeDataType.Builder<T> builder) {
+            this.modifiers.add(builder.build());
+            return this;
+        }
+
+        public <T> Builder changeDataType(RecipeInputSlot slot, DataComponentType<T> orig, ICustomDataComponent<T> dest) {
+            return this.changeDataType(ChangeDataType.changeDataType(slot, orig, dest));
         }
 
         public RecipeResult build() {

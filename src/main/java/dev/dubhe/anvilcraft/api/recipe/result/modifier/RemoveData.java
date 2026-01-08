@@ -41,7 +41,7 @@ public record RemoveData(List<DataComponentType<?>> types) implements IResultMod
     @Override
     public void modify(ResultContext ctx) {
         for (var type : this.types) {
-            ctx.getResult().remove(type);
+            ctx.getResult().set(type, null);
         }
     }
 
