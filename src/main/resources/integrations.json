@@ -207,6 +207,14 @@
           ],
           "extra": [
             {
+              "type": "curseforge",
+              "url": "https://www.curseforge.com/minecraft/mc-mods/anvilcraf-kubejs"
+            },
+            {
+              "type": "modrinth",
+              "url": "https://modrinth.com/project/anvilcraf-kubejs"
+            },
+            {
               "type": "github",
               "url": "https://github.com/Anvil-Dev/AnvilCraft-KubeJS"
             }
@@ -358,6 +366,14 @@
             }
           ],
           "extra": [
+            {
+              "type": "curseforge",
+              "url": "https://www.curseforge.com/minecraft/mc-mods/anvilcraft-better-beacons-compatible"
+            },
+            {
+              "type": "modrinth",
+              "url": "https://modrinth.com/project/anvilcraft-better-beacons-compatible"
+            },
             {
               "type": "github",
               "url": "https://github.com/Anvil-Dev/AnvilCraft-Better-Beacons-Compatible"
