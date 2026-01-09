@@ -86,11 +86,6 @@ public class AccelerateManager {
             case Y -> fixMovement.multiply(1, 0, 1);
             case Z -> fixMovement.multiply(1, 1, 0);
         };
-        deltaMovement = switch (direction.getAxis()) {
-            case X -> deltaMovement.multiply(1, 0, 0);
-            case Y -> deltaMovement.multiply(0, 1, 0);
-            case Z -> deltaMovement.multiply(0, 0, 1);
-        };
         fixMovement = fixMovement.multiply(0.2, 0.2, 0.2);
         if (Math.abs(entity.getDeltaMovement().get(direction.getAxis())) <= 5) {
             deltaMovement = deltaMovement.add(fixMovement);
