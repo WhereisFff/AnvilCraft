@@ -5,6 +5,7 @@ import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
+import dev.dubhe.anvilcraft.recipe.anvil.outcome.RoyalPreferenceOutcome;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -22,5 +23,10 @@ public class ModRecipeOutcomeTypes {
     public static final DeferredHolder<IRecipeOutcome.Type<?>, ProduceHeat.Type> PRODUCE_HEAT = OUTCOME_TYPE.register(
         "produce_heat",
         ProduceHeat.Type::new
+    );
+
+    public static final DeferredHolder<IRecipeOutcome.Type<?>, RoyalPreferenceOutcome.Type> ROYAL_PREFERENCE = OUTCOME_TYPE.register(
+        "royal_preference",
+        RoyalPreferenceOutcome.Type::new
     );
 }
