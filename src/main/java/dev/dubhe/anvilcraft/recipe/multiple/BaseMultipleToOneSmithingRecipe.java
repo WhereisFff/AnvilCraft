@@ -31,7 +31,6 @@ import net.minecraft.world.level.Level;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.function.Function;
 
 @Getter
 public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<MultipleToOneSmithingRecipeInput> {
@@ -41,7 +40,9 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
     protected final RecipeResult result;
 
     protected BaseMultipleToOneSmithingRecipe(
-        ItemIngredientPredicate template, ItemIngredientPredicate material, List<ItemIngredientPredicate> inputs,
+        ItemIngredientPredicate template,
+        ItemIngredientPredicate material,
+        List<ItemIngredientPredicate> inputs,
         RecipeResult result
     ) {
         this.template = template;
@@ -171,27 +172,33 @@ public abstract class BaseMultipleToOneSmithingRecipe implements Recipe<Multiple
         ).apply(ins, Data::new));
 
         public static final StreamCodec<RegistryFriendlyByteBuf, Data> STREAM_CODEC = StreamCodec.composite(
-            ItemIngredientPredicate.STREAM_CODEC, Data::template,
-            ItemIngredientPredicate.STREAM_CODEC, Data::material,
-            ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()), Data::inputs,
-            RecipeResult.STREAM_CODEC, Data::result,
+            ItemIngredientPredicate.STREAM_CODEC,
+            Data::template,
+            ItemIngredientPredicate.STREAM_CODEC,
+            Data::material,
+            ItemIngredientPredicate.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            Data::inputs,
+            RecipeResult.STREAM_CODEC,
+            Data::result,
             Data::new
         );
     }
 
     public abstract static class BaseSerializer<R extends BaseMultipleToOneSmithingRecipe> implements RecipeSerializer<R> {
-        private final Function<Data, R> fromData = this::fromData;
-
         protected abstract R fromData(Data data);
 
         @Override
         public MapCodec<R> codec() {
-            return Data.CODEC.xmap(this.fromData, BaseMultipleToOneSmithingRecipe::toData);
+            return Data.CODEC.xmap(this::fromData, BaseMultipleToOneSmithingRecipe::toData);
         }
 
         @Override
         public StreamCodec<RegistryFriendlyByteBuf, R> streamCodec() {
-            return StreamCodec.composite(Data.STREAM_CODEC, BaseMultipleToOneSmithingRecipe::toData, this.fromData);
+            return StreamCodec.composite(
+                Data.STREAM_CODEC,
+                BaseMultipleToOneSmithingRecipe::toData,
+                this::fromData
+            );
         }
     }
 

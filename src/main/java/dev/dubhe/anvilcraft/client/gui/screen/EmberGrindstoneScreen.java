@@ -93,8 +93,13 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
             guiGraphics.renderTooltip(this.font, this.getTooltipFromContainerItem(itemstack), itemstack.getTooltipImage(), itemstack, x, y);
         } else if (this.renderingTooltipEnchantedBook != null) {
             guiGraphics.renderTooltip(
-                this.font, this.getTooltipFromContainerItem(this.renderingTooltipEnchantedBook),
-                this.renderingTooltipEnchantedBook.getTooltipImage(), this.renderingTooltipEnchantedBook, x, y);
+                this.font,
+                this.getTooltipFromContainerItem(this.renderingTooltipEnchantedBook),
+                this.renderingTooltipEnchantedBook.getTooltipImage(),
+                this.renderingTooltipEnchantedBook,
+                x,
+                y
+            );
         }
     }
 
@@ -196,12 +201,12 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
                 int y = this.topPos + 23 + 18 * ((i - this.head) / 3);
 
                 if (!MathUtil.isInRange(mouseX, mouseY, x, y, x + 18, y + 18)) continue;
-                if (this.menu.getSelectedIndex() == this.head) {
+                if (this.menu.getSelectedIndex() == i) {
                     this.menu.setSelectedEnchantment(-1);
                     PacketDistributor.sendToServer(new EmberGrindstoneSyncPacket(-1));
                 } else {
-                    this.menu.setSelectedEnchantment(this.head);
-                    PacketDistributor.sendToServer(new EmberGrindstoneSyncPacket(this.head));
+                    this.menu.setSelectedEnchantment(i);
+                    PacketDistributor.sendToServer(new EmberGrindstoneSyncPacket(i));
                 }
             }
         }
@@ -211,7 +216,7 @@ public class EmberGrindstoneScreen extends AbstractContainerScreen<EmberGrindsto
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == 0) {
+        if (button == 0 && this.scrollable.isScrolling()) {
             this.scrollable.notScrolling();
             return true;
         }
