@@ -225,7 +225,7 @@ public abstract class DestroyType {
     public static final int TRAVERSE_DEPTH = 64;
     public static final int VISIT_LIMIT = 1024;
 
-    abstract public void accept(ShockContext context, List<BlockPos> list, DestroyMode mode);
+    public abstract void accept(ShockContext context, List<BlockPos> list, DestroyMode mode);
 
     private static void dropItems(List<ItemStack> itemStacks, BlockPos pos, Level level) {
         for (ItemStack itemStack : itemStacks) {
