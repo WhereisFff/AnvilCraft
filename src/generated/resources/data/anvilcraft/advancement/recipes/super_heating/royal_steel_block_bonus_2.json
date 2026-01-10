@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:super_heating/royal_steel_ingot"
+        "recipe": "anvilcraft:super_heating/royal_steel_block_bonus_2"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:super_heating/royal_steel_ingot"
+      "anvilcraft:super_heating/royal_steel_block_bonus_2"
     ]
   }
 }
