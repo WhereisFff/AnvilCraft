@@ -20,7 +20,7 @@ jobs:
       CI_BUILD: true
       HOTFIX_BUILD: true
       PR_BUILD: false
-      VERSION_TYPE: beta
+      VERSION_TYPE: release
     steps:
       - name: checkout
         uses: actions/checkout@v4
