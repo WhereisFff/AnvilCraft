@@ -18,9 +18,9 @@ jobs:
     runs-on: ubuntu-latest
     env:
       CI_BUILD: true
-      HOTFIX_BUILD: true
+      HOTFIX_BUILD: false
       PR_BUILD: false
-      VERSION_TYPE: beta
+      VERSION_TYPE: alpha
     steps:
       - name: checkout
         uses: actions/checkout@v4
@@ -84,7 +84,7 @@ jobs:
           version-type: ${{ env.VERSION_TYPE }}
           java: 21
           fail-mode: skip
-          changelog: Fixed some previously existing issues. 修复了部分此前存在的问题。
+          changelog: Early test version, please download and play with caution. 早期测试版本，请谨慎下载游玩
 
           modrinth-id: vuISAWPc
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}

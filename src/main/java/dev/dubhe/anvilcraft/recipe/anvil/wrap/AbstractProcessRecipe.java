@@ -11,7 +11,7 @@ import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
 import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
 import dev.anvilcraft.lib.recipe.predicate.block.HasBlock;
 import dev.anvilcraft.lib.recipe.predicate.block.HasBlockIngredient;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
