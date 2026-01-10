@@ -20,11 +20,14 @@ import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
+import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 
-enum DestroyType {
+@SuppressWarnings("resource")
+enum DestroyType implements IExtensibleEnum {
     FELLING {
         @Override
         void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
@@ -56,9 +59,10 @@ enum DestroyType {
 
         private static boolean isFellingApplicableBlock(BlockState blockState) {
             return (blockState.is(BlockTags.LEAVES) && !blockState.getValue(LeavesBlock.PERSISTENT))
-                || blockState.is(ModBlockTags.FELLING_APPLICABLE);
+                   || blockState.is(ModBlockTags.FELLING_APPLICABLE);
         }
-    }, HARVESTING {
+    },
+    HARVESTING {
         @Override
         void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
@@ -166,7 +170,8 @@ enum DestroyType {
             }
 
         }
-    }, CLEANING {
+    },
+    CLEANING {
         public static final ItemStack TOOL = Items.SHEARS.getDefaultInstance();
 
         @Override
@@ -188,7 +193,8 @@ enum DestroyType {
                 }
             }
         }
-    }, GENERAL {
+    },
+    GENERAL {
         @Override
         void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
@@ -202,7 +208,8 @@ enum DestroyType {
                 level.destroyBlock(pos, false);
             }
         }
-    }, BROKEN_CRYSTALS {
+    },
+    BROKEN_CRYSTALS {
         @Override
         void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
@@ -227,5 +234,9 @@ enum DestroyType {
         for (ItemStack itemStack : itemStacks) {
             Block.popResource(level, pos, itemStack);
         }
+    }
+
+    public static ExtensionInfo getExtensionInfo() {
+        return ExtensionInfo.nonExtended(DestroyMode.class);
     }
 }

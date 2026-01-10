@@ -13,13 +13,16 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
+import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-enum DestroyMode {
+@SuppressWarnings("resource")
+enum DestroyMode implements IExtensibleEnum {
     NORMAL {
         public static final ItemStack TOOL = Items.NETHERITE_PICKAXE.getDefaultInstance();
 
@@ -146,13 +149,16 @@ enum DestroyMode {
                 FOR_SNOW_TOOL = itemStack;
             }
         }
-    },
-    ;
+    };
 
     public abstract List<ItemStack> apply(BlockState blockState, BlockPos blockPos, ShockContext shockContext);
 
     public List<ItemStack> apply(BlockState blockState, BlockPos blockPos, ShockContext shockContext, ItemStack tool) {
         return apply(blockState, blockPos, shockContext);
+    }
+
+    public static ExtensionInfo getExtensionInfo() {
+        return ExtensionInfo.nonExtended(DestroyMode.class);
     }
 }
 
