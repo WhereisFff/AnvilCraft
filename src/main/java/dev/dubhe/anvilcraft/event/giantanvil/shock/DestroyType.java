@@ -20,16 +20,14 @@ import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
-import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
-import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public enum DestroyType implements IExtensibleEnum {
-    FELLING {
+public abstract class DestroyType {
+    public static final DestroyType FELLING = new DestroyType() {
         @Override
-        void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
+        public void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
             for (BlockPos destroyLayer : list) {
                 BlockState blockState = level.getBlockState(destroyLayer);
@@ -60,9 +58,10 @@ public enum DestroyType implements IExtensibleEnum {
             return (blockState.is(BlockTags.LEAVES) && !blockState.getValue(LeavesBlock.PERSISTENT))
                 || blockState.is(ModBlockTags.FELLING_APPLICABLE);
         }
-    }, HARVESTING {
+    };
+    public static final DestroyType HARVESTING = new DestroyType() {
         @Override
-        void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
+        public void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
             for (BlockPos pos : list) {
                 BlockPos.MutableBlockPos destroyLayer = pos.mutable();
@@ -168,11 +167,12 @@ public enum DestroyType implements IExtensibleEnum {
             }
 
         }
-    }, CLEANING {
+    };
+    public static final DestroyType CLEANING = new DestroyType() {
         public static final ItemStack TOOL = Items.SHEARS.getDefaultInstance();
 
         @Override
-        void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
+        public void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
             for (BlockPos pos : list) {
                 BlockState state = level.getBlockState(pos);
@@ -190,9 +190,10 @@ public enum DestroyType implements IExtensibleEnum {
                 }
             }
         }
-    }, GENERAL {
+    };
+    public static final DestroyType GENERAL = new DestroyType() {
         @Override
-        void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
+        public void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
             for (BlockPos pos : list) {
                 BlockState state = level.getBlockState(pos);
@@ -204,9 +205,10 @@ public enum DestroyType implements IExtensibleEnum {
                 level.destroyBlock(pos, false);
             }
         }
-    }, BROKEN_CRYSTALS {
+    };
+    public static final DestroyType BROKEN_CRYSTALS = new DestroyType() {
         @Override
-        void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
+        public void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
             Level level = context.level();
             for (BlockPos blockPos : list) {
                 BlockState blockState = level.getBlockState(blockPos);
@@ -223,15 +225,11 @@ public enum DestroyType implements IExtensibleEnum {
     public static final int TRAVERSE_DEPTH = 64;
     public static final int VISIT_LIMIT = 1024;
 
-    abstract void accept(ShockContext context, List<BlockPos> list, DestroyMode mode);
+    abstract public void accept(ShockContext context, List<BlockPos> list, DestroyMode mode);
 
     private static void dropItems(List<ItemStack> itemStacks, BlockPos pos, Level level) {
         for (ItemStack itemStack : itemStacks) {
             Block.popResource(level, pos, itemStack);
         }
-    }
-
-    public static ExtensionInfo getExtensionInfo() {
-        return ExtensionInfo.nonExtended(DestroyMode.class);
     }
 }

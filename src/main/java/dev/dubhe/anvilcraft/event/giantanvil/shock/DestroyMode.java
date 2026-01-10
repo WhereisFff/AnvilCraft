@@ -19,16 +19,14 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
-import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
-import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public enum DestroyMode implements IExtensibleEnum {
-    NORMAL {
+public abstract class DestroyMode {
+    public static final DestroyMode NORMAL = new DestroyMode() {
         public static final ItemStack TOOL = Items.NETHERITE_PICKAXE.getDefaultInstance();
 
         @Override
@@ -41,8 +39,9 @@ public enum DestroyMode implements IExtensibleEnum {
                     .withOptionalParameter(LootContextParams.THIS_ENTITY, FakePlayerSupport.get((ServerLevel) ctx.level()))
             );
         }
-    },
-    SILK_TOUCH {
+    };
+
+    public static final DestroyMode SILK_TOUCH = new DestroyMode() {
         public static ItemStack TOOL;
         public static ItemStack FOR_SNOW_TOOL;
 
@@ -83,8 +82,9 @@ public enum DestroyMode implements IExtensibleEnum {
                 FOR_SNOW_TOOL = itemStack;
             }
         }
-    },
-    AUTO_SMELTING {
+    };
+
+    public static final DestroyMode AUTO_SMELTING = new DestroyMode() {
         public static final ItemStack TOOL = Items.NETHERITE_PICKAXE.getDefaultInstance();
 
         @Override
@@ -112,8 +112,9 @@ public enum DestroyMode implements IExtensibleEnum {
             }
             return itemStacks;
         }
-    },
-    FORTUNE {
+    };
+
+    public static final DestroyMode FORTUNE = new DestroyMode() {
         public static ItemStack TOOL;
         public static ItemStack FOR_SNOW_TOOL;
 
@@ -154,8 +155,9 @@ public enum DestroyMode implements IExtensibleEnum {
                 FOR_SNOW_TOOL = itemStack;
             }
         }
-    },
-    DISINTEGRATION {
+    };
+
+    public static final DestroyMode DISINTEGRATION = new DestroyMode() {
         @Override
         public List<ItemStack> apply(BlockState state, BlockPos pos, ShockContext ctx, ItemStack tool) {
             this.dropExp(ctx.level(), pos, state);
@@ -186,14 +188,14 @@ public enum DestroyMode implements IExtensibleEnum {
         }
     };
 
+    public DestroyMode() {
+
+    }
+
     public abstract List<ItemStack> apply(BlockState state, BlockPos pos, ShockContext ctx);
 
     public List<ItemStack> apply(BlockState state, BlockPos pos, ShockContext ctx, ItemStack tool) {
         return apply(state, pos, ctx);
-    }
-
-    public static ExtensionInfo getExtensionInfo() {
-        return ExtensionInfo.nonExtended(DestroyMode.class);
     }
 }
 
