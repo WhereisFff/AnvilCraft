@@ -9,7 +9,7 @@ plugins {
 }
 
 String buildNumber
-String buildType = 'build'
+String buildType = 'snapshot'
 if (System.getenv("CI_BUILD") == 'false') buildNumber = null
 else {
     if (System.getenv("PR_BUILD") != 'false') buildType = 'pr'
