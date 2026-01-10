@@ -489,7 +489,8 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         // 1. 空芯磁铁块转化
         if ("iron".equals(matKey) || "magnet".equals(matKey)) {
             if (!this.level().isClientSide && state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())
-                && stack.getDescriptionId().contains("ingot")) {
+                && stack.getDescriptionId().contains("ingot")
+                && !state.getValue(MagnetBlock.LIT)) {
 
                 Block targetBlock = null;
                 if ("iron".equals(matKey)) targetBlock = ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get(); // 铁锭 -> 铁芯磁铁块
@@ -514,7 +515,7 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
             }
         }
         // 3. 涡流减速
-        if (state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())) {
+        if (state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get()) && !state.getValue(MagnetBlock.LIT)) {
             Double speedFactor = MATERIAL_MAP.get(matKey);
             if (speedFactor != null) this.setDeltaMovement(this.getDeltaMovement().scale(speedFactor));
         }
