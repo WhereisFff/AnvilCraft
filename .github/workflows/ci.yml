@@ -17,9 +17,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      CI_BUILD: true
-      HOTFIX_BUILD: false
-      PR_BUILD: false
+      BUILD_TYPE: snapshot
       VERSION_TYPE: alpha
     steps:
       - name: checkout
