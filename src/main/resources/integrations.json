@@ -65,6 +65,14 @@
           ],
           "extra": [
             {
+              "type": "curseforge",
+              "url": "https://www.curseforge.com/minecraft/mc-mods/anvilcraft-guideme"
+            },
+            {
+              "type": "modrinth",
+              "url": "https://modrinth.com/mod/anvilcraft-guideme"
+            },
+            {
               "type": "github",
               "url": "https://github.com/Anvil-Dev/AnvilCraft-GuideME"
             }
