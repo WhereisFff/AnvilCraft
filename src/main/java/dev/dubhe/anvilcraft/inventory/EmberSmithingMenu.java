@@ -215,22 +215,21 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
             this.resultSlots.setItem(0, ItemStack.EMPTY);
         } else {
             RecipeHolder<BaseMultipleToOneSmithingRecipe> recipeholder = list.getFirst();
-            ItemStack itemstack = recipeholder.value().assemble(input, this.level.registryAccess());
-            if (itemstack.isItemEnabled(this.level.enabledFeatures())) {
+            ItemStack stack = recipeholder.value().assemble(input, this.level);
+            if (stack.isItemEnabled(this.level.enabledFeatures())) {
                 this.selectedRecipe = recipeholder;
                 this.resultSlots.setRecipeUsed(recipeholder);
-                this.resultSlots.setItem(0, itemstack);
+                this.resultSlots.setItem(0, stack);
             }
         }
     }
 
-    @SuppressWarnings("OptionalGetWithoutIsPresent")
     @Override
     public int getSlotToQuickMoveTo(ItemStack stack) {
         return this.recipes.stream()
             .map(smithingRecipe -> EmberSmithingMenu.findSlotMatchingIngredient(smithingRecipe.value(), stack))
-            .filter(Optional::isPresent)
             .findFirst()
+            .filter(Optional::isPresent)
             .orElse(Optional.of(0))
             .get();
     }
@@ -257,14 +256,13 @@ public class EmberSmithingMenu extends ItemCombinerMenu {
     }
 
     public boolean canCreateResult() {
+        if (!this.getSlot(0).hasItem() || !this.getSlot(1).hasItem()) return false;
         ItemStack template = this.getSlot(0).getItem();
-
         if (template.getItem() instanceof BaseMultipleToOneTemplateItem templateItem) {
             for (int i = 2; i < 2 + templateItem.getSize(); i++) {
                 if (this.getSlot(i).getItem().isEmpty()) return false;
             }
         }
-
-        return this.getSlot(0).hasItem() && this.getSlot(1).hasItem();
+        return true;
     }
 }

@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.init.recipe;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.ApplyData;
+import dev.dubhe.anvilcraft.api.recipe.result.modifier.ChangeDataType;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.CopyData;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.IResultModifier;
 import dev.dubhe.anvilcraft.api.recipe.result.modifier.MergeData;
@@ -34,6 +35,9 @@ public class ModResultModifierTypes {
 
     public static final DeferredHolder<IResultModifier.Type<?>, ModifyCount.Type> MODIFY_COUNT = DF
         .register("modify_count", ModifyCount.Type::new);
+
+    public static final DeferredHolder<IResultModifier.Type<?>, ChangeDataType.Type> CHANGE_DATA_TYPE = DF
+        .register("change_data_type", ChangeDataType.Type::new);
 
     public static void register(IEventBus bus) {
         DF.register(bus);
