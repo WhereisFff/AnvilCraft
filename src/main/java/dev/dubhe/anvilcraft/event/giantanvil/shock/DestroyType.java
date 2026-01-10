@@ -20,11 +20,13 @@ import net.minecraft.world.level.block.PitcherCropBlock;
 import net.minecraft.world.level.block.SweetBerryBushBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
+import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
+import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
 
 import java.util.ArrayList;
 import java.util.List;
 
-enum DestroyType {
+public enum DestroyType implements IExtensibleEnum {
     FELLING {
         @Override
         void accept(ShockContext context, List<BlockPos> list, DestroyMode mode) {
@@ -227,5 +229,9 @@ enum DestroyType {
         for (ItemStack itemStack : itemStacks) {
             Block.popResource(level, pos, itemStack);
         }
+    }
+
+    public static ExtensionInfo getExtensionInfo() {
+        return ExtensionInfo.nonExtended(DestroyMode.class);
     }
 }

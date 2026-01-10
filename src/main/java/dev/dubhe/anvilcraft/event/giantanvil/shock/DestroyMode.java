@@ -19,13 +19,15 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.loot.LootParams;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.neoforged.fml.common.asm.enumextension.ExtensionInfo;
+import net.neoforged.fml.common.asm.enumextension.IExtensibleEnum;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-enum DestroyMode {
+public enum DestroyMode implements IExtensibleEnum {
     NORMAL {
         public static final ItemStack TOOL = Items.NETHERITE_PICKAXE.getDefaultInstance();
 
@@ -182,13 +184,16 @@ enum DestroyMode {
             );
             AnvilCraftFakePlayers.anvilcraftDestroyer.disable(destroyer);
         }
-    },
-    ;
+    };
 
     public abstract List<ItemStack> apply(BlockState state, BlockPos pos, ShockContext ctx);
 
     public List<ItemStack> apply(BlockState state, BlockPos pos, ShockContext ctx, ItemStack tool) {
         return apply(state, pos, ctx);
+    }
+
+    public static ExtensionInfo getExtensionInfo() {
+        return ExtensionInfo.nonExtended(DestroyMode.class);
     }
 }
 
