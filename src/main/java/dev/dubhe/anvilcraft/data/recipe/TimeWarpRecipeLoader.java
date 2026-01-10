@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.data.advancement.predicate.item.NotPredicate;
-import dev.anvilcraft.lib.init.LibItemSubPredicates;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.recipe.data.advancement.predicate.item.NotPredicate;
+import dev.anvilcraft.lib.recipe.init.LibItemSubPredicates;
 import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
