@@ -14,7 +14,7 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemSubPredicates;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.ExtendInWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.TimeWarpRecipe;
@@ -140,13 +140,42 @@ public class TimeWarpRecipeLoader {
             .save(provider);
 
         TimeWarpRecipe.builder()
-            .requires(ModItemTags.TITANIUM_INGOTS)
-            .requires(ModItemTags.SILVER_INGOTS)
-            .requires(Items.IRON_INGOT)
-            .consume(1000)
+            .requires(ModItems.ROYAL_STEEL_INGOT, 3)
             .fluid(Blocks.POWDER_SNOW_CAULDRON)
+            .consume(1000)
             .result(ModItems.FROST_METAL_INGOT)
-            .save(provider);
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_INGOT), AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
+            .save(provider, "frost_metal_ingot_0");
+
+        TimeWarpRecipe.builder()
+            .requires(ModItems.ROYAL_STEEL_INGOT, 3)
+            .requires(Items.IRON_INGOT)
+            .fluid(Blocks.POWDER_SNOW_CAULDRON)
+            .consume(1000)
+            .result(ModItems.FROST_METAL_INGOT, 2)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_INGOT), AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
+            .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Items.IRON_INGOT))
+            .save(provider, "frost_metal_ingot_1");
+
+        TimeWarpRecipe.builder()
+            .requires(ModItems.ROYAL_STEEL_INGOT, 3)
+            .requires(ModItems.SILVER_INGOT)
+            .fluid(Blocks.POWDER_SNOW_CAULDRON)
+            .consume(1000)
+            .result(ModItems.FROST_METAL_INGOT, 3)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_INGOT), AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.SILVER_INGOT), AnvilCraftDatagen.has(ModItems.SILVER_INGOT))
+            .save(provider, "frost_metal_ingot_2");
+
+        TimeWarpRecipe.builder()
+            .requires(ModItems.ROYAL_STEEL_INGOT, 3)
+            .requires(ModItems.TITANIUM_INGOT)
+            .fluid(Blocks.POWDER_SNOW_CAULDRON)
+            .consume(1000)
+            .result(ModItems.FROST_METAL_INGOT, 4)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_INGOT), AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.TITANIUM_INGOT), AnvilCraftDatagen.has(ModItems.TITANIUM_INGOT))
+            .save(provider, "frost_metal_ingot_3");
 
         TimeWarpRecipe.builder()
             .requires(ItemTags.FLOWERS)
@@ -283,7 +312,7 @@ public class TimeWarpRecipeLoader {
             .save(
                 provider,
                 AnvilCraft.of("time_warp/oil_from_" + BuiltInRegistries.ITEM.getKey(input.asItem()).getPath())
-            );
+        );
     }
 
     @SuppressWarnings("SameParameterValue")
@@ -295,6 +324,6 @@ public class TimeWarpRecipeLoader {
             .save(
                 provider,
                 AnvilCraft.of("time_warp/oil_from_" + input.location().getPath())
-            );
+        );
     }
 }

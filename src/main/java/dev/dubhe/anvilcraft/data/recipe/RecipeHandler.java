@@ -12,6 +12,7 @@ public class RecipeHandler {
         MeshRecipeLoader.init(provider);
         StampingRecipeLoader.init(provider);
         SuperHeatingRecipeLoader.init(provider);
+        NeutronIrradiationRecipeLoader.init(provider);
         TimeWarpRecipeLoader.init(provider);
         BlockSmearRecipeLoader.init(provider);
         CookingRecipeLoader.init(provider);
@@ -32,5 +33,8 @@ public class RecipeHandler {
         AnvilCollisionCraftRecipeLoader.init(provider);
         MultipleToOneSmithingRecipeLoader.init(provider);
         CoolingRecipeLoader.init(provider);
+        PillRecipeLoader.init(provider);
+        PermutationRecipeLoader.init(provider);
+        DeformationRecipeLoader.init(provider);
     }
 }

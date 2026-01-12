@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.block;
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -26,13 +25,8 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class BlockComparatorBlock extends HorizontalDirectionalBlock implements HammerRotateBehavior, IHammerRemovable {
 
     public static final MapCodec<BlockComparatorBlock> CODEC = simpleCodec(BlockComparatorBlock::new);
@@ -63,7 +57,7 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
     }
 
     @Override
-    protected @NotNull MapCodec<? extends HorizontalDirectionalBlock> codec() {
+    protected MapCodec<? extends HorizontalDirectionalBlock> codec() {
         return CODEC;
     }
 
@@ -91,8 +85,7 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
 
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean isMoving) {
-        if (level.isClientSide || (oldState.is(this) && state.getValue(FACING) == oldState.getValue(FACING)))
-            return;
+        if (level.isClientSide || (oldState.is(this) && state.getValue(FACING) == oldState.getValue(FACING))) return;
         boolean newPowered = checkBlocks(level, pos, state);
         level.setBlock(pos, state.setValue(POWERED, newPowered), 3);
         this.updateNeighborsInFront(level, pos, state);
@@ -100,8 +93,7 @@ public class BlockComparatorBlock extends HorizontalDirectionalBlock implements 
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (level.isClientSide || (state.is(newState.getBlock()) && state.getValue(FACING) == newState.getValue(FACING)))
-            return;
+        if (level.isClientSide || (state.is(newState.getBlock()) && state.getValue(FACING) == newState.getValue(FACING))) return;
         if (state.getValue(POWERED)) {
             this.updateNeighborsInFront(level, pos, state);
         }

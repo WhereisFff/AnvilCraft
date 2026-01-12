@@ -6,6 +6,8 @@ import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
+import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.MathUtil;
 import io.netty.buffer.ByteBuf;
@@ -29,7 +31,6 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.tuple.Triple;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -78,7 +79,7 @@ public final class SlidingBlockSection {
     public Vec3 findCollide(Vec3 center, AABB box) {
         Vec3 vector = Vec3.ZERO;
         for (SlidingBlockInfo info : this.blocks) {
-            Vec3 min = new Vec3(info.x() + center.x, info.y() + center.y, info.z() + center.z);
+            Vec3 min = new Vec3(info.offsetX() + center.x, info.offsetY() + center.y, info.offsetZ() + center.z);
             Vec3 max = min.add(1, 1, 1);
             box.clip(min, max).ifPresent(vector::add);
         }
@@ -135,6 +136,13 @@ public final class SlidingBlockSection {
                 state = state.setValue(BlockStateProperties.WATERLOGGED, true);
             }
 
+            if (state.is(ModBlockTags.HEATABLE_BLOCKS)) {
+                Optional<Block> prevTierBlock = HeatRecorder.getPrevTierHeatableBlock(level, pos, state);
+                if (prevTierBlock.isPresent()) {
+                    state = prevTierBlock.get().defaultBlockState();
+                }
+            }
+
             boolean canBeReplaced = level.getBlockState(pos).canBeReplaced(
                 new DirectionalPlaceContext(level, pos, Direction.DOWN, ItemStack.EMPTY, Direction.UP));
             boolean canSurvive = state.canSurvive(level, pos);
@@ -158,7 +166,7 @@ public final class SlidingBlockSection {
     }
 
     @Override
-    public @NotNull String toString() {
+    public String toString() {
         return "Section[" + this.blocks + ']';
     }
 

@@ -7,14 +7,13 @@ import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.block.better.BetterBaseEntityBlock;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
 import dev.dubhe.anvilcraft.network.MachineOutputDirectionPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -48,18 +47,13 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@MethodsReturnNonnullByDefault
 public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRotateBehavior, IHammerRemovable {
     public static final DirectionProperty FACING = DirectionalBlock.FACING;
     public static final BooleanProperty POWERED = BlockStateProperties.POWERED;
     public static final BooleanProperty OVERLOAD = IPowerComponent.OVERLOAD;
 
-    /**
-     * @param properties 方块属性
-     */
     public BatchCrafterBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition
@@ -70,19 +64,19 @@ public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRo
     }
 
     @Override
-    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+    protected MapCodec<? extends BaseEntityBlock> codec() {
         return simpleCodec(BatchCrafterBlock::new);
     }
 
     @Override
 
-    public boolean hasAnalogOutputSignal(@NotNull BlockState blockState) {
+    public boolean hasAnalogOutputSignal(BlockState blockState) {
         return true;
     }
 
     @Override
 
-    public int getAnalogOutputSignal(@NotNull BlockState blockState, @NotNull Level level, @NotNull BlockPos blockPos) {
+    public int getAnalogOutputSignal(BlockState blockState, Level level, BlockPos blockPos) {
         BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (blockEntity instanceof BatchCrafterBlockEntity crafterBlockEntity) {
             return crafterBlockEntity.getRedstoneSignal();
@@ -92,13 +86,13 @@ public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRo
 
     @Override
     @SuppressWarnings({"UnreachableCode"})
-    public @NotNull InteractionResult use(
-        @NotNull BlockState state,
-        @NotNull Level level,
-        @NotNull BlockPos pos,
-        @NotNull Player player,
-        @NotNull InteractionHand hand,
-        @NotNull BlockHitResult hit) {
+    public InteractionResult use(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
         }
@@ -129,10 +123,10 @@ public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRo
     @Override
 
     public void onRemove(
-        @NotNull BlockState state,
-        @NotNull Level level,
-        @NotNull BlockPos pos,
-        @NotNull BlockState newState,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        BlockState newState,
         boolean movedByPiston
     ) {
         if (state.is(newState.getBlock())) return;
@@ -148,37 +142,37 @@ public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRo
     }
 
     @Override
-    public boolean useShapeForLightOcclusion(@NotNull BlockState state) {
+    public boolean useShapeForLightOcclusion(BlockState state) {
         return true;
     }
 
     public VoxelShape getVisualShape(
-        @NotNull BlockState state,
-        @NotNull BlockGetter level,
-        @NotNull BlockPos pos,
-        @NotNull CollisionContext context) {
+        BlockState state,
+        BlockGetter level,
+        BlockPos pos,
+        CollisionContext context) {
         return Shapes.empty();
     }
 
-    public float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
         return 1.0F;
     }
 
     public boolean propagatesSkylightDown(
-        @NotNull BlockState state, @NotNull BlockGetter level, @NotNull BlockPos pos) {
+        BlockState state, BlockGetter level, BlockPos pos) {
         return false;
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, @NotNull BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new BatchCrafterBlockEntity(ModBlockEntities.BATCH_CRAFTER.get(), pos, state);
     }
 
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(
-        @NotNull Level level, @NotNull BlockState state, @NotNull BlockEntityType<T> type) {
+        Level level, BlockState state, BlockEntityType<T> type) {
         if (level.isClientSide) {
             return null;
         }
@@ -190,13 +184,13 @@ public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRo
     }
 
     @Override
-    public @NotNull RenderShape getRenderShape(@NotNull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
     @Override
     @Nullable
-    public BlockState getStateForPlacement(@NotNull BlockPlaceContext context) {
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
         Direction dir = context.getNearestLookingDirection().getOpposite();
         if (context.getPlayer() != null && context.getPlayer().isShiftKeyDown()) {
             dir = dir.getOpposite();
@@ -208,18 +202,18 @@ public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRo
     }
 
     @Override
-    protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(POWERED).add(OVERLOAD).add(FACING);
     }
 
     @Override
 
     public void neighborChanged(
-        @NotNull BlockState state,
-        @NotNull Level level,
-        @NotNull BlockPos pos,
-        @NotNull Block neighborBlock,
-        @NotNull BlockPos neighborPos,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block neighborBlock,
+        BlockPos neighborPos,
         boolean movedByPiston) {
         if (level.isClientSide) {
             return;
@@ -230,22 +224,22 @@ public class BatchCrafterBlock extends BetterBaseEntityBlock implements HammerRo
     @Override
 
     public void tick(
-        @NotNull BlockState state,
-        @NotNull ServerLevel level,
-        @NotNull BlockPos pos,
-        @NotNull RandomSource random) {
+        BlockState state,
+        ServerLevel level,
+        BlockPos pos,
+        RandomSource random) {
         if (state.getValue(POWERED) && !level.hasNeighborSignal(pos)) {
             level.setBlock(pos, state.cycle(POWERED), 2);
         }
     }
 
     @Override
-    public @NotNull BlockState rotate(@NotNull BlockState state, @NotNull Rotation rotation) {
+    public BlockState rotate(BlockState state, Rotation rotation) {
         return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    public @NotNull BlockState mirror(@NotNull BlockState state, @NotNull Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return this.rotate(state, mirror.getRotation(state.getValue(FACING)));
     }
 }

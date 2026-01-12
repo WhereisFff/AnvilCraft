@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.inventory.RoyalGrindstoneMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -37,13 +35,13 @@ public class RoyalGrindstoneScreen extends AbstractContainerScreen<RoyalGrindsto
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         this.renderTooltip(guiGraphics, mouseX, mouseY);
         this.renderLabels(guiGraphics);
     }
 
-    protected void renderBg(@NotNull GuiGraphics g, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
         g.blit(GRINDSTONE_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
@@ -92,7 +90,10 @@ public class RoyalGrindstoneScreen extends AbstractContainerScreen<RoyalGrindsto
         g.fill(RenderType.guiOverlay(), x, y, x + 16, y + 16, maskColor);
     }
 
-    private Map.Entry<Item, RoyalGrindstoneMenu.RepairCostRecipeEntry> getCurrentRecipe(List<Map.Entry<Item, RoyalGrindstoneMenu.RepairCostRecipeEntry>> recipes, int repairCost) {
+    private Map.Entry<Item, RoyalGrindstoneMenu.RepairCostRecipeEntry> getCurrentRecipe(
+        List<Map.Entry<Item, RoyalGrindstoneMenu.RepairCostRecipeEntry>> recipes,
+        int repairCost
+    ) {
         recipes.sort(Comparator.comparingInt(entry -> entry.getValue().count()));
         recipeIndex = recipeIndex % recipes.size();
         int checked = 0;
@@ -108,7 +109,6 @@ public class RoyalGrindstoneScreen extends AbstractContainerScreen<RoyalGrindsto
             RoyalGrindstoneMenu.REPAIR_COST_RECIPES.get(RoyalGrindstoneMenu.DEFAULT_REPAIR_MATERIAL)
         );
     }
-
 
     protected void renderLabels(GuiGraphics guiGraphics) {
         if (this.menu.getSlot(2).hasItem()) {
@@ -137,7 +137,7 @@ public class RoyalGrindstoneScreen extends AbstractContainerScreen<RoyalGrindsto
         }
     }
 
-    private void drawLabel(int x, int y, Component component, @NotNull GuiGraphics guiGraphics) {
+    private void drawLabel(int x, int y, Component component, GuiGraphics guiGraphics) {
         int i = (this.width - this.imageWidth - 2) / 2;
         int j = (this.height - this.imageHeight + 23) / 2;
         x += i;

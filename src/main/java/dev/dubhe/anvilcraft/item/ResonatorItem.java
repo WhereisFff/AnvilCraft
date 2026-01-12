@@ -1,10 +1,12 @@
 package dev.dubhe.anvilcraft.item;
 
-import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -12,6 +14,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
@@ -32,10 +35,10 @@ import net.minecraft.world.item.HoeItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.TieredItem;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.component.Tool;
@@ -43,9 +46,11 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.ItemAbilities;
 import net.neoforged.neoforge.common.ItemAbility;
 import org.jetbrains.annotations.Range;
@@ -68,8 +73,28 @@ public abstract class ResonatorItem extends TieredItem {
             properties
                 .component(DataComponents.TOOL, createToolProperties(tier))
                 .fireResistant()
-                .rarity(Rarity.EPIC)
         );
+    }
+
+    private boolean isTranscendence(ItemStack stack) {
+        return stack.is(ModItems.TRANSCENDENCE_RESONATOR);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+
+        if (isTranscendence(stack)) {
+            tooltipComponents.add(
+                Component.translatable("tooltip.anvilcraft.resonator.mining_desc", Component.keybind("key.anvilcraft.switch_resonate_mode"))
+                    .withStyle(ChatFormatting.GRAY)
+            );
+        } else {
+            tooltipComponents.add(
+                Component.translatable("tooltip.anvilcraft.resonator.desc", Component.keybind("key.anvilcraft.switch_resonate_mode"))
+                    .withStyle(net.minecraft.ChatFormatting.GRAY)
+            );
+        }
     }
 
     public static ItemAttributeModifiers createAttributes(Tier tier, float attackDamage, float attackSpeed) {
@@ -228,7 +253,19 @@ public abstract class ResonatorItem extends TieredItem {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
-        return switch (ResonatorItem.getMode(context.getItemInHand())) {
+        ItemStack stack = context.getItemInHand();
+        int mode = ResonatorItem.getMode(stack);
+        return switch (mode) {
+            case AUTO_MODE -> {
+                if (isTranscendence(stack) && !isTooDamagedToUse(stack)) {
+                    Player player = context.getPlayer();
+                    if (player != null) {
+                        player.startUsingItem(context.getHand());
+                        yield InteractionResult.CONSUME;
+                    }
+                }
+                yield InteractionResult.PASS;
+            }
             case AXE_MODE -> this.useOnAsAxe(context);
             case SHOVEL_MODE -> this.useOnAsShovel(context);
             case HOE_MODE -> this.useOnAsHoe(context);
@@ -237,16 +274,46 @@ public abstract class ResonatorItem extends TieredItem {
         };
     }
 
+    @Override
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
+        return 72000;
+    }
+
+    @Override
+    public void onUseTick(Level level, LivingEntity livingEntity, ItemStack stack, int remainingUseDuration) {
+        if (level.isClientSide || !(livingEntity instanceof ServerPlayer player)) return;
+
+        // 0.5秒 = 10 ticks
+        if (getUseDuration(stack, livingEntity) - remainingUseDuration >= 10) {
+            // 获取视线方块
+            if (player.pick(player.blockInteractionRange(), 0f, false) instanceof BlockHitResult hit) {
+                BlockPos pos = hit.getBlockPos();
+                BlockState state = level.getBlockState(pos);
+                // 检查是否可破坏 (硬度 >= 0)
+                if (state.getDestroySpeed(level, pos) >= 0) {
+                    Block.dropResources(state, level, pos, level.getBlockEntity(pos), player, stack);
+                    level.destroyBlock(pos, false);
+                    stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+                }
+            }
+            // 停止使用
+            player.stopUsingItem();
+        }
+    }
+
     public InteractionResult useOnAsAxe(UseOnContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         BlockState state = level.getBlockState(pos);
         Player player = context.getPlayer();
         if (player == null) return InteractionResult.PASS;
-        if (context.getHand().equals(InteractionHand.MAIN_HAND)
+        if (
+            context.getHand().equals(InteractionHand.MAIN_HAND)
             && player.getOffhandItem().is(Items.SHIELD)
             && !player.isSecondaryUseActive()
-        ) return InteractionResult.PASS;
+        ) {
+            return InteractionResult.PASS;
+        }
         Optional<BlockState> optional = Optional.<BlockState>empty()
             .or(() -> {
                 Optional<BlockState> optional1 = Optional.ofNullable(state.getToolModifiedState(context, ItemAbilities.AXE_STRIP, false));

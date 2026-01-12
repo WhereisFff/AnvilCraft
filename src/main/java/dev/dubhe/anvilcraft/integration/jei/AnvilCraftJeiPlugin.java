@@ -7,9 +7,9 @@ import dev.dubhe.anvilcraft.client.gui.screen.FilterScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemCollectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.ItemDetectorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.JewelCraftingScreen;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.integration.jei.category.AnvilCollisionCraftCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.BeaconConversionCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.ChargerChargingCategory;
@@ -33,12 +33,14 @@ import dev.dubhe.anvilcraft.integration.jei.category.anvil.ItemCrushCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.ItemInjectCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.MassInjectCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.MeshRecipeCategory;
+import dev.dubhe.anvilcraft.integration.jei.category.anvil.NeutronIrradiationCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.SqueezingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.StampingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.SuperHeatingCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.TimeWarpCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.anvil.UnpackCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.extension.CanningFoodExtension;
+import dev.dubhe.anvilcraft.integration.jei.category.extension.PillRecipeExtension;
 import dev.dubhe.anvilcraft.integration.jei.category.multiblock.MultiBlockConversionCategory;
 import dev.dubhe.anvilcraft.integration.jei.category.multiblock.MultiBlockCraftingCategory;
 import dev.dubhe.anvilcraft.integration.jei.handlers.GhostIngredientHandler;
@@ -53,6 +55,7 @@ import dev.dubhe.anvilcraft.inventory.RoyalSmithingMenu;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
+import dev.dubhe.anvilcraft.recipe.PillRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCompressRecipe;
@@ -64,6 +67,7 @@ import dev.dubhe.anvilcraft.recipe.anvil.wrap.CookingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemInjectRecipe;
+import dev.dubhe.anvilcraft.recipe.anvil.wrap.NeutronIrradiationRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.SqueezingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.StampingRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.SuperHeatingRecipe;
@@ -86,7 +90,6 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.IVanillaCategoryExtensionRegistration;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -94,11 +97,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 @JeiPlugin
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class AnvilCraftJeiPlugin implements IModPlugin {
 
     public static final RecipeType<MeshRecipeGroup> MESH = createRecipeType("mesh", MeshRecipeGroup.class);
@@ -133,6 +132,8 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
     public static final RecipeType<RecipeHolder<SqueezingRecipe>> SQUEEZING = createRecipeHolderType("squeezing");
     public static final RecipeType<RecipeHolder<BulgingRecipe>> BULGING = createRecipeHolderType("bulging");
     public static final RecipeType<RecipeHolder<TimeWarpRecipe>> TIME_WARP = createRecipeHolderType("time_warp");
+    public static final RecipeType<RecipeHolder<NeutronIrradiationRecipe>> NEUTRON_IRRADIATION =
+        createRecipeHolderType("neutron_irradiation");
 
     public static final RecipeType<RecipeHolder<MultiblockRecipe>> MULTIBLOCK_CRAFTING =
         createRecipeHolderType("multiblock");
@@ -153,7 +154,6 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
 
     public static final RecipeType<RecipeHolder<AnvilCollisionCraftRecipe>> ANVIL_COLLISION =
         createRecipeHolderType("anvil_collision");
-
 
     @Override
     public ResourceLocation getPluginUid() {
@@ -180,6 +180,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         ConcreteCategory.registerRecipes(registration);
         BulgingCategory.registerRecipes(registration);
         TimeWarpCategory.registerRecipes(registration);
+        NeutronIrradiationCategory.registerRecipes(registration);
         MultiBlockCraftingCategory.registerRecipes(registration);
         MultiBlockConversionCategory.registerRecipes(registration);
         JewelCraftingCategory.registerRecipes(registration);
@@ -198,23 +199,29 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
             Component.translatable("jei.anvilcraft.info.geode_1"),
             Component.translatable("jei.anvilcraft.info.geode_2"),
             Component.translatable("jei.anvilcraft.info.geode_3"),
-            Component.translatable("jei.anvilcraft.info.geode_4"));
+            Component.translatable("jei.anvilcraft.info.geode_4")
+        );
         registration.addItemStackInfo(
             new ItemStack(ModItems.ROYAL_STEEL_UPGRADE_SMITHING_TEMPLATE.get()),
             Component.translatable("jei.anvilcraft.info.royal_steel_upgrade_smithing_template_1"),
-            Component.translatable("jei.anvilcraft.info.royal_steel_upgrade_smithing_template_2"));
+            Component.translatable("jei.anvilcraft.info.royal_steel_upgrade_smithing_template_2")
+        );
         registration.addItemStackInfo(
             new ItemStack(ModItems.CRAB_CLAW.get()),
-            Component.translatable("jei.anvilcraft.info.craw_claw"));
+            Component.translatable("jei.anvilcraft.info.craw_claw")
+        );
         registration.addItemStackInfo(
             new ItemStack(ModItems.CAPACITOR.get()),
-            Component.translatable("jei.anvilcraft.info.capacitor"));
+            Component.translatable("jei.anvilcraft.info.capacitor")
+        );
         registration.addItemStackInfo(
             ModBlocks.END_DUST.asStack(),
-            Component.translatable("jei.anvilcraft.info.end_dust"));
+            Component.translatable("jei.anvilcraft.info.end_dust")
+        );
         registration.addItemStackInfo(
             Items.ZOMBIE_SPAWN_EGG.getDefaultInstance(),
-            Component.translatable("jei.anvilcraft.info.mob_transform_with_item"));
+            Component.translatable("jei.anvilcraft.info.mob_transform_with_item")
+        );
     }
 
     @Override
@@ -237,6 +244,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         ConcreteCategory.registerRecipeCatalysts(registration);
         BulgingCategory.registerRecipeCatalysts(registration);
         TimeWarpCategory.registerRecipeCatalysts(registration);
+        NeutronIrradiationCategory.registerRecipeCatalysts(registration);
         MultiBlockCraftingCategory.registerRecipeCatalysts(registration);
         MultiBlockConversionCategory.registerRecipeCatalysts(registration);
         JewelCraftingCategory.registerRecipeCatalysts(registration);
@@ -283,6 +291,7 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
         registration.addRecipeCategories(new ConcreteCategory(guiHelper));
         registration.addRecipeCategories(new BulgingCategory(guiHelper));
         registration.addRecipeCategories(new TimeWarpCategory(guiHelper));
+        registration.addRecipeCategories(new NeutronIrradiationCategory(guiHelper));
         registration.addRecipeCategories(new MultiBlockCraftingCategory(guiHelper));
         registration.addRecipeCategories(new MultiBlockConversionCategory(guiHelper));
         registration.addRecipeCategories(new JewelCraftingCategory(guiHelper));
@@ -299,10 +308,12 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(RoyalSmithingMenu.class,
+        registration.addRecipeTransferHandler(
+            RoyalSmithingMenu.class,
             ModMenuTypes.ROYAL_SMITHING.get(),
             RecipeTypes.SMITHING,
-            0, 3, 4, 36);
+            0, 3, 4, 36
+        );
     }
 
     @Override
@@ -340,8 +351,8 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
 
     @Override
     public void registerVanillaCategoryExtensions(IVanillaCategoryExtensionRegistration registration) {
-        registration.getCraftingCategory().addExtension(CanningFoodRecipe.class,
-            CanningFoodExtension.INSTANCE);
+        registration.getCraftingCategory().addExtension(CanningFoodRecipe.class, CanningFoodExtension.INSTANCE);
+        registration.getCraftingCategory().addExtension(PillRecipe.class, new PillRecipeExtension());
     }
 
     public static <T> RecipeType<T> createRecipeType(String name, Class<T> clazz) {

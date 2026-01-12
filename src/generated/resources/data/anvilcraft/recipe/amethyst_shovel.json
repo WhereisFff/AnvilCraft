@@ -10,11 +10,18 @@
     }
   },
   "pattern": [
-    " A ",
-    " B ",
-    " B "
+    "A",
+    "B",
+    "B"
   ],
   "result": {
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "minecraft:efficiency": 3
+        }
+      }
+    },
     "count": 1,
     "id": "anvilcraft:amethyst_shovel"
   }

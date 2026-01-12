@@ -2,9 +2,7 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
-import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager.Entry;
 import dev.dubhe.anvilcraft.api.event.LightningBoltStrikeEvent;
-import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -12,8 +10,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-
-import java.util.Collection;
 
 import static dev.dubhe.anvilcraft.block.MagnetBlock.LIT;
 
@@ -42,16 +38,7 @@ public class LightningEventListener {
 
     private static void lightningCharge(BlockPos pos, Level level, BlockState state) {
         if (state.is(Blocks.COPPER_BLOCK) || state.is(Blocks.LIGHTNING_ROD)) {
-            double unCharged = 32;
-            Collection<Entry> nearestChargeCollect =
-                ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos);
-            for (var floatChargeCollectorBlockEntityEntry : nearestChargeCollect) {
-                ChargeCollectorBlockEntity blockEntity = floatChargeCollectorBlockEntityEntry.getBlockEntity();
-                if (ChargeCollectorManager.getInstance(level).canCollect(blockEntity, pos)) {
-                    unCharged = blockEntity.incomingCharge(unCharged, pos);
-                    if (unCharged <= 0) break;
-                }
-            }
+            ChargeCollectorManager.charge(32, level, pos);
         }
     }
 }

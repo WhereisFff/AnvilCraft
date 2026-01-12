@@ -4,7 +4,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.SmithingTemplateItem;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -31,9 +30,6 @@ public class FrostMetalUpgradeTemplateItem extends SmithingTemplateItem {
     private static final ResourceLocation EMPTY_SLOT_INGOT =
         ResourceLocation.withDefaultNamespace("item/empty_slot_ingot");
 
-    /**
-     * @param properties 物品属性
-     */
     public FrostMetalUpgradeTemplateItem(@SuppressWarnings("unused") Properties properties) {
         super(
             APPLIES_TO,
@@ -46,7 +42,7 @@ public class FrostMetalUpgradeTemplateItem extends SmithingTemplateItem {
     }
 
     @Override
-    public @NotNull String getDescriptionId() {
+    public String getDescriptionId() {
         return this.getOrCreateDescriptionId();
     }
 }

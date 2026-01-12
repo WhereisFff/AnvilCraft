@@ -199,7 +199,7 @@ public class BlockTagLoader {
             .add(ModBlocks.SPACE_OVERCOMPRESSOR.getKey())
             .addTag(Tags.Blocks.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
 
-        //mekanism integration
+        // mekanism integration
         provider.addTag(ModBlockTags.MEKANISM_CARDBOARD_BOX_BLACKLIST)
             .add(ModBlocks.GIANT_ANVIL.getKey())
             .add(ModBlocks.TRANSMISSION_POLE.getKey())
@@ -259,7 +259,13 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.VINE))
             .add(findResourceKey(Blocks.SNOW))
             .add(findResourceKey(Blocks.MOSS_CARPET))
-            .add(findResourceKey(Blocks.LILY_PAD));
+            .add(findResourceKey(Blocks.LILY_PAD))
+            .add(findResourceKey(Blocks.SEAGRASS))
+            .add(findResourceKey(Blocks.TALL_SEAGRASS))
+            .add(findResourceKey(Blocks.SEA_PICKLE))
+            .add(findResourceKey(Blocks.KELP_PLANT))
+            .addTag(BlockTags.WALL_CORALS)
+            .addTag(BlockTags.CORAL_PLANTS);
 
         provider.addTag(ModBlockTags.SPECTRAL_CAN_THROUGH)
             .addTag(Tags.Blocks.GLASS_BLOCKS)

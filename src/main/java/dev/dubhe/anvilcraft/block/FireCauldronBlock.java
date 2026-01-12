@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.cauldron.CauldronInteraction;
 import net.minecraft.server.level.ServerLevel;
@@ -16,12 +15,7 @@ import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.HitResult;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class FireCauldronBlock extends Layered4LevelCauldronBlock implements IHammerRemovable {
     public FireCauldronBlock(Properties properties) {
         super(properties, CauldronInteraction.EMPTY);
@@ -29,7 +23,7 @@ public class FireCauldronBlock extends Layered4LevelCauldronBlock implements IHa
 
     @Override
     public void entityInside(
-        @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Entity entity) {
+        BlockState state, Level level, BlockPos pos, Entity entity) {
         if (this.isEntityInsideContent(state, pos, entity)) {
             entity.lavaHurt();
         }

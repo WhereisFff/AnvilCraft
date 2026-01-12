@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.util.PlayerUtil;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerPlayer;
@@ -19,14 +18,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.UseAnim;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class UtusanItem extends Item {
     public UtusanItem(Properties properties) {
         super(properties);
@@ -34,8 +29,8 @@ public class UtusanItem extends Item {
 
     @Override
     @SuppressWarnings("UnreachableCode")
-    public @NotNull ItemStack finishUsingItem(
-        @NotNull ItemStack itemStack, @NotNull Level level, @NotNull LivingEntity livingEntity) {
+    public ItemStack finishUsingItem(
+        ItemStack itemStack, Level level, LivingEntity livingEntity) {
         if (!(livingEntity instanceof Player player)) return itemStack;
         if (PlayerUtil.isFakePlayer(player)) return itemStack;
         if (!player.getAbilities().instabuild) {
@@ -54,7 +49,7 @@ public class UtusanItem extends Item {
      *
      * @param livingEntity 生物
      */
-    public static void removeHarmfulEffects(@NotNull LivingEntity livingEntity) {
+    public static void removeHarmfulEffects(LivingEntity livingEntity) {
         if (livingEntity.level().isClientSide) return;
         boolean bl = false;
         List<Holder<MobEffect>> effects = new ArrayList<>();
@@ -71,18 +66,18 @@ public class UtusanItem extends Item {
     }
 
     @Override
-    public int getUseDuration(ItemStack pStack, LivingEntity pEntity) {
+    public int getUseDuration(ItemStack stack, LivingEntity entity) {
         return 10;
     }
 
     @Override
-    public @NotNull UseAnim getUseAnimation(@NotNull ItemStack itemStack) {
+    public UseAnim getUseAnimation(ItemStack itemStack) {
         return UseAnim.EAT;
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(
-        @NotNull Level level, @NotNull Player player, @NotNull InteractionHand interactionHand) {
+    public InteractionResultHolder<ItemStack> use(
+        Level level, Player player, InteractionHand interactionHand) {
         return ItemUtils.startUsingInstantly(level, player, interactionHand);
     }
 }

@@ -1,12 +1,15 @@
 package dev.dubhe.anvilcraft.util;
 
+import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.api.heat.HeatRecorder;
+import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -25,9 +28,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class BreakBlockUtil {
-
     private static ItemStack DUMMY_SILK_TOUCH_TOOL = null;
     private static ItemStack DUMMY_FORTUNE_5_TOOL = null;
+    private static ItemStack DUMMY_DISINTEGRATION_TOOL = null;
     private static final ItemStack SHEARS_INSTANCE = Items.SHEARS.getDefaultInstance();
 
     public static ItemStack getDummySilkTouchTool(ServerLevel level) {
@@ -45,11 +48,16 @@ public class BreakBlockUtil {
     public static List<ItemStack> dropWithTool(ServerLevel level, BlockPos pos, ItemStack tool) {
         BlockState state = level.getBlockState(pos);
         if (state.isAir()) return List.of();
+        ServerPlayer fakePlayer = AnvilCraftFakePlayers.anvilcraftDestroyer.offerPlayer(level);
+        AnvilCraftFakePlayers.anvilcraftDestroyer.enabledDestroy(fakePlayer, tool);
         LootParams.Builder builder = new LootParams.Builder(level)
             .withParameter(LootContextParams.ORIGIN, Vec3.atCenterOf(pos))
             .withParameter(LootContextParams.TOOL, tool)
+            .withOptionalParameter(LootContextParams.THIS_ENTITY, fakePlayer)
             .withOptionalParameter(LootContextParams.BLOCK_ENTITY, level.getBlockEntity(pos));
-        return state.getDrops(builder);
+        List<ItemStack> itemStacks = state.getDrops(builder);
+        AnvilCraftFakePlayers.anvilcraftDestroyer.disable(fakePlayer);
+        return itemStacks;
     }
 
     public static List<ItemStack> drop(ServerLevel level, BlockPos pos) {
@@ -62,14 +70,17 @@ public class BreakBlockUtil {
 
     public static List<ItemStack> dropSmelt(ServerLevel level, BlockPos pos) {
         List<ItemStack> drops = drop(level, pos);
-        if (drops.size() == 1
+        if (
+            drops.size() == 1
             && drops.getFirst().is(ModItemTags.HEATABLE_BLOCKS)
             && Util.instanceOfAny(drops.getFirst().getItem(), BlockItem.class)
-        ) return List.of(
-            HeatRecorder.getNextTierHeatableBlock(level, pos, Block.byItem(drops.getFirst().getItem()).defaultBlockState())
-                .map(block -> block.asItem().getDefaultInstance())
-                .orElse(ItemStack.EMPTY)
-        );
+        ) {
+            return List.of(
+                HeatRecorder.getNextTierHeatableBlock(level, pos, Block.byItem(drops.getFirst().getItem()).defaultBlockState())
+                    .map(block -> block.asItem().getDefaultInstance())
+                    .orElse(ItemStack.EMPTY)
+            );
+        }
         return drops.stream()
             .map(it -> {
                 SingleRecipeInput cont = new SingleRecipeInput(it);
@@ -108,5 +119,17 @@ public class BreakBlockUtil {
         int layers = state.getValue(SnowLayerBlock.LAYERS);
         return List.of(layers <= 7 ? new ItemStack(Blocks.SNOW, layers) :
             Blocks.SNOW_BLOCK.asItem().getDefaultInstance());
+    }
+
+    public static ItemStack getDummyDisintegrationTool(ServerLevel level) {
+        if (DUMMY_DISINTEGRATION_TOOL == null) {
+            ItemStack tool = Items.NETHERITE_PICKAXE.getDefaultInstance();
+            tool.set(DataComponents.CUSTOM_NAME, Component.literal("Dummy Disintegration Tool"));
+            level.holderLookup(Registries.ENCHANTMENT)
+                .get(ModEnchantments.DISINTEGRATION_KEY)
+                .ifPresent(e -> tool.enchant(e, 1));
+            DUMMY_DISINTEGRATION_TOOL = tool;
+        }
+        return DUMMY_DISINTEGRATION_TOOL;
     }
 }

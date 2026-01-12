@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.block;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.init.block.ModFluidTags;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundEvents;
@@ -23,11 +23,8 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class MengerSpongeBlock extends SpongeBlock implements IHammerRemovable {
 
     private static final VoxelShape REDUCE_AABB = Stream.of(
@@ -112,20 +109,33 @@ public class MengerSpongeBlock extends SpongeBlock implements IHammerRemovable {
         ) > 1;
     }
 
-
     @Override
-    public VoxelShape getInteractionShape(
-        BlockState state, BlockGetter level, BlockPos pos) {
-        return REDUCE_AABB;
+    public void neighborChanged(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block neighborBlock,
+        BlockPos neighborPos,
+        boolean movedByPiston
+    ) {
+        if (level.isClientSide) return;
+        if (AnvilCraft.CONFIG.cleanFluidAfterUpdateMengerSponge) {
+            removeFluidBreadthFirstSearch(level, pos);
+        }
     }
 
+    @Override
+    public VoxelShape getInteractionShape(BlockState state, BlockGetter level, BlockPos pos) {
+        return REDUCE_AABB;
+    }
 
     @Override
     public VoxelShape getShape(
         BlockState state,
         BlockGetter level,
         BlockPos pos,
-        CollisionContext context) {
+        CollisionContext context
+    ) {
         return AABB;
     }
 }

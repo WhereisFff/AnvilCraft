@@ -2,8 +2,10 @@ package dev.dubhe.anvilcraft.init;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.amulet.type.AmuletType;
-import dev.dubhe.anvilcraft.api.data.ICustomDataComponent;
-import dev.dubhe.anvilcraft.recipe.multiple.result.modifier.IResultModifier;
+import dev.dubhe.anvilcraft.api.recipe.data.ICustomDataComponent;
+import dev.dubhe.anvilcraft.api.recipe.number.INumberProvider;
+import dev.dubhe.anvilcraft.api.recipe.result.modifier.IResultModifier;
+import dev.dubhe.anvilcraft.api.uuid.IUuidProvider;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -28,10 +30,26 @@ public class ModRegistries {
         .maxId(512)
         .create();
 
-    public static final ResourceKey<Registry<ICustomDataComponent.Type<?>>> CUSTOM_DATA_KEY = ResourceKey.createRegistryKey(
+    public static final ResourceKey<Registry<ICustomDataComponent.Type<?>>> CUSTOM_DATA_TYPE_KEY = ResourceKey.createRegistryKey(
         AnvilCraft.of("custom_data_component")
     );
-    public static final Registry<ICustomDataComponent.Type<?>> CUSTOM_DATA_TYPE_REGISTRY = new RegistryBuilder<>(CUSTOM_DATA_KEY)
+    public static final Registry<ICustomDataComponent.Type<?>> CUSTOM_DATA_TYPE_REGISTRY = new RegistryBuilder<>(CUSTOM_DATA_TYPE_KEY)
+        .sync(true)
+        .maxId(512)
+        .create();
+
+    public static final ResourceKey<Registry<IUuidProvider.Type<?>>> UUID_PROVIDER_TYPE_KEY = ResourceKey.createRegistryKey(
+        AnvilCraft.of("uuid_provider")
+    );
+    public static final Registry<IUuidProvider.Type<?>> UUID_PROVIDER_TYPE_REGISTRY = new RegistryBuilder<>(UUID_PROVIDER_TYPE_KEY)
+        .sync(true)
+        .maxId(512)
+        .create();
+
+    public static final ResourceKey<Registry<INumberProvider.Type<?>>> NUMBER_PROVIDER_TYPE_KEY = ResourceKey.createRegistryKey(
+        AnvilCraft.of("number_provider")
+    );
+    public static final Registry<INumberProvider.Type<?>> NUMBER_PROVIDER_TYPE_REGISTRY = new RegistryBuilder<>(NUMBER_PROVIDER_TYPE_KEY)
         .sync(true)
         .maxId(512)
         .create();
@@ -41,5 +59,7 @@ public class ModRegistries {
         event.register(AMULET_TYPE_REGISTRY);
         event.register(MODIFIER_TYPE_REGISTRY);
         event.register(CUSTOM_DATA_TYPE_REGISTRY);
+        event.register(UUID_PROVIDER_TYPE_REGISTRY);
+        event.register(NUMBER_PROVIDER_TYPE_REGISTRY);
     }
 }

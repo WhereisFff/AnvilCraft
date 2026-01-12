@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
     public static final ResourceLocation LOCATION = AnvilCraft.of("textures/gui/container/slider/background.png");
@@ -24,11 +23,6 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
     private Slider slider = null;
     private EditBox value;
 
-    /**
-     * @param menu      菜单
-     * @param inventory 背包
-     * @param title     标题
-     */
     public SliderScreen(SliderMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
         this.imageWidth = 176;
@@ -112,7 +106,7 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
         this.value.setValue("" + value);
     }
 
-    private void onValueInput(@NotNull String value) {
+    private void onValueInput(String value) {
         String regex = "^[+-]?[0-9]+$";
         int v;
         if (value.matches(regex)) {
@@ -145,14 +139,14 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
     }
 
     @Override
-    public void resize(@NotNull Minecraft minecraft, int width, int height) {
+    public void resize(Minecraft minecraft, int width, int height) {
         int lastValue = Integer.parseInt(this.value.getValue());
         this.init(minecraft, width, height);
         this.value.setValue("" + lastValue);
     }
 
     @Override
-    protected void renderLabels(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         guiGraphics.drawString(this.font, this.title, this.titleLabelX, this.titleLabelY, 0x404040, false);
     }
 
@@ -163,7 +157,6 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
-
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
@@ -178,7 +171,7 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
     }
 
     @Override
-    protected void renderBg(@NotNull GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int offsetX = (this.width - this.imageWidth) / 2;
         int offsetY = (this.height - this.imageHeight) / 2;
         guiGraphics.blit(LOCATION, offsetX, offsetY, 0, 0, this.imageWidth, this.imageHeight, 256, 128);

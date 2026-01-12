@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.entity.player.Player;
@@ -21,14 +20,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.common.util.TriState;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.stream.Stream;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable {
     public static final VoxelShape AABB_X = Stream.of(
         Block.box(0, 6, 11, 16, 12, 14),
@@ -64,11 +59,14 @@ public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerCha
         Axis axis = context.getHorizontalDirection().getOpposite().getAxis();
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
-        if ((isOtherRailInAxis(level, pos, Axis.X, -1) == TriState.TRUE
+        if (
+            (isOtherRailInAxis(level, pos, Axis.X, -1) == TriState.TRUE
              || isOtherRailInAxis(level, pos, Axis.X, 1) == TriState.TRUE)
             && (isOtherRailInAxis(level, pos, Axis.Z, -1) == TriState.TRUE
                 || isOtherRailInAxis(level, pos, Axis.Z, 1) == TriState.TRUE)
-        ) axis = Axis.Y;
+        ) {
+            axis = Axis.Y;
+        }
         return this.defaultBlockState().setValue(AXIS, axis);
     }
 
@@ -145,7 +143,7 @@ public class SlidingRailBlock extends BaseSlidingRailBlock implements IHammerCha
     }
 
     @Override
-    public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
+    public boolean change(Player player, BlockPos blockPos, Level level, ItemStack anvilHammer) {
         BlockState bs = level.getBlockState(blockPos);
         level.setBlockAndUpdate(blockPos, bs.cycle(AXIS));
         return true;

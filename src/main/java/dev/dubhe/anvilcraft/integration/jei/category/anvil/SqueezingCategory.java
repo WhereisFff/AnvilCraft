@@ -3,15 +3,15 @@ package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.SqueezingRecipe;
 import dev.dubhe.anvilcraft.util.CauldronUtil;
-import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.util.TooltipUtil;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
@@ -25,7 +25,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -38,12 +37,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class SqueezingCategory implements IRecipeCategory<RecipeHolder<SqueezingRecipe>> {
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
@@ -122,7 +118,9 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
             if (mouseY >= 24 && mouseY <= 42) {
                 List<ChanceBlockState> result = recipe.getResultBlocks();
                 if (result.isEmpty()) return;
-                tooltip.addAll(TooltipUtil.tooltip(result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).state().getBlock()));
+                tooltip.addAll(
+                    TooltipUtil.tooltip(result.get((int) ((System.currentTimeMillis() / 1000) % result.size())).state().getBlock())
+                );
             }
             if (mouseY >= 42 && mouseY <= 52) {
                 Block block = recipe.getHasCauldron().getTransformCauldron();

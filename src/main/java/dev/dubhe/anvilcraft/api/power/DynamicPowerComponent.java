@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.api.power;
 
-import com.google.common.collect.Sets;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.ChatFormatting;
@@ -8,8 +7,10 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.Locale;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -21,7 +22,7 @@ public class DynamicPowerComponent {
     @Setter
     private PowerGrid powerGrid;
     @Getter
-    private final Set<PowerConsumption> powerConsumptions = Sets.newConcurrentHashSet();
+    private final Set<PowerConsumption> powerConsumptions = Collections.newSetFromMap(new IdentityHashMap<>());
     private final Supplier<AABB> aabbSupplier;
 
     public DynamicPowerComponent(Entity owner, Supplier<AABB> aabbSupplier) {

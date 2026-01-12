@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
@@ -24,14 +23,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@Setter
 @Getter
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
+@Setter
 public class EmberGrindstoneBlock extends BetterGrindstoneBlock implements IHammerRemovable, IEmberBlock {
-
     private static final Component CONTAINER_TITLE = Component.translatable("container.grindstone_title");
     private BlockState checkBlockState;
 
@@ -39,9 +33,6 @@ public class EmberGrindstoneBlock extends BetterGrindstoneBlock implements IHamm
         super(properties);
     }
 
-    /**
-     *
-     */
     @SuppressWarnings("UnreachableCode")
     public InteractionResult use(
         BlockState state,
@@ -60,9 +51,9 @@ public class EmberGrindstoneBlock extends BetterGrindstoneBlock implements IHamm
     @Override
     public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
-            (i, inventory, player) ->
-                new EmberGrindstoneMenu(i, inventory, ContainerLevelAccess.create(level, pos)),
-            CONTAINER_TITLE);
+            (i, inventory, player) -> new EmberGrindstoneMenu(i, inventory, ContainerLevelAccess.create(level, pos)),
+            EmberGrindstoneBlock.CONTAINER_TITLE
+        );
     }
 
     @Override
@@ -75,9 +66,10 @@ public class EmberGrindstoneBlock extends BetterGrindstoneBlock implements IHamm
         BlockState state,
         ServerLevel level,
         BlockPos pos,
-        RandomSource random) {
+        RandomSource random
+    ) {
         if (random.nextDouble() <= 0.5) {
-            tryAbsorbWater(level, pos);
+            this.tryAbsorbWater(level, pos);
         }
     }
 }

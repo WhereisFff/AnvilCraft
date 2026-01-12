@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.network.PowerGridRemovePacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -23,7 +22,7 @@ public class PowerGridManager {
     public PowerGridManager() {
     }
 
-    public synchronized void addComponent(@NotNull IPowerComponent component) {
+    public synchronized void addComponent(IPowerComponent component) {
         try {
             if (component.getCurrentLevel() == null) return;
             addQueue.offer(Map.entry(component.getCurrentLevel(), component), 500, TimeUnit.MICROSECONDS);

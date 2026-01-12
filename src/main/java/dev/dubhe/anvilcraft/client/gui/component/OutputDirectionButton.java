@@ -9,7 +9,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,7 +44,7 @@ public class OutputDirectionButton extends Button {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
         if (this.isHovered()) {
             List<Component> components = new ArrayList<>() {
@@ -70,22 +69,21 @@ public class OutputDirectionButton extends Button {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation location =
-            switch (direction) {
-                case UP -> UP;
-                case EAST -> EAST;
-                case WEST -> WEST;
-                case SOUTH -> SOUTH;
-                case NORTH -> NORTH;
-                default -> DOWN;
-            };
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        ResourceLocation location = switch (direction) {
+            case UP -> UP;
+            case EAST -> EAST;
+            case WEST -> WEST;
+            case SOUTH -> SOUTH;
+            case NORTH -> NORTH;
+            default -> DOWN;
+        };
         this.renderTexture(guiGraphics, location, this.getX(), this.getY(), 0, 0, 16, this.width, this.height, 16, 32);
     }
 
     public void renderTexture(
-        @NotNull GuiGraphics guiGraphics,
-        @NotNull ResourceLocation texture,
+        GuiGraphics guiGraphics,
+        ResourceLocation texture,
         int x,
         int y,
         int puOffset,
@@ -114,16 +112,15 @@ public class OutputDirectionButton extends Button {
      * @param direction 方向
      * @return 方向
      */
-    public Direction next(@NotNull Direction direction) {
-        Direction direction1 =
-            switch (direction) {
-                case UP -> Direction.DOWN;
-                case EAST -> Direction.WEST;
-                case WEST -> Direction.SOUTH;
-                case SOUTH -> Direction.NORTH;
-                case NORTH -> Direction.UP;
-                default -> Direction.EAST;
-            };
+    public Direction next(Direction direction) {
+        Direction direction1 = switch (direction) {
+            case UP -> Direction.DOWN;
+            case EAST -> Direction.WEST;
+            case WEST -> Direction.SOUTH;
+            case SOUTH -> Direction.NORTH;
+            case NORTH -> Direction.UP;
+            default -> Direction.EAST;
+        };
         return this.skip.contains(direction1) ? next(direction1) : direction1;
     }
 }

@@ -10,11 +10,18 @@
     }
   },
   "pattern": [
-    "AA ",
-    " B ",
-    " B "
+    "AA",
+    " B",
+    " B"
   ],
   "result": {
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "anvilcraft:harvest": 1
+        }
+      }
+    },
     "count": 1,
     "id": "anvilcraft:amethyst_hoe"
   }

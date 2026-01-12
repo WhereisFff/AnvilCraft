@@ -17,7 +17,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedList;
@@ -98,7 +97,7 @@ public class ChargeCollectorBlockEntity extends BlockEntity implements IPowerPro
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.inputCooldownCount = tag.getInt("InputCooldownCount");
         this.outputCooldownCount = tag.getInt("OutputCooldownCount");
@@ -111,7 +110,7 @@ public class ChargeCollectorBlockEntity extends BlockEntity implements IPowerPro
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag, HolderLookup.@NotNull Provider registries) {
+    public void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         tag.putInt("InputCooldownCount", this.inputCooldownCount);
         tag.putInt("OutputCooldownCount", this.outputCooldownCount);
@@ -131,7 +130,7 @@ public class ChargeCollectorBlockEntity extends BlockEntity implements IPowerPro
         }
         if (this.outputCooldownCount-- <= 1) {
             this.outputCooldownCount = OUTPUT_COOLDOWN;
-            int oldPower = this.power;
+            final int oldPower = this.power;
             this.power = 0;
             for (Integer charge : this.charges) {
                 this.power += charge;
@@ -175,6 +174,6 @@ public class ChargeCollectorBlockEntity extends BlockEntity implements IPowerPro
     }
 
     public void clientTick() {
-        this.rotation += (float) (this.getServerPower() * 0.03);
+        this.rotation += (float) (Math.log(this.getServerPower() + 1) * 2.5);
     }
 }

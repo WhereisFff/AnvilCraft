@@ -5,7 +5,7 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.anvilcraft.lib.util.CodecUtil;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -31,9 +31,8 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -94,7 +93,7 @@ public record MobTransformWithItemRecipe(
     }
 
     @Override
-    public ItemStack assemble(Input input, HolderLookup.@NotNull Provider provider) {
+    public ItemStack assemble(Input input, HolderLookup.Provider provider) {
         return Items.AIR.getDefaultInstance();
     }
 
@@ -104,7 +103,7 @@ public record MobTransformWithItemRecipe(
     }
 
     @Override
-    public ItemStack getResultItem(HolderLookup.@NotNull Provider provider) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return Items.AIR.getDefaultInstance();
     }
 
@@ -154,7 +153,7 @@ public record MobTransformWithItemRecipe(
         );
         if (newEntity == null) return null;
         if (newEntity instanceof Mob mob) {
-            //noinspection deprecation,OverrideOnly
+            // noinspection deprecation,OverrideOnly
             mob.finalizeSpawn(
                 level,
                 level.getCurrentDifficultyAt(newEntity.blockPosition()),

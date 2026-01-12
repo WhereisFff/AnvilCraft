@@ -4,13 +4,12 @@ import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.ItemDetectorMenu;
 import dev.dubhe.anvilcraft.inventory.container.FilterOnlyContainer;
 import lombok.Getter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -35,16 +34,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.Optional;
 
 import static dev.dubhe.anvilcraft.block.ItemDetectorBlock.POWERED;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider, IFilterBlockEntity, IHasAffectRange,
     IDiskCloneable {
 
@@ -82,6 +80,7 @@ public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider
                     if (value < 0 || value >= Mode.values().length) return;
                     ItemDetectorBlockEntity.this.setFilterMode(Mode.values()[value]);
                     break;
+                default:
             }
         }
 
@@ -159,7 +158,7 @@ public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider
             this.detectionRange,
             entity -> !entity.getItem().isEmpty()
         );
-        int output = getOutput(itemEntities);
+        int output = getOutput(itemEntities, level, this.detectionRange);
         if (output == this.outputSignal) return;
         this.outputSignal = output;
         if (blockState.getValue(POWERED) != (this.outputSignal > 0)) {
@@ -169,8 +168,11 @@ public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider
         ModBlocks.ITEM_DETECTOR.get().updateNeighborsInFront(level, pos, blockState);
     }
 
-    private int getOutput(List<ItemEntity> itemEntities) {
-        if (itemEntities.isEmpty()) return 0;
+    private int getOutput(List<ItemEntity> itemEntities, Level level, AABB aabb) {
+        Iterable<BlockPos> blocksInRange = BlockPos.betweenClosed(
+            Mth.floor(aabb.minX), Mth.floor(aabb.minY), Mth.floor(aabb.minZ),
+            Mth.floor(aabb.maxX) - 1, Mth.floor(aabb.maxY) - 1, Mth.floor(aabb.maxZ) - 1
+        );
         int minNonZeroOutput = 16;
         boolean canOutput = true;
         boolean hasFilter = false;
@@ -185,6 +187,7 @@ public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider
                     matchCount += itemEntity.getItem().getCount();
                 }
             }
+            for (BlockPos p : blocksInRange) matchCount += scanContainer(level, p, filterItem);
             int lerpedOutput = lerpOutput(matchCount, targetCount);
             if (lerpedOutput > 0) {
                 minNonZeroOutput = Math.min(minNonZeroOutput, lerpedOutput);
@@ -196,12 +199,23 @@ public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider
         int output = (canOutput && minNonZeroOutput <= 15) ? minNonZeroOutput : 0;
         if (!hasFilter) {
             int totalCount = 0;
-            for (ItemEntity itemEntity : itemEntities) {
-                totalCount += itemEntity.getItem().getCount();
-            }
+            for (ItemEntity itemEntity : itemEntities) totalCount += itemEntity.getItem().getCount();
+            for (BlockPos p : blocksInRange) totalCount += scanContainer(level, p, null);
             output = lerpOutput(totalCount, 1);
         }
         return output;
+    }
+
+    private int scanContainer(Level level, BlockPos pos, @Nullable Item targetItem) {
+        IItemHandler handler = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
+        if (handler == null) return 0;
+        int count = 0;
+        for (int i = 0; i < handler.getSlots(); i++) {
+            ItemStack stack = handler.getStackInSlot(i);
+            if (stack.isEmpty()) continue;
+            if (targetItem == null || stack.is(targetItem)) count += stack.getCount();
+        }
+        return count;
     }
 
     public void setFilterMode(Mode filterMode) {

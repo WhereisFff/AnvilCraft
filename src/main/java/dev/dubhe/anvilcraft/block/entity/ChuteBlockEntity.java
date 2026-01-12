@@ -1,11 +1,10 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.block.ChuteBlock;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.inventory.ChuteMenu;
 import lombok.Getter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
@@ -16,26 +15,21 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
 @Getter
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class ChuteBlockEntity extends BaseChuteBlockEntity {
     protected ChuteBlockEntity(BlockEntityType<? extends BlockEntity> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
     }
 
     @Override
-    protected boolean shouldSkipDirection(@NotNull Direction direction) {
+    protected boolean shouldSkipDirection(Direction direction) {
         return Direction.UP == direction;
     }
 
     @Override
-    protected boolean validateBlockState(@NotNull BlockState state) {
+    protected boolean validateBlockState(BlockState state) {
         return state.is(ModBlocks.CHUTE.get());
     }
 
@@ -67,13 +61,13 @@ public class ChuteBlockEntity extends BaseChuteBlockEntity {
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
+    public Component getDisplayName() {
         return Component.translatable("block.anvilcraft.chute");
     }
 
     @Nullable
     @Override
-    public AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
+    public AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         if (player.isSpectator()) return null;
         return new ChuteMenu(ModMenuTypes.CHUTE.get(), i, inventory, this);
     }

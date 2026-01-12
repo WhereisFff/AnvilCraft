@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.api.itemhandler;
 
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -40,7 +39,9 @@ public class PollableFilteredItemStackHandler extends FilteredItemStackHandler {
                 slot = index;
                 countInSlot = 0;
                 continue;
-            } else if (!ItemStack.isSameItemSameComponents(stackInSlot, stack)) continue;
+            } else if (!ItemStack.isSameItemSameComponents(stackInSlot, stack)) {
+                continue;
+            }
             int stackInSlotCount = stackInSlot.getCount();
             if (stackInSlotCount <= countInSlot && stackInSlotCount < this.getSlotLimit(index)) {
                 slot = index;
@@ -50,7 +51,7 @@ public class PollableFilteredItemStackHandler extends FilteredItemStackHandler {
         return slot;
     }
 
-    public boolean canCompletelyInsert(@NotNull List<ItemStack> items) {
+    public boolean canCompletelyInsert(List<ItemStack> items) {
         List<ItemStack> copyItems = items.stream().map(ItemStack::copy).toList();
         for (int slot = 0; slot < this.getSlots(); slot++) {
             for (ItemStack stack : copyItems) {
@@ -66,7 +67,7 @@ public class PollableFilteredItemStackHandler extends FilteredItemStackHandler {
         return copyItems.stream().allMatch(ItemStack::isEmpty);
     }
 
-    public ItemStack insertItemNoPolling(int slot, @NotNull ItemStack stack, boolean simulate) {
+    public ItemStack insertItemNoPolling(int slot, ItemStack stack, boolean simulate) {
         if (stack.isEmpty()) {
             return ItemStack.EMPTY;
         } else if (!super.isItemValid(slot, stack)) {

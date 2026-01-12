@@ -11,17 +11,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
  * 世界内配方构建器
- * <p>
- * 用于构建在世界中使用的铁砧配方，支持各种触发器、谓词和结果。
- * 可以设置配方的触发条件、前置条件、冲突条件和结果操作等。
- * </p>
+ *
+ * <p>用于构建在世界中使用的铁砧配方，支持各种触发器、谓词和结果。可以设置配方的触发条件、前置条件、冲突条件和结果操作等。</p>
  */
 @SuppressWarnings("unused")
 @EqualsAndHashCode(callSuper = true)
@@ -341,7 +338,7 @@ public class ExtendInWorldRecipeBuilder extends InWorldRecipeBuilder<ExtendInWor
      * @param builder ProduceHeat构建器
      * @return 当前构建器实例
      */
-    public ExtendInWorldRecipeBuilder produceHeat(ProduceHeat.@NotNull Builder builder) {
+    public ExtendInWorldRecipeBuilder produceHeat(ProduceHeat.Builder builder) {
         this.out(builder.build());
         return this;
     }

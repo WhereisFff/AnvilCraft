@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.block.sliding;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
+import dev.dubhe.anvilcraft.entity.MagnetizedNodeEntity;
 import dev.dubhe.anvilcraft.entity.SlidingBlockEntity;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.Entity;
@@ -22,21 +22,18 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3f;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.List;
 import java.util.stream.Stream;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable {
     public static final List<Direction> SIGNAL_SOURCE_SIDES = List.of(
         Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
@@ -85,6 +82,8 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
             case SOUTH -> z += searchForward ? 1 : -1;
             case EAST -> x += searchForward ? 1 : -1;
             case WEST -> x -= searchForward ? 1 : -1;
+            default -> {
+            }
         }
 
         return this.isSameRailWithPower(level, new BlockPos(x, y, z), searchForward, 0, facing);
@@ -102,6 +101,8 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
             case SOUTH -> z += searchForward ? 1 : -1;
             case EAST -> x += searchForward ? 1 : -1;
             case WEST -> x -= searchForward ? 1 : -1;
+            default -> {
+            }
         }
 
         return this.isSameRailWithPower(level, new BlockPos(x, y, z), searchForward, recursionCount, facing);
@@ -211,6 +212,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (!level.getEntitiesOfClass(MagnetizedNodeEntity.class, new AABB(pos)).isEmpty()) return;
         if (entity.getType() != EntityType.ITEM && !(entity instanceof LivingEntity)) return;
         boolean isSneakPlayer = entity instanceof Player player && player.isShiftKeyDown();
         if (!state.getValue(POWERED)) {
@@ -232,7 +234,7 @@ public class PoweredSlidingRailBlock extends BaseSlidingRailBlock implements IHa
     }
 
     @Override
-    public boolean change(Player player, BlockPos blockPos, @NotNull Level level, ItemStack anvilHammer) {
+    public boolean change(Player player, BlockPos blockPos, Level level, ItemStack anvilHammer) {
         BlockState bs = level.getBlockState(blockPos);
         level.setBlockAndUpdate(blockPos, bs.cycle(FACING));
         return true;

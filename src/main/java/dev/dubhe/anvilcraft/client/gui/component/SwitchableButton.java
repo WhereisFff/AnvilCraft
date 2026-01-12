@@ -9,9 +9,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -19,7 +17,6 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-@ParametersAreNonnullByDefault
 public class SwitchableButton extends Button {
     public static final Button.OnPress DO_NOTHING = OnPress::doNothing;
 
@@ -30,41 +27,44 @@ public class SwitchableButton extends Button {
     private int current = 0;
 
     public SwitchableButton(
-        int pX, int pY, int pWidth, int pHeight,
-        List<ResourceLocation> textures, int yDiffTex, int textureWidth, int textureHeight,
-        OnPress pOnPress
+        int x, int y, int width, int height,
+        List<ResourceLocation> textures, int texYDiff, int textureWidth, int textureHeight,
+        OnPress onPress
     ) {
         this(
-            pX, pY, pWidth, pHeight,
+            x, y, width, height,
             Collections2.transform(
                 textures,
                 texture -> new TexturedButton(
-                    pX, pY, pWidth, pHeight, texture, yDiffTex, textureWidth, textureHeight, DO_NOTHING)),
-            pOnPress,
+                    x, y, width, height, texture, texYDiff, textureWidth, textureHeight, DO_NOTHING
+                )
+            ),
+            onPress,
             List.of()
         );
     }
 
     public SwitchableButton(
-        int pX, int pY, int pWidth, int pHeight,
-        List<ResourceLocation> textures, int yDiffTex, int textureWidth, int textureHeight,
-        OnPress pOnPress, List<Component> message
+        int x, int y, int width, int height,
+        List<ResourceLocation> textures, int texYDiff, int textureWidth, int textureHeight,
+        OnPress onPress, List<Component> message
     ) {
         this(
-            pX, pY, pWidth, pHeight,
+            x, y, width, height,
             Collections2.transform(
                 textures,
                 texture -> new TexturedButton(
-                    pX, pY, pWidth, pHeight, texture, yDiffTex, textureWidth, textureHeight, DO_NOTHING)),
-            pOnPress,
-            message
+                    x, y, width, height, texture, texYDiff, textureWidth, textureHeight, DO_NOTHING
+                )
+            ),
+            onPress, message
         );
     }
 
     public SwitchableButton(
-        int pX, int pY, int pWidth, int pHeight, Collection<Button> buttons, OnPress pOnPress, List<Component> message
+        int x, int y, int width, int height, Collection<Button> buttons, OnPress onPress, List<Component> message
     ) {
-        super(pX, pY, pWidth, pHeight, Component.empty(), pOnPress, DEFAULT_NARRATION);
+        super(x, y, width, height, Component.empty(), onPress, DEFAULT_NARRATION);
         this.message = message;
         this.switchables.addAll(buttons);
     }
@@ -100,10 +100,17 @@ public class SwitchableButton extends Button {
     }
 
     protected void onPress(int button) {
-        if (button == 0) this.current += 1;
-        else if (button == 1) this.current -= 1;
-        if (this.current < 0) this.current = this.switchables.size() - 1;
-        else if (this.current >= this.switchables.size()) this.current = 0;
+        if (button == 0) {
+            this.current += 1;
+        } else if (button == 1) {
+            this.current -= 1;
+        }
+
+        if (this.current < 0) {
+            this.current = this.switchables.size() - 1;
+        } else if (this.current >= this.switchables.size()) {
+            this.current = 0;
+        }
 
         ((OnPress) this.onPress).onPress(this, this.current);
     }
@@ -118,7 +125,7 @@ public class SwitchableButton extends Button {
         return button == 0 || button == 1;
     }
 
-    public interface OnPress extends Button.OnPress, Consumer<Button>, BiConsumer<Button, @NotNull Integer> {
+    public interface OnPress extends Button.OnPress, Consumer<Button>, BiConsumer<Button, Integer> {
         void onPress(Button button, int index);
 
         @Override

@@ -10,13 +10,11 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 
 /**
  * 简单的炼药锅条件
- * <p>
- * 该类用于定义配方中对炼药锅的要求，包括所需流体、消耗量和转换后的流体
- * </p>
+ *
+ * <p>该类用于定义配方中对炼药锅的要求，包括所需流体、消耗量和转换后的流体</p>
  *
  * @param fluid     流体ID
  * @param consume   消耗量（负数表示产生）
@@ -96,7 +94,7 @@ public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLoc
      *
      * @return 构建器实例
      */
-    public static @NotNull Builder empty() {
+    public static Builder empty() {
         return Builder.empty();
     }
 
@@ -106,7 +104,7 @@ public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLoc
      * @param fluid 流体ID
      * @return 构建器实例
      */
-    public static @NotNull Builder fluid(ResourceLocation fluid) {
+    public static Builder fluid(ResourceLocation fluid) {
         return Builder.of(fluid);
     }
 
@@ -123,7 +121,7 @@ public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLoc
          *
          * @return 构建器实例
          */
-        public static @NotNull Builder empty() {
+        public static Builder empty() {
             return new Builder();
         }
 
@@ -133,7 +131,7 @@ public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLoc
          * @param fluid 流体ID
          * @return 构建器实例
          */
-        public static @NotNull Builder of(ResourceLocation fluid) {
+        public static Builder of(ResourceLocation fluid) {
             Builder builder = new Builder();
             builder.fluid = fluid;
             return builder;
@@ -145,7 +143,7 @@ public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLoc
          * @param fluid 流体ID
          * @return 构建器实例
          */
-        public @NotNull Builder fluid(ResourceLocation fluid) {
+        public Builder fluid(ResourceLocation fluid) {
             this.fluid = fluid;
             return this;
         }
@@ -156,7 +154,7 @@ public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLoc
          * @param transform 转换后的流体ID
          * @return 构建器实例
          */
-        public @NotNull Builder transform(ResourceLocation transform) {
+        public Builder transform(ResourceLocation transform) {
             this.transform = transform;
             return this;
         }

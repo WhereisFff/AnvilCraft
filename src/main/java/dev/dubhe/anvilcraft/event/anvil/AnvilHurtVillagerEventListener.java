@@ -20,7 +20,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class AnvilHurtVillagerEventListener {
@@ -30,18 +29,19 @@ public class AnvilHurtVillagerEventListener {
      * @param event 铁砧伤害实体事件
      */
     @SubscribeEvent
-    public static void onAnvilHurtEntity(@NotNull AnvilEvent.HurtEntity event) {
+    public static void onAnvilHurtEntity(AnvilEvent.HurtEntity event) {
         Entity entity = event.getHurtedEntity();
         Level level = event.getLevel();
         if (level.isClientSide()) return;
         if (entity instanceof Villager villager) {
-            RandomSource random = level.random;
-            VillagerData villageData = villager.getVillagerData();
+            final RandomSource random = level.random;
 
             villager.releasePoi(MemoryModuleType.HOME);
             villager.releasePoi(MemoryModuleType.JOB_SITE);
             villager.releasePoi(MemoryModuleType.POTENTIAL_JOB_SITE);
             villager.releasePoi(MemoryModuleType.MEETING_POINT);
+
+            VillagerData villageData = villager.getVillagerData();
 
             if (villageData.getProfession() == VillagerProfession.NITWIT) {
                 return;
@@ -56,8 +56,8 @@ public class AnvilHurtVillagerEventListener {
             villager.setVillagerData(villageData);
         }
         if (entity instanceof WanderingTrader trader) {
-            BlockPos pos = event.getPos();
-            VillagerType type = VillagerType.byBiome(level.getBiome(pos));
+            final BlockPos pos = event.getPos();
+            final VillagerType type = VillagerType.byBiome(level.getBiome(pos));
             VillagerProfession profession = VillagerProfession.NONE;
             RandomSource random = level.random;
             double chance = random.nextDouble();
@@ -66,7 +66,6 @@ public class AnvilHurtVillagerEventListener {
             } else if (chance < 0.25) {
                 profession = VillagerProfession.FARMER;
             }
-            VillagerData villageData = new VillagerData(type, profession, 1);
             Villager villager = new Villager(EntityType.VILLAGER, level);
             villager.setPos(trader.position());
             villager.setPose(trader.getPose());
@@ -74,6 +73,7 @@ public class AnvilHurtVillagerEventListener {
             villager.setYRot(trader.getYRot());
             villager.setYHeadRot(trader.getYHeadRot());
             MerchantOffers offers = new MerchantOffers();
+            VillagerData villageData = new VillagerData(type, profession, 1);
             if (profession == VillagerProfession.FARMER) {
                 villager.setVillagerXp(250);
                 villageData = villageData.setLevel(5);

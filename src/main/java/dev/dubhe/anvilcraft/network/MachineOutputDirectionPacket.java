@@ -15,7 +15,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import org.jetbrains.annotations.NotNull;
 
 @Getter
 public class MachineOutputDirectionPacket implements CustomPacketPayload {
@@ -35,17 +34,14 @@ public class MachineOutputDirectionPacket implements CustomPacketPayload {
         this.direction = direction;
     }
 
-    public MachineOutputDirectionPacket(@NotNull FriendlyByteBuf buf) {
+    public MachineOutputDirectionPacket(FriendlyByteBuf buf) {
         this(buf.readEnum(Direction.class));
     }
 
-    public void encode(@NotNull RegistryFriendlyByteBuf buf) {
+    public void encode(RegistryFriendlyByteBuf buf) {
         buf.writeEnum(this.getDirection());
     }
 
-    /**
-     *
-     */
     public static void serverHandler(MachineOutputDirectionPacket data, IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {
@@ -57,9 +53,6 @@ public class MachineOutputDirectionPacket implements CustomPacketPayload {
         });
     }
 
-    /**
-     *
-     */
     public static void clientHandler(MachineOutputDirectionPacket data, IPayloadContext context) {
         Minecraft client = Minecraft.getInstance();
         context.enqueueWork(() -> {

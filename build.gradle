@@ -15,6 +15,7 @@ else {
     if (System.getenv("PR_BUILD") != 'false') buildType = 'pr'
     buildNumber = System.getenv("GITHUB_RUN_NUMBER")
 }
+if (System.getenv("HOTFIX_BUILD") != 'false') buildType = 'hotfix'
 def envVersion = System.getenv("GITHUB_REF")
 if (envVersion != null && envVersion.startsWith("refs/tags/")) {
     version = envVersion.substring(envVersion.lastIndexOf('/') + 1)

@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.api.RipeningManager;
 import dev.dubhe.anvilcraft.api.hammer.HammerManager;
 import dev.dubhe.anvilcraft.api.heat.HeaterManager;
 import dev.dubhe.anvilcraft.api.heat.collector.HeatCollectorManager;
@@ -16,7 +15,6 @@ import net.neoforged.neoforge.event.server.ServerStartedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppedEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
-import org.jetbrains.annotations.NotNull;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class ServerLifecycleEventListener {
@@ -27,30 +25,21 @@ public class ServerLifecycleEventListener {
         LevelLoadManager.notifyServerStarted();
     }
 
-    /**
-     * @param event 服务器刻事件
-     */
     @SubscribeEvent
-    public static void onTick(@NotNull ServerTickEvent.Pre event) {
+    public static void onTick(ServerTickEvent.Pre event) {
         PowerGrid.tickGrid();
         HeaterManager.tickAll();
         HeatCollectorManager.tickAll();
         RandomChuckTickLoadManager.tick();
     }
 
-    /**
-     * @param event 服务器关闭事件
-     */
     @SubscribeEvent
-    public static void onServerStopped(@NotNull ServerStoppedEvent event) {
+    public static void onServerStopped(ServerStoppedEvent event) {
         PowerGrid.isServerClosing = false;
         PowerGrid.clear();
         RecipeCaches.unload();
     }
 
-    /**
-     * @param event 服务器关闭事件
-     */
     @SubscribeEvent
     public static void onServerStopping(ServerStoppingEvent event) {
         PowerGrid.isServerClosing = true;

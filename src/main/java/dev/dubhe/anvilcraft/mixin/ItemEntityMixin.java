@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.dubhe.anvilcraft.api.event.ItemEntityEvent;
 import dev.dubhe.anvilcraft.api.injection.entity.IItemEntityExtension;
 import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
+import dev.dubhe.anvilcraft.block.MagnetBlock;
 import dev.dubhe.anvilcraft.block.entity.ItemCollectorBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
@@ -97,30 +98,6 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
             ));
         }
         this.anvilcraft$blockPos = blockPos;
-    }
-
-    @WrapOperation(
-        method = "tick",
-        at = @At(
-            value = "INVOKE",
-            target =
-                "Lnet/minecraft/world/entity/item/ItemEntity;"
-                + "getDeltaMovement()Lnet/minecraft/world/phys/Vec3;"
-        )
-    )
-    private Vec3 slowDown(ItemEntity instance, Operation<Vec3> original) {
-        Vec3 vec3 = original.call(instance);
-        double dy = 1;
-        if (this.getItem().is(ModItemTags.LEVITATIONALS)) dy *= -0.005;
-        if (this.level().getBlockState(this.blockPosition()).is(ModBlocks.HOLLOW_MAGNET_BLOCK)) dy *= 0.2;
-        if (this.getItem().is(ModItems.NEGATIVE_MATTER_NUGGET)
-            || this.getItem().is(ModItems.NEGATIVE_MATTER)
-            || this.getItem().is(ModBlocks.NEGATIVE_MATTER_BLOCK.asItem())) {
-            if (this.position().y <= this.level().getMaxBuildHeight()) {
-                if (vec3.y < 0) dy *= -1;
-            }
-        }
-        return new Vec3(vec3.x, vec3.y * dy, vec3.z);
     }
 
     @Inject(method = "tick", at = @At(value = "HEAD"))
@@ -225,7 +202,7 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         this.xo = this.getX();
         this.yo = this.getY();
         this.zo = this.getZ();
-        Vec3 vec3 = this.getDeltaMovement();
+        final Vec3 vec3 = this.getDeltaMovement();
         this.applyGravity();
         this.noPhysics = false;
         if (
@@ -282,19 +259,17 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         return super.getPistonPushReaction();
     }
 
-    @SuppressWarnings(
-        {
-            "unused",
-            "SameParameterValue",
-            "SuspiciousNameCombination",
-            "deprecation"
-        }
-    )
+    @SuppressWarnings({
+        "unused",
+        "SameParameterValue",
+        "SuspiciousNameCombination",
+        "deprecation"
+    })
     @Unique
     private void anvilcraft$neutroniumMove(MoverType moverType, Vec3 motion) {
 
         this.level().getProfiler().push("move");
-        //代替原版move方法中的collide调用
+        // 代替原版move方法中的collide调用
         AABB box = this.getBoundingBox().expandTowards(motion);
         int x1 = Mth.floor(box.minX - 1.0E-7) - 1;
         int x2 = Mth.floor(box.maxX + 1.0E-7) + 1;
@@ -309,7 +284,7 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
                 for (int z = z1; z < z2; z++) {
                     pos.set(x, y, z);
                     BlockState blockState = this.level().getBlockState(pos);
-                    //只检测带有特定标签的方块的碰撞
+                    // 只检测带有特定标签的方块的碰撞
                     if (blockState.is(ModBlockTags.NEUTRONIUM_CANNOT_PASS_THROUGH)) {
                         shapes.add(blockState.getCollisionShape(this.level(), pos).move(x, y, z));
                     }
@@ -361,35 +336,15 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         anvilcraft$mergeCooldown = cooldown;
     }
 
-    @Inject(
-        method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V",
-        at = @At("TAIL")
-    )
-    public void itemCollectorPoach0(CallbackInfo ci) {
-        this.anvilcraft$poach();
-    }
-
-    @Inject(
-        method = "<init>(Lnet/minecraft/world/level/Level;DDDLnet/minecraft/world/item/ItemStack;DDD)V",
-        at = @At("TAIL")
-    )
-    public void itemCollectorPoach1(CallbackInfo ci) {
-        this.anvilcraft$poach();
-    }
-
-    @Inject(
-        method = "<init>(Lnet/minecraft/world/entity/item/ItemEntity;)V",
-        at = @At("TAIL")
-    )
-    public void itemCollectorPoach2(CallbackInfo ci) {
-        this.anvilcraft$poach();
-    }
-
     @Unique
     public boolean anvilcraft$discarded = false;
 
     @Unique
-    private void anvilcraft$poach() {
+    public boolean anvilcraft$shouldPoach = true;
+
+    @Unique
+    public void anvilcraft$poach() {
+        if (!anvilcraft$shouldPoach) return;
         Level level = this.level();
         if (level.isClientSide) return;
         Map<ChunkPos, List<ItemCollectorBlockEntity>> map = ItemCollectorBlockEntity.POACHING_COLLECTOR_MAP.get(level);
@@ -421,9 +376,159 @@ abstract class ItemEntityMixin extends Entity implements IItemEntityExtension {
         }
     }
 
+    @Unique private static final Map<String, Double> MATERIAL_MAP = new HashMap<>();
+    @Unique private static final Map<String, String> SPECIAL_MAP = new HashMap<>();
+    @Unique private static final List<String> SPECIAL_BLACKLIST = List.of("spawn_egg", "waxed");
+
+    static {
+        // 1. 定义材质关键词及其减速 (数值越小越慢)
+        MATERIAL_MAP.put("iron", 0.50);
+        MATERIAL_MAP.put("magnet", 0.50);
+        MATERIAL_MAP.put("steel", 0.75);
+
+        MATERIAL_MAP.put("silver", 0.25);
+        MATERIAL_MAP.put("copper", 0.27);
+        MATERIAL_MAP.put("gold", 0.28);
+        MATERIAL_MAP.put("netherite", 0.30);
+        MATERIAL_MAP.put("ember", 0.30);
+        MATERIAL_MAP.put("aluminum", 0.30);
+        MATERIAL_MAP.put("tungsten", 0.38);
+        MATERIAL_MAP.put("zinc", 0.40);
+        MATERIAL_MAP.put("brass", 0.42);
+        MATERIAL_MAP.put("bronze", 0.45);
+        MATERIAL_MAP.put("royal", 0.50);
+        MATERIAL_MAP.put("tin", 0.55);
+        MATERIAL_MAP.put("lead", 0.65);
+        MATERIAL_MAP.put("uranium", 0.80);
+        MATERIAL_MAP.put("titanium", 0.88);
+        MATERIAL_MAP.put("frost_metal", 0.90);
+        MATERIAL_MAP.put("plutonium", 0.99);
+        // 在这里继续添加材料...
+
+        // 2. 将不含关键词的物品映射到上述材质
+        SPECIAL_MAP.put("lightning_rod", "copper");
+        SPECIAL_MAP.put("bucket", "iron");
+        SPECIAL_MAP.put("hopper", "iron");
+        SPECIAL_MAP.put("shears", "iron");
+        SPECIAL_MAP.put("anvil", "iron");
+        SPECIAL_MAP.put("minecart", "iron");
+        SPECIAL_MAP.put("tripwire_hook", "iron");
+        SPECIAL_MAP.put("chain", "iron");
+        SPECIAL_MAP.put("chute", "iron");
+        SPECIAL_MAP.put("compass", "iron");
+        // 在这里继续添加特判...
+    }
+
+    @SuppressWarnings("checkstyle:NeedBraces")
+    @Unique
+    private String anvilcraft$getMaterialKey(ItemStack stack) {
+        String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(stack.getItem()).getPath();
+        for (String black : SPECIAL_BLACKLIST) if (id.contains(black)) return null; // 黑名单检查
+        if (SPECIAL_MAP.containsKey(id)) return SPECIAL_MAP.get(id); // 别名/特判检查
+        for (String key : MATERIAL_MAP.keySet()) { // 关键词匹配
+            if (id.contains(key)) return key;
+        }
+        return null;
+    }
+
+    @Unique
+    private boolean anvilcraft$isMagnetBlock(BlockState state) {
+        return state.is(ModBlocks.MAGNET_BLOCK.get())
+               || state.is(ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get())
+               || state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get());
+    }
+
+    @Unique
+    private boolean anvilcraft$isTouchingMagnet() {
+        AABB box = this.getBoundingBox().inflate(0.01);
+        return BlockPos.betweenClosedStream(box).anyMatch(p -> {
+            BlockState s = this.level().getBlockState(p);
+            return anvilcraft$isMagnetBlock(s)
+                   && !s.getValue(MagnetBlock.LIT)
+                   && !s.getCollisionShape(this.level(), p).isEmpty()
+                   && s.getCollisionShape(this.level(), p).toAabbs().stream().anyMatch(b -> b.move(p).intersects(box));
+        });
+    }
+
+    @Unique
+    private Vec3 anvilcraft$magnetAttraction() {
+        Vec3 center = this.getBoundingBox().getCenter();
+        AABB area = this.getBoundingBox().inflate(0.5);
+        Object[] result = {null, Double.MAX_VALUE};
+        BlockPos.betweenClosedStream(area).forEach(pos -> {
+            BlockState state = this.level().getBlockState(pos);
+            if (!anvilcraft$isMagnetBlock(state)) return;
+            for (AABB box : state.getCollisionShape(this.level(), pos).toAabbs()) {
+                AABB wb = box.move(pos);
+                Vec3 p = new Vec3(
+                    Mth.clamp(center.x, wb.minX, wb.maxX),
+                    Mth.clamp(center.y, wb.minY, wb.maxY),
+                    Mth.clamp(center.z, wb.minZ, wb.maxZ)
+                );
+                double dist = center.distanceToSqr(p);
+                if (dist < (double) result[1]) {
+                    result[1] = dist;
+                    result[0] = p;
+                }
+            }
+        });
+        return result[0] != null && (double) result[1] > 1.0E-7 ? ((Vec3) result[0]).subtract(center).normalize().scale(0.05) : Vec3.ZERO;
+    }
+
+    @SuppressWarnings({"checkstyle:NeedBraces", "checkstyle:LeftCurly", "checkstyle:OneStatementPerLine"})
+    @Inject(method = "tick", at = @At("HEAD"), cancellable = true)
+    private void anvilcraft$magnetLogic(CallbackInfo ci) {
+        if (this.isRemoved()) return;
+
+        BlockPos pos = this.blockPosition();
+        BlockState state = this.level().getBlockState(pos);
+        ItemStack stack = this.getItem();
+        String matKey = anvilcraft$getMaterialKey(stack);
+        // 不是金属直接跳过
+        if (matKey == null) return;
+        // 1. 空芯磁铁块转化
+        if ("iron".equals(matKey) || "magnet".equals(matKey)) {
+            if (!this.level().isClientSide && state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get())
+                && stack.getDescriptionId().contains("ingot")
+                && !state.getValue(MagnetBlock.LIT)) {
+
+                Block targetBlock = null;
+                if ("iron".equals(matKey)) targetBlock = ModBlocks.FERRITE_CORE_MAGNET_BLOCK.get(); // 铁锭 -> 铁芯磁铁块
+                else if ("magnet".equals(matKey)) targetBlock = ModBlocks.MAGNET_BLOCK.get(); // 磁铁锭 -> 磁铁块
+
+                if (targetBlock != null) {
+                    this.level().setBlockAndUpdate(pos, targetBlock.defaultBlockState());
+                    stack.shrink(1);
+                    if (stack.isEmpty()) { this.discard(); ci.cancel(); }
+                    return;
+                }
+            }
+            // 2. 吸铁石就要吸铁
+            if (anvilcraft$isTouchingMagnet()) {
+                this.setDeltaMovement(Vec3.ZERO);
+                this.setNoGravity(true);
+                this.setOnGround(true);
+                return;
+            } else {
+                if (this.isNoGravity() && !stack.has(ModComponents.ETERNAL)) this.setNoGravity(false);
+                if (anvilcraft$magnetAttraction().lengthSqr() > 0) this.addDeltaMovement(anvilcraft$magnetAttraction());
+            }
+        }
+        // 3. 涡流减速
+        if (state.is(ModBlocks.HOLLOW_MAGNET_BLOCK.get()) && !state.getValue(MagnetBlock.LIT)) {
+            Double speedFactor = MATERIAL_MAP.get(matKey);
+            if (speedFactor != null) this.setDeltaMovement(this.getDeltaMovement().scale(speedFactor));
+        }
+    }
+
     @Override
     public boolean anvilcraft$getDiscarded() {
         return anvilcraft$discarded;
+    }
+
+    @Override
+    public void anvilcraft$setShouldPoach(boolean shouldPoach) {
+        this.anvilcraft$shouldPoach = shouldPoach;
     }
 
     @Override

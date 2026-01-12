@@ -4,11 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.inventory.IFilterMenu;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
-import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -29,11 +29,10 @@ import java.util.function.BiFunction;
 public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> extends IGhostIngredientScreen {
     ResourceLocation DISABLED_SLOT = AnvilCraft.of("textures/gui/container/machine/disabled_slot.png");
 
-    Component SCROLL_WHEEL_TO_CHANGE_STACK_LIMIT_TOOLTIP =
-        Component.translatable("screen.anvilcraft.filter.scroll_wheel_to_change_stack_limit")
+    Component SCROLL_WHEEL_TO_CHANGE_STACK_LIMIT_TOOLTIP = Component.translatable(
+        "screen.anvilcraft.filter.scroll_wheel_to_change_stack_limit")
             .withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
-    Component SHIFT_TO_SCROLL_FASTER_TOOLTIP =
-        Component.translatable("screen.anvilcraft.filter.shift_to_scroll_faster")
+    Component SHIFT_TO_SCROLL_FASTER_TOOLTIP = Component.translatable("screen.anvilcraft.filter.shift_to_scroll_faster")
             .withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
 
     T getFilterMenu();

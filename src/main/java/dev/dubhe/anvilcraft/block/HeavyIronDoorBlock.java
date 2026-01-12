@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -21,13 +20,8 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class HeavyIronDoorBlock extends DoorBlock implements IHammerChangeable {
     public HeavyIronDoorBlock(Properties properties) {
         super(BlockSetType.IRON, properties);
@@ -52,7 +46,15 @@ public class HeavyIronDoorBlock extends DoorBlock implements IHammerChangeable {
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
+    ) {
         if (stack.getItem() instanceof AnvilHammerItem) {
             state = state.cycle(OPEN);
             level.setBlock(pos, state, 10);
@@ -106,7 +108,7 @@ public class HeavyIronDoorBlock extends DoorBlock implements IHammerChangeable {
     }
 
     @Override
-    public boolean change(Player player, BlockPos pos, @NotNull Level level, ItemStack anvilHammer) {
+    public boolean change(Player player, BlockPos pos, Level level, ItemStack anvilHammer) {
         BlockState state = level.getBlockState(pos).cycle(OPEN);
         level.setBlock(pos, state, 10);
         level.playSound(

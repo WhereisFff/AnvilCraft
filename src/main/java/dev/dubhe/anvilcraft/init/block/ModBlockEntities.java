@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.block.entity.ActivatorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActiveSilencerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.BlackHoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChuteBlockEntity;
@@ -26,6 +27,7 @@ import dev.dubhe.anvilcraft.block.entity.LoadMonitorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MagneticChuteBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MineralFountainBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MobAmberBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.NeutronIrradiatorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.OverseerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PlasmaJetsBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PowerConverterBlockEntity;
@@ -40,6 +42,7 @@ import dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.TeslaTowerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.TransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.VoidEnergyCollectorBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.WhiteHoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.GlowingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatedBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.IncandescentBlockEntity;
@@ -200,6 +203,16 @@ public class ModBlockEntities {
         SpaceOvercompressorBlockEntity::createBlockEntity
     ).validBlocks(ModBlocks.SPACE_OVERCOMPRESSOR).register();
 
+    public static final BlockEntityEntry<BlackHoleBlockEntity> BLACK_HOLE = REGISTRATE.blockEntity(
+        "black_hole",
+        BlackHoleBlockEntity::createBlockEntity
+    ).validBlocks(ModBlocks.BLACK_HOLE).register();
+
+    public static final BlockEntityEntry<WhiteHoleBlockEntity> WHITE_HOLE = REGISTRATE.blockEntity(
+        "white_hole",
+        WhiteHoleBlockEntity::createBlockEntity
+    ).validBlocks(ModBlocks.WHITE_HOLE).register();
+
     public static final BlockEntityEntry<TimeCountedPressurePlateBlockEntity> TIME_COUNTED_PRESSURE_PLATE = REGISTRATE.blockEntity(
         "time_counted_pressure_plate",
         TimeCountedPressurePlateBlockEntity::createBlockEntity
@@ -284,6 +297,11 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<LaserReceiverBlockEntity> LASER_RECEIVER = REGISTRATE
         .blockEntity("laser_receiver", LaserReceiverBlockEntity::new)
         .validBlocks(ModBlocks.LASER_RECEIVER)
+        .register();
+
+    public static final BlockEntityEntry<NeutronIrradiatorBlockEntity> NEUTRON_IRRADIATOR = REGISTRATE
+        .blockEntity("neutron_irradiator", NeutronIrradiatorBlockEntity::createBlockEntity)
+        .validBlocks(ModBlocks.NEUTRON_IRRADIATOR)
         .register();
 
     public static void register() {

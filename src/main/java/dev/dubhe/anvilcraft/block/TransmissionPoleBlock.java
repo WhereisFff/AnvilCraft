@@ -7,7 +7,6 @@ import dev.dubhe.anvilcraft.block.entity.TransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical3PartHalf;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -27,13 +26,8 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class TransmissionPoleBlock extends SimpleMultiPartBlock<Vertical3PartHalf>
     implements IHammerRemovable, IHasMultiBlock, EntityBlock {
     public static final EnumProperty<Vertical3PartHalf> HALF = EnumProperty.create("half", Vertical3PartHalf.class);
@@ -47,9 +41,6 @@ public class TransmissionPoleBlock extends SimpleMultiPartBlock<Vertical3PartHal
     public static final VoxelShape TRANSMISSION_POLE_BASE =
         Shapes.or(Block.box(3, 4, 3, 13, 10, 13), Block.box(0, 0, 0, 16, 4, 16), Block.box(6, 10, 6, 10, 16, 10));
 
-    /**
-     * @param properties 属性
-     */
     public TransmissionPoleBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition
@@ -71,7 +62,7 @@ public class TransmissionPoleBlock extends SimpleMultiPartBlock<Vertical3PartHal
 
     @Override
     @Nullable
-    public BlockState getPlacementState(@NotNull BlockPlaceContext context) {
+    public BlockState getPlacementState(BlockPlaceContext context) {
         Level level = context.getLevel();
         BlockPos pos = context.getClickedPos();
         IPowerComponent.Switch sw =
@@ -83,7 +74,7 @@ public class TransmissionPoleBlock extends SimpleMultiPartBlock<Vertical3PartHal
     }
 
     @Override
-    protected void createBlockStateDefinition(@NotNull StateDefinition.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(HALF).add(OVERLOAD).add(SWITCH);
     }
 
@@ -110,13 +101,13 @@ public class TransmissionPoleBlock extends SimpleMultiPartBlock<Vertical3PartHal
     }
 
     @Override
-    protected BlockState placedState(@NotNull Vertical3PartHalf part, BlockState state) {
+    public BlockState placedState(Vertical3PartHalf part, BlockState state) {
         return super.placedState(part, state).setValue(SWITCH, IPowerComponent.Switch.ON);
     }
 
     @Nullable
     @Override
-    public BlockEntity newBlockEntity(@NotNull BlockPos pos, BlockState state) {
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return new TransmissionPoleBlockEntity(pos, state);
     }
 
@@ -161,10 +152,10 @@ public class TransmissionPoleBlock extends SimpleMultiPartBlock<Vertical3PartHal
     }
 
     @Override
-    public void onPlace(@NotNull Level level, BlockPos pos, BlockState state) {
+    public void onPlace(Level level, BlockPos pos, BlockState state) {
     }
 
     @Override
-    public void onRemove(@NotNull Level level, BlockPos pos, BlockState state) {
+    public void onRemove(Level level, BlockPos pos, BlockState state) {
     }
 }

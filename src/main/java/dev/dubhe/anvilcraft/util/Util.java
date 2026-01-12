@@ -7,18 +7,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.neoforged.fml.ModList;
-import org.jetbrains.annotations.NotNull;
+import net.neoforged.fml.util.thread.SidedThreadGroups;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Random;
 import java.util.function.Consumer;
 import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
@@ -42,15 +39,14 @@ public class Util {
     };
 
     /**
+     * 判断给定的 {@code modId} 对应的模组是否加载
+     *
      * @return 模组是否加载
      */
-    public static boolean isLoaded(String modid) {
-        return ModList.get().isLoaded(modid);
+    public static boolean isLoaded(String modId) {
+        return ModList.get().isLoaded(modId);
     }
 
-    /**
-     *
-     */
     public static Function<InteractionResult, ItemInteractionResult> interactionResultConverter() {
         return it -> switch (it) {
             case SUCCESS, SUCCESS_NO_ITEM_USED -> ItemInteractionResult.SUCCESS;
@@ -66,15 +62,15 @@ public class Util {
         return Optional.of(collection);
     }
 
-    public static @NotNull String generateUniqueRecipeSuffix() {
+    public static String generateUniqueRecipeSuffix() {
         return "_generated_" + generateRandomString(8, true, false);
     }
 
-    public static @NotNull String generateRandomString(int len) {
+    public static String generateRandomString(int len) {
         return generateRandomString(len, true, true);
     }
 
-    public static @NotNull String generateRandomString(int len, boolean hasInteger, boolean hasUpperLetter) {
+    public static String generateRandomString(int len, boolean hasInteger, boolean hasUpperLetter) {
         String ch = "abcdefghijklmnopqrstuvwxyz" + (hasUpperLetter ? "ABCDEFGHIGKLMNOPQRSTUVWXYZ" : "")
             + (hasInteger ? "0123456789" : "");
         StringBuilder stringBuffer = new StringBuilder();
@@ -91,8 +87,7 @@ public class Util {
     }
 
     public static boolean findCaller(String caller) {
-        return STACK_WALKER.walk(
-            it -> it.anyMatch(frame -> frame.getMethodName().equals(caller)));
+        return STACK_WALKER.walk(it -> it.anyMatch(frame -> frame.getMethodName().equals(caller)));
     }
 
     public static <K, V> Collector<Map.Entry<K, V>, ?, Map<K, V>> toMapCollector() {
@@ -126,37 +121,12 @@ public class Util {
         }
     }
 
-    public static <T> boolean isEqualCollection(Collection<T> list1, Collection<T> list2) {
-        if (list1.size() != list2.size()) {
-            return false;
-        }
-
-        Map<T, Integer> countMap = new HashMap<>();
-        for (T obj : list1) {
-            countMap.put(obj, countMap.getOrDefault(obj, 0) + 1);
-        }
-
-        for (T obj : list2) {
-            Integer count = countMap.get(obj);
-            if (count == null) {
-                return false;
-            }
-            int newCount = count - 1;
-            if (newCount < 0) {
-                return false;
-            }
-            countMap.put(obj, newCount);
-        }
-
-        return true;
+    public static boolean isClient() {
+        return Thread.currentThread().getThreadGroup() != SidedThreadGroups.SERVER;
     }
 
-    public static <T> boolean anyMatch(Collection<T> collection, Predicate<T> matcher) {
-        for (T t : collection) {
-            if (matcher.test(t)) return true;
-        }
-
-        return false;
+    public static boolean isServer() {
+        return Thread.currentThread().getThreadGroup() == SidedThreadGroups.SERVER;
     }
 
     /**
@@ -168,7 +138,7 @@ public class Util {
      * @throws ClassCastException 当无法将传入的值强转时抛出
      */
     @SuppressWarnings("unchecked")
-    public static <T> T cast(@NotNull Object o) {
+    public static <T> T cast(Object o) {
         return (T) o;
     }
 
@@ -214,5 +184,18 @@ public class Util {
             .filter(clazz::isInstance)
             .<T>map(Util::cast)
             .ifPresent(action);
+    }
+
+    /**
+     * 使用传入的参数运行代码，并返回原参数
+     *
+     * @param value 原参数
+     * @param consumer 需要在传入前调用的方法
+     * @param <T> 原参数的类型
+     * @return 原参数
+     */
+    public static <T> T run(T value, Consumer<T> consumer) {
+        consumer.accept(value);
+        return value;
     }
 }

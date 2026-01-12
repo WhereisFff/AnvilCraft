@@ -10,7 +10,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
@@ -43,9 +42,6 @@ public class LaserEmitPacket implements CustomPacketPayload {
             .orElse(null);
     }
 
-    /**
-     *
-     */
     public void encode(RegistryFriendlyByteBuf buf) {
         buf.writeVarInt(laserLevel);
         NetworkUtil.writeVarIntBlockPos(buf, laserBlockPos);
@@ -56,13 +52,10 @@ public class LaserEmitPacket implements CustomPacketPayload {
     }
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
+    public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    /**
-     *
-     */
     public static void clientHandler(LaserEmitPacket data, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (Minecraft.getInstance().level != null

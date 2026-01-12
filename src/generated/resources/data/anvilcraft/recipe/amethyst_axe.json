@@ -10,11 +10,18 @@
     }
   },
   "pattern": [
-    "AA ",
-    "AB ",
-    " B "
+    "AA",
+    "AB",
+    " B"
   ],
   "result": {
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "anvilcraft:felling": 1
+        }
+      }
+    },
     "count": 1,
     "id": "anvilcraft:amethyst_axe"
   }

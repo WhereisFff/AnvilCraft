@@ -7,8 +7,9 @@ import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
 import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
@@ -16,7 +17,6 @@ import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.AnvilCollisionCraftRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.collision.BlockTransform;
-import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.util.TooltipUtil;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
@@ -29,7 +29,6 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -46,12 +45,9 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.level.storage.loot.providers.number.NumberProvider;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder<AnvilCollisionCraftRecipe>> {
     public static final int WIDTH = 162;
     public static final int HEIGHT = 64;
@@ -202,7 +198,9 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                 for (BlockTransform blockTransform : blockTransforms) {
                     BlockStatePredicate inputBlock = blockTransform.inputBlock();
                     List<BlockState> inputBlockState = inputBlock.constructStatesForRender();
-                    BlockState inputBlockRenderedState = inputBlockState.get((int) ((System.currentTimeMillis() / 1000) % inputBlockState.size()));
+                    BlockState inputBlockRenderedState = inputBlockState.get(
+                        (int) ((System.currentTimeMillis() / 1000) % inputBlockState.size())
+                    );
                     RenderSupport.renderBlock(
                         guiGraphics,
                         inputBlockRenderedState,
@@ -242,7 +240,9 @@ public class AnvilCollisionCraftCategory implements IRecipeCategory<RecipeHolder
                 for (BlockTransform blockTransform : blockTransforms) {
                     BlockStatePredicate inputBlock = blockTransform.inputBlock();
                     List<BlockState> inputBlockState = inputBlock.constructStatesForRender();
-                    BlockState inputBlockRenderedState = inputBlockState.get((int) ((System.currentTimeMillis() / 1000) % inputBlockState.size()));
+                    BlockState inputBlockRenderedState = inputBlockState.get(
+                        (int) ((System.currentTimeMillis() / 1000) % inputBlockState.size())
+                    );
                     RenderSupport.renderBlock(
                         guiGraphics,
                         inputBlockRenderedState,

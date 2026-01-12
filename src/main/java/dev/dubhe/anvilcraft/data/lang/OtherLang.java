@@ -1,15 +1,9 @@
 package dev.dubhe.anvilcraft.data.lang;
 
 import com.tterrag.registrate.providers.RegistrateLangProvider;
-import org.jetbrains.annotations.NotNull;
 
 public class OtherLang {
-    /**
-     * @param provider 提供器
-     */
-    public static void init(@NotNull RegistrateLangProvider provider) {
-        provider.add("modmenu.nameTranslation.anvilcraft", "AnvilCraft");
-
+    public static void init(RegistrateLangProvider provider) {
         provider.add("item.anvilcraft.inherent_enchantment.tooltip", "Inherent enchantments:");
         provider.add(
             "item.anvilcraft.amethyst_pickaxe.tooltip", "Stone pickaxe quality, can mine iron ore, not diamonds!");
@@ -17,6 +11,8 @@ public class OtherLang {
 
         provider.add("item.anvilcraft.geode.find", "Suspected amethyst geode, located %s");
         provider.add("item.anvilcraft.disk.stored_from", "Stored from: %s");
+        provider.add("item.anvilcraft.spectral_slingshot.unload_return", "Returned when Unloaded");
+        provider.add("item.anvilcraft.spectral_slingshot.unload_vanish", "Vanishes when Unloaded");
 
         provider.add("entity.minecraft.villager.anvilcraft.jeweler", "Jeweler");
 
@@ -43,15 +39,13 @@ public class OtherLang {
         provider.add("enchantment.anvilcraft.felling", "Felling");
         provider.add("enchantment.anvilcraft.harvest", "Harvest");
         provider.add("enchantment.anvilcraft.smelting", "Smelting");
+        provider.add("enchantment.anvilcraft.disintegration", "Disintegration");
         provider.add("death.attack.anvilcraft.laser", "%1$s was pierced by laser");
         provider.add("death.attack.anvilcraft.lost_in_time", "%1$s was lost in the river of time");
 
-        provider.add("key.categories.anvilcraft", "AnvilCraft");
-        provider.add("key.anvilcraft.switch_phase", "Switch Phase");
-        provider.add("key.anvilcraft.toggle_goggle", "Toggle Goggle Mode");
-        provider.add("key.anvilcraft.switch_resonate_mode", "Switch Resonate Mode");
-
         provider.add("effect.anvilcraft.rage", "Rage");
-        provider.add("effect.anvilcraft.invulnerable", "Invulnerable");
+
+        provider.add("item.anvilcraft.pill.tooltip",
+            "Pills made together with potion to achieve corresponding effects, can be taken quickly");
     }
 }

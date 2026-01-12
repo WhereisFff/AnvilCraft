@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -17,9 +17,8 @@ import java.util.List;
 
 /**
  * 烹饪配方类
- * <p>
- * 该配方用于在铁砧下落时烹饪物品，需要在铁砧下方放置点燃的营火作为加热源
- * </p>
+ *
+ * <p>该配方用于在铁砧下落时烹饪物品，需要在铁砧下方放置点燃的营火作为加热源</p>
  */
 @Getter
 public class CookingRecipe extends AbstractProcessRecipe<CookingRecipe> {

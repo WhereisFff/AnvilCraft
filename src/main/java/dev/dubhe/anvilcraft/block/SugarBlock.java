@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block;
 
 import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
-import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.state.FragmentationDegree;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
 import net.minecraft.core.BlockPos;
@@ -23,10 +22,11 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePrope
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collection;
-
 public class SugarBlock extends Block {
-    public static final EnumProperty<FragmentationDegree> FRAGMENTATION_DEGREE = EnumProperty.create("fragmentation_degree", FragmentationDegree.class);
+    public static final EnumProperty<FragmentationDegree> FRAGMENTATION_DEGREE = EnumProperty.create(
+        "fragmentation_degree",
+        FragmentationDegree.class
+    );
 
     public SugarBlock(Properties properties) {
         super(properties);
@@ -59,15 +59,7 @@ public class SugarBlock extends Block {
 
     public void onHit(Level level, BlockPos pos) {
         level.scheduleTick(pos, this, 4);
-        Collection<ChargeCollectorManager.Entry> chargeCollectorCollection =
-            ChargeCollectorManager.getInstance(level).getNearestChargeCollect(pos);
-        double surplus = 1;
-        for (ChargeCollectorManager.Entry entry : chargeCollectorCollection) {
-            ChargeCollectorBlockEntity chargeCollectorBlockEntity = entry.getBlockEntity();
-            if (!ChargeCollectorManager.getInstance(level).canCollect(chargeCollectorBlockEntity, pos)) return;
-            surplus = chargeCollectorBlockEntity.incomingCharge(surplus, pos);
-            if (surplus == 0) return;
-        }
+        ChargeCollectorManager.charge(1, level, pos);
     }
 
     @Override

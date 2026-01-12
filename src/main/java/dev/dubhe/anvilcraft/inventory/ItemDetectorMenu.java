@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.block.entity.IFilterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ItemDetectorBlockEntity;
 import dev.dubhe.anvilcraft.inventory.component.FilterOnlySlot;
 import lombok.Getter;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -15,20 +14,17 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
+import java.util.Objects;
 
 @Getter
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 public class ItemDetectorMenu extends AbstractContainerMenu implements IFilterMenu {
 
     private final ItemDetectorBlockEntity blockEntity;
 
     public ItemDetectorMenu(
-        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull BlockEntity machine) {
+        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, BlockEntity machine) {
         super(menuType, containerId);
         ItemCollectorMenu.checkContainerSize(inventory, 9);
 
@@ -48,9 +44,8 @@ public class ItemDetectorMenu extends AbstractContainerMenu implements IFilterMe
         this.addDataSlot(DataSlot.forContainer(this.blockEntity.getDataAccess(), 1));
     }
 
-    public ItemDetectorMenu(
-        @Nullable MenuType<?> menuType, int containerId, Inventory inventory, @NotNull FriendlyByteBuf extraData) {
-        this(menuType, containerId, inventory, inventory.player.level().getBlockEntity(extraData.readBlockPos()));
+    public ItemDetectorMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, FriendlyByteBuf extraData) {
+        this(menuType, containerId, inventory, Objects.requireNonNull(inventory.player.level().getBlockEntity(extraData.readBlockPos())));
     }
 
     private void addPlayerInventory(Inventory playerInventory) {
@@ -91,7 +86,7 @@ public class ItemDetectorMenu extends AbstractContainerMenu implements IFilterMe
             return ItemStack.EMPTY;
         }
         Slot sourceSlot = this.getSlot(index);
-        //noinspection ConstantValue
+        // noinspection ConstantValue
         if (sourceSlot == null || !sourceSlot.hasItem()) {
             return ItemStack.EMPTY;
         } // EMPTY_ITEM

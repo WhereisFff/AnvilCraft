@@ -2,15 +2,15 @@ package dev.dubhe.anvilcraft.integration.jei.category;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.TransformResult;
-import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
@@ -110,8 +110,7 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
                 ItemStack x = Items.BARRIER.getDefaultInstance();
                 x.set(DataComponents.CUSTOM_NAME, Component.literal(name));
                 outputStacks.add(ChanceItemStack.of(x, (float) result.probability()));
-            } else
-                outputStacks.add(ChanceItemStack.of(spawnEggOutput.getDefaultInstance(), (float) result.probability()));
+            } else outputStacks.add(ChanceItemStack.of(spawnEggOutput.getDefaultInstance(), (float) result.probability()));
         }
         JeiSlotUtil.addOutputSlots(builder, outputStacks);
 
@@ -136,7 +135,7 @@ public class MobTransformCategory implements IRecipeCategory<RecipeHolder<MobTra
         GuiGraphics guiGraphics,
         double mouseX,
         double mouseY) {
-        MobTransformRecipe recipe = recipeHolder.value();
+        final MobTransformRecipe recipe = recipeHolder.value();
 
         BlockState block = ModBlocks.CORRUPTED_BEACON
             .get()

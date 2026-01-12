@@ -8,8 +8,11 @@ import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.network.ComparatorSyncPacket;
 import dev.dubhe.anvilcraft.network.CyclingValueSyncPacket;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
+import dev.dubhe.anvilcraft.network.EmberGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.network.FilterContentSyncPacket;
+import dev.dubhe.anvilcraft.network.FrostGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
+import dev.dubhe.anvilcraft.network.HammerChangeFlexibleMultiPartBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
 import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
@@ -19,8 +22,8 @@ import dev.dubhe.anvilcraft.network.LaserEmitPacket;
 import dev.dubhe.anvilcraft.network.MachineCycleFilterModePacket;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
 import dev.dubhe.anvilcraft.network.MachineOutputDirectionPacket;
-import dev.dubhe.anvilcraft.network.MultiphaseChangePacket;
 import dev.dubhe.anvilcraft.network.MutedSoundSyncPacket;
+import dev.dubhe.anvilcraft.network.OpenIntegrationScreenPacket;
 import dev.dubhe.anvilcraft.network.PowerGridRemovePacket;
 import dev.dubhe.anvilcraft.network.PowerGridSyncPacket;
 import dev.dubhe.anvilcraft.network.PulseGeneratorUpdatePacket;
@@ -37,19 +40,18 @@ import dev.dubhe.anvilcraft.network.SlotFilterChangePacket;
 import dev.dubhe.anvilcraft.network.SlotFilterMaxStackSizeChangePacket;
 import dev.dubhe.anvilcraft.network.StructureDataSyncPacket;
 import dev.dubhe.anvilcraft.network.SwitchMultitoolModePacket;
-import dev.dubhe.anvilcraft.network.SwitchPhasePacket;
 import dev.dubhe.anvilcraft.network.SwitchResonateModePacket;
-import dev.dubhe.anvilcraft.network.SyncEmberGrindstonePacket;
 import dev.dubhe.anvilcraft.network.TeslaFilterSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDeflectionRingLastEntitySpeedPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
+import dev.dubhe.anvilcraft.network.UsePillBoxPacket;
+import dev.dubhe.anvilcraft.network.multiple.FrostSmithingPackets;
+import dev.dubhe.anvilcraft.network.multiple.MultiphasePackets;
+import dev.dubhe.anvilcraft.network.split.PacketSplitter;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 public class ModNetworks {
-    /**
-     *
-     */
     public static void init(PayloadRegistrar registrar) {
         registrar.playBidirectional(
             MachineOutputDirectionPacket.TYPE,
@@ -76,23 +78,15 @@ public class ModNetworks {
             SlotFilterMaxStackSizeChangePacket.STREAM_CODEC,
             SlotFilterMaxStackSizeChangePacket.HANDLER
         );
+        registrar.playBidirectional(
+            HeliostatsIrradiationPacket.TYPE,
+            HeliostatsIrradiationPacket.STREAM_CODEC,
+            HeliostatsIrradiationPacket.HANDLER
+        );
         registrar.playToServer(
             SliderUpdatePacket.TYPE,
             SliderUpdatePacket.STREAM_CODEC,
             SliderUpdatePacket.HANDLER
-        );
-        registrar.playToClient(
-            SliderInitPacket.TYPE,
-            SliderInitPacket.STREAM_CODEC,
-            SliderInitPacket.HANDLER);
-        registrar.playToClient(
-            PowerGridSyncPacket.TYPE,
-            PowerGridSyncPacket.STREAM_CODEC,
-            PowerGridSyncPacket.HANDLER);
-        registrar.playToClient(
-            PowerGridRemovePacket.TYPE,
-            PowerGridRemovePacket.STREAM_CODEC,
-            PowerGridRemovePacket.HANDLER
         );
         registrar.playToServer(
             HammerUsePacket.TYPE,
@@ -105,19 +99,14 @@ public class ModNetworks {
             HammerChangeBlockPacket::handle
         );
         registrar.playToServer(
+            HammerChangeFlexibleMultiPartBlockPacket.TYPE,
+            HammerChangeFlexibleMultiPartBlockPacket.STREAM_CODEC,
+            HammerChangeFlexibleMultiPartBlockPacket::handle
+        );
+        registrar.playToServer(
             CyclingValueSyncPacket.TYPE,
             CyclingValueSyncPacket.STREAM_CODEC,
             CyclingValueSyncPacket.HANDLER
-        );
-        registrar.playToClient(
-            RocketJumpPacket.TYPE,
-            RocketJumpPacket.STREAM_CODEC,
-            RocketJumpPacket.HANDLER
-        );
-        registrar.playToClient(
-            MutedSoundSyncPacket.TYPE,
-            MutedSoundSyncPacket.STREAM_CODEC,
-            MutedSoundSyncPacket.HANDLER
         );
         registrar.playToServer(
             AddMutedSoundPacket.TYPE,
@@ -129,15 +118,95 @@ public class ModNetworks {
             RemoveMutedSoundPacket.STREAM_CODEC,
             RemoveMutedSoundPacket.HANDLER
         );
+        registrar.playToServer(
+            AddTeslaFilterPacket.TYPE,
+            AddTeslaFilterPacket.STREAM_CODEC,
+            AddTeslaFilterPacket.HANDLER
+        );
+        registrar.playToServer(
+            RemoveTeslaFilterPacket.TYPE,
+            RemoveTeslaFilterPacket.STREAM_CODEC,
+            RemoveTeslaFilterPacket.HANDLER
+        );
+        registrar.playToServer(
+            MachineCycleFilterModePacket.TYPE,
+            MachineCycleFilterModePacket.STREAM_CODEC,
+            MachineCycleFilterModePacket.HANDLER
+        );
+        registrar.playToServer(
+            PulseGeneratorUpdatePacket.TYPE,
+            PulseGeneratorUpdatePacket.STREAM_CODEC,
+            PulseGeneratorUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
+            AdvancedComparatorUpdatePacket.TYPE,
+            AdvancedComparatorUpdatePacket.STREAM_CODEC,
+            AdvancedComparatorUpdatePacket.HANDLER
+        );
+        registrar.playToServer(
+            EmberGrindstoneSyncPacket.TYPE,
+            EmberGrindstoneSyncPacket.STREAM_CODEC,
+            EmberGrindstoneSyncPacket.HANDLER
+        );
+        registrar.playToServer(
+            DragonRodDevourPacket.TYPE,
+            DragonRodDevourPacket.STREAM_CODEC,
+            DragonRodDevourPacket.HANDLER
+        );
+        registrar.playToServer(
+            FilterContentSyncPacket.TYPE,
+            FilterContentSyncPacket.STREAM_CODEC,
+            FilterContentSyncPacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchResonateModePacket.TYPE,
+            SwitchResonateModePacket.STREAM_CODEC,
+            SwitchResonateModePacket.HANDLER
+        );
+        registrar.playToServer(
+            SwitchMultitoolModePacket.TYPE,
+            SwitchMultitoolModePacket.STREAM_CODEC,
+            SwitchMultitoolModePacket.HANDLER
+        );
+        registrar.playToServer(
+            UsePillBoxPacket.TYPE,
+            UsePillBoxPacket.STREAM_CODEC,
+            UsePillBoxPacket.HANDLER
+        );
+        registrar.playToClient(
+            OpenIntegrationScreenPacket.TYPE,
+            OpenIntegrationScreenPacket.STREAM_CODEC,
+            OpenIntegrationScreenPacket.HANDLER
+        );
+        registrar.playToClient(
+            SliderInitPacket.TYPE,
+            SliderInitPacket.STREAM_CODEC,
+            SliderInitPacket.HANDLER
+        );
+        registrar.playToClient(
+            PowerGridSyncPacket.TYPE,
+            PowerGridSyncPacket.STREAM_CODEC,
+            PowerGridSyncPacket.HANDLER
+        );
+        registrar.playToClient(
+            PowerGridRemovePacket.TYPE,
+            PowerGridRemovePacket.STREAM_CODEC,
+            PowerGridRemovePacket.HANDLER
+        );
+        registrar.playToClient(
+            RocketJumpPacket.TYPE,
+            RocketJumpPacket.STREAM_CODEC,
+            RocketJumpPacket.HANDLER
+        );
+        registrar.playToClient(
+            MutedSoundSyncPacket.TYPE,
+            MutedSoundSyncPacket.STREAM_CODEC,
+            MutedSoundSyncPacket.HANDLER
+        );
         registrar.playToClient(
             LaserEmitPacket.TYPE,
             LaserEmitPacket.STREAM_CODEC,
             LaserEmitPacket.HANDLER
-        );
-        registrar.playBidirectional(
-            HeliostatsIrradiationPacket.TYPE,
-            HeliostatsIrradiationPacket.STREAM_CODEC,
-            HeliostatsIrradiationPacket.HANDLER
         );
         registrar.playToClient(
             UpdateDisplayItemPacket.TYPE,
@@ -169,70 +238,15 @@ public class ModNetworks {
             TeslaFilterSyncPacket.STREAM_CODEC,
             TeslaFilterSyncPacket.HANDLER
         );
-        registrar.playToServer(
-            AddTeslaFilterPacket.TYPE,
-            AddTeslaFilterPacket.STREAM_CODEC,
-            AddTeslaFilterPacket.HANDLER
-        );
-        registrar.playToServer(
-            RemoveTeslaFilterPacket.TYPE,
-            RemoveTeslaFilterPacket.STREAM_CODEC,
-            RemoveTeslaFilterPacket.HANDLER
-        );
         registrar.playBidirectional(
             ItemDetectorChangeRangePacket.TYPE,
             ItemDetectorChangeRangePacket.STREAM_CODEC,
             ItemDetectorChangeRangePacket.HANDLER
         );
-        registrar.playToServer(
-            MachineCycleFilterModePacket.TYPE,
-            MachineCycleFilterModePacket.STREAM_CODEC,
-            MachineCycleFilterModePacket.HANDLER
-        );
-        registrar.playToServer(
-            PulseGeneratorUpdatePacket.TYPE,
-            PulseGeneratorUpdatePacket.STREAM_CODEC,
-            PulseGeneratorUpdatePacket.HANDLER
-        );
-        registrar.playToServer(
-            AdvancedComparatorUpdatePacket.TYPE,
-            AdvancedComparatorUpdatePacket.STREAM_CODEC,
-            AdvancedComparatorUpdatePacket.HANDLER
-        );
-        registrar.playToServer(
-            SwitchPhasePacket.TYPE,
-            SwitchPhasePacket.STREAM_CODEC,
-            SwitchPhasePacket.HANDLER
-        );
-        registrar.playBidirectional(
-            MultiphaseChangePacket.TYPE,
-            MultiphaseChangePacket.STREAM_CODEC,
-            MultiphaseChangePacket.HANDLER
-        );
-        registrar.playToServer(
-            SyncEmberGrindstonePacket.TYPE,
-            SyncEmberGrindstonePacket.STREAM_CODEC,
-            SyncEmberGrindstonePacket.HANDLER
-        );
-        registrar.playToServer(
-            DragonRodDevourPacket.TYPE,
-            DragonRodDevourPacket.STREAM_CODEC,
-            DragonRodDevourPacket.HANDLER
-        );
-        registrar.playToServer(
-            FilterContentSyncPacket.TYPE,
-            FilterContentSyncPacket.STREAM_CODEC,
-            FilterContentSyncPacket.HANDLER
-        );
         registrar.playBidirectional(
             SilencerSyncPacket.TYPE,
             SilencerSyncPacket.STREAM_CODEC,
             SilencerSyncPacket.HANDLER
-        );
-        registrar.playToServer(
-            SwitchResonateModePacket.TYPE,
-            SwitchResonateModePacket.STREAM_CODEC,
-            SwitchResonateModePacket.HANDLER
         );
         registrar.playToClient(
             HeatableSyncPacket.TYPE,
@@ -254,11 +268,6 @@ public class ModNetworks {
             ComparatorSyncPacket.STREAM_CODEC,
             ComparatorSyncPacket.HANDLER
         );
-        registrar.playToServer(
-            SwitchMultitoolModePacket.TYPE,
-            SwitchMultitoolModePacket.STREAM_CODEC,
-            SwitchMultitoolModePacket.HANDLER
-        );
         registrar.playToClient(
             UpdateDeflectionRingLastEntitySpeedPacket.TYPE,
             UpdateDeflectionRingLastEntitySpeedPacket.STREAM_CODEC,
@@ -269,5 +278,13 @@ public class ModNetworks {
             UpdatePropelPistonStoredEnergyPacket.STREAM_CODEC,
             UpdatePropelPistonStoredEnergyPacket.HANDLER
         );
+        PacketSplitter.registerSplitPackets(registrar);
+        MultiphasePackets.register(registrar);
+        registrar.playToServer(
+            FrostGrindstoneSyncPacket.TYPE,
+            FrostGrindstoneSyncPacket.STREAM_CODEC,
+            FrostGrindstoneSyncPacket.HANDLER
+        );
+        FrostSmithingPackets.register(registrar);
     }
 }

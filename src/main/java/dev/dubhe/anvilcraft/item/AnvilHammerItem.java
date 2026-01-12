@@ -11,7 +11,6 @@ import dev.dubhe.anvilcraft.mixin.invoker.BlockBehaviourInvoker;
 import dev.dubhe.anvilcraft.network.RocketJumpPacket;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleTypes;
@@ -21,7 +20,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -49,17 +47,14 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
 import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getChainableMainPartPos;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class AnvilHammerItem extends Item implements Equipable {
     public static final Property<?>[] SUPPORTED_PROPERTIES = {
         BlockStateProperties.FACING,
@@ -104,7 +99,7 @@ public class AnvilHammerItem extends Item implements Equipable {
         state = level.getBlockState(pos);
         block = state.getBlock();
         BlockPos posToRemove = pos;
-        List<ItemStack> drops = player.isCreative() ? List.of() : BreakBlockUtil.dropSilkTouch(level, pos);
+        final List<ItemStack> drops = player.isCreative() ? List.of() : BreakBlockUtil.dropSilkTouch(level, pos);
         block.playerWillDestroy(level, posToRemove, state, player);
         level.destroyBlock(posToRemove, false);
         if (player.isCreative()) return;
@@ -199,23 +194,25 @@ public class AnvilHammerItem extends Item implements Equipable {
     }
 
     private static boolean rocketJump(@Nullable ServerPlayer serverPlayer, ServerLevel level, BlockPos blockPos) {
-        if (serverPlayer == null) return false;
-        ItemStack itemStack = serverPlayer.getInventory().offhand.getFirst();
-        if (!itemStack.is(Items.FIREWORK_ROCKET)) return false;
-        if (!itemStack.has(DataComponents.FIREWORKS)) return false;
-        Fireworks fireworks = itemStack.get(DataComponents.FIREWORKS);
-        if (fireworks == null) return false;
+        if (!AnvilHammerItem.canRocketJump(serverPlayer)) return false;
+        ItemStack stack = serverPlayer.getOffhandItem();
+        Fireworks fireworks = stack.get(DataComponents.FIREWORKS);
         int i = fireworks.flightDuration();
-        if (serverPlayer.getRotationVector().x > 70) {
-            if (!serverPlayer.getAbilities().instabuild) itemStack.shrink(1);
-            double power = i * 0.75 + 0.5;
-            serverPlayer.setDeltaMovement(0, power, 0);
-            PacketDistributor.sendToPlayer(serverPlayer, new RocketJumpPacket(power));
-            level.sendParticles(ParticleTypes.FIREWORK, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 20, 0, 0.5, 0, 0.05);
-            level.playSound(null, blockPos, SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.AMBIENT, 3.0f, 1.0f);
-            return true;
-        }
-        return false;
+        if (!serverPlayer.getAbilities().instabuild) stack.shrink(1);
+        double power = i * 0.75 + 0.5;
+        serverPlayer.setDeltaMovement(0, power, 0);
+        PacketDistributor.sendToPlayer(serverPlayer, new RocketJumpPacket(power));
+        level.sendParticles(ParticleTypes.FIREWORK, serverPlayer.getX(), serverPlayer.getY(), serverPlayer.getZ(), 20, 0, 0.5, 0, 0.05);
+        level.playSound(null, blockPos, SoundEvents.FIREWORK_ROCKET_LAUNCH, SoundSource.AMBIENT, 3.0f, 1.0f);
+        return true;
+    }
+
+    public static boolean canRocketJump(@Nullable Player player) {
+        if (player == null) return false;
+        ItemStack stack = player.getOffhandItem();
+        if (!stack.is(Items.FIREWORK_ROCKET)) return false;
+        if (!stack.has(DataComponents.FIREWORKS)) return false;
+        return player.getRotationVector().x > 70;
     }
 
     public static void addIsWearingPredicate(Predicate<Player> predicate) {
@@ -311,7 +308,7 @@ public class AnvilHammerItem extends Item implements Equipable {
     }
 
     @Override
-    public boolean isCorrectToolForDrops(ItemStack pStack, BlockState pState) {
+    public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
         return false;
     }
 

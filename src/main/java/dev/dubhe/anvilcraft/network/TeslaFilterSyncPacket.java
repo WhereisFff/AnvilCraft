@@ -11,7 +11,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,19 +37,16 @@ public class TeslaFilterSyncPacket implements CustomPacketPayload {
         this.filters = filters;
     }
 
-    public void encode(@NotNull FriendlyByteBuf buf) {
+    public void encode(FriendlyByteBuf buf) {
         buf.writeCollection(filters.stream().map(it -> it.left().getId()).toList(), FriendlyByteBuf::writeUtf);
         buf.writeCollection(filters.stream().map(Pair::right).toList(), FriendlyByteBuf::writeUtf);
     }
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
+    public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    /**
-     *
-     */
     public static void clientHandler(TeslaFilterSyncPacket data, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (Minecraft.getInstance().screen instanceof TeslaTowerScreen screen) {

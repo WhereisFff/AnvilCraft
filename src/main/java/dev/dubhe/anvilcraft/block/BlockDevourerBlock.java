@@ -3,21 +3,25 @@ package dev.dubhe.anvilcraft.block;
 import com.google.common.collect.Streams;
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
 import dev.dubhe.anvilcraft.util.BreakBlockUtil;
+import dev.dubhe.anvilcraft.util.MultiPartBlockUtil;
 import dev.dubhe.anvilcraft.util.TriggerUtil;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -42,19 +46,9 @@ import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemHandlerHelper;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers.anvilcraftBlockPlacer;
-import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.dropAllToPos;
-import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.exportContentsToItemHandlers;
-import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.getTargetItemHandlerList;
-import static dev.dubhe.anvilcraft.api.itemhandler.ItemHandlerUtil.isEmptyContainer;
-import static dev.dubhe.anvilcraft.util.MultiPartBlockUtil.getChainableMainPartPos;
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class BlockDevourerBlock extends DirectionalBlock implements HammerRotateBehavior, IHammerRemovable {
 
     public static final VoxelShape NORTH_SHAPE = Block.box(0, 0, 8, 16, 16, 16);
@@ -66,9 +60,6 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty TRIGGERED = BlockStateProperties.TRIGGERED;
 
-    /**
-     * @param properties 方块属性
-     */
     public BlockDevourerBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(
@@ -205,7 +196,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
     ) {
         BlockPos outputPos = devourerPos.relative(devourerDirection.getOpposite());
         BlockPos devourCenterPos = devourerPos.relative(devourerDirection);
-        final List<IItemHandler> itemHandlerList = getTargetItemHandlerList(
+        final List<IItemHandler> itemHandlerList = ItemHandlerUtil.getTargetItemHandlerList(
             outputPos,
             devourerDirection,
             level
@@ -268,60 +259,84 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         @Nullable List<IItemHandler> itemHandlerList, Vec3 center
     ) {
         AABB aabb = new AABB(center.add(-0.125, -0.125, -0.125), center.add(0.125, 0.125, 0.125));
-        boolean insertEnabled = itemHandlerList != null && !itemHandlerList.isEmpty();
-        boolean dropOriginalPlace = !level.noCollision(aabb);
+        final boolean insertEnabled = itemHandlerList != null && !itemHandlerList.isEmpty();
+        final boolean dropOriginalPlace = !level.noCollision(aabb);
 
         if (filteredBlockPosList.contains(devourBlockPos)) return;
         BlockState devourBlockState = level.getBlockState(devourBlockPos);
         if (devourBlockState.isAir()) return;
         if (devourBlockState.getBlock().defaultDestroyTime() < 0) return;
-        if (devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
-            && level.random.nextDouble() > 0.05) {
+        if (
+            !(anvil instanceof FrostAnvilBlock)
+            && devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)
+            && level.random.nextDouble() > 0.05
+        ) {
             level.destroyBlock(devourBlockPos, false);
             return;
         }
-        devourBlockPos = getChainableMainPartPos(level, devourBlockPos);
+        devourBlockPos = MultiPartBlockUtil.getChainableMainPartPos(level, devourBlockPos);
         devourBlockState = level.getBlockState(devourBlockPos);
-        List<ItemStack> dropList = switch (anvil) {
-            case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
-            case EmberAnvilBlock ignore -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
-            case TranscendenceAnvilBlock ignore -> BreakBlockUtil.dropFortune5(level, devourBlockPos);
-            case null, default -> BreakBlockUtil.drop(level, devourBlockPos);
-        };
-        IItemHandler source = level.getCapability(Capabilities.ItemHandler.BLOCK, devourBlockPos, null);
-        boolean skipContentTransfer = source == null;
-        for (ItemStack itemStack : dropList) {
-            skipContentTransfer |= ItemHandlerUtil.isEmptyContainer(itemStack);
-            if (insertEnabled) {
-                for (IItemHandler target : itemHandlerList) {
-                    itemStack = ItemHandlerHelper.insertItemStacked(target, itemStack, false);
+        if (anvil instanceof FrostAnvilBlock) {
+            ServerPlayer destroyer = AnvilCraftFakePlayers.anvilcraftDestroyer.offerPlayer(level);
+            ItemStack dummyTool = BreakBlockUtil.getDummyDisintegrationTool(level);
+            AnvilCraftFakePlayers.anvilcraftDestroyer.enabledDestroy(destroyer, dummyTool);
+            ExperienceOrb.award(
+                level,
+                center,
+                EnchantmentHelper.processBlockExperience(
+                    level,
+                    dummyTool,
+                    devourBlockState.getExpDrop(level, devourBlockPos, level.getBlockEntity(devourBlockPos), destroyer, dummyTool)
+                )
+            );
+            AnvilCraftFakePlayers.anvilcraftDestroyer.disable(destroyer);
+        } else {
+            List<ItemStack> dropList = switch (anvil) {
+                case RoyalAnvilBlock ignore -> BreakBlockUtil.dropSilkTouch(level, devourBlockPos);
+                case EmberAnvilBlock ignore -> BreakBlockUtil.dropSmelt(level, devourBlockPos);
+                case TranscendenceAnvilBlock ignore -> BreakBlockUtil.dropFortune5(level, devourBlockPos);
+                case null, default -> BreakBlockUtil.drop(level, devourBlockPos);
+            };
+            IItemHandler source = level.getCapability(Capabilities.ItemHandler.BLOCK, devourBlockPos, null);
+            boolean skipContentTransfer = source == null;
+            for (ItemStack itemStack : dropList) {
+                skipContentTransfer |= ItemHandlerUtil.isEmptyContainer(itemStack);
+                if (insertEnabled) {
+                    for (IItemHandler target : itemHandlerList) {
+                        itemStack = ItemHandlerHelper.insertItemStacked(target, itemStack, false);
+                    }
+                }
+                if (itemStack.isEmpty() && ItemHandlerUtil.isEmptyContainer(source)) continue;
+                if (dropOriginalPlace) {
+                    Block.popResource(level, devourBlockPos, itemStack);
+                } else {
+                    AnvilUtil.dropItems(List.of(itemStack), level, center);
                 }
             }
-            if (itemStack.isEmpty() && isEmptyContainer(source)) continue;
-            if (dropOriginalPlace) {
-                Block.popResource(level, devourBlockPos, itemStack);
-            } else {
-                AnvilUtil.dropItems(List.of(itemStack), level, center);
+            if (!skipContentTransfer) {
+                if (insertEnabled) ItemHandlerUtil.exportContentsToItemHandlers(source, itemHandlerList);
+                if (!dropOriginalPlace) ItemHandlerUtil.dropAllToPos(source, level, center);
             }
-        }
-        if (!skipContentTransfer) {
-            if (insertEnabled) exportContentsToItemHandlers(source, itemHandlerList);
-            if (!dropOriginalPlace) dropAllToPos(source, level, center);
         }
         if (level.getBlockEntity(devourBlockPos) instanceof LecternBlockEntity lectern) {
             transferLecternContents(level, itemHandlerList, center, lectern, insertEnabled, dropOriginalPlace);
         }
-        if (!(devourBlockState.getBlock() instanceof DoublePlantBlock))
-            devourBlockState.getBlock().playerWillDestroy(level, devourBlockPos, devourBlockState, anvilcraftBlockPlacer.getPlayer());
+        if (!(devourBlockState.getBlock() instanceof DoublePlantBlock)) {
+            devourBlockState.getBlock().playerWillDestroy(
+                level,
+                devourBlockPos,
+                devourBlockState,
+                AnvilCraftFakePlayers.anvilcraftBlockPlacer.getPlayer()
+            );
+        }
         level.destroyBlock(devourBlockPos, false);
         TriggerUtil.devourerDevourBlock(level, devourBlockPos, devourBlockState.getBlock());
     }
 
     /**
-     * 特判讲台的转移
-     * 虽然溜槽/漏斗无法与讲台交互
-     * 但吞噬器这类直接破坏的
-     * 应该正常转移走才正常点(?)
+     * 转移讲台内容
+     *
+     * <p>虽然溜槽/漏斗无法与讲台交互，但吞噬器这类直接破坏的应该转移走才正常点</p>
      */
     private static void transferLecternContents(
         ServerLevel level,

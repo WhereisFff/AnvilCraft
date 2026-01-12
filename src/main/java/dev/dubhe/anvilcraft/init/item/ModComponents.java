@@ -9,7 +9,8 @@ import dev.dubhe.anvilcraft.item.property.component.Eternal;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.item.property.component.HeliostatsData;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
-import dev.dubhe.anvilcraft.item.property.component.Multiphase;
+import dev.dubhe.anvilcraft.item.property.component.MultiphaseRef;
+import dev.dubhe.anvilcraft.item.property.component.PillBocContents;
 import dev.dubhe.anvilcraft.item.property.component.Providence;
 import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
 import dev.dubhe.anvilcraft.item.property.component.SignedPlayers;
@@ -22,12 +23,13 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
 public class ModComponents {
-    public static final DeferredRegister<DataComponentType<?>> DR = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, AnvilCraft.MOD_ID);
+    public static final DeferredRegister<DataComponentType<?>> DR = DeferredRegister.create(
+        Registries.DATA_COMPONENT_TYPE, AnvilCraft.MOD_ID
+    );
 
     public static final DataComponentType<DiskData> DISK_DATA = register(
         "disk_data",
@@ -71,9 +73,9 @@ public class ModComponents {
 
     public static final DataComponentType<Unit> FIRE_REFORGING = registerEmpty("reforging");
 
-    public static final DataComponentType<Multiphase> MULTIPHASE = register(
+    public static final DataComponentType<MultiphaseRef> MULTIPHASE = register(
         "multiphase",
-        b -> b.persistent(Multiphase.CODEC).networkSynchronized(Multiphase.STREAM_CODEC)
+        b -> b.persistent(MultiphaseRef.CODEC.codec()).networkSynchronized(MultiphaseRef.STREAM_CODEC)
     );
 
     public static final DataComponentType<Merciless> MERCILESS = register(
@@ -111,7 +113,22 @@ public class ModComponents {
         b -> b.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC)
     );
 
-    private static <T> @NotNull DataComponentType<T> register(String name, @NotNull Consumer<DataComponentType.Builder<T>> customizer) {
+    public static final DataComponentType<Boolean> CAN_TAKE_OUT_AMMO = register(
+        "can_take_out_ammo",
+        it -> it.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DataComponentType<Boolean> WEAKENING = register(
+        "weakening",
+        b -> b.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
+    );
+
+    public static final DataComponentType<PillBocContents> PILL_BOC_CONTENTS = register(
+        "pill_box_contents",
+        (builder) -> builder.persistent(PillBocContents.CODEC).networkSynchronized(PillBocContents.STREAM_CODEC)
+    );
+
+    private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
         var builder = DataComponentType.<T>builder();
         customizer.accept(builder);
         var componentType = builder.build();
@@ -124,7 +141,7 @@ public class ModComponents {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static @NotNull DataComponentType<Unit> registerEmpty(String name) {
+    private static DataComponentType<Unit> registerEmpty(String name) {
         return register(
             name,
             b -> b.persistent(Codec.EMPTY.codec()).networkSynchronized(StreamCodec.unit(Unit.INSTANCE))

@@ -8,7 +8,7 @@ import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.Distance;
@@ -29,9 +29,8 @@ import java.util.List;
 
 /**
  * 时移配方类
- * <p>
- * 该配方用于在铁砧下落时产生时移效果，需要在铁砧下方放置腐化信标作为触发条件
- * </p>
+ *
+ * <p>该配方用于在铁砧下落时产生时移效果，需要在铁砧下方放置腐化信标作为触发条件</p>
  */
 @Getter
 public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
@@ -408,9 +407,9 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
         }
 
         @Override
-        public void validate(ResourceLocation pId) {
+        public void validate(ResourceLocation id) {
             if (itemIngredients.isEmpty()) {
-                throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + pId);
+                throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + id);
             }
         }
 

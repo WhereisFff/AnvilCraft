@@ -6,7 +6,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.ResonatorItem;
-import dev.dubhe.anvilcraft.item.property.component.Multiphase;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
@@ -27,8 +26,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import javax.annotation.Nullable;
 import java.util.List;
+import javax.annotation.Nullable;
 
 @Mixin(ItemStack.class)
 public abstract class ItemStackMixin implements DataComponentHolder {
@@ -37,21 +36,28 @@ public abstract class ItemStackMixin implements DataComponentHolder {
     public abstract <T> T set(DataComponentType<? super T> component, @Nullable T value);
 
     @Inject(method = "set", at = @At("TAIL"))
-    private <T> void setForMultiphase(DataComponentType<? super T> component, @Nullable T value, CallbackInfoReturnable<T> cir) {
+    private <T> void setForMultiphase(DataComponentType<? super T> type, @Nullable T value, CallbackInfoReturnable<T> cir) {
         if (!this.has(ModComponents.MULTIPHASE)) return;
-        Multiphase multiphase = this.get(ModComponents.MULTIPHASE);
+        var ref = this.get(ModComponents.MULTIPHASE);
+        if (ref == null) return;
+        var multiphase = ref.toMultiphase();
         if (multiphase == null) return;
         switch (value) {
-            case Component customName when component.equals(DataComponents.CUSTOM_NAME) ->
-                this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withCustomName(customName)));
-            case Component itemName when component.equals(DataComponents.ITEM_NAME) ->
-                this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withItemName(itemName)));
-            case Integer repairCost when component.equals(DataComponents.REPAIR_COST) ->
-                this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withRepairCost(repairCost)));
-            case ItemEnchantments enchantments when component.equals(EnchantmentHelper.getComponentType(Util.cast(this))) ->
-                this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withEnchantments(enchantments)));
-            case ItemEnchantments enchantments when component.equals(ModComponents.MERCILESS_ENCHANTMENTS) ->
-                this.set(ModComponents.MULTIPHASE, multiphase.withAlpha(multiphase.peekFirst().withStoredEnchantments(enchantments)));
+            case Component customName when type.equals(DataComponents.CUSTOM_NAME) -> multiphase.changeAlpha(
+                multiphase.peekFirst().withCustomName(customName)
+            );
+            case Component itemName when type.equals(DataComponents.ITEM_NAME) -> multiphase.changeAlpha(
+                multiphase.peekFirst().withItemName(itemName)
+            );
+            case Integer repairCost when type.equals(DataComponents.REPAIR_COST) -> multiphase.changeAlpha(
+                multiphase.peekFirst().withRepairCost(repairCost)
+            );
+            case ItemEnchantments enchs when type.equals(EnchantmentHelper.getComponentType(Util.cast(this))) -> multiphase.changeAlpha(
+                multiphase.peekFirst().withEnchantments(enchs)
+            );
+            case ItemEnchantments mercilessEnchs when type.equals(ModComponents.MERCILESS_ENCHANTMENTS) -> multiphase.changeAlpha(
+                multiphase.peekFirst().withStoredEnchantments(mercilessEnchs)
+            );
             case null, default -> {
             }
         }
@@ -74,13 +80,13 @@ public abstract class ItemStackMixin implements DataComponentHolder {
         method = "is(Lnet/minecraft/core/HolderSet;)Z",
         at = @At(value = "INVOKE", target = "Lnet/minecraft/core/HolderSet;contains(Lnet/minecraft/core/Holder;)Z")
     )
-    private boolean tryUseResonatorVer2(HolderSet<Item> instance, Holder<Item> tHolder, Operation<Boolean> original) {
+    private boolean tryUseResonatorVer2(HolderSet<Item> instance, Holder<Item> holder0, Operation<Boolean> original) {
         if (instance instanceof MultitoolItem.MultitoolHolder holder) {
             return holder.is(MultitoolItem.getMode(Util.cast(this)), instance);
         } else if (instance instanceof ResonatorItem.ResonatorHolder holder) {
             return holder.is(ResonatorItem.getMode(Util.cast(this)), instance);
         }
-        return original.call(instance, tHolder);
+        return original.call(instance, holder0);
     }
 
     @Inject(

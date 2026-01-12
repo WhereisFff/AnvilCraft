@@ -2,8 +2,9 @@ package dev.dubhe.anvilcraft.init.enchantment;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.enchantment.FellingEffect;
-import dev.dubhe.anvilcraft.enchantment.HarvestEffect;
-import dev.dubhe.anvilcraft.enchantment.WeedingEffect;
+import dev.dubhe.anvilcraft.enchantment.HarvestLeftClickEffect;
+import dev.dubhe.anvilcraft.enchantment.HarvestRightClickEffect;
+import dev.dubhe.anvilcraft.enchantment.InRangeModifyEffect;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -14,8 +15,15 @@ import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
+import net.minecraft.world.item.enchantment.LevelBasedValue;
+import net.minecraft.world.item.enchantment.effects.AllOf;
+import net.minecraft.world.item.enchantment.effects.MultiplyValue;
+import net.minecraft.world.item.enchantment.effects.SetValue;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
+import net.neoforged.neoforge.registries.holdersets.AndHolderSet;
+import net.neoforged.neoforge.registries.holdersets.OrHolderSet;
 
 public class ModEnchantments {
 
@@ -23,14 +31,12 @@ public class ModEnchantments {
     public static final ResourceKey<Enchantment> HARVEST_KEY = key("harvest");
     public static final ResourceKey<Enchantment> BEHEADING_KEY = key("beheading");
     public static final ResourceKey<Enchantment> SMELTING_KEY = key("smelting");
+    public static final ResourceKey<Enchantment> DISINTEGRATION_KEY = key("disintegration");
 
     public static ResourceKey<Enchantment> key(String name) {
         return ResourceKey.create(Registries.ENCHANTMENT, AnvilCraft.of(name));
     }
 
-    /**
-     *
-     */
     public static void bootstrap(BootstrapContext<Enchantment> context) {
         HolderGetter<DamageType> damageTypeHolderGetter = context.lookup(Registries.DAMAGE_TYPE);
         HolderGetter<Enchantment> enchantmentHolderGetter = context.lookup(Registries.ENCHANTMENT);
@@ -73,14 +79,11 @@ public class ModEnchantments {
                 )
             ).withEffect(
                 ModEnchantmentEffectComponents.USE_ON_BLOCK,
-                new HarvestEffect(5),
-                MatchTool.toolMatches(
-                    ItemPredicate.Builder.item()
-                        .of(ItemTags.HOES)
-                )
+                new HarvestRightClickEffect(5),
+                MatchTool.toolMatches(ItemPredicate.Builder.item().of(ItemTags.HOES))
             ).withEffect(
                 ModEnchantmentEffectComponents.POST_BREAK_BLOCK,
-                new WeedingEffect(5),
+                new HarvestLeftClickEffect(5),
                 MatchTool.toolMatches(ItemPredicate.Builder.item().of(ItemTags.HOES))
             )
         );
@@ -111,6 +114,36 @@ public class ModEnchantments {
                     Enchantment.dynamicCost(15, 10),
                     2,
                     EquipmentSlotGroup.MAINHAND
+                )
+            )
+        );
+        register(
+            context,
+            DISINTEGRATION_KEY,
+            Enchantment.enchantment(
+                Enchantment.definition(
+                    new OrHolderSet<>(
+                        itemHolderGetter.getOrThrow(ItemTags.MINING_LOOT_ENCHANTABLE),
+                        itemHolderGetter.getOrThrow(ItemTags.WEAPON_ENCHANTABLE)
+                    ),
+                    5,
+                    1,
+                    Enchantment.constantCost(1),
+                    Enchantment.constantCost(15),
+                    2,
+                    EquipmentSlotGroup.MAINHAND
+                )
+            ).withEffect(
+                EnchantmentEffectComponents.BLOCK_EXPERIENCE,
+                AllOf.valueEffects(
+                    InRangeModifyEffect.min(1, new MultiplyValue(new LevelBasedValue.Constant(4))),
+                    InRangeModifyEffect.max(0, new SetValue(new LevelBasedValue.Constant(1)))
+                )
+            ).withEffect(
+                EnchantmentEffectComponents.MOB_EXPERIENCE,
+                AllOf.valueEffects(
+                    InRangeModifyEffect.min(1, new MultiplyValue(new LevelBasedValue.Constant(4))),
+                    InRangeModifyEffect.max(0, new SetValue(new LevelBasedValue.Constant(1)))
                 )
             )
         );

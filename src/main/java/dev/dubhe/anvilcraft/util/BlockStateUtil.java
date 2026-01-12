@@ -36,7 +36,6 @@ import net.minecraft.world.level.block.state.properties.SlabType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.neoforged.neoforge.fluids.CauldronFluidContent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Map;
@@ -81,8 +80,8 @@ public class BlockStateUtil {
      * @param block 需要判定的方块
      * @return 该方块是否是“多面类”方块
      * @apiNote 注：通过这个方法判定的方块不一定每个面都能放，
-     * 本方法只表明放置该方块所需的物品数量是否与 {@link PipeBlock#PROPERTY_BY_DIRECTION}
-     * 中的方块状态有关。
+     *     本方法只表明放置该方块所需的物品数量是否与 {@link PipeBlock#PROPERTY_BY_DIRECTION}
+     *     中的方块状态有关。
      */
     public static boolean isMultifaceLike(Block block) {
         return block instanceof MultifaceBlock || block instanceof VineBlock;
@@ -94,9 +93,9 @@ public class BlockStateUtil {
      * @param cauldron 被判定的炼药锅方块
      * @param state    被判定的方块状态
      * @return 炼药锅方块对应的流体桶
-     * @apiNote 暂时只判定满的炼药锅，因为不满的炼药锅不一定有对应物品。<br/>
-     * 由于目前的 {@link BlockStateUtil#ingredientsForPlacement(BlockState)} 只打算返回物品列表
-     * （同时返回物品列表和流体列表还是太麻烦了，以后再想办法吧）
+     * @apiNote 暂时只判定满的炼药锅，因为不满的炼药锅不一定有对应物品。<br>
+     *     由于目前的 {@link BlockStateUtil#ingredientsForPlacement(BlockState)} 只打算返回物品列表
+     *     （同时返回物品列表和流体列表还是太麻烦了，以后再想办法吧）
      */
     private static ItemStack getBucketFromCauldron(AbstractCauldronBlock cauldron, BlockState state) {
         if (cauldron == Blocks.POWDER_SNOW_CAULDRON) {
@@ -171,7 +170,7 @@ public class BlockStateUtil {
 
     public static class BlockHolderLookup implements HolderLookup<Block>, HolderOwner<Block> {
         @Override
-        public @NotNull Stream<Holder.Reference<Block>> listElements() {
+        public Stream<Holder.Reference<Block>> listElements() {
             return BuiltInRegistries.BLOCK.stream()
                 .map(BuiltInRegistries.BLOCK::getResourceKey)
                 .filter(Optional::isPresent)
@@ -179,17 +178,17 @@ public class BlockStateUtil {
         }
 
         @Override
-        public @NotNull Stream<HolderSet.Named<Block>> listTags() {
+        public Stream<HolderSet.Named<Block>> listTags() {
             return BuiltInRegistries.BLOCK.getTags().map(Pair::getSecond);
         }
 
         @Override
-        public @NotNull Optional<Holder.Reference<Block>> get(@NotNull ResourceKey<Block> resourceKey) {
+        public Optional<Holder.Reference<Block>> get(ResourceKey<Block> resourceKey) {
             return Optional.of(BuiltInRegistries.BLOCK.getHolderOrThrow(resourceKey));
         }
 
         @Override
-        public @NotNull Optional<HolderSet.Named<Block>> get(@NotNull TagKey<Block> tagKey) {
+        public Optional<HolderSet.Named<Block>> get(TagKey<Block> tagKey) {
             return BuiltInRegistries.BLOCK.getTag(tagKey);
         }
     }

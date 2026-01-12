@@ -11,6 +11,9 @@
     "anvilcraft:royal_anvil",
     "anvilcraft:royal_grindstone",
     "anvilcraft:royal_smithing_table",
+    "anvilcraft:frost_anvil",
+    "anvilcraft:frost_grindstone",
+    "anvilcraft:frost_smithing_table",
     "anvilcraft:ember_anvil",
     "anvilcraft:ember_grindstone",
     "anvilcraft:ember_smithing_table",
@@ -257,7 +260,7 @@
     "anvilcraft:silver_pressure_plate",
     "anvilcraft:uranium_pressure_plate",
     "anvilcraft:plutonium_pressure_plate",
-    "anvilcraft:bronze_pressure_plate",
-    "anvilcraft:brass_pressure_plate"
+    "anvilcraft:brass_pressure_plate",
+    "anvilcraft:bronze_pressure_plate"
   ]
 }

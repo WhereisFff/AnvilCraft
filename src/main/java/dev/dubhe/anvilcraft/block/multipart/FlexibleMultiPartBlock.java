@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.block.multipart;
 
+import com.tterrag.registrate.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.block.state.IFlexibleMultiPartBlockState;
 import dev.dubhe.anvilcraft.util.Util;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -19,15 +19,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 import java.util.function.Consumer;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public abstract class FlexibleMultiPartBlock<
         P extends Enum<P> & IFlexibleMultiPartBlockState<P, E>,
         T extends Property<E>,
@@ -63,8 +59,7 @@ public abstract class FlexibleMultiPartBlock<
         state = state.setValue(property, value);
         for (P part : getParts()) {
             BlockPos partPos = pos.offset(this.offsetFrom(state, part));
-            if (level.getBlockState(partPos).is(this))
-                level.setBlock(partPos, state.setValue(getPart(), part), flag);
+            if (level.getBlockState(partPos).is(this)) level.setBlock(partPos, state.setValue(getPart(), part), flag);
         }
     }
 
@@ -79,7 +74,7 @@ public abstract class FlexibleMultiPartBlock<
     }
 
     @Override
-    public Vec3i getOffset(@NotNull BlockState state) {
+    public Vec3i getOffset(BlockState state) {
         return state.getValue(this.getPart()).getOffset(state.getValue(this.getAdditionalProperty()));
     }
 
@@ -92,6 +87,11 @@ public abstract class FlexibleMultiPartBlock<
     public BlockPos getMainPartPos(BlockPos pos, BlockState state) {
         return pos.subtract(this.getOffset(state))
                 .offset(this.mainPart.getOffset(state.getValue(this.getAdditionalProperty())));
+    }
+
+    @Override
+    public BlockState mapRealModelHolderBlock(Level level, BlockPos blockPos, BlockState original) {
+        return level.getBlockState(this.getMainPartPos(blockPos, original));
     }
 
     /**
@@ -133,25 +133,26 @@ public abstract class FlexibleMultiPartBlock<
 
     @Override
     protected ItemInteractionResult useItemOn(
-            ItemStack pStack,
-            BlockState pState,
-            Level pLevel,
-            BlockPos pPos,
-            Player pPlayer,
-            InteractionHand pHand,
-            BlockHitResult pHitResult) {
-        return Util.interactionResultConverter().apply(this.use(pState, pLevel, pPos, pPlayer, pHand, pHitResult));
+            ItemStack stack,
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            InteractionHand hand,
+            BlockHitResult hitResult
+    ) {
+        return Util.interactionResultConverter().apply(this.use(state, level, pos, player, hand, hitResult));
     }
 
     @Override
     protected InteractionResult useWithoutItem(
-            BlockState pState,
-            Level pLevel,
-            BlockPos pPos,
-            Player pPlayer,
-            BlockHitResult pHitResult
+            BlockState state,
+            Level level,
+            BlockPos pos,
+            Player player,
+            BlockHitResult hitResult
     ) {
-        return this.use(pState, pLevel, pPos, pPlayer, InteractionHand.MAIN_HAND, pHitResult);
+        return this.use(state, level, pos, player, InteractionHand.MAIN_HAND, hitResult);
     }
 
     @SuppressWarnings("unused")
@@ -164,5 +165,14 @@ public abstract class FlexibleMultiPartBlock<
             BlockHitResult hit
     ) {
         return InteractionResult.PASS;
+    }
+
+    public void change(BlockPos blockPos, Level level, NonNullFunction<BlockState, BlockState> factory) {
+        BlockState blockState = level.getBlockState(blockPos);
+        for (P part : this.getParts()) {
+            BlockPos offset = blockPos.offset(this.offsetFrom(blockState, part));
+            BlockState blockState1 = this.placedState(part, factory.apply(blockState));
+            level.setBlockAndUpdate(offset, blockState1);
+        }
     }
 }

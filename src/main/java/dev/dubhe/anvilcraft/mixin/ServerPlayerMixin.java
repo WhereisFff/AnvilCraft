@@ -7,11 +7,11 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.api.power.DynamicPowerComponent;
 import dev.dubhe.anvilcraft.api.power.IDynamicPowerComponentHolder;
+import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import dev.dubhe.anvilcraft.util.Util;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
@@ -33,10 +33,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@MethodsReturnNonnullByDefault
-@ParametersAreNonnullByDefault
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends Player implements IDynamicPowerComponentHolder {
     @Shadow
@@ -45,8 +41,8 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
     @Unique
     private DynamicPowerComponent anvilcraft$component;
 
-    public ServerPlayerMixin(Level level, BlockPos pos, float yRot, GameProfile gameProfile) {
-        super(level, pos, yRot, gameProfile);
+    public ServerPlayerMixin(Level level, BlockPos pos, float rotY, GameProfile gameProfile) {
+        super(level, pos, rotY, gameProfile);
     }
 
     @Inject(method = "<init>", at = @At("RETURN"))
@@ -75,7 +71,23 @@ public abstract class ServerPlayerMixin extends Player implements IDynamicPowerC
             stack,
             this.anvilcraft$component
         ) && IonoCraftBackpackItem.getFlightTime(stack) < AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime) {
-            IonoCraftBackpackItem.addFlightTime(stack, AnvilCraft.CONFIG.ionoCraftBackpackMaxFlightTime / 120);
+            PowerGrid powerGrid = this.anvilcraft$component.getPowerGrid();
+            if (powerGrid != null && powerGrid.isWorking()) {
+                int chargeAmount = 0;
+                int consumption = this.anvilcraft$component.getPowerConsumption();
+                
+                if (consumption >= 512) {
+                    chargeAmount = 192;
+                } else if (consumption >= 256) {
+                    chargeAmount = 96;
+                } else if (consumption >= 128) {
+                    chargeAmount = 48;
+                } else if (consumption >= 64) {
+                    chargeAmount = 24;
+                }
+                
+                IonoCraftBackpackItem.addFlightTime(stack, chargeAmount);
+            }
         }
     }
 

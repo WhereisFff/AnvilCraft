@@ -1,12 +1,12 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 public class RubyPrismBlockEntity extends BaseLaserBlockEntity {
     private boolean enabled = false;
@@ -15,7 +15,7 @@ public class RubyPrismBlockEntity extends BaseLaserBlockEntity {
         super(type, pos, blockState);
     }
 
-    public static @NotNull RubyPrismBlockEntity createBlockEntity(
+    public static RubyPrismBlockEntity createBlockEntity(
         BlockEntityType<?> type,
         BlockPos pos,
         BlockState blockState
@@ -23,7 +23,7 @@ public class RubyPrismBlockEntity extends BaseLaserBlockEntity {
         return new RubyPrismBlockEntity(type, pos, blockState);
     }
 
-    public void tick(@NotNull Level level) {
+    public void tick(Level level) {
         if (enabled) {
             emitLaser(getFacing());
         }
@@ -49,6 +49,20 @@ public class RubyPrismBlockEntity extends BaseLaserBlockEntity {
     public void onIrradiated(BaseLaserBlockEntity baseLaserBlockEntity) {
         enabled = true;
         super.onIrradiated(baseLaserBlockEntity);
+    }
+
+    @Override
+    public int getLaserLevel() {
+        if (enabled) {
+            return super.getLaserLevel();
+        }
+        return 0;
+    }
+
+    @Override
+    public void clientUpdate(BlockPos irradiateBlockPos, int laserLevel) {
+        enabled = laserLevel > 0;
+        super.clientUpdate(irradiateBlockPos, laserLevel);
     }
 
     @Override

@@ -10,10 +10,11 @@ import dev.dubhe.anvilcraft.client.init.ModTooltipComponents;
 import dev.dubhe.anvilcraft.client.particle.PlasmaJetsParticle;
 import dev.dubhe.anvilcraft.client.renderer.item.decoration.IonoCraftBackpackDecoration;
 import dev.dubhe.anvilcraft.client.support.InspectionSupport;
+import dev.dubhe.anvilcraft.client.support.PillSelectorSupport;
 import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
+import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.init.ModParticles;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -33,6 +34,7 @@ public class AnvilCraftClient {
     public static IEventBus modEventBus = null;
     public static ModContainer modContainer = null;
     public static final AnvilCraftClientConfig CONFIG = AnvilCraft.CLIENT_CONFIG;
+    public static PillSelectorSupport pillSelectorSupport = PillSelectorSupport.INSTANCE;
 
     public AnvilCraftClient(IEventBus modBus, ModContainer container) {
         modEventBus = modBus;
@@ -58,7 +60,8 @@ public class AnvilCraftClient {
 
     public static void registerClientExtensions(RegisterClientExtensionsEvent e) {
         ModFluids.onRegisterFluidType(e);
-        e.registerItem(new ItemExtensionImpl(), ModItems.IONOCRAFT_BACKPACK);
+        ItemExtensionImpl itemExtensionInstance = new ItemExtensionImpl();
+        e.registerItem(itemExtensionInstance, ModItems.IONOCRAFT_BACKPACK);
     }
 
     public static void registerCustomItemDecorations(RegisterItemDecorationsEvent e) {

@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
-import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
 import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
 import net.minecraft.resources.ResourceLocation;
@@ -18,9 +18,8 @@ import java.util.List;
 
 /**
  * 煮沸配方类
- * <p>
- * 该配方用于在铁砧下落时煮沸物品，需要在铁砧下方放置炼药锅和点燃的营火作为触发条件
- * </p>
+ *
+ * <p>该配方用于在铁砧下落时煮沸物品，需要在铁砧下方放置炼药锅和点燃的营火作为触发条件</p>
  */
 @Getter
 public class BoilingRecipe extends AbstractProcessRecipe<BoilingRecipe> {

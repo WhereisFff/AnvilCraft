@@ -3,11 +3,10 @@ package dev.dubhe.anvilcraft.api.itemhandler;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.SlotItemHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class SlotItemHandlerWithFilter extends SlotItemHandler {
-    public SlotItemHandlerWithFilter(IItemHandler itemHandler, int index, int xPosition, int yPosition) {
-        super(itemHandler, index, xPosition, yPosition);
+    public SlotItemHandlerWithFilter(IItemHandler itemHandler, int index, int posX, int posY) {
+        super(itemHandler, index, posX, posY);
     }
 
     /**
@@ -19,7 +18,7 @@ public class SlotItemHandlerWithFilter extends SlotItemHandler {
         return this.getItemHandler() instanceof FilteredItemStackHandler;
     }
 
-    public boolean mayPlace(@NotNull ItemStack stack) {
+    public boolean mayPlace(ItemStack stack) {
         return true;
     }
 

@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.network;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.anvilcraft.lib.util.CodecUtil;
+import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -26,13 +26,12 @@ public record HammerChangeBlockPacket(
             HammerChangeBlockPacket::new
         );
 
-
     @Override
     public Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 
-    public void handle(IPayloadContext context) {
+    public  void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             Level level = context.player().level();
             if (level.isLoaded(pos)) {

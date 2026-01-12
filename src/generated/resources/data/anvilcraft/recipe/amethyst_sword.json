@@ -10,11 +10,18 @@
     }
   },
   "pattern": [
-    " A ",
-    " A ",
-    " B "
+    "A",
+    "A",
+    "B"
   ],
   "result": {
+    "components": {
+      "minecraft:enchantments": {
+        "levels": {
+          "anvilcraft:beheading": 1
+        }
+      }
+    },
     "count": 1,
     "id": "anvilcraft:amethyst_sword"
   }

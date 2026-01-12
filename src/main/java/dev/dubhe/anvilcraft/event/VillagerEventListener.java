@@ -2,8 +2,8 @@ package dev.dubhe.anvilcraft.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.entity.ModVillagers;
+import dev.dubhe.anvilcraft.init.item.ModItems;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.entity.npc.VillagerTrades;
 import net.minecraft.world.item.ItemStack;
@@ -14,7 +14,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.village.VillagerTradesEvent;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
@@ -27,7 +26,7 @@ public class VillagerEventListener {
      * @param event 事件
      */
     @SubscribeEvent
-    public static void addCustomTrades(@NotNull VillagerTradesEvent event) {
+    public static void addCustomTrades(VillagerTradesEvent event) {
         if (event.getType() == ModVillagers.JEWELER.get()) {
             Int2ObjectMap<List<VillagerTrades.ItemListing>> trades = event.getTrades();
             // level 1
@@ -48,12 +47,11 @@ public class VillagerEventListener {
 
             // level 3
             trades.get(3).add((entity, random) -> {
-                ItemCost cost =
-                    switch ((int) (random.nextDouble() * 3)) {
-                        case 0 -> new ItemCost(ModBlocks.TOPAZ_BLOCK);
-                        case 1 -> new ItemCost(ModBlocks.SAPPHIRE_BLOCK);
-                        default -> new ItemCost(ModBlocks.RUBY_BLOCK);
-                    };
+                ItemCost cost = switch ((int) (random.nextDouble() * 3)) {
+                    case 0 -> new ItemCost(ModBlocks.TOPAZ_BLOCK);
+                    case 1 -> new ItemCost(ModBlocks.SAPPHIRE_BLOCK);
+                    default -> new ItemCost(ModBlocks.RUBY_BLOCK);
+                };
                 return new MerchantOffer(cost, new ItemStack(Items.EMERALD, 8), 8, 10, 0.05f);
             });
             trades.get(3)

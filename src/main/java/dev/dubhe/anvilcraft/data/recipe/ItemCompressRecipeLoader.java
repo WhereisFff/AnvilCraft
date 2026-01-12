@@ -8,10 +8,11 @@ import dev.anvilcraft.lib.recipe.outcome.ProduceExplosion;
 import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItemSubPredicates;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.ExtendInWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCompressRecipe;
@@ -46,25 +47,9 @@ public class ItemCompressRecipeLoader {
         ItemCompressRecipe.builder()
             .requires(ModItemTags.CREAM, 4)
             .requires(Items.SUGAR)
-            .requires(ModItems.CHOCOLATE)
+            .requires(ModFoodItems.CHOCOLATE)
             .result(ModBlocks.CHOCOLATE_CREAM_BLOCK)
             .save(provider);
-
-        ItemCompressRecipe.builder()
-            .requires(ModItems.NEUTRONIUM_INGOT)
-            .requires(ModItemTags.URANIUM_INGOTS)
-            .result(ModItems.PLUTONIUM_NUGGET, 6)
-            .result(ModItems.LIME_POWDER)
-            .result(ModItems.NEUTRONIUM_INGOT)
-            .save(provider, AnvilCraft.of("item_compress/plutonium_nugget_from_neutronium_ingot"));
-
-        ItemCompressRecipe.builder()
-            .requires(ModItems.STABLE_NEUTRONIUM_INGOT)
-            .requires(ModItemTags.URANIUM_INGOTS)
-            .result(ModItems.PLUTONIUM_NUGGET, 6)
-            .result(ModItems.LIME_POWDER)
-            .result(ModItems.STABLE_NEUTRONIUM_INGOT)
-            .save(provider, AnvilCraft.of("item_compress/plutonium_nugget_from_stable_neutronium_ingot"));
 
         ItemCompressRecipe.builder()
             .requires(ModItemTags.IRON_PLATES, 2)
@@ -121,7 +106,7 @@ public class ItemCompressRecipeLoader {
                         1f,
                         true,
                         Level.ExplosionInteraction.BLOCK,
-                        //同权重二选一已经包含50%概率了，这里的概率要填1.0
+                        // 同权重二选一已经包含50%概率了，这里的概率要填1.0
                         ConstantValue.exactly(1f)
                     ),
                     0.5f

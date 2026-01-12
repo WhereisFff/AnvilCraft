@@ -1,14 +1,16 @@
 package dev.dubhe.anvilcraft.block;
 
+import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.api.power.IPowerComponent;
 import dev.dubhe.anvilcraft.api.power.IPowerConsumer;
 import dev.dubhe.anvilcraft.block.entity.AccelerationRingBlockEntity;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.state.DirectionCube3x3PartHalf;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -28,16 +30,12 @@ import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Arrays;
 
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3x3PartHalf, DirectionProperty, Direction>
-    implements EntityBlock, IHammerRemovable {
+    implements EntityBlock, IHammerRemovable, IHammerChangeable {
     public static final EnumProperty<DirectionCube3x3PartHalf> HALF = EnumProperty.create("half", DirectionCube3x3PartHalf.class);
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final BooleanProperty OVERLOAD = IPowerComponent.OVERLOAD;
@@ -73,7 +71,7 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
     }
 
     @Override
-    protected BlockState placedState(DirectionCube3x3PartHalf part, BlockState state) {
+    public BlockState placedState(DirectionCube3x3PartHalf part, BlockState state) {
         return state
             .setValue(this.getPart(), part);
     }
@@ -81,7 +79,12 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext context) {
         return this.defaultBlockState()
-            .setValue(FACING, context.getPlayer() != null && context.getPlayer().isShiftKeyDown() ? context.getNearestLookingDirection().getOpposite() : context.getNearestLookingDirection());
+            .setValue(
+                FACING,
+                context.getPlayer() != null && context.getPlayer().isShiftKeyDown()
+                ? context.getNearestLookingDirection().getOpposite()
+                : context.getNearestLookingDirection()
+            );
     }
 
     @Override
@@ -93,7 +96,11 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
         BlockPos neighborPos,
         boolean movedByPiston
     ) {
-        boolean isSignal = Arrays.stream(getParts()).anyMatch(it -> level.hasNeighborSignal(pos.subtract(state.getValue(getPart()).getOffset()).offset(it.getOffset())));
+        boolean isSignal = Arrays.stream(getParts())
+            .anyMatch(it -> level.hasNeighborSignal(
+                pos.subtract(state.getValue(this.getPart()).getOffset())
+                    .offset(it.getOffset())
+            ));
         if (isSignal && state.getValue(SWITCH) == IPowerComponent.Switch.ON) {
             updateState(level, pos, SWITCH, IPowerComponent.Switch.OFF, 3);
         } else if (!isSignal && state.getValue(SWITCH) == IPowerComponent.Switch.OFF) {
@@ -145,14 +152,25 @@ public class AccelerationRingBlock extends FlexibleMultiPartBlock<DirectionCube3
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return (level1, pos, state1, entity) -> {
             if (entity instanceof AccelerationRingBlockEntity be) be.tick();
         };
     }
 
     @Override
-    protected float getShadeBrightness(@NotNull BlockState state, @NotNull BlockGetter getter, @NotNull BlockPos pos) {
+    protected float getShadeBrightness(BlockState state, BlockGetter getter, BlockPos pos) {
         return 1.0F;
+    }
+
+    @Override
+    public boolean change(Player player, BlockPos blockPos, Level level, ItemStack anvilHammer) {
+        this.change(blockPos, level, (state) -> state.cycle(FACING));
+        return true;
+    }
+
+    @Override
+    public @Nullable Property<?> getChangeableProperty(BlockState blockState) {
+        return FACING;
     }
 }

@@ -11,17 +11,16 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import org.jetbrains.annotations.NotNull;
 
 public abstract class PowerProducerRenderer<T extends BlockEntity & IPowerProducer> implements BlockEntityRenderer<T> {
     public static final float ROTATION_MAGIC = 0.001220703125f;
 
     @Override
     public void render(
-        @NotNull T blockEntity,
+        T blockEntity,
         float partialTick,
-        @NotNull PoseStack poseStack,
-        @NotNull MultiBufferSource buffer,
+        PoseStack poseStack,
+        MultiBufferSource buffer,
         int packedLight,
         int packedOverlay
     ) {
@@ -44,12 +43,12 @@ public abstract class PowerProducerRenderer<T extends BlockEntity & IPowerProduc
                 0,
                 LightTexture.FULL_BLOCK,
                 packedOverlay
-            );
+        );
         poseStack.popPose();
     }
 
     protected float rotation(T blockEntity, float partialTick) {
-        return ((float) blockEntity.getTime() + partialTick) * blockEntity.getServerPower() * magic();
+        return ((float) blockEntity.getTime() + partialTick) * (float) Math.log(blockEntity.getServerPower() + 1) * magic() * 50.0f;
     }
 
     protected float elevation() {

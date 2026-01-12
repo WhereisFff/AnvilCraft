@@ -9,7 +9,7 @@ import dev.dubhe.anvilcraft.api.power.PowerComponentType;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.block.ChargerBlock;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.network.ChargerSyncPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
@@ -30,7 +30,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
@@ -146,8 +145,8 @@ public class ChargerBlockEntity extends BlockEntity
             ItemStack transformed = recipe.getResult().copy();
             itemHandler.setStackInSlot(1, transformed);
         }
-        timeLeft = recipe.time + 1; //since there is a "timeLeft--" after this, here +1 to negate
-        timeTotalCache = recipe.time; //make a total time cache for client display
+        timeLeft = recipe.time + 1; // since there is a "timeLeft--" after this, here +1 to negate
+        timeTotalCache = recipe.time; // make a total time cache for client display
         powerValue = recipe.power;
         if (this.getCurrentLevel() == null || !(this.getCurrentLevel() instanceof ServerLevel serverLevel)) return;
         PacketDistributor.sendToPlayersTrackingChunk(
@@ -211,7 +210,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.saveAdditional(tag, provider);
         tag.putInt("TimeLeft", timeLeft);
         tag.put("Depository", itemHandler.serializeNBT(provider));
@@ -219,7 +218,7 @@ public class ChargerBlockEntity extends BlockEntity
     }
 
     @Override
-    public void loadAdditional(CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         super.loadAdditional(tag, provider);
         timeLeft = tag.getInt("TimeLeft");
         itemHandler.deserializeNBT(provider, tag.getCompound("Depository"));
@@ -313,7 +312,7 @@ public class ChargerBlockEntity extends BlockEntity
         }
         if (timeLeft > 0) {
             if (!isCharger || isGridWorking()) {
-                //if isDisCharger or (isCharger and isGridWorking)
+                // if isDisCharger or (isCharger and isGridWorking)
                 timeLeft--;
             }
         }

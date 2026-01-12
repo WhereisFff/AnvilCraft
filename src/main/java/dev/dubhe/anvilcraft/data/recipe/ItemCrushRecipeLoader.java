@@ -3,23 +3,24 @@ package dev.dubhe.anvilcraft.data.recipe;
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.StampingRecipe;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.NotNull;
+
+import static dev.dubhe.anvilcraft.data.recipe.util.RecipeLoaderUtil.getName;
 
 public class ItemCrushRecipeLoader {
     public static void init(RegistrateRecipeProvider provider) {
         ItemCrushRecipe.builder()
             .requires(Tags.Items.CROPS_WHEAT)
-            .result(ModItems.FLOUR)
-            .result(ModItems.FLOUR, 0.5f)
+            .result(ModFoodItems.FLOUR)
+            .result(ModFoodItems.FLOUR, 0.5f)
             .save(provider);
         ItemCrushRecipe.builder()
             .requires(ItemTags.LOGS)
@@ -35,8 +36,8 @@ public class ItemCrushRecipeLoader {
             .save(provider, AnvilCraft.of("stamping/geode_gems"));
         StampingRecipe.builder()
             .requires(Items.COCOA_BEANS)
-            .result(ModItems.COCOA_BUTTER)
-            .result(ModItems.COCOA_POWDER)
+            .result(ModFoodItems.COCOA_BUTTER)
+            .result(ModFoodItems.COCOA_POWDER)
             .save(provider);
         StampingRecipe.builder()
             .requires(ModItems.PRISMARINE_CLUSTER)
@@ -138,9 +139,5 @@ public class ItemCrushRecipeLoader {
             .requires(armor)
             .result(result, UniformGenerator.between(0.0f, 2.0f))
             .save(provider, AnvilCraft.of("item_crush/armor/%s_2_%s".formatted(getName(armor), getName(result))));
-    }
-
-    private static @NotNull String getName(@NotNull ItemLike item) {
-        return BuiltInRegistries.ITEM.getKey(item.asItem()).getPath();
     }
 }

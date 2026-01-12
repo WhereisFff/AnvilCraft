@@ -2,7 +2,6 @@ package dev.dubhe.anvilcraft.block;
 
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.better.BetterBlock;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -21,12 +20,7 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class SupercriticalNestingShulkerBoxBlock extends BetterBlock implements IHammerRemovable {
-
     private static final int SOUND_DELAY = 8;
     public static final BooleanProperty COOLDOWN = BooleanProperty.create("cooldown");
     public static final IntegerProperty SOUNDSETID = IntegerProperty.create("soundsetid", 0, 4);

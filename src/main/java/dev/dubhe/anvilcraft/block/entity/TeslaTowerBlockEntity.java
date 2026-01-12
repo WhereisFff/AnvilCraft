@@ -13,9 +13,9 @@ import dev.dubhe.anvilcraft.api.taslatower.IsPlayerIdFilter;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.state.Vertical4PartHalf;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.TeslaTowerMenu;
 import dev.dubhe.anvilcraft.util.DistanceComparator;
 import it.unimi.dsi.fastutil.Pair;
@@ -42,7 +42,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -71,11 +70,10 @@ public class TeslaTowerBlockEntity extends BlockEntity
     }
 
     @Override
-    public @NotNull PowerComponentType getComponentType() {
+    public PowerComponentType getComponentType() {
         if (this.getLevel() == null) return PowerComponentType.INVALID;
         if (!this.getBlockState().is(ModBlocks.TESLA_TOWER.get())) return PowerComponentType.INVALID;
-        if (this.getBlockState().getValue(TeslaTowerBlock.HALF) != Vertical4PartHalf.BOTTOM)
-            return PowerComponentType.INVALID;
+        if (this.getBlockState().getValue(TeslaTowerBlock.HALF) != Vertical4PartHalf.BOTTOM) return PowerComponentType.INVALID;
         return PowerComponentType.CONSUMER;
     }
 
@@ -91,12 +89,12 @@ public class TeslaTowerBlockEntity extends BlockEntity
     }
 
     @Override
-    public @NotNull BlockPos getPos() {
+    public BlockPos getPos() {
         return this.getBlockPos();
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         int index = 0;
         for (Pair<TeslaFilter, String> entry : whiteList) {
             tag.putString(entry.first().getId() + "_-_" + index, entry.second());
@@ -105,7 +103,7 @@ public class TeslaTowerBlockEntity extends BlockEntity
     }
 
     @Override
-    public void loadAdditional(@NotNull CompoundTag tag, HolderLookup.@NotNull Provider provider) {
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
         whiteList.clear();
         for (String key : tag.getAllKeys()) {
             if (key.split("_-_").length != 2) continue;
@@ -151,15 +149,12 @@ public class TeslaTowerBlockEntity extends BlockEntity
             ArrayList<BlockPos> lightingRods = new ArrayList<>();
             BlockPos.betweenClosedStream(aabb)
                 .forEach(it -> {
-                    if (level.getBlockState(it).is(Blocks.LIGHTNING_ROD))
-                        lightingRods.add(it.above(0));
+                    if (level.getBlockState(it).is(Blocks.LIGHTNING_ROD)) lightingRods.add(it.above(0));
                 });
             Optional<BlockPos> targetBlock = lightingRods.stream()
                 .min((b1, b2) -> new DistanceComparator(getBlockPos().getCenter()).compare(b1.getCenter(), b2.getCenter()));
-            if (targetBlock.isPresent())
-                targetPos = targetBlock.get().getCenter();
-            else
-                return;
+            if (targetBlock.isPresent()) targetPos = targetBlock.get().getCenter();
+            else return;
         }
         LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
         lightningBolt.setDamage(10f);
@@ -180,8 +175,8 @@ public class TeslaTowerBlockEntity extends BlockEntity
     public void addFilter(String id, String arg) {
         if (level == null) return;
         BlockState blockState = level.getBlockState(getBlockPos());
-        int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
+        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             teslaTowerBlockEntity.whiteList.add(Pair.of(TeslaFilter.getFilter(id), arg));
         }
     }
@@ -189,8 +184,8 @@ public class TeslaTowerBlockEntity extends BlockEntity
     public void removeFilter(String id, String arg) {
         if (level == null) return;
         BlockState blockState = level.getBlockState(getBlockPos());
-        int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
+        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             teslaTowerBlockEntity.whiteList.removeIf(pair -> pair.first().getId().equals(id) && pair.second().equals(arg));
         }
     }
@@ -198,34 +193,36 @@ public class TeslaTowerBlockEntity extends BlockEntity
     public void handleSync(List<Pair<TeslaFilter, String>> filters) {
         if (level == null) return;
         BlockState blockState = level.getBlockState(getBlockPos());
-        int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
+        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             teslaTowerBlockEntity.whiteList.clear();
             teslaTowerBlockEntity.whiteList.addAll(filters);
         }
     }
 
     @Override
-    public @NotNull Component getDisplayName() {
+    public Component getDisplayName() {
         return Component.translatable("block.anvilcraft.tesla_tower");
     }
 
     @Override
-    public @Nullable AbstractContainerMenu createMenu(int i, @NotNull Inventory inventory, @NotNull Player player) {
+    public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
         if (level == null || player.isSpectator()) return null;
         BlockState blockState = level.getBlockState(getBlockPos());
-        int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity)
+        int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
+        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             return new TeslaTowerMenu(ModMenuTypes.TESLA_TOWER.get(), i, inventory, teslaTowerBlockEntity);
+        }
         return null;
     }
 
     public List<Pair<TeslaFilter, String>> getWhiteList() {
         if (level == null) return List.of();
         BlockState blockState = level.getBlockState(getBlockPos());
-        int yOffset = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-yOffset)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity)
+        int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
+        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             return teslaTowerBlockEntity.whiteList;
+        }
         return List.of();
     }
 

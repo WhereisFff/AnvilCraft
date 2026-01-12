@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.block;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,15 +34,11 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-import javax.annotation.ParametersAreNonnullByDefault;
-
-@ParametersAreNonnullByDefault
-@MethodsReturnNonnullByDefault
 public class HollowMagnetBlock extends MagnetBlock implements SimpleWaterloggedBlock {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
+    public static final String TAG = AnvilCraft.MOD_ID + ":hollow_magnet_block";
     private static final VoxelShape REDUCE_AABB = Block.box(5.0, 0.0, 5.0, 11.0, 16.0, 11.0);
     private static final VoxelShape AABB = Shapes.join(Shapes.block(), REDUCE_AABB, BooleanOp.ONLY_FIRST);
-    private static int itemEntityHashCode = 0;
 
     public HollowMagnetBlock(Properties properties) {
         super(properties);
@@ -117,24 +113,29 @@ public class HollowMagnetBlock extends MagnetBlock implements SimpleWaterloggedB
         if (state.getValue(LIT)) {
             return;
         }
-        if (entity instanceof ItemEntity itemEntity) {
-            if (itemEntityHashCode == entity.hashCode()) {
-                return;
-            }
+        if (entity instanceof ItemEntity itemEntity && !itemEntity.getTags().contains(TAG)) {
             ItemStack item = itemEntity.getItem();
             if (item.is(Items.IRON_INGOT) && item.getCount() == 1) {
                 if (itemEntity.getOwner() instanceof ServerPlayer) {
+                    itemEntity.addTag(TAG);
                     if (level.random.nextDouble() <= 0.005) {
                         itemEntity.setItem(new ItemStack(ModItems.MAGNET_INGOT.get()));
                     }
-                    itemEntityHashCode = entity.hashCode();
                 }
             }
         }
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
+    ) {
         if (!level.isClientSide()) {
             if (stack.is(Items.IRON_INGOT)) {
                 stack.consume(1, player);

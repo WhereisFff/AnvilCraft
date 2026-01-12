@@ -4,7 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.entity.HasMobBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.multiblock.BlockPattern;
 import dev.dubhe.anvilcraft.recipe.multiblock.ModifySpawnerAction;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockConversionRecipe;
@@ -25,7 +25,6 @@ import net.minecraft.world.phys.shapes.DiscreteVoxelShape;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.Tags;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -54,7 +53,7 @@ public class GiantAnvilLandingEventListener {
     }
 
     @SubscribeEvent
-    public static void handleMultiblock(@NotNull AnvilEvent.GiantOnLand event) {
+    public static void handleMultiblock(AnvilEvent.GiantOnLand event) {
         Level level = event.getLevel();
         BlockPos landPos = event.getPos().below(2);
 
@@ -112,7 +111,7 @@ public class GiantAnvilLandingEventListener {
                 Rotation rotation = value.getMatchedRotation();
                 BlockPattern outputPattern = value.getOutputPattern();
                 BlockPos.MutableBlockPos mpos = new BlockPos.MutableBlockPos();
-                Optional<EntityType<?>> entity = value.getModifySpawnerAction()
+                final Optional<EntityType<?>> entity = value.getModifySpawnerAction()
                     .map(ModifySpawnerAction::fromPos)
                     .map(pos -> rotatePos(pos, size, rotation))
                     .map(inputCorner::offset)

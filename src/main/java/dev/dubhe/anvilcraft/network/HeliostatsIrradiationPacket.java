@@ -12,7 +12,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import org.jetbrains.annotations.NotNull;
 
 public class HeliostatsIrradiationPacket implements CustomPacketPayload {
     public static final Type<HeliostatsIrradiationPacket> TYPE =
@@ -41,7 +40,7 @@ public class HeliostatsIrradiationPacket implements CustomPacketPayload {
         this.irritatePos = buf.readNullable(RegistryFriendlyByteBuf::readBlockPos);
     }
 
-    public void encode(@NotNull RegistryFriendlyByteBuf buf) {
+    public void encode(RegistryFriendlyByteBuf buf) {
         buf.writeBlockPos(blockPos);
         buf.writeNullable(irritatePos, RegistryFriendlyByteBuf::writeBlockPos);
     }
@@ -51,9 +50,6 @@ public class HeliostatsIrradiationPacket implements CustomPacketPayload {
         return TYPE;
     }
 
-    /**
-     *
-     */
     public static void clientHandler(HeliostatsIrradiationPacket data, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (Minecraft.getInstance().level != null
@@ -64,9 +60,6 @@ public class HeliostatsIrradiationPacket implements CustomPacketPayload {
         });
     }
 
-    /**
-     *
-     */
     public static void serverHandler(HeliostatsIrradiationPacket data, IPayloadContext context) {
         ServerPlayer player = (ServerPlayer) context.player();
         context.enqueueWork(() -> {

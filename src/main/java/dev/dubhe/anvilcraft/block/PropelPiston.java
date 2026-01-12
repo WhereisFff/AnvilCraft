@@ -3,11 +3,11 @@ package dev.dubhe.anvilcraft.block;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.mojang.serialization.MapCodec;
+import dev.anvilcraft.lib.block.IMoveableEntityBlock;
+import dev.anvilcraft.lib.injection.IPistonMovingBlockEntityExtension;
 import dev.dubhe.anvilcraft.api.hammer.IHammerChangeable;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
-import dev.dubhe.anvilcraft.api.injection.block.entity.IPistonMovingBlockEntityExtension;
 import dev.dubhe.anvilcraft.block.entity.PropelPistonBlockEntity;
-import dev.dubhe.anvilcraft.block.piston.IMoveableEntityBlock;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -88,7 +88,15 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult) {
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
+    ) {
         if (level.getBlockEntity(pos) instanceof PropelPistonBlockEntity propelPistonBlockEntity) {
             int storedEnergy = propelPistonBlockEntity.getStoredEnergy();
             if (stack.is(ModItems.CAPACITOR)) {
@@ -112,7 +120,14 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean movedByPiston) {
+    protected void neighborChanged(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block neighborBlock,
+        BlockPos neighborPos,
+        boolean movedByPiston
+    ) {
         if (level.hasNeighborSignal(pos)) {
             if (!state.getValue(MOVING)) {
                 level.setBlockAndUpdate(pos, state.setValue(MOVING, true));
@@ -251,7 +266,7 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
 
             for (int k = list.size() - 1; k >= 0; k--) {
                 BlockPos blockPos3 = list.get(k);
-                BlockState blockState5 = level.getBlockState(blockPos3);
+                final BlockState blockState5 = level.getBlockState(blockPos3);
                 blockPos3 = blockPos3.relative(facing);
                 map.remove(blockPos3);
                 BlockState blockState8 = Blocks.MOVING_PISTON.defaultBlockState().setValue(FACING, facing);
@@ -262,7 +277,7 @@ public class PropelPiston extends DirectionalBlock implements IMoveableEntityBlo
                 level.setBlock(blockPos3, blockState8, 68);
                 BlockEntity blockEntity = MovingPistonBlock.newMovingBlockEntity(blockPos3, blockState8, list1.get(k), facing, true, false);
                 if (blockEntity instanceof IPistonMovingBlockEntityExtension entity) {
-                    entity.anvilcraft$setData(nbt);
+                    entity.anvillib$setData(nbt);
                 }
                 level.setBlockEntity(blockEntity);
                 blockStates[i++] = blockState5;

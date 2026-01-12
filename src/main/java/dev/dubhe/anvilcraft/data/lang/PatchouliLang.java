@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.data.lang;
 
 import com.tterrag.registrate.providers.RegistrateLangProvider;
-import org.jetbrains.annotations.NotNull;
 
 public class PatchouliLang {
 
@@ -10,9 +9,8 @@ public class PatchouliLang {
      *
      * @param provider 提供器
      */
-    public static void init(@NotNull RegistrateLangProvider provider) {
-        provider.add("message.anvilcraft.need_patchouli_installed", "Patchouli needs to be installed");
-
+    @SuppressWarnings("checkstyle:LineLength")
+    public static void init(RegistrateLangProvider provider) {
         provider.add("gui.anvilcraft.category.anvil_collision_craft_speed", "Speed: %d m/tick");
 
         provider.add("patchouli.anvilcraft.landing_text", "Welcome to AnvilCraft.");
@@ -47,6 +45,9 @@ public class PatchouliLang {
         provider.add("title.anvilcraft.patchouli.advanced.template_dissociation", "Template Dissociation");
 
         // Entry titles for apply category
+        provider.add("title.anvilcraft.patchouli.apply.corrupted_beacon", "Corrupted Beacon");
+        provider.add("title.anvilcraft.patchouli.apply.space_overcompressor", "Space Overcompressor");
+        provider.add("title.anvilcraft.patchouli.apply.neutron_irradiator", "Neutron Irradiator");
         provider.add("title.anvilcraft.patchouli.apply.cake", "Large Cake");
         provider.add("title.anvilcraft.patchouli.apply.cement", "Cement&Concrete");
         provider.add("title.anvilcraft.patchouli.apply.confinement", "Confined Anvilon");
@@ -115,14 +116,14 @@ public class PatchouliLang {
         provider.add("title.anvilcraft.patchouli.prop.sliding_rail", "Sliding Rail");
         provider.add("title.anvilcraft.patchouli.prop.storage_block", "Storage Block");
         provider.add("title.anvilcraft.patchouli.prop.tier_1_food", "Simple Food");
+        provider.add("title.anvilcraft.patchouli.prop.pill", "Pill");
         provider.add("title.anvilcraft.patchouli.prop.tier_2_food", "Advanced Food");
         provider.add("title.anvilcraft.patchouli.prop.totem", "Totem");
 
         // Entry titles for smithing category
-        provider.add("title.anvilcraft.patchouli.smithing.corrupted_beacon", "Corrupted Beacon");
+        provider.add("title.anvilcraft.patchouli.smithing.ranged_weapons", "Ranged Weapons");
         provider.add("title.anvilcraft.patchouli.smithing.introduction", "Smithing Introduction");
         provider.add("title.anvilcraft.patchouli.smithing.jewelcrafting_table", "Jewelcrafting Table");
-        provider.add("title.anvilcraft.patchouli.smithing.space_overcompressor", "Space Overcompressor");
         provider.add("title.anvilcraft.patchouli.smithing.tier_1_forge", "Tier 1 Forge");
         provider.add("title.anvilcraft.patchouli.smithing.tier_1_materials", "Tier 1 Materials");
         provider.add("title.anvilcraft.patchouli.smithing.tier_2_forge", "Tier 2 Forge");
