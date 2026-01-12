@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.init.recipe;
 
-import dev.anvilcraft.lib.init.LibRegistries;
+import dev.anvilcraft.lib.recipe.init.LibRegistries;
 import dev.anvilcraft.lib.recipe.trigger.IRecipeTrigger;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.neoforged.neoforge.registries.DeferredHolder;

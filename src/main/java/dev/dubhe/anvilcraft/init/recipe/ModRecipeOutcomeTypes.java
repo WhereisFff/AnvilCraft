@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.init.recipe;
 
-import dev.anvilcraft.lib.init.LibRegistries;
+import dev.anvilcraft.lib.recipe.init.LibRegistries;
 import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;

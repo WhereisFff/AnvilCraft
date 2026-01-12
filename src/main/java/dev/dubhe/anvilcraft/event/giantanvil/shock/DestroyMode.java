@@ -25,8 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-enum DestroyMode {
-    NORMAL {
+public abstract class DestroyMode {
+    public static final DestroyMode NORMAL = new DestroyMode() {
         public static final ItemStack TOOL = Items.NETHERITE_PICKAXE.getDefaultInstance();
 
         @Override
@@ -39,8 +39,9 @@ enum DestroyMode {
                     .withOptionalParameter(LootContextParams.THIS_ENTITY, FakePlayerSupport.get((ServerLevel) ctx.level()))
             );
         }
-    },
-    SILK_TOUCH {
+    };
+
+    public static final DestroyMode SILK_TOUCH = new DestroyMode() {
         public static ItemStack TOOL;
         public static ItemStack FOR_SNOW_TOOL;
 
@@ -81,8 +82,9 @@ enum DestroyMode {
                 FOR_SNOW_TOOL = itemStack;
             }
         }
-    },
-    AUTO_SMELTING {
+    };
+
+    public static final DestroyMode AUTO_SMELTING = new DestroyMode() {
         public static final ItemStack TOOL = Items.NETHERITE_PICKAXE.getDefaultInstance();
 
         @Override
@@ -110,8 +112,9 @@ enum DestroyMode {
             }
             return itemStacks;
         }
-    },
-    FORTUNE {
+    };
+
+    public static final DestroyMode FORTUNE = new DestroyMode() {
         public static ItemStack TOOL;
         public static ItemStack FOR_SNOW_TOOL;
 
@@ -152,8 +155,9 @@ enum DestroyMode {
                 FOR_SNOW_TOOL = itemStack;
             }
         }
-    },
-    DISINTEGRATION {
+    };
+
+    public static final DestroyMode DISINTEGRATION = new DestroyMode() {
         @Override
         public List<ItemStack> apply(BlockState state, BlockPos pos, ShockContext ctx, ItemStack tool) {
             this.dropExp(ctx.level(), pos, state);
@@ -182,8 +186,11 @@ enum DestroyMode {
             );
             AnvilCraftFakePlayers.anvilcraftDestroyer.disable(destroyer);
         }
-    },
-    ;
+    };
+
+    public DestroyMode() {
+
+    }
 
     public abstract List<ItemStack> apply(BlockState state, BlockPos pos, ShockContext ctx);
 
