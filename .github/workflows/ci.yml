@@ -17,10 +17,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
     env:
-      CI_BUILD: true
-      HOTFIX_BUILD: true
-      PR_BUILD: false
-      VERSION_TYPE: beta
+      BUILD_TYPE: hotfix
+      VERSION_TYPE: release
     steps:
       - name: checkout
         uses: actions/checkout@v4

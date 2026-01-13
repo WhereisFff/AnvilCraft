@@ -2,15 +2,11 @@
   "type": "anvilcraft:super_heating",
   "ingredients": [
     {
-      "count": 3,
+      "count": 2,
       "items": "minecraft:iron_block"
     },
     {
       "items": "minecraft:diamond_block"
-    },
-    {
-      "count": 2,
-      "items": "minecraft:amethyst_block"
     },
     {
       "items": "#anvilcraft:gem_blocks"
@@ -18,7 +14,6 @@
   ],
   "results": [
     {
-      "count": 3,
       "id": "anvilcraft:royal_steel_block"
     }
   ]

@@ -1937,7 +1937,10 @@ public class ModBlocks {
             ModBlockTags.HAMMER_REMOVABLE,
             ModBlockTags.STORAGE_BLOCKS_FROST_METAL
         )
-        .blockstate((context, provider) -> provider.simpleBlock(context.get()))
+        .blockstate((context, provider) -> provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/frost_metal_block").get()
+        ))
         .item()
         .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_FROST_METAL)
         .build()
