@@ -6,6 +6,10 @@
     "anvilcraft:cut_royal_steel_pillar",
     "anvilcraft:cut_royal_steel_slab",
     "anvilcraft:cut_royal_steel_stairs",
-    "anvilcraft:frost_metal_block"
+    "anvilcraft:frost_metal_block",
+    "anvilcraft:cut_frost_metal_block",
+    "anvilcraft:cut_frost_metal_pillar",
+    "anvilcraft:cut_frost_metal_slab",
+    "anvilcraft:cut_frost_metal_stairs"
   ]
 }
