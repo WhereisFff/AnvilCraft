@@ -1,0 +1,8 @@
+{
+	"parent": "anvilcraft:block/pump",
+	"textures": {
+		"0": "anvilcraft:block/pump_overload",
+		"1": "anvilcraft:block/pipe_end",
+		"particle": "anvilcraft:block/pump_overload"
+	}
+}
