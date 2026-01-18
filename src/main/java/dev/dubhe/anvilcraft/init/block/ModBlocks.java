@@ -2095,7 +2095,7 @@ public class ModBlocks {
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_pillar_from_frost_metal_block"));
-            SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.CUT_FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get())
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_pillar_from_cut_frost_metal_block"));
         })
@@ -2152,7 +2152,7 @@ public class ModBlocks {
         .build()
         .recipe((ctx, provider) -> {
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
-                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_FROST_METAL_BLOCK))
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_stairs_from_frost_metal_block"));
             SingleItemRecipeBuilder.stonecutting(
                     Ingredient.of(ModBlocks.CUT_FROST_METAL_BLOCK),
@@ -2160,7 +2160,7 @@ public class ModBlocks {
                     ctx.get(),
                     1
                 )
-                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_FROST_METAL_BLOCK))
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_stairs_from_cut_frost_metal_block"));
         })
         .register();
@@ -3109,23 +3109,23 @@ public class ModBlocks {
         .tag(Tags.Blocks.GLASS_BLOCKS)
         .register();
 
-//    public static final BlockEntry<? extends Block> FROST_GLASS = REGISTRATE.block("frost_glass", TransparentBlock::new)
-//        .initialProperties(() -> Blocks.GLASS)
-//        .properties(properties -> properties.explosionResistance(1200)
-//            .noOcclusion()
-//            .isValidSpawn(ModBlocks::never)
-//            .isRedstoneConductor(ModBlocks::never)
-//            .isSuffocating(ModBlocks::never)
-//            .isViewBlocking(ModBlocks::never))
-//        .blockstate((ctx, provider) -> {
-//            provider.simpleBlock(ctx.get());
-//            provider.models().cubeAll(ctx.getName(), provider.modLoc("block/" + ctx.getName())).renderType("translucent");
-//        })
-//        .tag(Tags.Blocks.GLASS_BLOCKS)
-//        .item()
-//        .tag(Tags.Items.GLASS_BLOCKS)
-//        .build()
-//        .register();
+    public static final BlockEntry<? extends Block> FROST_GLASS = REGISTRATE.block("frost_glass", TransparentBlock::new)
+        .initialProperties(() -> Blocks.GLASS)
+        .properties(properties -> properties.explosionResistance(1200)
+            .noOcclusion()
+            .isValidSpawn(ModBlocks::never)
+            .isRedstoneConductor(ModBlocks::never)
+            .isSuffocating(ModBlocks::never)
+            .isViewBlocking(ModBlocks::never))
+        .blockstate((ctx, provider) -> {
+            provider.simpleBlock(ctx.get());
+            provider.models().cubeAll(ctx.getName(), provider.modLoc("block/" + ctx.getName())).renderType("translucent");
+        })
+        .tag(Tags.Blocks.GLASS_BLOCKS)
+        .item()
+        .tag(Tags.Items.GLASS_BLOCKS)
+        .build()
+        .register();
 
     public static final BlockEntry<? extends Block> EMBER_GLASS = REGISTRATE.block("ember_glass", TransparentBlock::new)
         .initialProperties(() -> Blocks.GLASS)

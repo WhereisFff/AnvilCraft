@@ -1,0 +1,18 @@
+{
+  "type": "anvilcraft:super_heating",
+  "ingredients": [
+    {
+      "count": 8,
+      "items": "anvilcraft:quartz_sand"
+    },
+    {
+      "items": "anvilcraft:frost_metal_ingot"
+    }
+  ],
+  "results": [
+    {
+      "count": 8,
+      "id": "anvilcraft:frost_glass"
+    }
+  ]
+}

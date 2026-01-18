@@ -85,6 +85,11 @@ public class SuperHeatingRecipeLoader {
             .save(provider);
         SuperHeatingRecipe.builder()
             .requires(ModBlocks.QUARTZ_SAND, 8)
+            .requires(ModItems.FROST_METAL_INGOT)
+            .result(ModBlocks.FROST_GLASS, 8)
+            .save(provider);
+        SuperHeatingRecipe.builder()
+            .requires(ModBlocks.QUARTZ_SAND, 8)
             .requires(ModItems.EMBER_METAL_INGOT)
             .result(ModBlocks.EMBER_GLASS, 8)
             .save(provider);
