@@ -63,6 +63,25 @@ public class StampingRecipeLoader {
             .result(ModItems.TIN_CAN)
             .result(ModItems.ROYAL_STEEL_INGOT)
             .save(provider, AnvilCraft.of("stamping/tin_can_from_plate"));
+        StampingRecipe.builder()
+            .requires(ModItems.GEODE)
+            .result(Items.AMETHYST_SHARD, 4)
+            .result(ModItems.TOPAZ.get(), 0.25f)
+            .result(ModItems.SAPPHIRE.get(), 0.25f)
+            .result(ModItems.RUBY.get(), 0.25f)
+            .save(provider, AnvilCraft.of("stamping/geode_gems"));
+        StampingRecipe.builder()
+            .requires(Items.COCOA_BEANS)
+            .result(ModFoodItems.COCOA_BUTTER)
+            .result(ModFoodItems.COCOA_POWDER)
+            .save(provider);
+        StampingRecipe.builder()
+            .requires(ModItems.PRISMARINE_CLUSTER)
+            .result(Items.PRISMARINE_CRYSTALS, 2)
+            .result(Items.PRISMARINE_SHARD)
+            .result(Items.PRISMARINE_CRYSTALS, 0.5f)
+            .result(ModItems.PRISMARINE_BLADE, 0.15f)
+            .save(provider);
 
         StampingRecipe.builder()
             .requires(ModBlocks.NESTING_SHULKER_BOX)

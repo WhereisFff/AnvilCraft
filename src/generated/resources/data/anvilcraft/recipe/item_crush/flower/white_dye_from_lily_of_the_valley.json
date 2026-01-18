@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "minecraft:lily_of_the_valley"
+    }
+  ],
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:white_dye"
+    }
+  ]
+}

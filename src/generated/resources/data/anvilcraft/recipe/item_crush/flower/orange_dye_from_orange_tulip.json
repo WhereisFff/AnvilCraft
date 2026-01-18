@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "minecraft:orange_tulip"
+    }
+  ],
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:orange_dye"
+    }
+  ]
+}

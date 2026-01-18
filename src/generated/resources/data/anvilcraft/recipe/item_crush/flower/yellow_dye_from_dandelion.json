@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "minecraft:dandelion"
+    }
+  ],
+  "results": [
+    {
+      "count": 2,
+      "id": "minecraft:yellow_dye"
+    }
+  ]
+}
