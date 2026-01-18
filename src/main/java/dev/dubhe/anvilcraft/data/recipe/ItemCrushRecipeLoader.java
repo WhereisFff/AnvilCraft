@@ -46,6 +46,31 @@ public class ItemCrushRecipeLoader {
             .result(Items.PRISMARINE_CRYSTALS, 0.5f)
             .result(ModItems.PRISMARINE_BLADE, 0.15f)
             .save(provider);
+        ItemCrushRecipe.builder()
+            .requires(Items.BEETROOT)
+            .result(Items.RED_DYE)
+            .result(Items.SUGAR)
+            .save(provider, AnvilCraft.of("item_crush/red_dye_from_beetroot"));
+        ItemCrushRecipe.builder()
+            .requires(ItemTags.WOOL)
+            .result(Items.STRING, 4)
+            .save(provider);
+        ItemCrushRecipe.builder()
+            .requires(Items.BONE)
+            .result(Items.BONE_MEAL, 6)
+            .save(provider, AnvilCraft.of("item_crush/bone_meal_from_bone"));
+        ItemCrushRecipe.builder()
+            .requires(Items.BLAZE_ROD)
+            .result(Items.BLAZE_POWDER, 4)
+            .save(provider);
+        ItemCrushRecipe.builder()
+            .requires(Items.BREEZE_ROD)
+            .result(Items.WIND_CHARGE, 8)
+            .save(provider);
+        ItemCrushRecipe.builder()
+            .requires(Items.LEATHER)
+            .result(Items.RABBIT_HIDE, 4)
+            .save(provider);
 
         ItemCrushRecipe.builder()
             .requires(Items.CREEPER_HEAD)
@@ -55,7 +80,7 @@ public class ItemCrushRecipeLoader {
         ItemCrushRecipe.builder()
             .requires(Items.SKELETON_SKULL)
             .result(Items.BONE_MEAL, 64)
-            .save(provider);
+            .save(provider, AnvilCraft.of("item_crush/bone_meal_from_skeleton_skull"));
 
         armor(provider, Items.CHAINMAIL_HELMET, Items.CHAIN);
         armor(provider, Items.CHAINMAIL_CHESTPLATE, Items.CHAIN);

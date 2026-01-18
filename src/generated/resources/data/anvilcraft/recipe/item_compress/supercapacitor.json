@@ -1,9 +1,9 @@
 {
-  "type": "anvillib:in_world_recipe",
+  "type": "anvillib_recipe:in_world_recipe",
   "compatible": true,
   "conflicting": [
     {
-      "type": "anvillib:has_item_ingredient",
+      "type": "anvillib_recipe:has_item_ingredient",
       "item": {
         "items": "anvilcraft:resin_block",
         "predicates": {
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "type": "anvillib:has_item_ingredient",
+      "type": "anvillib_recipe:has_item_ingredient",
       "item": {
         "count": 2,
         "items": "#c:plates/iron"
@@ -64,11 +64,11 @@
   ],
   "outcomes": [
     {
-      "type": "anvillib:choose_one",
+      "type": "anvillib_recipe:choose_one",
       "choices": [
         {
           "outcome": {
-            "type": "anvillib:produce_explosion",
+            "type": "anvillib_recipe:produce_explosion",
             "fire": true,
             "interact": "block",
             "offset": [
@@ -82,7 +82,7 @@
         },
         {
           "outcome": {
-            "type": "anvillib:spawn_item",
+            "type": "anvillib_recipe:spawn_item",
             "item": "anvilcraft:supercapacitor",
             "offset": [
               0.0,

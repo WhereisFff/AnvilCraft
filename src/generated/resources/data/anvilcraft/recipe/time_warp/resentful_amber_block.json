@@ -1,12 +1,12 @@
 {
-  "type": "anvillib:in_world_recipe",
+  "type": "anvillib_recipe:in_world_recipe",
   "compatible": true,
   "conflicting": [
     {
-      "type": "anvillib:has_item_ingredient",
+      "type": "anvillib_recipe:has_item_ingredient",
       "functions": [
         {
-          "type": "anvillib:save_component_2_tag",
+          "type": "anvillib_recipe:save_component_2_tag",
           "component": "anvilcraft:saved_entity",
           "path": "anvilcraft:saved_entity"
         }
@@ -54,7 +54,7 @@
       ]
     },
     {
-      "type": "anvillib:has_block",
+      "type": "anvillib_recipe:has_block",
       "offset": [
         0.0,
         -2.0,
@@ -72,11 +72,11 @@
   ],
   "outcomes": [
     {
-      "type": "anvillib:choose_one",
+      "type": "anvillib_recipe:choose_one",
       "choices": [
         {
           "outcome": {
-            "type": "anvillib:spawn_item",
+            "type": "anvillib_recipe:spawn_item",
             "components": {
               "anvilcraft:saved_entity": {
                 "isMonster": false,
@@ -87,7 +87,7 @@
             },
             "functions": [
               {
-                "type": "anvillib:apply_tag_2_component",
+                "type": "anvillib_recipe:apply_tag_2_component",
                 "component": "anvilcraft:saved_entity",
                 "path": "anvilcraft:saved_entity"
               }
@@ -103,7 +103,7 @@
         },
         {
           "outcome": {
-            "type": "anvillib:spawn_item",
+            "type": "anvillib_recipe:spawn_item",
             "components": {
               "anvilcraft:saved_entity": {
                 "isMonster": true,
@@ -114,7 +114,7 @@
             },
             "functions": [
               {
-                "type": "anvillib:apply_tag_2_component",
+                "type": "anvillib_recipe:apply_tag_2_component",
                 "component": "anvilcraft:saved_entity",
                 "path": "anvilcraft:saved_entity"
               }

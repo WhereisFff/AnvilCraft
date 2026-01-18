@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "minecraft:blaze_rod"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "minecraft:blaze_powder"
+    }
+  ]
+}

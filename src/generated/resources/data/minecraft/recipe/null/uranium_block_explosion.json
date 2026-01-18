@@ -1,9 +1,9 @@
 {
-  "type": "anvillib:in_world_recipe",
+  "type": "anvillib_recipe:in_world_recipe",
   "compatible": true,
   "conflicting": [
     {
-      "type": "anvillib:has_item_ingredient",
+      "type": "anvillib_recipe:has_item_ingredient",
       "item": {
         "items": "anvilcraft:uranium_block"
       },
@@ -33,7 +33,7 @@
       ]
     },
     {
-      "type": "anvillib:has_block",
+      "type": "anvillib_recipe:has_block",
       "offset": [
         0.0,
         -2.0,
@@ -46,11 +46,11 @@
   ],
   "outcomes": [
     {
-      "type": "anvillib:choose_one",
+      "type": "anvillib_recipe:choose_one",
       "choices": [
         {
           "outcome": {
-            "type": "anvillib:produce_explosion",
+            "type": "anvillib_recipe:produce_explosion",
             "fire": false,
             "interact": "block",
             "offset": [
