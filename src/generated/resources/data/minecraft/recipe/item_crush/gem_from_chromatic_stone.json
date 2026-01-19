@@ -1,0 +1,96 @@
+{
+  "type": "anvillib_recipe:in_world_recipe",
+  "compatible": true,
+  "conflicting": [
+    {
+      "type": "anvillib_recipe:has_item_ingredient",
+      "item": {
+        "items": "anvilcraft:chromatic_stone"
+      },
+      "offset": [
+        0.0,
+        -0.125,
+        0.0
+      ],
+      "range": [
+        0.75,
+        0.75,
+        0.75
+      ]
+    }
+  ],
+  "icon": {
+    "count": 1,
+    "id": "anvilcraft:crushing_table"
+  },
+  "non_conflicting": [
+    {
+      "type": "anvillib_recipe:has_block",
+      "offset": [
+        0.0,
+        -1.0,
+        0.0
+      ],
+      "predicate": {
+        "blocks": "anvilcraft:crushing_table"
+      }
+    }
+  ],
+  "outcomes": [
+    {
+      "type": "anvillib_recipe:choose_one",
+      "choices": [
+        {
+          "outcome": {
+            "type": "anvillib_recipe:spawn_item",
+            "item": "anvilcraft:ruby",
+            "offset": [
+              0.0,
+              -0.6875,
+              0.0
+            ]
+          },
+          "weight": 0.25
+        },
+        {
+          "outcome": {
+            "type": "anvillib_recipe:spawn_item",
+            "item": "anvilcraft:topaz",
+            "offset": [
+              0.0,
+              -0.6875,
+              0.0
+            ]
+          },
+          "weight": 0.25
+        },
+        {
+          "outcome": {
+            "type": "anvillib_recipe:spawn_item",
+            "item": "anvilcraft:sapphire",
+            "offset": [
+              0.0,
+              -0.6875,
+              0.0
+            ]
+          },
+          "weight": 0.25
+        },
+        {
+          "outcome": {
+            "type": "anvillib_recipe:spawn_item",
+            "item": "minecraft:emerald",
+            "offset": [
+              0.0,
+              -0.6875,
+              0.0
+            ]
+          },
+          "weight": 0.25
+        }
+      ]
+    }
+  ],
+  "priority": 4,
+  "trigger": "anvilcraft:on_anvil_fall_on"
+}

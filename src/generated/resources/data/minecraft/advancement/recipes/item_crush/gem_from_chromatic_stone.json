@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:item_crush/chromatic_stone"
+        "recipe": "minecraft:gem_from_chromatic_stone"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:item_crush/chromatic_stone"
+      "minecraft:gem_from_chromatic_stone"
     ]
   }
 }

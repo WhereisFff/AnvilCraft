@@ -1,10 +1,13 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.init.recipe.ModRecipeTriggers;
+import dev.dubhe.anvilcraft.recipe.anvil.builder.ExtendInWorldRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
@@ -58,14 +61,44 @@ public class ItemCrushRecipeLoader {
             .result(ModItems.SAPPHIRE.get(), 0.25f)
             .result(ModItems.RUBY.get(), 0.25f)
             .save(provider, AnvilCraft.of("item_crush/geode_gems"));
-        ItemCrushRecipe.builder()
-            .requires(ModBlocks.CHROMATIC_STONE)
-            .result(Items.QUARTZ, 3)
-            .result(Items.EMERALD, 0.25f)
-            .result(ModItems.TOPAZ.get(), 0.25f)
-            .result(ModItems.SAPPHIRE.get(), 0.25f)
-            .result(ModItems.RUBY.get(), 0.25f)
-            .save(provider, AnvilCraft.of("item_crush/chromatic_stone"));
+
+        ExtendInWorldRecipeBuilder.extendCompatible(ModRecipeTriggers.ON_ANVIL_FALL_ON)
+            .group("item_crush")
+            .icon(ModBlocks.CRUSHING_TABLE.asStack())
+            .hasBlock(0, -1, 0, ModBlocks.CRUSHING_TABLE.getDefaultState())
+            .hasItemIngredient((builder) -> builder
+                .offset(0, -.125, 0)
+                .range(.75, .75, .75)
+                .of(ModBlocks.CHROMATIC_STONE)
+            )
+            .chooseOne((builder) -> builder
+                .choice(
+                    SpawnItem.builder()
+                        .offset(0, -.6875, 0)
+                        .item(ModItems.RUBY)
+                        .build(),
+                    .25f
+                ).choice(
+                    SpawnItem.builder()
+                        .offset(0, -.6875, 0)
+                        .item(ModItems.TOPAZ)
+                        .build(),
+                    .25f
+                ).choice(
+                    SpawnItem.builder()
+                        .offset(0, -.6875, 0)
+                        .item(ModItems.SAPPHIRE)
+                        .build(),
+                    .25f
+                ).choice(
+                    SpawnItem.builder()
+                        .offset(0, -.6875, 0)
+                        .item(Items.EMERALD)
+                        .build(),
+                    .25f
+                )
+            )
+            .save(provider, "gem_from_chromatic_stone");
 
         ItemCrushRecipe.builder()
             .requires(Items.CREEPER_HEAD)

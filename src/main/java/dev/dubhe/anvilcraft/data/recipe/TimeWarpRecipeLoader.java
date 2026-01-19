@@ -75,15 +75,15 @@ public class TimeWarpRecipeLoader {
             .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
             .save(provider);
         TimeWarpRecipe.builder()
-            .requires(Blocks.STONE)
-            .result(ModBlocks.CHROMATIC_STONE)
-            .consume(1000)
-            .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
-            .save(provider);
-        TimeWarpRecipe.builder()
             .requires(ItemTags.LOGS)
             .result(Items.COAL)
             .save(provider, AnvilCraft.of("time_warp/coal_from_logs"));
+
+        TimeWarpRecipe.builder()
+            .fluid(ModBlocks.MELT_GEM_CAULDRON.get())
+            .consume(1000)
+            .result(ModBlocks.CHROMATIC_STONE)
+            .save(provider);
 
         timeWarpToOilCauldron(provider, Items.ROTTEN_FLESH, 64);
         timeWarpToOilCauldron(provider, Items.SPIDER_EYE, 64);
