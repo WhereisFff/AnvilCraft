@@ -241,8 +241,8 @@ import static dev.dubhe.anvilcraft.api.power.IPowerComponent.OVERLOAD;
 import static dev.dubhe.anvilcraft.api.power.IPowerComponent.SWITCH;
 
 @SuppressWarnings({
-        "unused",
-        "CodeBlock2Expr"
+    "unused",
+    "CodeBlock2Expr"
 })
 public class ModBlocks {
     static {
