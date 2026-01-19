@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.block;
 import com.mojang.serialization.MapCodec;
 import dev.dubhe.anvilcraft.block.entity.MineralFountainBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -50,6 +51,7 @@ public class MineralFountainBlock extends BaseEntityBlock {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
         setTickCount(level, pos);
+        if (!oldState.is(state.getBlock())) TriggerUtil.mineralFountainCreate(level, pos);
         super.onPlace(state, level, pos, oldState, movedByPiston);
     }
 

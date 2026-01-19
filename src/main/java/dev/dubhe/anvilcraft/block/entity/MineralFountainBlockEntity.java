@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.reicpe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainRecipe;
+import dev.dubhe.anvilcraft.util.TriggerUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -31,7 +32,8 @@ public class MineralFountainBlockEntity extends BlockEntity {
     }
 
     public static MineralFountainBlockEntity createBlockEntity(
-        BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
+        BlockEntityType<?> type, BlockPos pos, BlockState blockState
+    ) {
         return new MineralFountainBlockEntity(type, pos, blockState);
     }
 
