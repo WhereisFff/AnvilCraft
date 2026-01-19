@@ -201,7 +201,6 @@ public class TimeWarpRecipeLoader {
             .result(ModItems.RAW_LEAD.asStack())
             .save(provider, AnvilCraft.of("time_warp/raw_uranium_from_plutonium_block"));
 
-
         TimeWarpRecipe.builder()
             .requires(ItemIngredientPredicate.Builder.item()
                 .of(ModBlocks.RESIN_BLOCK)

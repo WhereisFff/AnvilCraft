@@ -98,7 +98,7 @@ public class ItemCrushRecipeLoader {
                     .25f
                 )
             )
-            .save(provider, "gem_from_chromatic_stone");
+            .save(provider, AnvilCraft.of("item_crush/gem_from_chromatic_stone"));
 
         ItemCrushRecipe.builder()
             .requires(Items.CREEPER_HEAD)
