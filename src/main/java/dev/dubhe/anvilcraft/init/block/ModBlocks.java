@@ -2136,7 +2136,7 @@ public class ModBlocks {
 
     public static final BlockEntry<FrostMetalStairBlock> CUT_FROST_METAL_STAIRS = REGISTRATE.block(
             "cut_frost_metal_stairs",
-            properties -> new FrostMetalStairBlock(ModBlocks.CUT_FROST_METAL_BLOCK.getDefaultState(),properties)
+            properties -> new FrostMetalStairBlock(ModBlocks.CUT_FROST_METAL_BLOCK.getDefaultState(), properties)
         )
         .tag(
             BlockTags.MINEABLE_WITH_PICKAXE,

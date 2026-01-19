@@ -196,5 +196,4 @@ public class ItemCrushRecipeLoader {
             .save(provider, AnvilCraft.of("item_crush/flower/%s_from_%s".formatted(getName(result), getName(flower))));
     }
 
-
 }
