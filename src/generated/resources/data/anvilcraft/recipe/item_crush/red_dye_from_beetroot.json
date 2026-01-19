@@ -1,0 +1,16 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "minecraft:beetroot"
+    }
+  ],
+  "results": [
+    {
+      "id": "minecraft:red_dye"
+    },
+    {
+      "id": "minecraft:sugar"
+    }
+  ]
+}

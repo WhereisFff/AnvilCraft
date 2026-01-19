@@ -1,0 +1,15 @@
+{
+  "type": "anvilcraft:time_warp",
+  "consume": 1000,
+  "fluid": "anvilcraft:melt_gem",
+  "ingredients": [
+    {
+      "items": "minecraft:stone"
+    }
+  ],
+  "results": [
+    {
+      "id": "anvilcraft:chromatic_stone"
+    }
+  ]
+}

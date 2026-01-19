@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:item_crush/bone_meal"
+        "recipe": "anvilcraft:item_crush/flower/magenta_dye_from_lilac"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:item_crush/bone_meal"
+      "anvilcraft:item_crush/flower/magenta_dye_from_lilac"
     ]
   }
 }

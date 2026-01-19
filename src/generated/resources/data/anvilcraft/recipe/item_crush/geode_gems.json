@@ -1,0 +1,38 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "anvilcraft:geode"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "minecraft:amethyst_shard"
+    },
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
+      "id": "anvilcraft:topaz"
+    },
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
+      "id": "anvilcraft:sapphire"
+    },
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
+      "id": "anvilcraft:ruby"
+    }
+  ]
+}

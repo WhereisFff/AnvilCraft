@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:super_heating/melt_gem_cauldron"
+        "recipe": "anvilcraft:item_crush/flower/cyan_dye_from_pitcher_plant"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:super_heating/melt_gem_cauldron"
+      "anvilcraft:item_crush/flower/cyan_dye_from_pitcher_plant"
     ]
   }
 }

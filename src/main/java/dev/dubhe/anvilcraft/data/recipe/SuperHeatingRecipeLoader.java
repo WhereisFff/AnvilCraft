@@ -85,6 +85,11 @@ public class SuperHeatingRecipeLoader {
             .save(provider);
         SuperHeatingRecipe.builder()
             .requires(ModBlocks.QUARTZ_SAND, 8)
+            .requires(ModItems.FROST_METAL_INGOT)
+            .result(ModBlocks.FROST_GLASS, 8)
+            .save(provider);
+        SuperHeatingRecipe.builder()
+            .requires(ModBlocks.QUARTZ_SAND, 8)
             .requires(ModItems.EMBER_METAL_INGOT)
             .result(ModBlocks.EMBER_GLASS, 8)
             .save(provider);
@@ -118,7 +123,12 @@ public class SuperHeatingRecipeLoader {
             .transform(ModBlocks.MELT_GEM_CAULDRON.get())
             .produce(1000)
             .requires(ModItemTags.GEM_BLOCKS)
-            .save(provider, AnvilCraft.of("super_heating/melt_gem_cauldron"));
+            .save(provider, AnvilCraft.of("super_heating/melt_gem_cauldron_from_gem_block"));
+        SuperHeatingRecipe.builder()
+            .transform(ModBlocks.MELT_GEM_CAULDRON.get())
+            .produce(1000)
+            .requires(ModBlocks.CHROMATIC_STONE)
+            .save(provider, AnvilCraft.of("super_heating/melt_gem_cauldron_from_chromatic_stone"));
 
         // metalBlockFromRaw
         metalBlockFromRaw(provider, Tags.Items.STORAGE_BLOCKS_RAW_COPPER, Items.COPPER_BLOCK);

@@ -6,7 +6,6 @@ import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemCrushRecipe;
-import dev.dubhe.anvilcraft.recipe.anvil.wrap.StampingRecipe;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
@@ -27,25 +26,46 @@ public class ItemCrushRecipeLoader {
             .result(ModItems.WOOD_FIBER)
             .result(ModItems.RESIN)
             .save(provider);
-        StampingRecipe.builder()
+        ItemCrushRecipe.builder()
+            .requires(Items.BEETROOT)
+            .result(Items.RED_DYE)
+            .result(Items.SUGAR)
+            .save(provider, AnvilCraft.of("item_crush/red_dye_from_beetroot"));
+        ItemCrushRecipe.builder()
+            .requires(ItemTags.WOOL)
+            .result(Items.STRING, 4)
+            .save(provider);
+        ItemCrushRecipe.builder()
+            .requires(Items.BONE)
+            .result(Items.BONE_MEAL, 6)
+            .save(provider, AnvilCraft.of("item_crush/bone_meal_from_bone"));
+        ItemCrushRecipe.builder()
+            .requires(Items.BLAZE_ROD)
+            .result(Items.BLAZE_POWDER, 4)
+            .save(provider);
+        ItemCrushRecipe.builder()
+            .requires(Items.BREEZE_ROD)
+            .result(Items.WIND_CHARGE, 8)
+            .save(provider);
+        ItemCrushRecipe.builder()
+            .requires(Items.LEATHER)
+            .result(Items.RABBIT_HIDE, 4)
+            .save(provider);
+        ItemCrushRecipe.builder()
             .requires(ModItems.GEODE)
             .result(Items.AMETHYST_SHARD, 4)
             .result(ModItems.TOPAZ.get(), 0.25f)
             .result(ModItems.SAPPHIRE.get(), 0.25f)
             .result(ModItems.RUBY.get(), 0.25f)
-            .save(provider, AnvilCraft.of("stamping/geode_gems"));
-        StampingRecipe.builder()
-            .requires(Items.COCOA_BEANS)
-            .result(ModFoodItems.COCOA_BUTTER)
-            .result(ModFoodItems.COCOA_POWDER)
-            .save(provider);
-        StampingRecipe.builder()
-            .requires(ModItems.PRISMARINE_CLUSTER)
-            .result(Items.PRISMARINE_CRYSTALS, 2)
-            .result(Items.PRISMARINE_SHARD)
-            .result(Items.PRISMARINE_CRYSTALS, 0.5f)
-            .result(ModItems.PRISMARINE_BLADE, 0.15f)
-            .save(provider);
+            .save(provider, AnvilCraft.of("item_crush/geode_gems"));
+        ItemCrushRecipe.builder()
+            .requires(ModBlocks.CHROMATIC_STONE)
+            .result(Items.QUARTZ, 3)
+            .result(Items.EMERALD, 0.25f)
+            .result(ModItems.TOPAZ.get(), 0.25f)
+            .result(ModItems.SAPPHIRE.get(), 0.25f)
+            .result(ModItems.RUBY.get(), 0.25f)
+            .save(provider, AnvilCraft.of("item_crush/chromatic_stone"));
 
         ItemCrushRecipe.builder()
             .requires(Items.CREEPER_HEAD)
@@ -55,7 +75,7 @@ public class ItemCrushRecipeLoader {
         ItemCrushRecipe.builder()
             .requires(Items.SKELETON_SKULL)
             .result(Items.BONE_MEAL, 64)
-            .save(provider);
+            .save(provider, AnvilCraft.of("item_crush/bone_meal_from_skeleton_skull"));
 
         armor(provider, Items.CHAINMAIL_HELMET, Items.CHAIN);
         armor(provider, Items.CHAINMAIL_CHESTPLATE, Items.CHAIN);
@@ -118,6 +138,27 @@ public class ItemCrushRecipeLoader {
         blockCrush(provider, Items.SOUL_SOIL, Items.SOUL_SAND);
         blockCrush(provider, Items.NETHERRACK, ModBlocks.NETHER_DUST.get());
         blockCrush(provider, Items.END_STONE, ModBlocks.END_DUST.get());
+
+        flower(provider, Items.LILY_OF_THE_VALLEY, Items.WHITE_DYE);
+        flower(provider, Items.AZURE_BLUET, Items.LIGHT_GRAY_DYE);
+        flower(provider, Items.OXEYE_DAISY, Items.LIGHT_GRAY_DYE);
+        flower(provider, Items.WHITE_TULIP, Items.LIGHT_GRAY_DYE);
+        flower(provider, Items.WITHER_ROSE, Items.BLACK_DYE);
+        flower(provider, Items.POPPY, Items.RED_DYE);
+        flower(provider, Items.ROSE_BUSH, Items.RED_DYE, 4);
+        flower(provider, Items.RED_TULIP, Items.RED_DYE);
+        flower(provider, Items.ORANGE_TULIP, Items.ORANGE_DYE);
+        flower(provider, Items.TORCHFLOWER, Items.ORANGE_DYE);
+        flower(provider, Items.DANDELION, Items.YELLOW_DYE);
+        flower(provider, Items.SUNFLOWER, Items.YELLOW_DYE, 4);
+        flower(provider, Items.PITCHER_PLANT, Items.CYAN_DYE, 4);
+        flower(provider, Items.BLUE_ORCHID, Items.LIGHT_BLUE_DYE);
+        flower(provider, Items.CORNFLOWER, Items.BLUE_DYE);
+        flower(provider, Items.ALLIUM, Items.MAGENTA_DYE);
+        flower(provider, Items.LILAC, Items.MAGENTA_DYE, 4);
+        flower(provider, Items.PEONY, Items.PINK_DYE, 4);
+        flower(provider, Items.PINK_PETALS, Items.PINK_DYE);
+        flower(provider, Items.PINK_TULIP, Items.PINK_DYE);
     }
 
     private static void tool(RegistrateRecipeProvider provider, ItemLike tool, ItemLike result) {
@@ -140,4 +181,19 @@ public class ItemCrushRecipeLoader {
             .result(result, UniformGenerator.between(0.0f, 2.0f))
             .save(provider, AnvilCraft.of("item_crush/armor/%s_2_%s".formatted(getName(armor), getName(result))));
     }
+
+    public static void flower(RegistrateRecipeProvider provider, ItemLike flower, ItemLike result) {
+        ItemCrushRecipe.builder()
+            .requires(flower)
+            .result(result, 2)
+            .save(provider, AnvilCraft.of("item_crush/flower/%s_from_%s".formatted(getName(result), getName(flower))));
+    }
+
+    public static void flower(RegistrateRecipeProvider provider, ItemLike flower, ItemLike result, int resultNum) {
+        ItemCrushRecipe.builder()
+            .requires(flower)
+            .result(result, resultNum)
+            .save(provider, AnvilCraft.of("item_crush/flower/%s_from_%s".formatted(getName(result), getName(flower))));
+    }
+
 }

@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "minecraft:breeze_rod"
+    }
+  ],
+  "results": [
+    {
+      "count": 8,
+      "id": "minecraft:wind_charge"
+    }
+  ]
+}

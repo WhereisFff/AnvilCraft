@@ -1,9 +1,9 @@
 {
-  "type": "anvillib:in_world_recipe",
+  "type": "anvillib_recipe:in_world_recipe",
   "compatible": true,
   "conflicting": [
     {
-      "type": "anvillib:has_item_ingredient",
+      "type": "anvillib_recipe:has_item_ingredient",
       "item": {
         "items": "anvilcraft:ember_metal_upgrade_smithing_template"
       },
@@ -25,7 +25,7 @@
   },
   "non_conflicting": [
     {
-      "type": "anvillib:has_block",
+      "type": "anvillib_recipe:has_block",
       "offset": [
         0.0,
         0.0,
@@ -41,7 +41,7 @@
   ],
   "outcomes": [
     {
-      "type": "anvillib:spawn_item",
+      "type": "anvillib_recipe:spawn_item",
       "item": "minecraft:netherite_upgrade_smithing_template",
       "offset": [
         0.0,
@@ -51,5 +51,5 @@
     }
   ],
   "priority": 4,
-  "trigger": "anvillib:item_into_block"
+  "trigger": "anvillib_recipe:item_into_block"
 }

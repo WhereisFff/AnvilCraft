@@ -1,0 +1,14 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "minecraft:pitcher_plant"
+    }
+  ],
+  "results": [
+    {
+      "count": 4,
+      "id": "minecraft:cyan_dye"
+    }
+  ]
+}

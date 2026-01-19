@@ -47,7 +47,8 @@ public class ModFluids {
             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
             .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
-        ));
+        )
+    );
     public static final DeferredHolder<Fluid, BaseFlowingFluid> OIL = FLUIDS
         .register(
             "oil",
@@ -80,15 +81,17 @@ public class ModFluids {
     }
 
     private static DeferredHolder<FluidType, FluidType> registerCementType(Color color) {
-        return FLUID_TYPES.register("%s_cement".formatted(color), () -> new FluidType(FluidType.Properties.create()
-            .descriptionId("block.anvilcraft.%s_cement".formatted(color))
-            .fallDistanceModifier(0)
-            .canExtinguish(true)
-            .supportsBoating(true)
-            .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
-            .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
-            .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
-        ));
+        return FLUID_TYPES.register(
+            "%s_cement".formatted(color), () -> new FluidType(FluidType.Properties.create()
+                .descriptionId("block.anvilcraft.%s_cement".formatted(color))
+                .fallDistanceModifier(0)
+                .canExtinguish(true)
+                .supportsBoating(true)
+                .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+                .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
+                .sound(SoundActions.FLUID_VAPORIZE, SoundEvents.FIRE_EXTINGUISH)
+            )
+        );
     }
 
     private static Object2ObjectMap<Color, DeferredHolder<Fluid, BaseFlowingFluid>> registerAllSourceCement() {
@@ -175,46 +178,62 @@ public class ModFluids {
         FLUIDS.register(eventBus);
     }
 
-    public static final Block[] FLOWING_MELT_GEM_CONVERTIBLE = {Blocks.DIORITE, Blocks.GRANITE, Blocks.ANDESITE};
+    public static final Block[] FLOWING_MELT_GEM_CONVERTIBLE = {
+        Blocks.DIORITE,
+        Blocks.GRANITE,
+        Blocks.ANDESITE
+    };
 
     public static void registerFluidInteractions(FMLCommonSetupEvent event) {
-        FluidInteractionRegistry.addInteraction(MELT_GEM.get().getFluidType(),
-            new InteractionInformation((level, currentPos, relativePos, currentState) ->
-                level.getFluidState(relativePos).getFluidType() == Fluids.WATER.getFluidType(),
+        FluidInteractionRegistry.addInteraction(
+            MELT_GEM.get().getFluidType(),
+            new InteractionInformation(
+                (level, currentPos, relativePos, currentState) ->
+                    level.getFluidState(relativePos).getFluidType() == Fluids.WATER.getFluidType(),
                 (level, currentPos, relativePos, currentState) -> {
                     Block block;
-                    if (level.getFluidState(currentPos).isSource()) block = Blocks.TERRACOTTA;
-                    else block = FLOWING_MELT_GEM_CONVERTIBLE[level.getRandom().nextInt(3)];
+                    if (level.getFluidState(currentPos).isSource()) {
+                        block = ModBlocks.CHROMATIC_STONE.get();
+                    } else {
+                        block = FLOWING_MELT_GEM_CONVERTIBLE[level.getRandom().nextInt(3)];
+                    }
                     level.setBlockAndUpdate(
                         currentPos,
                         EventHooks.fireFluidPlaceBlockEvent(level, currentPos, currentPos, block.defaultBlockState())
                     );
                     level.levelEvent(1501, currentPos, 0);
                 }
-            ));
+            )
+        );
     }
 
     public static void onRegisterFluidType(RegisterClientExtensionsEvent e) {
-        e.registerFluidType(new ModClientFluidTypeExtensionImpl(
-            AnvilCraft.of("block/oil"),
-            AnvilCraft.of("block/oil_flow"),
-            0x1B061F,
-            1.0f
-        ), OIL_TYPE);
-        for (Color color : Color.values()) {
-            e.registerFluidType(new ModClientFluidTypeExtensionImpl(
-                AnvilCraft.of("block/%s_cement".formatted(color)),
-                AnvilCraft.of("block/%s_cement".formatted(color)),
-                ColorUtil.mulValue(((DyeItem) color.dyeItem()).getDyeColor().getTextColor(), 0.6f),
+        e.registerFluidType(
+            new ModClientFluidTypeExtensionImpl(
+                AnvilCraft.of("block/oil"),
+                AnvilCraft.of("block/oil_flow"),
+                0x1B061F,
                 1.0f
-            ), CEMENT_TYPES.get(color));
+            ), OIL_TYPE
+        );
+        for (Color color : Color.values()) {
+            e.registerFluidType(
+                new ModClientFluidTypeExtensionImpl(
+                    AnvilCraft.of("block/%s_cement".formatted(color)),
+                    AnvilCraft.of("block/%s_cement".formatted(color)),
+                    ColorUtil.mulValue(((DyeItem) color.dyeItem()).getDyeColor().getTextColor(), 0.6f),
+                    1.0f
+                ), CEMENT_TYPES.get(color)
+            );
         }
-        e.registerFluidType(new ModClientFluidTypeExtensionImpl(
-            AnvilCraft.of("block/melt_gem"),
-            AnvilCraft.of("block/melt_gem_flow"),
-            0xB7EEDE,
-            2.0f
-        ), MELT_GEM_TYPE);
+        e.registerFluidType(
+            new ModClientFluidTypeExtensionImpl(
+                AnvilCraft.of("block/melt_gem"),
+                AnvilCraft.of("block/melt_gem_flow"),
+                0xB7EEDE,
+                2.0f
+            ), MELT_GEM_TYPE
+        );
     }
 
 }

@@ -10,7 +10,6 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.recipe.frost.PermutationRecipe;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -108,7 +107,7 @@ public class PermutationRecipeLoader {
         );
 
         PermutationRecipe.builder()
-            .material(ModItems.MULTIPHASE_MATTER)
+            .material(ModBlocks.CHROMATIC_STONE)
             .input(ModItems.EMERALD_AMULET)
             .input(ModItems.TOPAZ_AMULET)
             .input(ModItems.RUBY_AMULET)

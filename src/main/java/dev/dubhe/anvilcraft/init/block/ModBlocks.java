@@ -48,6 +48,9 @@ import dev.dubhe.anvilcraft.block.FlintBlock;
 import dev.dubhe.anvilcraft.block.FrostAnvilBlock;
 import dev.dubhe.anvilcraft.block.FrostGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.FrostMetalBlock;
+import dev.dubhe.anvilcraft.block.FrostMetalPillarBlock;
+import dev.dubhe.anvilcraft.block.FrostMetalSlabBlock;
+import dev.dubhe.anvilcraft.block.FrostMetalStairBlock;
 import dev.dubhe.anvilcraft.block.FrostSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.GunpowderBlock;
@@ -2015,18 +2018,19 @@ public class ModBlocks {
         })
         .register();
 
-    public static final BlockEntry<FrostMetalBlock> FROST_METAL_BLOCK = REGISTRATE
-        .block("frost_metal_block", FrostMetalBlock::new)
+    public static final BlockEntry<FrostMetalBlock> FROST_METAL_BLOCK = REGISTRATE.block(
+            "frost_metal_block",
+            FrostMetalBlock::new
+        )
         .lang("Block of Frost Metal")
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
         .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
         .tag(
+            BlockTags.BEACON_BASE_BLOCKS,
             BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_IRON_TOOL,
-            BlockTags.BEACON_BASE_BLOCKS,
             ModBlockTags.OVERSEER_BASE,
             Tags.Blocks.STORAGE_BLOCKS,
-            ModBlockTags.HAMMER_REMOVABLE,
             ModBlockTags.STORAGE_BLOCKS_FROST_METAL
         )
         .blockstate((context, provider) -> provider.simpleBlock(
@@ -2048,12 +2052,124 @@ public class ModBlocks {
         .defaultLoot()
         .register();
 
+    public static final BlockEntry<FrostMetalBlock> CUT_FROST_METAL_BLOCK = REGISTRATE.block(
+            "cut_frost_metal_block",
+            FrostMetalBlock::new
+        )
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_IRON_TOOL,
+            ModBlockTags.OVERSEER_BASE
+        )
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
+        .blockstate((context, provider) -> provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/cut_frost_metal_block").get()
+        ))
+        .simpleItem()
+        .recipe((ctx, provider) -> {
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_block"));
+        })
+        .defaultLoot()
+        .register();
+
+    public static final BlockEntry<FrostMetalPillarBlock> CUT_FROST_METAL_PILLAR = REGISTRATE.block(
+            "cut_frost_metal_pillar",
+            FrostMetalPillarBlock::new
+        )
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_IRON_TOOL,
+            ModBlockTags.OVERSEER_BASE
+        )
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .simpleItem()
+        .recipe((ctx, provider) -> {
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_pillar_from_frost_metal_block"));
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.CUT_FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_pillar_from_cut_frost_metal_block"));
+        })
+        .defaultLoot()
+        .register();
+
+    public static final BlockEntry<FrostMetalSlabBlock> CUT_FROST_METAL_SLAB = REGISTRATE.block(
+            "cut_frost_metal_slab",
+            FrostMetalSlabBlock::new
+        )
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_IRON_TOOL,
+            BlockTags.SLABS,
+            ModBlockTags.OVERSEER_BASE
+        )
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .tag(ItemTags.SLABS)
+        .build()
+        .recipe((ctx, provider) -> {
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 8)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_slab_from_frost_metal_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_FROST_METAL_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    2
+                )
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_slab_from_cut_frost_metal_block"));
+        })
+        .loot((tables, block) -> tables.add(block, tables.createSlabItemTable(block)))
+        .register();
+
+    public static final BlockEntry<FrostMetalStairBlock> CUT_FROST_METAL_STAIRS = REGISTRATE.block(
+            "cut_frost_metal_stairs",
+            properties -> new FrostMetalStairBlock(ModBlocks.CUT_FROST_METAL_BLOCK.getDefaultState(), properties)
+        )
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_IRON_TOOL,
+            BlockTags.STAIRS,
+            ModBlockTags.OVERSEER_BASE
+        )
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .tag(ItemTags.STAIRS)
+        .build()
+        .recipe((ctx, provider) -> {
+            SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.FROST_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_stairs_from_frost_metal_block"));
+            SingleItemRecipeBuilder.stonecutting(
+                    Ingredient.of(ModBlocks.CUT_FROST_METAL_BLOCK),
+                    RecipeCategory.BUILDING_BLOCKS,
+                    ctx.get(),
+                    1
+                )
+                .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.FROST_METAL_BLOCK))
+                .save(provider, AnvilCraft.of("stonecutting/cut_frost_metal_stairs_from_cut_frost_metal_block"));
+        })
+        .register();
+
     public static final BlockEntry<EmberMetalBlock> EMBER_METAL_BLOCK = REGISTRATE.block(
             "ember_metal_block",
             properties -> new EmberMetalBlock(properties, 0.5d)
         )
         .lang("Block of Ember Metal")
         .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
         .tag(
             BlockTags.BEACON_BASE_BLOCKS,
             BlockTags.MINEABLE_WITH_PICKAXE,
@@ -2063,7 +2179,6 @@ public class ModBlocks {
             Tags.Blocks.STORAGE_BLOCKS,
             ModBlockTags.HEATABLE_BLOCKS
         )
-        .properties(properties -> properties.lightLevel(state -> 9).noOcclusion().emissiveRendering(ModBlocks::always))
         .blockstate((context, provider) -> provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/ember_metal_block").get()
@@ -2894,6 +3009,13 @@ public class ModBlocks {
         })
         .register();
 
+    public static final BlockEntry<? extends Block> CHROMATIC_STONE = REGISTRATE.block("chromatic_stone", Block::new)
+        .lang("Chromatic Stone")
+        .initialProperties(() -> Blocks.EMERALD_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
+        .simpleItem()
+        .register();
+
     public static final BlockEntry<? extends Block> RESIN_BLOCK = REGISTRATE.block("resin_block", ResinBlock::new)
         .lang("Block of Resin")
         .initialProperties(() -> Blocks.SLIME_BLOCK)
@@ -2990,6 +3112,24 @@ public class ModBlocks {
         .tag(Tags.Items.GLASS_BLOCKS)
         .build()
         .tag(Tags.Blocks.GLASS_BLOCKS)
+        .register();
+
+    public static final BlockEntry<? extends Block> FROST_GLASS = REGISTRATE.block("frost_glass", TransparentBlock::new)
+        .initialProperties(() -> Blocks.GLASS)
+        .properties(properties -> properties.explosionResistance(1200)
+            .noOcclusion()
+            .isValidSpawn(ModBlocks::never)
+            .isRedstoneConductor(ModBlocks::never)
+            .isSuffocating(ModBlocks::never)
+            .isViewBlocking(ModBlocks::never))
+        .blockstate((ctx, provider) -> {
+            provider.simpleBlock(ctx.get());
+            provider.models().cubeAll(ctx.getName(), provider.modLoc("block/" + ctx.getName())).renderType("translucent");
+        })
+        .tag(Tags.Blocks.GLASS_BLOCKS)
+        .item()
+        .tag(Tags.Items.GLASS_BLOCKS)
+        .build()
         .register();
 
     public static final BlockEntry<? extends Block> EMBER_GLASS = REGISTRATE.block("ember_glass", TransparentBlock::new)

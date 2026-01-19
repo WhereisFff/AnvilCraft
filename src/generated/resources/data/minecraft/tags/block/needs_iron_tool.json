@@ -10,6 +10,10 @@
     "anvilcraft:cut_royal_steel_slab",
     "anvilcraft:cut_royal_steel_stairs",
     "anvilcraft:frost_metal_block",
+    "anvilcraft:cut_frost_metal_block",
+    "anvilcraft:cut_frost_metal_pillar",
+    "anvilcraft:cut_frost_metal_slab",
+    "anvilcraft:cut_frost_metal_stairs",
     "anvilcraft:heavy_iron_block",
     "anvilcraft:polished_heavy_iron_block",
     "anvilcraft:polished_heavy_iron_slab",
@@ -26,6 +30,7 @@
     "anvilcraft:cursed_gold_block",
     "anvilcraft:topaz_block",
     "anvilcraft:ruby_block",
-    "anvilcraft:sapphire_block"
+    "anvilcraft:sapphire_block",
+    "anvilcraft:chromatic_stone"
   ]
 }

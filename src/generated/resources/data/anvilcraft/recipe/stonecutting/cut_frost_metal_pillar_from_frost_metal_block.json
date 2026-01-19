@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "anvilcraft:frost_metal_block"
+  },
+  "result": {
+    "count": 4,
+    "id": "anvilcraft:cut_frost_metal_pillar"
+  }
+}
