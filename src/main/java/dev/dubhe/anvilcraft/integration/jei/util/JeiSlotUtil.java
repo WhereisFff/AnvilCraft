@@ -149,7 +149,7 @@ public class JeiSlotUtil {
             int startX = 108;
             int startY = 15;
             for (int index = 0; index < outputSize; index++) {
-                int row = index / 2;
+                int row = index / 3;
                 int col = index % 3;
                 ChanceItemStack stack = results.get(index);
                 ItemStack itemStack = stack.stack().copy();

@@ -3011,6 +3011,13 @@ public class ModBlocks {
         })
         .register();
 
+    public static final BlockEntry<? extends Block> CHROMATIC_STONE = REGISTRATE.block("chromatic_stone", Block::new)
+        .lang("Chromatic Stone")
+        .initialProperties(() -> Blocks.EMERALD_BLOCK)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
+        .simpleItem()
+        .register();
+
     public static final BlockEntry<? extends Block> RESIN_BLOCK = REGISTRATE.block("resin_block", ResinBlock::new)
         .lang("Block of Resin")
         .initialProperties(() -> Blocks.SLIME_BLOCK)

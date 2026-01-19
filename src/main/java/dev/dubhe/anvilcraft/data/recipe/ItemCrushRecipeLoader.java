@@ -58,6 +58,14 @@ public class ItemCrushRecipeLoader {
             .result(ModItems.SAPPHIRE.get(), 0.25f)
             .result(ModItems.RUBY.get(), 0.25f)
             .save(provider, AnvilCraft.of("item_crush/geode_gems"));
+        ItemCrushRecipe.builder()
+            .requires(ModBlocks.CHROMATIC_STONE)
+            .result(Items.QUARTZ, 3)
+            .result(Items.EMERALD, 0.25f)
+            .result(ModItems.TOPAZ.get(), 0.25f)
+            .result(ModItems.SAPPHIRE.get(), 0.25f)
+            .result(ModItems.RUBY.get(), 0.25f)
+            .save(provider, AnvilCraft.of("item_crush/chromatic_stone"));
 
         ItemCrushRecipe.builder()
             .requires(Items.CREEPER_HEAD)

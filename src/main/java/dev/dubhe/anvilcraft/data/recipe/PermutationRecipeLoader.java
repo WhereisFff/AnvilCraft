@@ -108,7 +108,7 @@ public class PermutationRecipeLoader {
         );
 
         PermutationRecipe.builder()
-            .material(ModItems.MULTIPHASE_MATTER)
+            .material(ModBlocks.CHROMATIC_STONE)
             .input(ModItems.EMERALD_AMULET)
             .input(ModItems.TOPAZ_AMULET)
             .input(ModItems.RUBY_AMULET)

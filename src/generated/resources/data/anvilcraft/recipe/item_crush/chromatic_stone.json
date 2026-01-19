@@ -1,0 +1,46 @@
+{
+  "type": "anvilcraft:item_crush",
+  "ingredients": [
+    {
+      "items": "anvilcraft:chromatic_stone"
+    }
+  ],
+  "results": [
+    {
+      "count": 3,
+      "id": "minecraft:quartz"
+    },
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
+      "id": "minecraft:emerald"
+    },
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
+      "id": "anvilcraft:topaz"
+    },
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
+      "id": "anvilcraft:sapphire"
+    },
+    {
+      "count": {
+        "type": "minecraft:binomial",
+        "n": 1.0,
+        "p": 0.25
+      },
+      "id": "anvilcraft:ruby"
+    }
+  ]
+}
