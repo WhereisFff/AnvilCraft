@@ -3,7 +3,7 @@
   "criteria": {
     "make_ice": {
       "conditions": {
-        "id": "anvilcraft:squeezing/power_snow_from_ice"
+        "id": "anvilcraft:squeezing/powder_snow_cauldron_from_snow_block"
       },
       "trigger": "anvilcraft:in_world_recipe"
     }
