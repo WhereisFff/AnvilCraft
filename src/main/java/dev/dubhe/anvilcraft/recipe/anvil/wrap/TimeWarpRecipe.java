@@ -408,8 +408,11 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
 
         @Override
         public void validate(ResourceLocation id) {
-            if (itemIngredients.isEmpty()) {
-                throw new IllegalArgumentException("Recipe ingredients must not be empty, RecipeId: " + id);
+            HasCauldronSimple hasCauldronSimple = this.hasCauldron.build();
+            if (itemIngredients.isEmpty()
+                && (hasCauldronSimple.fluid().equals(HasCauldron.EMPTY)
+                || hasCauldronSimple.fluid().equals(HasCauldron.NULL))) {
+                throw new IllegalArgumentException("Recipe input must not be empty, RecipeId: " + id);
             }
         }
 

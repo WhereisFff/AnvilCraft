@@ -139,7 +139,9 @@ public class TimeWarpCategory implements IRecipeCategory<RecipeHolder<TimeWarpRe
             RenderSupport.SINGLE_BLOCK
         );
 
-        arrowIn.draw(guiGraphics, 54, 20);
+        if (!recipe.getInputItems().isEmpty()) {
+            arrowIn.draw(guiGraphics, 54, 20);
+        }
         arrowOut.draw(guiGraphics, 92, 19);
 
         JeiSlotUtil.drawInputSlots(guiGraphics, slotDefault, recipe.getInputItems().size());
