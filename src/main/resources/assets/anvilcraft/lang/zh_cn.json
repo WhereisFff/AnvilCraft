@@ -1365,5 +1365,11 @@
   "screen.anvilcraft.frost_smithing.tooltip.missing_template": "放入嬗变模板或形变模板",
   "tooltip.anvilcraft.item.frost_anvil": "防凋灵",
   "tooltip.anvilcraft.item.frost_grindstone": "防凋灵",
-  "tooltip.anvilcraft.item.frost_smithing_table": "防凋灵"
+  "tooltip.anvilcraft.item.frost_smithing_table": "防凋灵",
+  "block.anvilcraft.chromatic_stone": "异彩石",
+  "block.anvilcraft.cut_frost_metal_block": "切制浮霜金属块",
+  "block.anvilcraft.cut_frost_metal_pillar": "切制浮霜金属柱",
+  "block.anvilcraft.cut_frost_metal_slab": "切制浮霜金属台阶",
+  "block.anvilcraft.cut_frost_metal_stairs": "切制浮霜金属楼梯",
+  "block.anvilcraft.frost_glass": "浮霜玻璃"
 }
