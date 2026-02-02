@@ -20,8 +20,8 @@ public class IntegrationScreenLang {
         provider.add("screen.anvilcraft.integration_screen.category.interaction", "Interaction");
         provider.add("screen.anvilcraft.integration_screen.category.compatible", "Compatible");
         provider.add("screen.anvilcraft.integration_screen.category.additional", "Additional");
-        provider.add("screen.anvilcraft.integration_screen.target", "Target Mod:");
-        provider.add("screen.anvilcraft.integration_screen.extra", "Extra Mod:");
+        provider.add("screen.anvilcraft.integration_screen.target", "Main Mod Download:");
+        provider.add("screen.anvilcraft.integration_screen.extra", "Extra Download:");
         provider.add("screen.anvilcraft.integration_screen.loaded", "Loaded");
         provider.add("screen.anvilcraft.integration_screen.not_loaded", "Recommended");
         provider.add("screen.anvilcraft.integration_screen.not_found", "Not Installed");
