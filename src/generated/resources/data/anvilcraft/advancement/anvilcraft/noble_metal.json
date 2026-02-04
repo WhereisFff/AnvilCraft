@@ -1,11 +1,35 @@
 {
   "parent": "anvilcraft:anvilcraft/industrial_grade_smelting",
   "criteria": {
-    "royal_metal": {
+    "has_royal_steel_block": {
       "conditions": {
-        "id": "anvilcraft:super_heating/royal_steel_ingot"
+        "items": [
+          {
+            "items": "anvilcraft:royal_steel_block"
+          }
+        ]
       },
-      "trigger": "anvilcraft:in_world_recipe"
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_royal_steel_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:royal_steel_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_royal_steel_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:royal_steel_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "display": {
@@ -22,7 +46,9 @@
   },
   "requirements": [
     [
-      "royal_metal"
+      "has_royal_steel_block",
+      "has_royal_steel_ingot",
+      "has_royal_steel_nugget"
     ]
   ],
   "sends_telemetry_event": true

@@ -290,7 +290,7 @@ public class ModAdvancements {
                 true,
                 false
             )
-            .inWorldRecipeAnc("make_ice", "squeezing/power_snow_from_ice")
+            .inWorldRecipeAnc("make_ice", "squeezing/powder_snow_cauldron_from_snow_block")
             .build("ice_maker");
         _4_TO_81 = iceLine.next()
             .display(
@@ -502,7 +502,8 @@ public class ModAdvancements {
                 true,
                 false
             )
-            .inWorldRecipeAnc("royal_metal", "super_heating/royal_steel_ingot")
+            .requireAny()
+            .hasItemAny("has_", ModBlocks.ROYAL_STEEL_BLOCK, ModItems.ROYAL_STEEL_INGOT, ModItems.ROYAL_STEEL_NUGGET)
             .build("noble_metal");
 
         OVERSEER = mainLine.createBranch().next()
@@ -607,9 +608,7 @@ public class ModAdvancements {
                 false
             )
             .requireAny()
-            .hasItems("has_frost_metal_block", ModBlocks.FROST_METAL_BLOCK)
-            .hasItems("has_frost_metal_ingot", ModItems.FROST_METAL_INGOT)
-            .hasItems("has_frost_metal_nugget", ModItems.FROST_METAL_NUGGET)
+            .hasItemAny("has_", ModBlocks.FROST_METAL_BLOCK, ModItems.FROST_METAL_INGOT, ModItems.FROST_METAL_NUGGET)
             .build("frost_metal");
         TAI_SHANG_WANG_QING = frostLine.next()
             .display(
@@ -884,7 +883,8 @@ public class ModAdvancements {
                 true,
                 false
             )
-            .inWorldRecipeAnc("transcendium_block", "item_inject/transcendium_block")
+            .requireAny()
+            .hasItemAny("has_", ModBlocks.TRANSCENDIUM_BLOCK, ModItems.TRANSCENDIUM_INGOT, ModItems.TRANSCENDIUM_NUGGET)
             .build("transcendence");
     }
 }
