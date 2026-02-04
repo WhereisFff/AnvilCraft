@@ -132,7 +132,8 @@ public final class SlidingBlockSection {
                 Block.dropResources(state, level, pos);
                 continue;
             }
-            if (level.getFluidState(pos).getType() == Fluids.WATER) {
+            if (level.getFluidState(pos).getType() == Fluids.WATER
+                && state.hasProperty(BlockStateProperties.WATERLOGGED)) {
                 state = state.setValue(BlockStateProperties.WATERLOGGED, true);
             }
 

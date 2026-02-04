@@ -2,13 +2,14 @@ package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.block.PulseGeneratorBlock;
-import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.inventory.PulseGeneratorMenu;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.Getter;
 import lombok.Setter;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import javax.annotation.ParametersAreNonnullByDefault;
 import java.util.Optional;
 
 @Getter
@@ -101,6 +103,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
         CompoundTag data = new CompoundTag();
         data.putByte("StartMode", this.startMode.index());
         data.putBoolean("OutputMode", this.outputInvert);
+        data.putBoolean("Inputting", this.isInputtingSignal);
         data.putInt("WaitingTime", this.waitingTime);
         data.putInt("SignalDuration", this.signalDuration);
         return data;
@@ -109,6 +112,7 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
     public PulseGeneratorBlockEntity readDataNbt(CompoundTag data) {
         this.startMode = Mode.fromIndex(data.getByte("StartMode"));
         this.outputInvert = data.getBoolean("OutputMode");
+        this.isInputtingSignal = data.getBoolean("Inputting");
         this.waitingTime = data.getInt("WaitingTime");
         this.signalDuration = data.getInt("SignalDuration");
         return this;
@@ -131,7 +135,9 @@ public class PulseGeneratorBlockEntity extends BlockEntity implements MenuProvid
 
     public void setStartMode(int mode) {
         this.startMode = Mode.fromIndex(mode % 3);
-        if (this.startMode.equals(Mode.LOOP) && !this.isInputtingSignal && this.level != null) {
+        if (this.startMode != Mode.LOOP) {
+            this.isDeadlock = false;
+        } else if (!this.isInputtingSignal && this.level != null) {
             Util.castSafely(this.getBlockState().getBlock(), PulseGeneratorBlock.class)
                 .ifPresent(block -> block.update(this.level, this.getBlockPos(), this::getBlockState));
         }
