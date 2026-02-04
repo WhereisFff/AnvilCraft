@@ -76,21 +76,30 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
         BlockState curState = cache.getBlockState(blockPos);
         if (!curState.is(BlockTags.CAULDRONS)) return false;
+
+        // 需要消耗液体
         if (this.consume > 0) {
             Optional<Tuple<IntegerProperty, Integer>> optionalCur = HasCauldron.getFluidLevel(curState);
             if (optionalCur.isPresent()) {
                 Tuple<IntegerProperty, Integer> fluidLevel = optionalCur.get();
                 int currentLevel = fluidLevel.getB();
-                int maxLevel = fluidLevel.getA().max;
-                return currentLevel >= maxLevel;
+                IntegerProperty maxLevel = fluidLevel.getA();
+                return HasCauldron.layer2Mb(maxLevel, currentLevel) >= this.consume;
             }
         }
+
+        // 不消耗液体 且提供了需求的流体 通过
         Block fluidCauldron = this.getFluidCauldron();
         if (curState.is(fluidCauldron)) return true;
+
         if (HasCauldron.isNotEmpty(this.fluid())) return false;
         if (!HasCauldron.isNotEmpty(this.transform())) return false;
+
+        // 不消耗液体，且产生液体
+        // 要么是空炼药锅，要么是同种炼药锅
         Block targetCauldron = this.getTransformCauldron();
         if (!curState.is(Blocks.CAULDRON) && !curState.is(targetCauldron)) return false;
+        // 可以继续接收同种液体 通过
         BlockState targetState = targetCauldron.defaultBlockState();
         Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
         int max = optionalTarget.map(tuple -> tuple.getA().max).orElse(0);

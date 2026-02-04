@@ -144,4 +144,12 @@ public class TriggerUtil {
             }
         }
     }
+
+    public static void mineralFountainCreate(Level level, BlockPos pos) {
+        if (!level.isClientSide) {
+            for (ServerPlayer player : PlayerUtil.searchPlayerByPos(level, pos, 7)) {
+                ModCriterionTriggers.MINERAL_FOUNTAIN_CREATE.get().trigger(player);
+            }
+        }
+    }
 }

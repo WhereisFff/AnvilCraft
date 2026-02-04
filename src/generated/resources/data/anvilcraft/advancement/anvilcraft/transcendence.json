@@ -1,11 +1,35 @@
 {
   "parent": "anvilcraft:anvilcraft/overheated",
   "criteria": {
-    "transcendium_block": {
+    "has_transcendium_block": {
       "conditions": {
-        "id": "anvilcraft:item_inject/transcendium_block"
+        "items": [
+          {
+            "items": "anvilcraft:transcendium_block"
+          }
+        ]
       },
-      "trigger": "anvilcraft:in_world_recipe"
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_transcendium_ingot": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:transcendium_ingot"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_transcendium_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:transcendium_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
     }
   },
   "display": {
@@ -23,7 +47,9 @@
   },
   "requirements": [
     [
-      "transcendium_block"
+      "has_transcendium_block",
+      "has_transcendium_ingot",
+      "has_transcendium_nugget"
     ]
   ],
   "sends_telemetry_event": true
