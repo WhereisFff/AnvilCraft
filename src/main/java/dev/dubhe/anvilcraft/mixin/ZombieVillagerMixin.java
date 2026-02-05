@@ -34,7 +34,7 @@ public abstract class ZombieVillagerMixin extends Zombie {
         )
     )
     private void discountForAllPlayers(Villager villager, ServerLevel serverLevel, Operation<Void> original) {
-        if (this.conversionStarter.equals(ModDispenserBehavior.ANVILCRAFT_DISPENSER)) {
+        if (ModDispenserBehavior.ANVILCRAFT_DISPENSER.equals(this.conversionStarter)) {
             serverLevel.getServer()
                 .getPlayerList()
                 .getPlayers()
