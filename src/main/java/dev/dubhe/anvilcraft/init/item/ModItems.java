@@ -2064,11 +2064,11 @@ public class ModItems {
         .properties((properties) -> properties.stacksTo(1))
         .register();
 
-    public static final ItemEntry<BucketItem> EXP_FLUID_BUCKET = REGISTRATE.item(
-            "exp_fluid_bucket",
+    public static final ItemEntry<BucketItem> EXP_BUCKET = REGISTRATE.item(
+            "exp_bucket",
             p -> new BucketItem(ModFluids.EXP_FLUID.get(), p)
         )
-        .tag(ModItemTags.EXP_FLUID_BUCKETS, Tags.Items.BUCKETS)
+        .tag(ModItemTags.EXP_BUCKETS, Tags.Items.BUCKETS)
         .initialProperties(() -> new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET))
         .model(ModelProviderUtil::bucket)
         .register();

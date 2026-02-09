@@ -64,7 +64,7 @@ public class ModFluids {
         EXP_FLUID,
         FLOWING_EXP_FLUID
     )
-        .bucket(ModItems.EXP_FLUID_BUCKET)
+        .bucket(ModItems.EXP_BUCKET)
         .block(ModBlocks.EXP_FLUID)
         .tickRate(60)
         .slopeFindDistance(2)
