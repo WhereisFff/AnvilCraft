@@ -70,7 +70,19 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
     }
 
     @Override
+    @SuppressWarnings("RedundantIfStatement")
     public boolean test(InWorldRecipeContext context) {
+        /*
+         * 由于过去在此出现了非常多的bug，在此罗列，以供测试：
+         * 1. 时移不完成宝石转化
+         * 2. 无水执行不消耗水的物品膨发
+         * 3. 流体不足执行配方
+         * 4. 流体不满1B不执行配方
+         * 4. 压榨重置炼药锅——永远无法达到满锅的真实
+         * 5. 一桶原油完成多份余烬金属的合成
+         * 6. 锅满了，仍可以熔融宝石，溢出浪费
+         * 7. 流体可以相互替代使用
+         */
         Vec3 pos = context.getPos().add(this.offset());
         BlockPos blockPos = BlockPos.containing(pos);
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
@@ -79,33 +91,41 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
 
         // 需要消耗液体
         if (this.consume > 0) {
+            // 不是对应的流体锅 否决
+            if (!curState.is(this.getFluidCauldron())) return false;
             Optional<Tuple<IntegerProperty, Integer>> optionalCur = HasCauldron.getFluidLevel(curState);
             if (optionalCur.isPresent()) {
+                // 该流体锅可分层，需要更多判断
+                // 流体不足 否决
                 Tuple<IntegerProperty, Integer> fluidLevel = optionalCur.get();
                 int currentLevel = fluidLevel.getB();
                 IntegerProperty maxLevel = fluidLevel.getA();
-                return HasCauldron.layer2Mb(maxLevel, currentLevel) >= this.consume;
+                if (HasCauldron.layer2Mb(maxLevel, currentLevel) < this.consume) return false;
+                // 如果要产生流体，而之前的流体不被消耗完 否决
+                if (HasCauldron.isNotEmpty(this.transform()) && HasCauldron.layer2Mb(maxLevel, currentLevel) > this.consume) return false;
+                // 因为产生了不同的流体，因此不用进行剩余容量是否存在的判断
+            }
+            // 不消耗流体
+        } else {
+            // 有液体要求且不是对应的流体锅 否决
+            if (HasCauldron.isNotEmpty(this.fluid()) && !curState.is(this.getFluidCauldron())) return false;
+
+            if (HasCauldron.isNotEmpty(this.transform())) {
+                // 异种液体 否决
+                Block targetCauldron = this.getTransformCauldron();
+                if (!curState.is(Blocks.CAULDRON) && !curState.is(targetCauldron)) return false;
+                // 没有剩余容量 否决
+                if (curState.is(targetCauldron)) {
+                    BlockState targetState = targetCauldron.defaultBlockState();
+                    Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
+                    int max = optionalTarget.map(tuple -> tuple.getA().max).orElse(0);
+                    Optional<Tuple<IntegerProperty, Integer>> optionalCur = HasCauldron.getFluidLevel(curState);
+                    int cur = optionalCur.map(Tuple::getB).orElse(0);
+                    if (cur >= max) return false;
+                }
             }
         }
-
-        // 不消耗液体 且提供了需求的流体 通过
-        Block fluidCauldron = this.getFluidCauldron();
-        if (curState.is(fluidCauldron)) return true;
-
-        if (HasCauldron.isNotEmpty(this.fluid())) return false;
-        if (!HasCauldron.isNotEmpty(this.transform())) return false;
-
-        // 不消耗液体，且产生液体
-        // 要么是空炼药锅，要么是同种炼药锅
-        Block targetCauldron = this.getTransformCauldron();
-        if (!curState.is(Blocks.CAULDRON) && !curState.is(targetCauldron)) return false;
-        // 可以继续接收同种液体 通过
-        BlockState targetState = targetCauldron.defaultBlockState();
-        Optional<Tuple<IntegerProperty, Integer>> optionalTarget = HasCauldron.getFluidLevel(targetState);
-        int max = optionalTarget.map(tuple -> tuple.getA().max).orElse(0);
-        Optional<Tuple<IntegerProperty, Integer>> optionalCur = HasCauldron.getFluidLevel(curState);
-        int cur = optionalCur.map(Tuple::getB).orElse(0);
-        return cur < max;
+        return true;
     }
 
     @Override
