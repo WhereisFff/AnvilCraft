@@ -35,6 +35,9 @@ public class FluidTagLoader {
         provider.addTag(ModFluidTags.OIL)
             .add(findResourceKey(ModFluids.OIL.get()))
             .add(findResourceKey(ModFluids.FLOWING_OIL.get()));
+        provider.addTag(ModFluidTags.EXPERIENCE)
+            .add(findResourceKey(ModFluids.EXP_FLUID.get()))
+            .add(findResourceKey(ModFluids.FLOWING_EXP_FLUID.get()));
         TagsProvider.TagAppender<Fluid> appender = provider.addTag(ModFluidTags.CEMENT);
         ModFluids.SOURCE_CEMENTS.forEach((color, cement) -> {
             appender.add(findResourceKey(cement.get()));

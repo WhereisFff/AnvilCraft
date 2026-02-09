@@ -124,6 +124,7 @@ public class ModItemTags {
     public static final TagKey<Item> RAW_SILVER = bindC("raw_materials/silver");
     public static final TagKey<Item> RAW_URANIUM = bindC("raw_materials/uranium");
 
+    public static final TagKey<Item> EXP_FLUID_BUCKETS = bindC("buckets/exp_fluid");
     public static final TagKey<Item> OIL_BUCKETS = bindC("buckets/oil");
     public static final TagKey<Item> CEMENT_BUCKETS = bindC("buckets/cement");
 

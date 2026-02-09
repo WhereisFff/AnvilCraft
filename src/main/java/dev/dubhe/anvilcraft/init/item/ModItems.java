@@ -136,7 +136,12 @@ import java.util.function.Supplier;
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 import static dev.dubhe.anvilcraft.AnvilCraft.of;
 
-@SuppressWarnings({"unused", "CodeBlock2Expr"})
+@SuppressWarnings(
+    {
+        "unused",
+        "CodeBlock2Expr"
+    }
+)
 public class ModItems {
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_TOOL.getKey());
@@ -2057,6 +2062,15 @@ public class ModItems {
         .tag(Tags.Items.INGOTS, ItemTags.BEACON_PAYMENT_ITEMS)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .properties((properties) -> properties.stacksTo(1))
+        .register();
+
+    public static final ItemEntry<BucketItem> EXP_FLUID_BUCKET = REGISTRATE.item(
+            "exp_fluid_bucket",
+            p -> new BucketItem(ModFluids.EXP_FLUID.get(), p)
+        )
+        .tag(ModItemTags.EXP_FLUID_BUCKETS, Tags.Items.BUCKETS)
+        .initialProperties(() -> new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET))
+        .model(ModelProviderUtil::bucket)
         .register();
 
     public static final ItemEntry<BucketItem> OIL_BUCKET = REGISTRATE.item("oil_bucket", p -> new BucketItem(ModFluids.OIL.get(), p))

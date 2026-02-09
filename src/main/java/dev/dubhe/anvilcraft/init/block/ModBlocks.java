@@ -4347,6 +4347,18 @@ public class ModBlocks {
         })
         .register();
 
+    public static final BlockEntry<LiquidBlock> EXP_FLUID = REGISTRATE.block("exp_fluid", p -> new LiquidBlock(ModFluids.EXP_FLUID.get(), p))
+        .properties(it -> it.mapColor(MapColor.COLOR_GREEN)
+            .replaceable()
+            .noCollission()
+            .pushReaction(PushReaction.DESTROY)
+            .noLootTable()
+            .liquid()
+            .sound(SoundType.EMPTY)
+            .strength(100.0F))
+        .blockstate(ModelProviderUtil::liquid)
+        .register();
+
     public static final BlockEntry<LiquidBlock> OIL = REGISTRATE.block("oil", p -> new LiquidBlock(ModFluids.OIL.get(), p))
         .properties(it -> it.mapColor(MapColor.TERRACOTTA_BLACK)
             .replaceable()
