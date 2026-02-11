@@ -87,10 +87,10 @@ public class ExpGemItem extends Item {
             // 获取对应职业的交易列表
             Int2ObjectMap<VillagerTrades.ItemListing[]> trades = VillagerTrades.TRADES.get(villagerData.getProfession());
             if (villager.level().enabledFeatures().contains(FeatureFlags.TRADE_REBALANCE)) {
-                Int2ObjectMap<VillagerTrades.ItemListing[]> rebalance_trades =
+                Int2ObjectMap<VillagerTrades.ItemListing[]> rebalanceTrades =
                     VillagerTrades.EXPERIMENTAL_TRADES.get(villagerData.getProfession());
-                if (rebalance_trades != null) {
-                    trades = rebalance_trades;
+                if (rebalanceTrades != null) {
+                    trades = rebalanceTrades;
                 }
             }
             if (trades == null || trades.isEmpty()) return;

@@ -1,7 +1,7 @@
 {
   "type": "anvilcraft:bulging",
   "consume": 1000,
-  "fluid": "anvilcraft:exp",
+  "fluid": "anvilcraft:exp_fluid",
   "ingredients": [],
   "results": [
     {

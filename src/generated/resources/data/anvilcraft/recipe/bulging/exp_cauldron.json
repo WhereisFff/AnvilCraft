@@ -1,6 +1,6 @@
 {
   "type": "anvilcraft:bulging",
-  "fluid": "anvilcraft:exp_fluid",
+  "fluid": "minecraft:water",
   "ingredients": [
     {
       "items": "anvilcraft:exp_gem"
