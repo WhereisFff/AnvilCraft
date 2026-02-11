@@ -3,9 +3,10 @@ package dev.dubhe.anvilcraft.item;
 import com.google.common.collect.Lists;
 import dev.dubhe.anvilcraft.block.ExpFluidBlock;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
@@ -17,9 +18,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
+import net.minecraft.world.level.Level;
 
 import java.util.ArrayList;
 
@@ -32,14 +33,17 @@ public class ExpGemItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(UseOnContext context) {
-        ItemStack itemInHand = context.getItemInHand();
-        Player player = context.getPlayer();
-        if (player == null) return InteractionResult.PASS;
-        int count = player.isShiftKeyDown() ? itemInHand.getCount() : 1;
+    public InteractionResultHolder<ItemStack> use(
+        Level level,
+        Player player,
+        InteractionHand usedHand
+    ) {
+        ItemStack itemStack = player.getItemInHand(usedHand);
+        int count = player.isShiftKeyDown() ? itemStack.getCount() : 1;
         player.giveExperiencePoints(ExpFluidBlock.XP_POINTS * count);
-        itemInHand.shrink(count);
-        return InteractionResult.SUCCESS;
+        itemStack.shrink(count);
+        player.getCooldowns().addCooldown(this, 5);
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide());
     }
 
     /**
@@ -60,15 +64,6 @@ public class ExpGemItem extends Item {
             return InteractionResult.SUCCESS;
         } else {
             villager.ageUp(AGE_ADDITION, true);
-            villager.level().addParticle(
-                ParticleTypes.HAPPY_VILLAGER,
-                villager.getRandomX(1.0),
-                villager.getRandomY() + 0.5,
-                villager.getRandomZ(1.0),
-                0.0,
-                0.0,
-                0.0
-            );
             stack.shrink(1);
             return InteractionResult.SUCCESS;
         }
