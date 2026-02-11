@@ -18,6 +18,7 @@ import dev.dubhe.anvilcraft.network.HeatableSyncPacket;
 import dev.dubhe.anvilcraft.network.HeliostatsIrradiationPacket;
 import dev.dubhe.anvilcraft.network.InspectionStateChangedPacket;
 import dev.dubhe.anvilcraft.network.ItemDetectorChangeRangePacket;
+import dev.dubhe.anvilcraft.network.JewelCraftingAutoFillPacket;
 import dev.dubhe.anvilcraft.network.LaserEmitPacket;
 import dev.dubhe.anvilcraft.network.MachineCycleFilterModePacket;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
@@ -286,5 +287,10 @@ public class ModNetworks {
             FrostGrindstoneSyncPacket.HANDLER
         );
         FrostSmithingPackets.register(registrar);
+        registrar.playToServer(
+            JewelCraftingAutoFillPacket.TYPE,
+            JewelCraftingAutoFillPacket.STREAM_CODEC,
+            JewelCraftingAutoFillPacket.HANDLER
+        );
     }
 }
