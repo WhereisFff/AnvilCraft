@@ -137,12 +137,7 @@ import java.util.function.Supplier;
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 import static dev.dubhe.anvilcraft.AnvilCraft.of;
 
-@SuppressWarnings(
-    {
-        "unused",
-        "CodeBlock2Expr"
-    }
-)
+@SuppressWarnings({"unused", "CodeBlock2Expr"})
 public class ModItems {
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_TOOL.getKey());

@@ -242,10 +242,12 @@ import static dev.dubhe.anvilcraft.AnvilCraft.of;
 import static dev.dubhe.anvilcraft.api.power.IPowerComponent.OVERLOAD;
 import static dev.dubhe.anvilcraft.api.power.IPowerComponent.SWITCH;
 
-@SuppressWarnings({
-    "unused",
-    "CodeBlock2Expr"
-})
+@SuppressWarnings(
+    {
+        "unused",
+        "CodeBlock2Expr"
+    }
+)
 public class ModBlocks {
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_FUNCTION_BLOCK.getKey());
@@ -4382,7 +4384,10 @@ public class ModBlocks {
         })
         .register();
 
-    public static final BlockEntry<LiquidBlock> EXP_FLUID = REGISTRATE.block("exp_fluid", p -> new LiquidBlock(ModFluids.EXP_FLUID.get(), p))
+    public static final BlockEntry<LiquidBlock> EXP_FLUID = REGISTRATE.block(
+            "exp_fluid",
+            p -> new LiquidBlock(ModFluids.EXP_FLUID.get(), p)
+        )
         .properties(it -> it.mapColor(MapColor.COLOR_GREEN)
             .replaceable()
             .noCollission()
