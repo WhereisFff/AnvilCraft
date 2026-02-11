@@ -37,6 +37,7 @@ import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.EmptySuperCapacitorItem;
+import dev.dubhe.anvilcraft.item.ExpGemItem;
 import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHeavyHalberdItem;
@@ -1371,6 +1372,15 @@ public class ModItems {
             ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
                 .requires(ModBlocks.SAPPHIRE_BLOCK)
                 .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModBlocks.SAPPHIRE_BLOCK))
+                .save(provider);
+        })
+        .register();
+    public static final ItemEntry<ExpGemItem> EXP_GEM = REGISTRATE.item("exp_gem", ExpGemItem::new)
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.EXP_GEM_BLOCK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModBlocks.EXP_GEM_BLOCK))
                 .save(provider);
         })
         .register();

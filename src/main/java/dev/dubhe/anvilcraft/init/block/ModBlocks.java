@@ -42,6 +42,7 @@ import dev.dubhe.anvilcraft.block.EmberMetalSlabBlock;
 import dev.dubhe.anvilcraft.block.EmberMetalStairBlock;
 import dev.dubhe.anvilcraft.block.EmberSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.EndDustBlock;
+import dev.dubhe.anvilcraft.block.ExpFluidBlock;
 import dev.dubhe.anvilcraft.block.ExpFluidCauldronBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
@@ -2963,6 +2964,31 @@ public class ModBlocks {
         .simpleItem()
         .register();
 
+    public static final BlockEntry<? extends Block> EXP_GEM_BLOCK = REGISTRATE.block("exp_gem_block", Block::new)
+        .lang("Block of Experience Gem")
+        .initialProperties(() -> Blocks.EMERALD_BLOCK)
+        .item()
+        .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_EXP_GEM)
+        .build()
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_IRON_TOOL,
+            BlockTags.BEACON_BASE_BLOCKS,
+            Tags.Blocks.STORAGE_BLOCKS,
+            ModBlockTags.STORAGE_BLOCKS_EXP_GEM
+        )
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.EXP_GEM)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.EXP_GEM), AnvilCraftDatagen.has(ModItems.EXP_GEM))
+                .save(provider);
+        })
+        .register();
+
+
     public static final BlockEntry<? extends Block> RESIN_BLOCK = REGISTRATE.block("resin_block", ResinBlock::new)
         .lang("Block of Resin")
         .initialProperties(() -> Blocks.SLIME_BLOCK)
@@ -4368,7 +4394,7 @@ public class ModBlocks {
         .blockstate(ModelProviderUtil::liquid)
         .register();
 
-    public static final BlockEntry<LiquidBlock> OIL = REGISTRATE.block("oil", p -> new LiquidBlock(ModFluids.OIL.get(), p))
+    public static final BlockEntry<ExpFluidBlock> OIL = REGISTRATE.block("oil", p -> new ExpFluidBlock(ModFluids.OIL.get(), p))
         .properties(it -> it.mapColor(MapColor.TERRACOTTA_BLACK)
             .replaceable()
             .noCollission()

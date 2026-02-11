@@ -1,0 +1,11 @@
+{
+  "type": "anvilcraft:bulging",
+  "consume": 1000,
+  "fluid": "anvilcraft:exp",
+  "ingredients": [],
+  "results": [
+    {
+      "id": "anvilcraft:exp_gem"
+    }
+  ]
+}

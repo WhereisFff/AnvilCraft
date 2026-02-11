@@ -25,7 +25,7 @@ public class ExpFluidCauldronBlock extends Layered4LevelCauldronBlock implements
         if (!this.isEntityInsideContent(state, pos, entity)) return;
         if (entity instanceof Player player) {
             if (!this.isFull(state)) return;
-            player.giveExperiencePoints(50);
+            player.giveExperiencePoints(ExpFluidBlock.XP_POINTS);
             level.setBlock(pos, Blocks.CAULDRON.defaultBlockState(), 3);
         }
     }
