@@ -204,7 +204,6 @@ public class JewelCraftingMenu extends AbstractContainerMenu {
         }
     }
 
-
     /**
      * 自动填充配方所需物品
      * 当玩家按下空格键时调用此方法
@@ -227,7 +226,6 @@ public class JewelCraftingMenu extends AbstractContainerMenu {
             moveInvItemTo(item, CRAFT_SLOT_START + i);
         }
     }
-
 
     protected void moveInvItemTo(Item needItem, int targetIndex) {
         for (int i = INV_SLOT_START; i < USE_ROW_SLOT_END; i++) {
