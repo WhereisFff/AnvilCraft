@@ -35,6 +35,42 @@ public class ModFluids {
     );
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(Registries.FLUID, AnvilCraft.MOD_ID);
 
+    public static final DeferredHolder<FluidType, FluidType> EXP_FLUID_TYPE = FLUID_TYPES.register(
+        "exp_fluid",
+        () -> new FluidType(FluidType.Properties.create()
+            .descriptionId("block.anvilcraft.exp_fluid")
+            .density(1000)
+            .viscosity(500)
+            .fallDistanceModifier(0)
+            .motionScale(0.01)
+            .supportsBoating(true)
+            .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
+            .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
+        )
+    );
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid> EXP_FLUID = FLUIDS.register(
+        "exp_fluid",
+        () -> new BaseFlowingFluid.Source(ModFluids.EXP_FLUID_PROPERTIES)
+    );
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid> FLOWING_EXP_FLUID = FLUIDS.register(
+        "flowing_exp_fluid",
+        () -> new BaseFlowingFluid.Flowing(ModFluids.EXP_FLUID_PROPERTIES)
+    );
+
+    public static final BaseFlowingFluid.Properties EXP_FLUID_PROPERTIES = new BaseFlowingFluid.Properties(
+        EXP_FLUID_TYPE,
+        EXP_FLUID,
+        FLOWING_EXP_FLUID
+    )
+        .bucket(ModItems.EXP_BUCKET)
+        .block(ModBlocks.EXP_FLUID)
+        .tickRate(60)
+        .slopeFindDistance(2)
+        .levelDecreasePerBlock(3)
+        .explosionResistance(100);
+
     public static final DeferredHolder<FluidType, FluidType> OIL_TYPE = FLUID_TYPES.register(
         "oil",
         () -> new FluidType(FluidType.Properties.create()
@@ -42,7 +78,6 @@ public class ModFluids {
             .density(2000)
             .viscosity(4000)
             .fallDistanceModifier(0)
-            .motionScale(0.007)
             .supportsBoating(true)
             .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL)
             .sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)
@@ -208,6 +243,14 @@ public class ModFluids {
     }
 
     public static void onRegisterFluidType(RegisterClientExtensionsEvent e) {
+        e.registerFluidType(
+            new ModClientFluidTypeExtensionImpl(
+                AnvilCraft.of("block/exp_fluid"),
+                AnvilCraft.of("block/exp_fluid_flow"),
+                0xC1E8A9,
+                1.0f
+            ), EXP_FLUID_TYPE
+        );
         e.registerFluidType(
             new ModClientFluidTypeExtensionImpl(
                 AnvilCraft.of("block/oil"),

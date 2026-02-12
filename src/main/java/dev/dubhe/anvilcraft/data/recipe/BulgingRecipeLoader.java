@@ -4,6 +4,7 @@ import com.tterrag.registrate.providers.RegistrateRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModFluids;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -54,13 +55,23 @@ public class BulgingRecipeLoader {
             .result(Blocks.RED_MUSHROOM_BLOCK)
             .result(Blocks.MUSHROOM_STEM, 0.1f)
             .save(provider);
-
         BulgingRecipe.builder()
             .cauldron(Blocks.WATER_CAULDRON)
             .requires(Items.BROWN_MUSHROOM)
             .result(Blocks.BROWN_MUSHROOM_BLOCK)
             .result(Blocks.MUSHROOM_STEM, 0.1f)
             .save(provider);
+
+        BulgingRecipe.builder()
+            .cauldron(ModFluids.EXP_FLUID.getId())
+            .consume(1000)
+            .result(ModItems.EXP_GEM)
+            .save(provider);
+        BulgingRecipe.builder()
+            .cauldron(Blocks.WATER_CAULDRON)
+            .transform(ModBlocks.EXP_CAULDRON.get())
+            .requires(ModItems.EXP_GEM)
+            .save(provider, AnvilCraft.of("bulging/exp_cauldron"));
     }
 
     private static void bulging(RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int consume) {

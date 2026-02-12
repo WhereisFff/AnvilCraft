@@ -17,7 +17,7 @@ public class ModelProviderUtil {
     /**
      * 用于流体的BlockState生成器
      */
-    public static void liquid(DataGenContext<Block, LiquidBlock> ctx, RegistrateBlockstateProvider provider) {
+    public static void liquid(DataGenContext<Block, ? extends LiquidBlock> ctx, RegistrateBlockstateProvider provider) {
         provider.simpleBlock(
             ctx.get(),
             provider.models().getBuilder(ctx.getName()).texture("particle", provider.modLoc("block/" + ctx.getName()))
