@@ -16,6 +16,7 @@ import dev.dubhe.anvilcraft.block.entity.CrabTrapBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CreativeGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.DeflectionRingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.DetectorSlidingRailBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.FluidTankBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeatCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeaterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
@@ -60,6 +61,7 @@ import dev.dubhe.anvilcraft.client.renderer.blockentity.ChargerBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.ConfinementChamberRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.CorruptedBeaconRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.CreativeGeneratorRenderer;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.FluidTankBlockEntityRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HasMobBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HeatCollectorRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.HeliostatsRenderer;
@@ -326,6 +328,12 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<SupercriticalNestingShulkerBoxBlockEntity> SUPERCRITICAL_NESTING_SHULKER_BOX = REGISTRATE
         .blockEntity("supercritical_nesting_shulker_box", SupercriticalNestingShulkerBoxBlockEntity::new)
         .validBlocks(ModBlocks.SUPERCRITICAL_NESTING_SHULKER_BOX)
+        .register();
+
+    public static final BlockEntityEntry<FluidTankBlockEntity> FLUID_TANK = REGISTRATE
+        .blockEntity("fluid_tank", FluidTankBlockEntity::new)
+        .validBlocks(ModBlocks.FLUID_TANK)
+        .renderer(() -> FluidTankBlockEntityRenderer::new)
         .register();
 
     public static void register() {

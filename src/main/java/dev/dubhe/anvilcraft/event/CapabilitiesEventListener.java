@@ -27,15 +27,22 @@ public class CapabilitiesEventListener {
             ModBlockEntities.OVER_NESTING_SHULKER_BOX.get(),
             ModBlockEntities.SUPERCRITICAL_NESTING_SHULKER_BOX.get()
         ).forEach(type -> event.registerBlockEntity(
-            Capabilities.ItemHandler.BLOCK,
-            type,
-            (be, side) -> be.getItemHandler())
+                Capabilities.ItemHandler.BLOCK,
+                type,
+                (be, side) -> be.getItemHandler()
+            )
         );
 
         event.registerBlock(
             Capabilities.ItemHandler.BLOCK,
             ((level, pos, state, blockEntity, side) -> new HoneyCauldronWrapper(level, pos)),
             ModBlocks.HONEY_CAULDRON.get()
+        );
+
+        event.registerBlockEntity(
+            Capabilities.FluidHandler.BLOCK,
+            ModBlockEntities.FLUID_TANK.get(),
+            (be, side) -> be.getFluidHandler()
         );
     }
 }
