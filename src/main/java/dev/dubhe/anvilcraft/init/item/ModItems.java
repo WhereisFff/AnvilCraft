@@ -37,6 +37,7 @@ import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.EmptySuperCapacitorItem;
+import dev.dubhe.anvilcraft.item.ExpGemItem;
 import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
 import dev.dubhe.anvilcraft.item.FrostMetalHeavyHalberdItem;
@@ -1369,6 +1370,15 @@ public class ModItems {
                 .save(provider);
         })
         .register();
+    public static final ItemEntry<ExpGemItem> EXP_GEM = REGISTRATE.item("exp_gem", ExpGemItem::new)
+        .tag(ItemTags.BEACON_PAYMENT_ITEMS)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+                .requires(ModBlocks.EXP_GEM_BLOCK)
+                .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModBlocks.EXP_GEM_BLOCK))
+                .save(provider);
+        })
+        .register();
     public static final ItemEntry<Item> RESIN = REGISTRATE.item("resin", Item::new).tag(ModItemTags.RESIN).recipe((ctx, provider) -> {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
             .requires(ModBlocks.RESIN_BLOCK)
@@ -2057,6 +2067,15 @@ public class ModItems {
         .tag(Tags.Items.INGOTS, ItemTags.BEACON_PAYMENT_ITEMS)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .properties((properties) -> properties.stacksTo(1))
+        .register();
+
+    public static final ItemEntry<BucketItem> EXP_BUCKET = REGISTRATE.item(
+            "exp_bucket",
+            p -> new BucketItem(ModFluids.EXP_FLUID.get(), p)
+        )
+        .tag(ModItemTags.EXP_BUCKETS, Tags.Items.BUCKETS)
+        .initialProperties(() -> new Item.Properties().stacksTo(1).craftRemainder(Items.BUCKET))
+        .model(ModelProviderUtil::bucket)
         .register();
 
     public static final ItemEntry<BucketItem> OIL_BUCKET = REGISTRATE.item("oil_bucket", p -> new BucketItem(ModFluids.OIL.get(), p))

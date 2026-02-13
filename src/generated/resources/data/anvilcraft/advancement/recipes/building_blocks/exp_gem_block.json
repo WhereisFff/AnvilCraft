@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_cut_royal_steel_block": {
+    "has_exp_gem": {
       "conditions": {
         "items": [
           {
-            "items": "anvilcraft:cut_royal_steel_block"
+            "items": "anvilcraft:exp_gem"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:cut_royal_steel_stairs"
+        "recipe": "anvilcraft:exp_gem_block"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_cut_royal_steel_block"
+      "has_exp_gem"
     ]
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:cut_royal_steel_stairs"
+      "anvilcraft:exp_gem_block"
     ]
   }
 }

@@ -13,6 +13,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.lwjgl.glfw.GLFW;
 
 public class JewelCraftingScreen extends AbstractContainerScreen<JewelCraftingMenu> {
     private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/jewelcrafting/background.png");
@@ -107,5 +108,15 @@ public class JewelCraftingScreen extends AbstractContainerScreen<JewelCraftingMe
             }
         }
         super.renderSlotContents(guiGraphics, itemstack, slot, countString);
+    }
+
+    @Override
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (key == GLFW.GLFW_KEY_SPACE) {
+            // 处理空格键快速填充配方逻辑
+            this.menu.autoFill();
+            return true;
+        }
+        return super.keyPressed(key, scanCode, modifiers);
     }
 }

@@ -42,6 +42,8 @@ import dev.dubhe.anvilcraft.block.EmberMetalSlabBlock;
 import dev.dubhe.anvilcraft.block.EmberMetalStairBlock;
 import dev.dubhe.anvilcraft.block.EmberSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.EndDustBlock;
+import dev.dubhe.anvilcraft.block.ExpFluidBlock;
+import dev.dubhe.anvilcraft.block.ExpFluidCauldronBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
 import dev.dubhe.anvilcraft.block.FlintBlock;
@@ -240,10 +242,7 @@ import static dev.dubhe.anvilcraft.AnvilCraft.of;
 import static dev.dubhe.anvilcraft.api.power.IPowerComponent.OVERLOAD;
 import static dev.dubhe.anvilcraft.api.power.IPowerComponent.SWITCH;
 
-@SuppressWarnings({
-    "unused",
-    "CodeBlock2Expr"
-})
+@SuppressWarnings({"unused", "CodeBlock2Expr"})
 public class ModBlocks {
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_FUNCTION_BLOCK.getKey());
@@ -1900,15 +1899,6 @@ public class ModBlocks {
         .properties(p -> p.strength(5.0f, 1200f))
         .simpleItem()
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
-                .pattern("AA")
-                .pattern("AA")
-                .define('A', ModBlocks.ROYAL_STEEL_BLOCK)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.ROYAL_STEEL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.ROYAL_STEEL_BLOCK)
-                )
-                .save(provider);
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.ROYAL_STEEL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.ROYAL_STEEL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_royal_steel_block"));
@@ -1954,14 +1944,6 @@ public class ModBlocks {
         .build()
         .loot((tables, block) -> tables.add(block, tables.createSlabItemTable(block)))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
-                .pattern("AAA")
-                .define('A', ModBlocks.CUT_ROYAL_STEEL_BLOCK)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.CUT_ROYAL_STEEL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.CUT_ROYAL_STEEL_BLOCK)
-                )
-                .save(provider);
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.ROYAL_STEEL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 8)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.ROYAL_STEEL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_royal_steel_slab_from_royal_steel_block"));
@@ -1994,16 +1976,6 @@ public class ModBlocks {
         .tag(ItemTags.STAIRS)
         .build()
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
-                .pattern("A  ")
-                .pattern("AA ")
-                .pattern("AAA")
-                .define('A', ModBlocks.CUT_ROYAL_STEEL_BLOCK)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.CUT_ROYAL_STEEL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.CUT_ROYAL_STEEL_BLOCK)
-                )
-                .save(provider);
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.ROYAL_STEEL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.ROYAL_STEEL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_royal_steel_stairs_from_royal_steel_block"));
@@ -2214,15 +2186,6 @@ public class ModBlocks {
         .initialProperties(() -> new Item.Properties().fireResistant())
         .build()
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
-                .pattern("AA")
-                .pattern("AA")
-                .define('A', ModBlocks.EMBER_METAL_BLOCK)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.EMBER_METAL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK)
-                )
-                .save(provider);
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.EMBER_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_ember_metal_block"));
@@ -2272,14 +2235,6 @@ public class ModBlocks {
         .build()
         .loot((tables, block) -> tables.add(block, tables.createSlabItemTable(block)))
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 6)
-                .pattern("AAA")
-                .define('A', ModBlocks.CUT_EMBER_METAL_BLOCK)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.CUT_EMBER_METAL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.CUT_EMBER_METAL_BLOCK)
-                )
-                .save(provider);
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.EMBER_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 8)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.EMBER_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_ember_metal_slab_from_ember_metal_block"));
@@ -2313,16 +2268,6 @@ public class ModBlocks {
         .tag(ItemTags.STAIRS)
         .build()
         .recipe((ctx, provider) -> {
-            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
-                .pattern("A  ")
-                .pattern("AA ")
-                .pattern("AAA")
-                .define('A', ModBlocks.CUT_EMBER_METAL_BLOCK)
-                .unlockedBy(
-                    AnvilCraftDatagen.hasItem(ModBlocks.CUT_EMBER_METAL_BLOCK.asItem()),
-                    AnvilCraftDatagen.has(ModBlocks.CUT_EMBER_METAL_BLOCK)
-                )
-                .save(provider);
             SingleItemRecipeBuilder.stonecutting(Ingredient.of(ModBlocks.EMBER_METAL_BLOCK), RecipeCategory.BUILDING_BLOCKS, ctx.get(), 4)
                 .unlockedBy("hasitem", AnvilCraftDatagen.has(ModBlocks.CUT_EMBER_METAL_BLOCK))
                 .save(provider, AnvilCraft.of("stonecutting/cut_ember_metal_stairs_from_ember_metal_block"));
@@ -3015,6 +2960,31 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
         .simpleItem()
         .register();
+
+    public static final BlockEntry<? extends Block> EXP_GEM_BLOCK = REGISTRATE.block("exp_gem_block", Block::new)
+        .lang("Block of Experience Gem")
+        .initialProperties(() -> Blocks.EMERALD_BLOCK)
+        .item()
+        .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_EXP_GEM)
+        .build()
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_IRON_TOOL,
+            BlockTags.BEACON_BASE_BLOCKS,
+            Tags.Blocks.STORAGE_BLOCKS,
+            ModBlockTags.STORAGE_BLOCKS_EXP_GEM
+        )
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+                .pattern("AAA")
+                .pattern("AAA")
+                .pattern("AAA")
+                .define('A', ModItems.EXP_GEM)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.EXP_GEM), AnvilCraftDatagen.has(ModItems.EXP_GEM))
+                .save(provider);
+        })
+        .register();
+
 
     public static final BlockEntry<? extends Block> RESIN_BLOCK = REGISTRATE.block("resin_block", ResinBlock::new)
         .lang("Block of Resin")
@@ -4043,6 +4013,14 @@ public class ModBlocks {
         .onRegister(block -> Item.BY_BLOCK.put(block, Items.CAULDRON))
         .register();
 
+    public static final BlockEntry<ExpFluidCauldronBlock> EXP_CAULDRON = REGISTRATE.block("exp_cauldron", ExpFluidCauldronBlock::new)
+        .initialProperties(() -> Blocks.CAULDRON)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .loot((tables, block) -> tables.dropOther(block, Items.CAULDRON))
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.CAULDRONS)
+        .onRegister(block -> Item.BY_BLOCK.put(block, Items.CAULDRON))
+        .register();
+
     public static final BlockEntry<OilCauldronBlock> OIL_CAULDRON = REGISTRATE.block("oil_cauldron", OilCauldronBlock::new)
         .initialProperties(() -> Blocks.CAULDRON)
         .blockstate(DataGenUtil::noExtraModelOrState)
@@ -4401,7 +4379,22 @@ public class ModBlocks {
         })
         .register();
 
-    public static final BlockEntry<LiquidBlock> OIL = REGISTRATE.block("oil", p -> new LiquidBlock(ModFluids.OIL.get(), p))
+    public static final BlockEntry<LiquidBlock> EXP_FLUID = REGISTRATE.block(
+            "exp_fluid",
+            p -> new LiquidBlock(ModFluids.EXP_FLUID.get(), p)
+        )
+        .properties(it -> it.mapColor(MapColor.COLOR_GREEN)
+            .replaceable()
+            .noCollission()
+            .pushReaction(PushReaction.DESTROY)
+            .noLootTable()
+            .liquid()
+            .sound(SoundType.EMPTY)
+            .strength(100.0F))
+        .blockstate(ModelProviderUtil::liquid)
+        .register();
+
+    public static final BlockEntry<ExpFluidBlock> OIL = REGISTRATE.block("oil", p -> new ExpFluidBlock(ModFluids.OIL.get(), p))
         .properties(it -> it.mapColor(MapColor.TERRACOTTA_BLACK)
             .replaceable()
             .noCollission()

@@ -81,6 +81,7 @@ public class ModBlockTags {
     public static final TagKey<Block> STORAGE_BLOCKS_TOPAZ = bindC("storage_blocks/topaz");
     public static final TagKey<Block> STORAGE_BLOCKS_SAPPHIRE = bindC("storage_blocks/sapphire");
     public static final TagKey<Block> STORAGE_BLOCKS_RUBY = bindC("storage_blocks/ruby");
+    public static final TagKey<Block> STORAGE_BLOCKS_EXP_GEM = bindC("storage_blocks/exp_gem");
     public static final TagKey<Block> STORAGE_BLOCKS_AMBER = bindC("storage_blocks/amber");
     public static final TagKey<Block> STORAGE_BLOCKS_RESIN = bindC("storage_blocks/resin");
     public static final TagKey<Block> STORAGE_BLOCKS_TRANSCENDIUM = bindC("storage_blocks/transcendium");

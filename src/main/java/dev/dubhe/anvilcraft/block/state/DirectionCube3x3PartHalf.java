@@ -2,6 +2,11 @@ package dev.dubhe.anvilcraft.block.state;
 
 import lombok.Getter;
 import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
 
 @Getter
 public enum DirectionCube3x3PartHalf
@@ -38,6 +43,34 @@ public enum DirectionCube3x3PartHalf
     private final int offsetX;
     private final int offsetY;
     private final int offsetZ;
+    private DirectionCube3x3PartHalf clockwise90;
+    private DirectionCube3x3PartHalf clockwise180;
+    private DirectionCube3x3PartHalf clockwise270;
+    private DirectionCube3x3PartHalf mirrorX;
+    private DirectionCube3x3PartHalf mirrorZ;
+
+    @Nullable
+    public static DirectionCube3x3PartHalf findByOffset(int offsetX, int offsetY, int offsetZ) {
+        return Arrays.stream(DirectionCube3x3PartHalf.values())
+            .filter(part -> part.offsetX == offsetX)
+            .filter(part -> part.offsetY == offsetY)
+            .filter(part -> part.offsetZ == offsetZ)
+            .findFirst()
+            .orElse(null);
+    }
+
+    static {
+        for (DirectionCube3x3PartHalf half : DirectionCube3x3PartHalf.values()) {
+            int x = half.offsetX;
+            int y = half.offsetY;
+            int z = half.offsetZ;
+            half.clockwise90 = findByOffset(-z, y, x);
+            half.clockwise180 = findByOffset(-x, y, -z);
+            half.clockwise270 = findByOffset(z, y, -x);
+            half.mirrorX = findByOffset(-x, y, z);
+            half.mirrorZ = findByOffset(x, y, -z);
+        }
+    }
 
     DirectionCube3x3PartHalf(String name, int offsetX, int offsetY, int offsetZ) {
         this.name = name;
@@ -73,5 +106,22 @@ public enum DirectionCube3x3PartHalf
     @Override
     public boolean isMain() {
         return this == MID_CENTER;
+    }
+
+    public DirectionCube3x3PartHalf rotate(Rotation rotation) {
+        return switch (rotation) {
+            case NONE -> this;
+            case CLOCKWISE_90 -> this.clockwise90;
+            case CLOCKWISE_180 -> this.clockwise180;
+            case COUNTERCLOCKWISE_90 -> this.clockwise270;
+        };
+    }
+
+    public DirectionCube3x3PartHalf mirror(Mirror mirror) {
+        return switch (mirror) {
+            case NONE -> this;
+            case LEFT_RIGHT -> this.mirrorZ;
+            case FRONT_BACK -> this.mirrorX;
+        };
     }
 }

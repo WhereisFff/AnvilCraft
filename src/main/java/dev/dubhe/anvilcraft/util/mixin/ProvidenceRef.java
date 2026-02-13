@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.util.mixin;
 
 public class ProvidenceRef {
-    private static final ThreadLocal<Boolean> SHOULD_TRIGGER = new ThreadLocal<>();
+    private static final ThreadLocal<Boolean> SHOULD_TRIGGER = ThreadLocal.withInitial(() -> false);
 
     public static void shouldTrigger() {
         SHOULD_TRIGGER.set(true);

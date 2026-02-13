@@ -1,0 +1,11 @@
+{
+  "type": "anvilcraft:bulging",
+  "fluid": "minecraft:water",
+  "ingredients": [
+    {
+      "items": "anvilcraft:exp_gem"
+    }
+  ],
+  "results": [],
+  "transform": "anvilcraft:exp"
+}

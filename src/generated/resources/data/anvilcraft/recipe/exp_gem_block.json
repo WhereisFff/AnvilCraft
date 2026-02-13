@@ -3,16 +3,16 @@
   "category": "building",
   "key": {
     "A": {
-      "item": "anvilcraft:cut_royal_steel_block"
+      "item": "anvilcraft:exp_gem"
     }
   },
   "pattern": [
-    "A  ",
-    "AA ",
+    "AAA",
+    "AAA",
     "AAA"
   ],
   "result": {
-    "count": 4,
-    "id": "anvilcraft:cut_royal_steel_stairs"
+    "count": 1,
+    "id": "anvilcraft:exp_gem_block"
   }
 }

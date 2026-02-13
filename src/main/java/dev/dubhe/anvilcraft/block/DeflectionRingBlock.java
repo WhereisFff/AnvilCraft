@@ -17,6 +17,8 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -174,5 +176,17 @@ public class DeflectionRingBlock extends FlexibleMultiPartBlock<DirectionCube3x3
     @Override
     public @Nullable Property<?> getChangeableProperty(BlockState blockState) {
         return FACING;
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(HALF, state.getValue(HALF).rotate(rotation))
+            .setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.setValue(HALF, state.getValue(HALF).mirror(mirror))
+            .setValue(FACING, mirror.mirror(state.getValue(FACING)));
     }
 }

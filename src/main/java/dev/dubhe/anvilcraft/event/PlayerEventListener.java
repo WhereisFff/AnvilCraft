@@ -11,6 +11,7 @@ import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.AnvilHammerItem;
 import dev.dubhe.anvilcraft.item.DragonRodItem;
+import dev.dubhe.anvilcraft.item.ExpGemItem;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.network.DragonRodDevourPacket;
@@ -50,6 +51,13 @@ public class PlayerEventListener {
         Entity target = event.getTarget();
         if (item.is(ModBlocks.RESIN_BLOCK.asItem())) {
             InteractionResult result = ResinBlockItem.useEntity(player, target, item);
+            if (result != InteractionResult.PASS) {
+                event.setCancellationResult(result);
+                event.setCanceled(true);
+            }
+        }
+        if (item.is(ModItems.EXP_GEM)) {
+            InteractionResult result = ExpGemItem.useEntity(player, target, item);
             if (result != InteractionResult.PASS) {
                 event.setCancellationResult(result);
                 event.setCanceled(true);
