@@ -8,6 +8,11 @@
 2. Import color scheme (optional)
     - [HERE TO VIEW](https://server.cjsah.net:1002/self/Cjsah.v15.icls)
     - `Settings` -> `Editor` -> `Color Scheme` -> `Import Scheme`
+3. Add `CheckStyle-IDEA` plugin (optional)
+    - `Plugins` -> `Marketplace`
+    - Search for `CheckStyle-IDEA` plugin, made by `Jamie Shiell` and apply it
+    - `Settings` -> `Tools` -> `CheckStyle` -> `Configuration File` -> `+`/`Add` -> Choose the `style.xml` file in the root folder of this project
+    - `Settings` -> `Tools` -> `CheckStyle` -> `Configuration File` -> Uncheck other entries except the entry added before
 
 ## The use of various annotations
 
