@@ -23,11 +23,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
@@ -50,7 +47,10 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
              */
 
             drawFluidInTank(
-                tank, ms, vertexConsumers, light, tank.getTank().getFluid(),
+                ms,
+                vertexConsumers,
+                light,
+                tank.getTank().getFluid(),
                 (float) tank.getTank().getFluid().getAmount() / tank.getTank().getCapacity()
             );
 
@@ -61,14 +61,7 @@ public class FluidTankBlockEntityRenderer implements BlockEntityRenderer<FluidTa
     private static final float TANK_W = 1 / 16f + 0.001f; // avoiding Z-fighting
 
     public static void drawFluidInTank(
-        BlockEntity be, PoseStack ms, MultiBufferSource vcp, int light, FluidStack fluid,
-        float fill
-    ) {
-        drawFluidInTank(be.getLevel(), be.getBlockPos(), ms, vcp, light, fluid, fill);
-    }
-
-    public static void drawFluidInTank(
-        Level level, BlockPos pos, PoseStack ps, MultiBufferSource mbs, int light,
+        PoseStack ps, MultiBufferSource mbs, int light,
         FluidStack fluid, float fill
     ) {
         // From Modern Industrialization
