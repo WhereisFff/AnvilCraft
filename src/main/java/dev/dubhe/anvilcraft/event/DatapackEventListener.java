@@ -9,10 +9,13 @@ import net.neoforged.neoforge.server.ServerLifecycleHooks;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class DatapackEventListener {
+    @SuppressWarnings("ConstantValue")
     @SubscribeEvent
     public static void onDatapack(AddReloadListenerEvent event) {
         event.addListener((barrier, manager, prpProfiler, rldProfiler, bgExec, gmExec) -> {
-            RoyalPreferenceOutcome.RoyalPreference.initRoyalPreference(ServerLifecycleHooks.getCurrentServer().overworld());
+            if (ServerLifecycleHooks.getCurrentServer() != null && ServerLifecycleHooks.getCurrentServer().overworld() != null) {
+                RoyalPreferenceOutcome.RoyalPreference.initRoyalPreference(ServerLifecycleHooks.getCurrentServer().overworld());
+            }
             return barrier.wait(null);
         });
     }
