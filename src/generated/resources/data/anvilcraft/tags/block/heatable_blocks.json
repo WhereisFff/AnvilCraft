@@ -11,6 +11,7 @@
     "anvilcraft:incandescent_netherite_block",
     "anvilcraft:incandescent_tungsten_block",
     "anvilcraft:overheated_ember_metal_block",
+    "#c:storage_blocks/tungsten",
     "minecraft:netherite_block"
   ]
 }
