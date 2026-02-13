@@ -16,6 +16,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 @Setter
@@ -74,5 +75,9 @@ public class InductionLightBlockEntity extends BlockEntity implements IPowerCons
     @Override
     public BlockPos getPos() {
         return getBlockPos();
+    }
+
+    public boolean isInRange(Vec3 pos) {
+        return this.blockingArea.get().contains(pos);
     }
 }
