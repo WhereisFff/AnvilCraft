@@ -28,7 +28,7 @@ public class AccelerateManager {
         for (BlockPos pos : AccelerationRingBlockEntity.getAllBlocks(level)) {
             AABB aabb = AccelerationRingBlockEntity.getAABB(pos);
             if (aabb == null) continue;
-            if (aabb.contains(entity.position())) {
+            if (aabb.contains(entity.getBoundingBox().getCenter())) {
                 BlockState state = level.getBlockState(pos);
                 if (isActiveAccelerationRing(state)) {
                     applyAcceleration(entity, pos, state.getValue(AccelerationRingBlock.FACING));
