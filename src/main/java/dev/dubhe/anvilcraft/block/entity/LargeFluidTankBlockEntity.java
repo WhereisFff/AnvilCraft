@@ -1,8 +1,10 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import dev.dubhe.anvilcraft.api.fluid.IFluidHandlerHolder;
+import dev.dubhe.anvilcraft.api.fluidtank.InfinityFluidTank;
 import dev.dubhe.anvilcraft.block.LargeFluidTankBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.util.TankUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
@@ -19,15 +21,13 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
-import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class LargeFluidTankBlockEntity extends BlockEntity implements IFluidHandlerHolder {
-    public static final int CAPACITY = 320;
-    public static final int BIG_CAPACITY = 12800;
+    public static final int CAPACITY = 320 * FluidType.BUCKET_VOLUME;
+    public static final int BIG_CAPACITY = 12800 * FluidType.BUCKET_VOLUME;
     public static final int COOLDOWN = 100;
-    protected FluidTank tank = new FluidTank(CAPACITY * FluidType.BUCKET_VOLUME);
+    protected InfinityFluidTank tank = new InfinityFluidTank(CAPACITY, false);
     protected int cooldown = 0;
-
 
     public LargeFluidTankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -45,10 +45,17 @@ public class LargeFluidTankBlockEntity extends BlockEntity implements IFluidHand
 
     protected void checkStructure() {
         if (this.getLevel() == null) return;
+        if (!this.isMainPart()) {
+            this.getMainPart().checkStructure();
+            return;
+        }
 
-        int targetCapacity = TankUtil.isMengerStructure(this.getLevel(), this.getBlockPos(), 9) ? BIG_CAPACITY : CAPACITY;
-        if (tank.getCapacity() != targetCapacity) {
-            tank.setCapacity(targetCapacity * FluidType.BUCKET_VOLUME);
+        if (TankUtil.isMengerStructure(this.getLevel(), this.getBlockPos(), 9)) {
+            tank.setCapacity(BIG_CAPACITY);
+            if (tank.getSpace() <= 0) tank.setInfinity(true);
+        } else {
+            tank.setInfinity(false);
+            tank.setCapacity(CAPACITY);
         }
     }
 
@@ -83,14 +90,27 @@ public class LargeFluidTankBlockEntity extends BlockEntity implements IFluidHand
 
     public boolean onPlayerUse(Player player, InteractionHand hand) {
         checkStructure();
-        return FluidUtil.interactWithFluidHandler(player, hand, tank);
+        return FluidUtil.interactWithFluidHandler(player, hand, this.getFluidHandler());
     }
 
     public IFluidTank getTank() {
-        return tank;
+        return getMainPart().tank;
     }
 
     public IFluidHandler getFluidHandler() {
-        return tank;
+        return getMainPart().tank;
+    }
+
+    public boolean isMainPart() {
+        LargeFluidTankBlock block = ModBlocks.LARGE_FLUID_TANK.get();
+        return block.isMainPart(this.getBlockState());
+    }
+
+    public LargeFluidTankBlockEntity getMainPart() {
+        LargeFluidTankBlock block = ModBlocks.LARGE_FLUID_TANK.get();
+        BlockPos mainPartPos = block.getMainPartPos(this.getBlockPos(), this.getBlockState());
+        if (this.getLevel() == null) return this;
+        BlockEntity mainPart = this.getLevel().getBlockEntity(mainPartPos);
+        return mainPart instanceof LargeFluidTankBlockEntity ? (LargeFluidTankBlockEntity) mainPart : this;
     }
 }

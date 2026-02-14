@@ -57,13 +57,15 @@ public class LargeFluidTankBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> i
         return Cube3x3PartHalf.values();
     }
 
+    @Nullable
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
+    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
         return ModBlockEntities.LARGE_FLUID_TANK.create(blockPos, blockState);
     }
 
+    @Nullable
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return createTickerHelper(
             type,
             ModBlockEntities.LARGE_FLUID_TANK.get(),
@@ -82,19 +84,14 @@ public class LargeFluidTankBlock extends SimpleMultiPartBlock<Cube3x3PartHalf> i
         BlockHitResult hitResult
     ) {
         InteractionResult result = super.useItemOn(stack, state, level, pos, player, hand, hitResult).result();
-        if (result != InteractionResult.PASS) return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        if (!(level.getBlockEntity(pos) instanceof LargeFluidTankBlockEntity)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+        if (result == InteractionResult.PASS) {
+            if (level.getBlockEntity(pos) instanceof LargeFluidTankBlockEntity tank) {
+                if (tank.onPlayerUse(player, hand)) {
+                    return ItemInteractionResult.sidedSuccess(level.isClientSide());
+                }
+            }
         }
-
-        BlockPos centerPos = this.getMainPartPos(pos, state);
-        if (!(level.getBlockEntity(centerPos) instanceof LargeFluidTankBlockEntity tank)) {
-            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
-        }
-        if (tank.onPlayerUse(player, hand)) {
-            return ItemInteractionResult.sidedSuccess(level.isClientSide());
-        }
-
         return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+
     }
 }

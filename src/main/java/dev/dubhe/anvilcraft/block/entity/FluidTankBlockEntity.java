@@ -20,12 +20,11 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class FluidTankBlockEntity extends BlockEntity implements IFluidHandlerHolder {
-    public static final int CAPACITY = 16;
-    public static final int BIG_CAPACITY = 640;
+    public static final int CAPACITY = 16 * FluidType.BUCKET_VOLUME;
+    public static final int BIG_CAPACITY = 640 * FluidType.BUCKET_VOLUME;
     public static final int COOLDOWN = 100;
-    protected FluidTank tank = new FluidTank(CAPACITY * FluidType.BUCKET_VOLUME);
+    protected FluidTank tank = new FluidTank(CAPACITY);
     protected int cooldown = 0;
-
 
     public FluidTankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState blockState) {
         super(type, pos, blockState);
@@ -44,7 +43,7 @@ public class FluidTankBlockEntity extends BlockEntity implements IFluidHandlerHo
 
         int targetCapacity = TankUtil.isMengerStructure(this.getLevel(), this.getBlockPos(), 3) ? BIG_CAPACITY : CAPACITY;
         if (tank.getCapacity() != targetCapacity) {
-            tank.setCapacity(targetCapacity * FluidType.BUCKET_VOLUME);
+            tank.setCapacity(targetCapacity);
         }
     }
 
