@@ -276,6 +276,7 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.COPPER_GRATE));
 
         provider.addTag(ModBlockTags.HEATABLE_BLOCKS)
+            .addTag(ModBlockTags.STORAGE_BLOCKS_TUNGSTEN)
             .add(findResourceKey(Blocks.NETHERITE_BLOCK));
 
         provider.addTag(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)
