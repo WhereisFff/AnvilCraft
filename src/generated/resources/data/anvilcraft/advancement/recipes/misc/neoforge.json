@@ -1,0 +1,43 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_cake_block": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:cake_block"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_creamy_bread_roll": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:creamy_bread_roll"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "anvilcraft:neoforge"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_cake_block",
+      "has_creamy_bread_roll"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "anvilcraft:neoforge"
+    ]
+  }
+}

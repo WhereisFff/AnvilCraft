@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "anvilcraft:block/neoforge",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "anvilcraft:block/neoforge",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "anvilcraft:block/neoforge"
+    },
+    "facing=west": {
+      "model": "anvilcraft:block/neoforge",
+      "y": 90
+    }
+  }
+}

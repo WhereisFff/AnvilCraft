@@ -84,6 +84,7 @@ import dev.dubhe.anvilcraft.block.MengerSpongeBlock;
 import dev.dubhe.anvilcraft.block.MineralFountainBlock;
 import dev.dubhe.anvilcraft.block.MobAmberBlock;
 import dev.dubhe.anvilcraft.block.NegativeMatterBlock;
+import dev.dubhe.anvilcraft.block.NeoforgeBlock;
 import dev.dubhe.anvilcraft.block.NestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.NeutronIrradiatorBlock;
 import dev.dubhe.anvilcraft.block.ObsidianCauldron;
@@ -442,6 +443,28 @@ public class ModBlocks {
         .tag(ItemTags.ANVIL)
         .build()
         .tag(BlockTags.ANVIL, ModBlockTags.CANT_BROKEN_ANVIL, BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
+        .register();
+
+    public static final BlockEntry<NeoforgeBlock> NEOFORGE = REGISTRATE
+        .block("neoforge", NeoforgeBlock::new)
+        .initialProperties(() -> Blocks.CAKE)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item()
+        .tag(ItemTags.ANVIL)
+        .build()
+        .tag(BlockTags.ANVIL, ModBlockTags.NON_MAGNETIC, ModBlockTags.CANT_BROKEN_ANVIL)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("AAA")
+                .pattern(" B ")
+                .pattern("BBB")
+                .define('A', ModBlocks.CAKE_BLOCK)
+                .define('B', ModFoodItems.CREAMY_BREAD_ROLL)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.CAKE_BLOCK), AnvilCraftDatagen.has(ModBlocks.CAKE_BLOCK))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModFoodItems.CREAMY_BREAD_ROLL),
+                    AnvilCraftDatagen.has(ModFoodItems.CREAMY_BREAD_ROLL))
+                .save(provider);
+        })
         .register();
 
     public static final BlockEntry<? extends Block> ROYAL_GRINDSTONE = REGISTRATE.block("royal_grindstone", RoyalGrindstoneBlock::new)
@@ -2984,7 +3007,6 @@ public class ModBlocks {
                 .save(provider);
         })
         .register();
-
 
     public static final BlockEntry<? extends Block> RESIN_BLOCK = REGISTRATE.block("resin_block", ResinBlock::new)
         .lang("Block of Resin")
