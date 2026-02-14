@@ -40,6 +40,8 @@ import java.util.stream.Stream;
 public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements IHammerChangeable, IMoveableEntityBlock {
     public static final List<Direction> SIGNAL_SOURCE_SIDES = List.of(
         Direction.DOWN, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
+    public static final List<Direction> UPDATE_SIDES = List.of(
+        Direction.UP, Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST);
     public static final VoxelShape AABB_X = Stream.of(
         Block.box(0, 0, 0, 16, 6, 16),
         Block.box(0, 6, 11, 16, 16, 16),
@@ -144,6 +146,7 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         boolean shouldPower = this.isPowered(level, pos);
         if (powered != shouldPower) {
             level.setBlockAndUpdate(pos, state.setValue(POWERED, shouldPower));
+            this.updateAbove(level, pos);
         }
         if (powered) {
             Direction.Axis axis = state.getValue(FACING).getAxis();
@@ -292,10 +295,11 @@ public class ActivatorSlidingRailBlock extends BaseSlidingRailBlock implements I
         aboveState.onNeighborChange(level, abovePos, pos);
         level.neighborChanged(aboveState, abovePos, this, pos, false);
         if (!aboveState.isRedstoneConductor(level, abovePos)) return;
-        abovePos = abovePos.above();
-        aboveState = level.getBlockState(abovePos);
-        if (!aboveState.getWeakChanges(level, abovePos)) return;
-        level.neighborChanged(aboveState, abovePos, this, pos, false);
+        for (Direction dir : UPDATE_SIDES) {
+            BlockPos neighborPos = abovePos.relative(dir);
+            BlockState neighborState = level.getBlockState(neighborPos);
+            level.neighborChanged(neighborState, neighborPos, aboveState.getBlock(), abovePos, false);
+        }
     }
 
     @Override
