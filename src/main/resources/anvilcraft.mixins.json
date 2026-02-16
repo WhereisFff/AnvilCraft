@@ -63,6 +63,7 @@
     "accessor.ShapedRecipePatternAccessor",
     "accessor.TargetingConditionsAccessor",
     "accessor.VaultServerDataAccessor",
+    "accessor.VillagerAccessor",
     "invoker.BlockBehaviourInvoker",
     "invoker.BlockItemInvoker",
     "piglin.AbstractPiglinMixin",
