@@ -97,7 +97,7 @@
   "advancements.anvilcraft.tai_shang_wang_qing.title": "太上忘情",
   "advancements.anvilcraft.topaz.description": "使用黄玉在避雷针上召唤闪电",
   "advancements.anvilcraft.topaz.title": "闪电之力",
-  "advancements.anvilcraft.transcendence.description": "将充能中子锭压入超温余烬金属块制造超限合金块",
+  "advancements.anvilcraft.transcendence.description": "将充能中子锭压入超温余烬金属块制造超限合金",
   "advancements.anvilcraft.transcendence.title": "超越限制",
   "advancements.anvilcraft.vanilla_iron_plate.description": "在冲压平台上砸铁锭以获得重质测重压力板",
   "advancements.anvilcraft.vanilla_iron_plate.title": "原版的铁板",
@@ -1248,11 +1248,11 @@
   "screen.anvilcraft.integration_screen.url.github": "Github 仓库",
   "screen.anvilcraft.integration_screen.url.curseforge": "CurseForge",
   "screen.anvilcraft.integration_screen.title": "集成",
-  "screen.anvilcraft.integration_screen.target": "目标模组：",
+  "screen.anvilcraft.integration_screen.target": "目标模组下载：",
   "screen.anvilcraft.integration_screen.not_loaded": "推荐",
   "screen.anvilcraft.integration_screen.not_found": "未安装",
   "screen.anvilcraft.integration_screen.loaded": "已加载",
-  "screen.anvilcraft.integration_screen.extra": "额外模组：",
+  "screen.anvilcraft.integration_screen.extra": "额外下载：",
   "screen.anvilcraft.integration_screen.category.recipe_query": "配方查询",
   "screen.anvilcraft.integration_screen.category.modify": "修改",
   "screen.anvilcraft.integration_screen.category.interaction": "联动",
@@ -1343,5 +1343,6 @@
   "tooltip.anvilcraft.item.black_hole": "具有强大引力的开发者方块",
   "tooltip.anvilcraft.item.spectral_anvil": "当上方的磁体消磁时，会生成一道幻影并向下坠落。它能穿透透明方块，且无论实际高度如何，坠落的冲击始终按 2 格高度计算处理",
   "tooltip.anvilcraft.item.white_hole": "具有强大斥力的开发者方块",
-  "integration.anvilcraft.interaction.curios": "Curios"
+  "integration.anvilcraft.interaction.curios": "Curios",
+  "screen.anvilcraft.integration_screen.note": "如需查阅手册，请先先挑选一个第三方手册模组下载，再下载本模组对其的兼容附属，共计 %d 个额外模组。下载链接已提供，点击按钮即可跳转。"
 }
