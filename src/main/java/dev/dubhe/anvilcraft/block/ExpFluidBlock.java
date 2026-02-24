@@ -18,8 +18,8 @@ public class ExpFluidBlock extends LiquidBlock {
 
     @Override
     public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
-        // 这个不触发，我没招了...
         if (level.isClientSide) return;
+        if (!level.getFluidState(pos).isSource()) return;
         if (entity instanceof Player player) {
             player.giveExperiencePoints(XP_POINTS);
             level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
