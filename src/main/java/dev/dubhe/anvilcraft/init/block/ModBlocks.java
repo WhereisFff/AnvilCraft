@@ -85,11 +85,12 @@ import dev.dubhe.anvilcraft.block.MineralFountainBlock;
 import dev.dubhe.anvilcraft.block.MobAmberBlock;
 import dev.dubhe.anvilcraft.block.NegativeMatterBlock;
 import dev.dubhe.anvilcraft.block.NeoforgeBlock;
-import dev.dubhe.anvilcraft.block.NestingShulkerBoxBlock;
+import dev.dubhe.anvilcraft.block.item.UncontainableBlockItem;
+import dev.dubhe.anvilcraft.block.nesting.NestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.NeutronIrradiatorBlock;
 import dev.dubhe.anvilcraft.block.ObsidianCauldron;
 import dev.dubhe.anvilcraft.block.OilCauldronBlock;
-import dev.dubhe.anvilcraft.block.OverNestingShulkerBoxBlock;
+import dev.dubhe.anvilcraft.block.nesting.OverNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.OverseerBlock;
 import dev.dubhe.anvilcraft.block.PiezoelectricCrystalBlock;
 import dev.dubhe.anvilcraft.block.PlasmaJetsBlock;
@@ -118,7 +119,7 @@ import dev.dubhe.anvilcraft.block.StepEffectBlock;
 import dev.dubhe.anvilcraft.block.StepEffectSlabBlock;
 import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
 import dev.dubhe.anvilcraft.block.SugarBlock;
-import dev.dubhe.anvilcraft.block.SupercriticalNestingShulkerBoxBlock;
+import dev.dubhe.anvilcraft.block.nesting.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendiumBlock;
@@ -180,6 +181,7 @@ import dev.dubhe.anvilcraft.init.item.ModItemGroups;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
+import dev.dubhe.anvilcraft.item.property.component.OverLimitItemContainerContents;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
 import dev.dubhe.anvilcraft.util.DangerUtil;
@@ -4379,10 +4381,14 @@ public class ModBlocks {
             NestingShulkerBoxBlock::new
         )
         .initialProperties(() -> Blocks.SHULKER_BOX)
+        .loot(DataGenUtil::nestingShulkerBoxLoot)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .properties(properties -> properties.stacksTo(16))
+        .item(UncontainableBlockItem::new)
+        .properties(properties -> properties
+            .stacksTo(1)
+            .component(ModComponents.OVER_LIMIT_CONTAINER, OverLimitItemContainerContents.EMPTY)
+        )
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {
@@ -4394,10 +4400,14 @@ public class ModBlocks {
             OverNestingShulkerBoxBlock::new
         )
         .initialProperties(() -> Blocks.SHULKER_BOX)
+        .loot(DataGenUtil::nestingShulkerBoxLoot)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .properties(properties -> properties.stacksTo(16))
+        .item(UncontainableBlockItem::new)
+        .properties(properties -> properties
+            .stacksTo(1)
+            .component(ModComponents.OVER_LIMIT_CONTAINER, OverLimitItemContainerContents.EMPTY)
+        )
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {
@@ -4409,10 +4419,14 @@ public class ModBlocks {
             SupercriticalNestingShulkerBoxBlock::new
         )
         .initialProperties(() -> Blocks.SHULKER_BOX)
+        .loot(DataGenUtil::nestingShulkerBoxLoot)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .properties(properties -> properties.stacksTo(16))
+        .item(UncontainableBlockItem::new)
+        .properties(properties -> properties
+            .stacksTo(1)
+            .component(ModComponents.OVER_LIMIT_CONTAINER, OverLimitItemContainerContents.EMPTY)
+        )
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {

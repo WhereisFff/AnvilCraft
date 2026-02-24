@@ -14,6 +14,7 @@ import net.minecraft.advancements.critereon.ItemSubPredicates;
 import net.minecraft.advancements.critereon.MinMaxBounds;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -26,6 +27,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.AlternativesEntry;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.predicates.ExplosionCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraft.world.level.storage.loot.predicates.MatchTool;
@@ -152,6 +154,26 @@ public class DataGenUtil {
                         LootItem.lootTableItem(other).when(ExplosionCondition.survivesExplosion())
                     ))
             )
+        );
+    }
+
+    public static void nestingShulkerBoxLoot(RegistrateBlockLootTables lootTables, Block block) {
+        lootTables.add(
+            block,
+            LootTable.lootTable()
+                .withPool(
+                    LootPool.lootPool()
+                        .when(ExplosionCondition.survivesExplosion())
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(
+                            LootItem.lootTableItem(block)
+                                .apply(
+                                    CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                        .include(DataComponents.CUSTOM_NAME)
+                                        .include(DataComponents.CONTAINER)
+                                )
+                        )
+                )
         );
     }
 }
