@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.item;
 
 import dev.dubhe.anvilcraft.block.ExpFluidBlock;
 import dev.dubhe.anvilcraft.mixin.accessor.VillagerAccessor;
+import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -63,11 +64,10 @@ public class ExpGemItem extends Item {
         int villagerXp = villager.getVillagerXp() + VILLAGER_XP;
         villager.setVillagerXp(villagerXp);
 
-        if (villager instanceof VillagerAccessor villager1) {
-            if (villager1.invokeShouldIncreaseLevel()) {
-                villager1.setUpdateMerchantTimer(40);
-                villager1.setIncreaseProfessionLevelOnUpdate(true);
-            }
+        VillagerAccessor accessor = Util.cast(villager);
+        if (accessor.invokeShouldIncreaseLevel()) {
+            accessor.setUpdateMerchantTimer(40);
+            accessor.setIncreaseProfessionLevelOnUpdate(true);
         }
     }
 }
