@@ -37,6 +37,7 @@ import dev.dubhe.anvilcraft.block.entity.RemoteTransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ResentfulAmberBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.RubyLaserBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.RubyPrismBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.ShulkerContainerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.SimpleChuteBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.SpaceOvercompressorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.TeslaTowerBlockEntity;
@@ -302,6 +303,11 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<NeutronIrradiatorBlockEntity> NEUTRON_IRRADIATOR = REGISTRATE
         .blockEntity("neutron_irradiator", NeutronIrradiatorBlockEntity::createBlockEntity)
         .validBlocks(ModBlocks.NEUTRON_IRRADIATOR)
+        .register();
+
+    public static final BlockEntityEntry<ShulkerContainerBlockEntity> SHULKER_CONTAINER = REGISTRATE
+        .blockEntity("shulker_container", ShulkerContainerBlockEntity::new)
+        .validBlocks(ModBlocks.SHULKER_CONTAINER)
         .register();
 
     public static void register() {

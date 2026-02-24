@@ -108,6 +108,7 @@ import dev.dubhe.anvilcraft.block.RoyalGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.RoyalSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.RubyLaserBlock;
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
+import dev.dubhe.anvilcraft.block.ShulkerContainerBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
 import dev.dubhe.anvilcraft.block.SimpleConfinementAnvilonBlock;
 import dev.dubhe.anvilcraft.block.SpaceOvercompressorBlock;
@@ -146,6 +147,7 @@ import dev.dubhe.anvilcraft.block.item.MultiphaseMatterBlockItem;
 import dev.dubhe.anvilcraft.block.item.PlaceInWaterBlockItem;
 import dev.dubhe.anvilcraft.block.item.RadiationBlockItem;
 import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.block.item.ShulkerContainerBlockItem;
 import dev.dubhe.anvilcraft.block.item.SimpleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.block.item.SuperHeavyBlockItem;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
@@ -1466,6 +1468,22 @@ public class ModBlocks {
                 .save(provider);
         })
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .register();
+    public static final BlockEntry<ShulkerContainerBlock> SHULKER_CONTAINER = REGISTRATE
+        .block("shulker_container", ShulkerContainerBlock::new)
+        .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .loot(FlexibleMultiPartBlock::loot)
+        .properties(properties -> properties
+            .noOcclusion()
+            .isValidSpawn(ModBlocks::never)
+            .requiresCorrectToolForDrops()
+        )
+        .item(ShulkerContainerBlockItem::new)
+        .properties(properties -> properties.stacksTo(16))
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .tag(BlockTags.NEEDS_DIAMOND_TOOL)
         .register();
 
     public static final BlockEntry<JewelCraftingTable> JEWEL_CRAFTING_TABLE = REGISTRATE.block(
