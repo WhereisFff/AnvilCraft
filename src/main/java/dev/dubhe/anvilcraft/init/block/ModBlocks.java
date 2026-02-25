@@ -3953,6 +3953,7 @@ public class ModBlocks {
             DangerUtil.genConfiguredModel("block/multiphase_matter_block").get()
         ))
         .item(MultiphaseMatterBlockItem::new)
+        .initialProperties(() -> new Item.Properties().fireResistant())
         .tag(Tags.Items.STORAGE_BLOCKS, ModItemTags.STORAGE_BLOCKS_MULTIPHASE_MATTER)
         .build()
         .tag(
