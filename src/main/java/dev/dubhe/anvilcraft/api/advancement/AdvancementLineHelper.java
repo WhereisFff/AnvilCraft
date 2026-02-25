@@ -38,6 +38,7 @@ import net.minecraft.advancements.critereon.PlayerHurtEntityTrigger;
 import net.minecraft.advancements.critereon.PlayerTrigger;
 import net.minecraft.advancements.critereon.RecipeCraftedTrigger;
 import net.minecraft.advancements.critereon.SlotsPredicate;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -169,6 +170,16 @@ public class AdvancementLineHelper {
 
         public AdvancementHelper hasItems(String key, ItemLike... items) {
             return this.addCriterion(key, InventoryChangeTrigger.TriggerInstance.hasItems(items));
+        }
+
+        public AdvancementHelper hasItemAny(String keyPrefix, ItemLike... items) {
+            for (ItemLike item : items) {
+                this.addCriterion(
+                    keyPrefix + BuiltInRegistries.ITEM.getKey(item.asItem()).getPath(),
+                    InventoryChangeTrigger.TriggerInstance.hasItems(item)
+                );
+            }
+            return this;
         }
 
         public AdvancementHelper useItem(String key, ItemLike item) {
