@@ -4035,7 +4035,8 @@ public class ModBlocks {
         .onRegister(block -> Item.BY_BLOCK.put(block, Items.CAULDRON))
         .register();
 
-    public static final BlockEntry<ExpFluidCauldronBlock> EXP_CAULDRON = REGISTRATE.block("exp_cauldron", ExpFluidCauldronBlock::new)
+    public static final BlockEntry<ExpFluidCauldronBlock> EXP_FLUID_CAULDRON = REGISTRATE
+        .block("exp_fluid_cauldron", ExpFluidCauldronBlock::new)
         .initialProperties(() -> Blocks.CAULDRON)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .loot((tables, block) -> tables.dropOther(block, Items.CAULDRON))

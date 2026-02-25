@@ -42,7 +42,7 @@ public class ModInteractionMap {
                 hand,
                 stack,
                 ModItems.EXP_BUCKET.asStack(),
-                (s) -> ModBlocks.EXP_CAULDRON.get().isFull(state),
+                (s) -> ModBlocks.EXP_FLUID_CAULDRON.get().isFull(state),
                 SoundEvents.BUCKET_FILL
             )
         );
@@ -238,7 +238,7 @@ public class ModInteractionMap {
                 player,
                 hand,
                 stack,
-                ModBlocks.EXP_CAULDRON.get().fullFilled(),
+                ModBlocks.EXP_FLUID_CAULDRON.get().fullFilled(),
                 SoundEvents.BUCKET_EMPTY
             )
         );
@@ -250,7 +250,7 @@ public class ModInteractionMap {
                     player.awardStat(Stats.USE_CAULDRON);
                     player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
                     if (level.random.nextBoolean()) {
-                        level.setBlockAndUpdate(pos, ModBlocks.EXP_CAULDRON.getDefaultState());
+                        level.setBlockAndUpdate(pos, ModBlocks.EXP_FLUID_CAULDRON.getDefaultState());
                     }
                     level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
                     level.gameEvent(null, GameEvent.FLUID_PLACE, pos);

@@ -15,6 +15,24 @@ public class SqueezingRecipeLoader {
         squeezing(provider, Blocks.MOSS_BLOCK, Blocks.MOSS_CARPET, Blocks.WATER_CAULDRON, 333);
         squeezing(provider, Blocks.MAGMA_BLOCK, Blocks.NETHERRACK, ModBlocks.LAVA_CAULDRON.get(), 250);
         squeezing(provider, Blocks.SNOW_BLOCK, Blocks.ICE, Blocks.POWDER_SNOW_CAULDRON, 333);
+
+        SqueezingRecipe.builder()
+            .requires(Blocks.SCULK)
+            .result(Blocks.AIR)
+            .transform(ModBlocks.EXP_FLUID_CAULDRON.get())
+            .produce(250)
+            .chance(0.1f)
+            .noFrostAnvil()
+            .save(provider, AnvilCraft.of("squeezing/exp_fluid_from_sculk"));
+
+        SqueezingRecipe.builder()
+            .requires(Blocks.SCULK)
+            .result(Blocks.AIR)
+            .transform(ModBlocks.EXP_FLUID_CAULDRON.get())
+            .produce(250)
+            .chance(0.4f)
+            .frostAnvil()
+            .save(provider, AnvilCraft.of("squeezing/exp_fluid_from_sculk_use_frost_anvil"));
     }
 
     public static void squeezing(RegistrateRecipeProvider provider, Block requires, Block result, Block cauldron, int produce) {
@@ -23,7 +41,6 @@ public class SqueezingRecipeLoader {
             .result(result)
             .transform(cauldron)
             .produce(produce)
-            .save(
-                provider, AnvilCraft.of("squeezing/%s_from_%s".formatted(getName(cauldron), getName(requires))));
+            .save(provider, AnvilCraft.of("squeezing/%s_from_%s".formatted(getName(cauldron), getName(requires))));
     }
 }

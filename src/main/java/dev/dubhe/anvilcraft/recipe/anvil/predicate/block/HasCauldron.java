@@ -35,9 +35,15 @@ import java.util.Optional;
  * @param fluid     流体ID
  * @param consume   消耗量（负数表示产生）
  * @param transform 转换后的流体ID
+ * @param chance    转换成功的概率
  */
-public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, ResourceLocation transform)
-    implements IRecipePredicate<HasCauldron> {
+public record HasCauldron(
+    Vec3 offset,
+    ResourceLocation fluid,
+    int consume,
+    ResourceLocation transform,
+    float chance
+) implements IRecipePredicate<HasCauldron> {
     /**
      * 空炼药锅标识
      */
@@ -55,6 +61,7 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
      * @param fluid     流体ID
      * @param consume   消耗量
      * @param transform 转换后的流体ID
+     * @param chance    转换成功的概率
      */
     public HasCauldron {
     }
@@ -66,7 +73,7 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
      * @return HasCauldron实例
      */
     public static HasCauldron empty(Vec3 offset) {
-        return new HasCauldron(offset, EMPTY, 0, NULL);
+        return new HasCauldron(offset, EMPTY, 0, NULL, 1.0f);
     }
 
     @Override
@@ -130,6 +137,7 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
 
     @Override
     public void accept(InWorldRecipeContext context) {
+        if (context.getLevel().random.nextFloat() > this.chance) return;
         if (this.fluid.equals(EMPTY) && !HasCauldron.isNotEmpty(this.transform())) return;
         BlockPos blockPos = BlockPos.containing(context.getPos().add(this.offset()));
         BlockCache cache = context.computeIfAbsent(BlockCache.BLOCK_CACHE);
@@ -248,10 +256,21 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
          * 编解码器
          */
         public final MapCodec<HasCauldron> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                Vec3.CODEC.fieldOf("offset").forGetter(HasCauldron::offset),
-                ResourceLocation.CODEC.optionalFieldOf("fluid", EMPTY).forGetter(HasCauldron::fluid),
-                Codec.INT.optionalFieldOf("consume", 0).forGetter(HasCauldron::consume),
-                ResourceLocation.CODEC.optionalFieldOf("transform", NULL).forGetter(HasCauldron::transform)
+                Vec3.CODEC
+                    .fieldOf("offset")
+                    .forGetter(HasCauldron::offset),
+                ResourceLocation.CODEC
+                    .optionalFieldOf("fluid", EMPTY)
+                    .forGetter(HasCauldron::fluid),
+                Codec.INT
+                    .optionalFieldOf("consume", 0)
+                    .forGetter(HasCauldron::consume),
+                ResourceLocation.CODEC
+                    .optionalFieldOf("transform", NULL)
+                    .forGetter(HasCauldron::transform),
+                Codec.FLOAT
+                    .optionalFieldOf("chance", 1.0f)
+                    .forGetter(HasCauldron::chance)
             ).apply(instance, HasCauldron::new)
         );
 
@@ -267,6 +286,8 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
             HasCauldron::consume,
             ResourceLocation.STREAM_CODEC,
             HasCauldron::transform,
+            ByteBufCodecs.FLOAT,
+            HasCauldron::chance,
             HasCauldron::new
         );
 
@@ -289,6 +310,7 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         private ResourceLocation fluid = HasCauldron.EMPTY;
         private int consume = 0;
         private ResourceLocation transform = HasCauldron.NULL;
+        private float chance = 1;
 
         /**
          * 设置偏移量
@@ -417,12 +439,23 @@ public record HasCauldron(Vec3 offset, ResourceLocation fluid, int consume, Reso
         }
 
         /**
+         * 设置转换成功的概率
+         *
+         * @param chance 概率
+         * @return 构建器实例
+         */
+        public Builder chance(float chance) {
+            this.chance = chance;
+            return this;
+        }
+
+        /**
          * 构建HasCauldron实例
          *
          * @return HasCauldron实例
          */
         public HasCauldron build() {
-            return new HasCauldron(this.offset, this.fluid, this.consume, this.transform);
+            return new HasCauldron(this.offset, this.fluid, this.consume, this.transform, this.chance);
         }
     }
 }

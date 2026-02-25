@@ -14,6 +14,7 @@ import dev.anvilcraft.lib.recipe.predicate.block.HasBlockIngredient;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasAnvil;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
 import lombok.Getter;
 import net.minecraft.core.Vec3i;
@@ -142,6 +143,15 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
      */
     public HasCauldronSimple getHasCauldron() {
         return this.property.getHasCauldron();
+    }
+
+    /**
+     * 获取铁砧条件
+     *
+     * @return 炼药锅条件
+     */
+    public HasAnvil getHasAnvil() {
+        return this.property.getHasAnvil();
     }
 
     /**
@@ -490,6 +500,11 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         private HasCauldronSimple hasCauldron = null;
 
         /**
+         * 铁砧条件
+         */
+        private HasAnvil hasAnvil = HasAnvil.DEFAULT;
+
+        /**
          * 产热信息
          */
         private ProduceHeat produceHeat = null;
@@ -688,6 +703,17 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
         }
 
         /**
+         * 设置铁砧条件
+         *
+         * @param hasAnvil 铁砧条件
+         * @return 属性实例
+         */
+        public Property setHasAnvil(HasAnvil hasAnvil) {
+            this.hasAnvil = hasAnvil;
+            return this;
+        }
+
+        /**
          * 设置产热信息
          *
          * @param produceHeat 产热信息
@@ -738,7 +764,8 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
                    + (this.resultItems == null ? 0 : this.resultItems.size())
                    + (this.inputBlocks == null ? 0 : this.inputBlocks.size() * 100)
                    + (this.resultBlocks == null ? 0 : this.resultBlocks.size())
-                   + (this.hasCauldron != null ? 1 : 0);
+                   + (this.hasCauldron != null ? 1 : 0)
+                   + (this.hasAnvil != null ? 1 : 0);
         }
 
         /**
@@ -750,6 +777,9 @@ public abstract class AbstractProcessRecipe<T extends InWorldRecipe> extends InW
             List<IRecipePredicate<?>> predicates = new ArrayList<>();
             if (this.hasCauldron != null) {
                 predicates.add(this.hasCauldron.toHasCauldron(this.getCauldronOffset()));
+            }
+            if (!Objects.equals(this.hasAnvil, HasAnvil.DEFAULT)) {
+                predicates.add(this.hasAnvil);
             }
             if (this.inputBlocks != null) {
                 for (int i = 0; i < this.inputBlocks.size(); i++) {
