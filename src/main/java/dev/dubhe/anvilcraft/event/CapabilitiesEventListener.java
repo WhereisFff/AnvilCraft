@@ -15,13 +15,17 @@ import java.util.List;
 public class CapabilitiesEventListener {
     @SubscribeEvent
     public static void registerCapabilities(final RegisterCapabilitiesEvent event) {
-        List.of(ModBlockEntities.BATCH_CRAFTER.get(),
+        List.of(
+            ModBlockEntities.BATCH_CRAFTER.get(),
             ModBlockEntities.CHARGER.get(),
             ModBlockEntities.CHUTE.get(),
             ModBlockEntities.SIMPLE_CHUTE.get(),
             ModBlockEntities.ITEM_COLLECTOR.get(),
             ModBlockEntities.MAGNETIC_CHUTE.get(),
-            ModBlockEntities.CONFINEMENT_CHAMBER.get()
+            ModBlockEntities.CONFINEMENT_CHAMBER.get(),
+            ModBlockEntities.NESTING_SHULKER_BOX.get(),
+            ModBlockEntities.OVER_NESTING_SHULKER_BOX.get(),
+            ModBlockEntities.SUPERCRITICAL_NESTING_SHULKER_BOX.get()
         ).forEach(type -> event.registerBlockEntity(
             Capabilities.ItemHandler.BLOCK,
             type,

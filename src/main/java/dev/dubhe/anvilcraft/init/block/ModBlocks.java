@@ -85,11 +85,9 @@ import dev.dubhe.anvilcraft.block.MineralFountainBlock;
 import dev.dubhe.anvilcraft.block.MobAmberBlock;
 import dev.dubhe.anvilcraft.block.NegativeMatterBlock;
 import dev.dubhe.anvilcraft.block.NeoforgeBlock;
-import dev.dubhe.anvilcraft.block.NestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.NeutronIrradiatorBlock;
 import dev.dubhe.anvilcraft.block.ObsidianCauldron;
 import dev.dubhe.anvilcraft.block.OilCauldronBlock;
-import dev.dubhe.anvilcraft.block.OverNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.OverseerBlock;
 import dev.dubhe.anvilcraft.block.PiezoelectricCrystalBlock;
 import dev.dubhe.anvilcraft.block.PlasmaJetsBlock;
@@ -108,6 +106,7 @@ import dev.dubhe.anvilcraft.block.RoyalGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.RoyalSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.RubyLaserBlock;
 import dev.dubhe.anvilcraft.block.RubyPrismBlock;
+import dev.dubhe.anvilcraft.block.ShulkerContainerBlock;
 import dev.dubhe.anvilcraft.block.SimpleChuteBlock;
 import dev.dubhe.anvilcraft.block.SimpleConfinementAnvilonBlock;
 import dev.dubhe.anvilcraft.block.SpaceOvercompressorBlock;
@@ -117,7 +116,6 @@ import dev.dubhe.anvilcraft.block.StepEffectBlock;
 import dev.dubhe.anvilcraft.block.StepEffectSlabBlock;
 import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
 import dev.dubhe.anvilcraft.block.SugarBlock;
-import dev.dubhe.anvilcraft.block.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendiumBlock;
@@ -146,10 +144,15 @@ import dev.dubhe.anvilcraft.block.item.MultiphaseMatterBlockItem;
 import dev.dubhe.anvilcraft.block.item.PlaceInWaterBlockItem;
 import dev.dubhe.anvilcraft.block.item.RadiationBlockItem;
 import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
+import dev.dubhe.anvilcraft.block.item.ShulkerContainerBlockItem;
 import dev.dubhe.anvilcraft.block.item.SimpleMultiPartBlockItem;
 import dev.dubhe.anvilcraft.block.item.SuperHeavyBlockItem;
+import dev.dubhe.anvilcraft.block.item.UncontainableBlockItem;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.multipart.SimpleMultiPartBlock;
+import dev.dubhe.anvilcraft.block.nesting.NestingShulkerBoxBlock;
+import dev.dubhe.anvilcraft.block.nesting.OverNestingShulkerBoxBlock;
+import dev.dubhe.anvilcraft.block.nesting.SupercriticalNestingShulkerBoxBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityCountPressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.EntityTypePressurePlateBlock;
 import dev.dubhe.anvilcraft.block.plate.FireImmunePressurePlateBlock;
@@ -178,6 +181,7 @@ import dev.dubhe.anvilcraft.init.item.ModItemGroups;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
+import dev.dubhe.anvilcraft.item.property.component.OverLimitItemContainerContents;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemInjectRecipe;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
 import dev.dubhe.anvilcraft.util.DangerUtil;
@@ -1466,6 +1470,22 @@ public class ModBlocks {
                 .save(provider);
         })
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .register();
+    public static final BlockEntry<ShulkerContainerBlock> SHULKER_CONTAINER = REGISTRATE
+        .block("shulker_container", ShulkerContainerBlock::new)
+        .initialProperties(() -> Blocks.NETHERITE_BLOCK)
+        .loot(FlexibleMultiPartBlock::loot)
+        .properties(properties -> properties
+            .noOcclusion()
+            .isValidSpawn(ModBlocks::never)
+            .requiresCorrectToolForDrops()
+        )
+        .item(ShulkerContainerBlockItem::new)
+        .properties(properties -> properties.stacksTo(16))
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .build()
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .tag(BlockTags.NEEDS_DIAMOND_TOOL)
         .register();
 
     public static final BlockEntry<JewelCraftingTable> JEWEL_CRAFTING_TABLE = REGISTRATE.block(
@@ -4362,10 +4382,14 @@ public class ModBlocks {
             NestingShulkerBoxBlock::new
         )
         .initialProperties(() -> Blocks.SHULKER_BOX)
+        .loot(DataGenUtil::nestingShulkerBoxLoot)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .properties(properties -> properties.stacksTo(16))
+        .item(UncontainableBlockItem::new)
+        .properties(properties -> properties
+            .stacksTo(1)
+            .component(ModComponents.OVER_LIMIT_CONTAINER, OverLimitItemContainerContents.EMPTY)
+        )
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {
@@ -4377,10 +4401,14 @@ public class ModBlocks {
             OverNestingShulkerBoxBlock::new
         )
         .initialProperties(() -> Blocks.SHULKER_BOX)
+        .loot(DataGenUtil::nestingShulkerBoxLoot)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .properties(properties -> properties.stacksTo(16))
+        .item(UncontainableBlockItem::new)
+        .properties(properties -> properties
+            .stacksTo(1)
+            .component(ModComponents.OVER_LIMIT_CONTAINER, OverLimitItemContainerContents.EMPTY)
+        )
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {
@@ -4392,10 +4420,14 @@ public class ModBlocks {
             SupercriticalNestingShulkerBoxBlock::new
         )
         .initialProperties(() -> Blocks.SHULKER_BOX)
+        .loot(DataGenUtil::nestingShulkerBoxLoot)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
-        .item()
-        .properties(properties -> properties.stacksTo(16))
+        .item(UncontainableBlockItem::new)
+        .properties(properties -> properties
+            .stacksTo(1)
+            .component(ModComponents.OVER_LIMIT_CONTAINER, OverLimitItemContainerContents.EMPTY)
+        )
         .model((ctx, provider) -> provider.blockItem(ctx))
         .build()
         .recipe((ctx, provider) -> {

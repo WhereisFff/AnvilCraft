@@ -10,6 +10,7 @@ import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.item.property.component.HeliostatsData;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.item.property.component.MultiphaseRef;
+import dev.dubhe.anvilcraft.item.property.component.OverLimitItemContainerContents;
 import dev.dubhe.anvilcraft.item.property.component.PillBocContents;
 import dev.dubhe.anvilcraft.item.property.component.Providence;
 import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
@@ -126,6 +127,11 @@ public class ModComponents {
     public static final DataComponentType<PillBocContents> PILL_BOC_CONTENTS = register(
         "pill_box_contents",
         (builder) -> builder.persistent(PillBocContents.CODEC).networkSynchronized(PillBocContents.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<OverLimitItemContainerContents> OVER_LIMIT_CONTAINER = register(
+        "over_limit_item_container_contents",
+        b -> b.persistent(OverLimitItemContainerContents.CODEC).networkSynchronized(OverLimitItemContainerContents.STREAM_CODEC)
     );
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {
