@@ -1,0 +1,18 @@
+{
+  "type": "anvilcraft:squeezing",
+  "anvil": {
+    "anvil": {
+      "blocks": "anvilcraft:frost_anvil"
+    },
+    "inverted": true
+  },
+  "chance": 0.1,
+  "consume": -250,
+  "ingredient": {
+    "blocks": "minecraft:sculk"
+  },
+  "result": {
+    "block": "minecraft:air"
+  },
+  "transform": "anvilcraft:exp_fluid"
+}

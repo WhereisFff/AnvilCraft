@@ -166,6 +166,6 @@ public class ActiveSilencerBlockEntity
 
     @Override
     public AABB shape() {
-        return range;
+        return this.range;
     }
 }

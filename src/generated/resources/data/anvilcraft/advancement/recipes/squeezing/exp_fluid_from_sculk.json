@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "anvilcraft:bulging/exp_cauldron"
+        "recipe": "anvilcraft:squeezing/exp_fluid_from_sculk"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -15,7 +15,7 @@
   ],
   "rewards": {
     "recipes": [
-      "anvilcraft:bulging/exp_cauldron"
+      "anvilcraft:squeezing/exp_fluid_from_sculk"
     ]
   }
 }

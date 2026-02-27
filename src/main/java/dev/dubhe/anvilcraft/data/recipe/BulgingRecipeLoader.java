@@ -69,9 +69,9 @@ public class BulgingRecipeLoader {
             .save(provider);
         BulgingRecipe.builder()
             .cauldron(Blocks.WATER_CAULDRON)
-            .transform(ModBlocks.EXP_CAULDRON.get())
+            .transform(ModBlocks.EXP_FLUID_CAULDRON.get())
             .requires(ModItems.EXP_GEM)
-            .save(provider, AnvilCraft.of("bulging/exp_cauldron"));
+            .save(provider, AnvilCraft.of("bulging/exp_fluid_cauldron"));
     }
 
     private static void bulging(RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int consume) {
