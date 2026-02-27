@@ -46,7 +46,9 @@ import dev.dubhe.anvilcraft.block.ExpFluidBlock;
 import dev.dubhe.anvilcraft.block.ExpFluidCauldronBlock;
 import dev.dubhe.anvilcraft.block.FerriteCoreMagnetBlock;
 import dev.dubhe.anvilcraft.block.FireCauldronBlock;
+import dev.dubhe.anvilcraft.block.FishTankBlock;
 import dev.dubhe.anvilcraft.block.FlintBlock;
+import dev.dubhe.anvilcraft.block.FluidTankBlock;
 import dev.dubhe.anvilcraft.block.FrostAnvilBlock;
 import dev.dubhe.anvilcraft.block.FrostGrindstoneBlock;
 import dev.dubhe.anvilcraft.block.FrostMetalBlock;
@@ -72,6 +74,7 @@ import dev.dubhe.anvilcraft.block.ItemCollectorBlock;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
 import dev.dubhe.anvilcraft.block.JewelCraftingTable;
 import dev.dubhe.anvilcraft.block.LargeCakeBlock;
+import dev.dubhe.anvilcraft.block.LargeFluidTankBlock;
 import dev.dubhe.anvilcraft.block.LaserReceiverBlock;
 import dev.dubhe.anvilcraft.block.LavaCauldronBlock;
 import dev.dubhe.anvilcraft.block.LevitationPowderBlock;
@@ -180,6 +183,7 @@ import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItemGroups;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.item.FishTankBlockItem;
 import dev.dubhe.anvilcraft.item.TeslaTowerItem;
 import dev.dubhe.anvilcraft.item.property.component.OverLimitItemContainerContents;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.ItemInjectRecipe;
@@ -360,6 +364,39 @@ public class ModBlocks {
                 .unlockedBy("has_" + Items.GRINDSTONE, AnvilCraftDatagen.has(Items.GRINDSTONE))
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Tags.Items.INGOTS_IRON))
                 .save(provider, AnvilCraft.of("shaped_crushing_table_recipe"));
+        })
+        .register();
+
+    public static final BlockEntry<FishTankBlock> FISH_TANK = REGISTRATE.block("fish_tank", FishTankBlock::new)
+        .initialProperties(() -> Blocks.CAULDRON)
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .item(FishTankBlockItem::new)
+        .build()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.CAULDRONS)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("A A")
+                .pattern("B B")
+                .pattern("BBB")
+                .define('A', Items.IRON_INGOT)
+                .define('B', Tags.Items.GLASS_PANES)
+                .unlockedBy(AnvilCraftDatagen.hasItem(Items.IRON_INGOT), AnvilCraftDatagen.has(Items.IRON_INGOT))
+                .save(provider);
+        })
+        .register();
+
+    public static final BlockEntry<FluidTankBlock> FLUID_TANK = REGISTRATE.block("fluid_tank", FluidTankBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(p -> p.noOcclusion().isValidSpawn(Blocks::never))
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe((ctx, provider) -> {
+            ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 2)
+                .requires(ModItemTags.BRASS_PLATES)
+                .requires(ModBlocks.FISH_TANK)
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.FISH_TANK.asItem()), AnvilCraftDatagen.has(ModBlocks.FISH_TANK))
+                .save(provider);
         })
         .register();
 
@@ -1753,6 +1790,20 @@ public class ModBlocks {
                 .unlockedBy(AnvilCraftDatagen.hasItem(Blocks.BLUE_ICE), AnvilCraftDatagen.has(Blocks.BLUE_ICE))
                 .save(provider);
         })
+        .register();
+
+    public static final BlockEntry<LargeFluidTankBlock> LARGE_FLUID_TANK = REGISTRATE.block(
+            "large_fluid_tank",
+            LargeFluidTankBlock::new
+        )
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(p -> p.isSuffocating(ModBlocks::never).isSuffocating(ModBlocks::never).noOcclusion().isValidSpawn(Blocks::never))
+        .loot(SimpleMultiPartBlock::loot)
+        .item(SimpleMultiPartBlockItem<Cube3x3PartHalf>::new)
+        .properties((properties) -> properties.stacksTo(16))
+        .build()
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .register();
 
     public static final BlockEntry<AccelerationRingBlock> ACCELERATION_RING = REGISTRATE.block(
