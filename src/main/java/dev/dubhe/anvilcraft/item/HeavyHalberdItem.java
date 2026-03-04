@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.item;
 import dev.dubhe.anvilcraft.entity.ThrownHeavyHalberdEntity;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
+import dev.dubhe.anvilcraft.item.property.component.Ferocious;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.client.renderer.item.ItemProperties;
@@ -109,8 +110,8 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
         Item item = stack.getItem();
         if (!(item instanceof HeavyHalberdItem heavyHalberd)) return;
         if (isTooDamagedToUse(stack)) {
-            if (stack.has(ModComponents.MERCILESS)) {
-                stack.set(ModComponents.MERCILESS, Merciless.DISABLED);
+            if (stack.has(ModComponents.FEROCIOUS)) {
+                stack.set(ModComponents.FEROCIOUS, Ferocious.DISABLED);
             }
             if (stack.has(DataComponents.ENCHANTMENTS) && !stack.has(ModComponents.MERCILESS)) {
                 ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
@@ -193,7 +194,7 @@ public abstract class HeavyHalberdItem extends TieredItem implements ProjectileI
     @Override
     public void inventoryTick(ItemStack stack, Level level, Entity entity, int slotId, boolean isSelected) {
         super.inventoryTick(stack, level, entity, slotId, isSelected);
-        checkTooDamaged(this.getTier(), stack);
+        if (!stack.has(DataComponents.UNBREAKABLE)) checkTooDamaged(this.getTier(), stack);
     }
 
     @Override

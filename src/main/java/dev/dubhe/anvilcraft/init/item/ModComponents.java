@@ -6,6 +6,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.item.property.component.DiskData;
 import dev.dubhe.anvilcraft.item.property.component.Eternal;
+import dev.dubhe.anvilcraft.item.property.component.Ferocious;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.item.property.component.HeliostatsData;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
@@ -81,7 +82,12 @@ public class ModComponents {
 
     public static final DataComponentType<Merciless> MERCILESS = register(
         "merciless",
-        b -> b.persistent(Merciless.CODEC).networkSynchronized(Merciless.STREAM_CODEC)
+        b -> b.persistent(Merciless.CODEC.codec()).networkSynchronized(Merciless.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<Ferocious> FEROCIOUS = register(
+        "ferocious",
+        b -> b.persistent(Ferocious.CODEC.codec()).networkSynchronized(Ferocious.STREAM_CODEC)
     );
 
     public static final DataComponentType<Integer> DEVOUR_RANGE = register(
@@ -111,6 +117,11 @@ public class ModComponents {
 
     public static final DataComponentType<ItemEnchantments> MERCILESS_ENCHANTMENTS = register(
         "merciless_enchantments",
+        b -> b.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<ItemEnchantments> DISABLED_ENCHANTMENTS = register(
+        "disabled_enchantments",
         b -> b.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC)
     );
 

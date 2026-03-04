@@ -7,7 +7,6 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.enchantment.Enchantment;
 
 public class ModEnchantmentTags {
-    public static final TagKey<Enchantment> MERCILESS_PASSED = bind("merciless_passed");
     public static final TagKey<Enchantment> DISABLED_PASSED = bind("disabled_passed");
     public static final TagKey<Enchantment> PROVIDENCE_BONUS = bind("providence_bonus");
 
