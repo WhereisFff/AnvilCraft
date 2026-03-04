@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.item.property.component.Ferocious;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -146,9 +145,6 @@ public abstract class ResonatorItem extends TieredItem {
         Item item = stack.getItem();
         if (!(item instanceof ResonatorItem resonator)) return;
         if (isTooDamagedToUse(stack)) {
-            if (stack.has(ModComponents.FEROCIOUS)) {
-                stack.set(ModComponents.FEROCIOUS, Ferocious.DISABLED);
-            }
             if (stack.has(DataComponents.ENCHANTMENTS)) {
                 ItemEnchantments enchs = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
                 ItemEnchantments disabledEnchs = stack.getOrDefault(ModComponents.DISABLED_ENCHANTMENTS, ItemEnchantments.EMPTY);
