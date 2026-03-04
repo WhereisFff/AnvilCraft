@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.network.multiple;
 import dev.anvilcraft.lib.recipe.util.CodecUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
-import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.item.property.component.MultiphaseRef;
 import dev.dubhe.anvilcraft.saved.multiphase.Multiphase;
 import dev.dubhe.anvilcraft.saved.multiphase.Multiphases;
@@ -86,21 +85,19 @@ public class MultiphasePackets {
         }
     }
 
-    public record ChangePhase(InteractionHand hand, byte index, boolean merciless) implements CustomPacketPayload {
+    public record ChangePhase(InteractionHand hand, byte index) implements CustomPacketPayload {
         public static final Type<ChangePhase> TYPE = MultiphasePackets.of("change_phase");
         public static final StreamCodec<FriendlyByteBuf, ChangePhase> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(InteractionHand.class),
             ChangePhase::hand,
             ByteBufCodecs.BYTE,
             ChangePhase::index,
-            ByteBufCodecs.BOOL,
-            ChangePhase::merciless,
             ChangePhase::new
         );
         public static final IPayloadHandler<ChangePhase> HANDLER = ChangePhase::serverHandler;
 
-        public ChangePhase(InteractionHand hand, int index, boolean merciless) {
-            this(hand, (byte) index, merciless);
+        public ChangePhase(InteractionHand hand, int index) {
+            this(hand, (byte) index);
         }
 
         @Override
@@ -116,11 +113,7 @@ public class MultiphasePackets {
                 if (stackOp.isEmpty()) return;
                 var stack = stackOp.get();
                 var multiphase = stack.get(ModComponents.MULTIPHASE).toMultiphase();
-                multiphase.cyclePhases(
-                    stack,
-                    (byte) ((this.index - multiphase.peekFirst().index() + multiphase.phases().size()) % multiphase.phases().size())
-                );
-                if (stack.has(ModComponents.MERCILESS)) stack.set(ModComponents.MERCILESS, new Merciless(this.merciless));
+                multiphase.cyclePhases(stack, this.index);
             });
         }
     }
