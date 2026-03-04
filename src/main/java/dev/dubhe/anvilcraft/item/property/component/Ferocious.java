@@ -20,24 +20,19 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
 
-public record Ferocious(boolean enabled) {
-    public static final Ferocious DEFAULT = new Ferocious(true);
-    public static final Ferocious DISABLED = new Ferocious(false);
+public record Ferocious() {
+    public static final Ferocious DEFAULT = new Ferocious();
     public static final ResourceLocation FEROCIOUS_ID = AnvilCraft.of("ferocious");
     public static final MapCodec<Ferocious> CODEC = Codec.EMPTY.xmap(a -> Ferocious.DEFAULT, a -> Unit.INSTANCE);
     public static final StreamCodec<ByteBuf, Ferocious> STREAM_CODEC = StreamCodec.unit(Ferocious.DEFAULT);
 
     public static void tick(ServerPlayer player) {
         for (ItemStack stack : InventoryUtil.getItems(player.getInventory(), stack -> stack.has(ModComponents.FEROCIOUS))) {
-            if (stack.getOrDefault(ModComponents.FEROCIOUS, Ferocious.DISABLED).enabled()) {
-                Ferocious.tickEnabled(stack);
-            } else {
-                Ferocious.tickDisabled(stack);
-            }
+            Ferocious.tick(stack);
         }
     }
 
-    private static void tickEnabled(ItemStack stack) {
+    private static void tick(ItemStack stack) {
         ItemEnchantments enchantments = stack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
         if (enchantments.isEmpty()) return;
 
@@ -69,16 +64,6 @@ public record Ferocious(boolean enabled) {
                 EquipmentSlotGroup.MAINHAND
             );
         }
-        for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
-            if (!entry.modifier().is(FEROCIOUS_ID)) {
-                builder.add(entry.attribute(), entry.modifier(), entry.slot());
-            }
-        }
-        stack.set(DataComponents.ATTRIBUTE_MODIFIERS, builder.build());
-    }
-
-    private static void tickDisabled(ItemStack stack) {
-        ItemAttributeModifiers.Builder builder = ItemAttributeModifiers.builder();
         for (ItemAttributeModifiers.Entry entry : stack.getAttributeModifiers().modifiers()) {
             if (!entry.modifier().is(FEROCIOUS_ID)) {
                 builder.add(entry.attribute(), entry.modifier(), entry.slot());
