@@ -58,6 +58,11 @@ public class MultiphasePackets {
             RefSync.STREAM_CODEC,
             RefSync.HANDLER
         );
+        registrar.playBidirectional(
+            SingleSync.TYPE,
+            SingleSync.STREAM_CODEC,
+            SingleSync.HANDLER
+        );
     }
 
     private static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> of(String path) {
@@ -198,6 +203,45 @@ public class MultiphasePackets {
                 }
                 PacketDistributor.sendToPlayer(Util.cast(ctx.player()), new RefSync(this.index, ref.id().optionalGet()));
             });
+        }
+    }
+
+    public record SingleSync(UUID id, Optional<Multiphase> multiphase) implements CustomPacketPayload {
+        public static final Type<SingleSync> TYPE = MultiphasePackets.of("single_sync");
+        public static final StreamCodec<RegistryFriendlyByteBuf, SingleSync> STREAM_CODEC = StreamCodec.composite(
+            UUIDUtil.STREAM_CODEC,
+            SingleSync::id,
+            ByteBufCodecs.optional(Multiphase.STREAM_CODEC),
+            SingleSync::multiphase,
+            SingleSync::new
+        );
+        public static final IPayloadHandler<SingleSync> HANDLER = new DirectionalPayloadHandler<>(
+            SingleSync::clientHandler,
+            SingleSync::serverHandler
+        );
+
+        public SingleSync(UUID id) {
+            this(id, Optional.empty());
+        }
+
+        private SingleSync(UUID id, Multiphase multiphase) {
+            this(id, Optional.of(multiphase));
+        }
+
+        @Override
+        public Type<SingleSync> type() {
+            return TYPE;
+        }
+
+        private void clientHandler(IPayloadContext ctx) {
+            ctx.enqueueWork(() -> Multiphases.get().put(this.id, this.multiphase.orElseThrow()));
+        }
+
+        private void serverHandler(IPayloadContext ctx) {
+            ctx.enqueueWork(() -> PacketDistributor.sendToPlayer(
+                Util.cast(ctx.player()),
+                new SingleSync(this.id, Multiphases.get().getOrCreate(this.id))
+            ));
         }
     }
 }

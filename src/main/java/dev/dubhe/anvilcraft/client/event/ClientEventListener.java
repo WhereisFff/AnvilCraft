@@ -80,7 +80,7 @@ public class ClientEventListener {
 
         // 以下是界面部分
 
-        switchPhase:
+        SWITCH_PHASE:
         if (event.getKey() == ModKeyMappings.SWITCH_PHASE.get().getKey().getValue()) {
             if (event.getAction() == InputConstants.REPEAT
                 && Minecraft.getInstance().screen == null
@@ -90,24 +90,27 @@ public class ClientEventListener {
                 ItemStack stack = player.getMainHandItem();
                 // noinspection DataFlowIssue
                 if (stack.has(ModComponents.MULTIPHASE) && !stack.get(ModComponents.MULTIPHASE).isEmpty()) {
+                    PacketDistributor.sendToServer(new MultiphasePackets.SingleSync(stack.get(ModComponents.MULTIPHASE).id().get()));
                     Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.MAIN_HAND));
                     return;
                 }
                 stack = player.getOffhandItem();
                 // noinspection DataFlowIssue
                 if (stack.has(ModComponents.MULTIPHASE) && !stack.get(ModComponents.MULTIPHASE).isEmpty()) {
+                    PacketDistributor.sendToServer(new MultiphasePackets.SingleSync(stack.get(ModComponents.MULTIPHASE).id().get()));
                     Minecraft.getInstance().setScreen(new MultiphaseScreen(InteractionHand.OFF_HAND));
                 }
             }
             if (event.getAction() != InputConstants.RELEASE) {
                 lastSwitchPhasePressAction = event.getAction();
-                break switchPhase;
+                break SWITCH_PHASE;
             }
             if (lastSwitchPhasePressAction == InputConstants.PRESS) {
                 PacketDistributor.sendToServer(new MultiphasePackets.SwitchPhase());
             } else if (
                 lastSwitchPhasePressAction == InputConstants.REPEAT
                 && Minecraft.getInstance().screen instanceof MultiphaseScreen screen
+                && !screen.wheel.isClosingAnimationStarted()
             ) {
                 screen.wheel.onClosing();
             }
