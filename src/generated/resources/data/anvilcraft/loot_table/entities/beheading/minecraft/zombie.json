@@ -22,7 +22,7 @@
           "term": {
             "condition": "anvilcraft:match_data_component",
             "predicate": {
-              "anvilcraft:merciless": true
+              "anvilcraft:merciless": {}
             }
           }
         }
@@ -56,7 +56,7 @@
           "term": {
             "condition": "anvilcraft:match_data_component",
             "predicate": {
-              "anvilcraft:merciless": true
+              "anvilcraft:merciless": {}
             }
           }
         },
@@ -94,7 +94,7 @@
           "term": {
             "condition": "anvilcraft:match_data_component",
             "predicate": {
-              "anvilcraft:merciless": true
+              "anvilcraft:merciless": {}
             }
           }
         },
