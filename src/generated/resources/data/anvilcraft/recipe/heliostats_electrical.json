@@ -4,7 +4,7 @@
   "group": "anvilcraft:heliostats",
   "key": {
     "C": {
-      "item": "anvilcraft:circuit_board"
+      "item": "anvilcraft:processor"
     },
     "D": {
       "item": "minecraft:daylight_detector"

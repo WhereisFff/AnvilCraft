@@ -1412,6 +1412,18 @@ public class ModItems {
             .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.HARDEND_RESIN), AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
             .save(provider);
     }).register();
+    public static final ItemEntry<Item> PROCESSOR = REGISTRUM.item("processor", Item::new).recipe((ctx, provider) -> {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            .pattern("   ")
+            .pattern("CAC")
+            .pattern("BBB")
+            .define('A', Items.COMPARATOR)
+            .define('B', ModItems.HARDEND_RESIN)
+            .define('C', ModItemTags.COPPER_NUGGETS)
+            .group(ctx.getId().toString())
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.HARDEND_RESIN), AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
+            .save(provider);
+    }).register();
     public static final ItemEntry<Item> PRISMARINE_BLADE = REGISTRUM.item("prismarine_blade", Item::new).register();
     public static final ItemEntry<Item> PRISMARINE_CLUSTER = REGISTRUM.item("prismarine_cluster", Item::new).register();
     public static final ItemEntry<Item> SEA_HEART_SHELL = REGISTRUM.item("sea_heart_shell", Item::new).register();
