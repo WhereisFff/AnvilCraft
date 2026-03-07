@@ -11,16 +11,6 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
-    "has_circuit_board": {
-      "conditions": {
-        "items": [
-          {
-            "items": "anvilcraft:circuit_board"
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
-    },
     "has_note_block": {
       "conditions": {
         "items": [
@@ -41,6 +31,16 @@
       },
       "trigger": "minecraft:inventory_changed"
     },
+    "has_processor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "anvilcraft:processor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "anvilcraft:active_silencer"
@@ -53,7 +53,7 @@
       "has_the_recipe",
       "has_amethyst_block",
       "has_note_block",
-      "has_circuit_board",
+      "has_processor",
       "has_piezoelectric_crystal"
     ]
   ],

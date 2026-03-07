@@ -954,10 +954,10 @@ public class ModBlocks {
                 .pattern(" I ")
                 .define('S', ModItemTags.SILVER_PLATES)
                 .define('D', Blocks.DAYLIGHT_DETECTOR)
-                .define('C', ModItems.CIRCUIT_BOARD)
+                .define('C', ModItems.PROCESSOR)
                 .define('I', Blocks.IRON_BLOCK)
                 .group(ctx.getId().toString())
-                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CIRCUIT_BOARD), AnvilCraftDatagen.has(ModItems.CIRCUIT_BOARD))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.PROCESSOR), AnvilCraftDatagen.has(ModItems.PROCESSOR))
                 .unlockedBy(AnvilCraftDatagen.hasItem(Blocks.IRON_BLOCK), AnvilCraftDatagen.has(Blocks.IRON_BLOCK))
                 .save(provider, AnvilCraft.of("heliostats_electrical"));
         })
@@ -1281,11 +1281,11 @@ public class ModBlocks {
                 .pattern("BDB")
                 .define('A', Items.AMETHYST_BLOCK)
                 .define('B', Items.NOTE_BLOCK)
-                .define('C', ModItems.CIRCUIT_BOARD)
+                .define('C', ModItems.PROCESSOR)
                 .define('D', ModBlocks.PIEZOELECTRIC_CRYSTAL)
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.AMETHYST_BLOCK), AnvilCraftDatagen.has(Items.AMETHYST_BLOCK))
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.NOTE_BLOCK), AnvilCraftDatagen.has(Items.NOTE_BLOCK))
-                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.CIRCUIT_BOARD), AnvilCraftDatagen.has(ModItems.CIRCUIT_BOARD))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.PROCESSOR), AnvilCraftDatagen.has(ModItems.PROCESSOR))
                 .unlockedBy(
                     AnvilCraftDatagen.hasItem(ModBlocks.PIEZOELECTRIC_CRYSTAL),
                     AnvilCraftDatagen.has(ModBlocks.PIEZOELECTRIC_CRYSTAL)

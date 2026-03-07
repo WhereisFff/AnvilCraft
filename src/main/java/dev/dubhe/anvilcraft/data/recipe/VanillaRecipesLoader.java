@@ -83,6 +83,25 @@ public class VanillaRecipesLoader {
             .define('A', ModItems.SPONGE_GEMMULE)
             .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.SPONGE_GEMMULE))
             .save(provider, AnvilCraft.of("wet_sponge"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Items.REPEATER)
+            .pattern("   ")
+            .pattern("TRT")
+            .pattern("BBB")
+            .define('R', Items.REDSTONE)
+            .define('T', Items.REDSTONE_TORCH)
+            .define('B', ModItems.HARDEND_RESIN)
+            .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
+            .save(provider, AnvilCraft.of("repeater"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Items.COMPARATOR)
+            .pattern(" T ")
+            .pattern("TQT")
+            .pattern("BBB")
+            .define('Q', Items.QUARTZ)
+            .define('T', Items.REDSTONE_TORCH)
+            .define('B', ModItems.HARDEND_RESIN)
+            .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
+            .save(provider, AnvilCraft.of("comparator"));
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.IRON_BLOCK, 9)
             .requires(ModBlocks.HEAVY_IRON_BLOCK)
             .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModBlocks.HEAVY_IRON_BLOCK))
