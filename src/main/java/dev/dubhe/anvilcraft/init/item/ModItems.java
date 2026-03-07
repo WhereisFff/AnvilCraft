@@ -719,20 +719,20 @@ public class ModItems {
         ModItemTags.EXPLOSION_PROOF
     ).model(DataGenUtil::noExtraModelOrState).register();
     public static final ItemEntry<MultitoolItem> MULTITOOL_ITEM = REGISTRUM.item("multitool", MultitoolItem::new).tag(
-            Tags.Items.TOOLS,
-            Tags.Items.TOOLS_IGNITER,
-            Tags.Items.TOOLS_SHEAR,
-            Tags.Items.TOOLS_BRUSH,
-            Tags.Items.TOOLS_FISHING_ROD,
-            Tags.Items.ENCHANTABLES,
-            ItemTags.CREEPER_IGNITERS,
-            ItemTags.VANISHING_ENCHANTABLE,
-            ItemTags.DURABILITY_ENCHANTABLE,
-            ItemTags.MINING_ENCHANTABLE,
-            ItemTags.FISHING_ENCHANTABLE,
-            ItemTags.STRIDER_TEMPT_ITEMS
-        ).properties((properties) -> properties.durability(2031).fireResistant())
-        .model(DataGenUtil::noExtraModelOrState).register();
+        Tags.Items.TOOLS,
+        Tags.Items.TOOLS_IGNITER,
+        Tags.Items.TOOLS_SHEAR,
+        Tags.Items.TOOLS_BRUSH,
+        Tags.Items.TOOLS_FISHING_ROD,
+        Tags.Items.ENCHANTABLES,
+        ItemTags.CREEPER_IGNITERS,
+        ItemTags.VANISHING_ENCHANTABLE,
+        ItemTags.DURABILITY_ENCHANTABLE,
+        ItemTags.MINING_ENCHANTABLE,
+        ItemTags.FISHING_ENCHANTABLE,
+        ItemTags.STRIDER_TEMPT_ITEMS
+    ).properties((properties) -> properties.durability(2031).fireResistant()
+    ).model(DataGenUtil::noExtraModelOrState).register();
 
     public static final ItemEntry<? extends SpectralSlingshotItem> SPECTRAL_SLINGSHOT = REGISTRUM
         .item("spectral_slingshot", SpectralSlingshotItem::new)
