@@ -137,7 +137,12 @@ import java.util.function.Supplier;
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
 import static dev.dubhe.anvilcraft.AnvilCraft.of;
 
-@SuppressWarnings({"unused", "CodeBlock2Expr"})
+@SuppressWarnings(
+    {
+        "unused",
+        "CodeBlock2Expr"
+    }
+)
 public class ModItems {
     static {
         REGISTRATE.defaultCreativeTab(ModItemGroups.ANVILCRAFT_TOOL.getKey());
@@ -714,20 +719,20 @@ public class ModItems {
         ModItemTags.EXPLOSION_PROOF
     ).model(DataGenUtil::noExtraModelOrState).register();
     public static final ItemEntry<MultitoolItem> MULTITOOL_ITEM = REGISTRATE.item("multitool", MultitoolItem::new).tag(
-            Tags.Items.TOOLS,
-            Tags.Items.TOOLS_IGNITER,
-            Tags.Items.TOOLS_SHEAR,
-            Tags.Items.TOOLS_BRUSH,
-            Tags.Items.TOOLS_FISHING_ROD,
-            Tags.Items.ENCHANTABLES,
-            ItemTags.CREEPER_IGNITERS,
-            ItemTags.VANISHING_ENCHANTABLE,
-            ItemTags.DURABILITY_ENCHANTABLE,
-            ItemTags.MINING_ENCHANTABLE,
-            ItemTags.FISHING_ENCHANTABLE,
-            ItemTags.STRIDER_TEMPT_ITEMS
-        ).properties((properties) -> properties.durability(2031).fireResistant())
-        .model(DataGenUtil::noExtraModelOrState).register();
+        Tags.Items.TOOLS,
+        Tags.Items.TOOLS_IGNITER,
+        Tags.Items.TOOLS_SHEAR,
+        Tags.Items.TOOLS_BRUSH,
+        Tags.Items.TOOLS_FISHING_ROD,
+        Tags.Items.ENCHANTABLES,
+        ItemTags.CREEPER_IGNITERS,
+        ItemTags.VANISHING_ENCHANTABLE,
+        ItemTags.DURABILITY_ENCHANTABLE,
+        ItemTags.MINING_ENCHANTABLE,
+        ItemTags.FISHING_ENCHANTABLE,
+        ItemTags.STRIDER_TEMPT_ITEMS
+    ).properties((properties) -> properties.durability(2031).fireResistant()
+    ).model(DataGenUtil::noExtraModelOrState).register();
 
     public static final ItemEntry<? extends SpectralSlingshotItem> SPECTRAL_SLINGSHOT = REGISTRATE
         .item("spectral_slingshot", SpectralSlingshotItem::new)
