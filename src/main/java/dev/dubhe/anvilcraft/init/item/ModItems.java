@@ -726,8 +726,8 @@ public class ModItems {
         ItemTags.MINING_ENCHANTABLE,
         ItemTags.FISHING_ENCHANTABLE,
         ItemTags.STRIDER_TEMPT_ITEMS
-    ).properties((properties) -> properties.durability(2031).fireResistant())
-        .model(DataGenUtil::noExtraModelOrState).register();
+    ).properties((properties) -> properties.durability(2031).fireResistant()
+    ).model(DataGenUtil::noExtraModelOrState).register();
 
     public static final ItemEntry<? extends SpectralSlingshotItem> SPECTRAL_SLINGSHOT = REGISTRATE
         .item("spectral_slingshot", SpectralSlingshotItem::new)
@@ -1404,6 +1404,18 @@ public class ModItems {
             .requires(ModItems.HARDEND_RESIN)
             .requires(ModItems.HARDEND_RESIN)
             .unlockedBy(AnvilCraftDatagen.hasItem(ModItemTags.COPPER_PLATES), AnvilCraftDatagen.has(ModItemTags.COPPER_PLATES))
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.HARDEND_RESIN), AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
+            .save(provider);
+    }).register();
+    public static final ItemEntry<Item> PROCESSOR = REGISTRATE.item("processor", Item::new).recipe((ctx, provider) -> {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+            .pattern("   ")
+            .pattern("CAC")
+            .pattern("BBB")
+            .define('A', Items.COMPARATOR)
+            .define('B', ModItems.HARDEND_RESIN)
+            .define('C', ModItemTags.COPPER_NUGGETS)
+            .group(ctx.getId().toString())
             .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.HARDEND_RESIN), AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
             .save(provider);
     }).register();
