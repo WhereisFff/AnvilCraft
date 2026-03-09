@@ -1,0 +1,6 @@
+{
+	"parent": "anvilcraft:item/laser_gun",
+	"textures": {
+		"0": "anvilcraft:item/energy_weapon_platform_exhausted"
+	}
+}

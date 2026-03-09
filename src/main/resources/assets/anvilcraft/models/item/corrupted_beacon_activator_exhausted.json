@@ -1,0 +1,6 @@
+{
+	"parent": "anvilcraft:item/corrupted_beacon_activator",
+	"textures": {
+		"0": "anvilcraft:item/energy_weapon_platform_exhausted"
+	}
+}
