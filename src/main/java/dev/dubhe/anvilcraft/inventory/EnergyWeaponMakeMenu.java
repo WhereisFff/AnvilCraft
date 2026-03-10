@@ -39,7 +39,6 @@ public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
      */
     @Setter
     private boolean cantCraft;
-    private boolean crafted;
 
     public EnergyWeaponMakeMenu(int containerId, Inventory playerInventory) {
         this(ModMenuTypes.ENERGY_WEAPON_MAKE.get(), containerId, playerInventory);
@@ -75,8 +74,8 @@ public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
 
         int row;
         for (row = 0; row < 3; ++row) {
-            for (int colomn = 0; colomn < 9; ++colomn) {
-                this.addSlot(new Slot(playerInventory, colomn + row * 9 + 9, 8 + colomn * 18, 83 + row * 18));
+            for (int column = 0; column < 9; ++column) {
+                this.addSlot(new Slot(playerInventory, column + row * 9 + 9, 8 + column * 18, 83 + row * 18));
             }
         }
 
@@ -118,10 +117,12 @@ public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
         EnergyWeaponMakeRecipe recipe = recipeOp.get().value();
         ItemStack result = recipe.assemble(input, this.level.registryAccess());
         this.inventory.setItem(this.inventory.selected, result);
-        this.crafted = true;
         for (int i = 0; i < 6; i++) {
             FilteredSlot slot = Util.cast(this.getSlot(i));
-            slot.set(ItemStack.EMPTY);
+            if (slot.isFilterEmpty()) continue;
+            ItemStack stack = slot.getItem().copy();
+            stack.shrink(slot.getFilter().count());
+            slot.set(stack);
             slot.resetFilter();
         }
         if (player instanceof ServerPlayer serverside) serverside.closeContainer();
@@ -132,7 +133,11 @@ public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
 
         if (selectedIndex == -1) {
             for (int i = 0; i < 6; i++) {
-                this.getFilteredSlot(i).resetFilter();
+                FilteredSlot slot = this.getFilteredSlot(i);
+                slot.resetFilter();
+                ItemStack stack = slot.getItem();
+                if (stack.isEmpty()) continue;
+                this.inventory.add(stack);
             }
         } else {
             RecipeHolder<EnergyWeaponMakeRecipe> recipe = this.recipes.get(selectedIndex);

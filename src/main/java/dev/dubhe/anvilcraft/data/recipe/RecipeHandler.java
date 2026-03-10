@@ -36,5 +36,6 @@ public class RecipeHandler {
         PillRecipeLoader.init(provider);
         PermutationRecipeLoader.init(provider);
         DeformationRecipeLoader.init(provider);
+        EnergyWeaponMakeRecipeLoader.init(provider);
     }
 }

@@ -93,6 +93,7 @@ import dev.dubhe.anvilcraft.item.template.frost.PermutationTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.FourToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.TwoToOneTemplateItem;
+import dev.dubhe.anvilcraft.item.weapon.AnvilRailgunItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
@@ -780,6 +781,12 @@ public class ModItems {
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.CROSSBOW), RegistrumRecipeProvider.has(Items.CROSSBOW))
                 .save(provider);
         })
+        .register();
+
+    public static final ItemEntry<? extends AnvilRailgunItem> ANVIL_RAILGUN = REGISTRUM
+        .item("anvil_railgun", AnvilRailgunItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
 
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRUM.item("ionocraft", IonoCraftItem::new)
