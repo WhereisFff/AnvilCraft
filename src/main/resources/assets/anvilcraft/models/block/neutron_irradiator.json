@@ -1,5 +1,5 @@
 {
-	"format_version": "1.21.6",
+	"format_version": "1.9.0",
 	"credit": "Made by XeKr with Blockbench",
 	"parent": "minecraft:block/block",
 	"ambientocclusion": false,
@@ -9,6 +9,7 @@
 		"2": "anvilcraft:block/neutron_irradiator_side",
 		"3": "anvilcraft:block/neutron_irradiator_top",
 		"4": "anvilcraft:block/negative_matter_block_outline",
+		"5": "anvilcraft:block/confined_neutronium_ingot",
 		"particle": "anvilcraft:block/neutron_irradiator_top"
 	},
 	"elements": [
@@ -50,17 +51,17 @@
 		},
 		{
 			"name": "cube_outline",
-			"from": [12, 16, 12],
-			"to": [4, 8, 4],
+			"from": [11.9, 15.9, 11.9],
+			"to": [4.1, 8.1, 4.1],
 			"shade": false,
 			"rotation": {"angle": 45, "axis": "y", "origin": [8, 9, 8]},
 			"faces": {
-				"north": {"uv": [8, 8, 16, 16], "rotation": 180, "texture": "#1"},
-				"east": {"uv": [8, 8, 16, 16], "rotation": 180, "texture": "#1"},
-				"south": {"uv": [8, 8, 16, 16], "rotation": 180, "texture": "#1"},
-				"west": {"uv": [8, 8, 16, 16], "rotation": 180, "texture": "#1"},
-				"up": {"uv": [8, 8, 16, 16], "rotation": 180, "texture": "#1"},
-				"down": {"uv": [8, 8, 16, 16], "rotation": 180, "texture": "#1"}
+				"north": {"uv": [8, 8, 10, 10], "rotation": 180, "texture": "#5"},
+				"east": {"uv": [8, 8, 10, 10], "rotation": 180, "texture": "#5"},
+				"south": {"uv": [8, 8, 10, 10], "rotation": 180, "texture": "#5"},
+				"west": {"uv": [8, 8, 10, 10], "rotation": 180, "texture": "#5"},
+				"up": {"uv": [8, 8, 10, 10], "rotation": 180, "texture": "#5"},
+				"down": {"uv": [8, 8, 10, 10], "rotation": 180, "texture": "#5"}
 			}
 		},
 		{

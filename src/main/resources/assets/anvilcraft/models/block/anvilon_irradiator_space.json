@@ -1,0 +1,6 @@
+{
+	"parent": "anvilcraft:block/neutron_irradiator",
+	"textures": {
+		"5": "anvilcraft:block/confined_space_anvilon"
+	}
+}
