@@ -24,11 +24,16 @@ public class FilteredSlot extends Slot {
 
     @Override
     public boolean mayPlace(ItemStack stack) {
-        return this.filter.testIgnoreCount(stack);
+        return !this.isFilterEmpty() && this.filter.testIgnoreCount(stack);
     }
 
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public boolean canCraft() {
-        return this.filter.testCount(this.getItem().getCount());
+        return this.isFilterEmpty() || this.filter.testCount(this.getItem().getCount());
+    }
+
+    public boolean isFilterEmpty() {
+        return this.filter.equals(RecipeUtil.EMPTY_ITEM_INGREDIENT);
     }
 
     public void resetFilter() {

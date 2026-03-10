@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.recipe;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
 import dev.dubhe.anvilcraft.recipe.anvil.input.IItemsInput;
@@ -67,6 +68,7 @@ public record EnergyWeaponMakeRecipe(
         ItemStack result = this.result.copy();
         ItemEnchantments enchantments = input.items.getFirst().get(DataComponents.ENCHANTMENTS);
         if (enchantments != null) result.set(DataComponents.ENCHANTMENTS, enchantments);
+        if (result.has(ModComponents.STORED_ENERGY)) result.set(ModComponents.STORED_ENERGY, 320000); // 320MJ
         return result;
     }
 

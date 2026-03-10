@@ -6,7 +6,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.NonNullList;
 
 import java.util.List;
 
@@ -34,31 +33,5 @@ public class CodecUtil {
                 .fieldOf("values")
                 .forGetter(List::copyOf)
         ).apply(inst, (maxSize, values) -> Util.run(EvictingQueue.create(maxSize), queue -> values.forEach(queue::offer))));
-    }
-
-    public static <T> MapCodec<NonNullList<T>> nonNullListMapCodec(
-        Codec<T> elementCodec,
-        int size,
-        String fieldName,
-        String element,
-        String thing,
-        T defaultValue
-    ) {
-        return elementCodec
-            .listOf(1, size)
-            .fieldOf(fieldName)
-            .flatXmap(
-                tl -> {
-                    T[] ta = Util.cast(tl.toArray());
-                    if (ta.length == 0) {
-                        return DataResult.error(() -> "No %1$s for %2$s".formatted(element, thing));
-                    } else {
-                        return ta.length > size
-                               ? DataResult.error(() -> "Too many %1$s for %2$s. The maximum is: %3$d".formatted(element, thing, size))
-                               : DataResult.success(NonNullList.of(defaultValue, ta));
-                    }
-                },
-                DataResult::success
-            );
     }
 }

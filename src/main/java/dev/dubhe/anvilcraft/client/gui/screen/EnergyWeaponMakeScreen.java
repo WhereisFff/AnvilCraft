@@ -9,7 +9,6 @@ import dev.dubhe.anvilcraft.network.multiple.EnergyWeaponMakePackets;
 import dev.dubhe.anvilcraft.recipe.EnergyWeaponMakeRecipe;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import dev.dubhe.anvilcraft.util.MathUtil;
-import dev.dubhe.anvilcraft.util.RecipeUtil;
 import dev.dubhe.anvilcraft.util.Scrollable;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -27,11 +26,6 @@ import org.jetbrains.annotations.Nullable;
 
 public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeaponMakeMenu> {
     private static final ResourceLocation BG = AnvilCraft.of("textures/gui/container/machine/background/energy_weapon_platform.png");
-    private static final int CANT_CRAFT_BLINK_DURATION = 40;
-    /**
-     * 错误闪烁变亮/变暗的时长
-     */
-    private static final int CANT_CRAFT_BLINK_HALF = 10;
     private final Scrollable scrollable = new Scrollable() {
         @Override
         public int row() {
@@ -63,7 +57,7 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
     };
     private int head;
     private ItemStack renderingTooltip;
-    private int cantCraftBlinkTick = 0;
+    private long cantCraftBlinkMs = 0;
 
     public EnergyWeaponMakeScreen(EnergyWeaponMakeMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -72,14 +66,6 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
     @Override
     protected void containerTick() {
         this.renderingTooltip = null;
-        
-        if (this.menu.isCantCraft()) {
-            if (this.cantCraftBlinkTick == EnergyWeaponMakeScreen.CANT_CRAFT_BLINK_DURATION) {
-                this.menu.setCantCraft(false);
-                this.cantCraftBlinkTick = 0;
-            }
-            this.cantCraftBlinkTick++;
-        }
 
         super.containerTick();
     }
@@ -103,7 +89,7 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
             btn -> {
                 this.menu.make(Minecraft.getInstance().player);
                 PacketDistributor.sendToServer(new EnergyWeaponMakePackets.Make());
-                this.cantCraftBlinkTick = 0;
+                this.cantCraftBlinkMs = 0;
             }
         ));
     }
@@ -112,7 +98,7 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         super.render(graphics, mouseX, mouseY, partialTick);
         this.renderSelectingArea(graphics, mouseX, mouseY, partialTick);
-        this.renderCantCraftBlink(graphics, partialTick);
+        this.renderCantCraftBlink(graphics);
         this.renderTooltip(graphics, mouseX, mouseY);
     }
 
@@ -145,15 +131,20 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
         }
     }
 
-    private void renderCantCraftBlink(GuiGraphics graphics, float partialTick) {
-        float tick = this.cantCraftBlinkTick + partialTick;
+    private void renderCantCraftBlink(GuiGraphics graphics) {
+        if (this.menu.isCantCraft()) {
+            this.menu.setCantCraft(false);
+            this.cantCraftBlinkMs = System.currentTimeMillis();
+        }
+        float ms = System.currentTimeMillis() - this.cantCraftBlinkMs;
+        if (ms > 1400) return;
 
-        float subTick = tick % EnergyWeaponMakeScreen.CANT_CRAFT_BLINK_HALF;
-        float red = subTick / EnergyWeaponMakeScreen.CANT_CRAFT_BLINK_HALF;
-        if ((tick / EnergyWeaponMakeScreen.CANT_CRAFT_BLINK_HALF) % 2 != 0) red = 1 - red;
+        float subTick = ms % 350;
+        float red = subTick / 350;
+        if (Math.floor(ms / 350) % 2 == 1) red = 1 - red;
         for (int i = 0; i < 6; i++) {
             FilteredSlot slot = this.menu.getFilteredSlot(i);
-            if (slot.getFilter().equals(RecipeUtil.EMPTY_ITEM_INGREDIENT)) return;
+            if (slot.isFilterEmpty()) return;
             if (!slot.canCraft()) {
                 this.renderSingleCantCraftBlink(graphics, i, red);
             }
@@ -161,13 +152,15 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
     }
 
     private void renderSingleCantCraftBlink(GuiGraphics graphics, int index, float alpha) {
+        int x = this.leftPos + 88 + (index % 3) * 18;
+        int y = this.topPos + 24 + (index / 2) * 18;
         graphics.fill(
             RenderType.GUI_OVERLAY,
-            this.leftPos + 88 + index * 18,
-            this.topPos + 24 + index * 18,
-            18,
-            18,
-            FastColor.ARGB32.colorFromFloat(alpha, 1, 0, 0)
+            x,
+            y,
+            x + 18,
+            y + 18,
+            FastColor.ARGB32.colorFromFloat(alpha * 0.9f, 1, 0, 0)
         );
     }
 
@@ -191,7 +184,7 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
     @Override
     protected void renderSlotContents(GuiGraphics guiGraphics, ItemStack stack, Slot slot, @Nullable String countString) {
         if (slot instanceof FilteredSlot filtered) {
-            if (filtered.getFilter().equals(RecipeUtil.EMPTY_ITEM_INGREDIENT)) return;
+            if (filtered.isFilterEmpty()) return;
             if (stack.isEmpty()) {
                 int seed = slot.x + slot.y * this.imageWidth;
                 ItemStack[] stacks = filtered.getFilter().getItems();
@@ -260,7 +253,7 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
                 return true;
             }
             for (int i = this.head; i < this.head + Math.min(this.menu.getRecipes().size() - this.head, 6); i++) {
-                int x = this.leftPos + 64 + 18 * (i % 3);
+                int x = this.leftPos + 7 + 18 * (i % 3);
                 int y = this.topPos + 24 + 18 * ((i - this.head) / 3);
 
                 if (!MathUtil.isInRange(mouseX, mouseY, x, y, x + 18, y + 18)) continue;
