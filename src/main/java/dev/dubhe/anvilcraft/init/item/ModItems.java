@@ -37,6 +37,7 @@ import dev.dubhe.anvilcraft.item.EmberMetalShovelItem;
 import dev.dubhe.anvilcraft.item.EmberMetalSwordItem;
 import dev.dubhe.anvilcraft.item.EmptyCapacitorItem;
 import dev.dubhe.anvilcraft.item.EmptySuperCapacitorItem;
+import dev.dubhe.anvilcraft.item.EnergyWeaponPlatformItem;
 import dev.dubhe.anvilcraft.item.ExpGemItem;
 import dev.dubhe.anvilcraft.item.FilterItem;
 import dev.dubhe.anvilcraft.item.FrostMetalAxeItem;
@@ -92,6 +93,7 @@ import dev.dubhe.anvilcraft.item.template.frost.PermutationTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.FourToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.TwoToOneTemplateItem;
+import dev.dubhe.anvilcraft.item.weapon.AnvilRailgunItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
@@ -125,6 +127,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.client.model.generators.ItemModelBuilder;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
 import net.neoforged.neoforge.common.Tags;
@@ -729,6 +732,33 @@ public class ModItems {
     ).properties((properties) -> properties.durability(2031).fireResistant()
     ).model(DataGenUtil::noExtraModelOrState).register();
 
+    public static final ItemEntry<EnergyWeaponPlatformItem> ENERGY_WEAPON_PLATFORM = REGISTRATE
+        .item("energy_weapon_platform", EnergyWeaponPlatformItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .model(DataGenUtil::noExtraModelOrState)
+        .recipe((ctx, provider) -> {
+            ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
+                .pattern("ASS")
+                .pattern("ASS")
+                .pattern("FPC")
+                .define('A', Blocks.ANVIL)
+                .define('C', ModBlocks.SPACE_OVERCOMPRESSOR)
+                .define('F', Blocks.SMITHING_TABLE)
+                .define('P', ModItems.PROCESSOR)
+                .define('S', ModItems.SUPER_CAPACITOR)
+                .group(ctx.getId().toString())
+                .unlockedBy(AnvilCraftDatagen.hasItem(Blocks.ANVIL), RegistrateRecipeProvider.has(Blocks.ANVIL))
+                .unlockedBy(
+                    AnvilCraftDatagen.hasItem(ModBlocks.SPACE_OVERCOMPRESSOR),
+                    RegistrateRecipeProvider.has(ModBlocks.SPACE_OVERCOMPRESSOR)
+                )
+                .unlockedBy(AnvilCraftDatagen.hasItem(Blocks.SMITHING_TABLE), RegistrateRecipeProvider.has(Blocks.SMITHING_TABLE))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.PROCESSOR), RegistrateRecipeProvider.has(ModItems.PROCESSOR))
+                .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.SUPER_CAPACITOR), RegistrateRecipeProvider.has(ModItems.SUPER_CAPACITOR))
+                .save(provider);
+        })
+        .register();
+
     public static final ItemEntry<? extends SpectralSlingshotItem> SPECTRAL_SLINGSHOT = REGISTRATE
         .item("spectral_slingshot", SpectralSlingshotItem::new)
         .tag(
@@ -751,6 +781,12 @@ public class ModItems {
                 .unlockedBy(AnvilCraftDatagen.hasItem(Items.CROSSBOW), RegistrateRecipeProvider.has(Items.CROSSBOW))
                 .save(provider);
         })
+        .register();
+
+    public static final ItemEntry<? extends AnvilRailgunItem> ANVIL_RAILGUN = REGISTRATE
+        .item("anvil_railgun", AnvilRailgunItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .model(DataGenUtil::noExtraModelOrState)
         .register();
 
     public static final ItemEntry<? extends IonoCraftItem> IONOCRAFT = REGISTRATE.item("ionocraft", IonoCraftItem::new)

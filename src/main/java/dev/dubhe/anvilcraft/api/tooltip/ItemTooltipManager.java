@@ -171,6 +171,7 @@ public class ItemTooltipManager {
         map.put(ModItems.CAPACITOR_EMPTY.asItem(), "4000kJ capacity");
         map.put(ModItems.SUPER_CAPACITOR.asItem(), "80MJ stored");
         map.put(ModItems.SUPER_CAPACITOR_EMPTY.asItem(), "80MJ capacity");
+        map.put(ModItems.ENERGY_WEAPON_PLATFORM.get(), "320MJ stored, but will only inherit the result of Energy Weapon Making");
         map.put(ModBlocks.BLACK_HOLE.asItem(), "Dev Block with intense gravitational attraction");
         map.put(ModBlocks.WHITE_HOLE.asItem(), "Dev Block with intense gravitational repulsion");
         map.put(ModBlocks.CHARGER.asItem(), "Charges items. Supports manual or automated input");
