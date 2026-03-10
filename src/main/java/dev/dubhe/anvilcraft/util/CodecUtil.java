@@ -6,8 +6,7 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.core.NonNullList;
 
 import java.util.List;
 
@@ -37,25 +36,29 @@ public class CodecUtil {
         ).apply(inst, (maxSize, values) -> Util.run(EvictingQueue.create(maxSize), queue -> values.forEach(queue::offer))));
     }
 
-    public static <B extends FriendlyByteBuf, T> StreamCodec<B, EvictingQueue<T>> evictingQueueStreamCodec(
-        StreamCodec<? super B, T> valueCodec
+    public static <T> MapCodec<NonNullList<T>> nonNullListMapCodec(
+        Codec<T> elementCodec,
+        int size,
+        String fieldName,
+        String element,
+        String thing,
+        T defaultValue
     ) {
-        return StreamCodec.of(
-            (buf, queue) -> {
-                buf.writeVarInt(queue.size());
-                buf.writeVarInt(queue.remainingCapacity());
-                for (T t : queue) {
-                    valueCodec.encode(buf, t);
-                }
-            },
-            buf -> {
-                int size = buf.readVarInt();
-                EvictingQueue<T> queue = EvictingQueue.create(size + buf.readVarInt());
-                for (int i = 0; i < size; i++) {
-                    queue.add(valueCodec.decode(buf));
-                }
-                return queue;
-            }
-        );
+        return elementCodec
+            .listOf(1, size)
+            .fieldOf(fieldName)
+            .flatXmap(
+                tl -> {
+                    T[] ta = Util.cast(tl.toArray());
+                    if (ta.length == 0) {
+                        return DataResult.error(() -> "No %1$s for %2$s".formatted(element, thing));
+                    } else {
+                        return ta.length > size
+                               ? DataResult.error(() -> "Too many %1$s for %2$s. The maximum is: %3$d".formatted(element, thing, size))
+                               : DataResult.success(NonNullList.of(defaultValue, ta));
+                    }
+                },
+                DataResult::success
+            );
     }
 }

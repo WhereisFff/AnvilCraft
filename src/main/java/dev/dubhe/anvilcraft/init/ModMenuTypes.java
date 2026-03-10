@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.client.gui.screen.ChuteScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberAnvilScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberGrindstoneScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.EmberSmithingScreen;
+import dev.dubhe.anvilcraft.client.gui.screen.EnergyWeaponMakeScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.FilterScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.FrostAnvilScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.FrostGrindstoneScreen;
@@ -31,6 +32,7 @@ import dev.dubhe.anvilcraft.inventory.ChuteMenu;
 import dev.dubhe.anvilcraft.inventory.EmberAnvilMenu;
 import dev.dubhe.anvilcraft.inventory.EmberGrindstoneMenu;
 import dev.dubhe.anvilcraft.inventory.EmberSmithingMenu;
+import dev.dubhe.anvilcraft.inventory.EnergyWeaponMakeMenu;
 import dev.dubhe.anvilcraft.inventory.FilterMenu;
 import dev.dubhe.anvilcraft.inventory.FrostAnvilMenu;
 import dev.dubhe.anvilcraft.inventory.FrostGrindstoneMenu;
@@ -157,6 +159,8 @@ public class ModMenuTypes {
             (type, id, inv) -> new FrostSmithingMenu(type, id, inv),
             () -> FrostSmithingScreen::new)
         .register();
+    public static final MenuEntry<EnergyWeaponMakeMenu> ENERGY_WEAPON_MAKE = REGISTRATE
+        .menu("energy_weapon_make", EnergyWeaponMakeMenu::new, () -> EnergyWeaponMakeScreen::new).register();
 
     public static void register() {
     }

@@ -47,6 +47,7 @@ import dev.dubhe.anvilcraft.network.UpdateDeflectionRingLastEntitySpeedPacket;
 import dev.dubhe.anvilcraft.network.UpdateDisplayItemPacket;
 import dev.dubhe.anvilcraft.network.UpdatePropelPistonStoredEnergyPacket;
 import dev.dubhe.anvilcraft.network.UsePillBoxPacket;
+import dev.dubhe.anvilcraft.network.multiple.EnergyWeaponMakePackets;
 import dev.dubhe.anvilcraft.network.multiple.FrostSmithingPackets;
 import dev.dubhe.anvilcraft.network.multiple.MultiphasePackets;
 import dev.dubhe.anvilcraft.network.split.PacketSplitter;
@@ -292,5 +293,6 @@ public class ModNetworks {
             JewelCraftingAutoFillPacket.STREAM_CODEC,
             JewelCraftingAutoFillPacket.HANDLER
         );
+        EnergyWeaponMakePackets.register(registrar);
     }
 }

@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.init.recipe;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.CanningFoodRecipe;
 import dev.dubhe.anvilcraft.recipe.ChargerChargingRecipe;
+import dev.dubhe.anvilcraft.recipe.EnergyWeaponMakeRecipe;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.recipe.PillRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.MassInjectRecipe;
@@ -206,6 +207,11 @@ public class ModRecipeTypes {
         registerType("deformation");
     public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<DeformationRecipe>> DEFORMATION_SERIALIZER =
         RECIPE_SERIALIZERS.register("deformation", DeformationRecipe.Serializer::new);
+
+    public static final DeferredHolder<RecipeType<?>, RecipeType<EnergyWeaponMakeRecipe>> ENERGY_WEAPON_MAKE_TYPE =
+        registerType("energy_weapon_make");
+    public static final DeferredHolder<RecipeSerializer<?>, RecipeSerializer<EnergyWeaponMakeRecipe>> ENERGY_WEAPON_MAKE_SERIALIZER =
+        RECIPE_SERIALIZERS.register("energy_weapon_make", EnergyWeaponMakeRecipe.Serializer::new);
 
     private static <T extends Recipe<?>> DeferredHolder<RecipeType<?>, RecipeType<T>> registerType(String name) {
         return RECIPE_TYPES.register(name, () -> new RecipeType<>() {
