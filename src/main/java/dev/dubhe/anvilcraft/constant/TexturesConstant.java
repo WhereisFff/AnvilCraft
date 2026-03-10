@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class TexturesConstant {
     public static final ResourceLocation DISABLED_SLOT = AnvilCraft.of("textures/gui/container/machine/disabled_slot.png");
+    public static final ResourceLocation CONFIRM = AnvilCraft.of("textures/gui/container/machine/confirm.png");
     public static final ResourceLocation ERROR_SPRITE = AnvilCraft.of("textures/gui/container/smithing/error.png");
 
     public static final ResourceLocation EMBER_GRINDSTONE_BUTTON = AnvilCraft.of(
