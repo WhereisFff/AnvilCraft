@@ -13,6 +13,7 @@ import lombok.Setter;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -31,6 +32,7 @@ import java.util.Optional;
 public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
     private final Level level;
     private final Inventory inventory;
+    private final boolean[] usedHand = new boolean[2]; // 序号0指示主手，序号1指示副手
     private final List<RecipeHolder<EnergyWeaponMakeRecipe>> recipes;
     private final Container inputContainer = new SimpleContainer(6);
     private int selectedIndex = -1;
@@ -60,6 +62,9 @@ public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
         this.level = playerInventory.player.level();
         this.inventory = playerInventory;
         this.recipes = this.level.getRecipeManager().getAllRecipesFor(ModRecipeTypes.ENERGY_WEAPON_MAKE_TYPE.get());
+
+        if (playerInventory.player.getMainHandItem().is(ModItems.ENERGY_WEAPON_PLATFORM)) this.usedHand[0] = true;
+        if (playerInventory.player.getOffhandItem().is(ModItems.ENERGY_WEAPON_PLATFORM)) this.usedHand[1] = true;
 
         for (int row = 0; row < 2; row++) {
             for (int column = 0; column < 3; column++) {
@@ -116,7 +121,15 @@ public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
         }
         EnergyWeaponMakeRecipe recipe = recipeOp.get().value();
         ItemStack result = recipe.assemble(input, this.level.registryAccess());
-        this.inventory.setItem(this.inventory.selected, result);
+
+        if (this.usedHand[0] && player.getMainHandItem().is(ModItems.ENERGY_WEAPON_PLATFORM)) {
+            player.setItemSlot(EquipmentSlot.MAINHAND, result);
+        } else if (this.usedHand[1] && player.getOffhandItem().is(ModItems.ENERGY_WEAPON_PLATFORM)) {
+            player.setItemSlot(EquipmentSlot.OFFHAND, result);
+        } else {
+            throw new IllegalStateException("How did you have more than two hands?!");
+        }
+
         for (int i = 0; i < 6; i++) {
             FilteredSlot slot = Util.cast(this.getSlot(i));
             if (slot.isFilterEmpty()) continue;
@@ -202,7 +215,8 @@ public class EnergyWeaponMakeMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return this.inventory.getSelected().is(ModItems.ENERGY_WEAPON_PLATFORM);
+        return this.usedHand[0] && player.getMainHandItem().is(ModItems.ENERGY_WEAPON_PLATFORM)
+               || this.usedHand[1] && player.getOffhandItem().is(ModItems.ENERGY_WEAPON_PLATFORM);
     }
 
     public FilteredSlot getFilteredSlot(@Range(from = 0, to = 5) int index) {
