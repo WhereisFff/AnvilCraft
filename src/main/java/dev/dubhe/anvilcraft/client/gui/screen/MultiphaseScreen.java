@@ -1,13 +1,9 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.google.common.collect.Lists;
-import com.mojang.datafixers.util.Pair;
 import dev.dubhe.anvilcraft.client.gui.component.WheelWidget;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
-import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.network.multiple.MultiphasePackets;
 import dev.dubhe.anvilcraft.saved.multiphase.Multiphase;
-import dev.dubhe.anvilcraft.util.ListUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
@@ -20,14 +16,13 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
 public class MultiphaseScreen extends Screen {
     private final LocalPlayer player = Objects.requireNonNull(Minecraft.getInstance().player);
     private final InteractionHand hand;
-    private final LinkedList<Multiphase.Phase> phasesCopy = new LinkedList<>();
+    private final List<Multiphase.Phase> phasesCopy = new ArrayList<>();
 
     public WheelWidget wheel;
 
@@ -47,14 +42,11 @@ public class MultiphaseScreen extends Screen {
             Multiphase multiphase = holding.get(ModComponents.MULTIPHASE).toMultiphase();
             if (multiphase != null) {
                 this.phasesCopy.addAll(multiphase.phases());
+                this.phasesCopy.sort(Comparator.comparingInt(Multiphase.Phase::index));
             }
         }
-        boolean hasMerciless = holding.has(ModComponents.MERCILESS);
         int size = this.phasesCopy.size();
-        var sections = Lists.reverse(MultiphaseScreen.createWheelSections(size, this.phasesCopy, holding, false));
-        if (hasMerciless) {
-            sections.addAll(MultiphaseScreen.createWheelSections(size, this.phasesCopy, holding, true));
-        }
+        var sections = MultiphaseScreen.createWheelSections(holding, this.phasesCopy);
         WheelWidget wheel = new WheelWidget(
             leftPos,
             topPos,
@@ -63,40 +55,31 @@ public class MultiphaseScreen extends Screen {
             12.5f,
             32.5f,
             0.75f,
-            -180f / size / 2,
+            90f - 180f / size,
             sections
-        ).setCurrentIndex(this.wheel != null ? this.wheel.getCurrentSectionIndex() : size - 1);
+        ).setCurrentIndex(this.wheel != null ? this.wheel.getCurrentSectionIndex() : 0);
         this.wheel = this.addRenderableWidget(wheel);
     }
 
-    private static List<WheelWidget.RawSection> createWheelSections(
-        int size, List<Multiphase.Phase> phasesCopy, ItemStack holding, boolean hasMerciless
-    ) {
-        var raw = ListUtil.createWithValues(
-            size,
-            i -> new Pair<>(phasesCopy.get(i), MultiphaseScreen.renderHolding(holding, phasesCopy, i, hasMerciless))
-        );
-        raw.sort(Comparator.comparingInt(pair -> pair.getFirst().index()));
-
+    private static List<WheelWidget.RawSection> createWheelSections(ItemStack holding, List<Multiphase.Phase> phasesCopy) {
         List<WheelWidget.RawSection> sections = new ArrayList<>();
-        for (var rawPair : raw) {
+        for (int i = 0; i < phasesCopy.size(); i++) {
             sections.add(new WheelWidget.RawSection(
-                !hasMerciless
-                ? rawPair.getFirst().phaseName().copy()
-                : rawPair.getFirst().phaseName().copy().append(Component.translatable("screen.anvilcraft.multiphase.merciless")),
-                rawPair.getSecond()
+                phasesCopy.get(i).phaseName().copy(),
+                MultiphaseScreen.renderHolding(holding, phasesCopy, i)
             ));
         }
         return sections;
     }
 
     private static WheelWidget.SectionRenderer renderHolding(
-        ItemStack holding, List<Multiphase.Phase> phasesCopy, int index, boolean hasMerciless
+        ItemStack holding,
+        List<Multiphase.Phase> phasesCopy,
+        int index
     ) {
         return (graphics, pose, width, height) -> {
             ItemStack stack = holding.copy();
             phasesCopy.get(index % phasesCopy.size()).applyToStack(stack);
-            stack.set(ModComponents.MERCILESS, new Merciless(hasMerciless));
             graphics.renderItem(stack, 2, 2, 9910597);
         };
     }
@@ -105,12 +88,7 @@ public class MultiphaseScreen extends Screen {
     public void removed() {
         super.removed();
         int index = this.wheel.getCurrentSectionIndex();
-        index = index < this.phasesCopy.size() ? this.phasesCopy.size() - 1 - index : index - this.phasesCopy.size();
-        PacketDistributor.sendToServer(new MultiphasePackets.ChangePhase(
-            this.hand,
-            index,
-            this.wheel.getCurrentSectionIndex() >= this.phasesCopy.size()
-        ));
+        PacketDistributor.sendToServer(new MultiphasePackets.ChangePhase(this.hand, index));
     }
 
     @Override

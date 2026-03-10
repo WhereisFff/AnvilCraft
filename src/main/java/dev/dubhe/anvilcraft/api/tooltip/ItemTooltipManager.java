@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
@@ -274,19 +273,11 @@ public class ItemTooltipManager {
         if (stack.has(ModComponents.ETERNAL)) {
             propertyTooltip("eternal", tooltip, 0xD3C5F6);
         }
-        if (stack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
-            if (!Screen.hasShiftDown()) {
-                propertyTooltip(
-                    "merciless", tooltip, 0xB4F0F6,
-                    Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
-            } else {
-                propertyTooltip("merciless.shifting", tooltip, 0xB4F0F6, ComponentUtils.formatList(
-                    List.of(
-                        Component.translatable("enchantment.minecraft.loyalty"),
-                        Component.translatable("enchantment.minecraft.riptide"),
-                        Component.translatable("tooltip.anvilcraft.property.merciless.curse")
-                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
-            }
+        if (stack.has(ModComponents.FEROCIOUS)) {
+            propertyTooltip("ferocious", tooltip, 0xDD1212);
+        }
+        if (stack.has(ModComponents.MERCILESS)) {
+            propertyTooltip("merciless", tooltip, 0xB4F0F6);
         }
         if (stack.has(ModComponents.FIRE_REFORGING)) {
             propertyTooltip("fire_reforging", tooltip, ChatFormatting.GOLD);

@@ -127,10 +127,12 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
             .when(() -> new LootItemRandomChanceWithEnchantedBonusCondition(
                 0.0f,
                 LevelBasedValue.perLevel(baseChance, bonusChancePerLevel),
-                new DummyHolder(ModEnchantments.BEHEADING_KEY)))
+                new DummyHolder(ModEnchantments.BEHEADING_KEY)
+            ))
             .when(LootItemKilledByPlayerCondition.killedByPlayer())
             .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
-                DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Merciless.DEFAULT))));
+                DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Merciless.DEFAULT)
+            )));
     }
 
     private LootPool.Builder generatePool(
@@ -141,10 +143,12 @@ public class BeheadingLootSubProvider implements LootTableSubProvider {
             .when(() -> new LootItemRandomChanceWithEnchantedBonusCondition(
                 0.0f,
                 LevelBasedValue.perLevel(baseChance, bonusChancePerLevel),
-                new DummyHolder(ModEnchantments.BEHEADING_KEY)))
+                new DummyHolder(ModEnchantments.BEHEADING_KEY)
+            ))
             .when(LootItemKilledByPlayerCondition.killedByPlayer())
             .when(InvertedLootItemCondition.invert(MatchDataComponent.component(
-                DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Merciless.DEFAULT))));
+                DataComponentPredicate.builder().expect(ModComponents.MERCILESS, Merciless.DEFAULT)
+            )));
     }
 
     private static class DummyHolder extends Holder.Reference<Enchantment> {

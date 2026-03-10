@@ -88,10 +88,6 @@ public class MultiphaseCommand {
                             new TranslatableInfo(
                                 "command.anvilcraft.multiphase.info.enchantments",
                                 phase.enchantments()
-                            ),
-                            new TranslatableInfo(
-                                "command.anvilcraft.multiphase.info.merciless_enchantments",
-                                phase.storedEnchantments()
                             )
                         }
                     );

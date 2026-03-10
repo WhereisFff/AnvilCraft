@@ -3,7 +3,6 @@ package dev.dubhe.anvilcraft.network.multiple;
 import dev.anvilcraft.lib.recipe.util.CodecUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
-import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.item.property.component.MultiphaseRef;
 import dev.dubhe.anvilcraft.saved.multiphase.Multiphase;
 import dev.dubhe.anvilcraft.saved.multiphase.Multiphases;
@@ -59,6 +58,11 @@ public class MultiphasePackets {
             RefSync.STREAM_CODEC,
             RefSync.HANDLER
         );
+        registrar.playBidirectional(
+            SingleSync.TYPE,
+            SingleSync.STREAM_CODEC,
+            SingleSync.HANDLER
+        );
     }
 
     private static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> of(String path) {
@@ -86,21 +90,19 @@ public class MultiphasePackets {
         }
     }
 
-    public record ChangePhase(InteractionHand hand, byte index, boolean merciless) implements CustomPacketPayload {
+    public record ChangePhase(InteractionHand hand, byte index) implements CustomPacketPayload {
         public static final Type<ChangePhase> TYPE = MultiphasePackets.of("change_phase");
         public static final StreamCodec<FriendlyByteBuf, ChangePhase> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(InteractionHand.class),
             ChangePhase::hand,
             ByteBufCodecs.BYTE,
             ChangePhase::index,
-            ByteBufCodecs.BOOL,
-            ChangePhase::merciless,
             ChangePhase::new
         );
         public static final IPayloadHandler<ChangePhase> HANDLER = ChangePhase::serverHandler;
 
-        public ChangePhase(InteractionHand hand, int index, boolean merciless) {
-            this(hand, (byte) index, merciless);
+        public ChangePhase(InteractionHand hand, int index) {
+            this(hand, (byte) index);
         }
 
         @Override
@@ -116,11 +118,7 @@ public class MultiphasePackets {
                 if (stackOp.isEmpty()) return;
                 var stack = stackOp.get();
                 var multiphase = stack.get(ModComponents.MULTIPHASE).toMultiphase();
-                multiphase.cyclePhases(
-                    stack,
-                    (byte) ((this.index - multiphase.peekFirst().index() + multiphase.phases().size()) % multiphase.phases().size())
-                );
-                if (stack.has(ModComponents.MERCILESS)) stack.set(ModComponents.MERCILESS, new Merciless(this.merciless));
+                multiphase.cyclePhases(stack, this.index);
             });
         }
     }
@@ -205,6 +203,45 @@ public class MultiphasePackets {
                 }
                 PacketDistributor.sendToPlayer(Util.cast(ctx.player()), new RefSync(this.index, ref.id().optionalGet()));
             });
+        }
+    }
+
+    public record SingleSync(UUID id, Optional<Multiphase> multiphase) implements CustomPacketPayload {
+        public static final Type<SingleSync> TYPE = MultiphasePackets.of("single_sync");
+        public static final StreamCodec<RegistryFriendlyByteBuf, SingleSync> STREAM_CODEC = StreamCodec.composite(
+            UUIDUtil.STREAM_CODEC,
+            SingleSync::id,
+            ByteBufCodecs.optional(Multiphase.STREAM_CODEC),
+            SingleSync::multiphase,
+            SingleSync::new
+        );
+        public static final IPayloadHandler<SingleSync> HANDLER = new DirectionalPayloadHandler<>(
+            SingleSync::clientHandler,
+            SingleSync::serverHandler
+        );
+
+        public SingleSync(UUID id) {
+            this(id, Optional.empty());
+        }
+
+        private SingleSync(UUID id, Multiphase multiphase) {
+            this(id, Optional.of(multiphase));
+        }
+
+        @Override
+        public Type<SingleSync> type() {
+            return TYPE;
+        }
+
+        private void clientHandler(IPayloadContext ctx) {
+            ctx.enqueueWork(() -> Multiphases.get().put(this.id, this.multiphase.orElseThrow()));
+        }
+
+        private void serverHandler(IPayloadContext ctx) {
+            ctx.enqueueWork(() -> PacketDistributor.sendToPlayer(
+                Util.cast(ctx.player()),
+                new SingleSync(this.id, Multiphases.get().getOrCreate(this.id))
+            ));
         }
     }
 }

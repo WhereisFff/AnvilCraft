@@ -1,11 +1,9 @@
 package dev.dubhe.anvilcraft.saved.multiphase;
 
-import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.anvilcraft.lib.recipe.util.CodecUtil;
-import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.util.CollectionUtil;
 import dev.dubhe.anvilcraft.util.EnchantmentUtil;
 import net.minecraft.core.Holder;
@@ -147,8 +145,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 phase = Phase.create(i)
                     .withName(makeName(i))
                     .withRepairCost(data.repairCost())
-                    .withEnchantments(data.enchantments())
-                    .withStoredEnchantments(data.storedEnchantments());
+                    .withEnchantments(data.enchantments());
                 if (data.customName() != null && !data.customName().equals(Component.empty())) {
                     phase = phase.withCustomName(data.customName().copy());
                 }
@@ -168,54 +165,48 @@ public record Multiphase(LinkedList<Phase> phases) {
     }
 
     public void cyclePhases(ItemStack stack) {
-        this.cyclePhases(stack, (byte) 1);
+        this.cyclePhases(stack, (byte) ((this.phases.peek().index + 1) % this.phases.size()));
     }
 
     public void cyclePhases(ItemStack stack, byte index) {
-        if (index == 0) return;
-        for (int i = 0; i < (index - 1) % this.phases.size(); i++) {
+        // 若目标相已为首相，返回
+        int current = this.phases.peek().index;
+        if (index == current) return;
+
+        // 计算使首相为目标相所需的取出放入操作数
+        int diff = (index - current + this.phases.size()) % this.phases.size();
+        // 取出首相，即需要更新现有值的相
+        Phase storing = this.phases.poll();
+        // 获取目标相
+        Phase beta = this.phases.get(diff - 1);
+
+        // 将目标相的值应用至物品，并存储旧值
+        Component customName = stack.set(DataComponents.CUSTOM_NAME, beta.customName().orElse(null));
+        if (customName != null) {
+            storing = storing.withCustomName(customName);
+        } else {
+            storing = storing.clearCustomName();
+        }
+
+        Component itemName = stack.set(DataComponents.ITEM_NAME, beta.itemName().orElse(null));
+        if (itemName != null) {
+            storing = storing.withItemName(itemName);
+        } else {
+            storing = storing.clearItemName();
+        }
+
+        int repairCost = Math.max(stack.set(DataComponents.REPAIR_COST, beta.repairCost()), 0);
+        storing = storing.withRepairCost(repairCost);
+
+        ItemEnchantments enchantments = stack.set(DataComponents.ENCHANTMENTS, beta.enchantments());
+        storing = storing.withEnchantments(Objects.requireNonNullElse(enchantments, ItemEnchantments.EMPTY));
+
+        // 将已更新现有值的首相放回首位
+        this.phases.offerFirst(storing);
+        // 执行操作，将目标相旋转至首位
+        for (int i = 0; i < diff; i++) {
             this.phases.offer(this.phases.poll());
         }
-        final Phase[] storing = {this.phases.poll()};
-
-        Optional<Phase> beta = Optional.ofNullable(this.phases.peek());
-        beta.<Component>map(phase -> {
-            var name = phase.customName();
-            if (name.isPresent()) return stack.set(DataComponents.CUSTOM_NAME, name.get());
-            Component c = stack.get(DataComponents.CUSTOM_NAME);
-            stack.remove(DataComponents.CUSTOM_NAME);
-            return c;
-        }).ifPresentOrElse(
-            name -> storing[0] = storing[0].withCustomName(name),
-            () -> storing[0] = storing[0].clearCustomName()
-        );
-        beta.<Component>map(phase -> {
-            var name = phase.itemName();
-            if (name.isPresent()) return stack.set(DataComponents.ITEM_NAME, name.get());
-            Component c = stack.get(DataComponents.ITEM_NAME);
-            stack.remove(DataComponents.ITEM_NAME);
-            return c;
-        }).ifPresentOrElse(
-            name -> storing[0] = storing[0].withItemName(name),
-            () -> storing[0] = storing[0].clearItemName()
-        );
-
-        storing[0] = storing[0]
-            .withRepairCost(
-                beta.map(phase -> stack.set(DataComponents.REPAIR_COST, phase.repairCost))
-                    .map(repairCost -> Math.max(repairCost, 0))
-                    .orElse(0)
-            )
-            .withEnchantments(
-                beta.map(phase -> stack.set(DataComponents.ENCHANTMENTS, phase.enchantments))
-                    .orElse(ItemEnchantments.EMPTY)
-            )
-            .withStoredEnchantments(
-                beta.map(phase -> stack.set(ModComponents.MERCILESS_ENCHANTMENTS, phase.storedEnchantments))
-                    .orElse(ItemEnchantments.EMPTY)
-            );
-
-        this.phases.offer(storing[0]);
     }
 
     public Multiphase copy() {
@@ -241,52 +232,29 @@ public record Multiphase(LinkedList<Phase> phases) {
         Optional<Component> customName,
         Optional<Component> itemName,
         int repairCost,
-        ItemEnchantments enchantments,
-        ItemEnchantments storedEnchantments
+        ItemEnchantments enchantments
     ) {
-        // TODO: 兼容性支持结束后移除此常量
-        @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-        private static Phase compat(
-            int index,
-            Component phaseName,
-            Optional<Component> customName,
-            Optional<Component> itemName,
-            int repairCost,
-            ItemEnchantments enchantments
-        ) {
-            return new Phase(
-                index,
-                phaseName,
-                customName,
-                itemName,
-                repairCost,
-                enchantments,
-                ItemEnchantments.EMPTY
-            );
-        }
-
-        // TODO: 兼容性支持结束后将此常量重命名为 CODEC
-        public static final MapCodec<Phase> TRUE_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            Codec.INT.fieldOf("index").forGetter(Phase::index),
-            ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName").forGetter(Phase::itemName),
-            Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
-            ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments),
-            ItemEnchantments.CODEC.fieldOf("storedEnchantments").forGetter(Phase::storedEnchantments)
+        public static final MapCodec<Phase> CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
+            Codec.INT
+                .fieldOf("index")
+                .forGetter(Phase::index),
+            ComponentSerialization.FLAT_CODEC
+                .fieldOf("phaseName")
+                .forGetter(Phase::phaseName),
+            ComponentSerialization.FLAT_CODEC
+                .optionalFieldOf("customName")
+                .forGetter(Phase::customName),
+            ComponentSerialization.FLAT_CODEC
+                .optionalFieldOf("itemName")
+                .forGetter(Phase::itemName),
+            Codec.INT
+                .fieldOf("repairCost")
+                .forGetter(Phase::repairCost),
+            ItemEnchantments.CODEC
+                .fieldOf("enchantments")
+                .forGetter(Phase::enchantments)
         ).apply(inst, Phase::new));
-        // TODO: 兼容性支持结束后移除此常量
-        public static final MapCodec<Phase> COMPATIBILITY_CODEC = RecordCodecBuilder.mapCodec(inst -> inst.group(
-            Codec.INT.fieldOf("index").forGetter(Phase::index),
-            ComponentSerialization.FLAT_CODEC.fieldOf("phaseName").forGetter(Phase::phaseName),
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("customName").forGetter(Phase::customName),
-            ComponentSerialization.FLAT_CODEC.optionalFieldOf("itemName").forGetter(Phase::itemName),
-            Codec.INT.fieldOf("repairCost").forGetter(Phase::repairCost),
-            ItemEnchantments.CODEC.fieldOf("enchantments").forGetter(Phase::enchantments)
-        ).apply(inst, Phase::compat));
-        // TODO: 兼容性支持结束后移除此常量
-        public static final MapCodec<Phase> CODEC = Codec.mapEither(TRUE_CODEC, COMPATIBILITY_CODEC).xmap(Either::unwrap, Either::left);
-        public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = CodecUtil.composite(
+        public static final StreamCodec<RegistryFriendlyByteBuf, Phase> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT,
             Phase::index,
             ComponentSerialization.STREAM_CODEC,
@@ -299,21 +267,18 @@ public record Multiphase(LinkedList<Phase> phases) {
             Phase::repairCost,
             ItemEnchantments.STREAM_CODEC,
             Phase::enchantments,
-            ItemEnchantments.STREAM_CODEC,
-            Phase::storedEnchantments,
             Phase::new
         );
 
-        public Phase(int index, Component name, @Nullable ItemEnchantments enchantments, @Nullable ItemEnchantments storedEnchantments) {
-            this(index, name, 0, enchantments, storedEnchantments);
+        public Phase(int index, Component name, @Nullable ItemEnchantments enchantments) {
+            this(index, name, 0, enchantments);
         }
 
         public Phase(
             int index,
             Component name,
             int repairCost,
-            @Nullable ItemEnchantments enchantments,
-            @Nullable ItemEnchantments storedEnchantments
+            @Nullable ItemEnchantments enchantments
         ) {
             this(
                 index,
@@ -321,8 +286,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 Optional.empty(),
                 Optional.empty(),
                 repairCost,
-                enchantments == null ? ItemEnchantments.EMPTY : enchantments,
-                storedEnchantments == null ? ItemEnchantments.EMPTY : storedEnchantments
+                enchantments == null ? ItemEnchantments.EMPTY : enchantments
             );
         }
 
@@ -332,8 +296,7 @@ public record Multiphase(LinkedList<Phase> phases) {
             @Nullable Component customName,
             @Nullable Component itemName,
             int repairCost,
-            ItemEnchantments enchantments,
-            ItemEnchantments storedEnchantments
+            ItemEnchantments enchantments
         ) {
             this(
                 index,
@@ -341,8 +304,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 Objects.equals(customName, Component.empty()) ? Optional.empty() : Optional.ofNullable(customName),
                 Objects.equals(itemName, Component.empty()) ? Optional.empty() : Optional.ofNullable(itemName),
                 repairCost,
-                enchantments,
-                storedEnchantments
+                enchantments
             );
         }
 
@@ -360,8 +322,13 @@ public record Multiphase(LinkedList<Phase> phases) {
 
         public static Phase create(int index) {
             return new Phase(
-                index, Component.literal("Empty"), Optional.empty(), Optional.empty(), 0,
-                ItemEnchantments.EMPTY, ItemEnchantments.EMPTY);
+                index,
+                Component.literal("Empty"),
+                Optional.empty(),
+                Optional.empty(),
+                0,
+                ItemEnchantments.EMPTY
+            );
         }
 
         public static Phase make(int index, Component name, @Nullable ItemEnchantments enchantments) {
@@ -377,8 +344,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName.or(phase::customName),
                 this.itemName.or(phase::itemName),
                 this.repairCost + phase.repairCost,
-                EnchantmentUtil.merge(this.enchantments, phase.enchantments),
-                EnchantmentUtil.merge(this.storedEnchantments, phase.storedEnchantments)
+                EnchantmentUtil.merge(this.enchantments, phase.enchantments)
             );
         }
 
@@ -389,8 +355,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName,
                 this.itemName,
                 this.repairCost,
-                this.enchantments,
-                this.storedEnchantments
+                this.enchantments
             );
         }
 
@@ -401,8 +366,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 Optional.ofNullable(customName),
                 this.itemName,
                 this.repairCost,
-                this.enchantments,
-                this.storedEnchantments
+                this.enchantments
             );
         }
 
@@ -413,8 +377,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName,
                 Optional.ofNullable(itemName),
                 this.repairCost,
-                this.enchantments,
-                this.storedEnchantments
+                this.enchantments
             );
         }
 
@@ -425,8 +388,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 Optional.empty(),
                 this.itemName,
                 this.repairCost,
-                this.enchantments,
-                this.storedEnchantments
+                this.enchantments
             );
         }
 
@@ -437,8 +399,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName,
                 Optional.empty(),
                 this.repairCost,
-                this.enchantments,
-                this.storedEnchantments
+                this.enchantments
             );
         }
 
@@ -449,8 +410,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName,
                 this.itemName,
                 repairCost,
-                this.enchantments,
-                this.storedEnchantments
+                this.enchantments
             );
         }
 
@@ -461,20 +421,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName,
                 this.itemName,
                 this.repairCost,
-                enchantments,
-                this.storedEnchantments
-            );
-        }
-
-        public Phase withStoredEnchantments(ItemEnchantments storedEnchantments) {
-            return new Phase(
-                this.index,
-                this.phaseName,
-                this.customName,
-                this.itemName,
-                this.repairCost,
-                this.enchantments,
-                storedEnchantments
+                enchantments
             );
         }
 
@@ -485,8 +432,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName,
                 this.itemName,
                 this.repairCost + repairCost,
-                this.enchantments,
-                this.storedEnchantments
+                this.enchantments
             );
         }
 
@@ -508,30 +454,6 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName,
                 this.itemName,
                 this.repairCost,
-                originalMut.toImmutable(),
-                this.storedEnchantments
-            );
-        }
-
-        public Phase addStoredEnchantments(ItemEnchantments storedEnchantments) {
-            ItemEnchantments original = this.enchantments;
-            ItemEnchantments.Mutable originalMut = new ItemEnchantments.Mutable(original);
-            for (Holder<Enchantment> enchantmentHolder : storedEnchantments.keySet()) {
-                if (original.keySet().contains(enchantmentHolder)) {
-                    int originalLevel = original.getLevel(enchantmentHolder);
-                    int newLevel = storedEnchantments.getLevel(enchantmentHolder);
-                    originalMut.set(enchantmentHolder, Math.max(originalLevel, newLevel));
-                } else {
-                    originalMut.set(enchantmentHolder, storedEnchantments.getLevel(enchantmentHolder));
-                }
-            }
-            return new Phase(
-                this.index,
-                this.phaseName,
-                this.customName,
-                this.itemName,
-                this.repairCost,
-                this.enchantments,
                 originalMut.toImmutable()
             );
         }
@@ -558,8 +480,7 @@ public record Multiphase(LinkedList<Phase> phases) {
                 this.customName.map(Component::copy),
                 this.itemName.map(Component::copy),
                 this.repairCost,
-                new ItemEnchantments.Mutable(this.enchantments).toImmutable(),
-                new ItemEnchantments.Mutable(this.storedEnchantments).toImmutable()
+                new ItemEnchantments.Mutable(this.enchantments).toImmutable()
             );
         }
 
@@ -574,27 +495,20 @@ public record Multiphase(LinkedList<Phase> phases) {
         @Nullable Component customName,
         @Nullable Component itemName,
         int repairCost,
-        @Nullable ItemEnchantments enchantments,
-        @Nullable ItemEnchantments storedEnchantments
+        @Nullable ItemEnchantments enchantments
     ) {
         public static PhaseData of(
             @Nullable Component customName,
             @Nullable Component itemName,
             int repairCost,
-            @Nullable ItemEnchantments enchantments,
-            @Nullable ItemEnchantments storedEnchantments
+            @Nullable ItemEnchantments enchantments
         ) {
-            return new PhaseData(customName, itemName, repairCost, enchantments, storedEnchantments);
+            return new PhaseData(customName, itemName, repairCost, enchantments);
         }
 
         @Override
         public ItemEnchantments enchantments() {
             return this.enchantments == null ? ItemEnchantments.EMPTY : this.enchantments;
-        }
-
-        @Override
-        public ItemEnchantments storedEnchantments() {
-            return this.storedEnchantments == null ? ItemEnchantments.EMPTY : this.storedEnchantments;
         }
     }
 }
