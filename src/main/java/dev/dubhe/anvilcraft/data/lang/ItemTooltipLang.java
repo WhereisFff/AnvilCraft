@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 
 public class ItemTooltipLang {
     @SuppressWarnings("checkstyle:LineLength")
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         ItemTooltipManager.NEED_TOOLTIP_ITEM.forEach(
             (item, s) -> provider.add(ItemTooltipManager.getTranslationKey(item), s));
         provider.add("tooltip.anvilcraft.item.reinforced_concrete", "Creeper proof");

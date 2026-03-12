@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data;
 
-import com.tterrag.registrate.providers.ProviderType;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.integration.IntegrationHook;
+import dev.anvilcraft.lib.v2.registrum.providers.ProviderType;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
+import dev.anvilcraft.lib.v2.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.data.advancement.AdvancementHandler;
 import dev.dubhe.anvilcraft.data.lang.LangHandler;
@@ -33,7 +33,7 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.concurrent.CompletableFuture;
 
-import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
+import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRUM;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
 public class AnvilCraftDatagen {
@@ -59,32 +59,32 @@ public class AnvilCraftDatagen {
      * 初始化生成器
      */
     public static void init() {
-        var genInit = REGISTRATE.getDataGenInitializer();
+        var genInit = REGISTRUM.getDataGenInitializer();
         genInit.add(Registries.ENCHANTMENT, ModEnchantments::bootstrap);
         genInit.add(Registries.DAMAGE_TYPE, ModDamageTypes::bootstrap);
 
         genInit.addDependency(ProviderType.RECIPE, ProviderType.DYNAMIC);
 
-        REGISTRATE.addDataGenerator(ProviderType.ITEM_TAGS, TagsHandler::initItem);
-        REGISTRATE.addDataGenerator(ProviderType.BLOCK_TAGS, TagsHandler::initBlock);
-        REGISTRATE.addDataGenerator(ProviderType.FLUID_TAGS, TagsHandler::initFluid);
-        REGISTRATE.addDataGenerator(ProviderType.ENCHANTMENT_TAGS, TagsHandler::initEnchantment);
-        REGISTRATE.addDataGenerator(
+        REGISTRUM.addDataGenerator(ProviderType.ITEM_TAGS, TagsHandler::initItem);
+        REGISTRUM.addDataGenerator(ProviderType.BLOCK_TAGS, TagsHandler::initBlock);
+        REGISTRUM.addDataGenerator(ProviderType.FLUID_TAGS, TagsHandler::initFluid);
+        REGISTRUM.addDataGenerator(ProviderType.ENCHANTMENT_TAGS, TagsHandler::initEnchantment);
+        REGISTRUM.addDataGenerator(
             ProviderType.registerDynamicTag("tags/damage_type", "damage_type", Registries.DAMAGE_TYPE),
             TagsHandler::initDamageType
         );
-        REGISTRATE.addDataGenerator(ProviderType.ENTITY_TAGS, TagsHandler::initEntityType);
-        REGISTRATE.addDataGenerator(ProviderType.LANG, LangHandler::init);
-        REGISTRATE.addDataGenerator(ProviderType.RECIPE, RecipeHandler::init);
-        REGISTRATE.addDataGenerator(ProviderType.ADVANCEMENT, AdvancementHandler::init);
+        REGISTRUM.addDataGenerator(ProviderType.ENTITY_TAGS, TagsHandler::initEntityType);
+        REGISTRUM.addDataGenerator(ProviderType.LANG, LangHandler::init);
+        REGISTRUM.addDataGenerator(ProviderType.RECIPE, RecipeHandler::init);
+        REGISTRUM.addDataGenerator(ProviderType.ADVANCEMENT, AdvancementHandler::init);
     }
 
     public static Criterion<InventoryChangeTrigger.TriggerInstance> has(ItemLike itemLike) {
-        return RegistrateRecipeProvider.has(itemLike);
+        return RegistrumRecipeProvider.has(itemLike);
     }
 
     public static Criterion<InventoryChangeTrigger.TriggerInstance> has(TagKey<Item> tag) {
-        return RegistrateRecipeProvider.has(tag);
+        return RegistrumRecipeProvider.has(tag);
     }
 
     public static String hasItem(TagKey<Item> item) {

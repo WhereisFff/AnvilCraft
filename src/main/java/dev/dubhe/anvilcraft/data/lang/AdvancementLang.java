@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class AdvancementLang {
     @SuppressWarnings("checkstyle:LineLength")
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         // region root
         provider.add("advancements.anvilcraft.root.title", "Welcome to AnvilCraft");
         provider.add("advancements.anvilcraft.root.description", "Pick up the anvil, start from the vanilla, and enter the world of technology and magic");

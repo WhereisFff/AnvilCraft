@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
+import dev.anvilcraft.lib.v2.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
@@ -18,7 +18,7 @@ import net.neoforged.neoforge.common.Tags;
 import static dev.dubhe.anvilcraft.data.recipe.util.RecipeLoaderUtil.getName;
 
 public class ItemCrushRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         ItemCrushRecipe.builder()
             .requires(Tags.Items.CROPS_WHEAT)
             .result(ModFoodItems.FLOUR)
@@ -194,35 +194,35 @@ public class ItemCrushRecipeLoader {
         flower(provider, Items.PINK_TULIP, Items.PINK_DYE);
     }
 
-    private static void tool(RegistrateRecipeProvider provider, ItemLike tool, ItemLike result) {
+    private static void tool(RegistrumRecipeProvider provider, ItemLike tool, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(tool)
             .result(result, 0.5f)
             .save(provider, AnvilCraft.of("item_crush/tool/%s_2_%s".formatted(getName(tool), getName(result))));
     }
 
-    private static void blockCrush(RegistrateRecipeProvider provider, ItemLike input, ItemLike result) {
+    private static void blockCrush(RegistrumRecipeProvider provider, ItemLike input, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(input)
             .result(result, 0.8f)
             .save(provider, AnvilCraft.of("item_crush/block_crush/%s_from_%s".formatted(getName(result), getName(input))));
     }
 
-    private static void armor(RegistrateRecipeProvider provider, ItemLike armor, ItemLike result) {
+    private static void armor(RegistrumRecipeProvider provider, ItemLike armor, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(armor)
             .result(result, UniformGenerator.between(0.0f, 2.0f))
             .save(provider, AnvilCraft.of("item_crush/armor/%s_2_%s".formatted(getName(armor), getName(result))));
     }
 
-    public static void flower(RegistrateRecipeProvider provider, ItemLike flower, ItemLike result) {
+    public static void flower(RegistrumRecipeProvider provider, ItemLike flower, ItemLike result) {
         ItemCrushRecipe.builder()
             .requires(flower)
             .result(result, 2)
             .save(provider, AnvilCraft.of("item_crush/flower/%s_from_%s".formatted(getName(result), getName(flower))));
     }
 
-    public static void flower(RegistrateRecipeProvider provider, ItemLike flower, ItemLike result, int resultNum) {
+    public static void flower(RegistrumRecipeProvider provider, ItemLike flower, ItemLike result, int resultNum) {
         ItemCrushRecipe.builder()
             .requires(flower)
             .result(result, resultNum)

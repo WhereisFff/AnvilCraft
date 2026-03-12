@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.recipe.mineral.MineralFountainChanceRecipe;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
 public class MineralFountainRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         mineralFountainDeepslate(provider, Tags.Blocks.STORAGE_BLOCKS_RAW_COPPER, Blocks.DEEPSLATE_COPPER_ORE);
         mineralFountainDeepslate(provider, Tags.Blocks.STORAGE_BLOCKS_RAW_IRON, Blocks.DEEPSLATE_IRON_ORE);
         mineralFountainDeepslate(provider, Tags.Blocks.STORAGE_BLOCKS_RAW_GOLD, Blocks.DEEPSLATE_GOLD_ORE);
@@ -50,7 +50,7 @@ public class MineralFountainRecipeLoader {
             .save(provider);
     }
 
-    private static void mineralFountainDeepslate(RegistrateRecipeProvider provider, TagKey<Block> require, Block result) {
+    private static void mineralFountainDeepslate(RegistrumRecipeProvider provider, TagKey<Block> require, Block result) {
         MineralFountainRecipe.builder()
             .needBlock(require)
             .fromBlock(Blocks.DEEPSLATE)

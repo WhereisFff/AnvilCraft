@@ -11,7 +11,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
+import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRUM;
 
 @SuppressWarnings("unused")
 public class ModItemGroups {
@@ -23,7 +23,7 @@ public class ModItemGroups {
             .icon(ModItems.ANVIL_HAMMER::asStack)
             .displayItems((ctx, entries) -> {
             })
-            .title(REGISTRATE.addLang("itemGroup", AnvilCraft.of("tools_and_utilities"), "AnvilCraft: Tools and Utilities"))
+            .title(REGISTRUM.addLang("itemGroup", AnvilCraft.of("tools_and_utilities"), "AnvilCraft: Tools and Utilities"))
             .withTabsAfter(
                 AnvilCraft.of("ingredients"),
                 AnvilCraft.of("functional_blocks"),
@@ -36,7 +36,7 @@ public class ModItemGroups {
             .icon(ModItems.MAGNET_INGOT::asStack)
             .displayItems((ctx, entries) -> {
             })
-            .title(REGISTRATE.addLang("itemGroup", AnvilCraft.of("ingredients"), "AnvilCraft: Ingredients"))
+            .title(REGISTRUM.addLang("itemGroup", AnvilCraft.of("ingredients"), "AnvilCraft: Ingredients"))
             .withTabsBefore(ANVILCRAFT_TOOL.getId())
             .withTabsAfter(AnvilCraft.of("functional_blocks"), AnvilCraft.of("building_blocks"))
             .build());
@@ -54,7 +54,7 @@ public class ModItemGroups {
                 entries.accept(Items.CHIPPED_ANVIL.getDefaultInstance());
                 entries.accept(Items.DAMAGED_ANVIL.getDefaultInstance());
             })
-            .title(REGISTRATE.addLang(
+            .title(REGISTRUM.addLang(
                 "itemGroup", AnvilCraft.of("functional_blocks"), "AnvilCraft: Functional Blocks"))
             .withTabsBefore(ANVILCRAFT_TOOL.getId(), ANVILCRAFT_INGREDIENTS.getId())
             .withTabsAfter(AnvilCraft.of("building_blocks"))
@@ -65,7 +65,7 @@ public class ModItemGroups {
             .icon(ModBlocks.REINFORCED_CONCRETES.get(Color.WHITE)::asStack)
             .displayItems((ctx, entries) -> {
             })
-            .title(REGISTRATE.addLang(
+            .title(REGISTRUM.addLang(
                 "itemGroup", AnvilCraft.of("building_blocks"), "AnvilCraft: Building Blocks"))
             .withTabsBefore(
                 ANVILCRAFT_TOOL.getId(), ANVILCRAFT_INGREDIENTS.getId(), ANVILCRAFT_FUNCTION_BLOCK.getId())

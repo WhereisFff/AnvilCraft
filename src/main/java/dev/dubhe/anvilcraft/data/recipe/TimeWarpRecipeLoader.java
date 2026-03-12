@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
-import dev.anvilcraft.lib.recipe.data.advancement.predicate.item.NotPredicate;
-import dev.anvilcraft.lib.recipe.init.LibItemSubPredicates;
-import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
+import dev.anvilcraft.lib.v2.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.v2.recipe.data.advancement.predicate.item.NotPredicate;
+import dev.anvilcraft.lib.v2.recipe.init.LibItemSubPredicates;
+import dev.anvilcraft.lib.v2.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.heat.HeatTier;
 import dev.dubhe.anvilcraft.block.CorruptedBeaconBlock;
@@ -28,7 +28,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.neoforged.neoforge.common.Tags;
 
 public class TimeWarpRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         timeWarp(provider, ModItems.RESIN, 1, ModItems.AMBER, 1);
         timeWarp(provider, Items.OBSIDIAN, 1, Items.CRYING_OBSIDIAN, 1);
         timeWarp(provider, Items.CHARCOAL, 1, Items.COAL, 2);
@@ -283,7 +283,7 @@ public class TimeWarpRecipeLoader {
     }
 
     private static void timeWarp(
-        RegistrateRecipeProvider provider,
+        RegistrumRecipeProvider provider,
         ItemLike input,
         int inputCount,
         ItemLike output,
@@ -297,7 +297,7 @@ public class TimeWarpRecipeLoader {
 
     @SuppressWarnings("SameParameterValue")
     private static void timeWarp(
-        RegistrateRecipeProvider provider,
+        RegistrumRecipeProvider provider,
         TagKey<Item> input,
         int inputCount,
         ItemLike output,
@@ -309,7 +309,7 @@ public class TimeWarpRecipeLoader {
             .save(provider);
     }
 
-    private static void timeWarpToOilCauldron(RegistrateRecipeProvider provider, ItemLike input, int inputCount) {
+    private static void timeWarpToOilCauldron(RegistrumRecipeProvider provider, ItemLike input, int inputCount) {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
             .transform(ModBlocks.OIL_CAULDRON.get())
@@ -321,7 +321,7 @@ public class TimeWarpRecipeLoader {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void timeWarpToOilCauldron(RegistrateRecipeProvider provider, TagKey<Item> input, int inputCount) {
+    private static void timeWarpToOilCauldron(RegistrumRecipeProvider provider, TagKey<Item> input, int inputCount) {
         TimeWarpRecipe.builder()
             .requires(input, inputCount)
             .transform(ModBlocks.OIL_CAULDRON.get())

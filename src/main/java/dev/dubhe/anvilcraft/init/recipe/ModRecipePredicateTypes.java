@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.init.recipe;
 
-import dev.anvilcraft.lib.recipe.init.LibRegistries;
-import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.v2.recipe.init.LibRegistries;
+import dev.anvilcraft.lib.v2.recipe.predicate.IRecipePredicate;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;

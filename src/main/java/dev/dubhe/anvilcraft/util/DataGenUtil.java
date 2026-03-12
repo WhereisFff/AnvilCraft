@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.util;
 
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-import com.tterrag.registrate.providers.RegistrateProvider;
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import dev.anvilcraft.lib.v2.registrum.providers.DataGenContext;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumBlockstateProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.loot.RegistrumBlockLootTables;
 import dev.dubhe.anvilcraft.block.plate.PowerLevelPressurePlateBlock;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
@@ -40,7 +40,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DataGenUtil {
     public static void powerLevelPressurePlate(
-        RegistrateBlockstateProvider provider, ResourceLocation id,
+        RegistrumBlockstateProvider provider, ResourceLocation id,
         PowerLevelPressurePlateBlock block, ResourceLocation texture
     ) {
         ModelFile pressurePlate = provider.models().pressurePlate(id.getPath(), texture);
@@ -65,7 +65,7 @@ public class DataGenUtil {
             .partialState().with(PowerLevelPressurePlateBlock.POWER, 15).addModels(new ConfiguredModel(pressurePlateDown));
     }
 
-    public static void diodeBlock(RegistrateBlockstateProvider provider, ResourceLocation id, DiodeBlock block) {
+    public static void diodeBlock(RegistrumBlockstateProvider provider, ResourceLocation id, DiodeBlock block) {
         ModelFile diode = new ModelFile.ExistingModelFile(id.withPrefix("block/"), provider.models().existingFileHelper);
         ModelFile diodeOn = new ModelFile.ExistingModelFile(
             id.withPrefix("block/").withSuffix("_on"),
@@ -100,10 +100,10 @@ public class DataGenUtil {
     }
 
     @SuppressWarnings("unused")
-    public static <T extends RegistrateProvider> void noExtraModelOrState(DataGenContext<?, ?> context, T provider) {
+    public static <T extends RegistrumProvider> void noExtraModelOrState(DataGenContext<?, ?> context, T provider) {
     }
 
-    public static <T extends RegistrateBlockstateProvider> void horizontalFacingBlock(
+    public static <T extends RegistrumBlockstateProvider> void horizontalFacingBlock(
         DataGenContext<Block, ?> context,
         T provider
     ) {
@@ -121,10 +121,10 @@ public class DataGenUtil {
     }
 
     @SuppressWarnings("unused")
-    public static <T> void noLoot(RegistrateBlockLootTables tables, T value) {
+    public static <T> void noLoot(RegistrumBlockLootTables tables, T value) {
     }
 
-    public static <E extends Block> void simple(DataGenContext<Block, E> context, RegistrateBlockstateProvider provider) {
+    public static <E extends Block> void simple(DataGenContext<Block, E> context, RegistrumBlockstateProvider provider) {
         provider.simpleBlock(
             context.get(),
             DangerUtil.genConfiguredModel("block/" + context.getId().getPath()).get()
@@ -144,7 +144,7 @@ public class DataGenUtil {
         );
     }
 
-    public static void dropOtherAndSelfWhenSilkTouch(RegistrateBlockLootTables tables, Block block, ItemLike other) {
+    public static void dropOtherAndSelfWhenSilkTouch(RegistrumBlockLootTables tables, Block block, ItemLike other) {
         tables.add(block, LootTable.lootTable()
             .withPool(
                 LootPool.lootPool()
@@ -157,7 +157,7 @@ public class DataGenUtil {
         );
     }
 
-    public static void nestingShulkerBoxLoot(RegistrateBlockLootTables lootTables, Block block) {
+    public static void nestingShulkerBoxLoot(RegistrumBlockLootTables lootTables, Block block) {
         lootTables.add(
             block,
             LootTable.lootTable()

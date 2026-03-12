@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.advancement;
 
-import com.tterrag.registrate.providers.RegistrateAdvancementProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumAdvancementProvider;
 import dev.dubhe.anvilcraft.init.ModAdvancements;
 import dev.dubhe.anvilcraft.util.Util;
 import lombok.SneakyThrows;
@@ -10,7 +10,7 @@ import java.lang.reflect.Modifier;
 
 public class AnvilCraftAdvancement {
     @SneakyThrows
-    public static void init(RegistrateAdvancementProvider provider) {
+    public static void init(RegistrumAdvancementProvider provider) {
         for (Field field : ModAdvancements.class.getDeclaredFields()) {
             int modifiers = field.getModifiers();
             if (Modifier.isPublic(modifiers) && Modifier.isStatic(modifiers) && Modifier.isFinal(modifiers)) {

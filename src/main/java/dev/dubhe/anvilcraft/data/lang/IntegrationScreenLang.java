@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class IntegrationScreenLang {
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         provider.add("screen.anvilcraft.integration_screen.title", "Integrations");
         provider.add(
             "screen.anvilcraft.integration_screen.note",

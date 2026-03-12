@@ -2,9 +2,9 @@ package dev.dubhe.anvilcraft.recipe.anvil.outcome;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
-import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
-import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.v2.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.v2.recipe.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeOutcomeTypes;
 import dev.dubhe.anvilcraft.util.AnvilUtil;

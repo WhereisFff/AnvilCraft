@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class JeiLang {
     @SuppressWarnings("checkstyle:LineLength")
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         provider.add("gui.anvilcraft.category.chance", "Chance: %s%%");
         provider.add("gui.anvilcraft.category.average_output", "Average: %s");
         provider.add("gui.anvilcraft.category.min_output", "Min: %s");
@@ -36,8 +36,10 @@ public class JeiLang {
 
         provider.add("gui.anvilcraft.category.mass_inject", "Mass Inject");
         provider.add("gui.anvilcraft.category.mass_inject.mass_value", "Mass Value: %s");
-        provider.add("gui.anvilcraft.category.mass_inject.mass_needed",
-            "This item will be produced after total mass value injected reaches %s");
+        provider.add(
+            "gui.anvilcraft.category.mass_inject.mass_needed",
+            "This item will be produced after total mass value injected reaches %s"
+        );
         provider.add("gui.anvilcraft.category.mass_inject.items_needed", "Items Needed: %s");
 
         provider.add("gui.anvilcraft.category.cement_staining", "Cement Staining");
@@ -100,16 +102,25 @@ public class JeiLang {
         provider.add("jei.anvilcraft.info.geode_3", "You can also find it in the Bonus Chest");
         provider.add("jei.anvilcraft.info.geode_4", "Or trade it from a Jeweler Villager");
 
-        provider.add("jei.anvilcraft.info.royal_steel_upgrade_smithing_template_1", "You can find it in the chest of the village weapons smith.");
+        provider.add(
+            "jei.anvilcraft.info.royal_steel_upgrade_smithing_template_1",
+            "You can find it in the chest of the village weapons smith."
+        );
         provider.add("jei.anvilcraft.info.royal_steel_upgrade_smithing_template_2", "Or you can trade with the jeweler.");
 
         provider.add("jei.anvilcraft.info.craw_claw", "You can obtain this from crab traps placed in the water.");
 
         provider.add("jei.anvilcraft.info.capacitor", "You can charge the empty capacitor in the charger to obtain it.");
 
-        provider.add("jei.anvilcraft.info.end_dust", "Any falling block, except for anvils and Dragon Egg, will be converted into End Dust when fall through end portal.");
+        provider.add(
+            "jei.anvilcraft.info.end_dust",
+            "Any falling block, except for anvils and Dragon Egg, will be converted into End Dust when fall through end portal."
+        );
 
-        provider.add("jei.anvilcraft.info.mob_transform_with_item", "Right-clicking mobs with the corresponding item in its Mob-Transform-with-Held-Item recipes can force the mob to hold it.");
+        provider.add(
+            "jei.anvilcraft.info.mob_transform_with_item",
+            "Right-clicking mobs with the corresponding item in its Mob-Transform-with-Held-Item recipes can force the mob to hold it."
+        );
 
         provider.add("gui.anvilcraft.category.anvil_collision", "Anvil Collision");
         provider.add("gui.anvilcraft.category.anvil_collision.maxcount", "Max Count: %s");

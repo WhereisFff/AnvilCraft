@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
-import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import java.util.function.Consumer;
 
 public class AnvilCollisionCraftRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         AnvilCollisionCraftRecipe.builder()
             .anvil(ModBlockTags.ANVIL_TIER_0)
             .hitBlock(ModBlocks.NEGATIVE_MATTER_BLOCK.get())

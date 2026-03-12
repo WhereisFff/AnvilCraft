@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.tags;
 
-import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumTagsProvider;
 import dev.dubhe.anvilcraft.init.block.ModFluidTags;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -21,7 +21,7 @@ public class FluidTagLoader {
      *
      * @param provider 提供器
      */
-    public static void init(RegistrateTagsProvider<Fluid> provider) {
+    public static void init(RegistrumTagsProvider<Fluid> provider) {
         provider.addTag(ModFluidTags.MENGER_SPONGE_CAN_ABSORB)
             .add(findResourceKey(Fluids.WATER))
             .add(findResourceKey(Fluids.FLOWING_WATER))

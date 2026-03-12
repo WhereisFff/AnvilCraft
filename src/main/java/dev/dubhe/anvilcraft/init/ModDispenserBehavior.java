@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.init;
 
-import com.tterrag.registrate.util.entry.ItemEntry;
+import dev.anvilcraft.lib.v2.registrum.util.entry.ItemEntry;
 import dev.dubhe.anvilcraft.block.item.HasMobBlockItem;
 import dev.dubhe.anvilcraft.block.item.ResinBlockItem;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;

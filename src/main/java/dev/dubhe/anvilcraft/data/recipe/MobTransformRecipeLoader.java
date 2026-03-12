@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.recipe.transform.MobTransformRecipe;
 import dev.dubhe.anvilcraft.recipe.transform.NumericTagValuePredicate;
 import dev.dubhe.anvilcraft.recipe.transform.TagModification;
@@ -9,7 +9,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.EntityType;
 
 public class MobTransformRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         MobTransformRecipe.from(EntityType.COW).to(EntityType.RAVAGER).save(provider);
         MobTransformRecipe.from(EntityType.PIG).to(EntityType.HOGLIN).save(provider);
         MobTransformRecipe.from(EntityType.GUARDIAN).to(EntityType.ELDER_GUARDIAN).save(provider);

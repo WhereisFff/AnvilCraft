@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
-import dev.anvilcraft.lib.recipe.data.advancement.predicate.item.NotPredicate;
-import dev.anvilcraft.lib.recipe.init.LibItemSubPredicates;
-import dev.anvilcraft.lib.recipe.outcome.ProduceExplosion;
-import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
+import dev.anvilcraft.lib.v2.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.v2.recipe.data.advancement.predicate.item.NotPredicate;
+import dev.anvilcraft.lib.v2.recipe.init.LibItemSubPredicates;
+import dev.anvilcraft.lib.v2.recipe.outcome.ProduceExplosion;
+import dev.anvilcraft.lib.v2.recipe.outcome.SpawnItem;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
@@ -25,7 +25,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.Vec3;
 
 public class ItemCompressRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         ItemCompressRecipe.builder()
             .requires(Items.BONE, 3)
             .result(new ItemStack(Items.BONE_BLOCK))

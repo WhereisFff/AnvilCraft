@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCompressRecipe;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class BlockCompressRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         blockCompress(provider, Blocks.STONE, Blocks.STONE, Blocks.DEEPSLATE);
         blockCompress(provider, Blocks.ICE, Blocks.ICE, Blocks.PACKED_ICE);
         blockCompress(provider, Blocks.PACKED_ICE, Blocks.PACKED_ICE, Blocks.BLUE_ICE);
@@ -35,12 +35,12 @@ public class BlockCompressRecipeLoader {
         );
     }
 
-    private static void blockCompress(RegistrateRecipeProvider provider, Block block1, Block block2, Block result) {
+    private static void blockCompress(RegistrumRecipeProvider provider, Block block1, Block block2, Block result) {
         BlockCompressRecipe.builder().input(block1).input(block2).result(result).save(provider);
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void blockCompress(RegistrateRecipeProvider provider, TagKey<Block> tag1, Block block2, Block result) {
+    private static void blockCompress(RegistrumRecipeProvider provider, TagKey<Block> tag1, Block block2, Block result) {
         BlockCompressRecipe.builder().input(tag1).input(block2).result(result).save(provider);
     }
 }

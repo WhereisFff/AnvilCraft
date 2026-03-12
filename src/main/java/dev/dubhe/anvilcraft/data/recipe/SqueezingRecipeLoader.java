@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.SqueezingRecipe;
@@ -10,7 +10,7 @@ import net.minecraft.world.level.block.Blocks;
 import static dev.dubhe.anvilcraft.data.recipe.util.RecipeLoaderUtil.getName;
 
 public class SqueezingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         squeezing(provider, Blocks.WET_SPONGE, Blocks.SPONGE, Blocks.WATER_CAULDRON, 333);
         squeezing(provider, Blocks.MOSS_BLOCK, Blocks.MOSS_CARPET, Blocks.WATER_CAULDRON, 333);
         squeezing(provider, Blocks.MAGMA_BLOCK, Blocks.NETHERRACK, ModBlocks.LAVA_CAULDRON.get(), 250);
@@ -35,7 +35,7 @@ public class SqueezingRecipeLoader {
             .save(provider, AnvilCraft.of("squeezing/exp_fluid_from_sculk_use_frost_anvil"));
     }
 
-    public static void squeezing(RegistrateRecipeProvider provider, Block requires, Block result, Block cauldron, int produce) {
+    public static void squeezing(RegistrumRecipeProvider provider, Block requires, Block result, Block cauldron, int produce) {
         SqueezingRecipe.builder()
             .requires(requires)
             .result(result)

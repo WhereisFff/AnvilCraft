@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.api.recipe.data.MultiphaseData;
 import dev.dubhe.anvilcraft.api.recipe.data.NormalDataComponent;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
@@ -12,13 +12,13 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 
 public class MultipleToOneSmithingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         MultipleToOneSmithingRecipeLoader.two(provider);
         MultipleToOneSmithingRecipeLoader.four(provider);
         MultipleToOneSmithingRecipeLoader.eight(provider);
     }
 
-    public static void two(RegistrateRecipeProvider provider) {
+    public static void two(RegistrumRecipeProvider provider) {
         TwoToOneSmithingRecipe.builder()
             .material(ModItems.MULTIPHASE_TRANSCENDIUM)
             .input(ModItems.EMBER_METAL_HEAVY_HALBERD)
@@ -33,7 +33,7 @@ public class MultipleToOneSmithingRecipeLoader {
             .save(provider);
     }
 
-    public static void four(RegistrateRecipeProvider provider) {
+    public static void four(RegistrumRecipeProvider provider) {
         FourToOneSmithingRecipe.builder()
             .material(ModItems.HEAVY_HALBERD_CORE)
             .input(ModItems.FROST_METAL_SWORD)
@@ -84,7 +84,7 @@ public class MultipleToOneSmithingRecipeLoader {
             .save(provider);
     }
 
-    public static void eight(RegistrateRecipeProvider provider) {
+    public static void eight(RegistrumRecipeProvider provider) {
         EightToOneSmithingRecipe.builder()
             .material(ModItems.MULTIPHASE_MATTER)
             .input(Items.SHEARS)

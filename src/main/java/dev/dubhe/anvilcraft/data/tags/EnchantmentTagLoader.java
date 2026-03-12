@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.tags;
 
-import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumTagsProvider;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantmentTags;
 import dev.dubhe.anvilcraft.init.enchantment.ModEnchantments;
 import net.minecraft.tags.EnchantmentTags;
@@ -15,7 +15,7 @@ public class EnchantmentTagLoader {
      *
      * @param provider 提供器
      */
-    public static void init(RegistrateTagsProvider<Enchantment> provider) {
+    public static void init(RegistrumTagsProvider<Enchantment> provider) {
         provider.addTag(ModEnchantmentTags.MERCILESS_PASSED)
             .addTag(EnchantmentTags.CURSE)
             .add(Enchantments.LOYALTY)

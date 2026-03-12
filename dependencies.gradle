@@ -1,12 +1,9 @@
 dependencies {
-    // Registrate
-    api(libs.registrate)
-    jarJar(libs.registrate)
-
     // AnvilLib
     runtimeOnly(libs.anvillib)
     compileOnly(libs.anvillibConfig)
     compileOnly(libs.anvillibRecipe)
+    compileOnly(libs.anvillibRegistrum)
     interfaceInjectionData(libs.anvillibRecipe)
     compileOnly(libs.anvillibMoveableEntityBlock)
     interfaceInjectionData(libs.anvillibMoveableEntityBlock)
