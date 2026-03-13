@@ -30,9 +30,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
 
-import javax.annotation.Nullable;
 import java.net.URI;
 import java.util.List;
+import javax.annotation.Nullable;
 
 public class IntegrationScreen extends Screen {
     public static final Component TITLE = Component.translatable(

@@ -39,7 +39,6 @@ public class CauldronOutletEntity extends Entity {
         EntityDataSerializers.BLOCK_STATE
     );
 
-
     // 标记是否处于活塞推动状态
     private boolean wasMoving = false;
     // 目标位置

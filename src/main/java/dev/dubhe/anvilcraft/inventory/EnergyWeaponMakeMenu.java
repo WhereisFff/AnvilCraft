@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.inventory;
 
-import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.v2.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;

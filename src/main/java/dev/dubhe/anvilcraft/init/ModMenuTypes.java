@@ -159,7 +159,7 @@ public class ModMenuTypes {
             (type, id, inv) -> new FrostSmithingMenu(type, id, inv),
             () -> FrostSmithingScreen::new)
         .register();
-    public static final MenuEntry<EnergyWeaponMakeMenu> ENERGY_WEAPON_MAKE = REGISTRATE
+    public static final MenuEntry<EnergyWeaponMakeMenu> ENERGY_WEAPON_MAKE = REGISTRUM
         .menu("energy_weapon_make", EnergyWeaponMakeMenu::new, () -> EnergyWeaponMakeScreen::new).register();
 
     public static void register() {
