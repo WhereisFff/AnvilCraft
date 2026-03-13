@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data;
 
+import dev.anvilcraft.lib.v2.integration.IntegrationHook;
 import dev.anvilcraft.lib.v2.registrum.providers.ProviderType;
 import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
-import dev.anvilcraft.lib.v2.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.data.advancement.AdvancementHandler;
 import dev.dubhe.anvilcraft.data.lang.LangHandler;

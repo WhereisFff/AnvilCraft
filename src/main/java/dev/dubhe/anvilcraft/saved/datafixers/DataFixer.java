@@ -7,7 +7,7 @@ import net.minecraft.nbt.CompoundTag;
  * 数据格式修复器
  *
  * @apiNote 若类名内需要包含版本号，建议命名为其数据格式的版本。<br>
- * 如某个修复器可以修复从上个版本升级到v2.4版本的数据，则可命名为 {@code V2_4}
+ *     如某个修复器可以修复从上个版本升级到v2.4版本的数据，则可命名为 {@code V2_4}
  */
 public abstract class DataFixer {
     /**
@@ -26,7 +26,7 @@ public abstract class DataFixer {
      * @return 修复后的数据
      * @implNote 建议修复整体数据结构。
      * @verNote 建议将格式版本范围限定到“进行了单次数据格式的修改”。<br>
-     * 如v2版本后，v2.1和v2.2都修改了数据格式，那么应有两个修复器分别负责v2->v2.1和v2.1->v2.2
+     *     如v2版本后，v2.1和v2.2都修改了数据格式，那么应有两个修复器分别负责v2->v2.1和v2.1->v2.2
      */
     public abstract CompoundTag fixData(CompoundTag nbt, HolderLookup.Provider registries);
 }

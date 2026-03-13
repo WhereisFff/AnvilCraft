@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 import dev.anvilcraft.lib.v2.config.ConfigData;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
 import dev.dubhe.anvilcraft.config.AnvilCraftServerConfig;
 

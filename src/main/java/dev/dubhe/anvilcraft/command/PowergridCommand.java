@@ -36,7 +36,8 @@ public class PowergridCommand {
                     returnValue.set(1);
                     if (p.getGrid() != null) {
                         MutableComponent message = Component.translatable(
-                                "command.anvilcraft.powergrid.info.total_generate", p.getGrid().getGenerate()).withStyle(ChatFormatting.GREEN)
+                                "command.anvilcraft.powergrid.info.total_generate", p.getGrid().getGenerate()
+                            ).withStyle(ChatFormatting.GREEN)
                             .append(Component.literal("\n"))
                             .append(Component.translatable(
                                     "command.anvilcraft.powergrid.info.total_consume", p.getGrid().getConsume())
@@ -56,9 +57,12 @@ public class PowergridCommand {
                             .forEach(message::append);
                         ctx.getSource().sendSuccess(() -> message, true);
                     }
-                }, () -> ctx.getSource().sendFailure(Component.translatable(
-                    "command.anvilcraft.powergrid.info.not_found", pos.getX(), pos.getY(), pos.getZ()
-                ))
+                },
+                () -> ctx.getSource().sendFailure(
+                    Component.translatable(
+                        "command.anvilcraft.powergrid.info.not_found", pos.getX(), pos.getY(), pos.getZ()
+                    )
+                )
             );
         return returnValue.get();
     }

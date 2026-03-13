@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
 import dev.anvilcraft.lib.v2.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
