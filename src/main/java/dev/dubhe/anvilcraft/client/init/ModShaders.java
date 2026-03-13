@@ -33,6 +33,8 @@ public class ModShaders {
     @Getter
     static ShaderInstance blitShader;
     @Getter
+    static ShaderInstance renderTypeLightningShader;
+    @Getter
     static Matrix4f orthoMatrix = new Matrix4f();
 
     public static void register(RegisterShadersEvent event) {
@@ -75,6 +77,14 @@ public class ModShaders {
                     DefaultVertexFormat.POSITION
                 ),
                 it -> blitShader = it
+            );
+            event.registerShader(
+                new ShaderInstance(
+                    event.getResourceProvider(),
+                    AnvilCraft.of("rendertype_lightning"),
+                    DefaultVertexFormat.BLOCK
+                ),
+                it -> renderTypeLightningShader = it
             );
         } catch (Exception e) {
             AnvilCraft.LOGGER.error("Shader loading has failed.", e);

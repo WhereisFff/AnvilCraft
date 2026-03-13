@@ -69,6 +69,7 @@ import dev.dubhe.anvilcraft.client.renderer.blockentity.HeliostatsRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.LargeFluidTankBlockEntityRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.LaserBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.PlasmaJetsRenderer;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.TeslaTowerRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.VoidEnergyCollectorRenderer;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRUM;
@@ -204,7 +205,7 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<TeslaTowerBlockEntity> TESLA_TOWER = REGISTRUM.blockEntity(
         "tesla_tower",
         TeslaTowerBlockEntity::createBlockEntity
-    ).validBlocks(ModBlocks.TESLA_TOWER).register();
+    ).validBlocks(ModBlocks.TESLA_TOWER).renderer(() -> TeslaTowerRenderer::new).register();
 
     public static final BlockEntityEntry<SpaceOvercompressorBlockEntity> SPACE_OVERCOMPRESSOR = REGISTRUM.blockEntity(
         "space_overcompressor",

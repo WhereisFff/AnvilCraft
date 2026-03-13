@@ -28,25 +28,27 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.LightningRodBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
+import javax.annotation.Nullable;
 
 @Slf4j
 public class TeslaTowerBlockEntity extends BlockEntity
@@ -55,7 +57,12 @@ public class TeslaTowerBlockEntity extends BlockEntity
     private int tickCount = 0;
     @Setter
     @Getter
-    private PowerGrid grid;
+    private @Nullable PowerGrid grid;
+    private @Nullable LivingEntity targetEntity;
+    @Getter
+    private @Nullable UUID targetEntityUUID;
+    @Getter
+    private @Nullable BlockPos targetLightingRot;
 
     public TeslaTowerBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntities.TESLA_TOWER.get(), pos, blockState);
@@ -79,12 +86,12 @@ public class TeslaTowerBlockEntity extends BlockEntity
 
     @Override
     public int getInputPower() {
-        if (level == null) return 0;
-        return level.getBlockState(getBlockPos()).getValue(TeslaTowerBlock.HALF) == Vertical4PartHalf.BOTTOM ? 128 : 0;
+        if (this.level == null) return 0;
+        return this.level.getBlockState(getBlockPos()).getValue(TeslaTowerBlock.HALF) == Vertical4PartHalf.BOTTOM ? 128 : 0;
     }
 
     @Override
-    public Level getCurrentLevel() {
+    public @Nullable Level getCurrentLevel() {
         return this.level;
     }
 
@@ -95,8 +102,22 @@ public class TeslaTowerBlockEntity extends BlockEntity
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider provider) {
+        super.saveAdditional(tag, provider);
+        if (this.targetEntityUUID != null) {
+            tag.putUUID("TargetEntityUUID", this.targetEntityUUID);
+        }
+        if (this.targetLightingRot != null) {
+            tag.putIntArray(
+                "TargetLightingRot",
+                new int[]{
+                    this.targetLightingRot.getX(),
+                    this.targetLightingRot.getY(),
+                    this.targetLightingRot.getZ()
+                }
+            );
+        }
         int index = 0;
-        for (Pair<TeslaFilter, String> entry : whiteList) {
+        for (Pair<TeslaFilter, String> entry : this.whiteList) {
             tag.putString(entry.first().getId() + "_-_" + index, entry.second());
             index++;
         }
@@ -104,17 +125,39 @@ public class TeslaTowerBlockEntity extends BlockEntity
 
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider provider) {
-        whiteList.clear();
+        super.loadAdditional(tag, provider);
+        if (tag.contains("TargetEntityUUID")) {
+            this.targetEntityUUID = tag.getUUID("TargetEntityUUID");
+        } else {
+            this.targetEntityUUID = null;
+        }
+        if (tag.contains("TargetLightingRot")) {
+            int[] arr = tag.getIntArray("TargetLightingRot");
+            this.targetLightingRot = new BlockPos(arr[0], arr[1], arr[2]);
+        } else {
+            this.targetLightingRot = null;
+        }
+        this.whiteList.clear();
         for (String key : tag.getAllKeys()) {
             if (key.split("_-_").length != 2) continue;
             String id = key.split("_-_")[0];
-            whiteList.add(Pair.of(TeslaFilter.getFilter(id), tag.getString(key)));
+            this.whiteList.add(Pair.of(TeslaFilter.getFilter(id), tag.getString(key)));
         }
     }
 
+    @Override
+    public CompoundTag getUpdateTag(HolderLookup.Provider registries) {
+        return this.saveWithoutMetadata(registries);
+    }
+
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
     public void tick() {
-        if (level == null) return;
-        BlockState state = level.getBlockState(getBlockPos());
+        if (this.level == null) return;
+        BlockState state = this.level.getBlockState(getBlockPos());
         if (!state.is(ModBlocks.TESLA_TOWER.get())) return;
         if (state.getValue(TeslaTowerBlock.HALF) != Vertical4PartHalf.BOTTOM) return;
         if (state.getValue(TeslaTowerBlock.SWITCH) == Switch.OFF && this.getGrid() != null) {
@@ -122,79 +165,91 @@ public class TeslaTowerBlockEntity extends BlockEntity
         } else if (state.getValue(TeslaTowerBlock.SWITCH) == Switch.ON && this.getGrid() == null) {
             PowerGrid.addComponent(this);
         }
-        this.flushState(level, getBlockPos());
-        this.flushState(level, getBlockPos().above(1));
-        this.flushState(level, getBlockPos().above(2));
-        this.flushState(level, getBlockPos().above(3));
-        if (level.isClientSide) return;
+        this.flushState(this.level, getBlockPos());
+        this.flushState(this.level, getBlockPos().above(1));
+        this.flushState(this.level, getBlockPos().above(2));
+        this.flushState(this.level, getBlockPos().above(3));
+        if (this.level.isClientSide()) return;
         if (state.getValue(TeslaTowerBlock.OVERLOAD) || state.getValue(TeslaTowerBlock.SWITCH) == Switch.OFF) return;
-        if (tickCount > 0) {
-            tickCount--;
+        if (this.tickCount > 0) {
+            this.tickCount--;
             return;
         }
-        tickCount = 80;
-        tickCount--;
-        BlockPos pos = getBlockPos().above(3);
-        BlockPos pos1 = pos.below(8).west(8).north(8);
-        BlockPos pos2 = pos.above(8).east(8).south(8);
-        AABB aabb = new AABB(pos1.getX(), pos1.getY(), pos1.getZ(), pos2.getX() + 1, pos2.getY() + 1, pos2.getZ() + 1);
-        Optional<LivingEntity> target = level.getEntitiesOfClass(LivingEntity.class, aabb)
+        this.tickCount = 80;
+        this.tickCount--;
+        AABB aabb = new AABB(this.getBlockPos().above(3)).expandTowards(8, 8, 8).expandTowards(-8, -8, -8);
+        if (this.targetEntity != null) {
+            if (!targetEntity.isAlive()) {
+                this.targetEntity = null;
+                this.targetEntityUUID = null;
+                this.level.sendBlockUpdated(this.getBlockPos(), state, state, 2);
+            } else {
+                AABB boundingBox = this.targetEntity.getBoundingBox();
+                if (!aabb.intersects(boundingBox)) {
+                    this.targetEntity = null;
+                    this.targetEntityUUID = null;
+                    this.level.sendBlockUpdated(this.getBlockPos(), state, state, 2);
+                }
+            }
+        }
+        Optional<LivingEntity> target = this.level.getEntitiesOfClass(LivingEntity.class, aabb)
             .stream()
-            .filter(it -> whiteList.stream().noneMatch(it2 -> it2.left().match(it, it2.right())))
+            .filter(it -> this.whiteList.stream().noneMatch(it2 -> it2.left().match(it, it2.right())))
             .min((e1, e2) -> new DistanceComparator(getBlockPos().getCenter()).compare(e1.position(), e2.position()));
-        Vec3 targetPos;
         if (target.isPresent()) {
-            targetPos = target.get().position();
+            this.targetEntity = target.get();
+            this.targetEntityUUID = target.get().getUUID();
+            this.level.sendBlockUpdated(this.getBlockPos(), state, state, 2);
+            this.targetEntity.hurt(this.level.damageSources().lightningBolt(), 5.0F);
         } else {
             ArrayList<BlockPos> lightingRods = new ArrayList<>();
             BlockPos.betweenClosedStream(aabb)
                 .forEach(it -> {
-                    if (level.getBlockState(it).is(Blocks.LIGHTNING_ROD)) lightingRods.add(it.above(0));
+                    if (this.level.getBlockState(it).is(Blocks.LIGHTNING_ROD)) lightingRods.add(it.above(0));
                 });
             Optional<BlockPos> targetBlock = lightingRods.stream()
                 .min((b1, b2) -> new DistanceComparator(getBlockPos().getCenter()).compare(b1.getCenter(), b2.getCenter()));
-            if (targetBlock.isPresent()) targetPos = targetBlock.get().getCenter();
-            else return;
+            targetBlock.ifPresent(blockPos -> {
+                this.targetLightingRot = blockPos;
+                this.level.sendBlockUpdated(this.getBlockPos(), state, state, 2);
+                ((LightningRodBlock) Blocks.LIGHTNING_ROD).onLightningStrike(this.level.getBlockState(blockPos), this.level, blockPos);
+            });
         }
-        LightningBolt lightningBolt = new LightningBolt(EntityType.LIGHTNING_BOLT, level);
-        lightningBolt.setDamage(10f);
-        lightningBolt.setPos(targetPos);
-        level.addFreshEntity(lightningBolt);
     }
 
     public void initWhiteList(Player player) {
-        whiteList.add(Pair.of(new IsPlayerIdFilter(), player.getName().getString()));
-        whiteList.add(Pair.of(new IsPetFilter(), ""));
-        whiteList.add(Pair.of(new HasCustomNameFilter(), ""));
-        whiteList.add(Pair.of(new IsEntityIdFilter(), Component.translatable("entity.minecraft.villager").getString()));
-        whiteList.add(Pair.of(new IsEntityIdFilter(), Component.translatable("entity.minecraft.wandering_trader").getString()));
-        whiteList.add(Pair.of(new IsFriendlyFilter(), ""));
-        whiteList.add(Pair.of(new IsOnVehicleFilter(), ""));
+        this.whiteList.add(Pair.of(new IsPlayerIdFilter(), player.getName().getString()));
+        this.whiteList.add(Pair.of(new IsPetFilter(), ""));
+        this.whiteList.add(Pair.of(new HasCustomNameFilter(), ""));
+        this.whiteList.add(Pair.of(new IsEntityIdFilter(), Component.translatable("entity.minecraft.villager").getString()));
+        this.whiteList.add(Pair.of(new IsEntityIdFilter(), Component.translatable("entity.minecraft.wandering_trader").getString()));
+        this.whiteList.add(Pair.of(new IsFriendlyFilter(), ""));
+        this.whiteList.add(Pair.of(new IsOnVehicleFilter(), ""));
     }
 
     public void addFilter(String id, String arg) {
-        if (level == null) return;
-        BlockState blockState = level.getBlockState(getBlockPos());
+        if (this.level == null) return;
+        BlockState blockState = this.level.getBlockState(getBlockPos());
         int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        if (this.level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             teslaTowerBlockEntity.whiteList.add(Pair.of(TeslaFilter.getFilter(id), arg));
         }
     }
 
     public void removeFilter(String id, String arg) {
-        if (level == null) return;
-        BlockState blockState = level.getBlockState(getBlockPos());
+        if (this.level == null) return;
+        BlockState blockState = this.level.getBlockState(getBlockPos());
         int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        if (this.level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             teslaTowerBlockEntity.whiteList.removeIf(pair -> pair.first().getId().equals(id) && pair.second().equals(arg));
         }
     }
 
     public void handleSync(List<Pair<TeslaFilter, String>> filters) {
-        if (level == null) return;
-        BlockState blockState = level.getBlockState(getBlockPos());
+        if (this.level == null) return;
+        BlockState blockState = this.level.getBlockState(getBlockPos());
         int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        if (this.level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             teslaTowerBlockEntity.whiteList.clear();
             teslaTowerBlockEntity.whiteList.addAll(filters);
         }
@@ -207,20 +262,20 @@ public class TeslaTowerBlockEntity extends BlockEntity
 
     @Override
     public @Nullable AbstractContainerMenu createMenu(int i, Inventory inventory, Player player) {
-        if (level == null || player.isSpectator()) return null;
-        BlockState blockState = level.getBlockState(getBlockPos());
+        if (this.level == null || player.isSpectator()) return null;
+        BlockState blockState = this.level.getBlockState(getBlockPos());
         int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        if (this.level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             return new TeslaTowerMenu(ModMenuTypes.TESLA_TOWER.get(), i, inventory, teslaTowerBlockEntity);
         }
         return null;
     }
 
     public List<Pair<TeslaFilter, String>> getWhiteList() {
-        if (level == null) return List.of();
-        BlockState blockState = level.getBlockState(getBlockPos());
+        if (this.level == null) return List.of();
+        BlockState blockState = this.level.getBlockState(getBlockPos());
         int offsetY = blockState.getValue(TeslaTowerBlock.HALF).getOffsetY();
-        if (level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
+        if (this.level.getBlockEntity(getBlockPos().above(-offsetY)) instanceof TeslaTowerBlockEntity teslaTowerBlockEntity) {
             return teslaTowerBlockEntity.whiteList;
         }
         return List.of();
