@@ -5,13 +5,18 @@ import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.recipe.VoidDecayRecipe;
-import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotDrawable;
+import mezz.jei.api.gui.ingredient.IRecipeSlotDrawablesView;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.placement.HorizontalAlignment;
+import mezz.jei.api.gui.placement.VerticalAlignment;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
+import mezz.jei.api.gui.widgets.IScrollGridWidget;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -33,14 +38,12 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
     public static final int WIDTH = 162;
     public static final int HEIGHT = 128;
     public static final int MAX_SHOWN_ROW = 7;
     public static final int MAX_SHOWN_COLUMN = 5;
-    public static final int MAX_SHOWN_COUNT = MAX_SHOWN_ROW * MAX_SHOWN_COLUMN;
 
     private final IDrawable slot;
     private final Component title;
@@ -110,22 +113,23 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
             .addItemStack(new ItemStack(recipe.catalyst.asItem(), recipe.catalystCount))
             .addRichTooltipCallback((recipeSlotView, tooltip) ->
                 tooltip.addAll(List.of(aroundTooltip, notConsumedTooltip)));
-        builder.addInvisibleIngredients(RecipeIngredientRole.OUTPUT)
-            .addIngredients(BlockTagUtil.toIngredient(recipe.result));
-        AtomicInteger slotId = new AtomicInteger(0);
         RegistryUtil.getRegistry(Registries.BLOCK)
             .getTag(recipe.result)
             .stream()
             .flatMap(HolderSet.ListBacked::stream)
             .map(h -> h.value().asItem().getDefaultInstance())
-            .limit(MAX_SHOWN_COUNT)
-            .forEach(stack -> {
-                int id = slotId.getAndAdd(1);
-                builder.addSlot(RecipeIngredientRole.RENDER_ONLY,
-                        (id % MAX_SHOWN_COLUMN) * 18 + 66,
-                        (id / MAX_SHOWN_COLUMN) * 18 + 4)
-                    .addItemStack(stack);
-            });
+            .forEach(stack -> builder.addOutputSlot().addItemStack(stack));
+    }
+
+    @Override
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, VoidDecayRecipe recipe, IFocusGroup focuses) {
+        IRecipeSlotDrawablesView recipeSlots = builder.getRecipeSlots();
+        List<IRecipeSlotDrawable> outputSlots = recipeSlots.getSlots(RecipeIngredientRole.OUTPUT);
+
+        IScrollGridWidget scrollGridWidget =
+            builder.addScrollGridWidget(outputSlots, MAX_SHOWN_COLUMN, MAX_SHOWN_ROW);
+        scrollGridWidget.setPosition(60, 4,
+            getWidth(), getHeight(), HorizontalAlignment.LEFT, VerticalAlignment.TOP);
     }
 
     @Override
@@ -148,14 +152,6 @@ public class VoidDecayCategory implements IRecipeCategory<VoidDecayRecipe> {
 
         slot.draw(guiGraphics, 7, 83);
         slot.draw(guiGraphics, 7, 101);
-        for (int i = 0; i < MAX_SHOWN_ROW; i++) {
-            for (int j = 0; j < MAX_SHOWN_COLUMN; j++) {
-                int x = 65 + j * 18;
-                int y = 3 + i * 18;
-                slot.draw(guiGraphics, x, y);
-            }
-        }
-
         arrowDefault.draw(guiGraphics, 35, 87);
     }
 
