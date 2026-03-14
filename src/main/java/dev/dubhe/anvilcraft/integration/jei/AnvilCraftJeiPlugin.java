@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei;
 
+import com.google.common.collect.ImmutableList;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.screen.BaseChuteScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.BatchCrafterScreen;
@@ -96,9 +97,20 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.ItemLike;
 
 @JeiPlugin
 public class AnvilCraftJeiPlugin implements IModPlugin {
+
+    public static final ImmutableList<ItemLike> ANVIL_PROCESSING_CATALYSTS = ImmutableList.of(
+        Items.ANVIL,
+        ModBlocks.ROYAL_ANVIL,
+        ModBlocks.EMBER_ANVIL,
+        ModBlocks.FROST_ANVIL,
+        ModBlocks.TRANSCENDENCE_ANVIL,
+        ModBlocks.SPECTRAL_ANVIL,
+        ModBlocks.GIANT_ANVIL
+    );
 
     public static final RecipeType<MeshRecipeGroup> MESH = createRecipeType("mesh", MeshRecipeGroup.class);
     public static final RecipeType<CementStainingRecipe> CEMENT_STAINING =
@@ -361,5 +373,10 @@ public class AnvilCraftJeiPlugin implements IModPlugin {
 
     public static <R extends Recipe<?>> RecipeType<RecipeHolder<R>> createRecipeHolderType(String name) {
         return RecipeType.createRecipeHolderType(AnvilCraft.of(name));
+    }
+
+    public static void addAnvilProcessingCatalysts(IRecipeCatalystRegistration registration, RecipeType<?> recipeType) {
+        ANVIL_PROCESSING_CATALYSTS.forEach(item ->
+            registration.addRecipeCatalyst(new ItemStack(item), recipeType));
     }
 }

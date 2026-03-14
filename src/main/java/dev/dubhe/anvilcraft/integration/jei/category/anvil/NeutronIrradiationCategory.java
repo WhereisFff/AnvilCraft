@@ -189,11 +189,7 @@ public class NeutronIrradiationCategory implements IRecipeCategory<RecipeHolder<
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(Items.ANVIL), AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROYAL_ANVIL), AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EMBER_ANVIL), AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GIANT_ANVIL), AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SPECTRAL_ANVIL), AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
+        AnvilCraftJeiPlugin.addAnvilProcessingCatalysts(registration, AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
         registration.addRecipeCatalyst(new ItemStack(Items.CAULDRON), AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
         registration.addRecipeCatalyst(new ItemStack(ModBlocks.NEUTRON_IRRADIATOR), AnvilCraftJeiPlugin.NEUTRON_IRRADIATION);
     }
