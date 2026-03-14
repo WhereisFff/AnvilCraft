@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.init;
 
-import com.tterrag.registrate.util.entry.MenuEntry;
+import dev.anvilcraft.lib.v2.registrum.util.entry.MenuEntry;
 import dev.dubhe.anvilcraft.client.gui.screen.ActiveSilencerScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.AdvancedComparatorScreen;
 import dev.dubhe.anvilcraft.client.gui.screen.BatchCrafterScreen;
@@ -53,113 +53,113 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.MenuProvider;
 
-import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRATE;
+import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRUM;
 
 @SuppressWarnings("DataFlowIssue")
 public class ModMenuTypes {
     @SuppressWarnings("DataFlowIssue")
-    public static final MenuEntry<BatchCrafterMenu> BATCH_CRAFTER = REGISTRATE
+    public static final MenuEntry<BatchCrafterMenu> BATCH_CRAFTER = REGISTRUM
         .menu("batch_crafter", BatchCrafterMenu::new, () -> BatchCrafterScreen::new)
         .register();
 
     @SuppressWarnings("DataFlowIssue")
     public static final MenuEntry<ChuteMenu> CHUTE =
-        REGISTRATE.menu("chute", ChuteMenu::new, () -> ChuteScreen::new).register();
+        REGISTRUM.menu("chute", ChuteMenu::new, () -> ChuteScreen::new).register();
 
     @SuppressWarnings("DataFlowIssue")
-    public static final MenuEntry<MagneticChuteMenu> MAGNETIC_CHUTE = REGISTRATE
+    public static final MenuEntry<MagneticChuteMenu> MAGNETIC_CHUTE = REGISTRUM
         .menu("magnetic_chute", MagneticChuteMenu::new, () -> MagneticChuteScreen::new)
         .register();
 
-    public static final MenuEntry<RoyalGrindstoneMenu> ROYAL_GRINDSTONE = REGISTRATE
+    public static final MenuEntry<RoyalGrindstoneMenu> ROYAL_GRINDSTONE = REGISTRUM
         .menu(
             "royal_grindstone",
             (type, id, inv) -> new RoyalGrindstoneMenu(type, id, inv),
             () -> RoyalGrindstoneScreen::new)
         .register();
-    public static final MenuEntry<RoyalAnvilMenu> ROYAL_ANVIL = REGISTRATE
+    public static final MenuEntry<RoyalAnvilMenu> ROYAL_ANVIL = REGISTRUM
         .menu("royal_anvil", (type, id, inv) -> new RoyalAnvilMenu(id, inv), () -> RoyalAnvilScreen::new)
         .register();
-    public static final MenuEntry<RoyalSmithingMenu> ROYAL_SMITHING = REGISTRATE
+    public static final MenuEntry<RoyalSmithingMenu> ROYAL_SMITHING = REGISTRUM
         .menu(
             "royal_smithing_table",
             (type, id, inv) -> new RoyalSmithingMenu(type, id, inv),
             () -> RoyalSmithingScreen::new)
         .register();
-    public static final MenuEntry<SliderMenu> SLIDER = REGISTRATE
+    public static final MenuEntry<SliderMenu> SLIDER = REGISTRUM
         .menu(
             "slider",
             (menuType, containerId, inventory) -> new SliderMenu(menuType, containerId),
             () -> SliderScreen::new)
         .register();
-    public static final MenuEntry<ItemCollectorMenu> ITEM_COLLECTOR = REGISTRATE
+    public static final MenuEntry<ItemCollectorMenu> ITEM_COLLECTOR = REGISTRUM
         .menu("item_collector", ItemCollectorMenu::new, () -> ItemCollectorScreen::new)
         .register();
-    public static final MenuEntry<ItemDetectorMenu> ITEM_DETECTOR = REGISTRATE
+    public static final MenuEntry<ItemDetectorMenu> ITEM_DETECTOR = REGISTRUM
         .menu("item_detector", ItemDetectorMenu::new, () -> ItemDetectorScreen::new)
         .register();
-    public static final MenuEntry<FilterMenu> FILTER = REGISTRATE
+    public static final MenuEntry<FilterMenu> FILTER = REGISTRUM
         .menu("filter", FilterMenu::new, () -> FilterScreen::new)
         .register();
 
-    public static final MenuEntry<ActiveSilencerMenu> ACTIVE_SILENCER = REGISTRATE
+    public static final MenuEntry<ActiveSilencerMenu> ACTIVE_SILENCER = REGISTRUM
         .menu("active_silencer", ActiveSilencerMenu::new, () -> ActiveSilencerScreen::new)
         .register();
-    public static final MenuEntry<EmberAnvilMenu> EMBER_ANVIL = REGISTRATE
+    public static final MenuEntry<EmberAnvilMenu> EMBER_ANVIL = REGISTRUM
         .menu("ember_anvil", (type, id, inv) -> new EmberAnvilMenu(id, inv), () -> EmberAnvilScreen::new)
         .register();
-    public static final MenuEntry<EmberGrindstoneMenu> EMBER_GRINDSTONE = REGISTRATE
+    public static final MenuEntry<EmberGrindstoneMenu> EMBER_GRINDSTONE = REGISTRUM
         .menu(
             "ember_grindstone",
             (type, id, inv) -> new EmberGrindstoneMenu(type, id, inv),
             () -> EmberGrindstoneScreen::new)
         .register();
-    public static final MenuEntry<EmberSmithingMenu> EMBER_SMITHING = REGISTRATE
+    public static final MenuEntry<EmberSmithingMenu> EMBER_SMITHING = REGISTRUM
         .menu(
             "ember_smithing_table",
             (type, id, inv) -> new EmberSmithingMenu(type, id, inv),
             () -> EmberSmithingScreen::new)
         .register();
-    public static final MenuEntry<StructureToolMenu> STRUCTURE_TOOL = REGISTRATE
+    public static final MenuEntry<StructureToolMenu> STRUCTURE_TOOL = REGISTRUM
         .menu("structure_tool", StructureToolMenu::new, () -> StructureToolScreen::new)
         .register();
 
-    public static final MenuEntry<JewelCraftingMenu> JEWEL_CRAFTING = REGISTRATE
+    public static final MenuEntry<JewelCraftingMenu> JEWEL_CRAFTING = REGISTRUM
         .menu("jewel_crafting", (type, id, inv) -> new JewelCraftingMenu(type, id, inv), () -> JewelCraftingScreen::new)
         .register();
 
-    public static final MenuEntry<TeslaTowerMenu> TESLA_TOWER = REGISTRATE
+    public static final MenuEntry<TeslaTowerMenu> TESLA_TOWER = REGISTRUM
         .menu("tesla_tower", TeslaTowerMenu::new, () -> TeslaTowerScreen::new)
         .register();
 
-    public static final MenuEntry<PulseGeneratorMenu> PULSE_GENERATOR = REGISTRATE
+    public static final MenuEntry<PulseGeneratorMenu> PULSE_GENERATOR = REGISTRUM
         .menu("pulse_generator", PulseGeneratorMenu::new, () -> PulseGeneratorScreen::new)
         .register();
 
-    public static final MenuEntry<AdvancedComparatorMenu> ADVANCED_COMPARATOR = REGISTRATE
+    public static final MenuEntry<AdvancedComparatorMenu> ADVANCED_COMPARATOR = REGISTRUM
         .menu("advanced_comparator", AdvancedComparatorMenu::new, () -> AdvancedComparatorScreen::new)
         .register();
 
-    public static final MenuEntry<TranscendenceAnvilMenu> TRANSCENDENCE_ANVIL = REGISTRATE
+    public static final MenuEntry<TranscendenceAnvilMenu> TRANSCENDENCE_ANVIL = REGISTRUM
         .menu("transcendence_anvil", (type, id, inv) -> new TranscendenceAnvilMenu(id, inv), () -> TranscendenceAnvilScreen::new)
         .register();
 
-    public static final MenuEntry<FrostAnvilMenu> FROST_ANVIL = REGISTRATE
+    public static final MenuEntry<FrostAnvilMenu> FROST_ANVIL = REGISTRUM
         .menu("frost_anvil", (type, id, inv) -> new FrostAnvilMenu(id, inv), () -> FrostAnvilScreen::new)
         .register();
-    public static final MenuEntry<FrostGrindstoneMenu> FROST_GRINDSTONE = REGISTRATE
+    public static final MenuEntry<FrostGrindstoneMenu> FROST_GRINDSTONE = REGISTRUM
         .menu(
             "frost_grindstone",
             (type, id, inv) -> new FrostGrindstoneMenu(type, id, inv),
             () -> FrostGrindstoneScreen::new)
         .register();
-    public static final MenuEntry<FrostSmithingMenu> FROST_SMITHING = REGISTRATE
+    public static final MenuEntry<FrostSmithingMenu> FROST_SMITHING = REGISTRUM
         .menu(
             "frost_smithing_table",
             (type, id, inv) -> new FrostSmithingMenu(type, id, inv),
             () -> FrostSmithingScreen::new)
         .register();
-    public static final MenuEntry<EnergyWeaponMakeMenu> ENERGY_WEAPON_MAKE = REGISTRATE
+    public static final MenuEntry<EnergyWeaponMakeMenu> ENERGY_WEAPON_MAKE = REGISTRUM
         .menu("energy_weapon_make", EnergyWeaponMakeMenu::new, () -> EnergyWeaponMakeScreen::new).register();
 
     public static void register() {

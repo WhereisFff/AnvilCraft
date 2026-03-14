@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;

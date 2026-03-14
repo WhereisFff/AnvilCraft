@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.recipe.init.reicpe.LibRecipeTriggers;
+import dev.anvilcraft.lib.v2.recipe.init.reicpe.LibRecipeTriggers;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 
 public class CoolingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         ExtendInWorldRecipeBuilder.compatible(LibRecipeTriggers.ITEM_INTO_BLOCK)
             .hasBlock(Blocks.WATER, Blocks.WATER_CAULDRON)
             .hasItemIngredient(ModItems.EMBER_METAL_UPGRADE_SMITHING_TEMPLATE)

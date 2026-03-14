@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
-import com.tterrag.registrate.providers.loot.RegistrateBlockLootTables;
+import dev.anvilcraft.lib.v2.registrum.providers.loot.RegistrumBlockLootTables;
 import dev.dubhe.anvilcraft.api.chargecollector.ChargeCollectorManager;
 import dev.dubhe.anvilcraft.block.state.FragmentationDegree;
 import net.minecraft.advancements.critereon.StatePropertiesPredicate;
@@ -33,7 +33,7 @@ public class SugarBlock extends Block {
         this.stateDefinition.any().setValue(FRAGMENTATION_DEGREE, FragmentationDegree.ZERO);
     }
 
-    public static void loot(RegistrateBlockLootTables tables, Block block) {
+    public static void loot(RegistrumBlockLootTables tables, Block block) {
         tables.add(block, LootTable.lootTable()
             .withPool(LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1.0f))

@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class CommandLang {
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         provider.add("command.anvilcraft.powergrid.info.total_generate", "Total power generate: %s");
         provider.add("command.anvilcraft.powergrid.info.total_consume", "Total power consume: %s");
         provider.add("command.anvilcraft.powergrid.info.components", "Components of power grid:");

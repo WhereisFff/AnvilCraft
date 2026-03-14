@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.recipe.anvil.builder;
 
-import dev.anvilcraft.lib.recipe.builder.InWorldRecipeBuilder;
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
-import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
-import dev.anvilcraft.lib.recipe.trigger.IRecipeTrigger;
+import dev.anvilcraft.lib.v2.recipe.builder.InWorldRecipeBuilder;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.outcome.SpawnItem;
+import dev.anvilcraft.lib.v2.recipe.trigger.IRecipeTrigger;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasAnvil;

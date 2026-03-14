@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class ToolPropertyLang {
     @SuppressWarnings("checkstyle:LineLength")
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         provider.add("tooltip.anvilcraft.property.fire_reforging", "Reforging: mending in fire or lava");
         provider.add("tooltip.anvilcraft.property.multiphase", "Multiphase: press [%1$s] to switch phases, hold [%1$s] to open phases wheel");
         provider.add("tooltip.anvilcraft.property.multiphase.id", "Multiphase Stored ID: %s");

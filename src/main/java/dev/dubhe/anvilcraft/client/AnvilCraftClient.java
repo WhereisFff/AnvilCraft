@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.client;
 
-import dev.anvilcraft.lib.integration.IntegrationHook;
+import dev.anvilcraft.lib.v2.integration.IntegrationHook;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.event.GuiLayerRegistrationEventListener;
 import dev.dubhe.anvilcraft.client.init.ModKeyMappings;

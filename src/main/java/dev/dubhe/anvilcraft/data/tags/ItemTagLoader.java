@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.tags;
 
-import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumTagsProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
@@ -19,7 +19,7 @@ public class ItemTagLoader {
      *
      * @param provider 提供器
      */
-    public static void init(RegistrateTagsProvider<Item> provider) {
+    public static void init(RegistrumTagsProvider<Item> provider) {
         provider.addTag(ModItemTags.PLATES)
             .add(findResourceKey(Items.HEAVY_WEIGHTED_PRESSURE_PLATE))
             .add(findResourceKey(Items.LIGHT_WEIGHTED_PRESSURE_PLATE));

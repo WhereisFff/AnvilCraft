@@ -2,10 +2,10 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
-import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
-import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
-import dev.anvilcraft.lib.recipe.component.ItemIngredientPredicate;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.v2.recipe.component.ItemIngredientPredicate;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import lombok.Getter;

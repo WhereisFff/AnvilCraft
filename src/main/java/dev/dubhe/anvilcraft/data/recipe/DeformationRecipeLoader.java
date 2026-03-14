@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
 import dev.dubhe.anvilcraft.recipe.frost.DeformationRecipe;
@@ -19,7 +19,7 @@ public class DeformationRecipeLoader {
         "boots"
     );
 
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         DeformationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
@@ -119,7 +119,7 @@ public class DeformationRecipeLoader {
     }
 
     private static void register(
-        RegistrateRecipeProvider provider,
+        RegistrumRecipeProvider provider,
         List<String> bases,
         ResourceLocation id,
         String suffix

@@ -33,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-
 public class JewelCraftingMenu extends AbstractContainerMenu {
     public static final int RESULT_SLOT = 0;
     public static final int SOURCE_SLOT = 1;

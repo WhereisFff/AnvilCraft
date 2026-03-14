@@ -26,9 +26,9 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemKilledByPlayerC
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceCondition;
 import net.minecraft.world.level.storage.loot.predicates.LootItemRandomChanceWithEnchantedBonusCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
+import javax.annotation.Nullable;
 
 public class BeheadingLootSubProvider implements LootTableSubProvider {
     private final HolderLookup.Provider provider;
