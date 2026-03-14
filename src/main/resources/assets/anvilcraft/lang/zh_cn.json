@@ -1079,10 +1079,10 @@
   "tooltip.anvilcraft.propel_piston.state": "推进活塞状态： ",
   "tooltip.anvilcraft.property.eternal": "永恒：无法破坏，免疫火焰、爆炸、仙人掌，甚至时间和虚空",
   "tooltip.anvilcraft.property.fire_reforging": "重铸：在火或熔岩中自动修复",
-  "tooltip.anvilcraft.property.merciless": "无情：禁用除特定魔咒外的所有魔咒 [按住 %s 查看] 并将其转换为攻击伤害和挖掘效率",
+  "tooltip.anvilcraft.property.merciless": "无情：禁用所有魔咒并将其转换为攻击伤害和挖掘效率",
   "tooltip.anvilcraft.property.merciless.curse": "所有诅咒",
   "tooltip.anvilcraft.property.merciless.shifting": "无情：禁用除特定魔咒外的所有魔咒（%s）并将其转换为攻击伤害和挖掘效率",
-  "tooltip.anvilcraft.property.multiphase": "多相：按 [%s] 切换附魔空间或切换“无情”的开关",
+  "tooltip.anvilcraft.property.multiphase": "多相：按 [%1$s] 切换魔咒相位，长按 [%1$s] 打开魔咒相位轮盘",
   "tooltip.anvilcraft.property.multiphase.name.0": "α",
   "tooltip.anvilcraft.property.multiphase.name.1": "β",
   "tooltip.anvilcraft.property.multiphase.name.2": "γ",
@@ -1385,5 +1385,9 @@
   "tooltip.anvilcraft.item.fish_tank": "比看起来坚固，可以代替炼药锅执行相关的铁砧合成。\n可以戴在头上获得临时水下呼吸效果。\n持物品右击顶部放入物品。\n持热带鱼桶右击下半鱼缸放入热带鱼。",
   "block.anvilcraft.shulker_container": "潜影集装箱",
   "block.anvilcraft.neoforge": "NeoForge砧",
-  "item.anvilcraft.processor": "处理器"
+  "item.anvilcraft.processor": "处理器",
+  "item.anvilcraft.anvil_railgun": "铁砧轨道炮",
+  "item.anvilcraft.energy_weapon_platform": "能量武器平台",
+  "tooltip.anvilcraft.item.energy_weapon_platform": "已存储320MJ，但只会继承至能量武器制作产物中",
+  "tooltip.anvilcraft.property.ferocious": "残暴：根据已有魔咒的等级提升攻击伤害和挖掘效率"
 }
