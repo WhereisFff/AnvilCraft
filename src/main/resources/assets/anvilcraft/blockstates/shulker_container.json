@@ -1,33 +1,41 @@
 {
   "variants": {
+    "half=bottom_w,opened=false": {
+      "model": "anvilcraft:block/shulker_container_edge",
+      "x": 180
+    },
     "half=bottom_wn,opened=false": {
-      "model": "anvilcraft:block/shulker_container_corner"
+      "model": "anvilcraft:block/shulker_container_corner",
+      "x": 90
     },
     "half=bottom_n,opened=false": {
-      "model": "anvilcraft:block/shulker_container_edge"
+      "model": "anvilcraft:block/shulker_container_edge",
+      "x": 180,
+      "y": 90
     },
     "half=bottom_en,opened=false": {
       "model": "anvilcraft:block/shulker_container_corner",
+      "x": 90,
       "y": 90
     },
     "half=bottom_e,opened=false": {
       "model": "anvilcraft:block/shulker_container_edge",
-      "y": 90
+      "x": 180,
+      "y": 180
     },
     "half=bottom_es,opened=false": {
       "model": "anvilcraft:block/shulker_container_corner",
+      "x": 90,
       "y": 180
     },
     "half=bottom_s,opened=false": {
       "model": "anvilcraft:block/shulker_container_edge",
-      "y": 180
+      "x": 180,
+      "y": 270
     },
     "half=bottom_ws,opened=false": {
       "model": "anvilcraft:block/shulker_container_corner",
-      "y": 270
-    },
-    "half=bottom_w,opened=false": {
-      "model": "anvilcraft:block/shulker_container_edge",
+      "x": 90,
       "y": 270
     },
     "half=bottom_center,opened=false": {
@@ -43,6 +51,7 @@
     },
     "half=mid_en,opened=false": {
       "model": "anvilcraft:block/shulker_container_edge",
+      "x": 90,
       "y": 90
     },
     "half=mid_e,opened=false": {
@@ -51,6 +60,7 @@
     },
     "half=mid_es,opened=false": {
       "model": "anvilcraft:block/shulker_container_edge",
+      "x": 90,
       "y": 180
     },
     "half=mid_s,opened=false": {
@@ -59,6 +69,7 @@
     },
     "half=mid_ws,opened=false": {
       "model": "anvilcraft:block/shulker_container_edge",
+      "x": 90,
       "y": 270
     },
     "half=mid_w,opened=false": {
@@ -68,11 +79,15 @@
     "half=mid_center,opened=false": {
       "model": "anvilcraft:block/shulker_container_center"
     },
+    "half=top_w,opened=false": {
+      "model": "anvilcraft:block/shulker_container_edge"
+    },
     "half=top_wn,opened=false": {
       "model": "anvilcraft:block/shulker_container_corner"
     },
     "half=top_n,opened=false": {
-      "model": "anvilcraft:block/shulker_container_edge"
+      "model": "anvilcraft:block/shulker_container_edge",
+      "y": 90
     },
     "half=top_en,opened=false": {
       "model": "anvilcraft:block/shulker_container_corner",
@@ -80,57 +95,60 @@
     },
     "half=top_e,opened=false": {
       "model": "anvilcraft:block/shulker_container_edge",
-      "x": 180,
-      "y": 270
+      "y": 180
     },
     "half=top_es,opened=false": {
       "model": "anvilcraft:block/shulker_container_corner",
-      "x": 180,
-      "y": 270
+      "y": 180
     },
     "half=top_s,opened=false": {
       "model": "anvilcraft:block/shulker_container_edge",
-      "x": 180
+      "y": 270
     },
     "half=top_ws,opened=false": {
       "model": "anvilcraft:block/shulker_container_corner",
-      "x": 180
-    },
-    "half=top_w,opened=false": {
-      "model": "anvilcraft:block/shulker_container_edge"
+      "y": 270
     },
     "half=top_center,opened=false": {
       "model": "anvilcraft:block/shulker_container_side",
       "x": 270
     },
+    "half=bottom_w,opened=true": {
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 180
+    },
     "half=bottom_wn,opened=true": {
-      "model": "anvilcraft:block/shulker_container_open_corner"
+      "model": "anvilcraft:block/shulker_container_open_corner",
+      "x": 90
     },
     "half=bottom_n,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal"
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 180,
+      "y": 90
     },
     "half=bottom_en,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_corner",
+      "x": 90,
       "y": 90
     },
     "half=bottom_e,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal",
-      "y": 90
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 180,
+      "y": 180
     },
     "half=bottom_es,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_corner",
+      "x": 90,
       "y": 180
     },
     "half=bottom_s,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal",
-      "y": 180
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 180,
+      "y": 270
     },
     "half=bottom_ws,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_corner",
-      "y": 270
-    },
-    "half=bottom_w,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal",
+      "x": 90,
       "y": 270
     },
     "half=bottom_center,opened=true": {
@@ -138,13 +156,15 @@
       "x": 90
     },
     "half=mid_wn,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_vertical"
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 90
     },
     "half=mid_n,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_side"
     },
     "half=mid_en,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_vertical",
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 90,
       "y": 90
     },
     "half=mid_e,opened=true": {
@@ -152,7 +172,8 @@
       "y": 90
     },
     "half=mid_es,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_vertical",
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 90,
       "y": 180
     },
     "half=mid_s,opened=true": {
@@ -160,7 +181,8 @@
       "y": 180
     },
     "half=mid_ws,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_vertical",
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "x": 90,
       "y": 270
     },
     "half=mid_w,opened=true": {
@@ -170,41 +192,35 @@
     "half=mid_center,opened=true": {
       "model": "anvilcraft:block/shulker_container_center"
     },
+    "half=top_w,opened=true": {
+      "model": "anvilcraft:block/shulker_container_open_edge"
+    },
     "half=top_wn,opened=true": {
-      "model": "anvilcraft:block/shulker_container_open_corner",
-      "x": 270
+      "model": "anvilcraft:block/shulker_container_open_corner"
     },
     "half=top_n,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal",
-      "x": 270
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "y": 90
     },
     "half=top_en,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_corner",
-      "x": 180,
-      "y": 180
+      "y": 90
     },
     "half=top_e,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal",
-      "x": 180,
-      "y": 270
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "y": 180
     },
     "half=top_es,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_corner",
-      "x": 180,
-      "y": 270
+      "y": 180
     },
     "half=top_s,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal",
-      "x": 180
+      "model": "anvilcraft:block/shulker_container_open_edge",
+      "y": 270
     },
     "half=top_ws,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_corner",
-      "x": 180
-    },
-    "half=top_w,opened=true": {
-      "model": "anvilcraft:block/shulker_container_edge_horizontal",
-      "x": 180,
-      "y": 90
+      "y": 270
     },
     "half=top_center,opened=true": {
       "model": "anvilcraft:block/shulker_container_open_side",
