@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockSmearRecipe;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class BlockSmearRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         blockSmear(provider, Blocks.MOSS_BLOCK, Blocks.COBBLESTONE, Blocks.MOSSY_COBBLESTONE);
         blockSmear(provider, Blocks.MOSS_BLOCK, Blocks.STONE_BRICKS, Blocks.MOSSY_STONE_BRICKS);
         blockSmear(provider, Blocks.MOSS_BLOCK, Blocks.DIRT, Blocks.GRASS_BLOCK);
@@ -20,7 +20,7 @@ public class BlockSmearRecipeLoader {
         }
     }
 
-    private static void blockSmear(RegistrateRecipeProvider provider, Block block1, Block block2, Block result) {
+    private static void blockSmear(RegistrumRecipeProvider provider, Block block1, Block block2, Block result) {
         BlockSmearRecipe.builder().input(block1).input(block2).result(result).save(provider);
     }
 }

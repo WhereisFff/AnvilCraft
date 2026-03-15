@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.util.registrater;
 
-import com.tterrag.registrate.providers.DataGenContext;
-import com.tterrag.registrate.providers.RegistrateBlockstateProvider;
-import com.tterrag.registrate.providers.RegistrateItemModelProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.DataGenContext;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumBlockstateProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumItemModelProvider;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +17,7 @@ public class ModelProviderUtil {
     /**
      * 用于流体的BlockState生成器
      */
-    public static void liquid(DataGenContext<Block, LiquidBlock> ctx, RegistrateBlockstateProvider provider) {
+    public static void liquid(DataGenContext<Block, ? extends LiquidBlock> ctx, RegistrumBlockstateProvider provider) {
         provider.simpleBlock(
             ctx.get(),
             provider.models().getBuilder(ctx.getName()).texture("particle", provider.modLoc("block/" + ctx.getName()))
@@ -27,7 +27,7 @@ public class ModelProviderUtil {
     /**
      * 用于流体的ItemModel生成器
      */
-    public static void bucket(DataGenContext<Item, ? extends BucketItem> ctx, RegistrateItemModelProvider provider) {
+    public static void bucket(DataGenContext<Item, ? extends BucketItem> ctx, RegistrumItemModelProvider provider) {
         provider.withExistingParent(
             ctx.getName(),
             ResourceLocation.parse("neoforge:item/bucket_drip")

@@ -54,6 +54,7 @@ public class ModItemTags {
     public static final TagKey<Item> STORAGE_BLOCKS_TOPAZ = bindC("storage_blocks/topaz");
     public static final TagKey<Item> STORAGE_BLOCKS_SAPPHIRE = bindC("storage_blocks/sapphire");
     public static final TagKey<Item> STORAGE_BLOCKS_RUBY = bindC("storage_blocks/ruby");
+    public static final TagKey<Item> STORAGE_BLOCKS_EXP_GEM = bindC("storage_blocks/exp_gem");
     public static final TagKey<Item> STORAGE_BLOCKS_AMBER = bindC("storage_blocks/amber");
     public static final TagKey<Item> STORAGE_BLOCKS_RESIN = bindC("storage_blocks/resin");
     public static final TagKey<Item> STORAGE_BLOCKS_TRANSCENDIUM = bindC("storage_blocks/transcendium");
@@ -124,6 +125,7 @@ public class ModItemTags {
     public static final TagKey<Item> RAW_SILVER = bindC("raw_materials/silver");
     public static final TagKey<Item> RAW_URANIUM = bindC("raw_materials/uranium");
 
+    public static final TagKey<Item> EXP_BUCKETS = bindC("buckets/exp_fluid");
     public static final TagKey<Item> OIL_BUCKETS = bindC("buckets/oil");
     public static final TagKey<Item> CEMENT_BUCKETS = bindC("buckets/cement");
 

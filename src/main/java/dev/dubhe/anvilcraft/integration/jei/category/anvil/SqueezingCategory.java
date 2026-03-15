@@ -1,10 +1,9 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
-import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
-import dev.anvilcraft.lib.recipe.component.ChanceItemStack;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceItemStack;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
@@ -189,11 +188,7 @@ public class SqueezingCategory implements IRecipeCategory<RecipeHolder<Squeezing
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(Items.ANVIL), AnvilCraftJeiPlugin.SQUEEZING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROYAL_ANVIL), AnvilCraftJeiPlugin.SQUEEZING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EMBER_ANVIL), AnvilCraftJeiPlugin.SQUEEZING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GIANT_ANVIL), AnvilCraftJeiPlugin.SQUEEZING);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SPECTRAL_ANVIL), AnvilCraftJeiPlugin.SQUEEZING);
+        AnvilCraftJeiPlugin.addAnvilProcessingCatalysts(registration, AnvilCraftJeiPlugin.SQUEEZING);
         registration.addRecipeCatalyst(new ItemStack(Items.CAULDRON), AnvilCraftJeiPlugin.SQUEEZING);
     }
 }

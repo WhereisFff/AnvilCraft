@@ -50,6 +50,10 @@ public class ModRenderTypes {
         () -> renderTypeLaserShader
     );
 
+    public static RenderStateShard.ShaderStateShard RENDERTYPE_LIGHTNING_SHADER = new RenderStateShard.ShaderStateShard(
+        ModShaders::getRenderTypeLightningShader
+    );
+
     private static RenderStateShard.ShaderStateShard createRenderTypeColoredOverlayShader(int color) {
         return new RenderStateShard.ShaderStateShard(
             ModRenderTypes::supplyNothing
@@ -128,6 +132,28 @@ public class ModRenderTypes {
             .setCullState(CULL)
             .setWriteMaskState(COLOR_DEPTH_WRITE)
             .setOverlayState(OVERLAY)
+            .setOutputState(LASER_TARGET)
+            .createCompositeState(true)
+    );
+
+    public static final RenderType LIGHTNING = RenderType.create(
+        "anvilcraft:lightning",
+        DefaultVertexFormat.BLOCK,
+        VertexFormat.Mode.QUADS,
+        1536,
+        true,
+        true,
+        RenderType.CompositeState.builder()
+            .setLightmapState(LIGHTMAP)
+            .setShaderState(RENDERTYPE_LIGHTNING_SHADER)
+            .setTextureState(new RenderStateShard.TextureStateShard(
+                TextureAtlas.LOCATION_BLOCKS,
+                false,
+                false
+            ))
+            .setTransparencyState(LASER_TRANSPARENCY)
+            .setCullState(NO_CULL)
+            .setWriteMaskState(COLOR_WRITE)
             .setOutputState(LASER_TARGET)
             .createCompositeState(true)
     );

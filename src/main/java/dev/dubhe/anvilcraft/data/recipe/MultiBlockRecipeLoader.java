@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.HeavyIronBeamBlock;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
 public class MultiBlockRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         MultiblockRecipe.builder(ModBlocks.GIANT_ANVIL)
             .layer("ABA", "CDE", "AFA")
             .layer("   ", " D ", "   ")
@@ -68,6 +68,20 @@ public class MultiBlockRecipeLoader {
             .symbol('B', ModBlocks.HEAVY_IRON_COLUMN)
             .symbol('C', ModBlocks.POLISHED_HEAVY_IRON_BLOCK)
             .save(provider, AnvilCraft.of("multiblock/giant_anvil_2"));
+
+        MultiblockRecipe.builder(ModBlocks.LARGE_FLUID_TANK)
+            .layer("AAA", "AAA", "AAA")
+            .layer("AAA", "AAA", "AAA")
+            .layer("AAA", "AAA", "AAA")
+            .symbol('A', ModBlocks.FLUID_TANK)
+            .save(provider, AnvilCraft.of("multiblock/large_fluid_tank_1"));
+
+        MultiblockRecipe.builder(ModBlocks.LARGE_FLUID_TANK)
+            .layer("AAA", "AAA", "AAA")
+            .layer("AAA", "A A", "AAA")
+            .layer("AAA", "AAA", "AAA")
+            .symbol('A', ModBlocks.FLUID_TANK)
+            .save(provider, AnvilCraft.of("multiblock/large_fluid_tank_2"));
 
         MultiblockRecipe.builder(ModBlocks.MENGER_SPONGE)
             .layer("AAA", "A A", "AAA")
@@ -203,6 +217,14 @@ public class MultiBlockRecipeLoader {
             .symbol('B', "anvilcraft:heavy_iron_block")
             .symbol('C', "anvilcraft:magnetoelectric_core")
             .symbol('D', "anvilcraft:tungsten_block")
+            .save(provider);
+
+        MultiblockRecipe.builder(ModBlocks.SHULKER_CONTAINER)
+            .layer("AAA", "ABA", "AAA")
+            .layer("ABA", "B B", "ABA")
+            .layer("AAA", "ABA", "AAA")
+            .symbol('A', Blocks.NETHERITE_BLOCK)
+            .symbol('B', Blocks.SHULKER_BOX)
             .save(provider);
     }
 }

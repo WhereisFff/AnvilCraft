@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.event.anvil;
 
-import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
-import dev.anvilcraft.lib.recipe.util.InWorldRecipeManager;
+import dev.anvilcraft.lib.v2.recipe.util.InWorldRecipeContext;
+import dev.anvilcraft.lib.v2.recipe.util.InWorldRecipeManager;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.IHasMultiBlock;
 import dev.dubhe.anvilcraft.api.anvil.IAnvilBehavior;
@@ -9,8 +9,10 @@ import dev.dubhe.anvilcraft.api.entity.fakeplayer.AnvilCraftFakePlayers;
 import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.block.EmberAnvilBlock;
 import dev.dubhe.anvilcraft.block.FrostAnvilBlock;
+import dev.dubhe.anvilcraft.block.NeoforgeBlock;
 import dev.dubhe.anvilcraft.block.RoyalAnvilBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTriggers;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.util.AnvilUtil;
@@ -60,6 +62,7 @@ public class AnvilEventListener {
         }
         Level level = event.getLevel();
         BlockPos pos = event.getPos();
+        final BlockState blockState = level.getBlockState(pos);
         MinecraftServer server = level.getServer();
         if (null == server) return;
         TriggerUtil.anvilOnGround(level, pos);
@@ -75,6 +78,13 @@ public class AnvilEventListener {
         for (IAnvilBehavior behavior : IAnvilBehavior.findMatching(hitBlockState)) {
             if (behavior.handle(level, hitBlockPos, hitBlockState, event.getFallDistance(), event)) {
                 return;
+            }
+        }
+        if (blockState.is(ModBlocks.NEOFORGE)) {
+            if (event.getFallDistance() > 1) {
+                if (level.random.nextDouble() < 0.01) {
+                    NeoforgeBlock.damage(level, pos);
+                }
             }
         }
     }

@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
-import dev.anvilcraft.lib.recipe.outcome.ProduceExplosion;
+import dev.anvilcraft.lib.v2.recipe.outcome.ProduceExplosion;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -13,7 +13,7 @@ import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.minecraft.world.phys.Vec3;
 
 public class NeutronIrradiationRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         NeutronIrradiationRecipe.builder()
             .requires(ModItemTags.URANIUM_INGOTS)
             .result(ModItems.PLUTONIUM_NUGGET, 6)

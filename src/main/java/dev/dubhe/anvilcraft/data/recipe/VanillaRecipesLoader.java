@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.data.AnvilCraftDatagen;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
@@ -15,7 +15,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 
 public class VanillaRecipesLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, Items.ANVIL, 9)
             .pattern("AAA")
             .pattern(" B ")
@@ -83,9 +83,28 @@ public class VanillaRecipesLoader {
             .define('A', ModItems.SPONGE_GEMMULE)
             .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.SPONGE_GEMMULE))
             .save(provider, AnvilCraft.of("wet_sponge"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Items.REPEATER)
+            .pattern("   ")
+            .pattern("TRT")
+            .pattern("BBB")
+            .define('R', Items.REDSTONE)
+            .define('T', Items.REDSTONE_TORCH)
+            .define('B', ModItems.HARDEND_RESIN)
+            .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
+            .save(provider, AnvilCraft.of("repeater"));
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, Items.COMPARATOR)
+            .pattern(" T ")
+            .pattern("TQT")
+            .pattern("BBB")
+            .define('Q', Items.QUARTZ)
+            .define('T', Items.REDSTONE_TORCH)
+            .define('B', ModItems.HARDEND_RESIN)
+            .unlockedBy("hasitem", AnvilCraftDatagen.has(ModItems.HARDEND_RESIN))
+            .save(provider, AnvilCraft.of("comparator"));
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.BUILDING_BLOCKS, Items.IRON_BLOCK, 9)
             .requires(ModBlocks.HEAVY_IRON_BLOCK)
-            .unlockedBy("hasitem", RegistrateRecipeProvider.has(ModBlocks.HEAVY_IRON_BLOCK))
+            .unlockedBy("hasitem", RegistrumRecipeProvider.has(ModBlocks.HEAVY_IRON_BLOCK))
             .save(provider, AnvilCraft.of("iron_block_from_heavy_iron_block"));
 
         SimpleCookingRecipeBuilder.campfireCooking(Ingredient.of(ModItemTags.DOUGH), RecipeCategory.FOOD,

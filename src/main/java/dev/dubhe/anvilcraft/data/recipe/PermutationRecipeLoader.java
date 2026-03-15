@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.recipe.data.ItemEnchantmentsData;
 import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
@@ -36,7 +36,7 @@ public class PermutationRecipeLoader {
         "smithing_table"
     );
 
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         PermutationRecipeLoader.register(
             provider,
             PermutationRecipeLoader.WEAPONS_AND_TOOLS,
@@ -116,7 +116,7 @@ public class PermutationRecipeLoader {
     }
 
     private static void register(
-        RegistrateRecipeProvider provider,
+        RegistrumRecipeProvider provider,
         List<String> bases,
         ItemLike material,
         ResourceLocation idA,
@@ -134,7 +134,7 @@ public class PermutationRecipeLoader {
     }
 
     private static void register(
-        RegistrateRecipeProvider provider,
+        RegistrumRecipeProvider provider,
         List<String> bases,
         ItemLike material,
         ResourceLocation idA,

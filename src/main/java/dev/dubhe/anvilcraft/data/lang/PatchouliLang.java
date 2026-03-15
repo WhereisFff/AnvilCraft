@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class PatchouliLang {
 
@@ -10,7 +10,7 @@ public class PatchouliLang {
      * @param provider 提供器
      */
     @SuppressWarnings("checkstyle:LineLength")
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         provider.add("gui.anvilcraft.category.anvil_collision_craft_speed", "Speed: %d m/tick");
 
         provider.add("patchouli.anvilcraft.landing_text", "Welcome to AnvilCraft.");

@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.config;
 
-import dev.anvilcraft.lib.config.BoundedDiscrete;
-import dev.anvilcraft.lib.config.CollapsibleObject;
-import dev.anvilcraft.lib.config.Comment;
-import dev.anvilcraft.lib.config.Config;
+import dev.anvilcraft.lib.v2.config.BoundedDiscrete;
+import dev.anvilcraft.lib.v2.config.CollapsibleObject;
+import dev.anvilcraft.lib.v2.config.Comment;
+import dev.anvilcraft.lib.v2.config.Config;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import net.neoforged.fml.config.ModConfig;
 

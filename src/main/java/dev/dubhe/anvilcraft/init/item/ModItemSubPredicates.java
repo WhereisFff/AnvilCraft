@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.init.item;
 
 import com.mojang.serialization.Codec;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.item.property.predicate.ItemEnchantmentCountPredicate;
 import dev.dubhe.anvilcraft.item.property.predicate.ItemSavedEntityPredicate;
 import net.minecraft.advancements.critereon.ItemSubPredicate;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -19,6 +20,12 @@ public class ModItemSubPredicates {
         "saved_entity",
         ItemSavedEntityPredicate.CODEC
     );
+
+    public static final DeferredHolder<ItemSubPredicate.Type<?>, ItemSubPredicate.Type<ItemEnchantmentCountPredicate>> ENCHANTMENT_COUNT =
+        register(
+            "enchantment_count",
+            ItemEnchantmentCountPredicate.CODEC.codec()
+        );
 
     public static <T extends ItemSubPredicate> DeferredHolder<ItemSubPredicate.Type<?>, ItemSubPredicate.Type<T>> register(
         String name,

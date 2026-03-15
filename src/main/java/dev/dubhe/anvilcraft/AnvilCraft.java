@@ -2,10 +2,10 @@ package dev.dubhe.anvilcraft;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.tterrag.registrate.Registrate;
-import dev.anvilcraft.lib.config.ConfigManager;
-import dev.anvilcraft.lib.integration.IntegrationHook;
-import dev.anvilcraft.lib.integration.IntegrationManager;
+import dev.anvilcraft.lib.v2.config.ConfigManager;
+import dev.anvilcraft.lib.v2.integration.IntegrationHook;
+import dev.anvilcraft.lib.v2.integration.IntegrationManager;
+import dev.anvilcraft.lib.v2.registrum.Registrum;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.api.tooltip.ItemTooltipManager;
 import dev.dubhe.anvilcraft.config.AnvilCraftClientConfig;
@@ -77,7 +77,7 @@ public class AnvilCraft {
     @Getter
     private static final IntegrationManager INTEGRATION_MANAGER = new IntegrationManager(AnvilCraft.MOD_ID);
 
-    public static final Registrate REGISTRATE = Registrate.create(MOD_ID);
+    public static final Registrum REGISTRUM = Registrum.create(MOD_ID);
 
     public AnvilCraft(IEventBus modEventBus, ModContainer modContainer) {
         MOD_BUS = modEventBus;

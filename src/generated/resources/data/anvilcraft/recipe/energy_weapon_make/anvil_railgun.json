@@ -1,0 +1,17 @@
+{
+  "type": "anvilcraft:energy_weapon_make",
+  "ingredients": [
+    {
+      "count": 4,
+      "items": "anvilcraft:acceleration_ring"
+    },
+    {
+      "count": 4,
+      "items": "anvilcraft:sliding_rail"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "anvilcraft:anvil_railgun"
+  }
+}

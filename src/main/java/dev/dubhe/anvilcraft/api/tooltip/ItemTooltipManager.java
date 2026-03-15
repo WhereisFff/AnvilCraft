@@ -8,7 +8,6 @@ import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
-import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.util.ListUtil;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.ChatFormatting;
@@ -63,6 +62,11 @@ public class ItemTooltipManager {
             "Attracting the anvil below, when pushed and pulled by the piston, causes adjacent copper blocks to generate charges");
         map.put(ModBlocks.BATCH_CRAFTER.asItem(),
             "Received a redstone signal and synthesized all internal items at once, with a power consumption of 4 kW");
+        map.put(ModBlocks.FISH_TANK.asItem(), """
+            It is sturdier than it looks and can be used as a substitute for the alchemy pot to perform related anvil synthesis.
+            Wearing it on your head provides a temporary underwater breathing effect.
+            Right-click the top with an item in hand to place the item inside.
+            Right-click the lower part of the fish tank with a tropical fish bucket in hand to release the tropical fish.""");
         map.put(ModBlocks.ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.SMOOTH_ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
         map.put(ModBlocks.CUT_ROYAL_STEEL_BLOCK.asItem(), "Explosion proof");
@@ -167,6 +171,7 @@ public class ItemTooltipManager {
         map.put(ModItems.CAPACITOR_EMPTY.asItem(), "4000kJ capacity");
         map.put(ModItems.SUPER_CAPACITOR.asItem(), "80MJ stored");
         map.put(ModItems.SUPER_CAPACITOR_EMPTY.asItem(), "80MJ capacity");
+        map.put(ModItems.ENERGY_WEAPON_PLATFORM.get(), "320MJ stored, but will only inherit the result of Energy Weapon Making");
         map.put(ModBlocks.BLACK_HOLE.asItem(), "Dev Block with intense gravitational attraction");
         map.put(ModBlocks.WHITE_HOLE.asItem(), "Dev Block with intense gravitational repulsion");
         map.put(ModBlocks.CHARGER.asItem(), "Charges items. Supports manual or automated input");
@@ -269,19 +274,11 @@ public class ItemTooltipManager {
         if (stack.has(ModComponents.ETERNAL)) {
             propertyTooltip("eternal", tooltip, 0xD3C5F6);
         }
-        if (stack.getOrDefault(ModComponents.MERCILESS, Merciless.DISABLED).enabled()) {
-            if (!Screen.hasShiftDown()) {
-                propertyTooltip(
-                    "merciless", tooltip, 0xB4F0F6,
-                    Minecraft.getInstance().options.keyShift.getKey().getDisplayName());
-            } else {
-                propertyTooltip("merciless.shifting", tooltip, 0xB4F0F6, ComponentUtils.formatList(
-                    List.of(
-                        Component.translatable("enchantment.minecraft.loyalty"),
-                        Component.translatable("enchantment.minecraft.riptide"),
-                        Component.translatable("tooltip.anvilcraft.property.merciless.curse")
-                    ), ComponentUtils.DEFAULT_NO_STYLE_SEPARATOR));
-            }
+        if (stack.has(ModComponents.FEROCIOUS)) {
+            propertyTooltip("ferocious", tooltip, 0xDD1212);
+        }
+        if (stack.has(ModComponents.MERCILESS)) {
+            propertyTooltip("merciless", tooltip, 0xB4F0F6);
         }
         if (stack.has(ModComponents.FIRE_REFORGING)) {
             propertyTooltip("fire_reforging", tooltip, ChatFormatting.GOLD);

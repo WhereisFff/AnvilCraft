@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
@@ -16,7 +16,7 @@ import net.neoforged.neoforge.common.Tags;
 import static dev.dubhe.anvilcraft.data.recipe.util.RecipeLoaderUtil.getName;
 
 public class SuperHeatingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         SuperHeatingRecipe.builder()
             .transform(Blocks.LAVA_CAULDRON)
             .produce(1000)
@@ -164,14 +164,14 @@ public class SuperHeatingRecipeLoader {
         ingotFromEarth(provider, ModItemTags.RAW_URANIUM, ModItems.URANIUM_INGOT);
     }
 
-    private static void metalBlockFromRaw(RegistrateRecipeProvider provider, TagKey<Item> raw, ItemLike result) {
+    private static void metalBlockFromRaw(RegistrumRecipeProvider provider, TagKey<Item> raw, ItemLike result) {
         SuperHeatingRecipe.builder()
             .requires(raw)
             .result(result, 2)
             .save(provider, AnvilCraft.of("super_heating/metal_block/%s_from_%s".formatted(getName(result), getName(raw))));
     }
 
-    private static void ingotFromEarth(RegistrateRecipeProvider provider, TagKey<Item> raw, ItemLike result) {
+    private static void ingotFromEarth(RegistrumRecipeProvider provider, TagKey<Item> raw, ItemLike result) {
         SuperHeatingRecipe.builder()
             .requires(raw, 8)
             .requires(ModItems.EARTH_CORE_SHARD)
@@ -179,14 +179,14 @@ public class SuperHeatingRecipeLoader {
             .save(provider, AnvilCraft.of("super_heating/raw/%s".formatted(getName(result))));
     }
 
-    private static void limePowder(RegistrateRecipeProvider provider, ItemLike item, int resultCount) {
+    private static void limePowder(RegistrumRecipeProvider provider, ItemLike item, int resultCount) {
         SuperHeatingRecipe.builder()
             .requires(item)
             .result(ModItems.LIME_POWDER, resultCount)
             .save(provider, AnvilCraft.of("super_heating/lime_powder/%s_from_%s".formatted("lime_powder", getName(item))));
     }
 
-    private static void limePowder(RegistrateRecipeProvider provider, TagKey<Item> tag, int resultCount) {
+    private static void limePowder(RegistrumRecipeProvider provider, TagKey<Item> tag, int resultCount) {
         SuperHeatingRecipe.builder()
             .requires(tag)
             .result(ModItems.LIME_POWDER, resultCount)

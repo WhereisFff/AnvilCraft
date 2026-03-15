@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 
 public class RecipeHandler {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         BlockCrushRecipeLoader.init(provider);
         ItemCrushRecipeLoader.init(provider);
         UnpackRecipeLoader.init(provider);
@@ -36,5 +36,6 @@ public class RecipeHandler {
         PillRecipeLoader.init(provider);
         PermutationRecipeLoader.init(provider);
         DeformationRecipeLoader.init(provider);
+        EnergyWeaponMakeRecipeLoader.init(provider);
     }
 }

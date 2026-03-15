@@ -1371,5 +1371,10 @@
   "block.anvilcraft.cut_frost_metal_pillar": "切制浮霜金属柱",
   "block.anvilcraft.cut_frost_metal_slab": "切制浮霜金属台阶",
   "block.anvilcraft.cut_frost_metal_stairs": "切制浮霜金属楼梯",
-  "block.anvilcraft.frost_glass": "浮霜玻璃"
+  "block.anvilcraft.frost_glass": "浮霜玻璃",
+  "block.anvilcraft.exp_cauldron": "经验锅",
+  "block.anvilcraft.exp_fluid": "液态经验",
+  "block.anvilcraft.exp_gem_block": "经验宝石块",
+  "item.anvilcraft.exp_bucket": "液态经验桶",
+  "item.anvilcraft.exp_gem": "经验宝石"
 }

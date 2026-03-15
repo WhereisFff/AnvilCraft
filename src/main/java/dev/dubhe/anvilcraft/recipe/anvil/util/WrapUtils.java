@@ -1,11 +1,11 @@
 package dev.dubhe.anvilcraft.recipe.anvil.util;
 
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
-import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
-import dev.anvilcraft.lib.recipe.outcome.IRecipeOutcome;
-import dev.anvilcraft.lib.recipe.predicate.IRecipePredicate;
-import dev.anvilcraft.lib.recipe.predicate.block.HasBlock;
-import dev.anvilcraft.lib.recipe.predicate.block.HasBlockIngredient;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.v2.recipe.outcome.IRecipeOutcome;
+import dev.anvilcraft.lib.v2.recipe.predicate.IRecipePredicate;
+import dev.anvilcraft.lib.v2.recipe.predicate.block.HasBlock;
+import dev.anvilcraft.lib.v2.recipe.predicate.block.HasBlockIngredient;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

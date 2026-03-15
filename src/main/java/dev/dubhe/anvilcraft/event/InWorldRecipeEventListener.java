@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.event;
 
-import dev.anvilcraft.lib.recipe.InWorldRecipe;
-import dev.anvilcraft.lib.recipe.event.InWorldRecipeEvent;
-import dev.anvilcraft.lib.recipe.event.InWorldRecipeManagerEvent;
-import dev.anvilcraft.lib.recipe.event.ItemCacheEvent;
-import dev.anvilcraft.lib.recipe.util.InWorldRecipeContext;
+import dev.anvilcraft.lib.v2.recipe.InWorldRecipe;
+import dev.anvilcraft.lib.v2.recipe.event.InWorldRecipeEvent;
+import dev.anvilcraft.lib.v2.recipe.event.InWorldRecipeManagerEvent;
+import dev.anvilcraft.lib.v2.recipe.event.ItemCacheEvent;
+import dev.anvilcraft.lib.v2.recipe.util.InWorldRecipeContext;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.MeshRecipe;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.VanillaRecipesWrap;

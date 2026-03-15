@@ -1,10 +1,18 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class IntegrationScreenLang {
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         provider.add("screen.anvilcraft.integration_screen.title", "Integrations");
+        provider.add(
+            "screen.anvilcraft.integration_screen.note",
+            "To access the manual, "
+            + "first choose and download a third-party manual mod, "
+            + "then download the compatibility add-on for it from this mod. "
+            + "A total of %d additional mods are required. "
+            + "Download links have been provided and can be accessed by clicking the button."
+        );
         provider.add("screen.anvilcraft.integration_screen.category.guide", "Guide");
         provider.add("screen.anvilcraft.integration_screen.category.recipe_query", "Recipe Query");
         provider.add("screen.anvilcraft.integration_screen.category.info_hud", "Info HUD");
@@ -12,8 +20,8 @@ public class IntegrationScreenLang {
         provider.add("screen.anvilcraft.integration_screen.category.interaction", "Interaction");
         provider.add("screen.anvilcraft.integration_screen.category.compatible", "Compatible");
         provider.add("screen.anvilcraft.integration_screen.category.additional", "Additional");
-        provider.add("screen.anvilcraft.integration_screen.target", "Target Mod:");
-        provider.add("screen.anvilcraft.integration_screen.extra", "Extra Mod:");
+        provider.add("screen.anvilcraft.integration_screen.target", "Main Mod Download:");
+        provider.add("screen.anvilcraft.integration_screen.extra", "Extra Download:");
         provider.add("screen.anvilcraft.integration_screen.loaded", "Loaded");
         provider.add("screen.anvilcraft.integration_screen.not_loaded", "Recommended");
         provider.add("screen.anvilcraft.integration_screen.not_found", "Not Installed");

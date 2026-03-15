@@ -2,10 +2,11 @@ package dev.dubhe.anvilcraft.recipe.anvil.wrap;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
-import dev.anvilcraft.lib.recipe.component.ChanceBlockState;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.component.ChanceBlockState;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.recipe.anvil.builder.AbstractRecipeBuilder;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import dev.dubhe.anvilcraft.recipe.anvil.util.WrapUtils;
 import dev.dubhe.anvilcraft.recipe.component.HasCauldronSimple;
@@ -19,6 +20,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.block.Block;
+
+import java.util.function.Consumer;
 
 /**
  * 压榨配方类
@@ -37,7 +40,8 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
     public SqueezingRecipe(
         BlockStatePredicate ingredient,
         ChanceBlockState result,
-        HasCauldronSimple hasCauldron
+        HasCauldronSimple hasCauldron,
+        HasAnvil hasAnvil
     ) {
         super(
             new Property()
@@ -46,6 +50,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
                 .setInputBlocks(ingredient)
                 .setCauldronOffset(new Vec3i(0, -2, 0))
                 .setHasCauldron(hasCauldron)
+                .setHasAnvil(hasAnvil)
                 .setBlockOutputOffset(new Vec3i(0, -1, 0))
                 .setResultBlocks(result)
         );
@@ -96,7 +101,10 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
                 .fieldOf("result")
                 .forGetter(SqueezingRecipe::getFirstResultBlock),
             HasCauldronSimple.CODEC
-                .forGetter(SqueezingRecipe::getHasCauldron)
+                .forGetter(SqueezingRecipe::getHasCauldron),
+            HasAnvil.CODEC.codec()
+                .optionalFieldOf("anvil", HasAnvil.DEFAULT)
+                .forGetter(SqueezingRecipe::getHasAnvil)
         ).apply(instance, SqueezingRecipe::new));
 
         /**
@@ -109,6 +117,8 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
             SqueezingRecipe::getFirstResultBlock,
             HasCauldronSimple.STREAM_CODEC,
             SqueezingRecipe::getHasCauldron,
+            HasAnvil.STREAM_CODEC,
+            SqueezingRecipe::getHasAnvil,
             SqueezingRecipe::new
         );
 
@@ -141,6 +151,11 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          * 炼药锅条件构建器
          */
         private final HasCauldronSimple.Builder hasCauldron = HasCauldronSimple.empty();
+
+        /**
+         * 铁砧条件
+         */
+        private HasAnvil hasAnvil = HasAnvil.DEFAULT;
 
         /**
          * 添加原料方块
@@ -273,9 +288,76 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
             return this;
         }
 
+        /**
+         * 设置转换成功的概率
+         *
+         * @param chance 转换成功的概率
+         * @return 构建器实例
+         */
+        public Builder chance(float chance) {
+            if (chance <= 0) return this;
+            this.hasCauldron.chance(chance);
+            return this;
+        }
+
+        /**
+         * 设置铁砧条件
+         *
+         * @param anvil 铁砧方块
+         * @return 构建器实例
+         */
+        public Builder anvil(Block anvil) {
+            this.hasAnvil = new HasAnvil(BlockStatePredicate.builder().of(anvil));
+            return this;
+        }
+
+        /**
+         * 设置铁砧条件
+         *
+         * @param anvil 铁砧方块标签
+         * @return 构建器实例
+         */
+        public Builder anvil(TagKey<Block> anvil) {
+            this.hasAnvil = new HasAnvil(BlockStatePredicate.builder().of(anvil));
+            return this;
+        }
+
+        /**
+         * 设置铁砧条件
+         *
+         * @param consumer 铁砧条件谓词消费者
+         * @return 构建器实例
+         */
+        public Builder anvil(Consumer<BlockStatePredicate.Builder> consumer) {
+            BlockStatePredicate.Builder builder = BlockStatePredicate.builder();
+            consumer.accept(builder);
+            this.hasAnvil = new HasAnvil(builder);
+            return this;
+        }
+
+        /**
+         * 设置浮霜铁砧条件
+         *
+         * @return 构建器实例
+         */
+        public Builder frostAnvil() {
+            this.hasAnvil = HasAnvil.frostOnly();
+            return this;
+        }
+
+        /**
+         * 设置非浮霜铁砧条件
+         *
+         * @return 构建器实例
+         */
+        public Builder noFrostAnvil() {
+            this.hasAnvil = HasAnvil.noFrost();
+            return this;
+        }
+
         @Override
         public SqueezingRecipe buildRecipe() {
-            return new SqueezingRecipe(this.ingredient, this.result, hasCauldron.build());
+            return new SqueezingRecipe(this.ingredient, this.result, hasCauldron.build(), this.hasAnvil);
         }
 
         @Override

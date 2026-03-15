@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
 import com.google.common.collect.ImmutableMap;
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -12,7 +12,7 @@ import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.Tags;
 
 public class MassInjectRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         ImmutableMap<TagKey<Item>, Integer> tagRecipes = ImmutableMap.<TagKey<Item>, Integer>builder()
             .put(ModItemTags.TITANIUM_NUGGETS, 5)
             .put(ModItemTags.ZINC_NUGGETS, 7)
@@ -80,11 +80,11 @@ public class MassInjectRecipeLoader {
         itemRecipes.forEach((item, mass) -> addItem(provider, item, mass));
     }
 
-    private static void addTag(RegistrateRecipeProvider provider, TagKey<Item> tag, int mass) {
+    private static void addTag(RegistrumRecipeProvider provider, TagKey<Item> tag, int mass) {
         MassInjectRecipe.builder().requires(tag).mass(mass).save(provider);
     }
 
-    private static void addItem(RegistrateRecipeProvider provider, ItemLike item, int mass) {
+    private static void addItem(RegistrumRecipeProvider provider, ItemLike item, int mass) {
         MassInjectRecipe.builder().requires(item).mass(mass).save(provider);
     }
 }

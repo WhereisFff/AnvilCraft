@@ -74,12 +74,12 @@ public class AnvilMenuResult {
             this.result = ItemStack.EMPTY;
             return;
         }
-        
+
         // 变量初始化
         int price = 0;
         int repairingCost = 0;
         long tax = (long) inputLeft.getOrDefault(DataComponents.REPAIR_COST, 0)
-                  + (long) inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
+                   + (long) inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
         ItemStack result = inputLeft.copy();
         final ItemEnchantments.Mutable enchantments = new ItemEnchantments.Mutable(EnchantmentHelper.getEnchantmentsForCrafting(result));
         boolean usingBook = false;
@@ -100,7 +100,7 @@ public class AnvilMenuResult {
             }
         } else if (!inputRight.isEmpty()) {
             usingBook = inputRight.has(DataComponents.STORED_ENCHANTMENTS);
-            
+
             // 若左侧可损失耐久且右侧为合适的修复材料，则尝试使用材料修复耐久度，否则尝试合并左右耐久度和魔咒
             // 仅当允许使用浮霜金属修复时才会允许浮霜金属作为修复材料
             if (
@@ -110,7 +110,7 @@ public class AnvilMenuResult {
                     || (
                         this.allowUsingFrostMetalToRepair
                         && (
-                            inputRight.is(ModItems.FROST_METAL_INGOT) 
+                            inputRight.is(ModItems.FROST_METAL_INGOT)
                             || inputRight.is(ModItems.FROST_METAL_NUGGET)
                         )
                     )
@@ -389,13 +389,13 @@ public class AnvilMenuResult {
             return AnvilMenu.calculateIncreasedRepairCost(baseCost);
         } else {
             int baseCost = result.getOrDefault(DataComponents.REPAIR_COST, 0)
-                       + inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
+                           + inputRight.getOrDefault(DataComponents.REPAIR_COST, 0);
             return namingCost == price || namingCost == price - baseCost || this.noTaxInRepairUsingItem && repairingCost == price - baseCost
                    ? baseCost
                    : ++baseCost;
         }
     }
-    
+
     @Accessors(fluent = true)
     @Setter
     public static class Builder {
@@ -406,7 +406,7 @@ public class AnvilMenuResult {
         private boolean noCostInRenaming = false;
         private boolean noTaxInRepairUsingItem = false;
         private boolean useNewRepairCostAlgorithm = false;
-        
+
         public Builder ignoreEnchantmentCompatible() {
             this.ignoreEnchantmentCompatible = true;
             return this;

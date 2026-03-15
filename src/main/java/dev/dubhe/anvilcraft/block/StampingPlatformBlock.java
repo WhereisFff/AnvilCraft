@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block;
 
-import dev.anvilcraft.lib.recipe.util.IRecipeResultOffsetBlock;
+import dev.anvilcraft.lib.v2.recipe.util.IRecipeResultOffsetBlock;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

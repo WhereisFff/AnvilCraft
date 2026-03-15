@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.network.multiple;
 
-import dev.anvilcraft.lib.recipe.util.CodecUtil;
+import dev.anvilcraft.lib.v2.recipe.util.CodecUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.recipe.result.RecipeResult;
 import dev.dubhe.anvilcraft.inventory.FrostSmithingMenu;
