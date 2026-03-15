@@ -26,8 +26,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.Blocks;
 
@@ -151,10 +149,6 @@ public class MassInjectCategory implements IRecipeCategory<RecipeHolder<MassInje
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(ModBlocks.SPACE_OVERCOMPRESSOR.asStack(), AnvilCraftJeiPlugin.MASS_INJECT);
-        registration.addRecipeCatalyst(new ItemStack(Items.ANVIL), AnvilCraftJeiPlugin.MASS_INJECT);
-        registration.addRecipeCatalyst(ModBlocks.ROYAL_ANVIL.asStack(), AnvilCraftJeiPlugin.MASS_INJECT);
-        registration.addRecipeCatalyst(ModBlocks.EMBER_ANVIL.asStack(), AnvilCraftJeiPlugin.MASS_INJECT);
-        registration.addRecipeCatalyst(ModBlocks.GIANT_ANVIL.asStack(), AnvilCraftJeiPlugin.MASS_INJECT);
-        registration.addRecipeCatalyst(ModBlocks.SPECTRAL_ANVIL.asStack(), AnvilCraftJeiPlugin.MASS_INJECT);
+        AnvilCraftJeiPlugin.addAnvilProcessingCatalysts(registration, AnvilCraftJeiPlugin.MASS_INJECT);
     }
 }
