@@ -2,6 +2,7 @@
 	"format_version": "1.9.0",
 	"credit": "Made by XeKr with Blockbench",
 	"parent": "minecraft:block/cube",
+	"ambientocclusion": false,
 	"textures": {
 		"0": "anvilcraft:block/redstone_computer_back",
 		"1": "anvilcraft:block/redstone_computer_bottom",
