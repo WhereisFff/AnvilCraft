@@ -1,0 +1,40 @@
+{
+	"format_version": "1.9.0",
+	"credit": "Made by XeKr with Blockbench",
+	"parent": "minecraft:block/cube",
+	"ambientocclusion": false,
+	"textures": {
+		"0": "anvilcraft:block/wip_block",
+		"particle": "anvilcraft:block/wip_block"
+	},
+	"elements": [
+		{
+			"from": [-0.5, 0, -0.5],
+			"to": [16.5, 16, 16.5],
+			"shade": false,
+			"faces": {
+				"north": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"east": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"south": {"uv": [0, 0, 16, 16], "texture": "#0"},
+				"west": {"uv": [0, 0, 16, 16], "texture": "#0"}
+			}
+		},
+		{
+			"name": "cube inverted",
+			"from": [16.5, 16, 16.5],
+			"to": [-0.5, 0, -0.5],
+			"faces": {
+				"north": {"uv": [0, 16, 16, 0], "texture": "#0"},
+				"east": {"uv": [0, 16, 16, 0], "texture": "#0"},
+				"south": {"uv": [0, 16, 16, 0], "texture": "#0"},
+				"west": {"uv": [0, 16, 16, 0], "texture": "#0"}
+			}
+		}
+	],
+	"display": {
+		"head": {
+			"translation": [0, 6, 0],
+			"scale": [1.5, 1.5, 1.5]
+		}
+	}
+}
