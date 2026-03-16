@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Future;
+import java.util.stream.Stream;
 
 @Slf4j(topic = "ShapeUtil")
 public class ShapeUtil {
@@ -93,5 +94,17 @@ public class ShapeUtil {
             result.add(Pair.of(input.get(i), input.get(i + 1)));
         }
         return result;
+    }
+
+    /**
+     * 合并指定的若干碰撞箱
+     *
+     * @param shapes 子碰撞箱
+     * @return 总碰撞箱
+     * @apiNote 仅应用于方块碰撞箱初始化！
+     */
+    public static VoxelShape merge(VoxelShape... shapes) {
+        if (shapes.length == 0) return Shapes.empty();
+        return Stream.of(shapes).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
     }
 }

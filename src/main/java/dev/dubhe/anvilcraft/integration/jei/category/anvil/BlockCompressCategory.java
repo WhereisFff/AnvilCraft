@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.integration.jei.category.anvil;
 
-import dev.anvilcraft.lib.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.recipe.ModRecipeTypes;
 import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.util.BlockTagUtil;
@@ -175,10 +174,6 @@ public class BlockCompressCategory implements IRecipeCategory<RecipeHolder<Block
     }
 
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(new ItemStack(Items.ANVIL), AnvilCraftJeiPlugin.BLOCK_COMPRESS);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.ROYAL_ANVIL), AnvilCraftJeiPlugin.BLOCK_COMPRESS);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.EMBER_ANVIL), AnvilCraftJeiPlugin.BLOCK_COMPRESS);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.GIANT_ANVIL), AnvilCraftJeiPlugin.BLOCK_COMPRESS);
-        registration.addRecipeCatalyst(new ItemStack(ModBlocks.SPECTRAL_ANVIL), AnvilCraftJeiPlugin.BLOCK_COMPRESS);
+        AnvilCraftJeiPlugin.addAnvilProcessingCatalysts(registration, AnvilCraftJeiPlugin.BLOCK_COMPRESS);
     }
 }

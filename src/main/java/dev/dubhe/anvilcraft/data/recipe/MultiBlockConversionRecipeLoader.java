@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.AccelerationRingBlock;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
@@ -22,7 +22,7 @@ import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
 public class MultiBlockConversionRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         MultiblockConversionRecipe.builder()
             .inputLayer("ABA", "CDC", "ABA")
             .inputLayer("E E", " F ", "E E")
@@ -422,6 +422,244 @@ public class MultiBlockConversionRecipeLoader {
             )
             .save(provider, AnvilCraft.of("multiblock_conversion/giant_anvil_2"));
 
+
+        MultiblockConversionRecipe.builder()
+            .inputLayer("AAA", "AAA", "AAA")
+            .inputLayer("AAA", "AAA", "AAA")
+            .inputLayer("AAA", "AAA", "AAA")
+            .inputSymbol('A', ModBlocks.FLUID_TANK)
+            .outputLayer("ABC", "DEF", "GHI")
+            .outputLayer("JKL", "MNO", "PQR")
+            .outputLayer("STU", "VWX", "YZ[")
+            .outputSymbol(
+                'A', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_WN)
+            )
+            .outputSymbol(
+                'B', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_N)
+            )
+            .outputSymbol(
+                'C', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_EN)
+            )
+            .outputSymbol(
+                'D', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_W)
+            )
+            .outputSymbol(
+                'E', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_CENTER)
+            )
+            .outputSymbol(
+                'F', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_E)
+            )
+            .outputSymbol(
+                'G', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_WS)
+            )
+            .outputSymbol(
+                'H', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_S)
+            )
+            .outputSymbol(
+                'I', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_ES)
+            )
+            .outputSymbol(
+                'J', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_WN)
+            )
+            .outputSymbol(
+                'K', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_N)
+            )
+            .outputSymbol(
+                'L', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_EN)
+            )
+            .outputSymbol(
+                'M', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_W)
+            )
+            .outputSymbol(
+                'N', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER)
+            )
+            .outputSymbol(
+                'O', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_E)
+            )
+            .outputSymbol(
+                'P', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_WS)
+            )
+            .outputSymbol(
+                'Q', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_S)
+            )
+            .outputSymbol(
+                'R', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_ES)
+            )
+            .outputSymbol(
+                'S', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_WN)
+            )
+            .outputSymbol(
+                'T', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_N)
+            )
+            .outputSymbol(
+                'U', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_EN)
+            )
+            .outputSymbol(
+                'V', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_W)
+            )
+            .outputSymbol(
+                'W', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_CENTER)
+            )
+            .outputSymbol(
+                'X', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_E)
+            )
+            .outputSymbol(
+                'Y', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_WS)
+            )
+            .outputSymbol(
+                'Z', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_S)
+            )
+            .outputSymbol(
+                '[', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_ES)
+            )
+            .save(provider, AnvilCraft.of("multiblock_conversion/large_fluid_tank_1"));
+
+        MultiblockConversionRecipe.builder()
+            .inputLayer("AAA", "AAA", "AAA")
+            .inputLayer("AAA", "A A", "AAA")
+            .inputLayer("AAA", "AAA", "AAA")
+            .inputSymbol('A', ModBlocks.FLUID_TANK)
+            .outputLayer("ABC", "DEF", "GHI")
+            .outputLayer("JKL", "MNO", "PQR")
+            .outputLayer("STU", "VWX", "YZ[")
+            .outputSymbol(
+                'A', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_WN)
+            )
+            .outputSymbol(
+                'B', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_N)
+            )
+            .outputSymbol(
+                'C', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_EN)
+            )
+            .outputSymbol(
+                'D', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_W)
+            )
+            .outputSymbol(
+                'E', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_CENTER)
+            )
+            .outputSymbol(
+                'F', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_E)
+            )
+            .outputSymbol(
+                'G', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_WS)
+            )
+            .outputSymbol(
+                'H', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_S)
+            )
+            .outputSymbol(
+                'I', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.BOTTOM_ES)
+            )
+            .outputSymbol(
+                'J', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_WN)
+            )
+            .outputSymbol(
+                'K', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_N)
+            )
+            .outputSymbol(
+                'L', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_EN)
+            )
+            .outputSymbol(
+                'M', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_W)
+            )
+            .outputSymbol(
+                'N', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_CENTER)
+            )
+            .outputSymbol(
+                'O', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_E)
+            )
+            .outputSymbol(
+                'P', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_WS)
+            )
+            .outputSymbol(
+                'Q', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_S)
+            )
+            .outputSymbol(
+                'R', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.MID_ES)
+            )
+            .outputSymbol(
+                'S', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_WN)
+            )
+            .outputSymbol(
+                'T', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_N)
+            )
+            .outputSymbol(
+                'U', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_EN)
+            )
+            .outputSymbol(
+                'V', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_W)
+            )
+            .outputSymbol(
+                'W', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_CENTER)
+            )
+            .outputSymbol(
+                'X', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_E)
+            )
+            .outputSymbol(
+                'Y', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_WS)
+            )
+            .outputSymbol(
+                'Z', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_S)
+            )
+            .outputSymbol(
+                '[', BlockPredicateWithState.of(ModBlocks.LARGE_FLUID_TANK)
+                    .hasState(GiantAnvilBlock.HALF, Cube3x3PartHalf.TOP_ES)
+            )
+            .save(provider, AnvilCraft.of("multiblock_conversion/large_fluid_tank_2"));
+
+
         MultiblockConversionRecipe.builder()
             .inputLayer("ABA", "B B", "ABA")
             .inputLayer("CDC", "D D", "CDC")
@@ -715,5 +953,124 @@ public class MultiBlockConversionRecipeLoader {
                 .hasState("facing", "down")
             )
             .save(provider, AnvilCraft.of("multiblock_conversion/deflection_ring"));
+
+        MultiblockConversionRecipe.builder()
+            .inputLayer("AAA", "ABA", "AAA")
+            .inputLayer("ABA", "B B", "ABA")
+            .inputLayer("AAA", "ABA", "AAA")
+            .inputSymbol('A', Blocks.NETHERITE_BLOCK)
+            .inputSymbol('B', Blocks.SHULKER_BOX)
+            .outputLayer("ABC", "DEF", "GHI")
+            .outputLayer("JKL", "MNO", "PQR")
+            .outputLayer("STU", "VWX", "YZ[")
+            .outputSymbol('A', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_wn")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('B', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_n")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('C', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_en")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('D', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_w")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('E', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_center")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('F', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_e")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('G', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_ws")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('H', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_s")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('I', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "bottom_es")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('J', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_wn")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('K', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_n")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('L', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_en")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('M', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_w")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('N', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_center")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('O', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_e")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('P', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_ws")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('Q', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_s")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('R', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "mid_es")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('S', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_wn")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('T', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_n")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('U', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_en")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('V', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_w")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('W', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_center")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('X', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_e")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('Y', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_ws")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('Z', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_s")
+                .hasState("opened", "false")
+            )
+            .outputSymbol('[', BlockPredicateWithState.of(ModBlocks.SHULKER_CONTAINER)
+                .hasState("half", "top_es")
+                .hasState("opened", "false")
+            )
+            .save(provider, AnvilCraft.of("multiblock_conversion/shulker_container"));
     }
 }

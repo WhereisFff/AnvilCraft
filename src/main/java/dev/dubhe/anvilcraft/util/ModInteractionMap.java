@@ -24,12 +24,64 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 public class ModInteractionMap {
     public static final CauldronInteraction.InteractionMap LAYERED_LAVA = CauldronInteraction.newInteractionMap("layered_lava");
+    public static final CauldronInteraction.InteractionMap EXP_FLUID = CauldronInteraction.newInteractionMap("exp_fluid");
     public static final CauldronInteraction.InteractionMap OIL = CauldronInteraction.newInteractionMap("oil");
     public static final CauldronInteraction.InteractionMap CEMENT = CauldronInteraction.newInteractionMap("cement");
     public static final CauldronInteraction.InteractionMap HONEY = CauldronInteraction.newInteractionMap("honey");
     public static final CauldronInteraction.InteractionMap MELT_GEM = CauldronInteraction.newInteractionMap("melt_gem");
 
     public static void initInteractionMap() {
+        var expFluidInteractionMap = EXP_FLUID.map();
+        expFluidInteractionMap.put(
+            Items.BUCKET,
+            (state, level, pos, player, hand, stack) -> CauldronInteraction.fillBucket(
+                state,
+                level,
+                pos,
+                player,
+                hand,
+                stack,
+                ModItems.EXP_BUCKET.asStack(),
+                (s) -> ModBlocks.EXP_FLUID_CAULDRON.get().isFull(state),
+                SoundEvents.BUCKET_FILL
+            )
+        );
+        expFluidInteractionMap.put(
+            Items.GLASS_BOTTLE,
+            (state, level, pos, player, hand, stack) -> {
+                if (!level.isClientSide()) {
+                    Item item = stack.getItem();
+                    player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, Items.EXPERIENCE_BOTTLE.getDefaultInstance()));
+                    player.awardStat(Stats.USE_CAULDRON);
+                    player.awardStat(Stats.ITEM_USED.get(item));
+                    Layered4LevelCauldronBlock.lowerFillLevel(state, level, pos);
+                    level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS);
+                    level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
+                }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            }
+        );
+        expFluidInteractionMap.put(
+            Items.EXPERIENCE_BOTTLE,
+            (state, level, pos, player, hand, stack) -> {
+                if (ModBlocks.HONEY_CAULDRON.get().isFull(state)) {
+                    return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
+                }
+                if (!level.isClientSide()) {
+                    player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                    player.awardStat(Stats.FILL_CAULDRON);
+                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                    // 50%概率
+                    if (level.random.nextBoolean()) {
+                        level.setBlockAndUpdate(pos, state.cycle(HoneyCauldronBlock.LEVEL));
+                    }
+                    level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
+                    level.gameEvent(null, GameEvent.FLUID_PLACE, pos);
+                }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            }
+        );
+
         var oilInteractionMap = OIL.map();
         oilInteractionMap.put(
             Items.BUCKET,
@@ -177,6 +229,34 @@ public class ModInteractionMap {
                     SoundEvents.BUCKET_EMPTY
                 )
             )
+        );
+        emptyInteractionMap.put(
+            ModItems.EXP_BUCKET.get(),
+            (state, level, pos, player, hand, stack) -> CauldronInteraction.emptyBucket(
+                level,
+                pos,
+                player,
+                hand,
+                stack,
+                ModBlocks.EXP_FLUID_CAULDRON.get().fullFilled(),
+                SoundEvents.BUCKET_EMPTY
+            )
+        );
+        emptyInteractionMap.put(
+            Items.EXPERIENCE_BOTTLE,
+            (state, level, pos, player, hand, stack) -> {
+                if (!level.isClientSide()) {
+                    player.setItemInHand(hand, ItemUtils.createFilledResult(stack, player, new ItemStack(Items.GLASS_BOTTLE)));
+                    player.awardStat(Stats.USE_CAULDRON);
+                    player.awardStat(Stats.ITEM_USED.get(stack.getItem()));
+                    if (level.random.nextBoolean()) {
+                        level.setBlockAndUpdate(pos, ModBlocks.EXP_FLUID_CAULDRON.getDefaultState());
+                    }
+                    level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
+                    level.gameEvent(null, GameEvent.FLUID_PLACE, pos);
+                }
+                return ItemInteractionResult.sidedSuccess(level.isClientSide());
+            }
         );
         emptyInteractionMap.put(
             ModItems.OIL_BUCKET.get(),

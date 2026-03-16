@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.tags;
 
-import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumTagsProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlockTags;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -22,7 +22,7 @@ public class BlockTagLoader {
      *
      * @param provider 提供器
      */
-    public static void init(RegistrateTagsProvider<Block> provider) {
+    public static void init(RegistrumTagsProvider<Block> provider) {
         provider.addTag(ModBlockTags.REDSTONE_TORCH)
             .add(findResourceKey(Blocks.REDSTONE_WALL_TORCH))
             .add(findResourceKey(Blocks.REDSTONE_TORCH));
@@ -276,6 +276,7 @@ public class BlockTagLoader {
             .add(findResourceKey(Blocks.COPPER_GRATE));
 
         provider.addTag(ModBlockTags.HEATABLE_BLOCKS)
+            .addTag(ModBlockTags.STORAGE_BLOCKS_TUNGSTEN)
             .add(findResourceKey(Blocks.NETHERITE_BLOCK));
 
         provider.addTag(ModBlockTags.STICKABLE_WITH_SLIDING_RAILS)

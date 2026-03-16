@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
@@ -14,7 +14,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
 public class StampingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         stamping(provider, Items.IRON_INGOT, Items.HEAVY_WEIGHTED_PRESSURE_PLATE);
         stamping(provider, Items.GOLD_INGOT, Items.LIGHT_WEIGHTED_PRESSURE_PLATE);
         stamping(provider, Items.COPPER_INGOT, ModBlocks.COPPER_PRESSURE_PLATE);
@@ -117,18 +117,18 @@ public class StampingRecipeLoader {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void stamping(RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int count) {
+    private static void stamping(RegistrumRecipeProvider provider, ItemLike input, ItemLike result, int count) {
         StampingRecipe.builder()
             .requires(input)
             .result(result, count)
             .save(provider);
     }
 
-    private static void stamping(RegistrateRecipeProvider provider, ItemLike input, ItemLike result) {
+    private static void stamping(RegistrumRecipeProvider provider, ItemLike input, ItemLike result) {
         stamping(provider, input, result, 1);
     }
 
-    private static void stamping(RegistrateRecipeProvider provider, TagKey<Item> input, ItemLike result) {
+    private static void stamping(RegistrumRecipeProvider provider, TagKey<Item> input, ItemLike result) {
         StampingRecipe.builder()
             .requires(input)
             .result(result, 1)

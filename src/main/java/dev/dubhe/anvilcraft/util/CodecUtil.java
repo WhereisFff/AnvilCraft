@@ -6,8 +6,6 @@ import com.mojang.serialization.DataResult;
 import com.mojang.serialization.DynamicOps;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 
 import java.util.List;
 
@@ -35,27 +33,5 @@ public class CodecUtil {
                 .fieldOf("values")
                 .forGetter(List::copyOf)
         ).apply(inst, (maxSize, values) -> Util.run(EvictingQueue.create(maxSize), queue -> values.forEach(queue::offer))));
-    }
-
-    public static <B extends FriendlyByteBuf, T> StreamCodec<B, EvictingQueue<T>> evictingQueueStreamCodec(
-        StreamCodec<? super B, T> valueCodec
-    ) {
-        return StreamCodec.of(
-            (buf, queue) -> {
-                buf.writeVarInt(queue.size());
-                buf.writeVarInt(queue.remainingCapacity());
-                for (T t : queue) {
-                    valueCodec.encode(buf, t);
-                }
-            },
-            buf -> {
-                int size = buf.readVarInt();
-                EvictingQueue<T> queue = EvictingQueue.create(size + buf.readVarInt());
-                for (int i = 0; i < size; i++) {
-                    queue.add(valueCodec.decode(buf));
-                }
-                return queue;
-            }
-        );
     }
 }

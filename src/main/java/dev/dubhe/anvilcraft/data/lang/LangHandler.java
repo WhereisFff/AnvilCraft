@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class LangHandler {
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         AdvancementLang.init(provider);
         ConfigScreenLang.init(provider);
         ItemTooltipLang.init(provider);

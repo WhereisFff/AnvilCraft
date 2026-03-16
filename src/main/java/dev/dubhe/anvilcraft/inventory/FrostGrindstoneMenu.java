@@ -21,7 +21,6 @@ import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.AnvilMenu;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.inventory.ResultContainer;
@@ -162,7 +161,6 @@ public class FrostGrindstoneMenu extends AbstractContainerMenu {
         ItemStack inputItem = this.input.getItem(0).copy();
 
         Map<DataComponentType<ItemEnchantments>, ItemEnchantments.Mutable> mutableMap = new HashMap<>();
-        int cost = 0;
         for (int i = 0; i < this.enchantments.size(); i++) {
             EnchantmentData data = ListUtil.safelyGet(this.enchantments, i).orElse(null);
             if (data == null) continue;
@@ -173,14 +171,11 @@ public class FrostGrindstoneMenu extends AbstractContainerMenu {
             );
             if (this.selectedIndexes.contains(i)) continue;
             newMut.set(data.enchantment(), data.level());
-
-            cost = AnvilMenu.calculateIncreasedRepairCost(cost);
         }
 
         for (Map.Entry<DataComponentType<ItemEnchantments>, ItemEnchantments.Mutable> entry : mutableMap.entrySet()) {
             inputItem.set(entry.getKey(), entry.getValue().toImmutable());
         }
-        inputItem.set(DataComponents.REPAIR_COST, cost);
 
         ItemEnchantments.Mutable stored = mutableMap.get(DataComponents.STORED_ENCHANTMENTS);
         if (inputItem.is(Items.ENCHANTED_BOOK) && stored != null && stored.keySet().isEmpty()) {

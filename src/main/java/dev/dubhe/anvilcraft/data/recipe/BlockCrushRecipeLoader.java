@@ -1,13 +1,13 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.recipe.anvil.wrap.BlockCrushRecipe;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class BlockCrushRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         blockCrush(provider, Blocks.COBBLESTONE, Blocks.GRAVEL);
         blockCrush(provider, Blocks.GRAVEL, Blocks.SAND);
         blockCrush(provider, Blocks.POLISHED_GRANITE, Blocks.GRANITE);
@@ -26,7 +26,7 @@ public class BlockCrushRecipeLoader {
         blockCrush(provider, Blocks.END_STONE, ModBlocks.END_DUST.get());
     }
 
-    private static void blockCrush(RegistrateRecipeProvider provider, Block input, Block result) {
+    private static void blockCrush(RegistrumRecipeProvider provider, Block input, Block result) {
         BlockCrushRecipe.builder().input(input).result(result).save(provider);
     }
 }

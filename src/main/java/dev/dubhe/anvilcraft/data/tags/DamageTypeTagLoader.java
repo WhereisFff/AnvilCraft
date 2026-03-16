@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.tags;
 
-import com.tterrag.registrate.providers.RegistrateTagsProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumTagsProvider;
 import dev.dubhe.anvilcraft.init.entity.ModDamageTypeTags;
 import dev.dubhe.anvilcraft.init.entity.ModDamageTypes;
 import net.minecraft.resources.ResourceLocation;
@@ -14,7 +14,7 @@ public class DamageTypeTagLoader {
      *
      * @param provider 提供器
      */
-    public static void init(RegistrateTagsProvider<DamageType> provider) {
+    public static void init(RegistrumTagsProvider<DamageType> provider) {
         provider.addTag(ModDamageTypeTags.AMULET_VALID)
             .addOptionalTag(ModDamageTypeTags.TOPAZ_AMULET_VALID)
             .addOptionalTag(ModDamageTypeTags.RUBY_AMULET_VALID)

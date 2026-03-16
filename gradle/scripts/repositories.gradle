@@ -22,11 +22,4 @@ repositories {
             includeGroup "mezz.jei"
         }
     }
-    maven { // Registrate Fork
-        name = "Ithundxr Maven"
-        url = "https://maven.ithundxr.dev/snapshots"
-        content {
-            includeGroup "com.tterrag.registrate"
-        }
-    }
 }

@@ -109,7 +109,8 @@ public class HudTooltipManager {
             tooltipPosY,
             BACKGROUND_COLOR,
             BORDER_COLOR_TOP,
-            BORDER_COLOR_BOTTOM);
+            BORDER_COLOR_BOTTOM
+        );
     }
 
     /**
@@ -139,7 +140,8 @@ public class HudTooltipManager {
             tooltipPosY,
             BACKGROUND_COLOR,
             BORDER_COLOR_TOP,
-            BORDER_COLOR_BOTTOM);
+            BORDER_COLOR_BOTTOM
+        );
     }
 
     /**

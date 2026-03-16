@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.init.entity;
 
-import com.tterrag.registrate.util.entry.EntityEntry;
+import dev.anvilcraft.lib.v2.registrum.util.entry.EntityEntry;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.renderer.entity.AscendingBlockRenderer;
 import dev.dubhe.anvilcraft.client.renderer.entity.CauldronOutletRenderer;
@@ -31,46 +31,46 @@ import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.MobCategory;
 
 public class ModEntities {
-    public static final EntityEntry<? extends AnimateAscendingBlockEntity> ASCENDING_BLOCK_ENTITY = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends AnimateAscendingBlockEntity> ASCENDING_BLOCK_ENTITY = AnvilCraft.REGISTRUM
         .entity("animate_ascending_block", AnimateAscendingBlockEntity::new, MobCategory.MISC)
         .renderer(() -> AscendingBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends FallingGiantAnvilEntity> FALLING_GIANT_ANVIL = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends FallingGiantAnvilEntity> FALLING_GIANT_ANVIL = AnvilCraft.REGISTRUM
         .entity("falling_giant_anvil", FallingGiantAnvilEntity::new, MobCategory.MISC)
         .renderer(() -> FallingBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends FallingSpectralBlockEntity> FALLING_SPECTRAL_BLOCK = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends FallingSpectralBlockEntity> FALLING_SPECTRAL_BLOCK = AnvilCraft.REGISTRUM
         .entity("falling_spectral_block", FallingSpectralBlockEntity::new, MobCategory.MISC)
         .properties(builder -> builder.sized(0.98f, 0.98f))
         .renderer(() -> SpectralBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends FloatingBlockEntity> FLOATING_BLOCK = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends FloatingBlockEntity> FLOATING_BLOCK = AnvilCraft.REGISTRUM
         .entity("floating_block", FloatingBlockEntity::new, MobCategory.MISC)
         .renderer(() -> FallingBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends LevitatingBlockEntity> LEVITATING_BLOCK = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends LevitatingBlockEntity> LEVITATING_BLOCK = AnvilCraft.REGISTRUM
         .entity("levitating_block", LevitatingBlockEntity::new, MobCategory.MISC)
         .properties(builder -> builder.sized(0.98f, 0.98f))
         .renderer(() -> FallingBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends StandableFallingBlockEntity> STANDABLE_FALLING_BLOCK = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends StandableFallingBlockEntity> STANDABLE_FALLING_BLOCK = AnvilCraft.REGISTRUM
         .entity("standable_falling_block", StandableFallingBlockEntity::new, MobCategory.MISC)
         .properties(builder -> builder.sized(0.98f, 0.98f))
         .renderer(() -> FallingBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends StandableLevitatingBlockEntity> STANDABLE_LEVITATING_BLOCK = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends StandableLevitatingBlockEntity> STANDABLE_LEVITATING_BLOCK = AnvilCraft.REGISTRUM
         .entity("standable_levitating_block", StandableLevitatingBlockEntity::new, MobCategory.MISC)
         .properties(builder -> builder.sized(0.98f, 0.98f))
         .renderer(() -> FallingBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends IonocraftEntity> IONOCRAFT = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends IonocraftEntity> IONOCRAFT = AnvilCraft.REGISTRUM
         .<IonocraftEntity>entity("ionocraft", IonocraftEntity::new, MobCategory.MISC)
         .properties(it -> it.sized(0.75f, 0.75f)
             .eyeHeight(0.5625F)
@@ -78,7 +78,7 @@ public class ModEntities {
         ).renderer(() -> IonocraftRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends ThrownFrostMetalHeavyHalberdEntity> THROWN_FROST_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends ThrownFrostMetalHeavyHalberdEntity> THROWN_FROST_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRUM
         .entity(
             "thrown_frost_metal_heavy_halberd",
             (ThrownHeavyHalberdEntity.Factory<ThrownFrostMetalHeavyHalberdEntity>) ThrownFrostMetalHeavyHalberdEntity::new,
@@ -91,7 +91,7 @@ public class ModEntities {
         .renderer(() -> ThrownHeavyHalberdRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends ThrownEmberMetalHeavyHalberdEntity> THROWN_EMBER_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends ThrownEmberMetalHeavyHalberdEntity> THROWN_EMBER_METAL_HEAVY_HALBERD = AnvilCraft.REGISTRUM
         .entity(
             "thrown_ember_metal_heavy_halberd",
             (ThrownHeavyHalberdEntity.Factory<ThrownEmberMetalHeavyHalberdEntity>) ThrownEmberMetalHeavyHalberdEntity::new,
@@ -105,7 +105,7 @@ public class ModEntities {
         .register();
 
     public static final EntityEntry<? extends ThrownTranscendenceHeavyHalberdEntity> THROWN_TRANSCENDENCE_HEAVY_HALBERD =
-        AnvilCraft.REGISTRATE
+        AnvilCraft.REGISTRUM
             .entity(
                 "thrown_transcendence_heavy_halberd",
                 (ThrownHeavyHalberdEntity.Factory<ThrownTranscendenceHeavyHalberdEntity>) ThrownTranscendenceHeavyHalberdEntity::new,
@@ -118,24 +118,24 @@ public class ModEntities {
             .renderer(() -> ThrownHeavyHalberdRenderer::new)
             .register();
 
-    public static final EntityEntry<? extends SlidingBlockEntity> SLIDING_BLOCK = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends SlidingBlockEntity> SLIDING_BLOCK = AnvilCraft.REGISTRUM
         .<SlidingBlockEntity>entity("sliding_block", SlidingBlockEntity::new, MobCategory.MISC)
         .renderer(() -> SlidingBlockRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends MagnetizedNodeEntity> MAGNETIZED_NODE = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends MagnetizedNodeEntity> MAGNETIZED_NODE = AnvilCraft.REGISTRUM
         .<MagnetizedNodeEntity>entity("magnetized_node", MagnetizedNodeEntity::new, MobCategory.MISC)
         .properties(it -> it.eyeHeight(0f))
         .renderer(() -> MagnetizedNodeEntityRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends CauldronOutletEntity> CAULDRON_OUTLET = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends CauldronOutletEntity> CAULDRON_OUTLET = AnvilCraft.REGISTRUM
         .<CauldronOutletEntity>entity("cauldron_outlet", CauldronOutletEntity::new, MobCategory.MISC)
         .properties(it -> it.eyeHeight(0f))
         .renderer(() -> CauldronOutletRenderer::new)
         .register();
 
-    public static final EntityEntry<? extends SpectralProjectileEntity> SPECTRAL_PROJECTILE = AnvilCraft.REGISTRATE
+    public static final EntityEntry<? extends SpectralProjectileEntity> SPECTRAL_PROJECTILE = AnvilCraft.REGISTRUM
         .<SpectralProjectileEntity>entity("spectral_projectile", SpectralProjectileEntity::new, MobCategory.MISC)
         .properties(it -> it.sized(0.5F, 0.5F)
             .eyeHeight(0.13F)

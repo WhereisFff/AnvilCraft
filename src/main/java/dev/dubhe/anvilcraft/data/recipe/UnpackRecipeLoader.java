@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -9,7 +9,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 
 public class UnpackRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         unpack(provider, Items.WET_SPONGE, ModItems.SPONGE_GEMMULE, 4);
         unpack(provider, Items.MELON, Items.MELON_SLICE, 9);
         unpack(provider, Items.SNOW_BLOCK, Items.SNOWBALL, 4);
@@ -46,7 +46,7 @@ public class UnpackRecipeLoader {
             .save(provider, AnvilCraft.of("unpack/prismine_shard_from_prismine_bricks"));
     }
 
-    private static void unpack(RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int count) {
+    private static void unpack(RegistrumRecipeProvider provider, ItemLike input, ItemLike result, int count) {
         UnpackRecipe.builder().requires(input).result(result, count).save(provider);
     }
 }

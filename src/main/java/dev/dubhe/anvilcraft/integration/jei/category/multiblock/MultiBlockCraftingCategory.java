@@ -1,9 +1,6 @@
 package dev.dubhe.anvilcraft.integration.jei.category.multiblock;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.GiantAnvilBlock;
 import dev.dubhe.anvilcraft.block.state.Cube3x3PartHalf;
@@ -19,7 +16,6 @@ import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockRecipe;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
-import dev.dubhe.anvilcraft.util.VertexConsumerWithPose;
 import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -32,25 +28,12 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.FluidState;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -60,7 +43,6 @@ import java.util.Map;
 
 public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<MultiblockRecipe>> {
     private static final Component TITLE = Component.translatable("gui.anvilcraft.category.multiblock");
-    private static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
 
     private static final Comparator<ItemStack> BY_COUNT_DECREASING =
         Comparator.comparing(ItemStack::getCount).thenComparing(ItemStack::getDescriptionId).reversed();
@@ -176,71 +158,10 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
         }
         final boolean renderAllLayers = level.isAllLayersVisible();
         final int visibleLayer = level.getCurrentVisibleLayer();
-        RenderSystem.enableBlend();
-        final int xPos = 45;
-        final int yPos = 50;
+        RenderSupport.renderLevelLike(level, guiGraphics, 45, 50, SCALE_FAC, 2.0f);
         Minecraft minecraft = Minecraft.getInstance();
-        DeltaTracker tracker = minecraft.getTimer();
-        ClientLevel clientLevel = minecraft.level;
         PoseStack pose = guiGraphics.pose();
-        int sizeX = level.horizontalSize();
         int sizeY = level.verticalSize();
-
-        float scaleX = SCALE_FAC / (sizeX * Mth.SQRT_OF_TWO);
-        float scaleY = SCALE_FAC / (float) sizeY;
-        float scale = Math.min(scaleY, scaleX);
-
-        pose.pushPose();
-        pose.translate(xPos, yPos, 100);
-
-        pose.scale(-scale, -scale, -scale);
-
-        pose.translate(-(float) sizeX / 2, -(float) sizeY / 2, 0);
-        pose.mulPose(Axis.XP.rotationDegrees(-30));
-
-        float offsetX = (float) -sizeX / 2;
-        float offsetZ = (float) -sizeX / 2 + 1;
-        float rotationY = (clientLevel.getGameTime() + tracker.getGameTimeDeltaPartialTick(true)) * 2f;
-
-        pose.translate(-offsetX, 0, -offsetZ);
-        pose.mulPose(Axis.YP.rotationDegrees(rotationY + 45));
-
-        pose.translate(offsetX, 0, offsetZ);
-
-        Iterable<BlockPos> iter;
-        if (renderAllLayers) {
-            iter = BlockPos.betweenClosed(BlockPos.ZERO, new BlockPos(sizeX - 1, sizeY - 1, sizeX - 1));
-        } else {
-            iter = BlockPos.betweenClosed(
-                BlockPos.ZERO.atY(visibleLayer), new BlockPos(sizeX - 1, visibleLayer, sizeX - 1));
-        }
-        pose.pushPose();
-        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
-        pose.translate(0, 0, -1);
-        MultiBufferSource.BufferSource buffers = minecraft.renderBuffers().bufferSource();
-        BlockRenderDispatcher blockRenderer = minecraft.getBlockRenderer();
-        for (BlockPos pos : iter) {
-            BlockState state = level.getBlockState(pos);
-            pose.pushPose();
-            pose.translate(pos.getX(), pos.getY(), pos.getZ());
-            FluidState fluid = state.getFluidState();
-            if (!fluid.isEmpty()) {
-                RenderType renderType = ItemBlockRenderTypes.getRenderLayer(fluid);
-                VertexConsumer vertex = buffers.getBuffer(renderType);
-                blockRenderer.renderLiquid(pos, level, new VertexConsumerWithPose(vertex, pose.last(), pos), state, fluid);
-            }
-            if (state.getRenderShape() != RenderShape.INVISIBLE) {
-                BakedModel bakedModel = blockRenderer.getBlockModel(state);
-                for (RenderType type : bakedModel.getRenderTypes(state, RANDOM, ModelData.EMPTY)) {
-                    VertexConsumer vertex = buffers.getBuffer(type);
-                    blockRenderer.renderBatched(state, pos, level, pose, vertex, false, RANDOM, ModelData.EMPTY, type);
-                }
-            }
-            pose.popPose();
-        }
-        buffers.endBatch();
-        pose.popPose();
-        pose.popPose();
         Component component;
         if (renderAllLayers) {
             component = Component.translatable("gui.anvilcraft.category.multiblock.all_layers");
@@ -346,6 +267,7 @@ public class MultiBlockCraftingCategory implements IRecipeCategory<RecipeHolder<
     public static void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(ModBlocks.GIANT_ANVIL.asStack(), AnvilCraftJeiPlugin.MULTIBLOCK_CRAFTING);
         registration.addRecipeCatalyst(ModBlocks.TRANSPARENT_CRAFTING_TABLE.asStack(), AnvilCraftJeiPlugin.MULTIBLOCK_CRAFTING);
+        registration.addRecipeCatalyst(Items.CRAFTING_TABLE.getDefaultInstance(), AnvilCraftJeiPlugin.MULTIBLOCK_CRAFTING);
         registration.addRecipeCatalyst(ModBlocks.SPACE_OVERCOMPRESSOR.asStack(), AnvilCraftJeiPlugin.MULTIBLOCK_CRAFTING);
     }
 

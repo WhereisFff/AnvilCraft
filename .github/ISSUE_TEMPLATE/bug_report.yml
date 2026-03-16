@@ -2,7 +2,7 @@ name: Bug Report - Bug反馈
 description: Create a report to help us improve. - 反馈问题，帮助我们改进
 title: "[Bug] "
 labels:
-  - 🐛 bug
+  - 🐛 Bug
 
 body:
   - type: markdown

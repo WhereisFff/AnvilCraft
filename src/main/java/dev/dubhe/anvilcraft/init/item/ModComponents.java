@@ -6,10 +6,12 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
 import dev.dubhe.anvilcraft.item.property.component.DiskData;
 import dev.dubhe.anvilcraft.item.property.component.Eternal;
+import dev.dubhe.anvilcraft.item.property.component.Ferocious;
 import dev.dubhe.anvilcraft.item.property.component.FilterContent;
 import dev.dubhe.anvilcraft.item.property.component.HeliostatsData;
 import dev.dubhe.anvilcraft.item.property.component.Merciless;
 import dev.dubhe.anvilcraft.item.property.component.MultiphaseRef;
+import dev.dubhe.anvilcraft.item.property.component.OverLimitItemContainerContents;
 import dev.dubhe.anvilcraft.item.property.component.PillBocContents;
 import dev.dubhe.anvilcraft.item.property.component.Providence;
 import dev.dubhe.anvilcraft.item.property.component.SavedEntity;
@@ -80,7 +82,12 @@ public class ModComponents {
 
     public static final DataComponentType<Merciless> MERCILESS = register(
         "merciless",
-        b -> b.persistent(Merciless.CODEC).networkSynchronized(Merciless.STREAM_CODEC)
+        b -> b.persistent(Merciless.CODEC.codec()).networkSynchronized(Merciless.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<Ferocious> FEROCIOUS = register(
+        "ferocious",
+        b -> b.persistent(Ferocious.CODEC.codec()).networkSynchronized(Ferocious.STREAM_CODEC)
     );
 
     public static final DataComponentType<Integer> DEVOUR_RANGE = register(
@@ -113,6 +120,11 @@ public class ModComponents {
         b -> b.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC)
     );
 
+    public static final DataComponentType<ItemEnchantments> DISABLED_ENCHANTMENTS = register(
+        "disabled_enchantments",
+        b -> b.persistent(ItemEnchantments.CODEC).networkSynchronized(ItemEnchantments.STREAM_CODEC)
+    );
+
     public static final DataComponentType<Boolean> CAN_TAKE_OUT_AMMO = register(
         "can_take_out_ammo",
         it -> it.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL)
@@ -126,6 +138,11 @@ public class ModComponents {
     public static final DataComponentType<PillBocContents> PILL_BOC_CONTENTS = register(
         "pill_box_contents",
         (builder) -> builder.persistent(PillBocContents.CODEC).networkSynchronized(PillBocContents.STREAM_CODEC)
+    );
+
+    public static final DataComponentType<OverLimitItemContainerContents> OVER_LIMIT_CONTAINER = register(
+        "over_limit_item_container_contents",
+        b -> b.persistent(OverLimitItemContainerContents.CODEC).networkSynchronized(OverLimitItemContainerContents.STREAM_CODEC)
     );
 
     private static <T> DataComponentType<T> register(String name, Consumer<DataComponentType.Builder<T>> customizer) {

@@ -1,9 +1,10 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.init.block.ModFluids;
 import dev.dubhe.anvilcraft.init.item.ModFoodItems;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -17,7 +18,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 public class BulgingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         BulgingRecipeLoader.bulging(provider, Items.DIRT, Items.CLAY);
         BulgingRecipeLoader.bulging(provider, Items.CRIMSON_FUNGUS, Items.NETHER_WART_BLOCK);
         BulgingRecipeLoader.bulging(provider, Items.WARPED_FUNGUS, Items.WARPED_WART_BLOCK);
@@ -54,16 +55,26 @@ public class BulgingRecipeLoader {
             .result(Blocks.RED_MUSHROOM_BLOCK)
             .result(Blocks.MUSHROOM_STEM, 0.1f)
             .save(provider);
-
         BulgingRecipe.builder()
             .cauldron(Blocks.WATER_CAULDRON)
             .requires(Items.BROWN_MUSHROOM)
             .result(Blocks.BROWN_MUSHROOM_BLOCK)
             .result(Blocks.MUSHROOM_STEM, 0.1f)
             .save(provider);
+
+        BulgingRecipe.builder()
+            .cauldron(ModFluids.EXP_FLUID.getId())
+            .consume(1000)
+            .result(ModItems.EXP_GEM)
+            .save(provider);
+        BulgingRecipe.builder()
+            .cauldron(Blocks.WATER_CAULDRON)
+            .transform(ModBlocks.EXP_FLUID_CAULDRON.get())
+            .requires(ModItems.EXP_GEM)
+            .save(provider, AnvilCraft.of("bulging/exp_fluid_cauldron"));
     }
 
-    private static void bulging(RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int consume) {
+    private static void bulging(RegistrumRecipeProvider provider, ItemLike input, ItemLike result, int consume) {
         BulgingRecipe.builder()
             .cauldron(Blocks.WATER_CAULDRON)
             .requires(input)
@@ -72,12 +83,12 @@ public class BulgingRecipeLoader {
             .save(provider);
     }
 
-    private static void bulging(RegistrateRecipeProvider provider, ItemLike input, ItemLike result) {
+    private static void bulging(RegistrumRecipeProvider provider, ItemLike input, ItemLike result) {
         BulgingRecipeLoader.bulging(provider, input, result, 0);
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void bulging(RegistrateRecipeProvider provider, TagKey<Item> input, ItemLike result, int consume) {
+    private static void bulging(RegistrumRecipeProvider provider, TagKey<Item> input, ItemLike result, int consume) {
         BulgingRecipe.builder()
             .cauldron(Blocks.WATER_CAULDRON)
             .requires(input)
@@ -87,13 +98,13 @@ public class BulgingRecipeLoader {
     }
 
     @SuppressWarnings("SameParameterValue")
-    private static void bulging(RegistrateRecipeProvider provider, TagKey<Item> input, ItemLike result) {
+    private static void bulging(RegistrumRecipeProvider provider, TagKey<Item> input, ItemLike result) {
         BulgingRecipeLoader.bulging(provider, input, result, 0);
     }
 
     @SuppressWarnings("SameParameterValue")
     private static void crystallize(
-        RegistrateRecipeProvider provider, ItemLike input, ItemLike result, int consume
+        RegistrumRecipeProvider provider, ItemLike input, ItemLike result, int consume
     ) {
         BulgingRecipe.builder()
             .cauldron(Blocks.POWDER_SNOW_CAULDRON)

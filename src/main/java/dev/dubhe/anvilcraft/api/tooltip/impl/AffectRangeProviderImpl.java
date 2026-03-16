@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.api.tooltip.impl;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IAffectRangeProvider;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -14,8 +15,9 @@ public class AffectRangeProviderImpl implements IAffectRangeProvider {
 
     @Override
     public VoxelShape affectRange(BlockEntity entity) {
-        if (entity instanceof IHasAffectRange) {
-            return Shapes.create(((IHasAffectRange) entity).shape());
+        // 有作用范围且作用范围不为 null
+        if (entity instanceof IHasAffectRange har && har.shape() instanceof AABB shape) {
+            return Shapes.create(shape);
         }
         return null;
     }

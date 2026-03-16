@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.block.multipart;
 
-import com.tterrag.registrate.util.nullness.NonNullFunction;
+import dev.anvilcraft.lib.v2.registrum.util.nullness.NonNullFunction;
 import dev.dubhe.anvilcraft.block.state.IFlexibleMultiPartBlockState;
 import dev.dubhe.anvilcraft.util.Util;
 import net.minecraft.core.BlockPos;

@@ -198,11 +198,7 @@ public class AccelerationRingBlockEntity extends BlockEntity implements IPowerCo
             aabbStart = getBlockPos().relative(direction.getOpposite(), 2);
         }
         AABB aabb = AABB.encapsulatingFullBlocks(endRingPos.relative(direction), aabbStart);
-        Direction.Axis axis = direction.getAxis();
-        double inflationX = axis == Direction.Axis.X ? 0 : 1;
-        double inflationY = axis == Direction.Axis.Y ? 0 : 1;
-        double inflationZ = axis == Direction.Axis.Z ? 0 : 1;
-        ACCELERATION_AABB_MAP.put(getBlockPos(), aabb.inflate(inflationX, inflationY, inflationZ));
+        ACCELERATION_AABB_MAP.put(getBlockPos(), aabb);
         for (BlockPos pos : blockPoses) {
             BlockState fallState = this.level.getBlockState(pos);
             this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 2);

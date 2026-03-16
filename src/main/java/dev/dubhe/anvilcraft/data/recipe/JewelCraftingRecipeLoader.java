@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.data.recipe;
 
-import com.tterrag.registrate.providers.RegistrateRecipeProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumRecipeProvider;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -10,7 +10,7 @@ import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.Tags;
 
 public class JewelCraftingRecipeLoader {
-    public static void init(RegistrateRecipeProvider provider) {
+    public static void init(RegistrumRecipeProvider provider) {
         JewelCraftingRecipe.builder()
             .requires(Items.EXPERIENCE_BOTTLE, 16)
             .requires(Items.GOLD_BLOCK, 8)

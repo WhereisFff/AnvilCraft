@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.data.lang;
 
-import com.tterrag.registrate.providers.RegistrateLangProvider;
+import dev.anvilcraft.lib.v2.registrum.providers.RegistrumLangProvider;
 
 public class AdvancementLang {
     @SuppressWarnings("checkstyle:LineLength")
-    public static void init(RegistrateLangProvider provider) {
+    public static void init(RegistrumLangProvider provider) {
         // region root
         provider.add("advancements.anvilcraft.root.title", "Welcome to AnvilCraft");
         provider.add("advancements.anvilcraft.root.description", "Pick up the anvil, start from the vanilla, and enter the world of technology and magic");
@@ -105,7 +105,7 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.rip_van_winkle.title", "Rip Van Winkle");
         provider.add("advancements.anvilcraft.rip_van_winkle.description", "Perform any time warp operation");
 
-        provider.add("advancements.anvilcraft.frost_metal.title", "Rome was not built in a day");
+        provider.add("advancements.anvilcraft.frost_metal.title", "River was not frozen in one day's cold");
         provider.add("advancements.anvilcraft.frost_metal.description", "Obtain any frost metal");
 
         provider.add("advancements.anvilcraft.tai_shang_wang_qing.title", "Immortals beyond emotions");
@@ -136,7 +136,7 @@ public class AdvancementLang {
         provider.add("advancements.anvilcraft.overheated.description", "Using anvil collision to make ember metal block overheated");
 
         provider.add("advancements.anvilcraft.transcendence.title", "Transcendence");
-        provider.add("advancements.anvilcraft.transcendence.description", "Injecting an charged neutronium ingot into an overheated ember metal block to craft transcendium block");
+        provider.add("advancements.anvilcraft.transcendence.description", "Injecting an charged neutronium ingot into an overheated ember metal block to craft transcendium");
 
         provider.add("advancements.anvilcraft.nuclear_power_10a.title", "Nuclear power, piece of cake!");
         provider.add("advancements.anvilcraft.nuclear_power_10a.description", "Using heat collector to collect overheated blocks' heat");

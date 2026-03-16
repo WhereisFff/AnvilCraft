@@ -1,10 +1,12 @@
 package dev.dubhe.anvilcraft.recipe.anvil.builder;
 
-import dev.anvilcraft.lib.recipe.builder.InWorldRecipeBuilder;
-import dev.anvilcraft.lib.recipe.outcome.SpawnItem;
-import dev.anvilcraft.lib.recipe.trigger.IRecipeTrigger;
+import dev.anvilcraft.lib.v2.recipe.builder.InWorldRecipeBuilder;
+import dev.anvilcraft.lib.v2.recipe.component.BlockStatePredicate;
+import dev.anvilcraft.lib.v2.recipe.outcome.SpawnItem;
+import dev.anvilcraft.lib.v2.recipe.trigger.IRecipeTrigger;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.DamageAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.outcome.ProduceHeat;
+import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasAnvil;
 import dev.dubhe.anvilcraft.recipe.anvil.predicate.block.HasCauldron;
 import lombok.EqualsAndHashCode;
 import net.minecraft.resources.ResourceLocation;
@@ -257,6 +259,27 @@ public class ExtendInWorldRecipeBuilder extends InWorldRecipeBuilder<ExtendInWor
      */
     public ExtendInWorldRecipeBuilder hasCauldron(double x, double y, double z, Block cauldron, int consume) {
         return this.with(HasCauldron.builder().cauldron(cauldron).offset(new Vec3(x, y, z)).consume(consume).build());
+    }
+
+    /**
+     * 添加铁砧谓词
+     *
+     * @param consumer BlockStatePredicate构建器消费者
+     * @return 当前构建器实例
+     */
+    public ExtendInWorldRecipeBuilder hasAnvil(Consumer<BlockStatePredicate.Builder> consumer) {
+        BlockStatePredicate.Builder builder = BlockStatePredicate.builder();
+        consumer.accept(builder);
+        return this.with(new HasAnvil(builder));
+    }
+
+    /**
+     * 添加浮霜铁砧谓词
+     *
+     * @return 当前构建器实例
+     */
+    public ExtendInWorldRecipeBuilder hasFrostAnvil() {
+        return this.with(HasAnvil.frostOnly());
     }
 
     /**
