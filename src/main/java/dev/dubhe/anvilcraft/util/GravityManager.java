@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-@EventBusSubscriber(modid = "anvilcraft", bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = "anvilcraft")
 public class GravityManager {
 
     // 维度 -> 区块索引 -> 重力源列表

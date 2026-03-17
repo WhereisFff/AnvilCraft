@@ -13,7 +13,7 @@ import net.neoforged.neoforge.client.model.BakedModelWrapper;
 
 import java.util.Map;
 
-@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID, value = Dist.CLIENT)
 public class WrappingItemCustomRenderedModels {
     @SubscribeEvent
     public static void onModelBake(ModelEvent.ModifyBakingResult event) {

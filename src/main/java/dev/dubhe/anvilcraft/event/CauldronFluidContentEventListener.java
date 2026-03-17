@@ -8,7 +8,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.fluids.RegisterCauldronFluidContentEvent;
 
-@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class CauldronFluidContentEventListener {
     @SubscribeEvent
     public static void registerCauldronFluidContent(RegisterCauldronFluidContentEvent event) {

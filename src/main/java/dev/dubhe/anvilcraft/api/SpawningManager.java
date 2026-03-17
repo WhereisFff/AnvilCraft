@@ -45,7 +45,7 @@ import java.util.Set;
  * @see InductionLightBlockEntity
  * @see MobSpawnEvent.PositionCheck
  */
-@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.GAME)
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class SpawningManager {
     private static final Map<Level, SpawningManager> INSTANCES = new HashMap<>();
     private final Set<BlockPos> nonAnimalLightBlockSet = Collections.synchronizedSet(new ObjectOpenHashSet<>());
