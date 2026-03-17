@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.hud;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.AnvilCraftClient;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.item.IonoCraftBackpackItem;
 import net.minecraft.client.DeltaTracker;
@@ -15,8 +16,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
 public class IonoCraftBackpackHUD {
-    private static final ResourceLocation BATTERY_EMPTY = AnvilCraft.of("widget/battery_display/battery_empty");
-    private static final ResourceLocation BATTERY_FULL = AnvilCraft.of("widget/battery_display/battery_full");
+    private static final ResourceLocation BATTERY_EMPTY = SharedTextures.textureGui("misc/battery_display/battery_empty");
+    private static final ResourceLocation BATTERY_FULL = SharedTextures.textureGui("misc/battery_display/battery_full");
 
     public static void render(GuiGraphics guiGraphics, DeltaTracker partialTick) {
         if (!AnvilCraftClient.CONFIG.ionoCraftBackpackHud.enabled) {

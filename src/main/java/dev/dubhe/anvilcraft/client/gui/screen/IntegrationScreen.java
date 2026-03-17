@@ -4,6 +4,8 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.integration.IntegrationUtil;
 import dev.dubhe.anvilcraft.util.ModEventUtil;
 import net.minecraft.ChatFormatting;
@@ -12,9 +14,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
-import net.minecraft.client.gui.components.ImageButton;
 import net.minecraft.client.gui.components.Tooltip;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.layouts.LinearLayout;
@@ -123,9 +123,9 @@ public class IntegrationScreen extends Screen {
         private final boolean hasExtra;
         private final IntegrationUtil.LoadStatus status;
         private final List<FormattedCharSequence> label;
-        protected final List<ImageButton> children = Lists.newArrayList();
-        protected final List<ImageButton> targetButtons = Lists.newArrayList();
-        protected final List<ImageButton> extraButtons = Lists.newArrayList();
+        protected final List<TexturedButton> children = Lists.newArrayList();
+        protected final List<TexturedButton> targetButtons = Lists.newArrayList();
+        protected final List<TexturedButton> extraButtons = Lists.newArrayList();
 
         public BaseIntegrationEntry(
             String id,
@@ -139,12 +139,12 @@ public class IntegrationScreen extends Screen {
             this.status = ModEventUtil.checkIntegration(id, this.hasExtra);
             this.label = Minecraft.getInstance().font.split(name, 175);
             links.target().forEach(target -> {
-                ImageButton button = this.createButton(target.type(), target.url());
+                TexturedButton button = this.createButton(target.type(), target.url());
                 this.targetButtons.add(button);
                 this.children.add(button);
             });
             links.extra().forEach(extra -> {
-                ImageButton button = this.createButton(extra.type(), extra.url());
+                TexturedButton button = this.createButton(extra.type(), extra.url());
                 this.extraButtons.add(button);
                 this.children.add(button);
             });
@@ -181,15 +181,17 @@ public class IntegrationScreen extends Screen {
             pose.popPose();
         }
 
-        public ImageButton createButton(String type, String url) {
+        public TexturedButton createButton(String type, String url) {
             MutableComponent component = Component.translatable("screen.anvilcraft.integration_screen.url." + type);
-            ImageButton imageButton = new ImageButton(
+            TexturedButton imageButton = new TexturedButton(
                 18,
                 18,
-                new WidgetSprites(
-                    AnvilCraft.of("widget/integration_screen/" + type),
-                    AnvilCraft.of("widget/integration_screen/" + type + "_highlighted")
-                ),
+                18,
+                18,
+                SharedTextures.textureGui("misc/integration_screen/" + type),
+                18,
+                18,
+                36,
                 button -> {
                     try {
                         URI uri = Util.parseAndValidateUntrustedUri(url);
@@ -239,7 +241,7 @@ public class IntegrationScreen extends Screen {
                 false
             );
             for (int i = this.targetButtons.size(); i > 0; i--) {
-                ImageButton button = this.targetButtons.get(i - 1);
+                TexturedButton button = this.targetButtons.get(i - 1);
                 button.setX(left + width - 19 * (i));
                 button.setY(top + offsetY - 9);
                 button.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -254,7 +256,7 @@ public class IntegrationScreen extends Screen {
                 false
             );
             for (int i = this.extraButtons.size(); i > 0; i--) {
-                ImageButton button = this.extraButtons.get(i - 1);
+                TexturedButton button = this.extraButtons.get(i - 1);
                 button.setX(left + width - 19 * (i));
                 button.setY(top + 48 - 9);
                 button.render(guiGraphics, mouseX, mouseY, partialTick);
@@ -263,7 +265,7 @@ public class IntegrationScreen extends Screen {
 
         @Override
         public void renderToolTip() {
-            for (ImageButton child : this.children) {
+            for (TexturedButton child : this.children) {
                 if (child.isHovered()) return;
             }
             super.renderToolTip();

@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.constant.TexturesConstant;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.FrostGrindstoneMenu;
 import dev.dubhe.anvilcraft.network.FrostGrindstoneSyncPacket;
 import dev.dubhe.anvilcraft.util.EnchantmentData;
@@ -19,8 +18,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindstoneMenu> {
-    private static final ResourceLocation BACKGROUND =
-        AnvilCraft.of("textures/gui/container/smithing/background/frost_grindstone.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "frost_grindstone");
 
     private final FrostGrindstoneMenu menu;
     private final Scrollable scrollable = new Scrollable() {
@@ -116,7 +114,7 @@ public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindsto
                 selected = true;
             }
 
-            guiGraphics.blit(TexturesConstant.EMBER_GRINDSTONE_BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
+            guiGraphics.blit(SharedTextures.SWITCH_TABLE_BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
             guiGraphics.renderItem(willRender, x + 1, y + (selected ? 1 : 0), (int) (partialTick * 100));
         }
     }
@@ -129,7 +127,7 @@ public class FrostGrindstoneScreen extends AbstractContainerScreen<FrostGrindsto
             int top = this.topPos + 23;
             int down = top + 36;
             guiGraphics.blit(
-                TexturesConstant.EMBER_GRINDSTONE_SLIDER,
+                SharedTextures.SWITCH_TABLE_SLIDER,
                 left,
                 top + (int) ((down - top - 12) * this.scrollable.getScrollOffs()),
                 0,

@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.SilencerButton;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.ActiveSilencerMenu;
 import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
 import dev.dubhe.anvilcraft.network.RemoveMutedSoundPacket;
@@ -28,12 +28,8 @@ import java.util.regex.Pattern;
 
 @SuppressWarnings("DuplicatedCode")
 public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencerMenu> {
-
-    private static final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/active_silencer.png");
-
-    public static final ResourceLocation ACTIVE_SILENCER_SLIDER =
-        AnvilCraft.of("textures/gui/container/machine/active_silencer_slider.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "active_silencer");
+    public static final ResourceLocation SLIDER = SharedTextures.textureGui("machine/active_silencer/slider");
 
     private static final int SCROLL_BAR_HEIGHT = 120;
     private static final int SCROLL_BAR_TOP_POS_Y = 35;
@@ -48,9 +44,6 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
     public static final int SOUND_MUTED = 1;
 
     private final ActiveSilencerMenu menu;
-    private final SilencerButton[] allSoundButtons = new SilencerButton[8];
-    private final SilencerButton[] mutedSoundButtons = new SilencerButton[8];
-    private EditBox editBox;
     private int leftScrollOff;
     private int rightScrollOff;
 
@@ -198,7 +191,7 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
 
         int buttonTop = topPos + 35;
         for (int l = 0; l < 8; ++l) {
-            SilencerButton button = new SilencerButton(
+            this.addRenderableWidget(new SilencerButton(
                 leftPos + START_LEFT_X,
                 buttonTop,
                 l,
@@ -209,15 +202,13 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
                     }
                 },
                 this,
-                "add");
-            button.setWidth(112);
-            this.allSoundButtons[l] = this.addRenderableWidget(button);
-            buttonTop += 15;
+                "add"
+            )).setWidth(112);
         }
 
         buttonTop = topPos + 35;
         for (int l = 0; l < 8; ++l) {
-            SilencerButton button = new SilencerButton(
+            this.addRenderableWidget(new SilencerButton(
                 leftPos + START_RIGHT_X,
                 buttonTop,
                 l,
@@ -228,20 +219,18 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
                     }
                 },
                 this,
-                "remove");
-            this.mutedSoundButtons[l] = this.addRenderableWidget(button);
-            buttonTop += 15;
+                "remove"
+            ));
         }
 
-        editBox = new EditBox(
+        this.addRenderableWidget(new EditBox(
             Objects.requireNonNull(this.minecraft).font,
             leftPos + 78,
             topPos + 19,
             100,
             12,
-            Component.translatable("screen.anvilcraft.active_silencer.search"));
-        editBox.setResponder(this::onSearchTextChange);
-        addRenderableWidget(editBox);
+            Component.translatable("screen.anvilcraft.active_silencer.search")
+        )).setResponder(this::onSearchTextChange);
 
         SoundManager manager = Minecraft.getInstance().getSoundManager();
         BuiltInRegistries.SOUND_EVENT.stream()
@@ -361,9 +350,9 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
             int scrollY = (int) (posY + (scrollOff / (float) totalCount) * SCROLL_BAR_HEIGHT);
             scrollY = Mth.clamp(scrollY, posY, maxY);
 
-            guiGraphics.blit(ACTIVE_SILENCER_SLIDER, posX, scrollY, 0, 0, 5, 9, 10, 9);
+            guiGraphics.blit(SLIDER, posX, scrollY, 0, 0, 5, 9, 10, 9);
         } else {
-            guiGraphics.blit(ACTIVE_SILENCER_SLIDER, posX, posY, 0, 0, 5, 9, 10, 9);
+            guiGraphics.blit(SLIDER, posX, posY, 0, 0, 5, 9, 10, 9);
         }
     }
 
@@ -407,7 +396,7 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

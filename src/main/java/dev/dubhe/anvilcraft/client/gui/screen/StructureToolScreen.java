@@ -13,6 +13,8 @@ import dev.dubhe.anvilcraft.block.OverseerBlock;
 import dev.dubhe.anvilcraft.block.RemoteTransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
+import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.inventory.StructureToolMenu;
@@ -27,8 +29,6 @@ import lombok.Setter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.ImageButton;
-import net.minecraft.client.gui.components.WidgetSprites;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -61,12 +61,8 @@ import java.util.Map;
 import java.util.Set;
 
 public class StructureToolScreen extends AbstractContainerScreen<StructureToolMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/structure_tool/background.png");
-
-    private static final WidgetSprites SPRITES = new WidgetSprites(
-        AnvilCraft.of("widget/structure_tool/button"),
-        AnvilCraft.of("widget/structure_tool/button_highlighted")
-    );
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("misc", "structure_tool");
+    private static final ResourceLocation BUTTON = SharedTextures.textureGui("misc/structure_tool/button");
 
     private static final Component REGULAR_RECIPE_TOOLTIP =
         Component.translatable("screen.anvilcraft.structure_tool.regular_recipe");
@@ -82,9 +78,9 @@ public class StructureToolScreen extends AbstractContainerScreen<StructureToolMe
 
     private static char currentSymbol;
 
-    private ImageButton dataGenButton;
-    private ImageButton kubejsButton;
-    private ImageButton jsonButton;
+    private TexturedButton dataGenButton;
+    private TexturedButton kubejsButton;
+    private TexturedButton jsonButton;
     private static final int SLOT_ID_RESULT = 36;
 
     @Setter
@@ -101,81 +97,109 @@ public class StructureToolScreen extends AbstractContainerScreen<StructureToolMe
         int offsetX = (this.width - this.imageWidth) / 2;
         int offsetY = (this.height - this.imageHeight) / 2;
 
-        dataGenButton = addRenderableWidget(new ImageButton(offsetX + 122, offsetY + 21, 46, 16, SPRITES, button -> {
-            Recipe<?> recipe = toRecipe();
-            if (recipe instanceof IDatagen datagenRecipe) {
-                minecraft.keyboardHandler.setClipboard(datagenRecipe.toDatagen());
-                minecraft.player.displayClientMessage(
-                    Component.translatable("message.anvilcraft.copied_to_clipboard"),
-                    false
-                );
-            } else {
-                minecraft.player.displayClientMessage(
-                    Component.translatable("message.anvilcraft.code_gen_filed").withStyle(ChatFormatting.RED),
-                    false
-                );
-                minecraft.player.displayClientMessage(
-                    Component.translatable("message.anvilcraft.code_gen_check").withStyle(ChatFormatting.RED),
-                    false
-                );
-            }
+        dataGenButton = addRenderableWidget(new TexturedButton(
+            offsetX + 122,
+            offsetY + 21,
+            46,
+            16,
+            BUTTON,
+            16,
+            46,
+            32,
+            button -> {
+                Recipe<?> recipe = toRecipe();
+                if (recipe instanceof IDatagen datagenRecipe) {
+                    minecraft.keyboardHandler.setClipboard(datagenRecipe.toDatagen());
+                    minecraft.player.displayClientMessage(
+                        Component.translatable("message.anvilcraft.copied_to_clipboard"),
+                        false
+                    );
+                } else {
+                    minecraft.player.displayClientMessage(
+                        Component.translatable("message.anvilcraft.code_gen_filed").withStyle(ChatFormatting.RED),
+                        false
+                    );
+                    minecraft.player.displayClientMessage(
+                        Component.translatable("message.anvilcraft.code_gen_check").withStyle(ChatFormatting.RED),
+                        false
+                    );
+                }
 
-            minecraft.player.closeContainer();
-        }));
-        kubejsButton = addRenderableWidget(new ImageButton(offsetX + 122, offsetY + 37, 46, 16, SPRITES, button -> {
-            button.setFocused(false);
-        }));
-        jsonButton = addRenderableWidget(new ImageButton(offsetX + 122, offsetY + 53, 46, 16, SPRITES, button -> {
-            Recipe<?> recipe = toRecipe();
-            if (recipe == null) {
-                minecraft.player.displayClientMessage(
-                    Component.translatable("message.anvilcraft.code_gen_filed")
-                        .withStyle(ChatFormatting.RED),
-                    false
-                );
-                minecraft.player.displayClientMessage(
-                    Component.translatable("message.anvilcraft.code_gen_check")
-                        .withStyle(ChatFormatting.RED),
-                    false
-                );
-                return;
+                minecraft.player.closeContainer();
             }
-            String defaultName = switch (recipe) {
-                case IDatagen datagenRecipe -> datagenRecipe.getSuggestedName();
-                default -> Integer.toHexString(recipe.hashCode());
-            };
-            String pathString = getFilePath(defaultName, "*.json");
-            if (pathString == null) {
-                minecraft.player.displayClientMessage(Component.translatable("message.anvilcraft.no_file_selected")
-                        .withStyle(ChatFormatting.RED),
-                    false
-                );
-                return;
+        ));
+        kubejsButton = addRenderableWidget(new TexturedButton(
+            offsetX + 122,
+            offsetY + 37,
+            46,
+            16,
+            BUTTON,
+            16,
+            46,
+            32,
+            button -> button.setFocused(false)
+        ));
+        jsonButton = addRenderableWidget(new TexturedButton(
+            offsetX + 122,
+            offsetY + 53,
+            46,
+            16,
+            BUTTON,
+            16,
+            46,
+            32,
+            button -> {
+                Recipe<?> recipe = toRecipe();
+                if (recipe == null) {
+                    minecraft.player.displayClientMessage(
+                        Component.translatable("message.anvilcraft.code_gen_filed")
+                            .withStyle(ChatFormatting.RED),
+                        false
+                    );
+                    minecraft.player.displayClientMessage(
+                        Component.translatable("message.anvilcraft.code_gen_check")
+                            .withStyle(ChatFormatting.RED),
+                        false
+                    );
+                    return;
+                }
+                String defaultName = switch (recipe) {
+                    case IDatagen datagenRecipe -> datagenRecipe.getSuggestedName();
+                    default -> Integer.toHexString(recipe.hashCode());
+                };
+                String pathString = getFilePath(defaultName, "*.json");
+                if (pathString == null) {
+                    minecraft.player.displayClientMessage(Component.translatable("message.anvilcraft.no_file_selected")
+                            .withStyle(ChatFormatting.RED),
+                        false
+                    );
+                    return;
+                }
+                Path path = Paths.get(pathString);
+                JsonElement json = Recipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).getOrThrow();
+                try {
+                    String jsonString = AnvilCraft.GSON.toJson(json);
+                    Files.writeString(
+                        path,
+                        jsonString,
+                        StandardCharsets.UTF_8,
+                        StandardOpenOption.CREATE,
+                        StandardOpenOption.WRITE);
+                    minecraft.player.displayClientMessage(
+                        Component.translatable("message.anvilcraft.file_saved", pathString),
+                        false
+                    );
+                } catch (IOException e) {
+                    AnvilCraft.LOGGER.error("Error occurred when saving file {}: {}", path, e);
+                    minecraft.player.displayClientMessage(
+                        Component.translatable("message.anvilcraft.file_save_failed", pathString, e.getMessage())
+                            .withStyle(ChatFormatting.RED),
+                        false
+                    );
+                }
+                minecraft.player.closeContainer();
             }
-            Path path = Paths.get(pathString);
-            JsonElement json = Recipe.CODEC.encodeStart(JsonOps.INSTANCE, recipe).getOrThrow();
-            try {
-                String jsonString = AnvilCraft.GSON.toJson(json);
-                Files.writeString(
-                    path,
-                    jsonString,
-                    StandardCharsets.UTF_8,
-                    StandardOpenOption.CREATE,
-                    StandardOpenOption.WRITE);
-                minecraft.player.displayClientMessage(
-                    Component.translatable("message.anvilcraft.file_saved", pathString),
-                    false
-                );
-            } catch (IOException e) {
-                AnvilCraft.LOGGER.error("Error occurred when saving file {}: {}", path, e);
-                minecraft.player.displayClientMessage(
-                    Component.translatable("message.anvilcraft.file_save_failed", pathString, e.getMessage())
-                        .withStyle(ChatFormatting.RED),
-                    false
-                );
-            }
-            minecraft.player.closeContainer();
-        }));
+        ));
     }
 
     @Override
@@ -251,7 +275,7 @@ public class StructureToolScreen extends AbstractContainerScreen<StructureToolMe
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Nullable

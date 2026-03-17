@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.JewelCraftingMenu;
 import dev.dubhe.anvilcraft.inventory.component.jewel.JewelInputSlot;
 import net.minecraft.client.gui.GuiGraphics;
@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
 public class JewelCraftingScreen extends AbstractContainerScreen<JewelCraftingMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/jewelcrafting/background.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "jewel_crafting");
 
     public JewelCraftingScreen(JewelCraftingMenu menu, Inventory playerInventory, Component title) {
         super(menu, playerInventory, title);
@@ -26,7 +26,7 @@ public class JewelCraftingScreen extends AbstractContainerScreen<JewelCraftingMe
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

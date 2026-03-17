@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.CycleFilterModeButton;
 import dev.dubhe.anvilcraft.client.gui.component.ItemCollectorButton;
 import dev.dubhe.anvilcraft.client.gui.component.TextWidget;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.ItemDetectorMenu;
 import dev.dubhe.anvilcraft.inventory.component.FilterOnlySlot;
 import dev.dubhe.anvilcraft.network.ItemDetectorChangeRangePacket;
@@ -30,8 +30,7 @@ import java.util.Optional;
 public class ItemDetectorScreen extends AbstractContainerScreen<ItemDetectorMenu>
     implements IFilterScreen<ItemDetectorMenu> {
 
-    private static final ResourceLocation BACKGROUND_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/item_detector.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "item_detector");
     private final Component scrollToChangeTooltip =
         Component.translatable("screen.anvilcraft.filter.scroll_to_change")
             .withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
@@ -50,7 +49,7 @@ public class ItemDetectorScreen extends AbstractContainerScreen<ItemDetectorMenu
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(BACKGROUND_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IMultipleMaterial;
-import dev.dubhe.anvilcraft.constant.TexturesConstant;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.EmberSmithingMenu;
 import dev.dubhe.anvilcraft.item.template.mto.BaseMultipleToOneTemplateItem;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,16 +18,18 @@ import java.util.List;
 import java.util.Optional;
 
 public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
-    private static final ResourceLocation BACKGROUND =
-        AnvilCraft.of("textures/gui/container/smithing/background/ember_smithing_table.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "ember_smithing_table.png");
 
     // 空槽位纹理 - 模板
-    private static final ResourceLocation EMPTY_SLOT_TWO_TO_ONE_SMITHING_TEMPLATE =
-        AnvilCraft.of("item/empty_slot_two_to_one_smithing_template");
-    private static final ResourceLocation EMPTY_SLOT_FOUR_TO_ONE_SMITHING_TEMPLATE =
-        AnvilCraft.of("item/empty_slot_four_to_one_smithing_template");
-    private static final ResourceLocation EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE =
-        AnvilCraft.of("item/empty_slot_eight_to_one_smithing_template");
+    private static final ResourceLocation EMPTY_SLOT_TWO_TO_ONE_SMITHING_TEMPLATE = SharedTextures.texture(
+        "item/empty_slot_two_to_one_smithing_template"
+    );
+    private static final ResourceLocation EMPTY_SLOT_FOUR_TO_ONE_SMITHING_TEMPLATE = SharedTextures.texture(
+        "item/empty_slot_four_to_one_smithing_template"
+    );
+    private static final ResourceLocation EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE = SharedTextures.texture(
+        "item/empty_slot_eight_to_one_smithing_template"
+    );
 
     // tooltips
     private static final Component MISSING_TEMPLATE_TOOLTIP = Component.translatable(
@@ -124,7 +126,7 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
         for (int i = 2; i < 10; i++) {
             if (this.isSlotEnabled(i)) continue;
             Slot slot = this.menu.getSlot(i);
-            guiGraphics.blit(TexturesConstant.DISABLED_SLOT, this.leftPos + slot.x, this.topPos + slot.y, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(SharedTextures.DISABLED_SLOT, this.leftPos + slot.x, this.topPos + slot.y, 0, 0, 16, 16, 16, 16);
         }
     }
 
@@ -135,7 +137,7 @@ public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
     @Override
     protected void renderErrorIcon(GuiGraphics guiGraphics, int x, int y) {
         if (!this.menu.canCreateResult()) {
-            guiGraphics.blit(TexturesConstant.ERROR_SPRITE, x + 123, y + 48, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(SharedTextures.ERROR_SPRITE, x + 123, y + 48, 0, 0, 16, 16, 16, 16);
         }
     }
 

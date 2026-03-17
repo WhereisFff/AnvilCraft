@@ -5,7 +5,7 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.recipe.EndPortalConversionRecipe;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiSlotUtil;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiTextureConstants;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -38,7 +38,8 @@ public class EndPortalConversionCategory implements IRecipeCategory<EndPortalCon
     public EndPortalConversionCategory(IGuiHelper helper) {
         slotDefault = JeiRenderHelper.getSlotDefault(helper);
         slotChoice = JeiRenderHelper.getSlotChoice(helper);
-        preRenderedEndPortal = helper.drawableBuilder(TextureConstants.PRE_RENDERED_END_PORTAL,
+        preRenderedEndPortal = helper.drawableBuilder(
+            JeiTextureConstants.PRE_RENDERED_END_PORTAL,
             0, 0, 400, 300).setTextureSize(400, 300).build();
         title = Component.translatable("gui.anvilcraft.category.end_portal_conversion");
         fallThroughTooltip = Component.translatable("gui.anvilcraft.category.end_portal_conversion.fall_through");
