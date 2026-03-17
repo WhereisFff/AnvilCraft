@@ -1,26 +1,35 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
+import dev.anvilcraft.lib.v2.network.packet.IServerboundPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.entity.PulseGeneratorBlockEntity;
 import dev.dubhe.anvilcraft.inventory.PulseGeneratorMenu;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerPlayer;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.world.entity.player.Player;
 
 public record PulseGeneratorUpdatePacket(
-    byte startMode, boolean outputInvert, int waitingTime, int signalDuration
-) implements CustomPacketPayload {
-    public static final Type<PulseGeneratorUpdatePacket> TYPE = new Type<>(AnvilCraft.of("advanced_repeater_update"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PulseGeneratorUpdatePacket> STREAM_CODEC =
-        StreamCodec.ofMember(PulseGeneratorUpdatePacket::encode, PulseGeneratorUpdatePacket::new);
-    public static final IPayloadHandler<PulseGeneratorUpdatePacket> HANDLER = PulseGeneratorUpdatePacket::serverHandler;
-
-    public PulseGeneratorUpdatePacket(RegistryFriendlyByteBuf buf) {
-        this(buf.readByte(), buf.readBoolean(), buf.readInt(), buf.readInt());
-    }
+    byte startMode,
+    boolean outputInvert,
+    int waitingTime,
+    int signalDuration
+) implements IServerboundPacket {
+    public static final Type<PulseGeneratorUpdatePacket> TYPE = IPacket.type(AnvilCraft.of("advanced_repeater_update"));
+    public static final StreamCodec<ByteBuf, PulseGeneratorUpdatePacket> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.BYTE,
+        PulseGeneratorUpdatePacket::startMode,
+        ByteBufCodecs.BOOL,
+        PulseGeneratorUpdatePacket::outputInvert,
+        ByteBufCodecs.VAR_INT,
+        PulseGeneratorUpdatePacket::waitingTime,
+        ByteBufCodecs.VAR_INT,
+        PulseGeneratorUpdatePacket::signalDuration,
+        PulseGeneratorUpdatePacket::new
+    );
 
     @Override
     public Type<? extends CustomPacketPayload> type() {
@@ -34,16 +43,13 @@ public record PulseGeneratorUpdatePacket(
         buf.writeInt(this.signalDuration);
     }
 
-    public static void serverHandler(PulseGeneratorUpdatePacket data, IPayloadContext context) {
-        ServerPlayer player = (ServerPlayer) context.player();
-        context.enqueueWork(() -> {
-            if (!player.hasContainerOpen()) return;
-            if (!(player.containerMenu instanceof PulseGeneratorMenu menu)) return;
-            PulseGeneratorBlockEntity repeater = menu.getBlockEntity();
-            repeater.setStartMode(data.startMode);
-            repeater.setOutputMode(data.outputInvert);
-            repeater.setWaitingTime(data.waitingTime);
-            repeater.setSignalDuration(data.signalDuration);
-        });
+    @Override
+    public void handleOnServer(Player player) {
+        if (!(player.containerMenu instanceof PulseGeneratorMenu menu)) return;
+        PulseGeneratorBlockEntity repeater = menu.getBlockEntity();
+        repeater.setStartMode(this.startMode);
+        repeater.setOutputMode(this.outputInvert);
+        repeater.setWaitingTime(this.waitingTime);
+        repeater.setSignalDuration(this.signalDuration);
     }
 }

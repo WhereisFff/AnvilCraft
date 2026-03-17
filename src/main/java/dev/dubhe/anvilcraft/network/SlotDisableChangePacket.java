@@ -1,62 +1,44 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
+import dev.anvilcraft.lib.v2.network.packet.ISensitiveBiPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.screen.IFilterScreen;
 import dev.dubhe.anvilcraft.inventory.IFilterMenu;
-import lombok.Getter;
+import dev.dubhe.anvilcraft.util.Util;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-@Getter
-public class SlotDisableChangePacket implements CustomPacketPayload {
-    public static final Type<SlotDisableChangePacket> TYPE = new Type<>(AnvilCraft.of("slot_disable_change"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, SlotDisableChangePacket> STREAM_CODEC =
-        StreamCodec.composite(
-            ByteBufCodecs.INT,
-            SlotDisableChangePacket::getIndex,
-            ByteBufCodecs.BOOL,
-            SlotDisableChangePacket::isState,
-            SlotDisableChangePacket::new);
-    public static final IPayloadHandler<SlotDisableChangePacket> HANDLER = new DirectionalPayloadHandler<>(
-        SlotDisableChangePacket::clientHandler, SlotDisableChangePacket::serverHandler);
-
-    private final int index;
-    private final boolean state;
-
-    public SlotDisableChangePacket(int index, boolean state) {
-        this.index = index;
-        this.state = state;
-    }
+public record SlotDisableChangePacket(int index, boolean state) implements ISensitiveBiPacket {
+    public static final Type<SlotDisableChangePacket> TYPE = IPacket.type(AnvilCraft.of("slot_disable_change"));
+    public static final StreamCodec<ByteBuf, SlotDisableChangePacket> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.INT,
+        SlotDisableChangePacket::index,
+        ByteBufCodecs.BOOL,
+        SlotDisableChangePacket::state,
+        SlotDisableChangePacket::new
+    );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<SlotDisableChangePacket> type() {
         return TYPE;
     }
 
-    public static void serverHandler(SlotDisableChangePacket data, IPayloadContext context) {
-        ServerPlayer player = (ServerPlayer) context.player();
-        context.enqueueWork(() -> {
-            if (!player.hasContainerOpen()) return;
-            if (!(player.containerMenu instanceof IFilterMenu menu)) return;
-            menu.setSlotDisabled(data.index, data.state);
-            menu.flush();
-            PacketDistributor.sendToPlayer(player, data);
-        });
+    @Override
+    public void handleOnClient(Player player) {
+        if (!(Minecraft.getInstance().screen instanceof IFilterScreen<?> screen)) return;
+        screen.setSlotDisabled(this.index, this.state);
     }
 
-    public static void clientHandler(SlotDisableChangePacket data, IPayloadContext context) {
-        Minecraft client = Minecraft.getInstance();
-        context.enqueueWork(() -> {
-            if (!(client.screen instanceof IFilterScreen<?> screen)) return;
-            screen.setSlotDisabled(data.index, data.state);
-        });
+    @Override
+    public void handleOnServer(Player player) {
+        if (!(player.containerMenu instanceof IFilterMenu menu)) return;
+        menu.setSlotDisabled(this.index, this.state);
+        menu.flush();
+        PacketDistributor.sendToPlayer(Util.cast(player), this);
     }
 }

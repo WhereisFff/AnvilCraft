@@ -3,8 +3,8 @@ package dev.dubhe.anvilcraft.client.gui.screen;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.SilencerButton;
 import dev.dubhe.anvilcraft.inventory.ActiveSilencerMenu;
-import dev.dubhe.anvilcraft.network.AddMutedSoundPacket;
-import dev.dubhe.anvilcraft.network.RemoveMutedSoundPacket;
+import dev.dubhe.anvilcraft.network.SilencerAddMutedPacket;
+import dev.dubhe.anvilcraft.network.SilencerRemoveMutedPacket;
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
@@ -123,7 +123,7 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
         if (filteredSounds.isEmpty() || actualIndex >= filteredSounds.size()) return;
         ResourceLocation sound = filteredSounds.get(actualIndex).left();
         addMutedSound(sound);
-        PacketDistributor.sendToServer(new AddMutedSoundPacket(sound));
+        PacketDistributor.sendToServer(new SilencerAddMutedPacket(sound));
         refreshSoundList();
     }
 
@@ -133,7 +133,7 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
         if (mutedSounds.isEmpty() || actualIndex >= mutedSounds.size()) return;
         ResourceLocation sound = mutedSounds.get(actualIndex).left();
         removeMutedSound(sound);
-        PacketDistributor.sendToServer(new RemoveMutedSoundPacket(sound));
+        PacketDistributor.sendToServer(new SilencerRemoveMutedPacket(sound));
         refreshSoundList();
     }
 

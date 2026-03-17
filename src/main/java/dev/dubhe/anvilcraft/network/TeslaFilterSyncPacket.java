@@ -1,57 +1,54 @@
 package dev.dubhe.anvilcraft.network;
 
+import com.google.common.collect.Lists;
+import dev.anvilcraft.lib.v2.network.packet.IClientboundPacket;
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.client.gui.screen.TeslaTowerScreen;
+import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.Pair;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.world.entity.player.Player;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public class TeslaFilterSyncPacket implements CustomPacketPayload {
-    public static final Type<TeslaFilterSyncPacket> TYPE = new Type<>(AnvilCraft.of("tesla_filter_sync"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, TeslaFilterSyncPacket> STREAM_CODEC =
-        StreamCodec.ofMember(TeslaFilterSyncPacket::encode, TeslaFilterSyncPacket::new);
-    public static final IPayloadHandler<TeslaFilterSyncPacket> HANDLER = TeslaFilterSyncPacket::clientHandler;
+public record TeslaFilterSyncPacket(List<FilterData> filters) implements IClientboundPacket {
+    public static final Type<TeslaFilterSyncPacket> TYPE = IPacket.type(AnvilCraft.of("tesla_filter_sync"));
+    public static final StreamCodec<ByteBuf, TeslaFilterSyncPacket> STREAM_CODEC = StreamCodec.composite(
+        FilterData.STREAM_CODEC.apply(ByteBufCodecs.list()),
+        TeslaFilterSyncPacket::filters,
+        TeslaFilterSyncPacket::new
+    );
 
-    private final List<Pair<TeslaFilter, String>> filters;
-
-    public TeslaFilterSyncPacket(List<Pair<TeslaFilter, String>> filters) {
-        this.filters = filters;
-    }
-
-    public TeslaFilterSyncPacket(RegistryFriendlyByteBuf buf) {
-        List<String> ids = buf.readList(FriendlyByteBuf::readUtf);
-        List<String> args = buf.readList(FriendlyByteBuf::readUtf);
-        ArrayList<Pair<TeslaFilter, String>> filters = new ArrayList<>();
-        for (int i = 0; i < args.size(); i++) {
-            filters.add(Pair.of(TeslaFilter.getFilter(ids.get(i)), args.get(i)));
-        }
-        this.filters = filters;
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeCollection(filters.stream().map(it -> it.left().getId()).toList(), FriendlyByteBuf::writeUtf);
-        buf.writeCollection(filters.stream().map(Pair::right).toList(), FriendlyByteBuf::writeUtf);
+    public static TeslaFilterSyncPacket create(List<Pair<TeslaFilter, String>> filters) {
+        return new TeslaFilterSyncPacket(Lists.transform(filters, FilterData::new));
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<TeslaFilterSyncPacket> type() {
         return TYPE;
     }
 
-    public static void clientHandler(TeslaFilterSyncPacket data, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (Minecraft.getInstance().screen instanceof TeslaTowerScreen screen) {
-                screen.handleSync(data.filters);
-            }
-        });
+    @Override
+    public void handleOnClient(Player player) {
+        if (!(Minecraft.getInstance().screen instanceof TeslaTowerScreen screen)) return;
+        screen.handleSync(Lists.transform(this.filters, data -> Pair.of(data.filter, data.extra)));
+    }
+
+    public record FilterData(TeslaFilter filter, String extra) {
+        public static final StreamCodec<ByteBuf, FilterData> STREAM_CODEC = StreamCodec.composite(
+            TeslaFilter.STREAM_CODEC,
+            FilterData::filter,
+            ByteBufCodecs.STRING_UTF8,
+            FilterData::extra,
+            FilterData::new
+        );
+
+        public FilterData(Pair<TeslaFilter, String> data) {
+            this(data.left(), data.right());
+        }
     }
 }

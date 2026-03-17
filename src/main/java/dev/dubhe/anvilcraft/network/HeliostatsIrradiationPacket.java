@@ -1,72 +1,43 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
+import dev.anvilcraft.lib.v2.network.packet.ISensitiveBiPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
-import net.minecraft.client.Minecraft;
+import dev.dubhe.anvilcraft.util.Util;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-public class HeliostatsIrradiationPacket implements CustomPacketPayload {
-    public static final Type<HeliostatsIrradiationPacket> TYPE =
-        new Type<>(AnvilCraft.of("heliostats_irradiation_pack"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, HeliostatsIrradiationPacket> STREAM_CODEC =
-        StreamCodec.ofMember(HeliostatsIrradiationPacket::encode, HeliostatsIrradiationPacket::new);
-    public static final IPayloadHandler<HeliostatsIrradiationPacket> HANDLER = new DirectionalPayloadHandler<>(
-        HeliostatsIrradiationPacket::clientHandler, HeliostatsIrradiationPacket::serverHandler);
-
-    private final BlockPos blockPos;
-    private final BlockPos irritatePos;
-
-    /**
-     * 定日镜照射网络包
-     */
-    public HeliostatsIrradiationPacket(BlockPos blockPos, BlockPos irritatePos) {
-        this.blockPos = blockPos;
-        this.irritatePos = irritatePos;
-    }
-
-    /**
-     * 定日镜照射网络包
-     */
-    public HeliostatsIrradiationPacket(RegistryFriendlyByteBuf buf) {
-        this.blockPos = buf.readBlockPos();
-        this.irritatePos = buf.readNullable(RegistryFriendlyByteBuf::readBlockPos);
-    }
-
-    public void encode(RegistryFriendlyByteBuf buf) {
-        buf.writeBlockPos(blockPos);
-        buf.writeNullable(irritatePos, RegistryFriendlyByteBuf::writeBlockPos);
-    }
+public record HeliostatsIrradiationPacket(BlockPos pos, BlockPos irritatePos) implements ISensitiveBiPacket {
+    public static final Type<HeliostatsIrradiationPacket> TYPE = IPacket.type(AnvilCraft.of("heliostats_irradiation_pack"));
+    public static final StreamCodec<ByteBuf, HeliostatsIrradiationPacket> STREAM_CODEC = StreamCodec.composite(
+        BlockPos.STREAM_CODEC,
+        HeliostatsIrradiationPacket::pos,
+        BlockPos.STREAM_CODEC,
+        HeliostatsIrradiationPacket::irritatePos,
+        HeliostatsIrradiationPacket::new
+    );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<HeliostatsIrradiationPacket> type() {
         return TYPE;
     }
 
-    public static void clientHandler(HeliostatsIrradiationPacket data, IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (Minecraft.getInstance().level != null
-                && Minecraft.getInstance().level.getBlockEntity(data.blockPos)
-                instanceof HeliostatsBlockEntity heliostatsBlockEntity) {
-                heliostatsBlockEntity.setIrritatePos(data.irritatePos);
-            }
-        });
+    @Override
+    public void handleOnClient(Player player) {
+        if (!(player.level().getBlockEntity(this.pos) instanceof HeliostatsBlockEntity heliostats)) return;
+        heliostats.setIrritatePos(this.irritatePos);
     }
 
-    public static void serverHandler(HeliostatsIrradiationPacket data, IPayloadContext context) {
-        ServerPlayer player = (ServerPlayer) context.player();
-        context.enqueueWork(() -> {
-            if (player.level().getBlockEntity(data.blockPos) instanceof HeliostatsBlockEntity heliostatsBlockEntity) {
-                var pack = new HeliostatsIrradiationPacket(data.blockPos, heliostatsBlockEntity.getIrritatePos());
-                PacketDistributor.sendToPlayer(player, pack);
-            }
-        });
+    @Override
+    public void handleOnServer(Player player) {
+        if (!(player.level().getBlockEntity(this.pos) instanceof HeliostatsBlockEntity heliostats)) return;
+        PacketDistributor.sendToPlayer(
+            Util.cast(player),
+            new HeliostatsIrradiationPacket(this.pos, heliostats.getIrritatePos())
+        );
     }
 }

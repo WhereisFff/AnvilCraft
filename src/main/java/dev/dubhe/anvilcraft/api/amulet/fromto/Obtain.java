@@ -53,7 +53,7 @@ public interface Obtain extends BiPredicate<ServerPlayer, DamageSource> {
     }
 
     class Multiple implements Obtain {
-        private Obtain first;
+        private final Obtain first;
         private final List<Sub> subs = new ArrayList<>();
 
         Multiple(Obtain first) {

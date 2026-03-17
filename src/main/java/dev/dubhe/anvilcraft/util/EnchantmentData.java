@@ -7,7 +7,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
-import org.jetbrains.annotations.NotNull;
 
 public record EnchantmentData(
     DataComponentType<ItemEnchantments> type,
@@ -23,7 +22,7 @@ public record EnchantmentData(
     }
 
     @Override
-    public int compareTo(@NotNull EnchantmentData that) {
+    public int compareTo(EnchantmentData that) {
         if (this.type.equals(that.type)) {
             if (this.enchantment.equals(that.enchantment)) {
                 return Integer.compare(this.level, that.level);
