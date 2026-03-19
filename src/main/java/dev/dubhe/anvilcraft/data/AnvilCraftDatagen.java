@@ -35,7 +35,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRUM;
 
-@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class AnvilCraftDatagen {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {

@@ -12,7 +12,7 @@ import net.neoforged.neoforge.event.AddPackFindersEvent;
 
 import java.util.function.UnaryOperator;
 
-@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class ModBuiltinPacks {
     public static final PackSource BUILT_IN = PackSource.create(decorateWithSource("pack.source.builtin"), false);
 

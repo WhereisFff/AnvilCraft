@@ -13,7 +13,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.RegistryBuilder;
 
-@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class ModRegistries {
     public static final ResourceKey<Registry<AmuletType>> AMULET_TYPE_KEY = ResourceKey.createRegistryKey(
         AnvilCraft.of("amulet_type")

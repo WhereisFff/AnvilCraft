@@ -9,7 +9,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 
-@EventBusSubscriber(modid = AnvilCraft.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = AnvilCraft.MOD_ID)
 public class RegisterColorHandlersEventListener {
     @SubscribeEvent
     public static void registerItemColorHandlersEvent(RegisterColorHandlersEvent.Item event) {
