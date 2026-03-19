@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
 import dev.dubhe.anvilcraft.client.gui.component.ItemCollectorButton;
 import dev.dubhe.anvilcraft.client.gui.component.TextWidget;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.inventory.ItemCollectorMenu;
 import dev.dubhe.anvilcraft.item.FilterItem;
@@ -29,9 +29,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorMenu> implements IFilterScreen<ItemCollectorMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of(
-        "textures/gui/container/machine/background/item_collector.png"
-    );
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "item_collector");
     BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier = this.getEnableFilterButtonSupplier(75, 54);
 
     @Getter
@@ -113,7 +111,7 @@ public class ItemCollectorScreen extends AbstractContainerScreen<ItemCollectorMe
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

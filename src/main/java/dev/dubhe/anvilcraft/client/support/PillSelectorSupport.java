@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.client.support;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.property.component.PillBocContents;
 import net.minecraft.client.Minecraft;
@@ -14,7 +15,6 @@ public class PillSelectorSupport {
     public static final PillSelectorSupport INSTANCE = new PillSelectorSupport();
 
     public static final ResourceLocation BACKGROUND = AnvilCraft.of("textures/gui/container/pill_box/background.png");
-    public static final ResourceLocation SELECTION_BOX = AnvilCraft.of("textures/gui/container/pill_box/selection_box.png");
 
     private ItemStack pillBox = ItemStack.EMPTY;
     private PillBocContents contents = PillBocContents.EMPTY;
@@ -75,7 +75,7 @@ public class PillSelectorSupport {
         int index = this.contents.index();
         if (index >= 0) {
             guiGraphics.blit(
-                SELECTION_BOX,
+                SharedTextures.BOX_SELECTION,
                 left + 3 + index % 4 * 18,
                 top + 3 + index / 4 * 18,
                 0, 0,

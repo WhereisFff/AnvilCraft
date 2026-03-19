@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.client.support;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
 import dev.dubhe.anvilcraft.item.amulet.AmuletItem;
 import dev.dubhe.anvilcraft.item.property.component.BoxContents;
@@ -15,8 +15,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class AmuletSelectorSupport {
-    public static final ResourceLocation BACKGROUND = AnvilCraft.of("textures/gui/container/amulet_box/background.png");
-    public static final ResourceLocation SELECTION_BOX = AnvilCraft.of("textures/gui/container/amulet_box/selection_box.png");
+    public static final ResourceLocation BACKGROUND = SharedTextures.bg("misc", "amulet_box");
     public static final int BACKGROUND_WIDTH = 78;
     public static final int BACKGROUND_HEIGHT = 80;
 
@@ -288,10 +287,10 @@ public class AmuletSelectorSupport {
         void renderSelectionBox(GuiGraphics guiGraphics, int minX, int minY, int maxX, int maxY) {
             maxX -= 9;
             maxY -= 9;
-            guiGraphics.blit(SELECTION_BOX, minX, minY, 9, 9, 0, 0, 9, 9, 18, 18);
-            guiGraphics.blit(SELECTION_BOX, maxX, minY, 9, 9, 9, 0, 9, 9, 18, 18);
-            guiGraphics.blit(SELECTION_BOX, minX, maxY, 9, 9, 0, 9, 9, 9, 18, 18);
-            guiGraphics.blit(SELECTION_BOX, maxX, maxY, 9, 9, 9, 9, 9, 9, 18, 18);
+            guiGraphics.blit(SharedTextures.BOX_SELECTION, minX, minY, 9, 9, 0, 0, 9, 9, 18, 18);
+            guiGraphics.blit(SharedTextures.BOX_SELECTION, maxX, minY, 9, 9, 9, 0, 9, 9, 18, 18);
+            guiGraphics.blit(SharedTextures.BOX_SELECTION, minX, maxY, 9, 9, 0, 9, 9, 9, 18, 18);
+            guiGraphics.blit(SharedTextures.BOX_SELECTION, maxX, maxY, 9, 9, 9, 9, 9, 9, 18, 18);
 
             int widthU = maxX - minX - 9;
             int heightV = maxY - minY - 9;

@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.constant.TexturesConstant;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.FrostAnvilMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -18,12 +17,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class FrostAnvilScreen extends ItemCombinerScreen<FrostAnvilMenu> {
-    private static final ResourceLocation ANVIL_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/background/frost_anvil.png");
-    private static final ResourceLocation TEXT_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/text_field.png");
-    private static final ResourceLocation TEXT_DISABLE_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/text_field_disabled.png");
+    private static final ResourceLocation ANVIL_LOCATION = SharedTextures.bg("crafting", "frost_anvil");
     private EditBox name;
     private final Player player;
 
@@ -121,8 +115,10 @@ public class FrostAnvilScreen extends ItemCombinerScreen<FrostAnvilMenu> {
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTick, mouseX, mouseY);
-        ResourceLocation location = this.menu.getSlot(0).getItem().isEmpty() ? TEXT_DISABLE_LOCATION : TEXT_LOCATION;
-        guiGraphics.blit(location, this.leftPos + 59, this.topPos + 20, 0, 0, 110, 16, 110, 16);
+        ResourceLocation texture = this.menu.getSlot(0).getItem().isEmpty()
+                                   ? SharedTextures.TEXT_FIELD_DISABLE
+                                   : SharedTextures.TEXT_FIELD;
+        guiGraphics.blit(texture, this.leftPos + 59, this.topPos + 20, 0, 0, 110, 16, 110, 16);
     }
 
     @Override
@@ -134,7 +130,7 @@ public class FrostAnvilScreen extends ItemCombinerScreen<FrostAnvilMenu> {
     protected void renderErrorIcon(GuiGraphics guiGraphics, int x, int y) {
         if ((this.menu.getSlot(0).hasItem() || this.menu.getSlot(1).hasItem())
             && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()) {
-            guiGraphics.blit(TexturesConstant.ERROR_SPRITE, x + 103, y + 47, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(SharedTextures.ERROR_SPRITE, x + 103, y + 47, 0, 0, 16, 16, 16, 16);
         }
     }
 

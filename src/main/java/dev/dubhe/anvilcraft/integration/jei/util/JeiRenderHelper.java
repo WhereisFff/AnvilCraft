@@ -16,57 +16,57 @@ public class JeiRenderHelper {
 
     // Arrow
     public static IDrawable getArrowDefault(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.ARROW_DEFAULT, 0, 0, 16, 10)
+        return helper.drawableBuilder(JeiTextureConstants.ARROW_DEFAULT, 0, 0, 16, 10)
             .setTextureSize(16, 10)
             .build();
     }
 
     public static IDrawable getArrowInput(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.ARROW_INPUT, 0, 0, 16, 8)
+        return helper.drawableBuilder(JeiTextureConstants.ARROW_INPUT, 0, 0, 16, 8)
             .setTextureSize(16, 8)
             .build();
     }
 
     public static IDrawable getArrowOutput(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.ARROW_OUTPUT, 0, 0, 16, 10)
+        return helper.drawableBuilder(JeiTextureConstants.ARROW_OUTPUT, 0, 0, 16, 10)
             .setTextureSize(16, 10)
             .build();
     }
 
     public static IDrawable getArrowOutputFromBelow(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.ARROW_OUTPUT_FROM_BELOW, 0, 0, 14, 18)
+        return helper.drawableBuilder(JeiTextureConstants.ARROW_OUTPUT_FROM_BELOW, 0, 0, 14, 18)
             .setTextureSize(14, 18)
             .build();
     }
 
     public static IDrawable getArrowBlockConversion(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.ARROW_BLOCK_CONVERSION, 0, 0, 14, 22)
+        return helper.drawableBuilder(JeiTextureConstants.ARROW_BLOCK_CONVERSION, 0, 0, 14, 22)
             .setTextureSize(14, 22)
             .build();
     }
 
     // Slot
     public static IDrawable getSlotDefault(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.SLOT_DEFAULT, 0, 0, 18, 18)
+        return helper.drawableBuilder(JeiTextureConstants.SLOT_DEFAULT, 0, 0, 18, 18)
             .setTextureSize(18, 18)
             .build();
     }
 
     public static IDrawable getSlotChoice(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.SLOT_CHOICE, 0, 0, 18, 18)
+        return helper.drawableBuilder(JeiTextureConstants.SLOT_CHOICE, 0, 0, 18, 18)
             .setTextureSize(18, 18)
             .build();
     }
 
     public static IDrawable getSlotProbability(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.SLOT_PROBABILITY, 0, 0, 18, 18)
+        return helper.drawableBuilder(JeiTextureConstants.SLOT_PROBABILITY, 0, 0, 18, 18)
             .setTextureSize(18, 18)
             .build();
     }
 
     // Other
     public static IDrawable getExplosion(IGuiHelper helper) {
-        return helper.drawableBuilder(TextureConstants.EXPLOSION, 0, 0, 32, 32)
+        return helper.drawableBuilder(JeiTextureConstants.EXPLOSION, 0, 0, 32, 32)
             .setTextureSize(32, 32)
             .build();
     }

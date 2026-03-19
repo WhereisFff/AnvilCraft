@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.RoyalAnvilMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,14 +17,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class RoyalAnvilScreen extends ItemCombinerScreen<RoyalAnvilMenu> {
-    private static final ResourceLocation ANVIL_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/background/royal_anvil.png");
-    private static final ResourceLocation TEXT_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/text_field.png");
-    private static final ResourceLocation TEXT_DISABLE_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/text_field_disabled.png");
-    public static final ResourceLocation ERROR_SPRITE =
-        AnvilCraft.of("textures/gui/container/smithing/error.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "royal_anvil");
     private EditBox name;
     private final Player player;
 
@@ -36,7 +29,7 @@ public class RoyalAnvilScreen extends ItemCombinerScreen<RoyalAnvilMenu> {
      * @param title           标题
      */
     public RoyalAnvilScreen(RoyalAnvilMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, ANVIL_LOCATION);
+        super(menu, playerInventory, title, BACKGROUND);
         this.player = playerInventory.player;
     }
 
@@ -122,8 +115,10 @@ public class RoyalAnvilScreen extends ItemCombinerScreen<RoyalAnvilMenu> {
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         super.renderBg(guiGraphics, partialTick, mouseX, mouseY);
-        ResourceLocation location = this.menu.getSlot(0).getItem().isEmpty() ? TEXT_DISABLE_LOCATION : TEXT_LOCATION;
-        guiGraphics.blit(location, this.leftPos + 59, this.topPos + 20, 0, 0, 110, 16, 110, 16);
+        ResourceLocation texture = this.menu.getSlot(0).getItem().isEmpty()
+                                   ? SharedTextures.TEXT_FIELD_DISABLE
+                                   : SharedTextures.TEXT_FIELD;
+        guiGraphics.blit(texture, this.leftPos + 59, this.topPos + 20, 0, 0, 110, 16, 110, 16);
     }
 
     @Override
@@ -133,9 +128,11 @@ public class RoyalAnvilScreen extends ItemCombinerScreen<RoyalAnvilMenu> {
 
     @Override
     protected void renderErrorIcon(GuiGraphics guiGraphics, int x, int y) {
-        if ((this.menu.getSlot(0).hasItem() || this.menu.getSlot(1).hasItem())
-            && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()) {
-            guiGraphics.blit(ERROR_SPRITE, x + 103, y + 47, 0, 0, 16, 16, 16, 16);
+        if (
+            (this.menu.getSlot(0).hasItem() || this.menu.getSlot(1).hasItem())
+            && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()
+        ) {
+            guiGraphics.blit(SharedTextures.ERROR_SPRITE, x + 103, y + 47, 0, 0, 16, 16, 16, 16);
         }
     }
 

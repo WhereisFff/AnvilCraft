@@ -30,6 +30,26 @@ public class TexturedButton extends Button {
         this.texture = texture;
     }
 
+    public TexturedButton(
+        int x,
+        int y,
+        int width,
+        int height,
+        ResourceLocation texture,
+        int texYDiff,
+        int textureWidth,
+        int textureHeight,
+        OnPress onPress,
+        Component message
+    ) {
+        super(x, y, width, height, message, onPress, DEFAULT_NARRATION);
+
+        this.texYDiff = texYDiff;
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
+        this.texture = texture;
+    }
+
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         if (!this.visible) return;

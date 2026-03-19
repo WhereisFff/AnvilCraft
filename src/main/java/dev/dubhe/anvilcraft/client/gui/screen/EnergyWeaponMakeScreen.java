@@ -1,8 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
-import dev.dubhe.anvilcraft.constant.TexturesConstant;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.EnergyWeaponMakeMenu;
 import dev.dubhe.anvilcraft.inventory.component.FilteredSlot;
 import dev.dubhe.anvilcraft.network.multiple.EnergyWeaponMakePackets;
@@ -25,7 +24,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
 public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeaponMakeMenu> {
-    private static final ResourceLocation BG = AnvilCraft.of("textures/gui/container/machine/background/energy_weapon_platform.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "energy_weapon_platform");
     private final Scrollable scrollable = new Scrollable() {
         @Override
         public int row() {
@@ -82,7 +81,7 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
             this.topPos + 34,
             16,
             16,
-            TexturesConstant.CONFIRM,
+            SharedTextures.CONFIRM,
             16,
             16,
             32,
@@ -126,7 +125,7 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
                 selected = true;
             }
 
-            graphics.blit(TexturesConstant.EMBER_GRINDSTONE_BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
+            graphics.blit(SharedTextures.SWITCH_TABLE_BUTTON, x, y, 0, offsetV, 18, 18, 18, 54);
             graphics.renderItem(willRender, x + 1, y + (selected ? 1 : 0), (int) (partialTick * 100));
         }
     }
@@ -218,14 +217,14 @@ public class EnergyWeaponMakeScreen extends AbstractContainerScreen<EnergyWeapon
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        graphics.blit(BG, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
+        graphics.blit(BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
         if (this.menu.canScroll()) {
             int left = this.leftPos + 64;
             int top = this.topPos + 24;
             int down = top + 36;
             graphics.blit(
-                TexturesConstant.EMBER_GRINDSTONE_SLIDER,
+                SharedTextures.SWITCH_TABLE_SLIDER,
                 left,
                 top + (int) ((down - top - 12) * this.scrollable.getScrollOffs()),
                 0,

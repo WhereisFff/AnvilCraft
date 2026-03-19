@@ -12,7 +12,7 @@ import dev.dubhe.anvilcraft.integration.jei.AnvilCraftJeiPlugin;
 import dev.dubhe.anvilcraft.integration.jei.drawable.JeiButton;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRecipeUtil;
 import dev.dubhe.anvilcraft.integration.jei.util.JeiRenderHelper;
-import dev.dubhe.anvilcraft.integration.jei.util.TextureConstants;
+import dev.dubhe.anvilcraft.integration.jei.util.JeiTextureConstants;
 import dev.dubhe.anvilcraft.recipe.multiblock.MultiblockConversionRecipe;
 import dev.dubhe.anvilcraft.util.LevelLike;
 import dev.dubhe.anvilcraft.util.RecipeUtil;
@@ -82,55 +82,43 @@ public class MultiBlockConversionCategory implements IRecipeCategory<RecipeHolde
         arrowOut = JeiRenderHelper.getArrowDefault(helper);
         slot = JeiRenderHelper.getSlotDefault(helper);
         timer = helper.createTickTimer(30, 60, true);
-        conversion = helper.drawableBuilder(TextureConstants.BLOCK_CONVERSION, 0, 0, 594, 418)
+        conversion = helper.drawableBuilder(JeiTextureConstants.BLOCK_CONVERSION, 0, 0, 594, 418)
             .setTextureSize(594, 418)
             .build();
-        layerUp = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_layer_up.png"), 0, 0, 10, 10)
+        layerUp = helper.drawableBuilder(JeiTextureConstants.LAYER_UP, 0, 0, 10, 10)
             .setTextureSize(10, 20)
             .build();
-        layerUpHovered = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_layer_up.png"), 0, 10, 10, 10)
+        layerUpHovered = helper.drawableBuilder(JeiTextureConstants.LAYER_UP, 0, 10, 10, 10)
             .setTextureSize(10, 20)
             .build();
-        layerDown = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_layer_down.png"), 0, 0, 10, 10)
+        layerDown = helper.drawableBuilder(JeiTextureConstants.LAYER_DOWN, 0, 0, 10, 10)
             .setTextureSize(10, 20)
             .build();
-        layerDownHovered = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_layer_down.png"), 0, 10, 10, 10)
+        layerDownHovered = helper.drawableBuilder(JeiTextureConstants.LAYER_DOWN, 0, 10, 10, 10)
             .setTextureSize(10, 20)
             .build();
-        modeOverview = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_display_modes.png"), 0, 0, 10, 10)
+        modeOverview = helper.drawableBuilder(JeiTextureConstants.DISPLAY_MODES, 0, 0, 10, 10)
             .setTextureSize(30, 20)
             .build();
-        modeOverviewHovered = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_display_modes.png"), 0, 10, 10, 10)
+        modeOverviewHovered = helper.drawableBuilder(JeiTextureConstants.DISPLAY_MODES, 0, 10, 10, 10)
             .setTextureSize(30, 20)
             .build();
-        modeInput = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_display_modes.png"), 10, 0, 10, 10)
+        modeInput = helper.drawableBuilder(JeiTextureConstants.DISPLAY_MODES, 10, 0, 10, 10)
             .setTextureSize(30, 20)
             .build();
-        modeInputHovered = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_display_modes.png"), 10, 10, 10, 10)
+        modeInputHovered = helper.drawableBuilder(JeiTextureConstants.DISPLAY_MODES, 10, 10, 10, 10)
             .setTextureSize(30, 20)
             .build();
-        modeOutput = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_display_modes.png"), 20, 0, 10, 10)
+        modeOutput = helper.drawableBuilder(JeiTextureConstants.DISPLAY_MODES, 20, 0, 10, 10)
             .setTextureSize(30, 20)
             .build();
-        modeOutputHovered = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_display_modes.png"), 20, 10, 10, 10)
+        modeOutputHovered = helper.drawableBuilder(JeiTextureConstants.DISPLAY_MODES, 20, 10, 10, 10)
             .setTextureSize(30, 20)
             .build();
-        renderSwitchOff = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_layer_switch.png"), 0, 0, 10, 10)
+        renderSwitchOff = helper.drawableBuilder(JeiTextureConstants.LAYER_SWITCH, 0, 0, 10, 10)
             .setTextureSize(10, 20)
             .build();
-        renderSwitchOn = helper.drawableBuilder(
-                AnvilCraft.of("textures/gui/container/insight/insight_layer_switch.png"), 0, 10, 10, 10)
+        renderSwitchOn = helper.drawableBuilder(JeiTextureConstants.LAYER_SWITCH, 0, 10, 10, 10)
             .setTextureSize(10, 20)
             .build();
     }

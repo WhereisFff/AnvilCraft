@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.RoyalGrindstoneMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -20,8 +20,7 @@ public class RoyalGrindstoneScreen extends AbstractContainerScreen<RoyalGrindsto
     private int tickCounter = 0;
     private int recipeIndex = 0;
 
-    private static final ResourceLocation GRINDSTONE_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/background/royal_grindstone.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "royal_grindstone");
 
     public RoyalGrindstoneScreen(
         RoyalGrindstoneMenu menu, Inventory playerInventory, @SuppressWarnings("unused") Component title) {
@@ -44,7 +43,7 @@ public class RoyalGrindstoneScreen extends AbstractContainerScreen<RoyalGrindsto
     protected void renderBg(GuiGraphics g, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        g.blit(GRINDSTONE_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        g.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
         g.setColor(1f, 1f, 1f, 1);
         ItemStack repairToolItem = this.menu.getSlot(0).getItem();
         ItemStack repairItem = this.menu.getSlot(1).getItem();

@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.RoyalSmithingMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.CyclingSlotBackground;
@@ -26,7 +27,6 @@ import java.util.Optional;
 public class RoyalSmithingScreen extends ItemCombinerScreen<RoyalSmithingMenu> {
     private static final ResourceLocation SMITHING_LOCATION =
         AnvilCraft.of("textures/gui/container/smithing/background/royal_smithing_table.png");
-    private static final ResourceLocation ERROR = AnvilCraft.of("textures/gui/container/smithing/error.png");
     private static final ResourceLocation EMPTY_SLOT_SMITHING_TEMPLATE_ARMOR_TRIM =
         ResourceLocation.withDefaultNamespace("item/empty_slot_smithing_template_armor_trim");
     private static final ResourceLocation EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE =
@@ -150,7 +150,7 @@ public class RoyalSmithingScreen extends ItemCombinerScreen<RoyalSmithingMenu> {
     @Override
     protected void renderErrorIcon(GuiGraphics guiGraphics, int x, int y) {
         if (this.hasRecipeError()) {
-            guiGraphics.blit(ERROR, x + 83, y + 48, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(SharedTextures.ERROR_SPRITE, x + 83, y + 48, 0, 0, 16, 16, 16, 16);
         }
     }
 

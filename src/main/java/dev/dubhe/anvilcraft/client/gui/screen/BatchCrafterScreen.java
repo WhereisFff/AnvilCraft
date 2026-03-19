@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import dev.dubhe.anvilcraft.inventory.BatchCrafterMenu;
 import dev.dubhe.anvilcraft.item.FilterItem;
@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 public class BatchCrafterScreen extends BaseMachineScreen<BatchCrafterMenu> implements IFilterScreen<BatchCrafterMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION = AnvilCraft.of("textures/gui/container/machine/background/auto_crafter.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "batch_crafter");
     BiFunction<Integer, Integer, EnableFilterButton> enableFilterButtonSupplier = this.getEnableFilterButtonSupplier(116, 18);
 
     @Getter
@@ -49,7 +49,7 @@ public class BatchCrafterScreen extends BaseMachineScreen<BatchCrafterMenu> impl
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int i = (this.width - this.imageWidth) / 2;
         int j = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(CONTAINER_LOCATION, i, j, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.blit(BACKGROUND, i, j, 0, 0, this.imageWidth, this.imageHeight);
     }
 
     @Override

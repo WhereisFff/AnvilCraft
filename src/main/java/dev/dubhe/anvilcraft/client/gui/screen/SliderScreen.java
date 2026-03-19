@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.Slider;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.SliderMenu;
 import dev.dubhe.anvilcraft.network.SliderUpdatePacket;
 import net.minecraft.client.Minecraft;
@@ -15,11 +15,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.neoforged.neoforge.network.PacketDistributor;
 
 public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
-    public static final ResourceLocation LOCATION = AnvilCraft.of("textures/gui/container/slider/background.png");
-    public static final ResourceLocation BUTTON_MAX = AnvilCraft.of("textures/gui/container/slider/button_max.png");
-    public static final ResourceLocation BUTTON_ADD = AnvilCraft.of("textures/gui/container/slider/button_add.png");
-    public static final ResourceLocation BUTTON_MINUS = AnvilCraft.of("textures/gui/container/slider/button_minus.png");
-    public static final ResourceLocation BUTTON_MIN = AnvilCraft.of("textures/gui/container/slider/button_min.png");
+    public static final ResourceLocation BACKGROUND = SharedTextures.bg("misc", "slider_like");
+    public static final ResourceLocation BUTTON_MAX = SharedTextures.textureGui("misc/slider_like/button_max");
+    public static final ResourceLocation BUTTON_ADD = SharedTextures.textureGui("misc/slider_like/button_add");
+    public static final ResourceLocation BUTTON_MINUS = SharedTextures.textureGui("tmisc/slider_like/button_minus");
+    public static final ResourceLocation BUTTON_MIN = SharedTextures.textureGui("misc/slider_like/button_min");
     private Slider slider = null;
     private EditBox value;
 
@@ -174,7 +174,7 @@ public class SliderScreen extends AbstractContainerScreen<SliderMenu> {
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
         int offsetX = (this.width - this.imageWidth) / 2;
         int offsetY = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(LOCATION, offsetX, offsetY, 0, 0, this.imageWidth, this.imageHeight, 256, 128);
+        guiGraphics.blit(BACKGROUND, offsetX, offsetY, 0, 0, this.imageWidth, this.imageHeight, 256, 128);
     }
 
     private void update(int value) {

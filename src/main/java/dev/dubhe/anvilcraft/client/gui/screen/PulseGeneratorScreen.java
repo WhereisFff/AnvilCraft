@@ -1,9 +1,9 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableButton;
 import dev.dubhe.anvilcraft.client.gui.component.TextWidget;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.PulseGeneratorMenu;
 import dev.dubhe.anvilcraft.network.PulseGeneratorUpdatePacket;
 import dev.dubhe.anvilcraft.util.FormattingUtil;
@@ -21,33 +21,20 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 
 public class PulseGeneratorScreen extends AbstractContainerScreen<PulseGeneratorMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/pulse_generator.png");
-
-    private static final ResourceLocation BUTTON_RISING_EDGE =
-        AnvilCraft.of("textures/gui/container/machine/button_rising_edge.png");
-    private static final ResourceLocation BUTTON_FALLING_EDGE =
-        AnvilCraft.of("textures/gui/container/machine/button_falling_edge.png");
-    private static final ResourceLocation BUTTON_LOOP =
-        AnvilCraft.of("textures/gui/container/machine/button_loop.png");
-
-    private static final ResourceLocation BUTTON_REVERSE_OFF =
-        AnvilCraft.of("textures/gui/container/machine/button_reverse_off.png");
-    private static final ResourceLocation BUTTON_REVERSE_ON =
-        AnvilCraft.of("textures/gui/container/machine/button_reverse_on.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "pulse_generator");
 
     private static final ResourceLocation BUTTON_ADD_T =
-        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_add_t.png");
+        SharedTextures.texture("machine/pulse_generator/button_add_t.png");
     private static final ResourceLocation BUTTON_ADD_S =
-        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_add_s.png");
+        SharedTextures.texture("machine/pulse_generator/button_add_s.png");
     private static final ResourceLocation BUTTON_ADD_M =
-        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_add_m.png");
+        SharedTextures.texture("machine/pulse_generator/button_add_m.png");
     private static final ResourceLocation BUTTON_MINUS_T =
-        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_minus_t.png");
+        SharedTextures.texture("machine/pulse_generator/button_minus_t.png");
     private static final ResourceLocation BUTTON_MINUS_S =
-        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_minus_s.png");
+        SharedTextures.texture("machine/pulse_generator/button_minus_s.png");
     private static final ResourceLocation BUTTON_MINUS_M =
-        AnvilCraft.of("textures/gui/container/machine/pulse_generator_button_minus_m.png");
+        SharedTextures.texture("machine/pulse_generator/button_minus_m.png");
 
     private final Minecraft minecraft;
     private TextWidget waitingTime;
@@ -78,7 +65,7 @@ public class PulseGeneratorScreen extends AbstractContainerScreen<PulseGenerator
             this.leftPos + 28,
             this.topPos + 25,
             16, 16,
-            List.of(BUTTON_RISING_EDGE, BUTTON_FALLING_EDGE, BUTTON_LOOP),
+            List.of(SharedTextures.BUTTON_RISING_EDGE, SharedTextures.BUTTON_FALLING_EDGE, SharedTextures.BUTTON_LOOP),
             16, 16, 32,
             (button, index) -> this.menu.setStartMode((byte) index),
             List.of(Component.translatable("screen.anvilcraft.button.pulse_generator.start_mode.rising"),
@@ -89,7 +76,7 @@ public class PulseGeneratorScreen extends AbstractContainerScreen<PulseGenerator
             this.leftPos + 28,
             this.topPos + 43,
             16, 16,
-            List.of(BUTTON_REVERSE_OFF, BUTTON_REVERSE_ON),
+            List.of(SharedTextures.BUTTON_REVERSE_OFF, SharedTextures.BUTTON_REVERSE_ON),
             16, 16, 32,
             (button, index) -> this.menu.setOutputInvert(index == 1),
             List.of(Component.translatable("screen.anvilcraft.button.pulse_generator.reverse.off"),
@@ -184,7 +171,7 @@ public class PulseGeneratorScreen extends AbstractContainerScreen<PulseGenerator
 
     @Override
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(CONTAINER_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 128);
+        guiGraphics.blit(BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 128);
     }
 
     @Override

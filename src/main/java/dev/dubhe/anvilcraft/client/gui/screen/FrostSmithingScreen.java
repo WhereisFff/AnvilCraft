@@ -1,9 +1,8 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IPermutationMaterial;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
-import dev.dubhe.anvilcraft.constant.TexturesConstant;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.FrostSmithingMenu;
 import dev.dubhe.anvilcraft.item.template.frost.DeformationTemplateItem;
 import dev.dubhe.anvilcraft.item.template.frost.PermutationTemplateItem;
@@ -31,16 +30,17 @@ import java.util.List;
 import java.util.Optional;
 
 public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
-    private static final ResourceLocation SMITHING_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/background/frost_smithing_table.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "frost_smithing_table");
 
-    private static final ResourceLocation LEFT = AnvilCraft.of("textures/gui/container/smithing/frost_smithing_table_button_left.png");
-    private static final ResourceLocation RIGHT = AnvilCraft.of("textures/gui/container/smithing/frost_smithing_table_button_right.png");
+    private static final ResourceLocation LEFT =
+        SharedTextures.textureGui("crafting/frost_smithing_table/button_left");
+    private static final ResourceLocation RIGHT =
+        SharedTextures.textureGui("crafting/frost_smithing_table/button_right");
 
     private static final ResourceLocation EMPTY_SLOT_PERMUTATION_SMITHING_TEMPLATE =
-        AnvilCraft.of("item/empty_slot_permutation_smithing_template");
+        SharedTextures.texture("item/empty_slot_permutation_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_DEFORMATION_SMITHING_TEMPLATE =
-        AnvilCraft.of("item/empty_slot_deformation_smithing_template");
+        SharedTextures.texture("item/empty_slot_deformation_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_INGOT =
         ResourceLocation.withDefaultNamespace("item/empty_slot_ingot");
 
@@ -76,7 +76,7 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
      * @param title           标题
      */
     public FrostSmithingScreen(FrostSmithingMenu menu, Inventory playerInventory, Component title) {
-        super(menu, playerInventory, title, SMITHING_LOCATION);
+        super(menu, playerInventory, title, BACKGROUND);
     }
 
     @Override
@@ -236,7 +236,7 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
             (this.menu.getSlot(0).hasItem() && this.menu.getSlot(2).hasItem())
             && !this.menu.getSlot(this.menu.getResultSlot()).hasItem()
         ) {
-            guiGraphics.blit(TexturesConstant.ERROR_SPRITE, x + 83, y + 48, 0, 0, 16, 16, 16, 16);
+            guiGraphics.blit(SharedTextures.ERROR_SPRITE, x + 83, y + 48, 0, 0, 16, 16, 16, 16);
         }
     }
 

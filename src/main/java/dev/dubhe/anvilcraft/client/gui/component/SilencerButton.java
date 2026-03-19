@@ -1,8 +1,8 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.screen.ActiveSilencerScreen;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import lombok.Getter;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class SilencerButton extends Button {
-
     private final ResourceLocation texture;
 
     @Getter
@@ -27,7 +26,6 @@ public class SilencerButton extends Button {
 
     private final ActiveSilencerScreen parent;
     private final int variant;
-    private final String textureVariant;
 
     /**
      * 主动静音器 screen 的按钮
@@ -50,27 +48,26 @@ public class SilencerButton extends Button {
             onPress,
             (var) -> parent.getSoundTextAt(index, variant).copy()
         );
-        this.textureVariant = textureVariant;
         this.height = 15;
         this.width = 112;
         this.index = index;
-        texture = AnvilCraft.of("textures/gui/container/machine/active_silencer_button_%s.png".formatted(textureVariant));
+        this.texture = SharedTextures.textureGui("machine/active_silencer/button_%s".formatted(textureVariant));
         this.parent = parent;
         this.variant = variant;
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        String searchText = parent.getFilterText();
-        ResourceLocation soundId = parent.getSoundIdAt(index, variant);
+        String searchText = this.parent.getFilterText();
+        ResourceLocation soundId = this.parent.getSoundIdAt(this.index, this.variant);
         if (soundId == null) return;
-        this.renderTexture(guiGraphics, texture, this.getX(), this.getY(), 0, 0, 15, this.width, this.height, 112, 30);
+        this.renderTexture(guiGraphics, this.texture, this.getX(), this.getY(), 0, 0, 15, this.width, this.height, 112, 30);
         Component message;
         if (searchText.startsWith("#") || searchText.startsWith("~")) {
-            message = parent.getSoundTextAt(index, variant);
+            message = this.parent.getSoundTextAt(this.index, this.variant);
         } else {
             message = highlighted(
-                parent.getSoundTextAt(index, variant).getString(),
+                this.parent.getSoundTextAt(this.index, this.variant).getString(),
                 searchText,
                 ChatFormatting.WHITE,
                 ChatFormatting.YELLOW);
@@ -102,7 +99,9 @@ public class SilencerButton extends Button {
                 components.add(Component.literal(s).copy().setStyle(Style.EMPTY.applyFormat(originalFormatting)));
             }
             return ComponentUtils.formatList(
-                components, Component.literal(hightlighted).withStyle(highlightFormatting));
+                components,
+                Component.literal(hightlighted).withStyle(highlightFormatting)
+            );
         } catch (Throwable e) {
             return Component.literal(original);
         }
@@ -119,7 +118,8 @@ public class SilencerButton extends Button {
         int width,
         int height,
         int textureWidth,
-        int textureHeight) {
+        int textureHeight
+    ) {
         int i = pvOffset;
         if (this.isHovered()) {
             i += textureDifference;

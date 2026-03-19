@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.AdvancedComparatorBlock;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
 import dev.dubhe.anvilcraft.client.gui.component.SwitchableButton;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.AdvancedComparatorMenu;
 import dev.dubhe.anvilcraft.network.AdvancedComparatorUpdatePacket;
 import dev.dubhe.anvilcraft.util.MathUtil;
@@ -20,26 +20,9 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import java.util.List;
 
 public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedComparatorMenu> {
-    private static final ResourceLocation CONTAINER_LOCATION =
-        AnvilCraft.of("textures/gui/container/machine/background/advanced_comparator.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "advanced_comparator");
 
-    private static final ResourceLocation BUTTON_REVERSE_OFF =
-        AnvilCraft.of("textures/gui/container/machine/button_reverse_off.png");
-    private static final ResourceLocation BUTTON_REVERSE_ON =
-        AnvilCraft.of("textures/gui/container/machine/button_reverse_on.png");
-
-    private static final ResourceLocation BUTTON_HYSTERESIS =
-        AnvilCraft.of("textures/gui/container/machine/button_hysteresis.png");
-    private static final ResourceLocation BUTTON_WINDOW =
-        AnvilCraft.of("textures/gui/container/machine/button_window.png");
-
-    private static final ResourceLocation BUTTON_REDSTONE_CONTROL =
-        AnvilCraft.of("textures/gui/container/machine/button_redstone_control_off.png");
-    private static final ResourceLocation BUTTON_REDSTONE_CONTROL_ON =
-        AnvilCraft.of("textures/gui/container/machine/button_redstone_control_on.png");
-
-    private static final ResourceLocation SLIDER =
-        AnvilCraft.of("textures/gui/container/machine/advanced_comparator_slider.png");
+    private static final ResourceLocation SLIDER = SharedTextures.textureGui("machine/advanced_comparator/slider");
 
     private final Minecraft minecraft;
     private static final int GRID = 6;
@@ -85,31 +68,37 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
             this.leftPos + 8,
             this.topPos + 24,
             16, 16,
-            List.of(BUTTON_HYSTERESIS, BUTTON_WINDOW),
+            List.of(SharedTextures.BUTTON_HYSTERESIS, SharedTextures.BUTTON_WINDOW),
             16, 16, 32,
             (button, index) -> this.menu.setCompareMode((byte) index),
-            List.of(Component.translatable("screen.anvilcraft.button.compare_mode_hysteresis"),
-                Component.translatable("screen.anvilcraft.button.compare_mode_window"))
+            List.of(
+                Component.translatable("screen.anvilcraft.button.compare_mode_hysteresis"),
+                Component.translatable("screen.anvilcraft.button.compare_mode_window")
+            )
         );
         SwitchableButton outputMode = new SwitchableButton(
             this.leftPos + 8,
             this.topPos + 42,
             16, 16,
-            List.of(BUTTON_REVERSE_OFF, BUTTON_REVERSE_ON),
+            List.of(SharedTextures.BUTTON_REVERSE_OFF, SharedTextures.BUTTON_REVERSE_ON),
             16, 16, 32,
             (button, index) -> this.menu.setOutputInvert(index == 1),
-            List.of(Component.translatable("screen.anvilcraft.button.reverse_off"),
-                Component.translatable("screen.anvilcraft.button.reverse"))
+            List.of(
+                Component.translatable("screen.anvilcraft.button.reverse_off"),
+                Component.translatable("screen.anvilcraft.button.reverse")
+            )
         );
         SwitchableButton redstoneControl = new SwitchableButton(
             this.leftPos + 8,
             this.topPos + 60,
             16, 16,
-            List.of(BUTTON_REDSTONE_CONTROL, BUTTON_REDSTONE_CONTROL_ON),
+            List.of(SharedTextures.BUTTON_REDSTONE_CONTROL_OFF, SharedTextures.BUTTON_REDSTONE_CONTROL_ON),
             16, 16, 32,
             (button, index) -> this.menu.setRedstoneControl(index == 1),
-            List.of(Component.translatable("screen.anvilcraft.button.redstone_control_off"),
-                Component.translatable("screen.anvilcraft.button.redstone_control"))
+            List.of(
+                Component.translatable("screen.anvilcraft.button.redstone_control_off"),
+                Component.translatable("screen.anvilcraft.button.redstone_control")
+            )
         );
         compareMode.setCurrent(this.menu.getBlockEntity().getCompareMode().index());
         outputMode.setCurrent(this.menu.getBlockEntity().isOutputInvert() ? 1 : 0);
@@ -145,7 +134,7 @@ public class AdvancedComparatorScreen extends AbstractContainerScreen<AdvancedCo
     @Override
     @SuppressWarnings("checkstyle:LocalVariableName")
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
-        guiGraphics.blit(CONTAINER_LOCATION, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
+        guiGraphics.blit(BACKGROUND, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight, 256, 256);
         int vOffset1 = this.isInSlider(mouseX, mouseY, this.slider1X, this.sliderY) ? 11 : 0;
         int vOffset2 = this.isInSlider(mouseX, mouseY, this.slider2X, this.sliderY) ? 11 : 0;
         guiGraphics.blit(SLIDER, this.slider1X, this.sliderY, 0, vOffset1, 7, 11, 7, 22);

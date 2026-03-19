@@ -1,10 +1,10 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.itemhandler.SlotItemHandlerWithFilter;
 import dev.dubhe.anvilcraft.client.gui.component.EnableFilterButton;
 import dev.dubhe.anvilcraft.client.support.RenderSupport;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.IFilterMenu;
 import dev.dubhe.anvilcraft.network.MachineEnableFilterPacket;
 import dev.dubhe.anvilcraft.network.SlotDisableChangePacket;
@@ -13,7 +13,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
@@ -27,8 +26,6 @@ import java.util.function.BiFunction;
  * 有过滤的 GUI
  */
 public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> extends IGhostIngredientScreen {
-    ResourceLocation DISABLED_SLOT = AnvilCraft.of("textures/gui/container/machine/disabled_slot.png");
-
     Component SCROLL_WHEEL_TO_CHANGE_STACK_LIMIT_TOOLTIP = Component.translatable(
         "screen.anvilcraft.filter.scroll_wheel_to_change_stack_limit")
             .withStyle(ChatFormatting.ITALIC, ChatFormatting.GRAY);
@@ -167,7 +164,7 @@ public interface IFilterScreen<T extends AbstractContainerMenu & IFilterMenu> ex
      */
     default void renderDisabledSlot(GuiGraphics guiGraphics, Slot crafterSlot) {
         RenderSystem.enableDepthTest();
-        guiGraphics.blit(DISABLED_SLOT, crafterSlot.x, crafterSlot.y, 0, 0, 16, 16, 16, 16);
+        guiGraphics.blit(SharedTextures.DISABLED_SLOT, crafterSlot.x, crafterSlot.y, 0, 0, 16, 16, 16, 16);
     }
 
     /**
