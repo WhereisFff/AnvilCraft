@@ -27,8 +27,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
 public class FrostAnvilBlock extends BetterAnvilBlock implements IHammerRemovable, IFrostBlock {
     private static final VoxelShape BASE = Block.box(2.0, 0.0, 2.0, 14.0, 4.0, 14.0);
     private static final VoxelShape X_LEG1 = Block.box(4.0, 4.0, 5.0, 12.0, 10.0, 11.0);
@@ -72,7 +70,7 @@ public class FrostAnvilBlock extends BetterAnvilBlock implements IHammerRemovabl
 
     @Override
     @Nullable
-    public MenuProvider getMenuProvider(@Nonnull BlockState state, @Nonnull Level level, @Nonnull BlockPos pos) {
+    public MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider(
             (i, inventory, player) -> new FrostAnvilMenu(i, inventory, ContainerLevelAccess.create(level, pos)),
             CONTAINER_TITLE

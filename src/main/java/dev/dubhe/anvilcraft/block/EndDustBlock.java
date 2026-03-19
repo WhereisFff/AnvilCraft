@@ -10,8 +10,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.FallingBlock;
 import net.minecraft.world.level.block.state.BlockState;
 
-import javax.annotation.Nonnull;
-
 public class EndDustBlock extends Block {
     public EndDustBlock(Properties properties) {
         super(properties);
@@ -43,7 +41,7 @@ public class EndDustBlock extends Block {
     @Override
     public void neighborChanged(
         BlockState state,
-        @Nonnull Level level,
+        Level level,
         BlockPos pos,
         Block neighborBlock,
         BlockPos neighborPos,

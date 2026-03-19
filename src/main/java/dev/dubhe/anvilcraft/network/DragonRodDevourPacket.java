@@ -1,59 +1,48 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
+import dev.anvilcraft.lib.v2.network.packet.IServerboundPacket;
+import dev.anvilcraft.lib.v2.recipe.util.CodecUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.item.DragonRodItem;
+import dev.dubhe.anvilcraft.util.Util;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.Level;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
 
-public record DragonRodDevourPacket(ResourceKey<Level> levelKey, InteractionHand hand, BlockPos pos,
-                                    Direction blockFace) implements CustomPacketPayload {
-    public static final Type<DragonRodDevourPacket> TYPE = new Type<>(AnvilCraft.of("dragon_rod_devour"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, DragonRodDevourPacket> STREAM_CODEC = StreamCodec.of(
-        DragonRodDevourPacket::encode, DragonRodDevourPacket::decode
+public record DragonRodDevourPacket(InteractionHand hand, BlockPos pos, Direction blockFace) implements IServerboundPacket {
+    public static final Type<DragonRodDevourPacket> TYPE = IPacket.type(AnvilCraft.of("dragon_rod_devour"));
+    public static final StreamCodec<ByteBuf, DragonRodDevourPacket> STREAM_CODEC = StreamCodec.composite(
+        CodecUtil.enumStreamCodec(InteractionHand.class),
+        DragonRodDevourPacket::hand,
+        BlockPos.STREAM_CODEC,
+        DragonRodDevourPacket::pos,
+        Direction.STREAM_CODEC,
+        DragonRodDevourPacket::blockFace,
+        DragonRodDevourPacket::new
     );
-    public static final IPayloadHandler<DragonRodDevourPacket> HANDLER = DragonRodDevourPacket::serverHandler;
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<DragonRodDevourPacket> type() {
         return TYPE;
     }
 
-    private static void encode(RegistryFriendlyByteBuf buf, DragonRodDevourPacket packet) {
-        buf.writeResourceKey(packet.levelKey);
-        buf.writeEnum(packet.hand);
-        buf.writeBlockPos(packet.pos);
-        buf.writeEnum(packet.blockFace);
-    }
-
-    private static DragonRodDevourPacket decode(RegistryFriendlyByteBuf buf) {
-        return new DragonRodDevourPacket(
-            buf.readResourceKey(ResourceKey.createRegistryKey(ResourceLocation.withDefaultNamespace("level"))),
-            buf.readEnum(InteractionHand.class),
-            buf.readBlockPos(),
-            buf.readEnum(Direction.class)
+    @Override
+    public void handleOnServer(Player player) {
+        ServerPlayer serverside = Util.cast(player);
+        ServerLevel level = serverside.serverLevel();
+        DragonRodItem.devourBlock(
+            level,
+            player,
+            this.hand,
+            this.pos,
+            level.getBlockState(this.pos),
+            this.blockFace
         );
-    }
-
-    private static void serverHandler(DragonRodDevourPacket packet, IPayloadContext ctx) {
-        Player player = ctx.player();
-        if (!(player instanceof ServerPlayer serverPlayer)) return;
-        ServerLevel level = serverPlayer.server.overworld().getServer().getLevel(packet.levelKey);
-        if (level == null) return;
-        ctx.enqueueWork(() -> DragonRodItem.devourBlock(
-            level, player, packet.hand,
-            packet.pos, level.getBlockState(packet.pos), packet.blockFace
-        ));
     }
 }

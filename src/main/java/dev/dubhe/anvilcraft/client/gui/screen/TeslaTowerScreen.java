@@ -4,8 +4,8 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.taslatower.TeslaFilter;
 import dev.dubhe.anvilcraft.client.gui.component.TeslaTowerButton;
 import dev.dubhe.anvilcraft.inventory.TeslaTowerMenu;
-import dev.dubhe.anvilcraft.network.AddTeslaFilterPacket;
-import dev.dubhe.anvilcraft.network.RemoveTeslaFilterPacket;
+import dev.dubhe.anvilcraft.network.TeslaAddFilterPacket;
+import dev.dubhe.anvilcraft.network.TeslaRemoveFilterPacket;
 import it.unimi.dsi.fastutil.Pair;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
@@ -123,7 +123,7 @@ public class TeslaTowerScreen extends AbstractContainerScreen<TeslaTowerMenu> {
         String id = filteredFilters.get(actualIndex).left().getId();
         String arg = filteredFilters.get(actualIndex).right();
         addWhiteFilter(id, arg);
-        PacketDistributor.sendToServer(new AddTeslaFilterPacket(id, arg));
+        PacketDistributor.sendToServer(new TeslaAddFilterPacket(id, arg));
         refreshFilterList();
     }
 
@@ -134,7 +134,7 @@ public class TeslaTowerScreen extends AbstractContainerScreen<TeslaTowerMenu> {
         String id = whiteFilters.get(actualIndex).left().getId();
         String arg = whiteFilters.get(actualIndex).right();
         removeWhiteFilter(id, arg);
-        PacketDistributor.sendToServer(new RemoveTeslaFilterPacket(id, arg));
+        PacketDistributor.sendToServer(new TeslaRemoveFilterPacket(id, arg));
         refreshFilterList();
     }
 

@@ -1,12 +1,19 @@
 package dev.dubhe.anvilcraft.api.taslatower;
 
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.LivingEntity;
 
 import java.util.Collection;
 import java.util.HashMap;
 
 public abstract class TeslaFilter {
+    public static final StreamCodec<ByteBuf, TeslaFilter> STREAM_CODEC = ByteBufCodecs.STRING_UTF8.map(
+        TeslaFilter::getFilter,
+        TeslaFilter::getId
+    );
     static TeslaFilter emptyFilter = new TeslaFilter() {
         @Override
         public String getId() {

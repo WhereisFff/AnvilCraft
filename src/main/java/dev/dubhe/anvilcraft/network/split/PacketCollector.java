@@ -48,7 +48,7 @@ public class PacketCollector {
         );
     }
 
-    static void body(PacketSplitter.SplitPacketBody body, IPayloadContext ignored) {
+    static void body(PacketSplitter.SplitPacketBody body) {
         COLLECTORS.get(body.id()).getBody(body);
     }
 

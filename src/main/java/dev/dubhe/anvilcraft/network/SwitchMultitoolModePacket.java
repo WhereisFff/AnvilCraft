@@ -1,29 +1,33 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
+import dev.anvilcraft.lib.v2.network.packet.IServerboundPacket;
+import dev.anvilcraft.lib.v2.recipe.util.CodecUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.item.MultitoolItem;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.world.InteractionHand;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.world.entity.player.Player;
 
-public record SwitchMultitoolModePacket(InteractionHand hand, int mode) implements CustomPacketPayload {
-    public static final Type<SwitchMultitoolModePacket> TYPE = new Type<>(AnvilCraft.of("switch_multitool_mode"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, SwitchMultitoolModePacket> STREAM_CODEC =
-        StreamCodec.ofMember((packet, buf) -> {
-            buf.writeEnum(packet.hand);
-            buf.writeVarInt(packet.mode);
-        }, (buf) -> new SwitchMultitoolModePacket(buf.readEnum(InteractionHand.class), buf.readVarInt()));
-    public static final IPayloadHandler<SwitchMultitoolModePacket> HANDLER = SwitchMultitoolModePacket::handler;
+public record SwitchMultitoolModePacket(InteractionHand hand, int mode) implements IServerboundPacket {
+    public static final Type<SwitchMultitoolModePacket> TYPE = IPacket.type(AnvilCraft.of("switch_multitool_mode"));
+    public static final StreamCodec<ByteBuf, SwitchMultitoolModePacket> STREAM_CODEC = StreamCodec.composite(
+        CodecUtil.enumStreamCodec(InteractionHand.class),
+        SwitchMultitoolModePacket::hand,
+        ByteBufCodecs.VAR_INT,
+        SwitchMultitoolModePacket::mode,
+        SwitchMultitoolModePacket::new
+    );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<SwitchMultitoolModePacket> type() {
         return TYPE;
     }
 
-    public static void handler(SwitchMultitoolModePacket packet, IPayloadContext context) {
-        context.enqueueWork(() -> MultitoolItem.setMode(context.player(), packet.hand, packet.mode));
+    @Override
+    public void handleOnServer(Player player) {
+        MultitoolItem.setMode(player, this.hand, this.mode);
     }
 }

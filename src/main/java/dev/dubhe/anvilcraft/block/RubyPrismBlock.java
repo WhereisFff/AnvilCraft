@@ -29,8 +29,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
 public class RubyPrismBlock extends BaseLaserBlock implements IHammerRemovable, HammerRotateBehavior, IMoveableEntityBlock {
     public static final VoxelShape UP_MODEL =
         Shapes.or(Block.box(0, 0, 0, 16, 4, 16), Block.box(2, 4, 2, 14, 14, 14), Block.box(4, 14, 4, 12, 16, 12));
@@ -87,7 +85,7 @@ public class RubyPrismBlock extends BaseLaserBlock implements IHammerRemovable, 
     }
 
     @Override
-    public @Nonnull RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 

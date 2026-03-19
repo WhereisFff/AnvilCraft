@@ -1,48 +1,34 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IClientboundPacket;
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.screen.ActiveSilencerScreen;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.world.entity.player.Player;
 
 import java.util.List;
 
-public class MutedSoundSyncPacket implements CustomPacketPayload {
-    public static final Type<MutedSoundSyncPacket> TYPE = new Type<>(AnvilCraft.of("muted_sound_sync"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, MutedSoundSyncPacket> STREAM_CODEC =
-        StreamCodec.ofMember(MutedSoundSyncPacket::encode, MutedSoundSyncPacket::new);
-    public static final IPayloadHandler<MutedSoundSyncPacket> HANDLER = MutedSoundSyncPacket::clientHandler;
-
-    private final List<ResourceLocation> sounds;
-
-    public MutedSoundSyncPacket(List<ResourceLocation> sounds) {
-        this.sounds = sounds;
-    }
-
-    public MutedSoundSyncPacket(RegistryFriendlyByteBuf buf) {
-        sounds = buf.readList(FriendlyByteBuf::readResourceLocation);
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        buf.writeCollection(sounds, FriendlyByteBuf::writeResourceLocation);
-    }
+public record MutedSoundSyncPacket(List<ResourceLocation> sounds) implements IClientboundPacket {
+    public static final Type<MutedSoundSyncPacket> TYPE = IPacket.type(AnvilCraft.of("muted_sound_sync"));
+    public static final StreamCodec<ByteBuf, MutedSoundSyncPacket> STREAM_CODEC = StreamCodec.composite(
+        ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()),
+        MutedSoundSyncPacket::sounds,
+        MutedSoundSyncPacket::new
+    );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<MutedSoundSyncPacket> type() {
         return TYPE;
     }
 
-    public void clientHandler(IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (Minecraft.getInstance().screen instanceof ActiveSilencerScreen screen) {
-                screen.handleSync(this.sounds);
-            }
-        });
+    @Override
+    public void handleOnClient(Player player) {
+        if (!(Minecraft.getInstance().screen instanceof ActiveSilencerScreen screen)) return;
+        screen.handleSync(this.sounds);
     }
 }

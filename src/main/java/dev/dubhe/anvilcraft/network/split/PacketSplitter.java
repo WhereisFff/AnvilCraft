@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.network.split;
 
+import dev.anvilcraft.lib.v2.network.packet.IInsensitiveBiPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
@@ -11,9 +12,9 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.connection.ConnectionType;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.UUID;
 import java.util.concurrent.ExecutorService;
@@ -113,20 +114,7 @@ public class PacketSplitter {
         });
     }
 
-    public static void registerSplitPackets(PayloadRegistrar registrar) {
-        registrar.playBidirectional(
-            SplitPacketHeader.TYPE,
-            SplitPacketHeader.STREAM_CODEC,
-            SplitPacketHeader.HANDLER
-        );
-        registrar.playBidirectional(
-            SplitPacketBody.TYPE,
-            SplitPacketBody.STREAM_CODEC,
-            SplitPacketBody.HANDLER
-        );
-    }
-
-    record SplitPacketHeader(UUID id, int total, ResourceLocation typeId) implements CustomPacketPayload {
+    record SplitPacketHeader(UUID id, int total, ResourceLocation typeId) implements IInsensitiveBiPacket {
         public static final Type<SplitPacketHeader> TYPE = new Type<>(AnvilCraft.of("split_packet_header"));
         public static final StreamCodec<ByteBuf, SplitPacketHeader> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
@@ -137,16 +125,24 @@ public class PacketSplitter {
             SplitPacketHeader::typeId,
             SplitPacketHeader::new
         );
-        public static final IPayloadHandler<SplitPacketHeader> HANDLER = PacketCollector::header;
 
         @Override
         public Type<SplitPacketHeader> type() {
             return TYPE;
         }
+
+        @Override
+        public void bidirectionalHandler(IPayloadContext ctx) {
+            PacketCollector.header(this, ctx);
+        }
+
+        @Override
+        public void handleOnBothSide(Player player) {
+        }
     }
 
-    record SplitPacketBody(UUID id, int index, byte[] data) implements CustomPacketPayload {
-        public static final Type<SplitPacketBody> TYPE = new Type<>(AnvilCraft.of("split_packet"));
+    record SplitPacketBody(UUID id, int index, byte[] data) implements IInsensitiveBiPacket {
+        public static final Type<SplitPacketBody> TYPE = new Type<>(AnvilCraft.of("split_packet_body"));
         public static final StreamCodec<ByteBuf, SplitPacketBody> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
             SplitPacketBody::id,
@@ -156,11 +152,15 @@ public class PacketSplitter {
             SplitPacketBody::data,
             SplitPacketBody::new
         );
-        public static final IPayloadHandler<SplitPacketBody> HANDLER = PacketCollector::body;
 
         @Override
         public Type<SplitPacketBody> type() {
             return TYPE;
+        }
+
+        @Override
+        public void handleOnBothSide(Player player) {
+            PacketCollector.body(this);
         }
     }
 }

@@ -1,25 +1,23 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IClientboundPacket;
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
 import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
-import lombok.Getter;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.world.entity.player.Player;
 
-@Getter
-public class PowerGridRemovePacket implements CustomPacketPayload {
-    public static final Type<PowerGridRemovePacket> TYPE = new Type<>(AnvilCraft.of("power_grid_remove"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PowerGridRemovePacket> STREAM_CODEC =
-        StreamCodec.composite(ByteBufCodecs.INT, PowerGridRemovePacket::getGrid, PowerGridRemovePacket::new);
-    public static final IPayloadHandler<PowerGridRemovePacket> HANDLER = PowerGridRemovePacket::clientHandler;
-
-    private final int grid;
+public record PowerGridRemovePacket(int grid) implements IClientboundPacket {
+    public static final Type<PowerGridRemovePacket> TYPE = IPacket.type(AnvilCraft.of("power_grid_remove"));
+    public static final StreamCodec<ByteBuf, PowerGridRemovePacket> STREAM_CODEC = StreamCodec.composite(
+        ByteBufCodecs.INT,
+        PowerGridRemovePacket::grid,
+        PowerGridRemovePacket::new
+    );
 
     /**
      * 电网移除
@@ -28,22 +26,17 @@ public class PowerGridRemovePacket implements CustomPacketPayload {
         this(grid.hashCode());
     }
 
-    public PowerGridRemovePacket(int grid) {
-        this.grid = grid;
-    }
-
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<PowerGridRemovePacket> type() {
         return TYPE;
     }
 
-    public void clientHandler(IPayloadContext context) {
-        context.enqueueWork(() -> {
-            SimplePowerGrid powerGrid = PowerGridSupport.getGridMap().get(this.grid);
-            if (powerGrid != null) {
-                powerGrid.destroy();
-            }
-            PowerGridSupport.getGridMap().remove(this.grid);
-        });
+    @Override
+    public void handleOnClient(Player player) {
+        SimplePowerGrid powerGrid = PowerGridSupport.getGridMap().get(this.grid);
+        if (powerGrid != null) {
+            powerGrid.destroy();
+        }
+        PowerGridSupport.getGridMap().remove(this.grid);
     }
 }

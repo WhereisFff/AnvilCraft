@@ -1,58 +1,42 @@
 package dev.dubhe.anvilcraft.network;
 
+import dev.anvilcraft.lib.v2.network.packet.IClientboundPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.power.PowerGrid;
 import dev.dubhe.anvilcraft.api.power.SimplePowerGrid;
 import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
-import lombok.Getter;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.RegistryFriendlyByteBuf;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
+import net.minecraft.world.entity.player.Player;
 
-@Getter
-public class PowerGridSyncPacket implements CustomPacketPayload {
+public record PowerGridSyncPacket(SimplePowerGrid grid) implements IClientboundPacket {
     public static final Type<PowerGridSyncPacket> TYPE = new Type<>(AnvilCraft.of("power_grid_sync"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PowerGridSyncPacket> STREAM_CODEC =
-        StreamCodec.ofMember(PowerGridSyncPacket::encode, PowerGridSyncPacket::new);
-    public static final IPayloadHandler<PowerGridSyncPacket> HANDLER = PowerGridSyncPacket::clientHandler;
-
-    private final SimplePowerGrid grid;
+    public static final StreamCodec<ByteBuf, PowerGridSyncPacket> STREAM_CODEC = StreamCodec.composite(
+        SimplePowerGrid.STREAM_CODEC,
+        PowerGridSyncPacket::grid,
+        PowerGridSyncPacket::new
+    );
 
     /**
      * 电网同步
      */
     public PowerGridSyncPacket(PowerGrid grid) {
-        this.grid = new SimplePowerGrid(grid);
-    }
-
-    public PowerGridSyncPacket(FriendlyByteBuf buf) {
-        CompoundTag tag = buf.readNbt();
-        Tag data = tag.get("data");
-        this.grid = SimplePowerGrid.CODEC.decode(NbtOps.INSTANCE, data).getOrThrow().getFirst();
-    }
-
-    public void encode(FriendlyByteBuf buf) {
-        this.grid.encode(buf);
+        this(new SimplePowerGrid(grid));
     }
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<PowerGridSyncPacket> type() {
         return TYPE;
     }
 
-    public static void clientHandler(PowerGridSyncPacket data, IPayloadContext context) {
-        context.enqueueWork(() -> PowerGridSupport.getGridMap().compute(
-            data.grid.getId(),
-            (integer, simplePowerGrid) -> {
-                if (simplePowerGrid != null) simplePowerGrid.destroy();
-                return data.grid;
+    @Override
+    public void handleOnClient(Player player) {
+        PowerGridSupport.getGridMap().compute(
+            this.grid.getId(),
+            (id, grid) -> {
+                if (grid != null) grid.destroy();
+                return this.grid;
             }
-        ));
+        );
     }
 }

@@ -1,52 +1,40 @@
 package dev.dubhe.anvilcraft.network;
 
-import com.mojang.serialization.Codec;
-import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.anvilcraft.lib.v2.network.packet.IClientboundPacket;
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 import java.util.Random;
 
-public record ChargeCollectorIncomingChargePacket(
-    BlockPos srcPos,
-    BlockPos dstPos,
-    double count
-) implements CustomPacketPayload {
+public record ChargeCollectorIncomingChargePacket(BlockPos srcPos, BlockPos dstPos, double count) implements IClientboundPacket {
     private static final Random RANDOM = new Random(System.nanoTime());
-    public static final Type<ChargeCollectorIncomingChargePacket> TYPE = new Type<>(AnvilCraft.of("incoming_charge"));
-
-    public static final Codec<ChargeCollectorIncomingChargePacket> CODEC = RecordCodecBuilder.create(ins -> ins.group(
-        BlockPos.CODEC.fieldOf("srcPos").forGetter(o -> o.srcPos),
-        BlockPos.CODEC.fieldOf("dstPos").forGetter(o -> o.dstPos),
-        Codec.DOUBLE.fieldOf("count").forGetter(o -> o.count)
-    ).apply(ins, ChargeCollectorIncomingChargePacket::new));
-
-    public static final StreamCodec<? super RegistryFriendlyByteBuf, ChargeCollectorIncomingChargePacket> STREAM_CODEC =
-        StreamCodec.composite(
-            net.minecraft.core.BlockPos.STREAM_CODEC,
-            ChargeCollectorIncomingChargePacket::srcPos,
-            net.minecraft.core.BlockPos.STREAM_CODEC,
-            ChargeCollectorIncomingChargePacket::dstPos,
-            ByteBufCodecs.DOUBLE,
-            ChargeCollectorIncomingChargePacket::count,
-            ChargeCollectorIncomingChargePacket::new
-        );
+    public static final Type<ChargeCollectorIncomingChargePacket> TYPE = IPacket.type(AnvilCraft.of("incoming_charge"));
+    public static final StreamCodec<ByteBuf, ChargeCollectorIncomingChargePacket> STREAM_CODEC = StreamCodec.composite(
+        BlockPos.STREAM_CODEC,
+        ChargeCollectorIncomingChargePacket::srcPos,
+        BlockPos.STREAM_CODEC,
+        ChargeCollectorIncomingChargePacket::dstPos,
+        ByteBufCodecs.DOUBLE,
+        ChargeCollectorIncomingChargePacket::count,
+        ChargeCollectorIncomingChargePacket::new
+    );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public Type<ChargeCollectorIncomingChargePacket> type() {
         return TYPE;
     }
 
-    public void acceptClient(IPayloadContext ctx) {
-        ClientLevel level = (ClientLevel) ctx.player().level();
+    @Override
+    public void handleOnClient(Player player) {
+        ClientLevel level = (ClientLevel) player.level();
         Vec3 srcPos = this.srcPos.getCenter();
         Vec3 dstPos = this.dstPos.getCenter();
         Vec3 offset = dstPos.subtract(srcPos);

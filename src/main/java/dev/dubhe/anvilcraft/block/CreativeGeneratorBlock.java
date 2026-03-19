@@ -27,8 +27,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
 public class CreativeGeneratorBlock extends BetterBaseEntityBlock implements IHammerRemovable {
     public static final VoxelShape SHAPE = Block.box(0, 0, 0, 16, 4, 16);
 
@@ -80,7 +78,7 @@ public class CreativeGeneratorBlock extends BetterBaseEntityBlock implements IHa
     }
 
     @Override
-    public @Nonnull RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 

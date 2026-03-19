@@ -21,6 +21,7 @@ import net.neoforged.neoforge.common.Tags;
 
 import static dev.dubhe.anvilcraft.AnvilCraft.REGISTRUM;
 
+@SuppressWarnings("CodeBlock2Expr")
 public class ModFoodItems {
     public static final ItemEntry<Item> CREAM = REGISTRUM
         .item("cream", Item::new)

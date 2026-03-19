@@ -1,5 +1,9 @@
 package dev.dubhe.anvilcraft.network.multiple;
 
+import dev.anvilcraft.lib.v2.network.packet.IClientboundPacket;
+import dev.anvilcraft.lib.v2.network.packet.IPacket;
+import dev.anvilcraft.lib.v2.network.packet.ISensitiveBiPacket;
+import dev.anvilcraft.lib.v2.network.packet.IServerboundPacket;
 import dev.anvilcraft.lib.v2.recipe.util.CodecUtil;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.init.item.ModComponents;
@@ -9,19 +13,13 @@ import dev.dubhe.anvilcraft.saved.multiphase.Multiphases;
 import dev.dubhe.anvilcraft.util.Util;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload.Type;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.DirectionalPayloadHandler;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
-import net.neoforged.neoforge.network.handling.IPayloadHandler;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -32,98 +30,58 @@ import java.util.Set;
 import java.util.UUID;
 
 public class MultiphasePackets {
-    public static void register(PayloadRegistrar registrar) {
-        registrar.playToServer(
-            SwitchPhase.TYPE,
-            SwitchPhase.STREAM_CODEC,
-            SwitchPhase.HANDLER
-        );
-        registrar.playToServer(
-            ChangePhase.TYPE,
-            ChangePhase.STREAM_CODEC,
-            ChangePhase.HANDLER
-        );
-        registrar.playToClient(
-            AllSync.TYPE,
-            AllSync.STREAM_CODEC,
-            AllSync.HANDLER
-        );
-        registrar.playToClient(
-            RecoverClear.TYPE,
-            RecoverClear.STREAM_CODEC,
-            RecoverClear.HANDLER
-        );
-        registrar.playBidirectional(
-            RefSync.TYPE,
-            RefSync.STREAM_CODEC,
-            RefSync.HANDLER
-        );
-        registrar.playBidirectional(
-            SingleSync.TYPE,
-            SingleSync.STREAM_CODEC,
-            SingleSync.HANDLER
-        );
+    private static <T extends IPacket> Type<T> of(String path) {
+        return IPacket.type(AnvilCraft.of("multiphase_" + path));
     }
 
-    private static <T extends CustomPacketPayload> CustomPacketPayload.Type<T> of(String path) {
-        return new CustomPacketPayload.Type<>(AnvilCraft.of("multiphase_" + path));
-    }
-
-    public record SwitchPhase() implements CustomPacketPayload {
+    public record SwitchPhase() implements IServerboundPacket {
         public static final Type<SwitchPhase> TYPE = MultiphasePackets.of("switch_phase");
         public static final StreamCodec<ByteBuf, SwitchPhase> STREAM_CODEC = StreamCodec.unit(new SwitchPhase());
-        public static final IPayloadHandler<SwitchPhase> HANDLER = SwitchPhase::serverHandler;
 
         @Override
-        public Type<? extends CustomPacketPayload> type() {
+        public Type<SwitchPhase> type() {
             return TYPE;
         }
 
-        public void serverHandler(IPayloadContext context) {
-            ServerPlayer player = (ServerPlayer) context.player();
-            context.enqueueWork(() -> {
-                if (!(player.level() instanceof ServerLevel)) return;
-                Optional.of(player.getMainHandItem()).filter(stack -> stack.has(ModComponents.MULTIPHASE))
-                    .or(() -> Optional.of(player.getOffhandItem()).filter(stack -> stack.has(ModComponents.MULTIPHASE)))
-                    .ifPresent(stack -> Objects.requireNonNull(stack.get(ModComponents.MULTIPHASE)).cyclePhases(stack));
-            });
+        @Override
+        public void handleOnServer(Player player) {
+            Optional.of(player.getMainHandItem()).filter(stack -> stack.has(ModComponents.MULTIPHASE))
+                .or(() -> Optional.of(player.getOffhandItem()).filter(stack -> stack.has(ModComponents.MULTIPHASE)))
+                .ifPresent(stack -> Objects.requireNonNull(stack.get(ModComponents.MULTIPHASE)).cyclePhases(stack));
         }
     }
 
-    public record ChangePhase(InteractionHand hand, byte index) implements CustomPacketPayload {
+    public record ChangePhase(InteractionHand hand, byte index) implements IServerboundPacket {
         public static final Type<ChangePhase> TYPE = MultiphasePackets.of("change_phase");
-        public static final StreamCodec<FriendlyByteBuf, ChangePhase> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<ByteBuf, ChangePhase> STREAM_CODEC = StreamCodec.composite(
             CodecUtil.enumStreamCodec(InteractionHand.class),
             ChangePhase::hand,
             ByteBufCodecs.BYTE,
             ChangePhase::index,
             ChangePhase::new
         );
-        public static final IPayloadHandler<ChangePhase> HANDLER = ChangePhase::serverHandler;
 
         public ChangePhase(InteractionHand hand, int index) {
             this(hand, (byte) index);
         }
 
         @Override
-        public Type<? extends CustomPacketPayload> type() {
+        public Type<ChangePhase> type() {
             return TYPE;
         }
 
-        public void serverHandler(IPayloadContext context) {
-            ServerPlayer player = (ServerPlayer) context.player();
-            context.enqueueWork(() -> {
-                var stackOp = Optional.of(player.getItemInHand(this.hand))
-                    .filter(stack -> stack.has(ModComponents.MULTIPHASE));
-                if (stackOp.isEmpty()) return;
-                var stack = stackOp.get();
-                var multiphase = stack.get(ModComponents.MULTIPHASE).toMultiphase();
-                multiphase.cyclePhases(stack, this.index);
-            });
+        @Override
+        public void handleOnServer(Player player) {
+            var stackOp = Optional.of(player.getItemInHand(this.hand))
+                .filter(stack -> stack.has(ModComponents.MULTIPHASE));
+            if (stackOp.isEmpty()) return;
+            var stack = stackOp.get();
+            var multiphase = stack.get(ModComponents.MULTIPHASE).toMultiphase();
+            multiphase.cyclePhases(stack, this.index);
         }
     }
 
-    public record AllSync(Map<UUID, Multiphase> multiphases, Set<UUID> recoverableIds) implements CustomPacketPayload {
+    public record AllSync(Map<UUID, Multiphase> multiphases, Set<UUID> recoverableIds) implements IClientboundPacket {
         public static final Type<AllSync> TYPE = MultiphasePackets.of("all_sync");
         public static final StreamCodec<RegistryFriendlyByteBuf, AllSync> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.map(HashMap::new, UUIDUtil.STREAM_CODEC, Multiphase.STREAM_CODEC),
@@ -132,45 +90,41 @@ public class MultiphasePackets {
             AllSync::recoverableIds,
             AllSync::new
         );
-        public static final IPayloadHandler<AllSync> HANDLER = AllSync::clientHandler;
 
         @Override
         public Type<AllSync> type() {
             return TYPE;
         }
 
-        private void clientHandler(IPayloadContext ctx) {
-            ctx.enqueueWork(() -> Multiphases.get().sync(this.multiphases, this.recoverableIds));
+        @Override
+        public void handleOnClient(Player player) {
+            Multiphases.get().sync(this.multiphases, this.recoverableIds);
         }
     }
 
-    public record RecoverClear() implements CustomPacketPayload {
+    public record RecoverClear() implements IClientboundPacket {
         public static final Type<RecoverClear> TYPE = MultiphasePackets.of("recover_clear");
-        public static final StreamCodec<RegistryFriendlyByteBuf, RecoverClear> STREAM_CODEC = StreamCodec.unit(new RecoverClear());
-        public static final IPayloadHandler<RecoverClear> HANDLER = RecoverClear::clientHandler;
+        public static final StreamCodec<ByteBuf, RecoverClear> STREAM_CODEC = StreamCodec.unit(new RecoverClear());
 
         @Override
         public Type<RecoverClear> type() {
             return TYPE;
         }
 
-        private void clientHandler(IPayloadContext ctx) {
-            ctx.enqueueWork(() -> Multiphases.get().clearRecover());
+        @Override
+        public void handleOnClient(Player player) {
+            Multiphases.get().clearRecover();
         }
     }
 
-    public record RefSync(int index, Optional<UUID> id) implements CustomPacketPayload {
+    public record RefSync(int index, Optional<UUID> id) implements ISensitiveBiPacket {
         public static final Type<RefSync> TYPE = MultiphasePackets.of("ref_sync");
-        public static final StreamCodec<RegistryFriendlyByteBuf, RefSync> STREAM_CODEC = StreamCodec.composite(
+        public static final StreamCodec<ByteBuf, RefSync> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT,
             RefSync::index,
             ByteBufCodecs.optional(UUIDUtil.STREAM_CODEC),
             RefSync::id,
             RefSync::new
-        );
-        public static final IPayloadHandler<RefSync> HANDLER = new DirectionalPayloadHandler<>(
-            RefSync::clientHandler,
-            RefSync::serverHandler
         );
 
         public RefSync(int index) {
@@ -182,31 +136,29 @@ public class MultiphasePackets {
             return TYPE;
         }
 
-        private void clientHandler(IPayloadContext ctx) {
-            ctx.enqueueWork(
-                () -> ctx.player()
-                    .getInventory()
-                    .getItem(this.index)
-                    .set(ModComponents.MULTIPHASE, new MultiphaseRef(this.id().orElseThrow()))
-            );
+        @Override
+        public void handleOnClient(Player player) {
+            player
+                .getInventory()
+                .getItem(this.index)
+                .set(ModComponents.MULTIPHASE, new MultiphaseRef(this.id().orElseThrow()));
         }
 
-        private void serverHandler(IPayloadContext ctx) {
-            ctx.enqueueWork(() -> {
-                var stack = ctx.player().getInventory().getItem(this.index);
-                var ref = stack.get(ModComponents.MULTIPHASE);
-                if (ref == null) {
-                    return;
-                } else if (ref.isEmpty()) {
-                    ref = new MultiphaseRef(stack.getItem().getDescription());
-                    stack.set(ModComponents.MULTIPHASE, ref);
-                }
-                PacketDistributor.sendToPlayer(Util.cast(ctx.player()), new RefSync(this.index, ref.id().optionalGet()));
-            });
+        @Override
+        public void handleOnServer(Player player) {
+            var stack = player.getInventory().getItem(this.index);
+            var ref = stack.get(ModComponents.MULTIPHASE);
+            if (ref == null) {
+                return;
+            } else if (ref.isEmpty()) {
+                ref = new MultiphaseRef(stack.getItem().getDescription());
+                stack.set(ModComponents.MULTIPHASE, ref);
+            }
+            PacketDistributor.sendToPlayer(Util.cast(player), new RefSync(this.index, ref.id().optionalGet()));
         }
     }
 
-    public record SingleSync(UUID id, Optional<Multiphase> multiphase) implements CustomPacketPayload {
+    public record SingleSync(UUID id, Optional<Multiphase> multiphase) implements ISensitiveBiPacket {
         public static final Type<SingleSync> TYPE = MultiphasePackets.of("single_sync");
         public static final StreamCodec<RegistryFriendlyByteBuf, SingleSync> STREAM_CODEC = StreamCodec.composite(
             UUIDUtil.STREAM_CODEC,
@@ -214,10 +166,6 @@ public class MultiphasePackets {
             ByteBufCodecs.optional(Multiphase.STREAM_CODEC),
             SingleSync::multiphase,
             SingleSync::new
-        );
-        public static final IPayloadHandler<SingleSync> HANDLER = new DirectionalPayloadHandler<>(
-            SingleSync::clientHandler,
-            SingleSync::serverHandler
         );
 
         public SingleSync(UUID id) {
@@ -233,15 +181,17 @@ public class MultiphasePackets {
             return TYPE;
         }
 
-        private void clientHandler(IPayloadContext ctx) {
-            ctx.enqueueWork(() -> Multiphases.get().put(this.id, this.multiphase.orElseThrow()));
+        @Override
+        public void handleOnClient(Player player) {
+            Multiphases.get().put(this.id, this.multiphase.orElseThrow());
         }
 
-        private void serverHandler(IPayloadContext ctx) {
-            ctx.enqueueWork(() -> PacketDistributor.sendToPlayer(
-                Util.cast(ctx.player()),
+        @Override
+        public void handleOnServer(Player player) {
+            PacketDistributor.sendToPlayer(
+                Util.cast(player),
                 new SingleSync(this.id, Multiphases.get().getOrCreate(this.id))
-            ));
+            );
         }
     }
 }

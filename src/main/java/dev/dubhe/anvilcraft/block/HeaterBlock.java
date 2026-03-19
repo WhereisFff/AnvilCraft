@@ -27,8 +27,6 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nonnull;
-
 public class HeaterBlock extends BaseEntityBlock implements IHammerRemovable {
     public static final VoxelShape SHAPE = Shapes.or(Block.box(0, 2, 0, 16, 16, 16), Block.box(1, 0, 1, 15, 2, 15));
     public static final BooleanProperty OVERLOAD = IPowerComponent.OVERLOAD;
@@ -61,7 +59,7 @@ public class HeaterBlock extends BaseEntityBlock implements IHammerRemovable {
     }
 
     @Override
-    public @Nonnull RenderShape getRenderShape(@Nonnull BlockState state) {
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 

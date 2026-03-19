@@ -19,26 +19,26 @@ public class FakePlayerSupport {
         "TheGiantAnvil"
     );
 
-    private static Map<ServerLevel, FakePlayer> fakePlayers = new HashMap<>();
+    private static final Map<ServerLevel, FakePlayer> FAKE_PLAYERS = new HashMap<>();
 
     @SubscribeEvent
     public static void onLevelLoad(LevelEvent.Load event) {
         if (event.getLevel() instanceof ServerLevel level) {
-            if (fakePlayers.get(level) == null) {
+            if (FAKE_PLAYERS.get(level) == null) {
                 FakePlayer fakePlayer = FakePlayerFactory.get(level, GAME_PROFILE);
-                fakePlayers.put(level, fakePlayer);
+                FAKE_PLAYERS.put(level, fakePlayer);
             }
         }
     }
 
     public static FakePlayer get(ServerLevel level) {
-        return fakePlayers.get(level);
+        return FAKE_PLAYERS.get(level);
     }
 
     @SubscribeEvent
     public static void onLevelUnload(LevelEvent.Unload event) {
         if (event.getLevel() instanceof ServerLevel level) {
-            fakePlayers.remove(level);
+            FAKE_PLAYERS.remove(level);
         }
     }
 }

@@ -11,7 +11,7 @@ import dev.dubhe.anvilcraft.block.state.GiantAnvilCube;
 import dev.dubhe.anvilcraft.entity.FallingGiantAnvilEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import dev.dubhe.anvilcraft.network.UpdateDeflectionRingLastEntitySpeedPacket;
+import dev.dubhe.anvilcraft.network.DeflectionRingUpdateLastSpeedPacket;
 import dev.dubhe.anvilcraft.util.AccelerateManager;
 import dev.dubhe.anvilcraft.util.DistanceComparator;
 import lombok.Getter;
@@ -113,7 +113,7 @@ public class DeflectionRingBlockEntity extends BlockEntity implements IPowerCons
         PacketDistributor.sendToPlayersTrackingChunk(
             serverLevel,
             new ChunkPos(getBlockPos()),
-            new UpdateDeflectionRingLastEntitySpeedPacket(getBlockPos(), lastEntitySpeed)
+            new DeflectionRingUpdateLastSpeedPacket(getBlockPos(), lastEntitySpeed)
         );
     }
 

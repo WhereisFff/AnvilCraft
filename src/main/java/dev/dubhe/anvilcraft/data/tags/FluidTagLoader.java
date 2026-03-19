@@ -40,11 +40,7 @@ public class FluidTagLoader {
             .add(findResourceKey(ModFluids.EXP_FLUID.get()))
             .add(findResourceKey(ModFluids.FLOWING_EXP_FLUID.get()));
         TagsProvider.TagAppender<Fluid> appender = provider.addTag(ModFluidTags.CEMENT);
-        ModFluids.SOURCE_CEMENTS.forEach((color, cement) -> {
-            appender.add(findResourceKey(cement.get()));
-        });
-        ModFluids.FLOWING_CEMENTS.forEach((color, cement) -> {
-            appender.add(findResourceKey(cement.get()));
-        });
+        ModFluids.SOURCE_CEMENTS.forEach((color, cement) -> appender.add(findResourceKey(cement.get())));
+        ModFluids.FLOWING_CEMENTS.forEach((color, cement) -> appender.add(findResourceKey(cement.get())));
     }
 }

@@ -404,7 +404,7 @@ public abstract class ResonatorItem extends TieredItem {
         return InteractionResult.PASS;
     }
 
-    public static void set(ServerPlayer player, InteractionHand hand, @Range(from = 0, to = 4) int mode) {
+    public static void setMode(Player player, InteractionHand hand, @Range(from = 0, to = 4) int mode) {
         ItemStack resonator = player.getItemInHand(hand);
         if (!resonator.is(ModItemTags.RESONATOR)) return;
         Item item = resonator.getItem();
