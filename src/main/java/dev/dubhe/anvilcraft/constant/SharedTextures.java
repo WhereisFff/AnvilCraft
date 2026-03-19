@@ -51,6 +51,6 @@ public class SharedTextures {
     }
 
     public static ResourceLocation bg(String category, String id) {
-        return textureGui(category + "/background/" + id + ".png");
+        return textureGui(category + "/background/" + id);
     }
 }
