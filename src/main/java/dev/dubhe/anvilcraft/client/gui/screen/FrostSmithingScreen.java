@@ -1,5 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
+import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.item.IPermutationMaterial;
 import dev.dubhe.anvilcraft.client.gui.component.TexturedButton;
 import dev.dubhe.anvilcraft.constant.SharedTextures;
@@ -38,9 +39,9 @@ public class FrostSmithingScreen extends ItemCombinerScreen<FrostSmithingMenu> {
         SharedTextures.textureGui("crafting/frost_smithing_table/button_right");
 
     private static final ResourceLocation EMPTY_SLOT_PERMUTATION_SMITHING_TEMPLATE =
-        SharedTextures.texture("item/empty_slot_permutation_smithing_template");
+        AnvilCraft.of("item/empty_slot_permutation_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_DEFORMATION_SMITHING_TEMPLATE =
-        SharedTextures.texture("item/empty_slot_deformation_smithing_template");
+        AnvilCraft.of("item/empty_slot_deformation_smithing_template");
     private static final ResourceLocation EMPTY_SLOT_INGOT =
         ResourceLocation.withDefaultNamespace("item/empty_slot_ingot");
 

@@ -25,8 +25,7 @@ import java.util.List;
 import java.util.Optional;
 
 public class RoyalSmithingScreen extends ItemCombinerScreen<RoyalSmithingMenu> {
-    private static final ResourceLocation SMITHING_LOCATION =
-        AnvilCraft.of("textures/gui/container/smithing/background/royal_smithing_table.png");
+    private static final ResourceLocation SMITHING_LOCATION = SharedTextures.bg("crafting", "royal_smithing_table");
     private static final ResourceLocation EMPTY_SLOT_SMITHING_TEMPLATE_ARMOR_TRIM =
         ResourceLocation.withDefaultNamespace("item/empty_slot_smithing_template_armor_trim");
     private static final ResourceLocation EMPTY_SLOT_SMITHING_TEMPLATE_NETHERITE_UPGRADE =

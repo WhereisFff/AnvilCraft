@@ -13,8 +13,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class PillSelectorSupport {
     public static final PillSelectorSupport INSTANCE = new PillSelectorSupport();
-
-    public static final ResourceLocation BACKGROUND = AnvilCraft.of("textures/gui/container/pill_box/background.png");
+    public static final ResourceLocation BACKGROUND = SharedTextures.bg("misc", "pill_box");
 
     private ItemStack pillBox = ItemStack.EMPTY;
     private PillBocContents contents = PillBocContents.EMPTY;

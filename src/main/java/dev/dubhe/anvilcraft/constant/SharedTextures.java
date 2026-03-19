@@ -9,7 +9,7 @@ public class SharedTextures {
     public static final ResourceLocation SWITCH_TABLE_BUTTON = textureGui("crafting/switch_table_button");
     public static final ResourceLocation SWITCH_TABLE_SLIDER = textureGui("crafting/switch_table_slider");
     public static final ResourceLocation TEXT_FIELD = textureGui("crafting/text_field");
-    public static final ResourceLocation TEXT_FIELD_DISABLE = textureGui("crafting/text_field_disable");
+    public static final ResourceLocation TEXT_FIELD_DISABLE = textureGui("crafting/text_field_disabled");
 
     // MACHINE
     public static final ResourceLocation BUTTON_ALL = textureGui("machine/button_all");
