@@ -9,6 +9,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -38,7 +39,7 @@ public class CycleFilterModeButton extends Button {
     @Override
     public Component getMessage() {
         return Component.translatable("screen.anvilcraft.button.filter_mode",
-            Component.translatable("screen.anvilcraft.button.filter_mode_" + this.filterMode.get().name().toLowerCase()));
+            Component.translatable("screen.anvilcraft.button.filter_mode_" + this.filterMode.get().name().toLowerCase(Locale.ROOT)));
     }
 
     @Override
