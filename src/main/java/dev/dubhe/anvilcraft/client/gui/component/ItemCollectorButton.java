@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.constant.SharedTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;

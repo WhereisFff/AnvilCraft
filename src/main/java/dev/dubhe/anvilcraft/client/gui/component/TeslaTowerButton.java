@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.client.gui.screen.TeslaTowerScreen;
 import dev.dubhe.anvilcraft.constant.SharedTextures;
 import lombok.Getter;
@@ -53,7 +52,7 @@ public class TeslaTowerButton extends Button {
         this.height = 15;
         this.width = 112;
         this.index = index;
-        this.texture = SharedTextures.textureGui("machine/active_silence/button_%s".formatted(textureVariant));
+        this.texture = SharedTextures.textureGui("machine/active_silencer/button_%s".formatted(textureVariant));
         this.parent = parent;
         this.variant = variant;
     }

@@ -36,7 +36,7 @@ public enum ItemDetectorProvider implements IBlockComponentProvider, IServerData
             if (ordinal >= 0 && ordinal < Mode.values().length) {
                 Mode filterMode = Mode.values()[ordinal];
                 tooltip.add(Component.translatable("screen.anvilcraft.button.filter_mode",
-                    Component.translatable("screen.anvilcraft.button.filter_mode_" + filterMode.buttonTexture))
+                    Component.translatable("screen.anvilcraft.button.filter_mode_" + filterMode.name().toLowerCase()))
                 );
             }
         }

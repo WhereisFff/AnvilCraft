@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.inventory.RoyalSmithingMenu;
 import net.minecraft.client.gui.GuiGraphics;

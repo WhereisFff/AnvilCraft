@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.util.Callback;
 import lombok.Getter;
