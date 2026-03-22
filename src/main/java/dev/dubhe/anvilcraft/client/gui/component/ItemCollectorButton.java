@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -16,7 +16,7 @@ public class ItemCollectorButton extends Button {
      */
     public ItemCollectorButton(int x, int y, String variant, OnPress onPress) {
         super(x, y, 10, 10, Component.literal(""), onPress, (var) -> Component.literal(variant));
-        texture = AnvilCraft.of("textures/gui/container/machine/item_collector_button_%s.png".formatted(variant));
+        texture = SharedTextures.textureGui("machine/item_collector/button_%s".formatted(variant));
     }
 
     @Override

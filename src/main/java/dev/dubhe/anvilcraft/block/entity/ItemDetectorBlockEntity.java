@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.api.item.IDiskCloneable;
 import dev.dubhe.anvilcraft.api.itemhandler.FilteredItemStackHandler;
 import dev.dubhe.anvilcraft.api.tooltip.providers.IHasAffectRange;
 import dev.dubhe.anvilcraft.block.ItemDetectorBlock;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.init.ModMenuTypes;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
@@ -19,6 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.MenuProvider;
@@ -349,13 +351,13 @@ public class ItemDetectorBlockEntity extends BlockEntity implements MenuProvider
     }
 
     public enum Mode {
-        ANY("any"),
-        ALL("all");
+        ANY(SharedTextures.BUTTON_ANY),
+        ALL(SharedTextures.BUTTON_ALL);
 
-        public final String buttonPath;
+        public final ResourceLocation buttonTexture;
 
-        Mode(String buttonPath) {
-            this.buttonPath = buttonPath;
+        Mode(ResourceLocation buttonTexture) {
+            this.buttonTexture = buttonTexture;
         }
 
         public Mode cycle() {

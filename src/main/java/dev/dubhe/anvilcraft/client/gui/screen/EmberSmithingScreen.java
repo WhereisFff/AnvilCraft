@@ -18,16 +18,16 @@ import java.util.List;
 import java.util.Optional;
 
 public class EmberSmithingScreen extends ItemCombinerScreen<EmberSmithingMenu> {
-    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "ember_smithing_table.png");
+    private static final ResourceLocation BACKGROUND = SharedTextures.bg("crafting", "ember_smithing_table");
 
     // 空槽位纹理 - 模板
-    private static final ResourceLocation EMPTY_SLOT_TWO_TO_ONE_SMITHING_TEMPLATE = SharedTextures.texture(
+    private static final ResourceLocation EMPTY_SLOT_TWO_TO_ONE_SMITHING_TEMPLATE = AnvilCraft.of(
         "item/empty_slot_two_to_one_smithing_template"
     );
-    private static final ResourceLocation EMPTY_SLOT_FOUR_TO_ONE_SMITHING_TEMPLATE = SharedTextures.texture(
+    private static final ResourceLocation EMPTY_SLOT_FOUR_TO_ONE_SMITHING_TEMPLATE = AnvilCraft.of(
         "item/empty_slot_four_to_one_smithing_template"
     );
-    private static final ResourceLocation EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE = SharedTextures.texture(
+    private static final ResourceLocation EMPTY_SLOT_EIGHT_TO_ONE_SMITHING_TEMPLATE = AnvilCraft.of(
         "item/empty_slot_eight_to_one_smithing_template"
     );
 

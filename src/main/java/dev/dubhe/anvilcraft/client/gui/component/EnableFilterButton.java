@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -17,8 +17,6 @@ import java.util.function.Supplier;
 @Getter
 public class EnableFilterButton extends Button {
     private final Supplier<Boolean> filterEnabled;
-    private static final ResourceLocation YES = AnvilCraft.of("textures/gui/container/machine/button_yes.png");
-    private static final ResourceLocation NO = AnvilCraft.of("textures/gui/container/machine/button_no.png");
     private static final MutableComponent defaultMessage = Component.translatable(
         "screen.anvilcraft.button.record", Component.translatable("screen.anvilcraft.button.off"));
 
@@ -48,7 +46,7 @@ public class EnableFilterButton extends Button {
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation location = this.filterEnabled.get() ? EnableFilterButton.YES : EnableFilterButton.NO;
+        ResourceLocation location = this.filterEnabled.get() ? SharedTextures.BUTTON_YES : SharedTextures.BUTTON_NO;
         this.renderTexture(guiGraphics, location, this.getX(), this.getY(), 0, 0, 16, this.width, this.height, 16, 32);
     }
 

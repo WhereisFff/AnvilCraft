@@ -1,6 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import dev.dubhe.anvilcraft.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
@@ -17,7 +17,7 @@ import net.minecraft.resources.ResourceLocation;
 import java.util.function.Function;
 
 public class Slider extends AbstractWidget {
-    public static final ResourceLocation SLIDER = AnvilCraft.of("textures/gui/container/slider/slider.png");
+    public static final ResourceLocation SLIDER = SharedTextures.textureGui("misc/slider_like/slider");
 
     @Setter
     @Getter

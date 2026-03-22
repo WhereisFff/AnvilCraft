@@ -13,6 +13,7 @@ import snownee.jade.api.IServerDataProvider;
 import snownee.jade.api.ITooltip;
 import snownee.jade.api.config.IPluginConfig;
 
+import java.util.Locale;
 import java.util.Optional;
 
 import static dev.dubhe.anvilcraft.block.entity.ItemDetectorBlockEntity.Mode;
@@ -36,7 +37,7 @@ public enum ItemDetectorProvider implements IBlockComponentProvider, IServerData
             if (ordinal >= 0 && ordinal < Mode.values().length) {
                 Mode filterMode = Mode.values()[ordinal];
                 tooltip.add(Component.translatable("screen.anvilcraft.button.filter_mode",
-                    Component.translatable("screen.anvilcraft.button.filter_mode_" + filterMode.buttonPath))
+                    Component.translatable("screen.anvilcraft.button.filter_mode_" + filterMode.name().toLowerCase(Locale.ROOT)))
                 );
             }
         }

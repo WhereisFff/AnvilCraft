@@ -19,7 +19,7 @@ public record SlotFilterChangePacket(int index, ItemStack filter) implements ISe
     public static final StreamCodec<RegistryFriendlyByteBuf, SlotFilterChangePacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT,
         SlotFilterChangePacket::index,
-        ItemStack.STREAM_CODEC,
+        ItemStack.OPTIONAL_STREAM_CODEC,
         SlotFilterChangePacket::filter,
         SlotFilterChangePacket::new
     );

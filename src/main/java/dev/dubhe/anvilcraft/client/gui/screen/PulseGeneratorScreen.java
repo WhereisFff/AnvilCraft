@@ -24,17 +24,17 @@ public class PulseGeneratorScreen extends AbstractContainerScreen<PulseGenerator
     private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "pulse_generator");
 
     private static final ResourceLocation BUTTON_ADD_T =
-        SharedTextures.texture("machine/pulse_generator/button_add_t.png");
+        SharedTextures.textureGui("machine/pulse_generator/button_add_t");
     private static final ResourceLocation BUTTON_ADD_S =
-        SharedTextures.texture("machine/pulse_generator/button_add_s.png");
+        SharedTextures.textureGui("machine/pulse_generator/button_add_s");
     private static final ResourceLocation BUTTON_ADD_M =
-        SharedTextures.texture("machine/pulse_generator/button_add_m.png");
+        SharedTextures.textureGui("machine/pulse_generator/button_add_m");
     private static final ResourceLocation BUTTON_MINUS_T =
-        SharedTextures.texture("machine/pulse_generator/button_minus_t.png");
+        SharedTextures.textureGui("machine/pulse_generator/button_minus_t");
     private static final ResourceLocation BUTTON_MINUS_S =
-        SharedTextures.texture("machine/pulse_generator/button_minus_s.png");
+        SharedTextures.textureGui("machine/pulse_generator/button_minus_s");
     private static final ResourceLocation BUTTON_MINUS_M =
-        SharedTextures.texture("machine/pulse_generator/button_minus_m.png");
+        SharedTextures.textureGui("machine/pulse_generator/button_minus_m");
 
     private final Minecraft minecraft;
     private TextWidget waitingTime;

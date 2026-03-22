@@ -1,7 +1,6 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -10,6 +9,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.function.Supplier;
 
@@ -18,8 +18,6 @@ import static dev.dubhe.anvilcraft.block.entity.ItemDetectorBlockEntity.Mode;
 public class CycleFilterModeButton extends Button {
 
     private final Supplier<Mode> filterMode;
-    private static final String LOCATION_PREFIX = "textures/gui/container/machine/button_";
-    private static final String LOCATION_SUFFIX = ".png";
     private static final MutableComponent DEFAULT_MESSAGE = Component.translatable(
         "screen.anvilcraft.button.filter_mode",
         Component.translatable("screen.anvilcraft.button.filter_mode_any"));
@@ -38,19 +36,15 @@ public class CycleFilterModeButton extends Button {
         }
     }
 
-    private String buttonPath() {
-        return this.filterMode.get().buttonPath;
-    }
-
     @Override
     public Component getMessage() {
         return Component.translatable("screen.anvilcraft.button.filter_mode",
-            Component.translatable("screen.anvilcraft.button.filter_mode_" + this.buttonPath()));
+            Component.translatable("screen.anvilcraft.button.filter_mode_" + this.filterMode.get().name().toLowerCase(Locale.ROOT)));
     }
 
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        ResourceLocation location = AnvilCraft.of(LOCATION_PREFIX + this.buttonPath() + LOCATION_SUFFIX);
+        ResourceLocation location = this.filterMode.get().buttonTexture;
         this.renderTexture(guiGraphics, location, this.getX(), this.getY(), 0, 0, 16, this.width, this.height, 16, 32);
     }
 

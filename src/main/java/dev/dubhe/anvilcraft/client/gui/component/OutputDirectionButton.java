@@ -1,7 +1,7 @@
 package dev.dubhe.anvilcraft.client.gui.component;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.constant.SharedTextures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
@@ -17,12 +17,6 @@ import java.util.Optional;
 public class OutputDirectionButton extends Button {
     private Direction direction;
     private final List<Direction> skip = new ArrayList<>();
-    private static final ResourceLocation UP = AnvilCraft.of("textures/gui/container/machine/button_u.png");
-    private static final ResourceLocation DOWN = AnvilCraft.of("textures/gui/container/machine/button_d.png");
-    private static final ResourceLocation EAST = AnvilCraft.of("textures/gui/container/machine/button_e.png");
-    private static final ResourceLocation WEST = AnvilCraft.of("textures/gui/container/machine/button_w.png");
-    private static final ResourceLocation SOUTH = AnvilCraft.of("textures/gui/container/machine/button_s.png");
-    private static final ResourceLocation NORTH = AnvilCraft.of("textures/gui/container/machine/button_n.png");
     private static final MutableComponent DEFAULT_MESSAGE = Component.translatable(
         "screen.anvilcraft.button.direction", Component.translatable("screen.anvilcraft.button.direction.up"));
 
@@ -71,12 +65,12 @@ public class OutputDirectionButton extends Button {
     @Override
     public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         ResourceLocation location = switch (direction) {
-            case UP -> UP;
-            case EAST -> EAST;
-            case WEST -> WEST;
-            case SOUTH -> SOUTH;
-            case NORTH -> NORTH;
-            default -> DOWN;
+            case UP -> SharedTextures.BUTTON_U;
+            case EAST -> SharedTextures.BUTTON_E;
+            case WEST -> SharedTextures.BUTTON_W;
+            case SOUTH -> SharedTextures.BUTTON_S;
+            case NORTH -> SharedTextures.BUTTON_N;
+            default -> SharedTextures.BUTTON_D;
         };
         this.renderTexture(guiGraphics, location, this.getX(), this.getY(), 0, 0, 16, this.width, this.height, 16, 32);
     }
