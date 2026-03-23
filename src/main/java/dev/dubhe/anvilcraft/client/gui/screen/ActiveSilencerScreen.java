@@ -29,7 +29,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("DuplicatedCode")
 public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencerMenu> {
     private static final ResourceLocation BACKGROUND = SharedTextures.bg("machine", "active_silencer");
-    public static final ResourceLocation SLIDER = SharedTextures.textureGui("machine/active_silencer/slider");
+    public static final ResourceLocation SLIDER = SharedTextures.SMALL_SLIDER;
 
     private static final int SCROLL_BAR_HEIGHT = 120;
     private static final int SCROLL_BAR_TOP_POS_Y = 35;
@@ -204,6 +204,7 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
                 this,
                 "add"
             )).setWidth(112);
+            buttonTop += 15;
         }
 
         buttonTop = topPos + 35;
@@ -221,6 +222,7 @@ public class ActiveSilencerScreen extends AbstractContainerScreen<ActiveSilencer
                 this,
                 "remove"
             ));
+            buttonTop += 15;
         }
 
         this.addRenderableWidget(new EditBox(
