@@ -11,17 +11,29 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 
-public record LaserEmitPacket(int level, BlockPos laserPos, BlockPos irradiatePos) implements IClientboundPacket {
+import java.util.Optional;
+import javax.annotation.Nullable;
+
+public record LaserEmitPacket(int level, BlockPos laserPos, @Nullable BlockPos irradiatePos) implements IClientboundPacket {
     public static final Type<LaserEmitPacket> TYPE = IPacket.type(AnvilCraft.of("laser_emit"));
     public static final StreamCodec<ByteBuf, LaserEmitPacket> STREAM_CODEC = StreamCodec.composite(
         ByteBufCodecs.VAR_INT,
         LaserEmitPacket::level,
         BlockPos.STREAM_CODEC,
         LaserEmitPacket::laserPos,
-        BlockPos.STREAM_CODEC,
-        LaserEmitPacket::irradiatePos,
+        ByteBufCodecs.optional(BlockPos.STREAM_CODEC),
+        LaserEmitPacket::irradiatePosOptional,
         LaserEmitPacket::new
     );
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private LaserEmitPacket(int level, BlockPos laserPos, Optional<BlockPos> irradiatePos) {
+        this(level, laserPos, irradiatePos.orElse(null));
+    }
+
+    private Optional<BlockPos> irradiatePosOptional() {
+        return Optional.ofNullable(this.irradiatePos);
+    }
 
     @Override
     public Type<LaserEmitPacket> type() {

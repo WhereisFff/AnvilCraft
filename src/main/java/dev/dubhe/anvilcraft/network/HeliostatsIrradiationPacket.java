@@ -7,19 +7,32 @@ import dev.dubhe.anvilcraft.block.entity.HeliostatsBlockEntity;
 import dev.dubhe.anvilcraft.util.Util;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
 
-public record HeliostatsIrradiationPacket(BlockPos pos, BlockPos irritatePos) implements ISensitiveBiPacket {
+import java.util.Optional;
+import javax.annotation.Nullable;
+
+public record HeliostatsIrradiationPacket(BlockPos pos, @Nullable BlockPos irritatePos) implements ISensitiveBiPacket {
     public static final Type<HeliostatsIrradiationPacket> TYPE = IPacket.type(AnvilCraft.of("heliostats_irradiation_pack"));
     public static final StreamCodec<ByteBuf, HeliostatsIrradiationPacket> STREAM_CODEC = StreamCodec.composite(
         BlockPos.STREAM_CODEC,
         HeliostatsIrradiationPacket::pos,
-        BlockPos.STREAM_CODEC,
-        HeliostatsIrradiationPacket::irritatePos,
+        ByteBufCodecs.optional(BlockPos.STREAM_CODEC),
+        HeliostatsIrradiationPacket::irritatePosOptional,
         HeliostatsIrradiationPacket::new
     );
+
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private HeliostatsIrradiationPacket(BlockPos pos, Optional<BlockPos> irritatePos) {
+        this(pos, irritatePos.orElse(null));
+    }
+
+    private Optional<BlockPos> irritatePosOptional() {
+        return Optional.ofNullable(this.irritatePos);
+    }
 
     @Override
     public Type<HeliostatsIrradiationPacket> type() {

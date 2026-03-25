@@ -15,7 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public record UpdateDisplayItemPacket(ItemStack displayItem, BlockPos pos) implements IClientboundPacket {
     public static final Type<UpdateDisplayItemPacket> TYPE = IPacket.type(AnvilCraft.of("client_update_display_item"));
     public static final StreamCodec<RegistryFriendlyByteBuf, UpdateDisplayItemPacket> STREAM_CODEC = StreamCodec.composite(
-        ItemStack.STREAM_CODEC,
+        ItemStack.OPTIONAL_STREAM_CODEC,
         UpdateDisplayItemPacket::displayItem,
         BlockPos.STREAM_CODEC,
         UpdateDisplayItemPacket::pos,
