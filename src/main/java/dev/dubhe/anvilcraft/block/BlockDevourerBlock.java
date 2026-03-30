@@ -274,7 +274,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
         if (filteredBlockPosList.contains(devourBlockPos)) return;
         BlockState devourBlockState = level.getBlockState(devourBlockPos);
         if (devourBlockState.isAir()) return;
-        if (!canDevour(devourBlockState)) return;
+        if (!BlockDevourerBlock.canDevour(devourBlockState)) return;
         if (
             !(anvil instanceof FrostAnvilBlock)
             && devourBlockState.is(ModBlockTags.BLOCK_DEVOURER_PROBABILITY_DROPPING)

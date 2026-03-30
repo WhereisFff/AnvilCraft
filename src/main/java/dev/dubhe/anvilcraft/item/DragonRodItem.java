@@ -100,7 +100,7 @@ public class DragonRodItem extends Item {
         BlockPos centerPos, BlockState centerState, Direction clickedSide
     ) {
         if (centerState.is(ModBlockTags.DEVOUR_BLACKLIST)) return;
-        if (centerState.getDestroySpeed(level, centerPos) == 0.0F) return;
+        if (centerState.getDestroySpeed(level, centerPos) < 0.0F) return;
         ItemStack dragonRod = player.getItemInHand(hand);
         if (!canDevour(player, dragonRod)) return;
         int range = dragonRod.getOrDefault(ModComponents.DEVOUR_RANGE, -1);
