@@ -259,7 +259,7 @@ public class BlockDevourerBlock extends DirectionalBlock implements HammerRotate
      *
      * @param devourBlockState       目标方块
      * */
-    public static boolean canDevour(BlockState devourBlockState){
+    public static boolean canDevour(BlockState devourBlockState) {
         return !devourBlockState.is(ModBlockTags.DEVOUR_BLACKLIST) && devourBlockState.getBlock().defaultDestroyTime() >= 0;
     }
 
