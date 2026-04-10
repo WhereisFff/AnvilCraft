@@ -5,7 +5,6 @@ import dev.dubhe.anvilcraft.block.entity.AccelerationRingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActivatorSlidingRailBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ActiveSilencerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.AdvancedComparatorBlockEntity;
-import dev.dubhe.anvilcraft.block.entity.BatchCrafterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.BlackHoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CelestialForgingAnvilBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.ChargeCollectorBlockEntity;
@@ -47,6 +46,8 @@ import dev.dubhe.anvilcraft.block.entity.TeslaTowerBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.TransmissionPoleBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.VoidEnergyCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.WhiteHoleBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.batch.BatchCrafterBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.batch.BatchCutterBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.GlowingBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.HeatedBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.heatable.IncandescentBlockEntity;
@@ -57,7 +58,7 @@ import dev.dubhe.anvilcraft.block.entity.nesting.OverNestingShulkerBoxBlockEntit
 import dev.dubhe.anvilcraft.block.entity.nesting.SupercriticalNestingShulkerBoxBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.plate.TimeCountedPressurePlateBlockEntity;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.AdvancedComparatorBlockEntityRender;
-import dev.dubhe.anvilcraft.client.renderer.blockentity.BatchCrafterRenderer;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.BatchCraftingBERenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.CelestialForgingAnvilBlockEntityRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.ChargeCollectorRenderer;
 import dev.dubhe.anvilcraft.client.renderer.blockentity.ChargerBlockRenderer;
@@ -80,7 +81,12 @@ public class ModBlockEntities {
     public static final BlockEntityEntry<BatchCrafterBlockEntity> BATCH_CRAFTER = REGISTRUM.blockEntity(
         "batch_crafter",
         BatchCrafterBlockEntity::new
-    ).renderer(() -> BatchCrafterRenderer::new).validBlock(ModBlocks.BATCH_CRAFTER).register();
+    ).renderer(() -> BatchCraftingBERenderer::new).validBlock(ModBlocks.BATCH_CRAFTER).register();
+
+    public static final BlockEntityEntry<BatchCutterBlockEntity> BATCH_CUTTER = REGISTRUM.blockEntity(
+        "batch_cutter",
+        BatchCutterBlockEntity::new
+    ).renderer(() -> BatchCraftingBERenderer::new).validBlock(ModBlocks.BATCH_CUTTER).register();
 
     public static final BlockEntityEntry<ItemCollectorBlockEntity> ITEM_COLLECTOR = REGISTRUM.blockEntity(
         "item_collector",
