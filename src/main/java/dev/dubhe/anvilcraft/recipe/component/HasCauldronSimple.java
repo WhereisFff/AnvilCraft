@@ -29,6 +29,7 @@ public record HasCauldronSimple(ResourceLocation fluid, int consume, ResourceLoc
      * @param fluid     流体ID
      * @param consume   消耗量
      * @param transform 转换后的流体ID
+     * @param produce   产生量
      * @param chance    转换成功的概率
      */
     public HasCauldronSimple {

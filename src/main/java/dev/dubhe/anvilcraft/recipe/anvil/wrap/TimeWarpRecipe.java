@@ -104,7 +104,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
      */
     public boolean isProduceFluid() {
         HasCauldronSimple hasCauldron = this.getHasCauldron();
-        return HasCauldron.isNotEmpty(hasCauldron.transform()) && this.getHasCauldron().consume() < 0;
+        return HasCauldron.isNotEmpty(hasCauldron.transform()) && this.getHasCauldron().produce() > 0;
     }
 
     /**

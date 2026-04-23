@@ -33,9 +33,9 @@ import java.util.Optional;
  * <p>用于检查指定位置是否存在特定炼药锅的谓词条件，并在配方完成后处理炼药锅中的流体</p>
  *
  * @param fluid     流体ID
- * @param consume   消耗量（正数表示消耗）
+ * @param consume   消耗量
  * @param transform 转换后的流体ID
- * @param produce   产生量（正数，产生到 transform 指定的流体；若为0则不产生）
+ * @param produce   产生量
  * @param chance    转换成功的概率
  */
 public record HasCauldron(
@@ -63,6 +63,7 @@ public record HasCauldron(
      * @param fluid     流体ID
      * @param consume   消耗量
      * @param transform 转换后的流体ID
+     * @param produce   产生量
      * @param chance    转换成功的概率
      */
     public HasCauldron {
@@ -133,7 +134,7 @@ public record HasCauldron(
                     int cur = optionalCur.map(Tuple::getB).orElse(0);
                     // 当存在 produce 时，要求当前已有量 + produce 不超过最大层数
                     if (this.produce > 0) {
-                        int targetMaxMb = optionalTarget.map(tuple -> HasCauldron.layer2Mb(tuple.getA(), tuple.getA().max)).orElse(0);
+                        int targetMaxMb = optionalTarget.map(tuple -> HasCauldron.layer2Mb(tuple.getA(), tuple.getA().max)).orElse(1000);
                         int curMb = optionalCur.map(tuple -> HasCauldron.layer2Mb(tuple.getA(), tuple.getB())).orElse(0);
                         if (curMb + this.produce > targetMaxMb) return false;
                     } else {
