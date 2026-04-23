@@ -397,7 +397,7 @@ public class TimeWarpRecipe extends AbstractProcessRecipe<TimeWarpRecipe> {
          * @return 构建器实例
          */
         public Builder produce(int produce) {
-            this.consume(-produce);
+            this.hasCauldron.produce(produce);
             return this;
         }
 

@@ -272,7 +272,7 @@ public class SqueezingRecipe extends AbstractProcessRecipe<SqueezingRecipe> {
          */
         public Builder produce(int produce) {
             if (produce <= 0) return this;
-            this.hasCauldron.consume(-produce);
+            this.hasCauldron.produce(produce);
             return this;
         }
 
