@@ -15,6 +15,7 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -29,6 +30,7 @@ import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
 import java.util.List;
+import javax.annotation.Nullable;
 
 @Getter
 public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHolder, IFluidHandlerHolder {
@@ -63,7 +65,9 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         @Override
         protected void onContentsChanged(int slot) {
             FishTankBlockEntity.this.setChanged();
-            FishTankBlockEntity.this.getLevel().sendBlockUpdated(
+            Level level = FishTankBlockEntity.this.getLevel();
+            if (level == null) return;
+            level.sendBlockUpdated(
                 FishTankBlockEntity.this.getBlockPos(),
                 FishTankBlockEntity.this.getBlockState(),
                 FishTankBlockEntity.this.getBlockState(),
@@ -139,7 +143,8 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
      * @param stack 要放入的物品
      * @return 是否放入成功
      */
-    public static boolean insertToTank(IItemHandler handler, ItemStack stack) {
+    public static boolean insertToTank(@Nullable IItemHandler handler, ItemStack stack) {
+        if (handler == null) return false;
         if (stack.is(ModItemTags.DISALLOW_HAND_INSERT_INTO_TANK)) return false;
         for (int i = 8; i < 16; i++) {
             ItemStack inserted = handler.insertItem(i, stack.copy(), true);
@@ -172,7 +177,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
                 result.add(handler.extractItem(i, count, false));
                 continue;
             }
-            for (; count >= 0; count -= maxSize) {
+            for (; count > 0; count -= maxSize) {
                 result.add(handler.extractItem(i, Math.min(count, maxSize), false));
             }
         }
@@ -186,7 +191,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
                     result.add(handler.extractItem(i, count, false));
                     continue;
                 }
-                for (; count >= 0; count -= maxSize) {
+                for (; count > 0; count -= maxSize) {
                     result.add(handler.extractItem(i, Math.min(count, maxSize), false));
                 }
             }

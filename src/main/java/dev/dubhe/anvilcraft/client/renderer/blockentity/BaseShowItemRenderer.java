@@ -27,7 +27,6 @@ public abstract class BaseShowItemRenderer<B extends BlockEntity> implements Blo
     private static final float FLAT_ITEM_BUNDLE_OFFSET_Y = 0.0F;
     private static final float FLAT_ITEM_BUNDLE_OFFSET_Z = 0.09375F;
     private final ItemRenderer itemRenderer;
-    private final RandomSource random = RandomSource.create();
 
     public BaseShowItemRenderer(BlockEntityRendererProvider.Context context) {
         itemRenderer = context.getItemRenderer();

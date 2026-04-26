@@ -114,14 +114,16 @@ public class FishTankBlock extends Block implements EntityBlock, HammerRotateBeh
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
-        BlockEntity be = level.getBlockEntity(pos);
-        if (be instanceof FishTankBlockEntity tank) {
-            IItemHandler handler = tank.getItemHandler();
-            for (int slot = 0; slot < handler.getSlots(); slot++) {
-                ItemStack stack = handler.extractItem(slot, Integer.MAX_VALUE, false);
-                if (!stack.isEmpty()) Block.popResource(level, pos, stack);
-            }
+        if (!level.isClientSide && !state.is(newState.getBlock())) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof FishTankBlockEntity tank) {
+                IItemHandler handler = tank.getItemHandler();
+                for (int slot = 0; slot < handler.getSlots(); slot++) {
+                    ItemStack stack = handler.extractItem(slot, Integer.MAX_VALUE, false);
+                    if (!stack.isEmpty()) Block.popResource(level, pos, stack);
+                }
 
+            }
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
