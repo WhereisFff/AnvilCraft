@@ -91,7 +91,7 @@ public record Multiphase(LinkedList<Phase> phases) {
     private static Multiphase make(Component name, int phaseCount) {
         LinkedList<Phase> phases = new LinkedList<>();
         for (int i = 0; i < phaseCount; i++) {
-            phases.add(Phase.create(i).withName(makeName(i)).withItemName(name.copy().append(makeSuffix(i))));
+            phases.add(Phase.create(i).withItemName(name.copy().append(makeSuffix(i))));
         }
         return new Multiphase(phases);
     }
@@ -118,7 +118,7 @@ public record Multiphase(LinkedList<Phase> phases) {
     private static Multiphase make(Component name, @Nullable ItemEnchantments enchantments, int phaseCount) {
         LinkedList<Phase> phases = new LinkedList<>();
         for (int i = 0; i < phaseCount; i++) {
-            Phase phase = Phase.create(i).withName(makeName(i)).withItemName(name.copy().append(makeSuffix(i)));
+            Phase phase = Phase.create(i).withItemName(name.copy().append(makeSuffix(i)));
             if (i == 0) {
                 phase = phase.withEnchantments(enchantments == null ? ItemEnchantments.EMPTY : enchantments);
             }
@@ -142,10 +142,9 @@ public record Multiphase(LinkedList<Phase> phases) {
             PhaseData data = dataS[i];
             Phase phase;
             if (data == null) {
-                phase = Phase.create(i).withName(makeName(i)).withItemName(original.getDescription().copy().append(makeSuffix(i)));
+                phase = Phase.create(i).withItemName(original.getDescription().copy().append(makeSuffix(i)));
             } else {
                 phase = Phase.create(i)
-                    .withName(makeName(i))
                     .withRepairCost(data.repairCost())
                     .withEnchantments(data.enchantments());
                 if (data.customName() != null && !data.customName().equals(Component.empty())) {
@@ -325,7 +324,7 @@ public record Multiphase(LinkedList<Phase> phases) {
         public static Phase create(int index) {
             return new Phase(
                 index,
-                Component.literal("Empty"),
+                Multiphase.makeName(index),
                 Optional.empty(),
                 Optional.empty(),
                 0,
