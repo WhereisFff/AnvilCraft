@@ -127,7 +127,7 @@ public class NeutronIrradiationRecipe extends AbstractProcessRecipe<NeutronIrrad
         }
 
         public Builder produce(int produce) {
-            this.consume(-produce);
+            this.hasCauldron.produce(produce);
             return this;
         }
 
