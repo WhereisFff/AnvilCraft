@@ -1,9 +1,11 @@
 package dev.dubhe.anvilcraft.block.entity;
 
 import com.google.common.collect.ImmutableList;
+import dev.anvilcraft.lib.v2.recipe.cache.IItemHandlerCache;
 import dev.dubhe.anvilcraft.api.fluid.IFluidHandlerHolder;
 import dev.dubhe.anvilcraft.api.itemhandler.IItemHandlerHolder;
 import dev.dubhe.anvilcraft.api.itemhandler.PollableItemHandler;
+import dev.dubhe.anvilcraft.init.block.ModFluidTags;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
@@ -22,6 +24,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
@@ -33,9 +36,23 @@ import java.util.List;
 import javax.annotation.Nullable;
 
 @Getter
-public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHolder, IFluidHandlerHolder {
+public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHolder, IItemHandlerCache, IFluidHandlerHolder {
     public static final int CAPACITY = FluidType.BUCKET_VOLUME;
-    private final FluidTank fluidHandler = new FluidTank(CAPACITY);
+    private final FluidTank fluidHandler = new FluidTank(CAPACITY) {
+        @Override
+        protected void onContentsChanged() {
+            FishTankBlockEntity.this.setChanged();
+            if (!FishTankBlockEntity.shouldIgnite(this.getFluid())) FishTankBlockEntity.this.setIgnited(false);
+            Level level = FishTankBlockEntity.this.getLevel();
+            if (level == null) return;
+            level.sendBlockUpdated(
+                FishTankBlockEntity.this.getBlockPos(),
+                FishTankBlockEntity.this.getBlockState(),
+                FishTankBlockEntity.this.getBlockState(),
+                Block.UPDATE_CLIENTS
+            );
+        }
+    };
     /**
      * 0-7 为输出产物，<br>
      * 8-15 为输入物品
@@ -75,9 +92,28 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             );
         }
     };
+    private boolean ignited = false;
 
     public FishTankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
+    }
+
+    public void setIgnited(boolean ignited) {
+        this.ignited = ignited;
+        this.setChanged();
+        Level level = this.getLevel();
+        if (level == null) return;
+        level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+    }
+
+    @Override
+    public PollableItemHandler getInput() {
+        return this.itemHandler;
+    }
+
+    @Override
+    public PollableItemHandler getOutput() {
+        return this.itemHandler;
     }
 
     @Override
@@ -91,6 +127,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         if (!chestNbt.isEmpty()) {
             tag.put("Items", chestNbt);
         }
+        tag.putBoolean("ignited", this.ignited);
     }
 
     @Override
@@ -98,6 +135,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         super.loadAdditional(tag, provider);
         this.fluidHandler.readFromNBT(provider, tag.getCompound("Fluid"));
         this.itemHandler.deserializeNBT(provider, tag.getCompound("Items"));
+        this.ignited = tag.getBoolean("ignited") && FishTankBlockEntity.shouldIgnite(this.fluidHandler.getFluid());
     }
 
     @Override
@@ -111,6 +149,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         if (!chestNbt.isEmpty()) {
             tag.put("Items", chestNbt);
         }
+        tag.putBoolean("ignited", this.ignited);
         return tag;
     }
 
@@ -197,5 +236,9 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             }
         }
         return ImmutableList.copyOf(result);
+    }
+
+    public static boolean shouldIgnite(FluidStack cur) {
+        return cur.is(ModFluidTags.IGNITABLE);
     }
 }

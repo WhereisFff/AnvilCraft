@@ -1,20 +1,28 @@
 package dev.dubhe.anvilcraft.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.anvilcraft.lib.v2.piston.IMoveableEntityBlock;
+import dev.anvilcraft.lib.v2.recipe.cache.BlockCache;
 import dev.anvilcraft.lib.v2.util.ShapeUtil;
+import dev.anvilcraft.lib.v2.util.Util;
+import dev.dubhe.anvilcraft.api.block.IIgnitableCauldron;
 import dev.dubhe.anvilcraft.api.hammer.HammerRotateBehavior;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.FishTankBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
 import dev.dubhe.anvilcraft.init.item.ModItemTags;
+import dev.dubhe.anvilcraft.util.ModInteractionMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.cauldron.CauldronInteraction;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,13 +30,13 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -37,7 +45,7 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.items.IItemHandler;
 import org.jetbrains.annotations.Nullable;
 
-public class FishTankBlock extends Block implements EntityBlock, HammerRotateBehavior, IHammerRemovable {
+public class FishTankBlock extends Block implements IMoveableEntityBlock, HammerRotateBehavior, IHammerRemovable, IIgnitableCauldron {
     public static final BooleanProperty TROPICAL = BooleanProperty.create("tropical");
     public static final BooleanProperty OUTLET = BooleanProperty.create("outlet");
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
@@ -86,30 +94,36 @@ public class FishTankBlock extends Block implements EntityBlock, HammerRotateBeh
 
     @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
+        if (entity.getType().equals(EntityType.ARROW) && entity.isOnFire()) {
+            this.tryIgnite(level, pos);
+            return;
+        }
         if (!(entity instanceof ItemEntity itemEntity)) return;
+        if (itemEntity.getItem().is(ModItemTags.FIRE_STARTER)) {
+            this.tryIgnite(level, pos);
+            itemEntity.getItem().setCount(itemEntity.getItem().getCount() - 1);
+        } else if (itemEntity.getItem().is(ModItemTags.UNBROKEN_FIRE_STARTER)) {
+            this.tryIgnite(level, pos);
+        }
         IItemHandler items = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
         FishTankBlockEntity.insertToTank(items, itemEntity.getItem());
     }
 
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        if (entity.getType().equals(EntityType.ARROW) && entity.isOnFire()) {
+            this.tryIgnite(level, pos);
+            return;
+        }
         if (!(entity instanceof ItemEntity itemEntity)) return;
+        if (itemEntity.getItem().is(ModItemTags.FIRE_STARTER)) {
+            this.tryIgnite(level, pos);
+            itemEntity.getItem().setCount(itemEntity.getItem().getCount() - 1);
+        } else if (itemEntity.getItem().is(ModItemTags.UNBROKEN_FIRE_STARTER)) {
+            this.tryIgnite(level, pos);
+        }
         IItemHandler items = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
         FishTankBlockEntity.insertToTank(items, itemEntity.getItem());
-    }
-
-    @Override
-    protected ItemInteractionResult useItemOn(
-        ItemStack stack,
-        BlockState state,
-        Level level,
-        BlockPos pos,
-        Player player,
-        InteractionHand hand,
-        BlockHitResult hitResult
-    ) {
-        if (stack.is(ModItemTags.ANVIL_HAMMER)) return this.changeOutlet(level, pos, state, player, hitResult);
-        return this.useItemOnTank(stack, state, level, pos, player, hand, hitResult);
     }
 
     @Override
@@ -128,7 +142,23 @@ public class FishTankBlock extends Block implements EntityBlock, HammerRotateBeh
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
-    private ItemInteractionResult changeOutlet(Level level, BlockPos pos, BlockState state, Player player, BlockHitResult hitResult) {
+    @Override
+    protected ItemInteractionResult useItemOn(
+        ItemStack stack,
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Player player,
+        InteractionHand hand,
+        BlockHitResult hitResult
+    ) {
+        if (stack.is(ModItemTags.ANVIL_HAMMER)) return this.changeOutlet(level, pos, state, player, hitResult);
+        CauldronInteraction interaction = ModInteractionMap.FISH_TANK.map().get(stack.getItem());
+        if (interaction != null) return interaction.interact(state, level, pos, player, hand, stack);
+        return this.useItemOnTank(stack, state, level, pos, player, hand, hitResult);
+    }
+
+    public ItemInteractionResult changeOutlet(Level level, BlockPos pos, BlockState state, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide) {
             // 水平的四个方向根据被右键的方向转换
             Direction outletDir = Direction.from2DDataValue((hitResult.getDirection().get2DDataValue()));
@@ -139,6 +169,14 @@ public class FishTankBlock extends Block implements EntityBlock, HammerRotateBeh
         }
         level.playSound(player, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0f, 1.0f);
         return ItemInteractionResult.SUCCESS;
+    }
+
+    public boolean tryIgnite(Level level, BlockPos pos) {
+        if (!(level.getBlockEntity(pos) instanceof FishTankBlockEntity tank)) return false;
+        if (!FishTankBlockEntity.shouldIgnite(tank.getFluidHandler().getFluid())) return false;
+        if (tank.isIgnited()) return false;
+        tank.setIgnited(true);
+        return true;
     }
 
     private ItemInteractionResult useItemOnTank(
@@ -165,5 +203,34 @@ public class FishTankBlock extends Block implements EntityBlock, HammerRotateBeh
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return ModBlockEntities.FISH_TANK.create(pos, state);
+    }
+
+    @Override
+    public CompoundTag clearData(Level level, BlockPos pos) {
+        CompoundTag tag = IMoveableEntityBlock.super.clearData(level, pos);
+        level.getBlockEntity(pos, ModBlockEntities.FISH_TANK.get())
+            .ifPresent(be -> tag.put("data", be.getUpdateTag(level.registryAccess())));
+        return tag;
+    }
+
+    @Override
+    public void setData(Level level, BlockPos pos, CompoundTag nbt) {
+        level.getBlockEntity(pos, ModBlockEntities.FISH_TANK.get())
+            .ifPresent(be -> be.loadAdditional(nbt.getCompound("data"), level.registryAccess()));
+    }
+
+    @Override
+    public boolean isIgnited(BlockCache cache, BlockPos pos) {
+        return Util.<FishTankBlockEntity>cast(cache.getBlockEntity(pos)).isIgnited();
+    }
+
+    @Override
+    public void setIgnited(BlockCache cache, BlockPos pos, boolean ignited) {
+        Util.<FishTankBlockEntity>cast(cache.getBlockEntity(pos)).setIgnited(ignited);
+    }
+
+    @Override
+    public Fluid getFluid(BlockCache cache, BlockPos pos) {
+        return Util.<FishTankBlockEntity>cast(cache.getBlockEntity(pos)).getFluidHandler().getFluid().getFluid();
     }
 }
