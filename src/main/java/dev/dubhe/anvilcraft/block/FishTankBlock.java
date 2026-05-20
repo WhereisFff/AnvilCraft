@@ -94,6 +94,18 @@ public class FishTankBlock extends Block implements IMoveableEntityBlock, Hammer
     }
 
     @Override
+    protected boolean hasAnalogOutputSignal(BlockState state) {
+        return true;
+    }
+
+    @Override
+    protected int getAnalogOutputSignal(BlockState state, Level level, BlockPos pos) {
+        return level.getBlockEntity(pos, ModBlockEntities.FISH_TANK.get())
+            .map(FishTankBlockEntity::getSignal)
+            .orElse(0);
+    }
+
+    @Override
     public void stepOn(Level level, BlockPos pos, BlockState state, Entity entity) {
         if (entity.getType().equals(EntityType.ARROW) && entity.isOnFire()) {
             this.tryIgnite(level, pos);
@@ -107,7 +119,7 @@ public class FishTankBlock extends Block implements IMoveableEntityBlock, Hammer
             this.tryIgnite(level, pos);
         }
         IItemHandler items = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-        FishTankBlockEntity.insertToTank(items, itemEntity.getItem());
+        FishTankBlockEntity.insertToTank(items, itemEntity);
     }
 
     @Override
@@ -124,7 +136,7 @@ public class FishTankBlock extends Block implements IMoveableEntityBlock, Hammer
             this.tryIgnite(level, pos);
         }
         IItemHandler items = level.getCapability(Capabilities.ItemHandler.BLOCK, pos, null);
-        FishTankBlockEntity.insertToTank(items, itemEntity.getItem());
+        FishTankBlockEntity.insertToTank(items, itemEntity);
     }
 
     @Override
@@ -168,6 +180,10 @@ public class FishTankBlock extends Block implements IMoveableEntityBlock, Hammer
             BlockState newState = state.setValue(FishTankBlock.OUTLET, hasOutlet).setValue(FishTankBlock.FACING, outletDir);
 
             level.setBlock(pos, newState, 3);
+            if (hasOutlet) {
+                level.getBlockEntity(pos, ModBlockEntities.FISH_TANK.get())
+                    .ifPresent(FishTankBlockEntity::tryAutoOutputResults);
+            }
         }
         level.playSound(player, pos, SoundEvents.ITEM_FRAME_ADD_ITEM, SoundSource.BLOCKS, 1.0f, 1.0f);
         return ItemInteractionResult.SUCCESS;
@@ -175,7 +191,7 @@ public class FishTankBlock extends Block implements IMoveableEntityBlock, Hammer
 
     public boolean tryIgnite(Level level, BlockPos pos) {
         if (!(level.getBlockEntity(pos) instanceof FishTankBlockEntity tank)) return false;
-        if (!FishTankBlockEntity.shouldIgnite(tank.getFluidHandler().getFluid())) return false;
+        if (!FishTankBlockEntity.canIgnite(tank.getFluidHandler().getFluid())) return false;
         if (tank.isIgnited()) return false;
         tank.setIgnited(true);
         return true;

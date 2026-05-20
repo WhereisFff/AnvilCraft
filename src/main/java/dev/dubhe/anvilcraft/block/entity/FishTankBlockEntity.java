@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.block.entity;
 
 import com.google.common.collect.ImmutableList;
 import dev.anvilcraft.lib.v2.recipe.cache.IItemHandlerCache;
+import dev.anvilcraft.lib.v2.util.MathUtil;
 import dev.dubhe.anvilcraft.api.fluid.IFluidHandlerHolder;
 import dev.dubhe.anvilcraft.api.itemhandler.IItemHandlerHolder;
 import dev.dubhe.anvilcraft.api.itemhandler.PollableItemHandler;
@@ -11,6 +12,7 @@ import dev.dubhe.anvilcraft.init.item.ModItemTags;
 import lombok.Getter;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
@@ -21,11 +23,18 @@ import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.MobBucketItem;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -34,12 +43,15 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.ArrayList;
@@ -48,6 +60,7 @@ import javax.annotation.Nullable;
 
 @Getter
 public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHolder, IItemHandlerCache, IFluidHandlerHolder {
+    private static final double EPSILON = 1.0 / 1024.0;
     public static final int CAPACITY = FluidType.BUCKET_VOLUME;
     public static final int MAX_TROPICAL_FISH = 4;
     public static final Double FISH_HEIGHT = 0.75D;
@@ -60,6 +73,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             if (this.size() >= MAX_TROPICAL_FISH) return false;
             setChanged();
             sendUpdate();
+            sendNeighbourUpdate();
             return super.add(tag);
         }
 
@@ -67,6 +81,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         public CompoundTag removeLast() {
             setChanged();
             sendUpdate();
+            sendNeighbourUpdate();
             return super.removeLast();
         }
 
@@ -74,6 +89,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         public void clear() {
             setChanged();
             sendUpdate();
+            sendNeighbourUpdate();
             super.clear();
         }
     };
@@ -81,8 +97,9 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         @Override
         protected void onContentsChanged() {
             FishTankBlockEntity.this.setChanged();
-            if (!FishTankBlockEntity.shouldIgnite(this.getFluid())) FishTankBlockEntity.this.setIgnited(false);
+            FishTankBlockEntity.this.refreshIgnited();
             sendUpdate();
+            sendNeighbourUpdate();
             if (!isWaterArea(this)) {
                 FishTankBlockEntity.this.dropFish();
                 FishTankBlockEntity.this.updateFishState();
@@ -118,17 +135,93 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
 
         @Override
         protected void onContentsChanged(int slot) {
-            if (slot < 8
+            if (
+                slot < 8
                 && getBlockState().getValue(FishTankBlock.OUTLET)
-                && !this.getStackInSlot(slot).isEmpty()) {
+                && !this.getStackInSlot(slot).isEmpty()
+            ) {
                 Direction outletDir = getBlockState().getValue(FishTankBlock.FACING);
                 if (level != null) {
                     ItemStack stack = this.extractItem(slot, Integer.MAX_VALUE, false);
-                    if (!stack.isEmpty()) Block.popResource(level, getBlockPos().relative(outletDir), stack);
+                    if (!stack.isEmpty()) FishTankBlockEntity.popResourceFromFace(level, getBlockPos(), outletDir, stack);
                 }
             }
             FishTankBlockEntity.this.setChanged();
+            FishTankBlockEntity.this.refreshIgnited();
             sendUpdate();
+        }
+    };
+    private final PollableItemHandler outputProxy = new PollableItemHandler(8) {
+        @Override
+        public ItemStack getStackInSlot(int slot) {
+            return FishTankBlockEntity.this.itemHandler.getStackInSlot(slot);
+        }
+
+        @Override
+        public int getSlotLimit(int slot) {
+            return FishTankBlockEntity.this.itemHandler.getSlotLimit(slot);
+        }
+
+        @Override
+        public ItemStack insertItem(int slot, ItemStack stack, boolean simulate) {
+            if (stack.isEmpty()) {
+                return ItemStack.EMPTY;
+            } else if (!this.isItemValid(slot, stack)) {
+                return stack;
+            } else {
+                this.validateSlotIndex(slot);
+                ItemStack existing = this.getStackInSlot(slot);
+                int limit = this.getStackLimit(slot, stack);
+                if (!existing.isEmpty()) {
+                    if (!ItemStack.isSameItemSameComponents(stack, existing)) {
+                        return stack;
+                    }
+
+                    limit -= existing.getCount();
+                }
+
+                if (limit <= 0) {
+                    return stack;
+                } else {
+                    boolean reachedLimit = stack.getCount() > limit;
+                    if (!simulate) {
+                        if (existing.isEmpty()) {
+                            this.setStackInSlot(slot, reachedLimit ? stack.copyWithCount(limit) : stack);
+                        } else {
+                            existing.grow(reachedLimit ? limit : stack.getCount());
+                        }
+
+                        this.onContentsChanged(slot);
+                    }
+
+                    return reachedLimit ? stack.copyWithCount(stack.getCount() - limit) : ItemStack.EMPTY;
+                }
+            }
+        }
+
+        @Override
+        public ItemStack extractItem(int slot, int amount, boolean simulate) {
+            if (amount == 0) return ItemStack.EMPTY;
+            this.validateSlotIndex(slot);
+            ItemStack existing = this.getStackInSlot(slot);
+            if (existing.isEmpty()) return ItemStack.EMPTY;
+            int toExtract = Math.min(amount, existing.getMaxStackSize());
+            if (existing.getCount() <= toExtract) {
+                if (simulate) return existing.copy();
+                this.setStackInSlot(slot, ItemStack.EMPTY);
+                this.onContentsChanged(slot);
+                return existing;
+            } else {
+                if (simulate) return existing.copyWithCount(toExtract);
+                this.setStackInSlot(slot, existing.copyWithCount(existing.getCount() - toExtract));
+                this.onContentsChanged(slot);
+                return existing.copyWithCount(toExtract);
+            }
+        }
+
+        @Override
+        public void setStackInSlot(int slot, ItemStack stack) {
+            FishTankBlockEntity.this.itemHandler.setStackInSlot(slot, stack);
         }
     };
     private boolean ignited = false;
@@ -144,19 +237,24 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
     }
 
     public void setIgnited(boolean ignited) {
+        if (this.ignited == ignited) return;
         this.ignited = ignited;
         this.setChanged();
         sendUpdate();
     }
 
     private void sendUpdate() {
-        if (level == null) return;
-        level.sendBlockUpdated(
-            getBlockPos(),
-            getBlockState(),
-            getBlockState(),
-            Block.UPDATE_CLIENTS
+        if (this.level == null) return;
+        this.level.sendBlockUpdated(
+            this.getBlockPos(),
+            this.getBlockState(),
+            this.getBlockState(),
+            Block.UPDATE_ALL
         );
+    }
+
+    private void sendNeighbourUpdate() {
+        if (this.level != null) this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
     }
 
     @Override
@@ -166,7 +264,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
 
     @Override
     public PollableItemHandler getOutput() {
-        return this.itemHandler;
+        return this.outputProxy;
     }
 
     @Override
@@ -196,7 +294,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         super.loadAdditional(tag, provider);
         this.fluidHandler.readFromNBT(provider, tag.getCompound("Fluid"));
         this.itemHandler.deserializeNBT(provider, tag.getCompound("Items"));
-        this.ignited = tag.getBoolean("ignited") && FishTankBlockEntity.shouldIgnite(this.fluidHandler.getFluid());
+        this.ignited = tag.getBoolean("ignited") && FishTankBlockEntity.canIgnite(this.fluidHandler.getFluid());
 
         this.tropicalFishData.clear();
         if (tag.contains(TAG_TROPICAL_FISH_DATA, Tag.TAG_LIST)) {
@@ -235,14 +333,18 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
+    public int getSignal() {
+        return Math.round(15F * ((float) this.fluidHandler.getFluidAmount() / this.fluidHandler.getCapacity()));
+    }
+
     public boolean onPlayerUse(Player player, InteractionHand hand, BlockHitResult hitResult) {
+        if (hand != InteractionHand.MAIN_HAND) return false;
         ItemStack inHand = player.getItemInHand(hand);
-        if (isLowerSideArea(hitResult) && level != null) {
-            if (interactWithFish(level, player, hand)) return true;
+        if (FishTankBlockEntity.isLowerSideArea(hitResult) && level != null) {
+            if (this.interactWithFish(level, player, hand)) return true;
         }
-        if (FluidUtil.interactWithFluidHandler(player, hand, this.fluidHandler)) return true;
+        if (this.interactWithFluid(player, hand)) return true;
         if (inHand.isEmpty()) {
-            if (hand != InteractionHand.MAIN_HAND) return false;
             List<ItemStack> stacks = FishTankBlockEntity.extractAllFromTank(this.itemHandler, TriState.TRUE);
             if (stacks.isEmpty()) return false;
             for (ItemStack stack : stacks) {
@@ -250,9 +352,88 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             }
             return true;
         } else {
-            if (hitResult.getLocation().y - hitResult.getBlockPos().getY() < 5 / 8F) return false;
+            if (!this.shouldInsert(hitResult.getLocation())) return false;
             return FishTankBlockEntity.insertToTank(this.itemHandler, inHand);
         }
+    }
+
+    private boolean shouldInsert(Vec3 hitLoc) {
+        double x = hitLoc.x - this.getBlockPos().getX();
+        double y = hitLoc.y - this.getBlockPos().getY();
+        double z = hitLoc.z - this.getBlockPos().getZ();
+
+        // wall
+        if (Math.abs(x - 0) < FishTankBlockEntity.EPSILON || Math.abs(x - 1) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(y, 0.624, 1.001);
+        }
+        if (Math.abs(z - 0) < FishTankBlockEntity.EPSILON || Math.abs(z - 1) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(y, 0.624, 1.001);
+        }
+        if (Math.abs(x - 0.0625) < FishTankBlockEntity.EPSILON || Math.abs(x - 0.9375) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(z, y, 0.0624, 0.0624, 0.9376, 1.001);
+        }
+        if (Math.abs(y - 0.0625) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(x, z, 0.0624, 0.0624, 0.9376, 0.9376);
+        }
+        if (Math.abs(z - 0.0625) < FishTankBlockEntity.EPSILON || Math.abs(z - 0.9375) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(x, y, 0.0624, 0.0624, 0.9376, 1.001);
+        }
+
+        // port
+        if (Math.abs(x - 0.125) < FishTankBlockEntity.EPSILON || Math.abs(x - 0.875) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(z, y, 0.124, 0.874, 0.876, 1.001);
+        }
+        if (Math.abs(y - 0.875) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(x, z, 0.0624, 0.0624, 0.9376, 0.9376)
+                   && !MathUtil.isInRange(x, z, 0.124, 0.124, 0.876, 0.876);
+        }
+        if (Math.abs(y - 1) < FishTankBlockEntity.EPSILON) {
+            return !MathUtil.isInRange(x, z, 0.124, 0.124, 0.876, 0.876);
+        }
+        if (Math.abs(z - 0.125) < FishTankBlockEntity.EPSILON || Math.abs(z - 0.875) < FishTankBlockEntity.EPSILON) {
+            return MathUtil.isInRange(x, y, 0.124, 0.874, 0.876, 1.001);
+        }
+        return false;
+    }
+
+    private boolean interactWithFluid(Player player, InteractionHand hand) {
+        if (FluidUtil.interactWithFluidHandler(player, hand, this.fluidHandler)) return true;
+        ItemStack inHand = player.getItemInHand(hand);
+        if (inHand.is(Items.GLASS_BOTTLE)) {
+            FluidStack stack = this.fluidHandler.getFluid();
+            if (stack.is(Fluids.WATER)) {
+                FluidStack drained = this.fluidHandler.drain(250, IFluidHandler.FluidAction.SIMULATE);
+                if (drained.getAmount() != 250) return false;
+                this.fluidHandler.drain(250, IFluidHandler.FluidAction.EXECUTE);
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.BOTTLE_FILL, SoundSource.PLAYERS);
+                if (!player.hasInfiniteMaterials()) inHand.shrink(1);
+                if (inHand.isEmpty()) {
+                    player.setItemInHand(hand, Items.POTION.getDefaultInstance());
+                } else {
+                    if (!player.hasInfiniteMaterials()) player.addItem(Items.POTION.getDefaultInstance());
+                }
+                return true;
+            }
+        } else if (inHand.has(DataComponents.POTION_CONTENTS)) {
+            PotionContents contents = inHand.get(DataComponents.POTION_CONTENTS);
+            if (contents.potion().isEmpty()) return false;
+            Holder<Potion> potion = contents.potion().get();
+            if (potion == Potions.WATER) {
+                FluidStack stack = new FluidStack(Fluids.WATER, 250);
+                int filled = this.fluidHandler.fill(stack, IFluidHandler.FluidAction.SIMULATE);
+                if (filled != 250) return false;
+                this.fluidHandler.fill(stack, IFluidHandler.FluidAction.EXECUTE);
+                this.level.playSound(null, this.getBlockPos(), SoundEvents.BOTTLE_EMPTY, SoundSource.PLAYERS);
+                if (!player.hasInfiniteMaterials()) inHand.shrink(1);
+                if (inHand.isEmpty()) {
+                    player.setItemInHand(hand, Items.GLASS_BOTTLE.getDefaultInstance());
+                } else {
+                    if (!player.hasInfiniteMaterials()) player.addItem(Items.GLASS_BOTTLE.getDefaultInstance());
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     public boolean interactWithFish(Level level, Player player, InteractionHand hand) {
@@ -265,6 +446,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             level.playSound(player, this.getBlockPos(), SoundEvents.BUCKET_FILL_FISH, SoundSource.BLOCKS, 1.0F, 1.0F);
             player.setItemInHand(hand, Items.WATER_BUCKET.getDefaultInstance());
             FluidUtil.interactWithFluidHandler(player, hand, this.fluidHandler);
+            if (player.hasInfiniteMaterials()) player.setItemInHand(hand, stack);
             updateFishState();
             return true;
         } else if (stack.is(Items.WATER_BUCKET)) {
@@ -304,12 +486,12 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
     }
 
     public void updateFishState() {
-        if (level == null) return;
+        if (this.level == null) return;
 
         if (this.isEmptyOfFish() && getBlockState().getValue(FishTankBlock.TROPICAL)) {
-            level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, false), 3);
+            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, false), 3);
         } else if (!this.isEmptyOfFish() && !getBlockState().getValue(FishTankBlock.TROPICAL)) {
-            level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, true), 3);
+            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, true), 3);
         }
     }
 
@@ -356,6 +538,44 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
      * 向鱼缸中放入物品
      *
      * @param handler 鱼缸物品处理器
+     * @param entity  要放入的物品实体
+     */
+    public static void insertToTank(@Nullable IItemHandler handler, ItemEntity entity) {
+        ItemStack stack = entity.getItem();
+        if (entity.anvilcraft$isAdsorbable()) {
+            FishTankBlockEntity.insertToTank(handler, stack);
+            return;
+        }
+        if (!(handler instanceof IItemHandlerModifiable modifiable)) return;
+        int remaining = stack.getCount();
+        while (remaining > 0) {
+            int slot = -1;
+            for (int i = 0; i < 8; i++) {
+                ItemStack stackInSlot = handler.getStackInSlot(i);
+                if (!stackInSlot.isEmpty() && !ItemStack.isSameItemSameComponents(stackInSlot, stack)) continue;
+                int limit = Math.min(stackInSlot.getMaxStackSize(), handler.getSlotLimit(i));
+                if (stackInSlot.getCount() >= limit) continue;
+                slot = i;
+                break;
+            }
+            if (slot < 0) return;
+            ItemStack stackInSlot = handler.getStackInSlot(slot);
+            int limit = Math.min(
+                stackInSlot.isEmpty() ? Item.DEFAULT_MAX_STACK_SIZE : stackInSlot.getMaxStackSize(),
+                handler.getSlotLimit(slot)
+            );
+            int existing = stackInSlot.getCount();
+            int storing = Math.min(remaining, limit - existing);
+            remaining -= storing;
+            modifiable.setStackInSlot(slot, stack.copyWithCount(existing + storing));
+        }
+        entity.discard();
+    }
+
+    /**
+     * 向鱼缸中放入物品
+     *
+     * @param handler 鱼缸物品处理器
      * @param stack   要放入的物品
      * @return 是否放入成功
      */
@@ -370,6 +590,18 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             return true;
         }
         return false;
+    }
+
+    public void tryAutoOutputResults() {
+        if (this.level == null) return;
+        Direction outletDir = this.getBlockState().getValue(FishTankBlock.FACING);
+        for (int i = 0; i < 8; i++) {
+            ItemStack stack = this.itemHandler.extractItem(i, Integer.MAX_VALUE, false);
+            if (!stack.isEmpty()) FishTankBlockEntity.popResourceFromFace(this.level, this.getBlockPos(), outletDir, stack);
+        }
+        this.setChanged();
+        this.refreshIgnited();
+        this.sendUpdate();
     }
 
     /**
@@ -415,7 +647,39 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         return ImmutableList.copyOf(result);
     }
 
-    public static boolean shouldIgnite(FluidStack cur) {
+    public static boolean canIgnite(FluidStack cur) {
         return cur.is(ModFluidTags.IGNITABLE);
+    }
+
+    public void refreshIgnited() {
+        if (!FishTankBlockEntity.canIgnite(this.fluidHandler.getFluid())) this.setIgnited(false);
+        if (this.isIgnited()) return;
+        for (int i = 0; i < this.itemHandler.getSlots(); i++) {
+            ItemStack stack = this.itemHandler.getStackInSlot(i);
+            if (stack.is(ModItemTags.FIRE_STARTER)) {
+                stack.shrink(1);
+                this.setIgnited(true);
+            } else if (stack.is(ModItemTags.UNBROKEN_FIRE_STARTER)) {
+                this.setIgnited(true);
+            }
+        }
+    }
+
+    private static void popResourceFromFace(Level level, BlockPos pos, Direction direction, ItemStack stack) {
+        int stepX = direction.getStepX();
+        int stepY = direction.getStepY();
+        int stepZ = direction.getStepZ();
+        double halfWidth = (double) EntityType.ITEM.getWidth() / 2.0;
+        double posX = (double) pos.getX() + 0.5
+                      + (stepX == 0 ? Mth.nextDouble(level.random, -0.25, 0.25) : (double) stepX * (0.5 + halfWidth));
+        double posY = pos.getY() + 0.5;
+        double posZ = (double) pos.getZ() + 0.5
+                      + (stepZ == 0 ? Mth.nextDouble(level.random, -0.25, 0.25) : (double) stepZ * (0.5 + halfWidth));
+        double deltaX = stepX == 0 ? Mth.nextDouble(level.random, -0.1, 0.1) : (double) stepX * 0.1;
+        double deltaY = stepY == 0 ? Mth.nextDouble(level.random, 0.0, 0.1) : (double) stepY * 0.1 + 0.1;
+        double deltaZ = stepZ == 0 ? Mth.nextDouble(level.random, -0.1, 0.1) : (double) stepZ * 0.1;
+        ItemEntity entity = new ItemEntity(level, posX, posY, posZ, stack, deltaX, deltaY, deltaZ);
+        entity.setDefaultPickUpDelay();
+        level.addFreshEntity(entity);
     }
 }
