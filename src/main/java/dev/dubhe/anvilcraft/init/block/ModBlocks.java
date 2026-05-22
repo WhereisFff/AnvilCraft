@@ -117,6 +117,7 @@ import dev.dubhe.anvilcraft.block.StampingPlatformBlock;
 import dev.dubhe.anvilcraft.block.StepEffectBlock;
 import dev.dubhe.anvilcraft.block.StepEffectSlabBlock;
 import dev.dubhe.anvilcraft.block.StepEffectStairBlock;
+import dev.dubhe.anvilcraft.block.StructureScannerBlock;
 import dev.dubhe.anvilcraft.block.SugarBlock;
 import dev.dubhe.anvilcraft.block.TeslaTowerBlock;
 import dev.dubhe.anvilcraft.block.TranscendenceAnvilBlock;
@@ -847,6 +848,17 @@ public class ModBlocks {
         .recipe(RegistrumBlockRecipeLoader::blockDevourer)
         .register();
 
+    public static final BlockEntry<? extends StructureScannerBlock> STRUCTURE_SCANNER = REGISTRUM
+        .block("structure_scanner", StructureScannerBlock::new)
+        .lang("Structure Scanner")
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(p -> p.noOcclusion().isValidSpawn(Blocks::never))
+        .blockstate(DataGenUtil::horizontalFacingBlock)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE, BlockTags.NEEDS_IRON_TOOL)
+        .recipe(RegistrumBlockRecipeLoader::structureScanner)
+        .register();
+
     public static final BlockEntry<SmartBlockPlacerBlock> SMART_BLOCK_PLACER = REGISTRUM
         .block("smart_block_placer", SmartBlockPlacerBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
@@ -858,7 +870,6 @@ public class ModBlocks {
                 boolean upsideDown = state.getValue(dev.dubhe.anvilcraft.block.SmartBlockPlacerBlock.UPSIDE_DOWN);
                 
                 int rotation = switch (facing) {
-                    case NORTH -> 0;
                     case EAST -> 90;
                     case SOUTH -> 180;
                     case WEST -> 270;
