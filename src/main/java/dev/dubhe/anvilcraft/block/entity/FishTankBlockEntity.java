@@ -33,6 +33,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.item.Items;
@@ -263,8 +264,19 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         private boolean autoOutputting = false;
 
         @Override
+        public int getSlotLimit(int slot) {
+            ItemStack stack = this.getStackInSlot(slot);
+            int stackMax = stack.getMaxStackSize();
+            if (stack.isEmpty()) {
+                stackMax = Item.DEFAULT_MAX_STACK_SIZE;
+            }
+            return Math.min(super.getSlotLimit(slot), stackMax);
+        }
+
+        @Override
         protected void onContentsChanged(int slot) {
-            if (!this.autoOutputting) this.checkAutoOutput(slot);
+            if (this.autoOutputting) return;
+            this.checkAutoOutput(slot);
             FishTankBlockEntity.this.setChanged();
             FishTankBlockEntity.this.refreshIgnited();
             FishTankBlockEntity.this.sendUpdate();
