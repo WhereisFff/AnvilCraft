@@ -244,10 +244,13 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
                     continue;
                 }
                 if (!ItemStack.isSameItemSameComponents(stackInSlot, stack)) continue;
+                if (countInSlot != Integer.MAX_VALUE) return -1;
                 int stackInSlotCount = stackInSlot.getCount();
-                if (stackInSlotCount <= countInSlot && stackInSlotCount < this.getStackLimit(i, stackInSlot)) {
+                if (stackInSlotCount < this.getStackLimit(i, stackInSlot)) {
                     slot = i;
                     countInSlot = stackInSlotCount;
+                } else {
+                    return -1;
                 }
             }
             return slot;
@@ -265,8 +268,23 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            ItemStack stackInSlot = this.getStackInSlot(slot);
-            return stackInSlot.isEmpty() || stackInSlot.is(stack.getItem());
+            Item item = stack.getItem();
+            boolean hasSame = false;
+            int sameSlot = -1;
+            for (int i = 0; i < this.getSlots(); i++) {
+                if (!this.getStackInSlot(i).is(item)) {
+                    continue;
+                }
+
+                if (hasSame) {
+                    return false;
+                } else {
+                    hasSame = true;
+                    sameSlot = i;
+                }
+            }
+            if (!hasSame) return this.getStackInSlot(slot).isEmpty();
+            return sameSlot == slot;
         }
 
         @Override
