@@ -29,6 +29,7 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.phys.BlockHitResult;
+import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import org.jetbrains.annotations.Nullable;
 
 import static dev.dubhe.anvilcraft.block.PropelPiston.createTickerHelper;
@@ -117,6 +118,18 @@ public class LargeFluidTankBlock
     @Override
     protected boolean propagatesSkylightDown(BlockState state, BlockGetter level, BlockPos pos) {
         return true;
+    }
+
+    @Override
+    public boolean hasDynamicLightEmission(BlockState state) {
+        return true;
+    }
+
+    @Override
+    public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
+        AuxiliaryLightManager manager = level.getAuxLightManager(pos);
+        if (manager == null) return 0;
+        return manager.getLightAt(pos);
     }
 
     @Override

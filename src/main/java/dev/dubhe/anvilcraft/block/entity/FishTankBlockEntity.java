@@ -52,6 +52,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.common.world.AuxiliaryLightManager;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
@@ -77,14 +78,12 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
     private static final double FLUID_CONTENT_AREA_HEIGHT = 7.0 / 8;
     private static final String TAG_TROPICAL_FISH_DATA = "TropicalFishData";
 
-    // region private final List<CompoundTag> tropicalFishData = new ArrayList<>();
     private final List<CompoundTag> tropicalFishData = new ArrayList<>() {
         @Override
         public boolean add(CompoundTag tag) {
             if (this.size() >= MAX_TROPICAL_FISH) return false;
             FishTankBlockEntity.this.setChanged();
             FishTankBlockEntity.this.sendUpdate();
-            FishTankBlockEntity.this.sendNeighbourUpdate();
             return super.add(tag);
         }
 
@@ -92,7 +91,6 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         public CompoundTag removeLast() {
             FishTankBlockEntity.this.setChanged();
             FishTankBlockEntity.this.sendUpdate();
-            FishTankBlockEntity.this.sendNeighbourUpdate();
             return super.removeLast();
         }
 
@@ -100,13 +98,10 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         public void clear() {
             FishTankBlockEntity.this.setChanged();
             FishTankBlockEntity.this.sendUpdate();
-            FishTankBlockEntity.this.sendNeighbourUpdate();
             super.clear();
         }
     };
-    // endregion
     private AABB fluidContentArea = new AABB(FLUID_CONTENT_AREA_MIN, FLUID_CONTENT_AREA_MAX);
-    // region private final FluidTank fluidHandler = new FluidTank(FishTankBlockEntity.CAPACITY);
     private final FluidTank fluidHandler = new FluidTank(FishTankBlockEntity.CAPACITY) {
         @Override
         protected void onContentsChanged() {
@@ -114,9 +109,10 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             FishTankBlockEntity.this.refreshIgnited();
             FishTankBlockEntity.this.sendUpdate();
             FishTankBlockEntity.this.sendNeighbourUpdate();
+            FishTankBlockEntity.this.updateLightLevel();
             this.updateContentArea();
-            if (this.getFluid().is(Fluids.WATER)) return;
 
+            if (this.getFluid().is(Fluids.WATER)) return;
             FishTankBlockEntity.this.dropFish();
             FishTankBlockEntity.this.updateFishState();
         }
@@ -137,13 +133,11 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             );
         }
     };
-    // endregion
 
     /**
      * 0-7 为输出产物，<br>
      * 8-15 为输入原料
      */
-    // region private final ItemStackHandler proxy = new ItemStackHandler(16);
     private final ItemStackHandler proxy = new ItemStackHandler(16) {
         @Override
         public ItemStack getStackInSlot(int slot) {
@@ -237,8 +231,6 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             }
         }
     };
-    // endregion
-    // region private final PollableItemHandler input = new PollableItemHandler(8);
     private final PollableItemHandler input = new PollableItemHandler(8) {
         @Override
         protected int getEmptyOrSmallerSlot(ItemStack stack) {
@@ -267,8 +259,6 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             FishTankBlockEntity.this.sendUpdate();
         }
     };
-    // endregion
-    // region private final ItemStackHandler output = new ItemStackHandler(8);
     private final ItemStackHandler output = new ItemStackHandler(8) {
         private boolean autoOutputting = false;
 
@@ -307,7 +297,6 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             this.autoOutputting = false;
         }
     };
-    // endregion
     private boolean ignited = false;
 
     public FishTankBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
@@ -326,12 +315,35 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             this.getBlockPos(),
             this.getBlockState(),
             this.getBlockState(),
-            Block.UPDATE_ALL
+            Block.UPDATE_CLIENTS
         );
     }
 
     private void sendNeighbourUpdate() {
-        if (this.level != null) this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
+        if (this.level == null) return;
+        this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
+    }
+
+    private void updateLightLevel() {
+        if (this.level == null) {
+            return;
+        }
+        if (this.ignited) {
+            return;
+        }
+
+        BlockPos pos = this.getBlockPos();
+        AuxiliaryLightManager manager = this.level.getAuxLightManager(pos);
+        if (manager == null) {
+            return;
+        }
+        manager.setLightAt(pos, this.computeLightLevel());
+    }
+
+    private int computeLightLevel() {
+        FluidStack stack = this.fluidHandler.getFluid();
+        float fill = (float) this.fluidHandler.getFluidAmount() / this.fluidHandler.getCapacity();
+        return (int) Math.ceil(stack.getFluidType().getLightLevel(stack) * fill);
     }
 
     @Override
@@ -682,30 +694,28 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         FluidStack stack = this.fluidHandler.getFluid();
         BlockPos pos = this.getBlockPos();
         if (stack.is(Fluids.WATER)) {
+            FluidStack drained = this.fluidHandler.drain(250, IFluidHandler.FluidAction.SIMULATE);
+            if (drained.getAmount() != 250) return false;
+            if (level.isClientSide()) return true;
+            this.fluidHandler.drain(250, IFluidHandler.FluidAction.EXECUTE);
+
             ItemStack result = Items.POTION.getDefaultInstance();
             player.setItemInHand(hand, ItemUtils.createFilledResult(inHand, player, result));
             player.awardStat(Stats.USE_CAULDRON);
             player.awardStat(Stats.ITEM_USED.get(inHand.getItem()));
-
-            FluidStack drained = this.fluidHandler.drain(250, IFluidHandler.FluidAction.SIMULATE);
-            if (drained.getAmount() != 250) return false;
-            if (level.isClientSide()) return true;
-            this.fluidHandler.drain(250, IFluidHandler.FluidAction.EXECUTE);
-
             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS);
             level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
             return true;
         } else if (stack.is(ModFluids.EXP_FLUID)) {
-            ItemStack result = Items.EXPERIENCE_BOTTLE.getDefaultInstance();
-            player.setItemInHand(hand, ItemUtils.createFilledResult(inHand, player, result));
-            player.awardStat(Stats.USE_CAULDRON);
-            player.awardStat(Stats.ITEM_USED.get(inHand.getItem()));
-
             FluidStack drained = this.fluidHandler.drain(250, IFluidHandler.FluidAction.SIMULATE);
             if (drained.getAmount() != 250) return false;
             if (level.isClientSide()) return true;
             this.fluidHandler.drain(250, IFluidHandler.FluidAction.EXECUTE);
 
+            ItemStack result = Items.EXPERIENCE_BOTTLE.getDefaultInstance();
+            player.setItemInHand(hand, ItemUtils.createFilledResult(inHand, player, result));
+            player.awardStat(Stats.USE_CAULDRON);
+            player.awardStat(Stats.ITEM_USED.get(inHand.getItem()));
             level.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS);
             level.gameEvent(null, GameEvent.FLUID_PICKUP, pos);
             return true;
@@ -838,9 +848,9 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         if (this.level == null) return;
 
         if (this.isEmptyOfFish() && getBlockState().getValue(FishTankBlock.TROPICAL)) {
-            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, false), 3);
+            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, false), 18);
         } else if (!this.isEmptyOfFish() && !getBlockState().getValue(FishTankBlock.TROPICAL)) {
-            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, true), 3);
+            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, true), 18);
         }
     }
 
@@ -890,15 +900,31 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
     }
 
     public void setIgnited(boolean ignited) {
-        if (this.ignited == ignited) return;
+        if (this.ignited == ignited) {
+            return;
+        }
         this.ignited = ignited;
         this.setChanged();
         this.sendUpdate();
+
+        if (this.level == null) {
+            return;
+        }
+        BlockPos pos = this.getBlockPos();
+        AuxiliaryLightManager manager = this.level.getAuxLightManager(pos);
+        if (manager == null) {
+            return;
+        }
+        manager.setLightAt(pos, ignited ? 15 : this.computeLightLevel());
     }
 
     public void refreshIgnited() {
-        if (!FishTankBlockEntity.canIgnite(this.fluidHandler.getFluid())) this.setIgnited(false);
-        if (this.isIgnited()) return;
+        if (!FishTankBlockEntity.canIgnite(this.fluidHandler.getFluid())) {
+            this.setIgnited(false);
+        }
+        if (this.isIgnited()) {
+            return;
+        }
         for (int i = 0; i < this.proxy.getSlots(); i++) {
             ItemStack stack = this.proxy.getStackInSlot(i);
             if (stack.is(ModItemTags.FIRE_STARTER)) {
