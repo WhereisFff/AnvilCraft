@@ -268,11 +268,10 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
 
         @Override
         public boolean isItemValid(int slot, ItemStack stack) {
-            Item item = stack.getItem();
             boolean hasSame = false;
             int sameSlot = -1;
             for (int i = 0; i < this.getSlots(); i++) {
-                if (!this.getStackInSlot(i).is(item)) {
+                if (!ItemStack.isSameItemSameComponents(this.getStackInSlot(i), stack)) {
                     continue;
                 }
 
@@ -443,7 +442,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         }
         this.input.deserializeNBT(registries, tag.getCompound("Inputs"));
         this.output.deserializeNBT(registries, tag.getCompound("Outputs"));
-        this.ignited = tag.getBoolean("ignited") && FishTankBlockEntity.canIgnite(this.fluidHandler.getFluid());
+        this.setIgnited(tag.getBoolean("ignited") && FishTankBlockEntity.canIgnite(this.fluidHandler.getFluid()));
 
         this.tropicalFishData.clear();
         if (tag.contains(TAG_TROPICAL_FISH_DATA, Tag.TAG_LIST)) {
@@ -884,9 +883,17 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         if (this.level == null) return;
 
         if (this.isEmptyOfFish() && getBlockState().getValue(FishTankBlock.TROPICAL)) {
-            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, false), 18);
+            this.level.setBlock(
+                getBlockPos(),
+                getBlockState().setValue(FishTankBlock.TROPICAL, false),
+                Block.UPDATE_CLIENTS + Block.UPDATE_KNOWN_SHAPE
+            );
         } else if (!this.isEmptyOfFish() && !getBlockState().getValue(FishTankBlock.TROPICAL)) {
-            this.level.setBlock(getBlockPos(), getBlockState().setValue(FishTankBlock.TROPICAL, true), 18);
+            this.level.setBlock(
+                getBlockPos(),
+                getBlockState().setValue(FishTankBlock.TROPICAL, true),
+                Block.UPDATE_CLIENTS + Block.UPDATE_KNOWN_SHAPE
+            );
         }
     }
 

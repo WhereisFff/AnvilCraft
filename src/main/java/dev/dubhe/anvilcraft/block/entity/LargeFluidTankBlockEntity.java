@@ -22,11 +22,19 @@ import net.neoforged.neoforge.fluids.FluidType;
 import net.neoforged.neoforge.fluids.FluidUtil;
 import net.neoforged.neoforge.fluids.IFluidTank;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.templates.FluidTank;
 
 public class LargeFluidTankBlockEntity extends BlockEntity implements IFluidHandlerHolder {
     public static final int CAPACITY = 320 * FluidType.BUCKET_VOLUME;
     public static final int BIG_CAPACITY = 12800 * FluidType.BUCKET_VOLUME;
     protected final InfinityFluidTank tank = new InfinityFluidTank(CAPACITY, false) {
+        @Override
+        public FluidTank readFromNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+            FluidTank tank = super.readFromNBT(lookupProvider, nbt);
+            this.onContentsChanged();
+            return tank;
+        }
+
         @Override
         protected void onContentsChanged() {
             LargeFluidTankBlockEntity.this.updateLightLevel();

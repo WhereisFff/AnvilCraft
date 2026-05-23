@@ -127,9 +127,10 @@ public class LargeFluidTankBlock
 
     @Override
     public int getLightEmission(BlockState state, BlockGetter level, BlockPos pos) {
-        AuxiliaryLightManager manager = level.getAuxLightManager(pos);
+        BlockPos mainPartPos = this.getMainPartPos(pos, state);
+        AuxiliaryLightManager manager = level.getAuxLightManager(mainPartPos);
         if (manager == null) return 0;
-        return manager.getLightAt(pos);
+        return manager.getLightAt(mainPartPos);
     }
 
     @Override
@@ -156,6 +157,6 @@ public class LargeFluidTankBlock
 
     @Override
     public BlockPos correctPos(ServerLevel level, BlockPos pos, BlockState state) {
-        return pos.offset(state.getValue(HALF).getOffset()).offset(this.getMainPartOffset());
+        return this.getMainPartPos(pos, state);
     }
 }

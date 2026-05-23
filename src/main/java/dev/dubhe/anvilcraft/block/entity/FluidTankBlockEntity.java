@@ -25,6 +25,13 @@ public class FluidTankBlockEntity extends BlockEntity implements IFluidHandlerHo
     public static final int BIG_CAPACITY = 640 * FluidType.BUCKET_VOLUME;
     protected final FluidTank tank = new FluidTank(CAPACITY) {
         @Override
+        public FluidTank readFromNBT(HolderLookup.Provider lookupProvider, CompoundTag nbt) {
+            FluidTank tank = super.readFromNBT(lookupProvider, nbt);
+            this.onContentsChanged();
+            return tank;
+        }
+
+        @Override
         protected void onContentsChanged() {
             FluidTankBlockEntity.this.updateLightLevel();
         }
