@@ -719,35 +719,33 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
             if (Objects.requireNonNull(contents).potion().isEmpty()) return false;
             Holder<Potion> potion = contents.potion().get();
             if (potion == Potions.WATER) {
-                player.setItemInHand(hand, ItemUtils.createFilledResult(inHand, player, Items.GLASS_BOTTLE.getDefaultInstance()));
-                player.awardStat(Stats.FILL_CAULDRON);
-                player.awardStat(Stats.ITEM_USED.get(inHand.getItem()));
-
                 FluidStack stack = new FluidStack(Fluids.WATER, 250);
                 int filled = this.fluidHandler.fill(stack, IFluidHandler.FluidAction.SIMULATE);
                 if (filled != 250) return false;
                 if (level.isClientSide()) return true;
                 this.fluidHandler.fill(stack, IFluidHandler.FluidAction.EXECUTE);
 
+                player.setItemInHand(hand, ItemUtils.createFilledResult(inHand, player, Items.GLASS_BOTTLE.getDefaultInstance()));
+                player.awardStat(Stats.FILL_CAULDRON);
+                player.awardStat(Stats.ITEM_USED.get(inHand.getItem()));
                 BlockPos pos = this.getBlockPos();
                 level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
                 level.gameEvent(null, GameEvent.FLUID_PLACE, pos);
                 return true;
             }
         } else if (inHand.is(Items.EXPERIENCE_BOTTLE)) {
-            player.setItemInHand(hand, ItemUtils.createFilledResult(inHand, player, Items.GLASS_BOTTLE.getDefaultInstance()));
-            player.awardStat(Stats.FILL_CAULDRON);
-            player.awardStat(Stats.ITEM_USED.get(inHand.getItem()));
-
+            FluidStack stack = new FluidStack(ModFluids.EXP_FLUID, 250);
+            int filled = this.fluidHandler.fill(stack, IFluidHandler.FluidAction.SIMULATE);
+            if (filled != 250) return false;
+            if (level.isClientSide()) return true;
             // 50%概率
             if (level.getRandom().nextBoolean()) {
-                FluidStack stack = new FluidStack(ModFluids.EXP_FLUID, 250);
-                int filled = this.fluidHandler.fill(stack, IFluidHandler.FluidAction.SIMULATE);
-                if (filled != 250) return false;
-                if (level.isClientSide()) return true;
                 this.fluidHandler.fill(stack, IFluidHandler.FluidAction.EXECUTE);
             }
 
+            player.setItemInHand(hand, ItemUtils.createFilledResult(inHand, player, Items.GLASS_BOTTLE.getDefaultInstance()));
+            player.awardStat(Stats.FILL_CAULDRON);
+            player.awardStat(Stats.ITEM_USED.get(inHand.getItem()));
             BlockPos pos = this.getBlockPos();
             level.playSound(null, pos, SoundEvents.BOTTLE_EMPTY, SoundSource.BLOCKS);
             level.gameEvent(null, GameEvent.FLUID_PLACE, pos);
