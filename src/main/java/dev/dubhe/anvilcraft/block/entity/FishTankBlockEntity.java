@@ -27,7 +27,6 @@ import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
-import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -253,7 +252,7 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
                 }
                 if (!ItemStack.isSameItemSameComponents(stackInSlot, stack)) continue;
                 int stackInSlotCount = stackInSlot.getCount();
-                if (stackInSlotCount <= countInSlot && stackInSlotCount < this.getSlotLimit(i)) {
+                if (stackInSlotCount <= countInSlot && stackInSlotCount < this.getStackLimit(i, stackInSlot)) {
                     slot = i;
                     countInSlot = stackInSlotCount;
                 }
@@ -550,6 +549,9 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
      * @param entity  要放入的物品实体
      */
     public static void insertItemToTank(@Nullable IItemHandler handler, ItemEntity entity) {
+        if (!entity.anvilcraft$isAdsorbable()) {
+            return;
+        }
         ItemStack stack = entity.getItem();
         ItemStack remaining = FishTankBlockEntity.insertItemToTank(handler, stack.copy());
         if (remaining.isEmpty()) {
@@ -567,7 +569,9 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
      * @return 剩余物品
      */
     public static ItemStack insertItemToTank(@Nullable IItemHandler handler, ItemStack stack) {
-        if (handler == null) return stack;
+        if (handler == null) {
+            return stack;
+        }
         return ItemHandlerUtil.insertItem(handler, stack, false);
     }
 
@@ -654,17 +658,13 @@ public class FishTankBlockEntity extends BlockEntity implements IItemHandlerHold
         int stepX = direction.getStepX();
         int stepY = direction.getStepY();
         int stepZ = direction.getStepZ();
-        double halfWidth = (double) EntityType.ITEM.getWidth() / 2.0;
-        double posX = (double) pos.getX() + 0.5
-                      + (stepX == 0 ? Mth.nextDouble(level.random, -0.25, 0.25) : (double) stepX * (0.5 + halfWidth));
-        double posY = pos.getY() + 0.5;
-        double posZ = (double) pos.getZ() + 0.5
-                      + (stepZ == 0 ? Mth.nextDouble(level.random, -0.25, 0.25) : (double) stepZ * (0.5 + halfWidth));
-        double deltaX = stepX == 0 ? Mth.nextDouble(level.random, -0.1, 0.1) : (double) stepX * 0.1;
-        double deltaY = stepY == 0 ? Mth.nextDouble(level.random, 0.0, 0.1) : (double) stepY * 0.1 + 0.1;
-        double deltaZ = stepZ == 0 ? Mth.nextDouble(level.random, -0.1, 0.1) : (double) stepZ * 0.1;
-        ItemEntity entity = new ItemEntity(level, posX, posY, posZ, stack, deltaX, deltaY, deltaZ);
-        entity.setDefaultPickUpDelay();
+        double extra = 0.5 + (double) EntityType.ITEM.getWidth() / 2.0;
+        double posX = (double) pos.getX() + 0.5 + stepX * extra;
+        double posY = (double) pos.getY() + 0.5 + stepY * extra;
+        double posZ = (double) pos.getZ() + 0.5 + stepZ * extra;
+        Vec3 delta = new Vec3(stepX, stepY, stepZ).multiply(0.25, 0.25, 0.25);
+        ItemEntity entity = new ItemEntity(level, posX, posY, posZ, stack, delta.x, delta.y, delta.z);
+        entity.anvilcraft$setIsAdsorbable(false);
         level.addFreshEntity(entity);
     }
     // endregion
