@@ -321,11 +321,22 @@ public class StructureLoadUtil {
         Block block = state.getBlock();
             
         // 使用switch表达式检查是否实现了多方块方块相关接口
-        return switch (block) {
-            case MultiPartBlockEntity<?, ?> ignored1 -> true;
-            case AbstractMultiPartBlock<?> ignored2 -> true;
-            case IHasMultiBlock ignored3 -> true;
-            default -> false;
-        };
+        if (switch (block) {
+                case MultiPartBlockEntity<?, ?> ignored1 -> true;
+                case AbstractMultiPartBlock<?> ignored2 -> true;
+                case IHasMultiBlock ignored3 -> true;
+                default -> false;
+            }) {
+            return true;
+        }
+        
+        // 检查原版多方块方块
+        // 床（BED）：由两个方块组成
+        if (block instanceof net.minecraft.world.level.block.BedBlock) {
+            return true;
+        }
+        
+        // 门（DOOR）：由上下两个方块组成
+        return block instanceof net.minecraft.world.level.block.DoorBlock;
     }
 }
