@@ -188,10 +188,34 @@ public class StructureDiskPreviewSupport {
         
         LevelLike levelLike = new LevelLike(minecraft.level);
         
-        // 设置方块
+        // 计算旋转（基于scannerFacing）
+        // 磁盘预览固定朝北显示，需要根据scannerFacing旋转方块朝向
+        int scannerFacingValue = data.scannerFacing;
+        
+        // 根据Scanner朝向计算旋转步数
+        int rotationSteps = switch (scannerFacingValue) {
+            case 2 -> 0;  // Scanner北 → 0度
+            case 3 -> 2;  // Scanner南 → 180度
+            case 4 -> 1;  // Scanner西 → 90度
+            case 5 -> 3;  // Scanner东 → 270度
+            default -> 0;
+        };
+        
+        // 转换为Minecraft原生Rotation
+        net.minecraft.world.level.block.Rotation rotation = switch (rotationSteps) {
+            case 1 -> net.minecraft.world.level.block.Rotation.CLOCKWISE_90;
+            case 2 -> net.minecraft.world.level.block.Rotation.CLOCKWISE_180;
+            case 3 -> net.minecraft.world.level.block.Rotation.COUNTERCLOCKWISE_90;
+            default -> net.minecraft.world.level.block.Rotation.NONE;
+        };
+        
+        // 设置旋转后的方块
         for (StructureLoadUtil.BlockPosition blockPos : data.blocks) {
+            // 旋转方块朝向
+            net.minecraft.world.level.block.state.BlockState rotatedState = blockPos.state().rotate(rotation);
+            
             BlockPos pos = new BlockPos(blockPos.x(), blockPos.y(), blockPos.z());
-            levelLike.setBlockState(pos, blockPos.state());
+            levelLike.setBlockState(pos, rotatedState);
         }
         
         return levelLike;

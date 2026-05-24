@@ -1629,25 +1629,8 @@ public class SmartBlockPlacerBlockEntity extends BlockEntity implements IPowerCo
             // 放置成功后，修正方块的朝向为蓝图中的朝向
             this.applyBlueprintBlockFacing(level, targetPos, index);
             
-            // 获取蓝图中的目标状态（已经包含旋转和倒挂处理）
+            // 获取蓝图中的目标状态（已经包含旋转、倒挂和状态过滤处理）
             BlockState blueprintState = getBlueprintBlockState(index, level);
-            
-            // 侦测器不继承POWERED状态
-            if (blueprintState.is(net.minecraft.world.level.block.Blocks.OBSERVER) 
-                && blueprintState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWERED)) {
-                blueprintState = blueprintState.setValue(
-                    net.minecraft.world.level.block.state.properties.BlockStateProperties.POWERED, 
-                    false
-                );
-            }
-            
-            // 移除waterlogged属性
-            if (blueprintState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED)) {
-                blueprintState = blueprintState.setValue(
-                    net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED, 
-                    false
-                );
-            }
             
             // 先删除源方块
             IS_BEING_MOVED_BY_PLACER.set(true);
@@ -2148,6 +2131,27 @@ public class SmartBlockPlacerBlockEntity extends BlockEntity implements IPowerCo
             rotatedState = flipHalfProperty(rotatedState);
         }
         
+        // 忽略活塞的推出状态
+        if (rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.EXTENDED)) {
+            rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.EXTENDED, false);
+        }
+        
+        // 忽略侦测器的红石信号状态
+        if (rotatedState.is(net.minecraft.world.level.block.Blocks.OBSERVER)
+            && rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWERED)) {
+            rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWERED, false);
+        }
+        
+        // 忽略方块的含水状态
+        if (rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED)) {
+            rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED, false);
+        }
+        
+        // 忽略信标的点亮状态
+        if (rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT)) {
+            rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT, false);
+        }
+        
         return rotatedState;
     }
     
@@ -2184,6 +2188,22 @@ public class SmartBlockPlacerBlockEntity extends BlockEntity implements IPowerCo
         // 对于活塞方块，忽略其推出状态，默认放置未推出的活塞
         if (rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.EXTENDED)) {
             rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.EXTENDED, false);
+        }
+        
+        // 忽略侦测器的红石信号状态
+        if (rotatedState.is(net.minecraft.world.level.block.Blocks.OBSERVER)
+            && rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWERED)) {
+            rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.POWERED, false);
+        }
+        
+        // 忽略方块的含水状态
+        if (rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED)) {
+            rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED, false);
+        }
+        
+        // 忽略信标的点亮状态
+        if (rotatedState.hasProperty(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT)) {
+            rotatedState = rotatedState.setValue(net.minecraft.world.level.block.state.properties.BlockStateProperties.LIT, false);
         }
 
         if (!worldState.equals(rotatedState)) {

@@ -1186,18 +1186,13 @@ public class SmartBlockPlacerScreen extends AbstractContainerScreen<SmartBlockPl
         if (this.isBlueprintMode) {
             var loadedStructure = blockEntity.getLoadedStructure();
             if (loadedStructure != null && !loadedStructure.isEmpty()) {
-                // 获取放置器朝向
-                Direction placerFacing = Direction.NORTH;  // 默认
-                if (this.minecraft.level != null) {
-                    BlockState placerState = this.minecraft.level.getBlockState(blockEntity.getBlockPos());
-                    if (placerState.hasProperty(HorizontalDirectionalBlock.FACING)) {
-                        placerFacing = placerState.getValue(HorizontalDirectionalBlock.FACING);
-                    }
-                }
+                // 预览中放置器固定朝北，所以使用NORTH作为forward参数
+                // 这样旋转计算才能与预览中的朝向一致
+                Direction previewFacing = Direction.NORTH;
                 
                 // 对结构方块应用旋转和倒挂翻转（与服务端放置逻辑保持一致）
                 List<dev.dubhe.anvilcraft.util.StructureLoadUtil.BlockPosition> rotatedBlocks = 
-                    this.rotateStructureForPreview(loadedStructure, placerFacing, upsideDown);
+                    this.rotateStructureForPreview(loadedStructure, previewFacing, upsideDown);
                 
                 // 渲染旋转后的结构方块
                 for (dev.dubhe.anvilcraft.util.StructureLoadUtil.BlockPosition blockPos : rotatedBlocks) {
