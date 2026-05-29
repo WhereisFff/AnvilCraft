@@ -94,7 +94,10 @@ import dev.dubhe.anvilcraft.item.template.mto.EightToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.FourToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.template.mto.TwoToOneTemplateItem;
 import dev.dubhe.anvilcraft.item.weapon.AnvilRailgunItem;
+import dev.dubhe.anvilcraft.item.weapon.CorruptedBeaconActivatorItem;
+import dev.dubhe.anvilcraft.item.weapon.LaserGunItem;
 import dev.dubhe.anvilcraft.item.weapon.SpectralWeaponLauncherItem;
+import dev.dubhe.anvilcraft.item.weapon.TeslaGunItem;
 import dev.dubhe.anvilcraft.recipe.JewelCraftingRecipe;
 import dev.dubhe.anvilcraft.util.DataGenUtil;
 import dev.dubhe.anvilcraft.util.registrater.ModelProviderUtil;
@@ -437,13 +440,6 @@ public class ModItems {
     ).properties((properties) -> properties.durability(2031).fireResistant()
     ).model(DataGenUtil::noExtraModelOrState).register();
 
-    public static final ItemEntry<EnergyWeaponPlatformItem> ENERGY_WEAPON_PLATFORM = REGISTRUM
-        .item("energy_weapon_platform", EnergyWeaponPlatformItem::new)
-        .properties(properties -> properties.stacksTo(1))
-        .model(DataGenUtil::noExtraModelOrState)
-        .recipe(RegistrumItemRecipeLoader::energyWeaponPlatform)
-        .register();
-
     public static final ItemEntry<? extends SpectralSlingshotItem> SPECTRAL_SLINGSHOT = REGISTRUM
         .item("spectral_slingshot", SpectralSlingshotItem::new)
         .tag(
@@ -453,6 +449,13 @@ public class ModItems {
         .properties((properties) -> properties.durability(1561))
         .model(DataGenUtil::noExtraModelOrState)
         .recipe(RegistrumItemRecipeLoader::spectralSlingshot)
+        .register();
+
+    public static final ItemEntry<EnergyWeaponPlatformItem> ENERGY_WEAPON_PLATFORM = REGISTRUM
+        .item("energy_weapon_platform", EnergyWeaponPlatformItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .model(DataGenUtil::noExtraModelOrState)
+        .recipe(RegistrumItemRecipeLoader::energyWeaponPlatform)
         .register();
 
     public static final ItemEntry<? extends SpectralWeaponLauncherItem> SPECTRAL_WEAPON_LAUNCHER = REGISTRUM
@@ -468,6 +471,27 @@ public class ModItems {
 
     public static final ItemEntry<? extends AnvilRailgunItem> ANVIL_RAILGUN = REGISTRUM
         .item("anvil_railgun", AnvilRailgunItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), DataGenUtil::energy)
+        .model(DataGenUtil::noExtraModelOrState)
+        .register();
+
+    public static final ItemEntry<? extends CorruptedBeaconActivatorItem> CORRUPTED_BEACON_ACTIVATOR = REGISTRUM
+        .item("corrupted_beacon_activator", CorruptedBeaconActivatorItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), DataGenUtil::energy)
+        .model(DataGenUtil::noExtraModelOrState)
+        .register();
+
+    public static final ItemEntry<? extends TeslaGunItem> TESLA_GUN = REGISTRUM
+        .item("tesla_gun", TeslaGunItem::new)
+        .properties(properties -> properties.stacksTo(1))
+        .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), DataGenUtil::energy)
+        .model(DataGenUtil::noExtraModelOrState)
+        .register();
+
+    public static final ItemEntry<? extends LaserGunItem> LASER_GUN = REGISTRUM
+        .item("laser_gun", LaserGunItem::new)
         .properties(properties -> properties.stacksTo(1))
         .tab(ModItemGroups.ANVILCRAFT_TOOL.getKey(), DataGenUtil::energy)
         .model(DataGenUtil::noExtraModelOrState)
