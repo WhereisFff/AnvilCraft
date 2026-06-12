@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.api.event.AnvilEvent;
 import dev.dubhe.anvilcraft.entity.FallingSpectralBlockEntity;
 import dev.dubhe.anvilcraft.init.ModSoundEvents;
 import dev.dubhe.anvilcraft.init.block.ModBlocks;
+import dev.dubhe.anvilcraft.network.GiantAnvilShockEffectPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
@@ -18,6 +19,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.FallingBlockEntity;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.AnvilBlock;
 import net.minecraft.world.level.block.Blocks;
@@ -27,6 +29,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.network.PacketDistributor;
 
 import java.util.List;
 
@@ -40,7 +43,10 @@ public class GiantAnvilShockEventListener {
 
     static {
         TreeNode<ShockContext> root = TreeNode.<ShockContext>predicatedExecutable(
-            it -> it.unwrap().level().getBlockState(it.unwrap().centerPos()).is(ModBlocks.HEAVY_IRON_BLOCK)
+            it -> {
+                @SuppressWarnings("resource") Level level = it.unwrap().level();
+                return level.getBlockState(it.unwrap().centerPos()).is(ModBlocks.HEAVY_IRON_BLOCK);
+            }
         ).then(
             // break mode
             TreeNode.<ShockContext>executes(it -> {
@@ -146,7 +152,8 @@ public class GiantAnvilShockEventListener {
                 1,
                 radius * 2 + 1
             );
-            List<LivingEntity> e = it.unwrap().level().getEntitiesOfClass(LivingEntity.class, aabb);
+            @SuppressWarnings("resource") Level level = it.unwrap().level();
+            List<LivingEntity> e = level.getEntitiesOfClass(LivingEntity.class, aabb);
             for (LivingEntity l : e) {
                 if (it.has(HURT_TYPE)) {
                     HurtType hurtType = it.getAttachment(HURT_TYPE, HurtType.class);
@@ -155,7 +162,7 @@ public class GiantAnvilShockEventListener {
                 } else {
                     if (l.getItemBySlot(EquipmentSlot.FEET).is(Items.AIR)) {
                         l.hurt(
-                            it.unwrap().level().damageSources().source(DamageTypes.FALL, it.unwrap().fallingGiantAnvil()),
+                            level.damageSources().source(DamageTypes.FALL, it.unwrap().fallingGiantAnvil()),
                             it.unwrap().fallDistance() * 2
                         );
                     }
@@ -169,13 +176,29 @@ public class GiantAnvilShockEventListener {
     public static void onLand(AnvilEvent.GiantOnLand event) {
         ShockContext context = ShockContext.inflate(event);
         behaviorTree.run(context);
-        // 仅当冲击机制实际触发（中心为重型铁块）时才生成撼地粒子和音效
+        // 仅当冲击机制实际触发（中心为重型铁块）时才生成撼地效果
         if (event.getLevel()
                 .getBlockState(event.getPos().below(2))
-                .is(ModBlocks.HEAVY_IRON_BLOCK) && AnvilCraft.CLIENT_CONFIG.groundHeaveParticlesEnabled) {
-            event.getLevel().playSound(null, event.getPos(), ModSoundEvents.GIANT_ANVIL_SHOCK.get(),
-                SoundSource.BLOCKS, 1.8f, 1.2f + event.getLevel().random.nextFloat() * 0.2f);
-            spawnGroundHeave(event);
+                .is(ModBlocks.HEAVY_IRON_BLOCK)) {
+            float fallDistance = event.getFallDistance();
+            int radius = (int) Math.min(Math.ceil(fallDistance), AnvilCraft.CONFIG.giantAnvilMaxShockRadius);
+            BlockPos shockCenter = event.getPos().below(2);
+
+            // 发送震波效果包到附近所有玩家
+            if (event.getLevel() instanceof ServerLevel serverLevel) {
+                PacketDistributor.sendToPlayersTrackingChunk(
+                    serverLevel,
+                    new ChunkPos(event.getPos()),
+                    new GiantAnvilShockEffectPacket(shockCenter, radius)
+                );
+            }
+
+            // 音效与粒子
+            if (AnvilCraft.CLIENT_CONFIG.groundHeaveParticlesEnabled) {
+                event.getLevel().playSound(null, event.getPos(), ModSoundEvents.GIANT_ANVIL_SHOCK.get(),
+                    SoundSource.BLOCKS, 1.8f, 1.2f + event.getLevel().random.nextFloat() * 0.2f);
+                spawnGroundHeave(event);
+            }
         }
     }
 
@@ -200,7 +223,11 @@ public class GiantAnvilShockEventListener {
 
                 int ring = Math.max(Math.abs(dx), Math.abs(dz));
                 double ratio = (double) ring / radius;
-                double jumpHeight = 0.3 + (1.0 - ratio);
+                // 粒子弹跳高度：整体降低约 50%
+                // 旧公式：0.3 + (1.0 - ratio)  → 范围 [1.3, 0.3]
+                // 新公式：0.15 + (1.0 - ratio) * 0.5 → 范围 [0.65, 0.15]
+                // 减缓粒子过高飞散，更贴近地面效果
+                double jumpHeight = 0.15 + (1.0 - ratio) * 0.5;
                 int particleCount = AnvilCraft.CLIENT_CONFIG.groundHeaveParticleCount;
                 double speed = 0.15 + jumpHeight * 0.2;
 
