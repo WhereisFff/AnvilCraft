@@ -2,7 +2,7 @@ package dev.dubhe.anvilcraft.client.renderer.blockentity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.dubhe.anvilcraft.block.entity.ChargerBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.DischargerBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -11,25 +11,24 @@ import net.minecraft.world.item.ItemStack;
 
 import javax.annotation.Nullable;
 
-public class ChargerBlockRenderer extends BaseShowItemRenderer<ChargerBlockEntity> {
-    public ChargerBlockRenderer(BlockEntityRendererProvider.Context context) {
+public class DischargerBlockRenderer extends BaseShowItemRenderer<DischargerBlockEntity> {
+    public DischargerBlockRenderer(BlockEntityRendererProvider.Context context) {
         super(context);
     }
 
     @Override
-    protected @Nullable ItemStack getDisplayItemStack(ChargerBlockEntity blockEntity) {
-        // 使用从服务端同步过来的显示物品
+    protected @Nullable ItemStack getDisplayItemStack(DischargerBlockEntity blockEntity) {
         return blockEntity.getDisplayItemStack();
     }
 
     @Override
-    protected int getSeed(ChargerBlockEntity blockEntity) {
+    protected int getSeed(DischargerBlockEntity blockEntity) {
         return 0;
     }
 
     @Override
     public void render(
-        ChargerBlockEntity be,
+        DischargerBlockEntity be,
         float partialTick,
         PoseStack poseStack,
         MultiBufferSource buffer,
