@@ -17,6 +17,7 @@ import dev.dubhe.anvilcraft.init.ModParticles;
 import dev.dubhe.anvilcraft.init.block.ModFluids;
 import dev.dubhe.anvilcraft.init.item.ModItems;
 import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.particle.FlyTowardsPositionParticle;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -72,6 +73,10 @@ public class AnvilCraftClient {
 
     public static void registerParticleProviders(RegisterParticleProvidersEvent e) {
         e.registerSpriteSet(ModParticles.PLASMA_JETS.get(), PlasmaJetsParticle.Provider::new);
+        e.registerSpriteSet(ModParticles.ANVILON_ENERGY.get(), FlyTowardsPositionParticle.EnchantProvider::new);
+        e.registerSpriteSet(ModParticles.ANVILON_MASS.get(), FlyTowardsPositionParticle.EnchantProvider::new);
+        e.registerSpriteSet(ModParticles.ANVILON_SPACE.get(), FlyTowardsPositionParticle.EnchantProvider::new);
+        e.registerSpriteSet(ModParticles.ANVILON_TIME.get(), FlyTowardsPositionParticle.EnchantProvider::new);
         e.registerSpriteSet(ModParticles.IONOCRAFT_BACKPACK_EXHAUST.get(), IonoCraftBackpackExhaustParticle.Provider::new);
     }
 
