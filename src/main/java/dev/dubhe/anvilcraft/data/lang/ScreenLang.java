@@ -271,5 +271,164 @@ public class ScreenLang {
         provider.add("screen.anvilcraft.trading_station.input_not_allow", "Disallow automatically inputting");
         provider.add("screen.anvilcraft.trading_station.output_allow", "Allow automatically outputting");
         provider.add("screen.anvilcraft.trading_station.output_not_allow", "Disallow automatically outputting");
+
+        // Celestial Forging Anvil
+        provider.add("screen.anvilcraft.celestial_forging_anvil", "Celestial Forging Anvil");
+        provider.add("screen.anvilcraft.cfa.celestial_params", "Parameter");
+        provider.add("screen.anvilcraft.cfa.lock", "Click to lock");
+        provider.add("screen.anvilcraft.cfa.locked_tooltip", "Operation requires unlocking first.");
+        provider.add("screen.anvilcraft.cfa.missing_amplifier.line1", "Amplifier missing,");
+        provider.add("screen.anvilcraft.cfa.missing_amplifier.line2", "celestial body status");
+        provider.add("screen.anvilcraft.cfa.missing_amplifier.line3", "cannot be synced");
+        provider.add("screen.anvilcraft.cfa.power_fail", "Insufficient power");
+        provider.add("screen.anvilcraft.cfa.re_search_tooltip", "Search Again");
+        provider.add("screen.anvilcraft.cfa.search_fail", "Unreasonable parameters");
+        provider.add("screen.anvilcraft.cfa.search_loading", "Searching");
+        provider.add("screen.anvilcraft.cfa.search_tooltip", "Search for celestial bodies with this parameter");
+        provider.add("screen.anvilcraft.cfa.unlock", "Shift-Click to unlock");
+        provider.add("screen.anvilcraft.cfa.unlock_warning", "Unlock will delete the megastructure, Shift-Click to confirm");
+        provider.add("screen.anvilcraft.cfa.radius", "Radius: %s");
+        provider.add("screen.anvilcraft.cfa.age", "Age: %s");
+        provider.add("screen.anvilcraft.cfa.mass", "Mass: %s");
+        provider.add("screen.anvilcraft.cfa.tilt", "Axial Tilt: %s");
+
+        provider.add("screen.anvilcraft.cfa.atmos", "Atmosphere: %s");
+        provider.add("screen.anvilcraft.cfa.atmos.yes", "Yes");
+        provider.add("screen.anvilcraft.cfa.none", "None");
+
+        provider.add("screen.anvilcraft.cfa.mag", "Magnetic Field: %s");
+        provider.add("screen.anvilcraft.cfa.mag.very_weak", "Very Weak");
+        provider.add("screen.anvilcraft.cfa.mag.weak", "Weak");
+        provider.add("screen.anvilcraft.cfa.mag.medium", "Medium");
+        provider.add("screen.anvilcraft.cfa.mag.strong", "Strong");
+        provider.add("screen.anvilcraft.cfa.mag.very_strong", "Very Strong");
+
+        provider.add("screen.anvilcraft.cfa.spin", "Spin: %s");
+        provider.add("screen.anvilcraft.cfa.spin.very_slow", "Very Slow");
+        provider.add("screen.anvilcraft.cfa.spin.slow", "Slow");
+        provider.add("screen.anvilcraft.cfa.spin.medium", "Medium");
+        provider.add("screen.anvilcraft.cfa.spin.fast", "Fast");
+        provider.add("screen.anvilcraft.cfa.spin.very_fast", "Very Fast");
+
+        provider.add("screen.anvilcraft.cfa.temp", "Temperature: %s");
+        provider.add("screen.anvilcraft.cfa.temp.freezing", "Freezing");
+        provider.add("screen.anvilcraft.cfa.temp.cold", "Cold");
+        provider.add("screen.anvilcraft.cfa.temp.mild", "Mild");
+        provider.add("screen.anvilcraft.cfa.temp.hot", "Hot");
+        provider.add("screen.anvilcraft.cfa.temp.scorched", "Scorched");
+
+        provider.add("screen.anvilcraft.cfa.liquid", "Liquid Coverage: %s");
+        provider.add("screen.anvilcraft.cfa.liquid.none", "None");
+        provider.add("screen.anvilcraft.cfa.liquid.low", "Low");
+        provider.add("screen.anvilcraft.cfa.liquid.medium", "Medium");
+        provider.add("screen.anvilcraft.cfa.liquid.high", "High");
+
+        provider.add("screen.anvilcraft.cfa.pressure", "Pressure Type: %s");
+        provider.add("screen.anvilcraft.cfa.pressure.gas", "Gas");
+        provider.add("screen.anvilcraft.cfa.pressure.ice", "Ice");
+
+        provider.add("screen.anvilcraft.cfa.wind", "Wind Speed: %s");
+        provider.add("screen.anvilcraft.cfa.wind.high", "High");
+        provider.add("screen.anvilcraft.cfa.wind.very_high", "Very High");
+
+        provider.add("screen.anvilcraft.cfa.type", "Type: %s");
+        provider.add("screen.anvilcraft.cfa.class.large_moon", "Large Moon");
+        // Rocky planet types — keyed by temperature × liquid × atmosphere
+        provider.add("screen.anvilcraft.cfa.class.freezing_no_liquid_no_atmos", "Deathly Frozen");
+        provider.add("screen.anvilcraft.cfa.class.freezing_no_liquid_atmos", "Desolate Frozen");
+        provider.add("screen.anvilcraft.cfa.class.freezing_liquid", "Frozen Planet");
+        provider.add("screen.anvilcraft.cfa.class.scorched_no_liquid_no_atmos", "Deathly Scorched");
+        provider.add("screen.anvilcraft.cfa.class.scorched_no_liquid_atmos", "Desolate Scorched");
+        provider.add("screen.anvilcraft.cfa.class.scorched_liquid", "Lava Planet");
+        provider.add("screen.anvilcraft.cfa.class.deathly_planet", "Deathly Planet");
+        provider.add("screen.anvilcraft.cfa.class.desert_planet", "Desert Planet");
+        provider.add("screen.anvilcraft.cfa.class.cold_riverbank", "Frozen Riverbank");
+        provider.add("screen.anvilcraft.cfa.class.mild_riverbank", "Warm Riverbank");
+        provider.add("screen.anvilcraft.cfa.class.hot_riverbank", "Sweltering Riverbank");
+        provider.add("screen.anvilcraft.cfa.class.cold_land_ocean", "Frozen Land-Ocean");
+        provider.add("screen.anvilcraft.cfa.class.mild_land_ocean", "Warm Land-Ocean");
+        provider.add("screen.anvilcraft.cfa.class.hot_land_ocean", "Sweltering Land-Ocean");
+        provider.add("screen.anvilcraft.cfa.class.cold_ocean", "Frozen Ocean");
+        provider.add("screen.anvilcraft.cfa.class.mild_ocean", "Warm Ocean");
+        provider.add("screen.anvilcraft.cfa.class.hot_ocean", "Sweltering Ocean");
+        provider.add("screen.anvilcraft.cfa.class.ice_giant", "Ice Giant");
+        provider.add("screen.anvilcraft.cfa.class.gas_giant", "Gas Giant");
+        provider.add("screen.anvilcraft.cfa.class.brown_dwarf", "Brown Dwarf");
+        provider.add("screen.anvilcraft.cfa.class.m_main", "Red Dwarf");
+        provider.add("screen.anvilcraft.cfa.class.k_main", "Orange Dwarf");
+        provider.add("screen.anvilcraft.cfa.class.g_main", "Yellow Dwarf");
+        provider.add("screen.anvilcraft.cfa.class.f_main", "F-type Star");
+        provider.add("screen.anvilcraft.cfa.class.a_main", "A-type Star");
+        provider.add("screen.anvilcraft.cfa.class.b_main", "B-type Star");
+        provider.add("screen.anvilcraft.cfa.class.o_main", "O-type Star");
+        provider.add("screen.anvilcraft.cfa.class.m_giant", "Red Giant");
+        provider.add("screen.anvilcraft.cfa.class.k_giant", "Orange Giant");
+        provider.add("screen.anvilcraft.cfa.class.g_giant", "Yellow Giant");
+        provider.add("screen.anvilcraft.cfa.class.f_giant", "Yellow-White Giant");
+        provider.add("screen.anvilcraft.cfa.class.a_giant", "White Giant");
+        provider.add("screen.anvilcraft.cfa.class.b_giant", "Blue-White Giant");
+        provider.add("screen.anvilcraft.cfa.class.o_giant", "Blue Giant");
+        provider.add("screen.anvilcraft.cfa.class.m_supergiant", "Red Supergiant");
+        provider.add("screen.anvilcraft.cfa.class.k_supergiant", "Orange Supergiant");
+        provider.add("screen.anvilcraft.cfa.class.g_supergiant", "Yellow Supergiant");
+        provider.add("screen.anvilcraft.cfa.class.f_supergiant", "Yellow Supergiant");
+        provider.add("screen.anvilcraft.cfa.class.a_supergiant", "White Supergiant");
+        provider.add("screen.anvilcraft.cfa.class.b_supergiant", "Blue Supergiant");
+        provider.add("screen.anvilcraft.cfa.class.o_supergiant", "Blue Supergiant");
+        provider.add("screen.anvilcraft.cfa.class.white_dwarf", "White Dwarf");
+
+        // Celestial Restriction Ring Refactor
+        provider.add("screen.anvilcraft.cfa.refactor_title", "Refactor");
+        provider.add("screen.anvilcraft.cfa.need_lock", "Need to lock");
+        provider.add("screen.anvilcraft.cfa.no_refactor_option", "No refactoring option selected");
+        provider.add("screen.anvilcraft.cfa.insufficient_materials", "Insufficient building materials");
+        provider.add("screen.anvilcraft.cfa.material_required", "Requires: %s × %s");
+        provider.add("screen.anvilcraft.cfa.refactor_materials", "Refactor materials");
+        provider.add("screen.anvilcraft.cfa.refactor_start_tooltip", "Refactor Celestial Restriction into a selected megastructure");
+        // CFA Interface tooltips
+        provider.add("screen.anvilcraft.cfa.logistics_interface.title", "Logistics Interface");
+        provider.add("screen.anvilcraft.cfa.fluid_interface.title", "Fluid Interface");
+        provider.add("screen.anvilcraft.cfa.laser_interface.title", "Laser Interface");
+        provider.add("screen.anvilcraft.cfa.interface.empty", "(Empty)");
+        provider.add("screen.anvilcraft.cfa.laser_interface.received", "Receiving: Lv.%s");
+        provider.add("screen.anvilcraft.cfa.laser_interface.no_laser", "No laser");
+        provider.add("screen.anvilcraft.cfa.laser_interface.required", "Required: Lv.%s");
+        provider.add("screen.anvilcraft.cfa.laser_interface.valid", "✓ Valid");
+        provider.add("screen.anvilcraft.cfa.laser_interface.invalid", "✗ Invalid");
+        provider.add("screen.anvilcraft.cfa.already_built", "This megastructure already exists");
+
+        // CFA interface HUD tooltip (displayed on logistics interface)
+        provider.add("screen.anvilcraft.cfa.temple_demand", "◇ Temple Demand ◇");
+        provider.add("screen.anvilcraft.cfa.collider_targets", "◇ Collider Targets ◇");
+        provider.add("screen.anvilcraft.cfa.collider_processing", "◇ Processing");
+        provider.add("screen.anvilcraft.cfa.collider_star_missing", "! Star Missing !");
+
+        // Megastructure names (English) — 11 unique megastructures
+        provider.add("screen.anvilcraft.cfa.megastructure.planet_excavator", "Planet Excavator");
+        provider.add("screen.anvilcraft.cfa.megastructure.planet_exctractor", "Planet Exctractor");
+        provider.add("screen.anvilcraft.cfa.megastructure.eco_station", "Ecological Station");
+        provider.add("screen.anvilcraft.cfa.megastructure.temple", "Temple");
+        provider.add("screen.anvilcraft.cfa.megastructure.giant_planet_exctractor", "Giant Planet Exctractor");
+        provider.add("screen.anvilcraft.cfa.megastructure.stellar_ring_collider", "Stellar Ring Collider");
+        provider.add("screen.anvilcraft.cfa.megastructure.dyson_sphere_small", "Dyson Sphere");
+        provider.add("screen.anvilcraft.cfa.megastructure.dyson_sphere_large", "Dyson Sphere");
+        provider.add("screen.anvilcraft.cfa.megastructure.magnetar_coil", "Magnetar Coil");
+        provider.add("screen.anvilcraft.cfa.megastructure.penrose_sphere", "Penrose Sphere");
+        provider.add("screen.anvilcraft.cfa.megastructure.matter_decompressor", "Matter Decompressor");
+
+        // Planet resource bar
+        provider.add("screen.anvilcraft.cfa.resource_title", "— Celestial Resources —");
+
+        // Seed slot tooltip
+        provider.add("screen.anvilcraft.cfa.seed_slot.line1", "Consume all items placed in.");
+        provider.add("screen.anvilcraft.cfa.seed_slot.line2", "If specific item has been consumed, a hidden celestial body will be discovered.");
+
+        // Special celestial body type names
+        provider.add("screen.anvilcraft.cfa.class.special.overworld_like", "Overworld Like");
+        provider.add("screen.anvilcraft.cfa.class.special.flesh_planet", "Flesh Planet");
+        provider.add("screen.anvilcraft.cfa.class.special.intelligent_planet", "Intelligent Planet");
+        provider.add("screen.anvilcraft.cfa.class.special.shattered_planet", "Shattered Planet");
+        provider.add("screen.anvilcraft.cfa.class.special.hollow_planet", "Hollow Planet");
+        provider.add("screen.anvilcraft.cfa.class.special.error_planet", "Error Planet");
     }
 }

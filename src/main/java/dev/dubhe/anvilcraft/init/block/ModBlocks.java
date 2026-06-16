@@ -147,6 +147,7 @@ import dev.dubhe.anvilcraft.block.cfa.interfaces.CelestialForgingAnvilFluidInter
 import dev.dubhe.anvilcraft.block.cfa.interfaces.CelestialForgingAnvilLaserInterfaceBlock;
 import dev.dubhe.anvilcraft.block.cfa.interfaces.CelestialForgingAnvilLogisticsInterfaceBlock;
 import dev.dubhe.anvilcraft.block.cfa.item.CelestialForgingAnvilAmplifierBlockItem;
+import dev.dubhe.anvilcraft.block.cfa.item.CelestialForgingAnvilBlockItem;
 import dev.dubhe.anvilcraft.block.cfa.item.CelestialForgingAnvilInterfaceBlockItem;
 import dev.dubhe.anvilcraft.block.heatable.GlowingBlock;
 import dev.dubhe.anvilcraft.block.heatable.HeatedBlock;
@@ -1358,7 +1359,6 @@ public class ModBlocks {
     public static final BlockEntry<CelestialForgingAnvilBlock> CELESTIAL_FORGING_ANVIL = REGISTRUM
         .block("celestial_forging_anvil", CelestialForgingAnvilBlock::new)
         .initialProperties(() -> Blocks.IRON_BLOCK)
-        .loot(SimpleMultiPartBlock::loot)
         .properties((properties) -> properties
             .isSuffocating(ModBlocks::never)
             .isViewBlocking(ModBlocks::never)
@@ -1366,8 +1366,15 @@ public class ModBlocks {
             .isValidSpawn(Blocks::never)
             .explosionResistance(1200)
             .emissiveRendering(ModBlocks::always))
-        .item(SimpleMultiPartBlockItem::new)
-        .properties((properties) -> properties.stacksTo(16))
+        .loot((tables, block) -> {
+            // Generate empty loot table (rolls=0) so datagen doesn't break.
+            // Actual drop (with NBT) is handled manually in onRemove.
+            tables.add(block, LootTable.lootTable()
+                .withPool(LootPool.lootPool()
+                    .setRolls(ConstantValue.exactly(0.0f))));
+        })
+        .item(CelestialForgingAnvilBlockItem::new)
+        .properties((properties) -> properties.stacksTo(1))
         .build()
         .blockstate(DataGenUtil::noExtraModelOrState)
         .tag((BlockTags.MINEABLE_WITH_PICKAXE))
@@ -1375,6 +1382,7 @@ public class ModBlocks {
 
     public static final BlockEntry<CelestialForgingAnvilAmplifierBlock> CELESTIAL_FORGING_ANVIL_AMPLIFIER = REGISTRUM
         .block("celestial_forging_anvil_amplifier", CelestialForgingAnvilAmplifierBlock::new)
+        .recipe(RegistrumBlockRecipeLoader::cfaAmplifier)
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .loot(FlexibleMultiPartBlock::loot)
         .properties((properties) -> properties
@@ -1392,6 +1400,7 @@ public class ModBlocks {
 
     public static final BlockEntry<CelestialForgingAnvilLogisticsInterfaceBlock> CELESTIAL_FORGING_ANVIL_LOGISTICS_INTERFACE = REGISTRUM
         .block("celestial_forging_anvil_logistics_interface", CelestialForgingAnvilLogisticsInterfaceBlock::new)
+        .recipe(RegistrumBlockRecipeLoader::cfaLogisticsInterface)
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .properties((properties) -> properties
@@ -1407,6 +1416,7 @@ public class ModBlocks {
 
     public static final BlockEntry<CelestialForgingAnvilFluidInterfaceBlock> CELESTIAL_FORGING_ANVIL_FLUID_INTERFACE = REGISTRUM
         .block("celestial_forging_anvil_fluid_interface", CelestialForgingAnvilFluidInterfaceBlock::new)
+        .recipe(RegistrumBlockRecipeLoader::cfaFluidInterface)
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .properties((properties) -> properties
@@ -1422,6 +1432,7 @@ public class ModBlocks {
 
     public static final BlockEntry<CelestialForgingAnvilLaserInterfaceBlock> CELESTIAL_FORGING_ANVIL_LASER_INTERFACE = REGISTRUM
         .block("celestial_forging_anvil_laser_interface", CelestialForgingAnvilLaserInterfaceBlock::new)
+        .recipe(RegistrumBlockRecipeLoader::cfaLaserInterface)
         .initialProperties(() -> Blocks.IRON_BLOCK)
         .blockstate(DataGenUtil::noExtraModelOrState)
         .properties((properties) -> properties

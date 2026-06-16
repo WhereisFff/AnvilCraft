@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.block.entity.celestial.GiantPlanetData;
 import dev.dubhe.anvilcraft.block.entity.celestial.LiquidCoverage;
 import dev.dubhe.anvilcraft.block.entity.celestial.RingType;
 import dev.dubhe.anvilcraft.block.entity.celestial.RockyPlanetData;
+import dev.dubhe.anvilcraft.block.entity.celestial.SpecialCelestialBodyData;
 import dev.dubhe.anvilcraft.block.entity.celestial.StarData;
 import dev.dubhe.anvilcraft.block.entity.celestial.Temperature;
 import dev.dubhe.anvilcraft.block.entity.celestial.WindSpeed;
@@ -70,40 +71,89 @@ public class CelestialBodyTextureBakery {
 
     private static TexSet resolve(CelestialBodyData data) {
         if (data instanceof RockyPlanetData rp) return resolveRocky(rp);
-        if (data instanceof GiantPlanetData gp) return resolveGiant(gp);
+        if (data instanceof GiantPlanetData gp) {
+            if (gp.brownDwarf()) return new TexSet("planet_giant.png",
+                gp.windSpeed() == WindSpeed.VERY_HIGH ? "planet_giant_overlay_0.png" : "planet_giant_overlay_1.png",
+                "planet_mix_color_scorched.png");
+            return resolveGiant(gp);
+        }
         return null;
     }
 
+    @SuppressWarnings("Linelength")
+    /*
+      Resolve texture set for a rocky planet.
+
+      <table>
+      <caption>Texture mapping by temperature, liquid coverage, and atmosphere</caption>
+      <tr><th>Temperature</th><th>Liquid</th><th>Atmosphere</th><th>Base</th><th>Palette</th><th>Class</th></tr>
+      <tr><td>FREEZING</td><td>NONE</td><td>no</td><td>planet_atmosphereless</td><td>planet_mix_color_freezing</td><td>Deathly Frozen</td></tr>
+      <tr><td>FREEZING</td><td>NONE</td><td>yes</td><td>planet_arid</td><td>planet_mix_color_freezing</td><td>Desolate Frozen</td></tr>
+      <tr><td>FREEZING</td><td>has</td><td>any</td><td>wet/boggy/oceanic</td><td>planet_mix_color_freezing</td><td>Frozen Planet</td></tr>
+      <tr><td>SCORCHED</td><td>NONE</td><td>no</td><td>planet_atmosphereless</td><td>planet_mix_color_scorched</td><td>Deathly Scorched</td></tr>
+      <tr><td>SCORCHED</td><td>NONE</td><td>yes</td><td>planet_arid</td><td>planet_mix_color_scorched</td><td>Desolate Scorched</td></tr>
+      <tr><td>SCORCHED</td><td>has</td><td>any</td><td>wet/boggy/oceanic</td><td>planet_mix_color_scorched</td><td>Lava Planet</td></tr>
+      <tr><td>COLD/MILD/HOT</td><td>—</td><td>no</td><td>planet_atmosphereless</td><td>planet_atmosphereless_color</td><td>Deathly Planet</td></tr>
+      <tr><td>COLD/MILD/HOT</td><td>NONE</td><td>yes</td><td>planet_desert</td><td>planet_arid_color</td><td>Desert Planet</td></tr>
+      <tr><td>COLD/MILD/HOT</td><td>has</td><td>yes</td><td>wet/boggy/oceanic</td><td>planet_mix_color</td><td>9 types</td></tr>
+      </table>
+     */
     private static TexSet resolveRocky(RockyPlanetData rp) {
         String base, overlay = null, palette;
-        if (!rp.hasAtmosphere() && rp.liquidCoverage() == LiquidCoverage.NONE) {
-            base = "planet_atmosphereless.png";
-        } else {
+        boolean hasAtmos = rp.hasAtmosphere();
+        boolean hasLiquid = rp.liquidCoverage() != LiquidCoverage.NONE;
+        Temperature temp = rp.temperature();
+
+        if (hasLiquid && (temp == Temperature.FREEZING || temp == Temperature.SCORCHED)) {
+            // Extreme temp: liquid takes priority over atmosphere (Frozen Planet / Lava Planet)
             base = switch (rp.liquidCoverage()) {
-                case NONE -> "planet_arid.png";
                 case LOW -> "planet_wet.png";
                 case MEDIUM -> "planet_boggy.png";
                 case HIGH -> "planet_oceanic.png";
+                default -> "planet_arid.png";
             };
             overlay = switch (rp.liquidCoverage()) {
-                case NONE -> null;
                 case LOW -> "planet_wet_overlay.png";
                 case MEDIUM -> "planet_boggy_overlay.png";
                 case HIGH -> "planet_oceanic_overlay.png";
+                default -> null;
             };
-        }
-        if (!rp.hasAtmosphere()) {
-            palette = rp.liquidCoverage() == LiquidCoverage.NONE
-                ? (rp.temperature() == Temperature.FREEZING ? "planet_atmosphereless_color.png" : "planet_mix_color_scorched.png")
-                : (rp.temperature() == Temperature.FREEZING ? "planet_mix_color_freezing.png" : "planet_mix_color_scorched.png");
-        } else {
-            palette = rp.liquidCoverage() == LiquidCoverage.NONE
-                ? (rp.temperature() == Temperature.SCORCHED ? "planet_mix_color_scorched.png" : "planet_arid_color.png")
-                : switch (rp.temperature()) {
+            palette = temp == Temperature.FREEZING
+                ? "planet_mix_color_freezing.png"
+                : "planet_mix_color_scorched.png";
+        } else if (!hasAtmos) {
+            // No atmosphere: always atmosphereless (Deathly Frozen / Deathly Scorched / Deathly Planet)
+            base = "planet_atmosphereless.png";
+            palette = switch (temp) {
                 case FREEZING -> "planet_mix_color_freezing.png";
                 case SCORCHED -> "planet_mix_color_scorched.png";
-                default -> "planet_mix_color.png";
-                };
+                default -> "planet_atmosphereless_color.png";
+            };
+        } else if (hasLiquid) {
+            // Has atmosphere + has liquid + mild temps (Frozen Riverbank / Warm Riverbank / … / Warm Ocean)
+            base = switch (rp.liquidCoverage()) {
+                case LOW -> "planet_wet.png";
+                case MEDIUM -> "planet_boggy.png";
+                case HIGH -> "planet_oceanic.png";
+                default -> "planet_arid.png";
+            };
+            overlay = switch (rp.liquidCoverage()) {
+                case LOW -> "planet_wet_overlay.png";
+                case MEDIUM -> "planet_boggy_overlay.png";
+                case HIGH -> "planet_oceanic_overlay.png";
+                default -> null;
+            };
+            palette = "planet_mix_color.png";
+        } else {
+            // Has atmosphere, no liquid (Desolate Frozen / Desolate Scorched / Desert Planet)
+            base = (temp == Temperature.FREEZING || temp == Temperature.SCORCHED)
+                ? "planet_arid.png"
+                : "planet_desert.png";
+            palette = switch (temp) {
+                case FREEZING -> "planet_mix_color_freezing.png";
+                case SCORCHED -> "planet_mix_color_scorched.png";
+                default -> "planet_arid_color.png";
+            };
         }
         return new TexSet(base, overlay, palette);
     }
@@ -116,7 +166,7 @@ public class CelestialBodyTextureBakery {
 
     @Nullable
     private static ResourceLocation bakeBody(CelestialBodyData data, String key) {
-        if (data instanceof StarData star) return bakeStar(key, star);
+        if (data instanceof SpecialCelestialBodyData special) return bakeSpecial(key, special);
 
         TexSet tex = resolve(data);
         if (tex == null) return null;
@@ -159,39 +209,15 @@ public class CelestialBodyTextureBakery {
         };
     }
 
-    private static NativeImage generateStarPalette(StarData star, int numColors) {
-        NativeImage palette = new NativeImage(numColors, 1, false);
-        float[] base = starColor(star);
-        for (int col = 0; col < numColors; col++) {
-            float brightness = 1f - (float) col / (numColors - 1) * 0.15f;
-            int ir = Math.clamp((int) (base[0] * brightness * 255), 0, 255);
-            int ig = Math.clamp((int) (base[1] * brightness * 255), 0, 255);
-            int ib = Math.clamp((int) (base[2] * brightness * 255), 0, 255);
-            palette.setPixelRGBA(col, 0, (255 << 24) | (ib << 16) | (ig << 8) | ir);
-        }
-        return palette;
-    }
-
-    @SuppressWarnings("checkstyle:NeedBraces")
+    /**
+     * Bake a special celestial body — just load the PNG directly without palette coloring.
+     */
     @Nullable
-    private static ResourceLocation bakeStar(String key, StarData star) {
-        NativeImage starImg = loadImage("star.png");
-        if (starImg == null) return null;
-
-        int frameSize = starImg.getWidth();
-        NativeImage frame = new NativeImage(frameSize, frameSize, false);
-        for (int y = 0; y < frameSize; y++)
-            for (int x = 0; x < frameSize; x++)
-                frame.setPixelRGBA(x, y, starImg.getPixelRGBA(x, y));
-        starImg.close();
-
-        int[] refGrays = PaletteColorMapper.extractReferenceGrays(frame);
-        NativeImage palette = generateStarPalette(star, refGrays.length);
-        NativeImage colored = PaletteColorMapper.colorTexture(frame, palette, 0, true);
-        frame.close();
-        palette.close();
-
-        return registerTexture(key, colored);
+    private static ResourceLocation bakeSpecial(String key, SpecialCelestialBodyData special) {
+        String filename = special.specialType().getTextureName() + ".png";
+        NativeImage img = loadImage(filename);
+        if (img == null) return null;
+        return registerTexture(key, img);
     }
 
     @Nullable
@@ -221,6 +247,8 @@ public class CelestialBodyTextureBakery {
     }
 
     private static String cacheKey(CelestialBodyData data) {
+        if (data instanceof SpecialCelestialBodyData s)
+            return "special_" + s.specialType().getName();
         if (data instanceof StarData s)
             return "star_" + s.size() + "_" + s.colorR() + "_" + s.colorG() + "_" + s.colorB();
         if (data instanceof RockyPlanetData rp)
