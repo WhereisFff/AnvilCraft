@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.client.init;
 
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.support.GravitationalLensManager;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.PostChain;
@@ -15,9 +16,12 @@ import java.io.IOException;
 
 public class ModShaders {
     public static final ResourceLocation LASER_BLOOM_LOCATION = AnvilCraft.of("shaders/post/bloom.json");
+    public static final ResourceLocation GRAVITATIONAL_LENS_LOCATION = AnvilCraft.of("shaders/post/gravitational_lens.json");
 
     @Getter
     private static PostChain bloomChain;
+    @Getter
+    private static PostChain lensChain;
     static final Minecraft MINECRAFT = Minecraft.getInstance();
 
     @Getter
@@ -38,7 +42,8 @@ public class ModShaders {
 
     public static void register(RegisterShadersEvent event) {
         try {
-            event.registerShader(new ShaderInstance(
+            event.registerShader(
+                new ShaderInstance(
                     event.getResourceProvider(),
                     AnvilCraft.of("rendertype_laser"),
                     DefaultVertexFormat.BLOCK
@@ -102,6 +107,9 @@ public class ModShaders {
         if (bloomChain != null) {
             bloomChain.resize(width, height);
         }
+        if (lensChain != null) {
+            lensChain.resize(width, height);
+        }
         orthoMatrix = new Matrix4f()
             .setOrtho(
                 0f,
@@ -130,6 +138,24 @@ public class ModShaders {
             );
         } catch (Throwable tr) {
             AnvilCraft.LOGGER.error("Could not load bloom effect shader.", tr);
+        }
+    }
+
+    public static void loadLensEffect(ResourceProvider resourceProvider) throws IOException {
+        GravitationalLensManager.resetLensUbo();
+        try {
+            lensChain = new PostChain(
+                MINECRAFT.getTextureManager(),
+                resourceProvider,
+                Minecraft.getInstance().getMainRenderTarget(),
+                GRAVITATIONAL_LENS_LOCATION
+            );
+            lensChain.resize(
+                Minecraft.getInstance().getWindow().getWidth(),
+                Minecraft.getInstance().getWindow().getHeight()
+            );
+        } catch (Throwable tr) {
+            AnvilCraft.LOGGER.error("Could not load gravitational lens effect shader.", tr);
         }
     }
 }
