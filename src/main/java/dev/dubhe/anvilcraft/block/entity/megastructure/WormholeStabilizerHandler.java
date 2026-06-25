@@ -7,6 +7,7 @@ import dev.dubhe.anvilcraft.block.entity.CelestialForgingAnvilBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CelestialForgingAnvilFluidInterfaceBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CelestialForgingAnvilLaserInterfaceBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CelestialForgingAnvilLogisticsInterfaceBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.CfaInterfaceScanner;
 import dev.dubhe.anvilcraft.block.entity.celestial.CelestialBodyClass;
 import dev.dubhe.anvilcraft.block.entity.celestial.CelestialRefactorOption;
 import dev.dubhe.anvilcraft.block.entity.celestial.StarData;
@@ -129,19 +130,20 @@ public class WormholeStabilizerHandler extends BaseMegastructureHandler {
             WormholeNetwork.get().unregister(be.getLevel(), be.getBlockPos());
             registered = false;
         }
+        clearLocalInterfaces(be);
         bodyUuid = null;
         portals.clear();
         cleanupWormholeChunkLoading(be.getLevel());
     }
 
-    public boolean addPortal(Cube323PartHalf side, BlockPos portalPos, CelestialForgingAnvilBlockEntity be) {
+    public void addPortal(Cube323PartHalf side, BlockPos portalPos, CelestialForgingAnvilBlockEntity be) {
         if (side != Cube323PartHalf.BOTTOM_N && side
                                                 != Cube323PartHalf.BOTTOM_S && side
                                                                                != Cube323PartHalf.BOTTOM_E && side
                                                                                                               != Cube323PartHalf.BOTTOM_W) {
-            return false;
+            return;
         }
-        if (portals.containsKey(side)) return false;
+        if (portals.containsKey(side)) return;
         portals.put(side, portalPos);
 
         if (registered && be.getLevel() != null && !be.getLevel().isClientSide()) {
@@ -152,7 +154,6 @@ public class WormholeStabilizerHandler extends BaseMegastructureHandler {
         if (be.getLevel() != null) {
             be.getLevel().sendBlockUpdated(be.getBlockPos(), be.getBlockState(), be.getBlockState(), 3);
         }
-        return true;
     }
 
     public void removePortal(Cube323PartHalf side, CelestialForgingAnvilBlockEntity be) {
@@ -200,7 +201,9 @@ public class WormholeStabilizerHandler extends BaseMegastructureHandler {
             if (targetLevel == null) continue;
             BlockEntity targetBe = targetLevel.getBlockEntity(entry.pos());
             if (!(targetBe instanceof CelestialForgingAnvilBlockEntity targetCfa)) continue;
-            Map<BlockPos, CelestialForgingAnvilLogisticsInterfaceBlockEntity> remoteMap = targetCfa.getLogisticsInterfacesMap();
+            Map<BlockPos, CelestialForgingAnvilLogisticsInterfaceBlockEntity> remoteMap = CfaInterfaceScanner.getInterfacesMap(
+                    CelestialForgingAnvilLogisticsInterfaceBlockEntity.class, targetCfa.getLevel(), targetCfa.getBlockPos()
+                );
             CelestialForgingAnvilLogisticsInterfaceBlockEntity remoteBe = remoteMap.get(relOffset);
             if (remoteBe == null || remoteBe == localBe) continue;
             IItemHandler remoteHandler = remoteBe.getItemHandler();
@@ -404,16 +407,9 @@ public class WormholeStabilizerHandler extends BaseMegastructureHandler {
             BlockPos relOffset = localEntry.getKey();
             CelestialForgingAnvilLaserInterfaceBlockEntity localBe = localEntry.getValue();
 
-            int totalNormal = 0;
-            int totalGamma = 0;
-            int activeCount = localBe.isActive() ? 1 : 0;
-            if (!localBe.isActive() && localBe.getReceivedLaserLevel() > 0) {
-                if (localBe.isReceivedGamma()) {
-                    totalGamma += localBe.getReceivedLaserLevel();
-                } else {
-                    totalNormal += localBe.getReceivedLaserLevel();
-                }
-            }
+            LaserPool pool = new LaserPool();
+            /// 收集本地的激光贡献/消耗
+            pool.add(localBe);
 
             for (WormholeNetwork.Entry entry : connected) {
                 ServerLevel targetLevel = be.getLevel().getServer().getLevel(entry.dimension());
@@ -421,20 +417,19 @@ public class WormholeStabilizerHandler extends BaseMegastructureHandler {
                 BlockEntity targetBe = targetLevel.getBlockEntity(entry.pos());
                 if (!(targetBe instanceof CelestialForgingAnvilBlockEntity targetCfa)) continue;
 
-                Map<BlockPos, CelestialForgingAnvilLaserInterfaceBlockEntity> remoteMap = targetCfa.getLaserInterfacesMap();
+                Map<BlockPos, CelestialForgingAnvilLaserInterfaceBlockEntity> remoteMap = CfaInterfaceScanner.getInterfacesMap(
+                    CelestialForgingAnvilLaserInterfaceBlockEntity.class, targetCfa.getLevel(), targetCfa.getBlockPos()
+                );
                 CelestialForgingAnvilLaserInterfaceBlockEntity remoteBe = remoteMap.get(relOffset);
                 if (remoteBe == null) continue;
 
-                if (remoteBe.isActive()) {
-                    activeCount++;
-                } else if (remoteBe.getReceivedLaserLevel() > 0) {
-                    if (remoteBe.isReceivedGamma()) {
-                        totalGamma += remoteBe.getReceivedLaserLevel();
-                    } else {
-                        totalNormal += remoteBe.getReceivedLaserLevel();
-                    }
-                }
+                /// 收集远端的激光贡献/消耗
+                pool.add(remoteBe);
             }
+
+            int totalNormal = pool.totalNormal;
+            int totalGamma = pool.totalGamma;
+            int activeCount = pool.activeCount;
 
             if (localBe.isActive()) {
                 int eachNormal = activeCount > 0 ? totalNormal / activeCount : 0;
@@ -446,11 +441,42 @@ public class WormholeStabilizerHandler extends BaseMegastructureHandler {
         }
     }
 
+    /// 虫洞激光等级池：统计所有接口的贡献/消耗。
+    /// 关键规则：如果接口处于激活模式但正在接收激光，则它不会实际发射
+    ///（serverTick 中接收优先于发射），因此应作为生产者（贡献等级）
+    /// 而非消费者（增加 activeCount）。
+    private static final class LaserPool {
+        int totalNormal;
+        int totalGamma;
+        int activeCount;
+
+        void add(CelestialForgingAnvilLaserInterfaceBlockEntity be) {
+            if (be.isActive() && be.getReceivedLaserLevel() > 0) {
+                // 激活 + 正在接收 → 接收优先，不会发射 → 贡献到池
+                if (be.isReceivedGamma()) {
+                    totalGamma += be.getReceivedLaserLevel();
+                } else {
+                    totalNormal += be.getReceivedLaserLevel();
+                }
+            } else if (be.isActive()) {
+                // 激活 + 无接收 → 消费者
+                activeCount++;
+            } else if (be.getReceivedLaserLevel() > 0) {
+                // 被动 + 有接收 → 贡献到池
+                if (be.isReceivedGamma()) {
+                    totalGamma += be.getReceivedLaserLevel();
+                } else {
+                    totalNormal += be.getReceivedLaserLevel();
+                }
+            }
+        }
+    }
+
     /**
-     * Clear all local logistics and fluid interfaces when the amplifier is removed.
-     * Pre-existing items are discarded (they're still frozen on the amplifier side
-     * at canonical). Items placed during the subsequent disconnect period are
-     * handled by the reconnect conflict logic in {@link #syncWormholeLogistics}.
+     * Clear all local logistics, fluid, and laser interfaces when the amplifier is removed
+     * or the wormhole connection is broken. Pre-existing items and fluids are discarded
+     * (they're still frozen on the amplifier side at canonical). Laser output is zeroed
+     * so the output-side laser stops emitting immediately.
      */
     private void clearLocalInterfaces(CelestialForgingAnvilBlockEntity be) {
         if (be.getLevel() == null || be.getLevel().isClientSide()) return;
@@ -479,6 +505,13 @@ public class WormholeStabilizerHandler extends BaseMegastructureHandler {
                     handler.drain(stack, IFluidHandler.FluidAction.EXECUTE);
                 }
             }
+        }
+
+        // Reset laser interfaces so output lasers stop immediately
+        Map<BlockPos, CelestialForgingAnvilLaserInterfaceBlockEntity> laserMap = getLaserInterfacesMap(be);
+        for (var entry : laserMap.entrySet()) {
+            CelestialForgingAnvilLaserInterfaceBlockEntity localBe = entry.getValue();
+            localBe.setWormholeLaserOutput(0, false);
         }
     }
 

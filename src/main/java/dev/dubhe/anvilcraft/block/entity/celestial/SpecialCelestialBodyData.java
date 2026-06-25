@@ -5,17 +5,10 @@ import net.minecraft.client.resources.model.ModelResourceLocation;
 import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.Nullable;
 
-/**
- * Celestial body data for hidden (special) bodies discovered via seed items.
- * These bodies bypass the normal three-step diagram matching and texture baking
- * pipeline — they use fixed model textures directly.
- *
- * <p>
- * All properties are cached at creation time from a
- * {@link SpecialCelestialBodyRecipe}, so no recipe-manager lookup is needed
- * during rendering or NBT deserialization.
- * </p>
- */
+/// 特殊天体数据 —— 从 {@link SpecialCelestialBodyRecipe} 创建，
+/// 绕过常规三步图表匹配和贴图烘焙管线。
+///
+/// 所有属性在创建时从配方缓存，渲染和 NBT 反序列化时无需查配方管理器。
 @SuppressWarnings("checkstyle:MissingJavadocMethod")
 public record SpecialCelestialBodyData(
     String recipeId,
@@ -29,12 +22,10 @@ public record SpecialCelestialBodyData(
     @Nullable LiquidCoverage liquidCoverage,
     boolean isErrorPlanet,
     boolean needsCustomModel,
-    String textureName
+    String model
 ) implements CelestialBodyData {
 
-    /**
-     * Create from a recipe and its resource location ID.
-     */
+    /// 从配方和其资源路径ID创建。
     public static SpecialCelestialBodyData fromRecipe(SpecialCelestialBodyRecipe recipe, String recipeId) {
         return new SpecialCelestialBodyData(
             recipeId,
@@ -48,7 +39,7 @@ public record SpecialCelestialBodyData(
             recipe.getLiquidCoverage(),
             recipe.isErrorPlanet(),
             recipe.needsCustomModel(),
-            recipe.textureName()
+            recipe.model()
         );
     }
 
@@ -67,11 +58,9 @@ public record SpecialCelestialBodyData(
         return RingType.NONE;
     }
 
-    /**
-     * Get the standalone model resource location for this special body.
-     */
+    /// 获取此特殊天体的独立模型/贴图资源路径
     public ModelResourceLocation getModelLocation() {
-        return ModelResourceLocation.standalone(AnvilCraft.of("block/celestial_body/" + textureName));
+        return ModelResourceLocation.standalone(AnvilCraft.of("block/celestial_body/" + model));
     }
 
     @Override
@@ -87,7 +76,7 @@ public record SpecialCelestialBodyData(
         tag.putBoolean("hasAtmosphere", hasAtmosphere);
         tag.putBoolean("isErrorPlanet", isErrorPlanet);
         tag.putBoolean("needsCustomModel", needsCustomModel);
-        tag.putString("textureName", textureName);
+        tag.putString("model", model);
         if (temperature != null) {
             tag.putString("temperature", temperature.getSerializedName());
         }
@@ -97,9 +86,7 @@ public record SpecialCelestialBodyData(
         return tag;
     }
 
-    /**
-     * Deserialize a SpecialCelestialBodyData from NBT.
-     */
+    /// 从NBT反序列化SpecialCelestialBodyData。
     public static SpecialCelestialBodyData fromTag(CompoundTag tag) {
         String recipeId = tag.getString("recipeId");
         String name = tag.getString("name");
@@ -110,7 +97,10 @@ public record SpecialCelestialBodyData(
         boolean hasAtmosphere = tag.getBoolean("hasAtmosphere");
         boolean isErrorPlanet = tag.getBoolean("isErrorPlanet");
         boolean needsCustomModel = tag.getBoolean("needsCustomModel");
-        String textureName = tag.getString("textureName");
+        /// 向后兼容：优先读新 key "model"，回退到旧 key "textureName"
+        String model = tag.contains("model")
+            ? tag.getString("model")
+            : tag.getString("textureName");
         Temperature temperature = tag.contains("temperature")
             ? Temperature.fromName(tag.getString("temperature")) : null;
         LiquidCoverage liquidCoverage = tag.contains("liquidCoverage")
@@ -118,7 +108,7 @@ public record SpecialCelestialBodyData(
         return new SpecialCelestialBodyData(
             recipeId, name, size, axialTilt, rotationSpeed, magneticFieldStrength,
             temperature, hasAtmosphere, liquidCoverage,
-            isErrorPlanet, needsCustomModel, textureName
+            isErrorPlanet, needsCustomModel, model
         );
     }
 }
