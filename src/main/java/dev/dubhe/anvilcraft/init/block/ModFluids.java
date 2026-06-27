@@ -4,7 +4,6 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.MeltGemFluid;
 import dev.dubhe.anvilcraft.block.state.Color;
 import dev.dubhe.anvilcraft.fluid.HoneyFluid;
-import dev.dubhe.anvilcraft.fluid.MilkFluid;
 import dev.dubhe.anvilcraft.fluid.PowderSnowFluid;
 import dev.dubhe.anvilcraft.fluid.PrimordialMatterFluid;
 import dev.dubhe.anvilcraft.init.item.ModItems;
@@ -213,15 +212,6 @@ public class ModFluids {
         .bucket(ModItems.MELT_GEM_BUCKET)
         .tickRate(20)
         .explosionResistance(100);
-    // === Milk（不可放置流体） ===
-
-    public static final DeferredHolder<FluidType, FluidType> MILK_TYPE = FLUID_TYPES.register(
-        "milk", () -> MilkFluid.TYPE
-    );
-
-    public static final DeferredHolder<Fluid, MilkFluid> MILK = FLUIDS.register(
-        "milk", MilkFluid::new
-    );
 
     // === Honey（不可放置流体） ===
 
@@ -263,7 +253,7 @@ public class ModFluids {
         Blocks.ANDESITE
     };
 
-    public static void registerFluidInteractions(FMLCommonSetupEvent event) {
+    public static void registerFluidInteractions(FMLCommonSetupEvent ignore) {
         FluidInteractionRegistry.addInteraction(
             MELT_GEM.get().getFluidType(),
             new InteractionInformation(
@@ -308,7 +298,9 @@ public class ModFluids {
                 AnvilCraft.of("block/exp_fluid"),
                 AnvilCraft.of("block/exp_fluid_flow"),
                 0xC1E8A9,
-                1.0f
+                1.0f,
+                0xFFFFFFFF,
+                false
             ), EXP_FLUID_TYPE
         );
         e.registerFluidType(
@@ -316,7 +308,9 @@ public class ModFluids {
                 AnvilCraft.of("block/oil"),
                 AnvilCraft.of("block/oil_flow"),
                 0x1B061F,
-                1.0f
+                1.0f,
+                0xFFFFFFFF,
+                false
             ), OIL_TYPE
         );
         for (Color color : Color.values()) {
@@ -334,24 +328,19 @@ public class ModFluids {
                 AnvilCraft.of("block/melt_gem"),
                 AnvilCraft.of("block/melt_gem_flow"),
                 0xB7EEDE,
-                2.0f
+                2.0f,
+                0xFFFFFFFF,
+                false
             ), MELT_GEM_TYPE
-        );
-        e.registerFluidType(
-            new ModClientFluidTypeExtensionImpl(
-                AnvilCraft.of("block/milk"),
-                AnvilCraft.of("block/milk_flow"),
-                0xFFFFFF,
-                1.0f,
-                true
-            ), MILK_TYPE
         );
         e.registerFluidType(
             new ModClientFluidTypeExtensionImpl(
                 ResourceLocation.withDefaultNamespace("block/honey_block_top"),
                 ResourceLocation.withDefaultNamespace("block/honey_block_top"),
                 0xFFB82E,
-                2.0f
+                2.0f,
+                0xFFFFFFFF,
+                false
             ), HONEY_TYPE
         );
         e.registerFluidType(
