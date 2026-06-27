@@ -15,7 +15,10 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.material.Fluids;
+
+import javax.annotation.Nullable;
 
 public class CelestialForgingAnvilPortalBlockItem extends BlockItem {
     public CelestialForgingAnvilPortalBlockItem(Block block, Properties properties) {
@@ -40,7 +43,9 @@ public class CelestialForgingAnvilPortalBlockItem extends BlockItem {
                     || half == Cube323PartHalf.BOTTOM_E || half == Cube323PartHalf.BOTTOM_W) {
                     return getBlock().defaultBlockState()
                         .setValue(CelestialForgingAnvilPortalBlock.FACING, dir.getOpposite())
-                        .setValue(CelestialForgingAnvilPortalBlock.OPEN, false);
+                        .setValue(CelestialForgingAnvilPortalBlock.OPEN, false)
+                        .setValue(BlockStateProperties.WATERLOGGED,
+                            context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
                 }
             }
         }
