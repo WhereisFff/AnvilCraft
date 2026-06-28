@@ -157,9 +157,6 @@ public class AnvilCraftServerConfig {
     @Comment("Pushing or pulling a sliding rail will chain to other rails")
     public boolean slidingRailStickToEachOther = false;
 
-    @Comment("Whether to clean fluid after updating Menger Sponge")
-    public boolean cleanFluidAfterUpdateMengerSponge = false;
-
     @Comment("The max size of the entries in multiphases' recover station")
     public int multiphaseRecoverMaxSize = 20;
 

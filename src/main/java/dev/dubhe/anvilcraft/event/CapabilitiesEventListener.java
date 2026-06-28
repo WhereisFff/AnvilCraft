@@ -4,6 +4,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.energy.ItemFEStorage;
 import dev.dubhe.anvilcraft.api.fluid.HoneyBottleWrapper;
 import dev.dubhe.anvilcraft.api.fluid.PowderSnowWrapper;
+import dev.dubhe.anvilcraft.api.fluid.VoidFluidHandler;
 import dev.dubhe.anvilcraft.api.itemhandler.HoneyCauldronWrapper;
 import dev.dubhe.anvilcraft.block.entity.FeCollectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.PowerConverterBlockEntity;
@@ -83,6 +84,13 @@ public class CapabilitiesEventListener {
             Capabilities.FluidHandler.BLOCK,
             ModBlockEntities.CELESTIAL_FORGING_ANVIL_FLUID_INTERFACE.get(),
             (be, side) -> be.getFluidHandler()
+        );
+
+        // 门格海绵：通过管道输入的流体被无限吸收并消失（只进不出）
+        event.registerBlock(
+            Capabilities.FluidHandler.BLOCK,
+            (level, pos, state, blockEntity, side) -> VoidFluidHandler.INSTANCE,
+            ModBlocks.MENGER_SPONGE.get()
         );
 
         event.registerItem(

@@ -1,6 +1,5 @@
 package dev.dubhe.anvilcraft.block;
 
-import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -118,9 +117,8 @@ public class MengerSpongeBlock extends SpongeBlock implements IHammerRemovable {
         boolean movedByPiston
     ) {
         if (level.isClientSide) return;
-        if (AnvilCraft.CONFIG.cleanFluidAfterUpdateMengerSponge) {
-            removeFluidBreadthFirstSearch(level, pos);
-        }
+        // 邻居变化（如旁边放置流体）时持续吸收，与原版海绵一致
+        tryAbsorbWater(level, pos);
     }
 
     @Override
