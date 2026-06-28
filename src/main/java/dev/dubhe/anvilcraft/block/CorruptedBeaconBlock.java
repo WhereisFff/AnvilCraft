@@ -3,6 +3,7 @@ package dev.dubhe.anvilcraft.block;
 import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.CorruptedBeaconBlockEntity;
 import dev.dubhe.anvilcraft.init.block.ModBlockEntities;
+import dev.dubhe.anvilcraft.init.block.ModBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -79,5 +80,22 @@ public class CorruptedBeaconBlock extends BeaconBlock implements IHammerRemovabl
             ModBlockEntities.CORRUPTED_BEACON.get(),
             CorruptedBeaconBlockEntity::tick
         );
+    }
+
+    @Override
+    protected void neighborChanged(
+        BlockState state,
+        Level level,
+        BlockPos pos,
+        Block neighborBlock,
+        BlockPos neighborPos,
+        boolean movedByPiston
+    ) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, movedByPiston);
+        if (!level.getBlockState(pos).is(ModBlocks.CORRUPTED_BEACON)) return;
+
+        if (level.getBlockEntity(pos) instanceof CorruptedBeaconBlockEntity entity) {
+            CorruptedBeaconBlockEntity.work(level, pos, state, entity, true);
+        }
     }
 }
