@@ -130,6 +130,7 @@ public class SuperHeatingRecipeLoader {
             .requires(ModBlocks.CHROMATIC_STONE)
             .save(provider, AnvilCraft.of("super_heating/melt_gem_cauldron_from_chromatic_stone"));
 
+        // Honey Block to Honey Cauldron
         SuperHeatingRecipe.builder()
             .transform(ModBlocks.HONEY_CAULDRON.get())
             .produce(1000)
