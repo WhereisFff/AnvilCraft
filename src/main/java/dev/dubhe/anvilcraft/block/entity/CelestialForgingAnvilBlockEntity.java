@@ -30,6 +30,7 @@ import dev.dubhe.anvilcraft.util.GravityManager;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.ChatFormatting;
+import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -307,6 +308,111 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
         return t < 0.5f ? 4.0f * t * t * t : 1.0f - (float) Math.pow(-2.0f * t + 2.0f, 3) / 2.0f;
     }
 
+    /// === 超新星爆发闪光（同步到客户端，仅用于渲染）===
+    /// 超新星闪光剩余刻数，从 SUPERNOVA_FLASH_TICKS 递减到 0。0 表示无闪光。
+    @Getter
+    private int supernovaFlashTicks = 0;
+    /// 触发时捕获的天体视觉中心世界 Y（闪光中心，独立于其后生成的残骸位置）。
+    @Getter
+    private double supernovaCenterY = 0;
+    /// 触发时捕获的天体缩放比例（相对红石 15 满级的比值），用于让闪光大小跟随红石缩放。
+    @Getter
+    private float supernovaScale = 1.0f;
+    /// 超新星闪光总时长（刻）。8 帧 × 每帧 3 刻 = 24 刻（约 1.2 秒）。
+    public static final int SUPERNOVA_FLASH_TICKS = 24;
+
+    /// 在服务端触发超新星闪光，并同步到客户端。由 AcceleratorHandler 在超新星阶段调用。
+    /// 必须在生成残骸（替换天体数据）之前调用，以便捕获爆炸恒星的中心与缩放。
+    public void startSupernovaFlash() {
+        this.supernovaFlashTicks = SUPERNOVA_FLASH_TICKS;
+        this.supernovaCenterY = getBodyCenterWorldY();
+        /// 缩放比 = 当前天体缩放 / 基础（无红石）天体缩放：无红石时为 1（基准 16×16 格），
+        /// 红石越高天体越大、闪光也越大，从而"缩放倍率与天体一致"。
+        if (celestialBodyData != null) {
+            float redstoneFactor = getRedstoneSignal() / 15.0f;
+            float rawBodyScale = celestialBodyData.bodyScale();
+            float fullBodyScale = rawBodyScale * CelestialBodyData.BODY_SCALE_FACTOR;
+            float bodyScaleMultiplier = rawBodyScale + (fullBodyScale - rawBodyScale) * redstoneFactor;
+            this.supernovaScale = rawBodyScale > 1e-6f ? bodyScaleMultiplier / rawBodyScale : 1.0f;
+        } else {
+            this.supernovaScale = 1.0f;
+        }
+        setChanged();
+        if (level != null && !level.isClientSide()) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), 3);
+        }
+    }
+
+    /// 计算当前红石信号下天体视觉中心的世界 Y 坐标。
+    /// 与渲染端 centerY 计算一致：baseCenterY 与完整 dynamicCenterY 之间按红石比例线性插值。
+    public double getBodyCenterWorldY() {
+        float redstoneFactor = getRedstoneSignal() / 15.0f;
+        float fullCenterY = CelestialBodyData.dynamicCenterY(celestialBodyData, isAmplify);
+        float baseCenterY = isAmplify ? 6.5f : 4.5f;
+        float centerY = baseCenterY + (fullCenterY - baseCenterY) * redstoneFactor;
+        return worldPosition.getY() + centerY;
+    }
+
+    /// === 渲染端缩放/高度插值平滑（仅客户端，不持久化、不同步）===
+    /// 对环缩放、天体中心高度、天体缩放、光束高度做帧率无关的指数逼近，
+    /// 使红石信号变化时的尺寸/高度变化丝滑过渡而非瞬间跳变。
+    private float smoothRingScale;
+    private float smoothCenterY;
+    private float smoothBodyScale;
+    private float smoothBeamHeight;
+    private boolean smoothInitialized = false;
+    private long lastSmoothNanos = 0L;
+    /// 指数逼近时间常数（秒）。越小越快跟上目标。
+    private static final float SMOOTH_TAU = 0.18f;
+
+    /// 推进一帧的平滑插值，返回帧率无关的逼近系数。首帧直接吸附到目标值。
+    private float advanceSmoothFactor() {
+        long now = Util.getNanos();
+        if (!smoothInitialized) {
+            lastSmoothNanos = now;
+            return 1.0f;
+        }
+        float dt = (now - lastSmoothNanos) / 1.0e9f;
+        lastSmoothNanos = now;
+        if (dt <= 0f) return 0f;
+        if (dt > 0.25f) dt = 0.25f; /// 防止卡顿/暂停后跳变
+        return 1.0f - (float) Math.exp(-dt / SMOOTH_TAU);
+    }
+
+    /// 更新平滑后的渲染缩放/高度值。由渲染器每帧调用，传入当前红石信号下的目标值。
+    public void updateRenderSmoothing(float targetRingScale, float targetCenterY, float targetBodyScale, float targetBeamHeight) {
+        float f = advanceSmoothFactor();
+        if (!smoothInitialized) {
+            smoothRingScale = targetRingScale;
+            smoothCenterY = targetCenterY;
+            smoothBodyScale = targetBodyScale;
+            smoothBeamHeight = targetBeamHeight;
+            smoothInitialized = true;
+            return;
+        }
+        smoothRingScale += (targetRingScale - smoothRingScale) * f;
+        smoothCenterY += (targetCenterY - smoothCenterY) * f;
+        smoothBodyScale += (targetBodyScale - smoothBodyScale) * f;
+        smoothBeamHeight += (targetBeamHeight - smoothBeamHeight) * f;
+    }
+
+    public float getSmoothRingScale() {
+        return smoothRingScale;
+    }
+
+    public float getSmoothCenterY() {
+        return smoothCenterY;
+    }
+
+    public float getSmoothBodyScale() {
+        return smoothBodyScale;
+    }
+
+    public float getSmoothBeamHeight() {
+        return smoothBeamHeight;
+    }
+
+
     @Getter
     @Setter
     private boolean locked = false;
@@ -451,6 +557,10 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
     }
 
     public void serverTick() {
+        /// 超新星闪光计时（服务端）——递减以免同步出陈旧的激活状态。
+        if (supernovaFlashTicks > 0) {
+            supernovaFlashTicks--;
+        }
         /// 持续刷新电力状态——电网恢复时清除过期的 powerInsufficient
         boolean hasEnoughPower = hasEnoughPower();
         if (!hasEnoughPower && !this.powerInsufficient) {
@@ -716,6 +826,11 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
             if (animationTicks == 0 && !animationForward) {
                 animationPreviousBodyData = null;
             }
+        }
+        /// 超新星闪光计时（客户端）。服务端在阶段 3 期间也会递减并同步，
+        /// 但客户端独立递减以保证流畅；二者都到 0 即结束。
+        if (supernovaFlashTicks > 0) {
+            supernovaFlashTicks--;
         }
         /// 坍缩动画——在加速器阶段 3 期间，服务器每 tick 同步一次，
         /// 因此客户端不应独立递减以避免不同步。
@@ -1234,6 +1349,16 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
         this.templeDemandSatisfied = tag.getBoolean("templeDemandSatisfied");
         /// 对撞机运行时状态不持久化——加载时始终从干净状态开始
         this.historyBrowseIndex = tag.getInt("historyBrowseIndex");
+        /// 超新星闪光（客户端渲染）——运行时同步走 loadAdditional（onDataPacket→loadWithComponents），
+        /// 故必须在此读取；仅在收到更大 ticks 时重启，避免覆盖客户端流畅递减。
+        if (tag.contains("supernovaFlashTicks")) {
+            int incomingFlash = tag.getInt("supernovaFlashTicks");
+            if (incomingFlash > this.supernovaFlashTicks) {
+                this.supernovaFlashTicks = incomingFlash;
+            }
+            this.supernovaCenterY = tag.getDouble("supernovaCenterY");
+            this.supernovaScale = tag.contains("supernovaScale") ? tag.getFloat("supernovaScale") : 1.0f;
+        }
         /// 将巨构建造 NBT 委托给管理器（必须放在最后，以便管理器覆盖 BE 字段）
         megastructureManager.loadAdditional(tag, registries);
         if (level != null && !level.isClientSide()) {
@@ -1284,6 +1409,10 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
         tag.putBoolean("templeDemandSatisfied", templeDemandSatisfied);
         /// 对撞机运行时状态不同步到客户端
         tag.putInt("historyBrowseIndex", historyBrowseIndex);
+        /// 超新星闪光（客户端渲染）
+        tag.putInt("supernovaFlashTicks", supernovaFlashTicks);
+        tag.putDouble("supernovaCenterY", supernovaCenterY);
+        tag.putFloat("supernovaScale", supernovaScale);
         /// 将巨构建造 NBT 委托给管理器
         megastructureManager.writeUpdateTag(tag, registries);
         return tag;
@@ -1361,6 +1490,13 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
         this.templeDemandSatisfied = tag.getBoolean("templeDemandSatisfied");
         /// 对撞机运行时状态不同步到客户端
         this.historyBrowseIndex = tag.getInt("historyBrowseIndex");
+        /// 超新星闪光（客户端渲染）——仅在收到更大值时重启，避免覆盖客户端流畅递减
+        int incomingFlash = tag.getInt("supernovaFlashTicks");
+        if (incomingFlash > this.supernovaFlashTicks) {
+            this.supernovaFlashTicks = incomingFlash;
+        }
+        this.supernovaCenterY = tag.getDouble("supernovaCenterY");
+        this.supernovaScale = tag.contains("supernovaScale") ? tag.getFloat("supernovaScale") : 1.0f;
         /// 将巨构建造 NBT 委托给管理器
         megastructureManager.readUpdateTag(tag, lookupProvider);
     }

@@ -142,12 +142,13 @@ public class AcceleratorHandler extends BaseMegastructureHandler {
             ticksRemaining--;
             updateCollapseColor(be);
             if (collapseAnimTicks == 5) {
+                /// 爆炸发生在天体当前视觉中心（随红石信号上下移动）。
                 be.getLevel().explode(
                     null,
                     be.getBlockPos().getX() + 0.5,
-                    be.getBlockPos().getY() + 4.0,
+                    be.getBodyCenterWorldY(),
                     be.getBlockPos().getZ() + 0.5,
-                    6.0f,
+                    10.0f,
                     Level.ExplosionInteraction.BLOCK
                 );
             }
@@ -188,7 +189,28 @@ public class AcceleratorHandler extends BaseMegastructureHandler {
         be.getLevel().sendBlockUpdated(be.getBlockPos(), be.getBlockState(), be.getBlockState(), 3);
     }
 
+    /// 超新星屏幕震动范围（格）。
+    private static final float SUPERNOVA_SHAKE_RADIUS = 32.0f;
+
     private void triggerSupernova(CelestialForgingAnvilBlockEntity be) {
+        /// 在生成残骸（替换天体数据）之前触发闪光，以捕获爆炸恒星的中心与缩放。
+        be.startSupernovaFlash();
+        /// 向附近玩家发送屏幕震动包（中心为天体视觉中心，半径 32 格）。
+        if (be.getLevel() instanceof net.minecraft.server.level.ServerLevel serverLevel) {
+            net.neoforged.neoforge.network.PacketDistributor.sendToPlayersTrackingChunk(
+                serverLevel,
+                new net.minecraft.world.level.ChunkPos(be.getBlockPos()),
+                dev.dubhe.anvilcraft.network.ScreenShakePacket.of(
+                    new net.minecraft.world.phys.Vec3(
+                        be.getBlockPos().getX() + 0.5,
+                        be.getBodyCenterWorldY(),
+                        be.getBlockPos().getZ() + 0.5
+                    ),
+                    SUPERNOVA_SHAKE_RADIUS,
+                    dev.dubhe.anvilcraft.network.ScreenShakePacket.ShakeType.SUPERNOVA
+                )
+            );
+        }
         createRemnant(be);
         /// 通过管理器清除所有巨构
         be.getMegastructureManager().clearAllMegastructures(be);

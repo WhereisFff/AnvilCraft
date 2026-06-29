@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.client.event;
 
 import dev.dubhe.anvilcraft.AnvilCraft;
+import dev.dubhe.anvilcraft.client.support.ScreenShakeManager;
 import dev.dubhe.anvilcraft.client.support.SeismicBounceManager;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
@@ -15,5 +16,6 @@ public class SeismicBounceTickEventListener {
     public static void onTick(ClientTickEvent.Pre e) {
         if (Minecraft.getInstance().isPaused()) return;
         SeismicBounceManager.getInstance().tick();
+        ScreenShakeManager.getInstance().tick();
     }
 }

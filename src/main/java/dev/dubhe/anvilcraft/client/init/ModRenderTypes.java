@@ -18,6 +18,7 @@ import java.util.function.Function;
 import static dev.dubhe.anvilcraft.client.init.ModRenderTargets.LASER_TARGET;
 import static dev.dubhe.anvilcraft.client.init.ModRenderTargets.LINE_BLOOM_TARGET;
 import static dev.dubhe.anvilcraft.client.init.ModShaders.renderTypeLaserShader;
+import static net.minecraft.client.renderer.RenderStateShard.ADDITIVE_TRANSPARENCY;
 import static net.minecraft.client.renderer.RenderStateShard.BLOCK_SHEET_MIPPED;
 import static net.minecraft.client.renderer.RenderStateShard.COLOR_DEPTH_WRITE;
 import static net.minecraft.client.renderer.RenderStateShard.COLOR_WRITE;
@@ -255,13 +256,6 @@ public class ModRenderTypes {
         }
     );
 
-    /**
-     * Translucent render type for celestial rings in UI previews.
-     * Uses the block translucent shader ({@code RENDERTYPE_TRANSLUCENT_SHADER})
-     * for correct palette color reproduction, with depth test enabled so the
-     * celestial body occludes the back portion of the ring — matching the
-     * world-space rendering.
-     */
     public static final Function<ResourceLocation, RenderType> CELESTIAL_RING = Util.memoize(
         (resourceLocation) -> {
             RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
@@ -281,6 +275,46 @@ public class ModRenderTypes {
                 1536,
                 true,
                 false,
+                compositeState
+            );
+        }
+    );
+
+    public static final RenderType STELLAR_BEAM = RenderType.create(
+        "anvilcraft:stellar_beam",
+        DefaultVertexFormat.POSITION_COLOR,
+        VertexFormat.Mode.QUADS,
+        1536,
+        false,
+        true,
+        RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
+            .setTransparencyState(ADDITIVE_TRANSPARENCY)
+            .setCullState(NO_CULL)
+            .setDepthTestState(LEQUAL_DEPTH_TEST)
+            .setWriteMaskState(COLOR_WRITE)
+            .createCompositeState(false)
+    );
+
+    public static final Function<ResourceLocation, RenderType> SUPERNOVA_FLASH = Util.memoize(
+        (resourceLocation) -> {
+            RenderType.CompositeState compositeState = RenderType.CompositeState.builder()
+                .setShaderState(RENDERTYPE_TRANSLUCENT_SHADER)
+                .setTextureState(new RenderStateShard.TextureStateShard(resourceLocation, false, false))
+                .setTransparencyState(ADDITIVE_TRANSPARENCY)
+                .setDepthTestState(LEQUAL_DEPTH_TEST)
+                .setCullState(NO_CULL)
+                .setLightmapState(LIGHTMAP)
+                .setOverlayState(OVERLAY)
+                .setWriteMaskState(COLOR_WRITE)
+                .createCompositeState(true);
+            return RenderType.create(
+                "anvilcraft:supernova_flash",
+                DefaultVertexFormat.BLOCK,
+                VertexFormat.Mode.QUADS,
+                1536,
+                true,
+                true,
                 compositeState
             );
         }
