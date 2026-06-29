@@ -356,9 +356,13 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
     /// === 渲染端缩放/高度插值平滑（仅客户端，不持久化、不同步）===
     /// 对环缩放、天体中心高度、天体缩放、光束高度做帧率无关的指数逼近，
     /// 使红石信号变化时的尺寸/高度变化丝滑过渡而非瞬间跳变。
+    @Getter
     private float smoothRingScale;
+    @Getter
     private float smoothCenterY;
+    @Getter
     private float smoothBodyScale;
+    @Getter
     private float smoothBeamHeight;
     private boolean smoothInitialized = false;
     private long lastSmoothNanos = 0L;
@@ -395,23 +399,6 @@ public class CelestialForgingAnvilBlockEntity extends BlockEntity implements Men
         smoothBodyScale += (targetBodyScale - smoothBodyScale) * f;
         smoothBeamHeight += (targetBeamHeight - smoothBeamHeight) * f;
     }
-
-    public float getSmoothRingScale() {
-        return smoothRingScale;
-    }
-
-    public float getSmoothCenterY() {
-        return smoothCenterY;
-    }
-
-    public float getSmoothBodyScale() {
-        return smoothBodyScale;
-    }
-
-    public float getSmoothBeamHeight() {
-        return smoothBeamHeight;
-    }
-
 
     @Getter
     @Setter
