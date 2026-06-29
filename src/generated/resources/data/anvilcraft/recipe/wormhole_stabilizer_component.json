@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "item": "anvilcraft:transcendium_ingot"
+    },
+    "B": {
+      "item": "anvilcraft:negative_matter_block"
+    }
+  },
+  "pattern": [
+    "ABA",
+    "B B",
+    "ABA"
+  ],
+  "result": {
+    "count": 16,
+    "id": "anvilcraft:wormhole_stabilizer_component"
+  }
+}

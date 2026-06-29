@@ -1339,6 +1339,38 @@ public class RegistrumItemRecipeLoader {
             .save(provider);
     }
 
+    public static <T extends Item> void matterDecompressorComponent(DataGenContext<Item, T> ctx, RegistrumRecipeProvider provider) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 8)
+            .pattern("ABA")
+            .pattern("BCB")
+            .pattern("ABA")
+            .define('A', ModItems.TRANSCENDIUM_INGOT)
+            .define('B', ModBlocks.LASER_RECEIVER)
+            .define('C', ModBlocks.SINGULARITY_CRYSTAL)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.TRANSCENDIUM_INGOT), AnvilCraftDatagen.has(ModItems.TRANSCENDIUM_INGOT))
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModBlocks.LASER_RECEIVER.asItem()), AnvilCraftDatagen.has(ModBlocks.LASER_RECEIVER))
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModBlocks.SINGULARITY_CRYSTAL.asItem()),
+                AnvilCraftDatagen.has(ModBlocks.SINGULARITY_CRYSTAL)
+            )
+            .save(provider);
+    }
+
+    public static <T extends Item> void wormholeStabilizerComponent(DataGenContext<Item, T> ctx, RegistrumRecipeProvider provider) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 16)
+            .pattern("ABA")
+            .pattern("B B")
+            .pattern("ABA")
+            .define('A', ModItems.TRANSCENDIUM_INGOT)
+            .define('B', ModBlocks.NEGATIVE_MATTER_BLOCK)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.TRANSCENDIUM_INGOT), AnvilCraftDatagen.has(ModItems.TRANSCENDIUM_INGOT))
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModBlocks.NEGATIVE_MATTER_BLOCK.asItem()),
+                AnvilCraftDatagen.has(ModBlocks.NEGATIVE_MATTER_BLOCK)
+            )
+            .save(provider);
+    }
+
     public static <T extends Item> void pipe(DataGenContext<Item, T> ctx, RegistrumRecipeProvider provider) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 16)
             .pattern(" B ")

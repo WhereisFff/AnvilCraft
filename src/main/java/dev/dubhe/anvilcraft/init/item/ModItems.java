@@ -1002,6 +1002,18 @@ public class ModItems {
         .recipe(RegistrumItemRecipeLoader::penroseSphereComponent)
         .register();
 
+    public static final ItemEntry<Item> MATTER_DECOMPRESSOR_COMPONENT = REGISTRUM.item("matter_decompressor_component", Item::new)
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .recipe(RegistrumItemRecipeLoader::matterDecompressorComponent)
+        .register();
+
+    public static final ItemEntry<Item> WORMHOLE_STABILIZER_COMPONENT = REGISTRUM.item("wormhole_stabilizer_component", Item::new)
+        .initialProperties(() -> new Item.Properties().fireResistant())
+        .tag(ModItemTags.EXPLOSION_PROOF)
+        .recipe(RegistrumItemRecipeLoader::wormholeStabilizerComponent)
+        .register();
+
     public static final ItemEntry<SuperHeavyItem> NEUTRONIUM_INGOT = REGISTRUM.item("neutronium_ingot", SuperHeavyItem::new)
         .tag(Tags.Items.INGOTS, ItemTags.BEACON_PAYMENT_ITEMS)
         .initialProperties(() -> new Item.Properties().fireResistant())

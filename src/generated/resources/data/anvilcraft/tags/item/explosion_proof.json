@@ -35,6 +35,8 @@
     "anvilcraft:multiphase_transcendium",
     "anvilcraft:dyson_sphere_component",
     "anvilcraft:penrose_sphere_component",
+    "anvilcraft:matter_decompressor_component",
+    "anvilcraft:wormhole_stabilizer_component",
     "anvilcraft:earth_core_shard_block",
     "anvilcraft:earth_core_shard_ore",
     "anvilcraft:earth_core_shard",
