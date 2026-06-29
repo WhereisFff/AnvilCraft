@@ -2,6 +2,7 @@ package dev.dubhe.anvilcraft.integration.jade;
 
 import dev.dubhe.anvilcraft.block.CreativeCrateBlock;
 import dev.dubhe.anvilcraft.block.CreativeFluidTankBlock;
+import dev.dubhe.anvilcraft.block.MengerSpongeBlock;
 import dev.dubhe.anvilcraft.block.entity.CrabTrapBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CreativeCrateBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.CreativeFluidTankBlockEntity;
@@ -13,6 +14,7 @@ import dev.dubhe.anvilcraft.integration.jade.provider.CreativeFluidTankProvider;
 import dev.dubhe.anvilcraft.integration.jade.provider.DischargerProvider;
 import dev.dubhe.anvilcraft.integration.jade.provider.HeatableBlockProvider;
 import dev.dubhe.anvilcraft.integration.jade.provider.ItemDetectorProvider;
+import dev.dubhe.anvilcraft.integration.jade.provider.MengerSpongeProvider;
 import dev.dubhe.anvilcraft.integration.jade.provider.PowerBlockProvider;
 import dev.dubhe.anvilcraft.integration.jade.provider.RubyPrismProvider;
 import dev.dubhe.anvilcraft.integration.jade.provider.SmartBlockPlacerProvider;
@@ -42,6 +44,7 @@ public class AnvilCraftJadePlugin implements IWailaPlugin {
         registration.registerBlockDataProvider(WipBlockProvider.INSTANCE, BlockEntity.class);
         registration.registerBlockDataProvider(CreativeFluidTankProvider.INSTANCE, CreativeFluidTankBlockEntity.class);
         registration.registerBlockDataProvider(CreativeCrateProvider.INSTANCE, CreativeCrateBlockEntity.class);
+        registration.registerBlockDataProvider(MengerSpongeProvider.INSTANCE, Block.class);
     }
 
     @Override
@@ -59,5 +62,6 @@ public class AnvilCraftJadePlugin implements IWailaPlugin {
         registration.registerBlockComponent(WipBlockProvider.INSTANCE, Block.class);
         registration.registerBlockComponent(CreativeFluidTankProvider.INSTANCE, CreativeFluidTankBlock.class);
         registration.registerBlockComponent(CreativeCrateProvider.INSTANCE, CreativeCrateBlock.class);
+        registration.registerBlockComponent(MengerSpongeProvider.INSTANCE, MengerSpongeBlock.class);
     }
 }
