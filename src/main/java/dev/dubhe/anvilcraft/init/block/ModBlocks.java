@@ -138,6 +138,7 @@ import dev.dubhe.anvilcraft.block.TranscendiumBlock;
 import dev.dubhe.anvilcraft.block.TransmissionPoleBlock;
 import dev.dubhe.anvilcraft.block.TransparentCraftingTableBlock;
 import dev.dubhe.anvilcraft.block.VoidEnergyCollectorBlock;
+import dev.dubhe.anvilcraft.block.ExcitedStateVoidMatterBlock;
 import dev.dubhe.anvilcraft.block.VoidMatterBlock;
 import dev.dubhe.anvilcraft.block.WhiteHoleBlock;
 import dev.dubhe.anvilcraft.block.WipBlock;
@@ -232,6 +233,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -3314,6 +3316,28 @@ public class ModBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_DIAMOND_TOOL,
             ModBlockTags.STORAGE_BLOCKS_VOID_MATTER,
+            Tags.Blocks.STORAGE_BLOCKS
+        )
+        .register();
+
+    public static final BlockEntry<ExcitedStateVoidMatterBlock> EXCITED_STATE_VOID_MATTER_BLOCK = REGISTRUM
+        .block("excited_state_void_matter_block", ExcitedStateVoidMatterBlock::new)
+        .lang("Excited State Void Matter")
+        .initialProperties(() -> Blocks.DIAMOND_BLOCK)
+        .properties(BlockBehaviour.Properties::noOcclusion)
+        .blockstate((context, provider) -> provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/excited_state_void_matter_block").get()
+        ))
+        .recipe(RegistrumBlockRecipeLoader::excitedStateVoidMatterBlock)
+        .item()
+        .initialProperties(() -> new Item.Properties().stacksTo(16)
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true))
+        .tag(ModItemTags.VOID_RESISTANT, Tags.Items.STORAGE_BLOCKS)
+        .build()
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_DIAMOND_TOOL,
             Tags.Blocks.STORAGE_BLOCKS
         )
         .register();

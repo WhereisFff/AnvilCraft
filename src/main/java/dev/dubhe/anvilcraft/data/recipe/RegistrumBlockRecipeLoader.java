@@ -1772,6 +1772,19 @@ public class RegistrumBlockRecipeLoader {
             .save(provider);
     }
 
+    public static <T extends Block> void excitedStateVoidMatterBlock(DataGenContext<Block, T> ctx, RegistrumRecipeProvider provider) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.EXCITED_STATE_VOID_MATTER)
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModItems.EXCITED_STATE_VOID_MATTER),
+                AnvilCraftDatagen.has(ModItems.EXCITED_STATE_VOID_MATTER)
+            )
+            .save(provider);
+    }
+
     public static <T extends Block> void earthCoreShardBlock(DataGenContext<Block, T> ctx, RegistrumRecipeProvider provider) {
         ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
             .pattern("AAA")

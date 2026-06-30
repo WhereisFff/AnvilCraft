@@ -951,6 +951,12 @@ public class ModItems {
         .tag(ModItemTags.VOID_RESISTANT)
         .recipe(RegistrumItemRecipeLoader::voidMatter)
         .register();
+    public static final ItemEntry<Item> EXCITED_STATE_VOID_MATTER = REGISTRUM.item("excited_state_void_matter", Item::new)
+        .properties(properties -> properties.stacksTo(16)
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true))
+        .tag(ModItemTags.VOID_RESISTANT)
+        .recipe(RegistrumItemRecipeLoader::excitedStateVoidMatter)
+        .register();
     public static final ItemEntry<Item> EARTH_CORE_SHARD = REGISTRUM.item("earth_core_shard", Item::new)
         .initialProperties(() -> new Item.Properties().fireResistant())
         .recipe(RegistrumItemRecipeLoader::earthCoreShard)

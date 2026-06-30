@@ -1131,6 +1131,16 @@ public class RegistrumItemRecipeLoader {
             .save(provider);
     }
 
+    public static <T extends Item> void excitedStateVoidMatter(DataGenContext<Item, T> ctx, RegistrumRecipeProvider provider) {
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
+            .requires(ModBlocks.EXCITED_STATE_VOID_MATTER_BLOCK)
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModBlocks.EXCITED_STATE_VOID_MATTER_BLOCK),
+                AnvilCraftDatagen.has(ModBlocks.EXCITED_STATE_VOID_MATTER_BLOCK)
+            )
+            .save(provider);
+    }
+
     public static <T extends Item> void earthCoreShard(DataGenContext<Item, T> ctx, RegistrumRecipeProvider provider) {
         ShapelessRecipeBuilder.shapeless(RecipeCategory.MISC, ctx.get(), 9)
             .requires(ModBlocks.EARTH_CORE_SHARD_BLOCK)
