@@ -296,6 +296,23 @@ public class ModRenderTypes {
             .createCompositeState(false)
     );
 
+    public static final RenderType CORRUPTED_BEACON_BEAM = RenderType.create(
+        "anvilcraft:corrupted_beacon_beam",
+        DefaultVertexFormat.POSITION_COLOR,
+        VertexFormat.Mode.QUADS,
+        1536,
+        false,
+        true,
+        RenderType.CompositeState.builder()
+            .setShaderState(RenderStateShard.POSITION_COLOR_SHADER)
+            .setTransparencyState(TRANSLUCENT_TRANSPARENCY)
+            .setCullState(NO_CULL)
+            .setDepthTestState(LEQUAL_DEPTH_TEST)
+            .setWriteMaskState(COLOR_WRITE)
+            .setOutputState(TRANSLUCENT_TARGET)
+            .createCompositeState(false)
+    );
+
     public static final Function<ResourceLocation, RenderType> SUPERNOVA_FLASH = Util.memoize(
         (resourceLocation) -> {
             RenderType.CompositeState compositeState = RenderType.CompositeState.builder()

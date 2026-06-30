@@ -329,7 +329,13 @@ public class CelestialForgingAnvilPortalBlock
                 case EAST -> MID_LEFT_EAST;
                 default -> Shapes.empty();
             };
-            case MID_CENTER -> Shapes.empty();
+            case MID_CENTER -> switch (state.getValue(CelestialForgingAnvilPortalBlock.FACING)) {
+                case NORTH -> MID_CENTER_NORTH;
+                case  WEST -> MID_CENTER_WEST;
+                case SOUTH -> MID_CENTER_SOUTH;
+                case EAST -> MID_CENTER_EAST;
+                default -> Shapes.empty();
+            };
             case MID_RIGHT -> switch (state.getValue(CelestialForgingAnvilPortalBlock.FACING)) {
                 case NORTH -> MID_RIGHT_NORTH;
                 case WEST -> MID_RIGHT_WEST;
@@ -363,7 +369,7 @@ public class CelestialForgingAnvilPortalBlock
 
     public static final VoxelShape BOTTOM_CENTER_NORTH = ShapeUtil.merge(
         new AABB(0, 0, 2, 16, 4, 16),
-        new AABB(0, 4, 13, 16, 13, 16)
+        new AABB(0, 4, 13, 16, 16, 16)
     );
     public static final VoxelShape BOTTOM_CENTER_WEST = ShapeUtil.rotate(Direction.Axis.Y, 90, BOTTOM_CENTER_NORTH);
     public static final VoxelShape BOTTOM_CENTER_SOUTH = ShapeUtil.rotate(Direction.Axis.Y, 180, BOTTOM_CENTER_NORTH);
@@ -375,7 +381,7 @@ public class CelestialForgingAnvilPortalBlock
         new AABB(0, 8, 4, 7, 12, 16),
 
         new AABB(7, 4, 2, 9, 12, 14),
-        new AABB(7, 4, 13, 16, 13, 16),
+        new AABB(7, 4, 13, 16, 16, 16),
 
         new AABB(3, 0, -3, 13, 2, 2),
         new AABB(5, 2, -1, 11, 4, 2),
@@ -389,6 +395,13 @@ public class CelestialForgingAnvilPortalBlock
     public static final VoxelShape BOTTOM_RIGHT_WEST = ShapeUtil.rotate(Direction.Axis.Y, 90, BOTTOM_RIGHT_NORTH);
     public static final VoxelShape BOTTOM_RIGHT_SOUTH = ShapeUtil.rotate(Direction.Axis.Y, 180, BOTTOM_RIGHT_NORTH);
     public static final VoxelShape BOTTOM_RIGHT_EAST = ShapeUtil.rotate(Direction.Axis.Y, 270, BOTTOM_RIGHT_NORTH);
+
+    public static final VoxelShape MID_CENTER_NORTH = ShapeUtil.merge(
+        new AABB(0, 0, 13, 16, 16, 16)
+    );
+    public static final VoxelShape MID_CENTER_WEST = ShapeUtil.rotate(Direction.Axis.Y, 90, MID_CENTER_NORTH);
+    public static final VoxelShape MID_CENTER_SOUTH = ShapeUtil.rotate(Direction.Axis.Y, 180, MID_CENTER_NORTH);
+    public static final VoxelShape MID_CENTER_EAST = ShapeUtil.rotate(Direction.Axis.Y, 270, MID_CENTER_NORTH);
 
     public static final VoxelShape MID_LEFT_NORTH = ShapeUtil.merge(
         new AABB(7, 0, 5, 16, 7, 15),

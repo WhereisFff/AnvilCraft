@@ -5,6 +5,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.anvilcraft.lib.v2.util.Util;
 import dev.dubhe.anvilcraft.api.tooltip.HudTooltipManager;
 import dev.dubhe.anvilcraft.api.tooltip.TooltipRenderHelper;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.CelestialForgingAnvilBlockEntityRenderer;
+import dev.dubhe.anvilcraft.client.renderer.blockentity.CorruptedBeaconRenderer;
 import dev.dubhe.anvilcraft.client.support.InspectionSupport;
 import dev.dubhe.anvilcraft.client.support.PowerGridSupport;
 import dev.dubhe.anvilcraft.client.support.SeismicBounceManager;
@@ -51,6 +53,17 @@ public class RenderEventListener {
             camera,
             deltaTracker
         );
+    }
+
+    @SubscribeEvent
+    public static void onRenderAfterWeather(RenderLevelStageEvent event) {
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_WEATHER) return;
+        PoseStack poseStack = event.getPoseStack();
+        MultiBufferSource.BufferSource bufferSource =
+            event.getLevelRenderer().renderBuffers.bufferSource();
+        Vec3 camera = event.getCamera().getPosition();
+        CelestialForgingAnvilBlockEntityRenderer.renderDeferredTractorBeams(poseStack, bufferSource, camera);
+        CorruptedBeaconRenderer.renderDeferredBeams(poseStack, bufferSource, camera);
     }
 
     @SubscribeEvent
