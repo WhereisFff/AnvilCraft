@@ -38,6 +38,7 @@ import dev.dubhe.anvilcraft.block.entity.ItemDetectorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.LargeFluidTankBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.LargeLaserBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.LaserReceiverBlockEntity;
+import dev.dubhe.anvilcraft.block.entity.LensBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.LoadMonitorBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MagneticChuteBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.MineralFountainBlockEntity;
@@ -219,6 +220,11 @@ public class ModBlockEntities {
         "induction_light",
         InductionLightBlockEntity::new
     ).validBlock(ModBlocks.INDUCTION_LIGHT).register();
+
+    public static final BlockEntityEntry<LensBlockEntity> LENS = REGISTRUM.blockEntity(
+        "lens",
+        LensBlockEntity::new
+    ).validBlock(ModBlocks.LENS).register();
 
     public static final BlockEntityEntry<OverseerBlockEntity> OVERSEER = REGISTRUM.blockEntity(
         "overseer",

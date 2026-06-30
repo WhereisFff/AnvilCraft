@@ -62,7 +62,7 @@ public abstract class BaseLaserBlockEntity extends BlockEntity {
         super(type, pos, blockState);
     }
 
-    private boolean canPassThrough(Direction direction, BlockPos blockPos) {
+    protected boolean canPassThrough(Direction direction, BlockPos blockPos) {
         if (this.level == null) return false;
         BlockState blockState = level.getBlockState(blockPos);
         if (
