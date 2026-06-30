@@ -1,60 +1,17 @@
 package dev.dubhe.anvilcraft.block.cfa.item;
 
-import dev.dubhe.anvilcraft.block.cfa.CelestialForgingAnvilBlock;
-import dev.dubhe.anvilcraft.block.cfa.CelestialForgingAnvilPortalBlock;
-import dev.dubhe.anvilcraft.block.state.Cube323PartHalf;
-import dev.dubhe.anvilcraft.init.block.ModBlocks;
-import net.minecraft.ChatFormatting;
-import net.minecraft.core.BlockPos;
+import dev.dubhe.anvilcraft.block.item.FlexibleMultiPartBlockItem;
+import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
+import dev.dubhe.anvilcraft.block.state.DirectionGate331PartHalf;
 import net.minecraft.core.Direction;
-import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.level.block.state.properties.DirectionProperty;
 
-import javax.annotation.Nullable;
-
-public class CelestialForgingAnvilPortalBlockItem extends BlockItem {
-    public CelestialForgingAnvilPortalBlockItem(Block block, Properties properties) {
+public class CelestialForgingAnvilPortalBlockItem
+    extends FlexibleMultiPartBlockItem<DirectionGate331PartHalf, DirectionProperty, Direction> {
+    public CelestialForgingAnvilPortalBlockItem(
+        FlexibleMultiPartBlock<DirectionGate331PartHalf, DirectionProperty, Direction> block,
+        Properties properties
+    ) {
         super(block, properties);
-    }
-
-    @Override
-    protected @Nullable BlockState getPlacementState(BlockPlaceContext context) {
-        Level level = context.getLevel();
-        Player player = context.getPlayer();
-        BlockPos pos = context.getClickedPos();
-        if (player == null) return null;
-
-        /// 扫描相邻位置寻找锻星砧侧面中心
-        for (Direction dir : Direction.Plane.HORIZONTAL) {
-            BlockPos cfaPos = pos.relative(dir);
-            BlockState cfaState = level.getBlockState(cfaPos);
-            if (cfaState.is(ModBlocks.CELESTIAL_FORGING_ANVIL)) {
-                Cube323PartHalf half = cfaState.getValue(CelestialForgingAnvilBlock.HALF);
-                /// 只允许在侧面中心放置（BOTTOM_N/S/E/W）
-                if (half == Cube323PartHalf.BOTTOM_N || half == Cube323PartHalf.BOTTOM_S
-                    || half == Cube323PartHalf.BOTTOM_E || half == Cube323PartHalf.BOTTOM_W) {
-                    return getBlock().defaultBlockState()
-                        .setValue(CelestialForgingAnvilPortalBlock.FACING, dir.getOpposite())
-                        .setValue(CelestialForgingAnvilPortalBlock.OPEN, false)
-                        .setValue(BlockStateProperties.WATERLOGGED,
-                            context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
-                }
-            }
-        }
-
-        if (player instanceof ServerPlayer sp) {
-            sp.sendSystemMessage(
-                Component.translatable("message.anvilcraft.portal.invalid_placement")
-                    .withStyle(ChatFormatting.RED), true);
-        }
-        return null;
     }
 }

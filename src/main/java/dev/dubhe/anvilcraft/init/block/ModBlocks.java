@@ -1647,6 +1647,7 @@ public class ModBlocks {
         .block("celestial_forging_anvil_portal", CelestialForgingAnvilPortalBlock::new)
         .lang("Celestial Forging Anvil Portal")
         .initialProperties(() -> Blocks.IRON_BLOCK)
+        .loot(FlexibleMultiPartBlock::loot)
         .properties((properties) -> properties
             .noOcclusion()
             .isValidSpawn(Blocks::never)
