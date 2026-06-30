@@ -112,14 +112,6 @@ public class SimpleChuteBlock
             BlockState newState = getState(level, pos, state.getValue(FACING));
             if (newState != null && newState != state) level.setBlockAndUpdate(pos, newState);
         }
-        this.checkPoweredState(level, pos, state);
-    }
-
-    private void checkPoweredState(Level level, BlockPos pos, BlockState state) {
-        boolean flag = !level.hasNeighborSignal(pos);
-        if (flag != state.getValue(ENABLED)) {
-            level.setBlock(pos, state.setValue(ENABLED, flag), 2);
-        }
     }
 
     @Override
@@ -155,9 +147,6 @@ public class SimpleChuteBlock
         BlockPos pos,
         RandomSource random
     ) {
-        if (!state.getValue(ENABLED) && !level.hasNeighborSignal(pos)) {
-            level.setBlock(pos, state.cycle(ENABLED), 2);
-        }
     }
 
     @Override
@@ -280,6 +269,7 @@ public class SimpleChuteBlock
         boolean success = false;
         boolean tall = false;
         BlockState result = level.getBlockState(pos);
+
         // 遍历六个方向 获取指向自己的溜槽
         for (Direction dir : Direction.values()) {
             BlockPos neighborPos = pos.relative(dir);
@@ -291,7 +281,6 @@ public class SimpleChuteBlock
                         tall = !neighborState.is(ModBlocks.MAGNETIC_CHUTE.get());
                     }
                 }
-
             }
         }
         if (!success) {
