@@ -1,6 +1,7 @@
 package dev.dubhe.anvilcraft.block;
 
 import com.mojang.serialization.MapCodec;
+import dev.dubhe.anvilcraft.api.hammer.IHammerRemovable;
 import dev.dubhe.anvilcraft.block.entity.BaseLaserBlockEntity;
 import dev.dubhe.anvilcraft.block.entity.LensBlockEntity;
 import dev.dubhe.anvilcraft.block.state.LensType;
@@ -35,7 +36,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
-public class LensBlock extends BaseLaserBlock {
+public class LensBlock extends BaseLaserBlock implements IHammerRemovable {
 
     public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
     public static final EnumProperty<LensType> TYPE = EnumProperty.create("type", LensType.class);
