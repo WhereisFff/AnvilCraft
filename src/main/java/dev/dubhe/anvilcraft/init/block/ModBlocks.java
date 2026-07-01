@@ -43,6 +43,7 @@ import dev.dubhe.anvilcraft.block.EmberMetalSlabBlock;
 import dev.dubhe.anvilcraft.block.EmberMetalStairBlock;
 import dev.dubhe.anvilcraft.block.EmberSmithingTableBlock;
 import dev.dubhe.anvilcraft.block.EndDustBlock;
+import dev.dubhe.anvilcraft.block.ExcitedStateVoidMatterBlock;
 import dev.dubhe.anvilcraft.block.ExpCollectorBlock;
 import dev.dubhe.anvilcraft.block.ExpFluidBlock;
 import dev.dubhe.anvilcraft.block.ExpFluidCauldronBlock;
@@ -83,6 +84,7 @@ import dev.dubhe.anvilcraft.block.LargeFluidTankBlock;
 import dev.dubhe.anvilcraft.block.LargeLaserBlock;
 import dev.dubhe.anvilcraft.block.LaserReceiverBlock;
 import dev.dubhe.anvilcraft.block.LavaCauldronBlock;
+import dev.dubhe.anvilcraft.block.LensBlock;
 import dev.dubhe.anvilcraft.block.LevitationPowderBlock;
 import dev.dubhe.anvilcraft.block.LoadMonitorBlock;
 import dev.dubhe.anvilcraft.block.MagnetBlock;
@@ -232,6 +234,7 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
@@ -1085,6 +1088,15 @@ public class ModBlocks {
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .register();
 
+    public static final BlockEntry<LensBlock> LENS = REGISTRUM.block("lens", LensBlock::new)
+        .initialProperties(() -> Blocks.IRON_BLOCK)
+        .properties(p -> p.noOcclusion().isValidSpawn(Blocks::never).isViewBlocking(ModBlocks::never))
+        .blockstate(DataGenUtil::noExtraModelOrState)
+        .simpleItem()
+        .tag(BlockTags.MINEABLE_WITH_PICKAXE)
+        .recipe(RegistrumBlockRecipeLoader::lens)
+        .register();
+
     public static final BlockEntry<LaserReceiverBlock> LASER_RECEIVER = REGISTRUM.block("laser_receiver", LaserReceiverBlock::new)
         .tag(BlockTags.MINEABLE_WITH_PICKAXE)
         .blockstate(DataGenUtil::noExtraModelOrState)
@@ -1647,6 +1659,7 @@ public class ModBlocks {
         .block("celestial_forging_anvil_portal", CelestialForgingAnvilPortalBlock::new)
         .lang("Celestial Forging Anvil Portal")
         .initialProperties(() -> Blocks.IRON_BLOCK)
+        .loot(FlexibleMultiPartBlock::loot)
         .properties((properties) -> properties
             .noOcclusion()
             .isValidSpawn(Blocks::never)
@@ -3313,6 +3326,28 @@ public class ModBlocks {
             BlockTags.MINEABLE_WITH_PICKAXE,
             BlockTags.NEEDS_DIAMOND_TOOL,
             ModBlockTags.STORAGE_BLOCKS_VOID_MATTER,
+            Tags.Blocks.STORAGE_BLOCKS
+        )
+        .register();
+
+    public static final BlockEntry<ExcitedStateVoidMatterBlock> EXCITED_STATE_VOID_MATTER_BLOCK = REGISTRUM
+        .block("excited_state_void_matter_block", ExcitedStateVoidMatterBlock::new)
+        .lang("Excited State Void Matter")
+        .initialProperties(() -> Blocks.DIAMOND_BLOCK)
+        .properties(BlockBehaviour.Properties::noOcclusion)
+        .blockstate((context, provider) -> provider.simpleBlock(
+            context.get(),
+            DangerUtil.genConfiguredModel("block/excited_state_void_matter_block").get()
+        ))
+        .recipe(RegistrumBlockRecipeLoader::excitedStateVoidMatterBlock)
+        .item()
+        .initialProperties(() -> new Item.Properties().stacksTo(16)
+            .component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true))
+        .tag(ModItemTags.VOID_RESISTANT, Tags.Items.STORAGE_BLOCKS)
+        .build()
+        .tag(
+            BlockTags.MINEABLE_WITH_PICKAXE,
+            BlockTags.NEEDS_DIAMOND_TOOL,
             Tags.Blocks.STORAGE_BLOCKS
         )
         .register();

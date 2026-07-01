@@ -461,6 +461,18 @@ public class RegistrumBlockRecipeLoader {
             .save(provider);
     }
 
+    public static <T extends Block> void lens(DataGenContext<Block, T> ctx, RegistrumRecipeProvider provider) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get(), 1)
+            .pattern("AAA")
+            .pattern("ABA")
+            .pattern("AAA")
+            .define('A', ModItems.ROYAL_STEEL_INGOT)
+            .define('B', Items.GLASS)
+            .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.ROYAL_STEEL_INGOT), AnvilCraftDatagen.has(ModItems.ROYAL_STEEL_INGOT))
+            .unlockedBy(AnvilCraftDatagen.hasItem(Items.GLASS), AnvilCraftDatagen.has(Items.GLASS))
+            .save(provider);
+    }
+
     public static <T extends Block> void chargeCollector(DataGenContext<Block, T> ctx, RegistrumRecipeProvider provider) {
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ctx.get())
             .pattern(" A ")
@@ -1769,6 +1781,19 @@ public class RegistrumBlockRecipeLoader {
             .pattern("AAA")
             .define('A', ModItems.VOID_MATTER)
             .unlockedBy(AnvilCraftDatagen.hasItem(ModItems.VOID_MATTER), AnvilCraftDatagen.has(ModItems.VOID_MATTER))
+            .save(provider);
+    }
+
+    public static <T extends Block> void excitedStateVoidMatterBlock(DataGenContext<Block, T> ctx, RegistrumRecipeProvider provider) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, ctx.get())
+            .pattern("AAA")
+            .pattern("AAA")
+            .pattern("AAA")
+            .define('A', ModItems.EXCITED_STATE_VOID_MATTER)
+            .unlockedBy(
+                AnvilCraftDatagen.hasItem(ModItems.EXCITED_STATE_VOID_MATTER),
+                AnvilCraftDatagen.has(ModItems.EXCITED_STATE_VOID_MATTER)
+            )
             .save(provider);
     }
 

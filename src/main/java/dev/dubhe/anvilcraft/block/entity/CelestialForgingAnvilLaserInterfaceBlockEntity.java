@@ -95,10 +95,8 @@ public class CelestialForgingAnvilLaserInterfaceBlockEntity extends BaseLaserBlo
         BlockState state = getBlockState();
         if (state.hasProperty(CelestialForgingAnvilInterfaceBlock.ACTIVE)
             && state.getValue(CelestialForgingAnvilInterfaceBlock.ACTIVE)) {
-            if (wormholeOutputLevel > 0) {
-                return wormholeOutputLevel;
-            }
-            return 1;
+            /// 主动模式不再自发发射 1 级激光；仅在有虫洞输出时发射对应等级。
+            return wormholeOutputLevel;
         }
         return 0;
     }
@@ -142,18 +140,8 @@ public class CelestialForgingAnvilLaserInterfaceBlockEntity extends BaseLaserBlo
     @Override
     public void onCancelingIrradiation(BaseLaserBlockEntity source) {
         resetLaser();
-        /// 重新同步 ACTIVE 方块状态与当前红石信号，
-        /// 因为我们不再接收激光，应当重新响应红石信号。
-        if (level != null && !level.isClientSide()) {
-            BlockState state = getBlockState();
-            if (state.hasProperty(CelestialForgingAnvilInterfaceBlock.ACTIVE)) {
-                boolean hasSignal = level.hasNeighborSignal(worldPosition);
-                if (state.getValue(CelestialForgingAnvilInterfaceBlock.ACTIVE) != hasSignal) {
-                    level.setBlock(worldPosition, state.setValue(
-                        CelestialForgingAnvilInterfaceBlock.ACTIVE, hasSignal), 3);
-                }
-            }
-        }
+        /// ACTIVE 模式由铁砧锤切换，不再随红石信号变化，
+        /// 因此此处无需重新同步方块状态。
     }
 
     /// 仅接受来自正面的激光。侧面和背面的激光将被忽略。
@@ -243,15 +231,16 @@ public class CelestialForgingAnvilLaserInterfaceBlockEntity extends BaseLaserBlo
             Direction facing = getFacing();
             emitGammaLaserBeam(facing);
             this.gammaLevel = savedGammaLevel;
-        } else if (active) {
-            /// 主动模式下发射普通激光（通过 getBaseLaserLevel 包含 wormholeOutputLevel）
+        } else if (active && getBaseLaserLevel() > 0) {
+            /// 主动模式且有实际输出（虫洞普通激光）时才发射；
+            /// 主动模式自身不再自发发射 1 级激光（仅切换模型）。
             Direction facing = getFacing();
             /// 仅当尚未属于激光链时才发射
             if (irradiateSelfLaserBlockSet.isEmpty()) {
                 emitLaser(facing);
             }
         } else {
-            /// 被动模式：清除激光发射
+            /// 被动模式或主动但无输出：清除激光发射
             if (irradiateBlockPos != null) {
                 BlockEntity oldBe = level.getBlockEntity(irradiateBlockPos);
                 if (oldBe instanceof BaseLaserBlockEntity lastIrradiated) {

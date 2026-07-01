@@ -86,10 +86,6 @@ public class RegisterAdditionalEventListener {
         event.register(standaloneBlock("celestial_body/neutron_star_jet"));
         event.register(standaloneBlock("celestial_body/black_hole"));
 
-        // Celestial Forging Anvil Portal models
-        event.register(standaloneBlock("celestial_forging_anvil_gate"));
-        event.register(standaloneBlock("celestial_forging_anvil_gate_open"));
-
         // WIP models
         event.register(standaloneBlock("ancient_sea_reef_wip"));
         event.register(standaloneBlock("ancient_debris_wip"));

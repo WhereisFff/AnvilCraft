@@ -1944,6 +1944,10 @@ public class CelestialForgingAnvilScreen extends AbstractContainerScreen<Celesti
     private void performSearch() {
         if (searchState == SearchState.LOADING) return; /// 已在搜索中
         var be = getMenu().getBlockEntity();
+        /// 一旦发起搜索就覆盖星图指南，使搜索结果（含"参数不合理"失败提示）可见。
+        /// 否则参数不合理时直接进入 FAIL 状态、未经过 LOADING，指南不会被重置，
+        /// 会一直盖住 FAIL 提示，造成"点按钮没反应"的错觉。
+        guideTriggered = false;
         /// 检查是否有种子物品 —— 有种子物品时跳过图表预检以发现特殊天体
         boolean hasSeedItem = !be.getAnvilInventory().getItem(4).isEmpty();
         /// 客户端预检：匹配不可能时立即失败（有种子物品时跳过）

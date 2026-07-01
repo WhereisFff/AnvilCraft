@@ -28,6 +28,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.ModelResourceLocation;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
@@ -180,6 +181,16 @@ public class CelestialForgingAnvilBlockEntityRenderer implements BlockEntityRend
             float fullBodyScale = getBodyScale(bodyData);       // 信号 15 时的缩放
             bodyScaleMultiplier = rawBodyScale + (fullBodyScale - rawBodyScale) * redstoneFactor;
         }
+
+        /// 渲染端平滑：对环缩放、中心高度、天体缩放、光束高度做帧率无关的指数逼近，
+        /// 让红石信号引起的尺寸/高度变化丝滑过渡（数百帧），而非每 tick 瞬间跳变。
+        /// 光束高度 = 2 格 + 每级红石信号 0.5 格。
+        float beamHeightTarget = 2.0f + 0.5f * blockEntity.getRedstoneSignal();
+        blockEntity.updateRenderSmoothing(ringScale, centerY, bodyScaleMultiplier, beamHeightTarget);
+        ringScale = blockEntity.getSmoothRingScale();
+        centerY = blockEntity.getSmoothCenterY();
+        bodyScaleMultiplier = blockEntity.getSmoothBodyScale();
+        float beamHeight = blockEntity.getSmoothBeamHeight();
 
         poseStack.pushPose();
         poseStack.translate(0.5, centerY, 0.5);
@@ -422,6 +433,10 @@ public class CelestialForgingAnvilBlockEntityRenderer implements BlockEntityRend
         if (canRender) {
             float rotationBoost = blockEntity.getAnimationRotationBoost(partialTick);
             float bodyRot = (blockEntity.getBodyRotation() + partialTick) * rotationBoost;
+            /// 锥形托举光束放入延迟队列，在 AFTER_WEATHER 阶段渲染以避免云层遮挡。
+            if (beamHeight > 0.01f && animProgress > 0.01f) {
+                deferredTractorBeams.add(new TractorBeamData(blockEntity.getBlockPos(), beamHeight, animProgress));
+            }
             /// 天体缩放完全由 StarData.size() 驱动，坍缩期间通过 applyCollapseColor() 缩小 —— 无需额外的 pose 缩放。
             renderCelestialBody(
                 effectiveBodyData,
@@ -444,6 +459,12 @@ public class CelestialForgingAnvilBlockEntityRenderer implements BlockEntityRend
                 animProgress,
                 bodyScaleMultiplier
             );
+        }
+
+        /// 超新星爆发闪光：水平展开的动画billboard，中心跟随天体中心、大小随红石缩放。
+        /// 即使天体已被残骸替换也要播放，故置于 canRender 之外。
+        if (blockEntity.getSupernovaFlashTicks() > 0) {
+            renderSupernovaFlash(blockEntity, partialTick, poseStack, multiBufferSource);
         }
 
     }
@@ -1105,6 +1126,257 @@ public class CelestialForgingAnvilBlockEntityRenderer implements BlockEntityRend
         poseStack.popPose();
     }
 
+    /// 四棱锥托举光束：底面在锻星砧上表面下方半格（local Y=1.5，因砧顶非平面），锥尖向上指向天体。
+    /// 多层结构：核心窄而亮，外层逐层加宽、变暗、更透明，形成"核心 + 向外渐淡光晕"的炫光感，
+    /// 使光柱边界柔和、不明显（类似配置里可开启的输电杆连线炫光）。
+    /// 颜色青色偏白，叠加混合且整体强度很低 —— 只能模糊看见。
+    private static final float BEAM_BASE_Y = 1.5f;
+    private static final float BEAM_INNER_HALF = 0.08f; /// 核心底面半宽（约 0.16 格宽，比原来窄一半）
+    /// 炫光层数：每层在核心外扩张、亮度递减，营造柔和发光边缘。
+    private static final int BEAM_GLOW_LAYERS = 4;
+    private static final float BEAM_GLOW_HALF_STEP = 0.06f; /// 每层相对核心额外加宽的半宽
+
+    /// 延迟渲染队列：托举光束在 AFTER_WEATHER 阶段渲染以解决云层遮挡
+    private static final java.util.List<TractorBeamData> deferredTractorBeams = new java.util.ArrayList<>();
+
+    private record TractorBeamData(BlockPos pos, float beamHeight, float animProgress) {}
+
+    /**
+     * 在 AFTER_WEATHER 阶段由 RenderEventListener 调用，渲染所有延迟托举光束。
+     */
+    public static void renderDeferredTractorBeams(PoseStack poseStack, MultiBufferSource bufferSource, Vec3 camera) {
+        if (deferredTractorBeams.isEmpty()) return;
+        for (TractorBeamData data : deferredTractorBeams) {
+            poseStack.pushPose();
+            poseStack.translate(
+                data.pos.getX() - camera.x,
+                data.pos.getY() - camera.y,
+                data.pos.getZ() - camera.z
+            );
+            renderTractorBeam(data.beamHeight, data.animProgress, poseStack, bufferSource);
+            poseStack.popPose();
+        }
+        deferredTractorBeams.clear();
+    }
+
+    private static void renderTractorBeam(
+        float beamHeight,
+        float animProgress,
+        PoseStack poseStack,
+        MultiBufferSource bufferSource
+    ) {
+        if (beamHeight <= 0.01f || animProgress <= 0.01f) return;
+
+        VertexConsumer vc = bufferSource.getBuffer(ModRenderTypes.STELLAR_BEAM);
+        PoseStack.Pose pose = poseStack.last();
+        float apexY = BEAM_BASE_Y + beamHeight;
+
+        /// 由外到内绘制：外层最宽最暗（炫光晕），逐层收窄变亮，最后是明亮核心。
+        /// 叠加混合下颜色相加，使中心累积最亮、向外快速变淡，边界因此模糊柔和。
+        for (int layer = BEAM_GLOW_LAYERS; layer >= 1; layer--) {
+            float half = BEAM_INNER_HALF + BEAM_GLOW_HALF_STEP * layer;
+            /// 越外层强度越低（二次衰减），边缘几乎不可见。
+            float falloff = 1.0f / (layer + 1);
+            falloff *= falloff * 2.0f;
+            float r = 0.045f * falloff * animProgress;
+            float g = 0.10f * falloff * animProgress;
+            float b = 0.13f * falloff * animProgress;
+            emitBeamPyramid(vc, pose, half, apexY, r, g, b, 0.12f);
+        }
+        /// 核心：窄而亮（偏白青），叠加在炫光之上形成明亮光束芯。
+        emitBeamPyramid(vc, pose, BEAM_INNER_HALF, apexY,
+            0.11f * animProgress, 0.20f * animProgress, 0.23f * animProgress, 0.22f);
+    }
+
+    /// 发射一个以 (0.5,0.5) 为水平中心的四棱锥：方形底面在 BEAM_BASE_Y、半宽 halfWidth，锥尖在 (0.5, apexY, 0.5)。
+    /// 四个侧面四边形（顶部两点合并成尖）；底亮顶渐隐（apexFade 为锥尖亮度比例）。
+    private static void emitBeamPyramid(
+        VertexConsumer vc,
+        PoseStack.Pose pose,
+        float halfWidth,
+        float apexY,
+        float r,
+        float g,
+        float b,
+        float apexFade
+    ) {
+        float cx = 0.5f;
+        float cz = 0.5f;
+        float x0 = cx - halfWidth;
+        float x1 = cx + halfWidth;
+        float z0 = cz - halfWidth;
+        float z1 = cz + halfWidth;
+        /// 底面四角（顺时针），按四条边各生成一个三角形侧面（用退化四边形表示）。
+        float[][] corners = {
+            {x0, z0}, {x1, z0}, {x1, z1}, {x0, z1}
+        };
+        float ar = r * apexFade;
+        float ag = g * apexFade;
+        float ab = b * apexFade;
+        for (int i = 0; i < 4; i++) {
+            float[] c0 = corners[i];
+            float[] c1 = corners[(i + 1) % 4];
+            vc.addVertex(pose, c0[0], BEAM_BASE_Y, c0[1]).setColor(r, g, b, 1.0f);
+            vc.addVertex(pose, c1[0], BEAM_BASE_Y, c1[1]).setColor(r, g, b, 1.0f);
+            vc.addVertex(pose, cx, apexY, cz).setColor(ar, ag, ab, 1.0f);
+            vc.addVertex(pose, cx, apexY, cz).setColor(ar, ag, ab, 1.0f);
+        }
+    }
+
+    /// 超新星爆发闪光：水平展开的动画 billboard（平铺于 XZ 平面，面朝上下）。
+    /// 中心始终为天体视觉中心（supernovaCenterY），大小与天体一样随红石信号缩放
+    /// （supernovaScale）。快速从中心扩大到约 16×16 格。8 帧从 supernova_0 播放到 supernova_7。
+    private static final float SUPERNOVA_MAX_RADIUS = 8.0f; /// 半径 8 → 直径约 16 格
+
+    private void renderSupernovaFlash(
+        CelestialForgingAnvilBlockEntity blockEntity,
+        float partialTick,
+        PoseStack poseStack,
+        MultiBufferSource bufferSource
+    ) {
+        int ticks = blockEntity.getSupernovaFlashTicks();
+        int total = CelestialForgingAnvilBlockEntity.SUPERNOVA_FLASH_TICKS;
+        /// 已经过的进度 0→1（含 partialTick 平滑）
+        float elapsed = (total - ticks + partialTick);
+        float t = Math.clamp(elapsed / total, 0.0f, 1.0f);
+
+        /// 8 帧均匀分布在整个时长上，0→7
+        int frame = Math.clamp((int) (t * 8.0f), 0, 7);
+        ResourceLocation tex = AnvilCraft.of("textures/particle/supernova_" + frame + ".png");
+
+        /// 快速扩张：ease-out（sqrt）使开头扩张最快，随后趋缓。
+        float expand = (float) Math.sqrt(t);
+        float scale = blockEntity.getSupernovaScale();
+        if (scale <= 0f) scale = 1.0f;
+        float radius = SUPERNOVA_MAX_RADIUS * expand * scale;
+        if (radius < 0.01f) return;
+
+        /// 末段淡出，避免突兀消失。
+        float alpha = t > 0.75f ? (1.0f - (t - 0.75f) / 0.25f) : 1.0f;
+        if (alpha <= 0.01f) return;
+
+        /// 中心：水平居中于方块，竖直对齐捕获的天体中心世界 Y。
+        double localCenterY = blockEntity.getSupernovaCenterY() - blockEntity.getBlockPos().getY();
+
+        poseStack.pushPose();
+        poseStack.translate(0.5, localCenterY, 0.5);
+
+        VertexConsumer vc = bufferSource.getBuffer(ModRenderTypes.SUPERNOVA_FLASH.apply(tex));
+        PoseStack.Pose pose = poseStack.last();
+        int light = LightTexture.FULL_BRIGHT;
+
+        /// 水平四边形（朝上）。NO_CULL 使上下双面可见。
+        emitFlatQuad(vc, pose, radius, 1.0f, 1.0f, 1.0f, alpha, light);
+        poseStack.popPose();
+
+        /// 末影龙死亡式的向外放射光束：从中心向四面八方快速射出的光锥。
+        renderSupernovaRays(blockEntity, t, scale, localCenterY, poseStack, bufferSource);
+    }
+
+    /// 类似末影龙死亡时的向外发光：从天体中心向随机但固定的方向发射一束束光锥，
+    /// 快速向外延伸到约 16 格，速度匹配超新星爆发时长。叠加混合 + 末段淡出。
+    private static final int SUPERNOVA_RAY_COUNT = 24;
+    private static final float SUPERNOVA_RAY_LENGTH = 12.0f;
+
+    private void renderSupernovaRays(
+        CelestialForgingAnvilBlockEntity blockEntity,
+        float t,
+        float scale,
+        double localCenterY,
+        PoseStack poseStack,
+        MultiBufferSource bufferSource
+    ) {
+        /// 光束长度快速增长（ease-out），匹配爆发节奏；末段淡出。
+        float grow = (float) Math.sqrt(t);
+        float length = SUPERNOVA_RAY_LENGTH * grow * scale;
+        float intensity = t > 0.6f ? (1.0f - (t - 0.6f) / 0.4f) : 1.0f;
+        if (length < 0.01f || intensity <= 0.01f) return;
+
+        VertexConsumer vc = bufferSource.getBuffer(ModRenderTypes.STELLAR_BEAM);
+        poseStack.pushPose();
+        poseStack.translate(0.5, localCenterY, 0.5);
+        PoseStack.Pose pose = poseStack.last();
+
+        /// 以方块位置为种子的固定随机方向，使每次爆发的光束朝向稳定不抖动。
+        RandomSource rand = RandomSource.create(blockEntity.getBlockPos().asLong() ^ 0x5DEECE66DL);
+        float baseWidth = 0.25f * scale;
+        for (int i = 0; i < SUPERNOVA_RAY_COUNT; i++) {
+            /// 球面均匀方向
+            float u = rand.nextFloat() * 2.0f - 1.0f;
+            float theta = rand.nextFloat() * (float) (Math.PI * 2.0);
+            float s = (float) Math.sqrt(1.0f - u * u);
+            float dx = s * (float) Math.cos(theta);
+            float dy = u;
+            float dz = s * (float) Math.sin(theta);
+            /// 每束略微随机的长度与强度
+            float len = length * (0.7f + 0.6f * rand.nextFloat());
+            float rayI = intensity * (0.5f + 0.5f * rand.nextFloat());
+            emitRay(vc, pose, dx, dy, dz, len, baseWidth,
+                0.12f * rayI, 0.22f * rayI, 0.26f * rayI);
+        }
+        poseStack.popPose();
+    }
+
+    /// 发射一束从原点沿方向 (dx,dy,dz) 延伸的细长四棱锥光束：根部为方形截面、尖端收拢。
+    private static void emitRay(
+        VertexConsumer vc,
+        PoseStack.Pose pose,
+        float dx,
+        float dy,
+        float dz,
+        float length,
+        float halfWidth,
+        float r,
+        float g,
+        float b
+    ) {
+        /// 构造与方向垂直的两个基向量
+        org.joml.Vector3f dir = new org.joml.Vector3f(dx, dy, dz).normalize();
+        org.joml.Vector3f up = Math.abs(dir.y) > 0.99f
+            ? new org.joml.Vector3f(1f, 0f, 0f)
+            : new org.joml.Vector3f(0f, 1f, 0f);
+        org.joml.Vector3f n1 = new org.joml.Vector3f(dir).cross(up).normalize().mul(halfWidth);
+        org.joml.Vector3f n2 = new org.joml.Vector3f(dir).cross(n1).normalize().mul(halfWidth);
+        org.joml.Vector3f tip = new org.joml.Vector3f(dir).mul(length);
+
+        float[][] base = {
+            {-n1.x - n2.x, -n1.y - n2.y, -n1.z - n2.z},
+            {n1.x - n2.x, n1.y - n2.y, n1.z - n2.z},
+            {n1.x + n2.x, n1.y + n2.y, n1.z + n2.z},
+            {-n1.x + n2.x, -n1.y + n2.y, -n1.z + n2.z}
+        };
+        for (int i = 0; i < 4; i++) {
+            float[] c0 = base[i];
+            float[] c1 = base[(i + 1) % 4];
+            vc.addVertex(pose, c0[0], c0[1], c0[2]).setColor(r, g, b, 1.0f);
+            vc.addVertex(pose, c1[0], c1[1], c1[2]).setColor(r, g, b, 1.0f);
+            vc.addVertex(pose, tip.x, tip.y, tip.z).setColor(0f, 0f, 0f, 1.0f);
+            vc.addVertex(pose, tip.x, tip.y, tip.z).setColor(0f, 0f, 0f, 1.0f);
+        }
+    }
+
+    /// 发射一个以原点为中心、铺于 XZ 平面、边长 2r 的水平四边形（法线朝上）。
+    private static void emitFlatQuad(
+        VertexConsumer vc,
+        PoseStack.Pose pose,
+        float r,
+        float red,
+        float green,
+        float blue,
+        float alpha,
+        int light
+    ) {
+        int overlay = net.minecraft.client.renderer.texture.OverlayTexture.NO_OVERLAY;
+        vc.addVertex(pose, -r, 0f, -r).setColor(red, green, blue, alpha).setUv(0f, 0f)
+            .setOverlay(overlay).setLight(light).setNormal(pose, 0f, 1f, 0f);
+        vc.addVertex(pose, -r, 0f, r).setColor(red, green, blue, alpha).setUv(0f, 1f)
+            .setOverlay(overlay).setLight(light).setNormal(pose, 0f, 1f, 0f);
+        vc.addVertex(pose, r, 0f, r).setColor(red, green, blue, alpha).setUv(1f, 1f)
+            .setOverlay(overlay).setLight(light).setNormal(pose, 0f, 1f, 0f);
+        vc.addVertex(pose, r, 0f, -r).setColor(red, green, blue, alpha).setUv(1f, 0f)
+            .setOverlay(overlay).setLight(light).setNormal(pose, 0f, 1f, 0f);
+    }
+
     private void renderPlanetBody(
         CelestialBodyData bodyData,
         PoseStack poseStack,
@@ -1304,6 +1576,20 @@ public class CelestialForgingAnvilBlockEntityRenderer implements BlockEntityRend
         float bs = body != null ? bodyScale(body) * CelestialBodyData.BODY_SCALE_FACTOR : 6.0f;
         float maxHeight = Math.max(centerY + bs * 1.5f, blockEntity.isAmplify() ? 18.0f : 12.0f);
         float horizInset = bs * 0.8f;
+        /// 超新星爆发：水平闪光约 16 格 + 向四面八方（含下方）射出约 12 格光束，
+        /// 用以天体中心为心的对称大包围盒覆盖，避免被裁剪。
+        if (blockEntity.getSupernovaFlashTicks() > 0) {
+            float reach = Math.max(SUPERNOVA_MAX_RADIUS, SUPERNOVA_RAY_LENGTH) * 1.5f + 2;
+            double cy = blockEntity.getSupernovaCenterY();
+            return new AABB(
+                blockEntity.getBlockPos().getX() + 0.5,
+                cy,
+                blockEntity.getBlockPos().getZ() + 0.5,
+                blockEntity.getBlockPos().getX() + 0.5,
+                cy,
+                blockEntity.getBlockPos().getZ() + 0.5
+            ).inflate(reach);
+        }
         if (!blockEntity.isAmplify()) {
             AABB aabb = new AABB(blockEntity.getBlockPos().offset(state.getValue(CelestialForgingAnvilBlock.HALF).getOffset())).inflate(
                 Math.max(horizInset, 1),
