@@ -127,7 +127,11 @@ public class AnvilEventListener {
             FallingBlockEntity entity = event.getEntity();
             InWorldRecipeManager manager = level.getRecipeManager().anvillib$getInWorldRecipeManager();
             InWorldRecipeContext context = new InWorldRecipeContext(serverLevel, pos.getCenter().subtract(0.0, 0.5, 0.0), entity);
-            FishTankBlockEntity fishTank = level.getBlockEntity(pos.below(), ModBlockEntities.FISH_TANK.get()).orElse(null);
+            BlockPos fishTankPos = pos.below();
+            BlockState fishTankState = level.getBlockState(fishTankPos);
+            FishTankBlockEntity fishTank = ModBlockEntities.FISH_TANK.get().isValid(fishTankState)
+                ? level.getBlockEntity(fishTankPos, ModBlockEntities.FISH_TANK.get()).orElse(null)
+                : null;
             if (fishTank != null) fishTank.beginRecipeProcessing();
             try {
                 manager.trigger(ModRecipeTriggers.ON_ANVIL_FALL_ON, context);
