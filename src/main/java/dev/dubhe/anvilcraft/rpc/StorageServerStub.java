@@ -104,6 +104,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
 
@@ -309,6 +310,17 @@ public final class StorageServerStub {
             player.inventoryMenu.broadcastChanges();
         }
         return new InteractionResult(player.inventoryMenu.getCarried(), changed, 0, notice);
+    }
+
+    @RemoteCallable(validator = StorageAccessValidator.class)
+    public static void returnCarriedToInventory(UUID playerId, long sourcePos) {
+        StorageServerStub.getView(StorageServerStub.getAndClear(), playerId, sourcePos);
+        ServerPlayer player = StorageServerStub.getServerPlayer(playerId);
+        ItemStack carried = player.inventoryMenu.getCarried();
+        if (carried.isEmpty()) return;
+        player.inventoryMenu.setCarried(ItemStack.EMPTY);
+        if (!player.getInventory().add(carried)) player.drop(carried, false);
+        player.inventoryMenu.broadcastChanges();
     }
 
     @RemoteCallable(validator = StorageAccessValidator.class)
@@ -605,18 +617,18 @@ public final class StorageServerStub {
         CraftingStorage crafting = target.read();
         ItemStack carried = player.containerMenu.getCarried();
         CraftOperation operation = StorageServerStub.prepareCraftOperation(player, crafting, stonecutter, null);
-        if (operation == null || operation.result.isEmpty()) return new InteractionResult(carried, false);
+        if (operation == null || operation.result.isEmpty()) return new InteractionResult(carried, false).withCrafting(target.read());
         ItemStack result = operation.result;
         int overflow = 0;
         if (!shift) {
             if (!carried.isEmpty() && (!ItemStack.isSameItemSameComponents(carried, result)
                 || carried.getCount() + result.getCount() > carried.getMaxStackSize())) {
-                return new InteractionResult(carried, false);
+                return new InteractionResult(carried, false).withCrafting(target.read());
             }
             player.containerMenu.setCarried(result.copyWithCount(result.getCount() + carried.getCount()));
         } else {
             int inserted = StorageServerStub.placeCraftResult(target, result, crafting.toStorage());
-            if (inserted == 0) return new InteractionResult(carried, false);
+            if (inserted == 0) return new InteractionResult(carried, false).withCrafting(target.read());
             overflow = result.getCount() - inserted;
         }
         // 先准备全部剩余物，再发放产物和写回输入；每个取出路径都只执行一次消耗。
@@ -625,7 +637,7 @@ public final class StorageServerStub {
         int refilled = StorageServerStub.refillCrafting(target, crafting);
         player.getInventory().setChanged();
         player.containerMenu.broadcastChanges();
-        return new InteractionResult(player.containerMenu.getCarried(), true, refilled);
+        return new InteractionResult(player.containerMenu.getCarried(), true, refilled).withCrafting(target.read());
     }
 
     private static @Nullable CraftOperation prepareCraftOperation(
@@ -1757,13 +1769,25 @@ public final class StorageServerStub {
         }
     }
 
-    public record InteractionResult(ItemStack carried, boolean changed, int refilledSlots, FluidNotice notice) {
+    public record InteractionResult(
+        ItemStack carried, boolean changed, int refilledSlots, FluidNotice notice, Optional<CraftingStorage> crafting
+    ) {
+        public InteractionResult(ItemStack carried, boolean changed, int refilledSlots, FluidNotice notice) {
+            this(carried, changed, refilledSlots, notice, Optional.empty());
+        }
+
         public InteractionResult(ItemStack carried, boolean changed) {
             this(carried, changed, 0, FluidNotice.NONE);
         }
 
         public InteractionResult(ItemStack carried, boolean changed, int refilledSlots) {
             this(carried, changed, refilledSlots, FluidNotice.NONE);
+        }
+
+        public InteractionResult withCrafting(CraftingStorage state) {
+            CraftingStorage snapshot = state.withStonecutterInput(state.stonecutterInput().copy())
+                .withCraftingInput(state.craftingInput().stream().map(ItemStack::copy).toList());
+            return new InteractionResult(this.carried.copy(), this.changed, this.refilledSlots, this.notice, Optional.of(snapshot));
         }
 
         public static final StreamCodec<RegistryFriendlyByteBuf, InteractionResult> STREAM_CODEC = StreamCodec.composite(
@@ -1775,6 +1799,8 @@ public final class StorageServerStub {
             InteractionResult::refilledSlots,
             FluidNotice.STREAM_CODEC,
             InteractionResult::notice,
+            ByteBufCodecs.optional(CraftingStorage.STREAM_CODEC),
+            InteractionResult::crafting,
             InteractionResult::new
         );
     }
