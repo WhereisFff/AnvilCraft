@@ -85,7 +85,7 @@ import javax.annotation.Nullable;
 
 @Mod(AnvilCraft.MOD_ID)
 public class AnvilCraft {
-    public static final String NETWORK_VERSION = "2";
+    public static final String NETWORK_VERSION = "3";
     public static final String MOD_ID = "anvilcraft";
     public static final String MOD_NAME = "AnvilCraft";
     public static final Logger LOGGER = LoggerFactory.getLogger(MOD_NAME);

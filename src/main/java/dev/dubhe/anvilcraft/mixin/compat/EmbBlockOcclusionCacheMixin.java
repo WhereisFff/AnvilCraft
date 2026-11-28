@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.mixin.compat;
 
 import dev.dubhe.anvilcraft.api.block.INegativeShapeBlock;
+import dev.dubhe.anvilcraft.client.building.BuildingRodPlacementAnimation;
 import dev.dubhe.anvilcraft.client.event.NegativeShapeModelEventListener;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewState;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -22,6 +24,10 @@ abstract class EmbBlockOcclusionCacheMixin {
         Direction facing,
         CallbackInfoReturnable<Boolean> cir
     ) {
+        if (BuildingRodPlacementAnimation.hidesNeighbor(pos, facing) || HammerPreviewState.hidesNeighbor(pos, facing)) {
+            cir.setReturnValue(true);
+            return;
+        }
         if (selfState.getBlock() instanceof INegativeShapeBlock<?> block) {
             BlockState adjacentState = view.getBlockState(pos.relative(facing));
             if (!block.getBlockType().isInstance(adjacentState.getBlock())) {

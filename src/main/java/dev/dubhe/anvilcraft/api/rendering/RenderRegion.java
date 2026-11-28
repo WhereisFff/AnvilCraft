@@ -6,8 +6,10 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import dev.dubhe.anvilcraft.client.building.BuildingRodPlacementAnimation;
 import dev.dubhe.anvilcraft.client.init.ModRenderTypes;
 import dev.dubhe.anvilcraft.client.renderer.RenderState;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewState;
 import it.unimi.dsi.fastutil.objects.Reference2IntMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.client.Minecraft;
@@ -173,10 +175,13 @@ public class RenderRegion {
                     bufferSource.close();
                     return;
                 }
+                BlockPos pos = be.getBlockPos();
+                if (HammerPreviewState.hidesBlock(pos) || BuildingRodPlacementAnimation.hidesBlock(pos)) {
+                    continue;
+                }
                 CacheableBlockEntityRenderer renderer = CacheableBlockEntityRenderers.get(be.getType());
                 if (renderer == null) continue;
                 poseStack.pushPose();
-                BlockPos pos = be.getBlockPos();
                 poseStack.translate(
                     pos.getX(),
                     pos.getY(),

@@ -186,6 +186,7 @@ public class StructureScannerScreen extends AbstractContainerScreen<StructureSca
     private Direction cachedPreviewFacing = Direction.NORTH;
     private List<StructureScannerBlockEntity.CachedBlockData> cachedPreviewBlocks = List.of();
     private List<StructureScannerBlockEntity.CapturedEntityData> cachedPreviewEntities = List.of();
+    private StructureScannerBlockEntity.@Nullable SignalScan cachedSignalScan;
     private long lastPreviewBlockCheck = -1;
     private long lastPreviewEntityCheck = -10;
 
@@ -1259,8 +1260,7 @@ public class StructureScannerScreen extends AbstractContainerScreen<StructureSca
             bounds = this.cachedImportedPreviewBounds;
         } else {
             if (this.cachedBlockEntity == null) return;
-            var state = this.minecraft.level.getBlockState(this.cachedBlockEntity.getBlockPos());
-            preview = this.buildPreviewLevelLike(state.getValue(HorizontalDirectionalBlock.FACING));
+            preview = this.buildPreviewLevelLike(this.cachedBlockEntity.getScanDirection());
             bounds = this.cachedPreviewBounds;
         }
         if (this.blueprintError != null) {
@@ -1275,7 +1275,9 @@ public class StructureScannerScreen extends AbstractContainerScreen<StructureSca
         int rangeY = imported == null ? this.cachedRangeY : imported.previewSize().getY();
         int rangeZ = imported == null ? this.cachedRangeZ : imported.previewSize().getZ();
         if (preview != this.handbookSource) {
-            BlockPos scannerPos = new BlockPos(rangeX / 2, this.menu.getBlockEntity().isScannerUpsideDown() ? rangeY - 1 : 0, 0);
+            var scanner = this.menu.getBlockEntity();
+            boolean upsideDown = imported == null ? scanner.isScanUpsideDown() : scanner.isScannerUpsideDown();
+            BlockPos scannerPos = new BlockPos(rangeX / 2, upsideDown ? rangeY - 1 : 0, 0);
             var prepared = StructurePreviewTemplate.create(this.previewSnapshot, this.previewPlacement, bounds,
                 scannerPos, preview.getBlockState(scannerPos), this.minecraft.level.registryAccess());
             this.previewTemplate = prepared.template();
@@ -1381,8 +1383,18 @@ public class StructureScannerScreen extends AbstractContainerScreen<StructureSca
         }
 
         var scanned = this.cachedBlockEntity.getScannedBlocks();
+        var signal = this.cachedBlockEntity.getSignalScan();
+        if (signal != this.cachedSignalScan) {
+            if (!Objects.equals(signal, this.cachedSignalScan) || !scanned.equals(this.cachedPreviewBlocks)) {
+                this.clearBlockSelection();
+                this.structureGuiPreview.clear();
+                this.cachedPreviewLevelLike = null;
+            }
+            this.cachedSignalScan = signal;
+            this.cachedPreviewBlocks = List.copyOf(scanned);
+        }
         long now = this.minecraft.level.getGameTime();
-        if (this.lastPreviewBlockCheck != now || this.cachedPreviewLevelLike == null) {
+        if (signal == null && (this.lastPreviewBlockCheck != now || this.cachedPreviewLevelLike == null)) {
             this.lastPreviewBlockCheck = now;
             if (!scanned.equals(this.cachedPreviewBlocks)) {
                 this.cachedPreviewBlocks = scanned.stream().map(block -> new StructureScannerBlockEntity.CachedBlockData(
@@ -1390,9 +1402,12 @@ public class StructureScannerScreen extends AbstractContainerScreen<StructureSca
                 this.cachedPreviewLevelLike = null;
             }
         }
-        if (this.cachedPreviewLevelLike == null || now < this.lastPreviewEntityCheck || now - this.lastPreviewEntityCheck >= 10) {
+        if (signal == null && (this.cachedPreviewLevelLike == null
+            || now < this.lastPreviewEntityCheck || now - this.lastPreviewEntityCheck >= 10)) {
             var captured = this.cachedBlockEntity.captureEntities();
-            if (!captured.equals(this.cachedPreviewEntities)) this.cachedPreviewLevelLike = null;
+            if (!captured.equals(this.cachedPreviewEntities)) {
+                this.cachedPreviewLevelLike = null;
+            }
             this.cachedPreviewEntities = captured;
             this.lastPreviewEntityCheck = now;
         }
@@ -1407,10 +1422,7 @@ public class StructureScannerScreen extends AbstractContainerScreen<StructureSca
         this.cachedPreviewBounds = new AABB(0, 0, 0, Math.max(1, rangeX),
             Math.max(1, rangeY), Math.max(1, this.cachedRangeZ) + 2);
 
-        boolean upsideDown = false;
-        if (this.cachedBlockEntity.getBlockState().hasProperty(StructureScannerBlock.UPSIDE_DOWN)) {
-            upsideDown = this.cachedBlockEntity.getBlockState().getValue(StructureScannerBlock.UPSIDE_DOWN);
-        }
+        boolean upsideDown = this.cachedBlockEntity.isScanUpsideDown();
 
         // Scanner在预览中的位置：X居中，Y=0，Z=0（选区前面）
         int scannerX = rangeX / 2;

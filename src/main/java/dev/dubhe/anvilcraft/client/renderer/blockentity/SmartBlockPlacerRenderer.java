@@ -8,6 +8,7 @@ import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.block.SmartBlockPlacerBlock;
 import dev.dubhe.anvilcraft.block.entity.SmartBlockPlacerBlockEntity;
 import dev.dubhe.anvilcraft.client.selection.ModelSelectionRenderer;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewEntity;
 import dev.dubhe.anvilcraft.init.ModSoundEvents;
 import dev.dubhe.anvilcraft.util.AabbUtil;
 import dev.dubhe.anvilcraft.util.BlockPlacementUtil;
@@ -276,10 +277,11 @@ public class SmartBlockPlacerRenderer implements BlockEntityRenderer<SmartBlockP
         
         boolean animationActive = entity.isAnimationActive();
         BlockPos animationTargetPos = entity.getClientAnimationTargetPos();
-        if (!animationActive || level == null) {
+        boolean preview = HammerPreviewEntity.isRendering();
+        if (!preview && (!animationActive || level == null)) {
             entity.setClientAnimationTargetPos(null);
             entity.setClientRetractSoundPlayed(false);
-        } else {
+        } else if (!preview && level != null) {
             if (animationTargetPos == null) {
                 animationTargetPos = this.getNextTargetPosition(entity, level, facing, upsideDown);
                 if (animationTargetPos != null) {
@@ -363,7 +365,11 @@ public class SmartBlockPlacerRenderer implements BlockEntityRenderer<SmartBlockP
             poseStack,
             state,
             (model, pose) -> this.renderWorldModel(pose, buffer, model, packedLight, packedOverlay, level),
-            () -> this.renderHeldContent(poseStack, buffer, entity.getCurrentHeldBlock(), level, partialTick, packedLight, packedOverlay)
+            () -> {
+                if (!HammerPreviewEntity.isRendering()) {
+                    this.renderHeldContent(poseStack, buffer, entity.getCurrentHeldBlock(), level, partialTick, packedLight, packedOverlay);
+                }
+            }
         );
     }
 
@@ -416,8 +422,9 @@ public class SmartBlockPlacerRenderer implements BlockEntityRenderer<SmartBlockP
         Direction facing = state.getValue(HorizontalDirectionalBlock.FACING);
         boolean upsideDown = state.getValue(SmartBlockPlacerBlock.UPSIDE_DOWN);
         Level level = entity.getLevel();
-        BlockPos target = entity.isAnimationActive() ? entity.getClientAnimationTargetPos() : null;
-        if (entity.isAnimationActive() && target == null && level != null) {
+        boolean animated = entity.isAnimationActive() && !HammerPreviewEntity.isRendering();
+        BlockPos target = animated ? entity.getClientAnimationTargetPos() : null;
+        if (animated && target == null && level != null) {
             target = this.getNextTargetPosition(entity, level, facing, upsideDown);
         }
         float progress = target == null ? 0 : entity.getAnimationProgress(partialTick);

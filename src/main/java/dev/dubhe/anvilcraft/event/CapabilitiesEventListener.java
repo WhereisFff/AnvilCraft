@@ -135,7 +135,7 @@ public class CapabilitiesEventListener {
                 }
                 BlockEntity mainBe = level.getBlockEntity(shulkerContainer.getMainPartPos(pos, state));
                 if (mainBe instanceof StorageBlockEntity storage) {
-                    return ReadOnlyItemHandlerWrapper.wrap(CapabilitiesEventListener.storageItemHandler(storage, side));
+                    return CapabilitiesEventListener.readOnlyStorageItemHandler(storage, side);
                 }
                 return null;
             }),
@@ -150,7 +150,7 @@ public class CapabilitiesEventListener {
                 }
                 BlockEntity mainBe = level.getBlockEntity(station.getMainPartPos(pos, state));
                 if (mainBe instanceof StorageBlockEntity storage) {
-                    return ReadOnlyItemHandlerWrapper.wrap(CapabilitiesEventListener.storageItemHandler(storage, side));
+                    return CapabilitiesEventListener.readOnlyStorageItemHandler(storage, side);
                 }
                 return null;
             }),
@@ -330,12 +330,16 @@ public class CapabilitiesEventListener {
 
     }
 
+    private static @Nullable IItemHandler readOnlyStorageItemHandler(StorageBlockEntity storage, @Nullable Direction side) {
+        IItemHandler handler = storageItemHandler(storage, side);
+        return handler == null ? null : ReadOnlyItemHandlerWrapper.wrap(handler);
+    }
+
     /// 存储容器方块实体的物品能力：直接暴露全局存储中的无限物品处理器
-    private static IItemHandler storageItemHandler(StorageBlockEntity be, @Nullable Direction side) {
+    private static @Nullable IItemHandler storageItemHandler(StorageBlockEntity be, @Nullable Direction side) {
         UUID id = be.getId();
         if (id == null) {
-            id = UUID.randomUUID();
-            be.setId(id);
+            return null;
         }
         IItemHandler handler = Storages.get().getOrCreate(id, be.getStorageType().clazz()).getAvailableItems();
         // 板条箱的溢出销毁模式由存储处理器自身的 dispose 标记控制，

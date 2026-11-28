@@ -8,9 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.mojang.blaze3d.vertex.VertexSorting;
-import dev.dubhe.anvilcraft.api.hammer.IHasHammerEffect;
+import dev.dubhe.anvilcraft.client.building.BuildingRodPlacementAnimation;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewState;
 import dev.dubhe.anvilcraft.client.support.MagnetAnvilAnimation;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.SectionBufferBuilderPack;
 import net.minecraft.client.renderer.block.BlockRenderDispatcher;
@@ -77,38 +77,11 @@ public abstract class SectionCompilerMixin {
         RenderType renderType,
         Operation<Void> original
     ) {
-        if (MagnetAnvilAnimation.hidesBlock(pos, state)) return;
-        if (Minecraft.getInstance().screen instanceof IHasHammerEffect hammerEffect && hammerEffect.shouldSkipRebuildBlock()) {
-            BlockPos blockPos1 = hammerEffect.hiddenBlockPos();
-            if (!blockPos1.equals(pos)) {
-                original.call(
-                    instance,
-                    state,
-                    pos,
-                    blockAndTintGetter,
-                    poseStack,
-                    vertexConsumer,
-                    checkSides,
-                    randomSource,
-                    modelData,
-                    renderType
-                );
-            }
-        } else {
-            original.call(
-                instance,
-                state,
-                pos,
-                blockAndTintGetter,
-                poseStack,
-                vertexConsumer,
-                checkSides,
-                randomSource,
-                modelData,
-                renderType
-            );
+        if (BuildingRodPlacementAnimation.hidesBlock(pos) || HammerPreviewState.hidesBlock(pos)
+            || MagnetAnvilAnimation.hidesBlock(pos, state)) {
+            return;
         }
-
+        original.call(instance, state, pos, blockAndTintGetter, poseStack, vertexConsumer, checkSides, randomSource, modelData, renderType);
     }
 
     @Inject(

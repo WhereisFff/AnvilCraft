@@ -2,9 +2,9 @@ package dev.dubhe.anvilcraft.mixin.compat;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.dubhe.anvilcraft.api.hammer.IHasHammerEffect;
+import dev.dubhe.anvilcraft.client.building.BuildingRodPlacementAnimation;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewState;
 import dev.dubhe.anvilcraft.client.support.MagnetAnvilAnimation;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import org.embeddedt.embeddium.api.render.chunk.BlockRenderContext;
 import org.embeddedt.embeddium.impl.render.chunk.compile.ChunkBuildBuffers;
@@ -35,22 +35,10 @@ abstract class EmbChunkBuilderMeshingTaskMixin {
         Operation<Void> original
     ) {
         BlockPos blockPos = context.pos();
-        if (MagnetAnvilAnimation.hidesBlock(blockPos, context.state())) return;
-        if (Minecraft.getInstance().screen instanceof IHasHammerEffect hammerEffect && hammerEffect.shouldSkipRebuildBlock()) {
-            BlockPos blockPos1 = hammerEffect.hiddenBlockPos();
-            if (!blockPos1.equals(blockPos)) {
-                original.call(
-                    instance,
-                    context,
-                    consumer
-                );
-            }
-        } else {
-            original.call(
-                instance,
-                context,
-                consumer
-            );
+        if (BuildingRodPlacementAnimation.hidesBlock(blockPos) || HammerPreviewState.hidesBlock(blockPos)
+            || MagnetAnvilAnimation.hidesBlock(blockPos, context.state())) {
+            return;
         }
+        original.call(instance, context, consumer);
     }
 }

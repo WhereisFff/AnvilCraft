@@ -1,7 +1,9 @@
 package dev.dubhe.anvilcraft.mixin.compat;
 
 import dev.dubhe.anvilcraft.api.block.INegativeShapeBlock;
+import dev.dubhe.anvilcraft.client.building.BuildingRodPlacementAnimation;
 import dev.dubhe.anvilcraft.client.event.NegativeShapeModelEventListener;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewState;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockOcclusionCache;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -22,6 +24,10 @@ abstract class SodiumBlockOcclusionCacheMixin {
         Direction facing,
         CallbackInfoReturnable<Boolean> cir
     ) {
+        if (BuildingRodPlacementAnimation.hidesNeighbor(selfPos, facing) || HammerPreviewState.hidesNeighbor(selfPos, facing)) {
+            cir.setReturnValue(true);
+            return;
+        }
         if (selfState.getBlock() instanceof INegativeShapeBlock<?> block) {
             BlockState adjacentState = view.getBlockState(selfPos.relative(facing));
             if (!block.getBlockType().isInstance(adjacentState.getBlock())) {

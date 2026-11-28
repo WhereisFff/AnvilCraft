@@ -2,11 +2,11 @@ package dev.dubhe.anvilcraft.mixin.compat;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import dev.dubhe.anvilcraft.api.hammer.IHasHammerEffect;
+import dev.dubhe.anvilcraft.client.building.BuildingRodPlacementAnimation;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewState;
 import dev.dubhe.anvilcraft.client.support.MagnetAnvilAnimation;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.pipeline.BlockRenderer;
 import net.caffeinemc.mods.sodium.client.render.chunk.compile.tasks.ChunkBuilderMeshingTask;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
@@ -37,26 +37,10 @@ abstract class SodiumChunkBuilderMeshingTaskMixin {
         BlockPos origin,
         Operation<Void> original
     ) {
-        if (MagnetAnvilAnimation.hidesBlock(blockPos, blockState)) return;
-        if (Minecraft.getInstance().screen instanceof IHasHammerEffect hammerEffect && hammerEffect.shouldSkipRebuildBlock()) {
-            BlockPos blockPos1 = hammerEffect.hiddenBlockPos();
-            if (!blockPos1.equals(blockPos)) {
-                original.call(
-                    instance,
-                    model,
-                    blockState,
-                    blockPos,
-                    origin
-                );
-            }
-        } else {
-            original.call(
-                instance,
-                model,
-                blockState,
-                blockPos,
-                origin
-            );
+        if (BuildingRodPlacementAnimation.hidesBlock(blockPos) || HammerPreviewState.hidesBlock(blockPos)
+            || MagnetAnvilAnimation.hidesBlock(blockPos, blockState)) {
+            return;
         }
+        original.call(instance, model, blockState, blockPos, origin);
     }
 }

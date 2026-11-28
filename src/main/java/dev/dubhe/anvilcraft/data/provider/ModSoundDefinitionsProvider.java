@@ -68,11 +68,14 @@ public class ModSoundDefinitionsProvider extends SoundDefinitionsProvider {
             .subtitle("subtitles.anvilcraft.auto_enchanting_table.use")
             .with(sound(ResourceLocation.withDefaultNamespace("block.enchantment_table.use"), SoundDefinition.SoundType.EVENT)));
 
-        add(ModSoundEvents.ABOVE_THE_MOON_DUST, definition()
-            .with(sound(AnvilCraft.of("music/mun/above_the_moon_dust_loop")).stream()));
+        add(ModSoundEvents.ABOVE_THE_MUN_DUST, definition()
+            .with(sound(AnvilCraft.of("music/mun/above_the_mun_dust")).stream()));
 
         add(ModSoundEvents.FAR_SIDE_GLOW, definition()
-            .with(sound(AnvilCraft.of("music/mun/far_side_glow_loop")).stream()));
+            .with(sound(AnvilCraft.of("music/mun/far_side_glow")).stream()));
+
+        add(ModSoundEvents.BEYOND_THE_HORIZON, definition()
+            .with(sound(AnvilCraft.of("music/mun/beyond_the_horizon")).stream()));
 
         add(ModSoundEvents.MUNLIGHT, definition()
             .with(sound(AnvilCraft.of("music/mun/munlight")).stream()));

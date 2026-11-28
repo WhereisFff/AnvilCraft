@@ -2,17 +2,41 @@ package dev.dubhe.anvilcraft.integration.iris;
 
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.ByteBufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
+import com.mojang.blaze3d.vertex.MeshData;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import dev.dubhe.anvilcraft.client.renderer.RenderState;
+import net.irisshaders.iris.Iris;
 import net.irisshaders.iris.api.v0.IrisApi;
 import net.irisshaders.iris.pathways.HandRenderer;
 import net.irisshaders.iris.vertices.ImmediateState;
+import net.irisshaders.iris.vertices.IrisVertexFormats;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.jspecify.annotations.Nullable;
 
 public class IrisState {
+    private static final boolean HAS_IRIS_API = IrisState.class.getClassLoader()
+        .getResource("net/irisshaders/iris/Iris.class") != null;
+
+    private static boolean hasIrisApi() {
+        return HAS_IRIS_API && RenderState.isIrisPresent();
+    }
+
+    public static boolean isRenderingShadows() {
+        return hasIrisApi() && IrisApi.getInstance().isRenderingShadowPass();
+    }
+
+    public static boolean isBlockFormat(VertexFormat format) {
+        return format == DefaultVertexFormat.BLOCK || hasIrisApi() && format == IrisVertexFormats.TERRAIN;
+    }
+
+    public static int shaderGeneration() {
+        return hasIrisApi() ? Iris.getPipelineManager().getVersionCounterForSodiumShaderReload() : 0;
+    }
+
     public static boolean isShaderEnabled() {
-        if (RenderState.isIrisPresent()) {
+        if (hasIrisApi()) {
             return isShaderEnabledInternal();
         }
         return false;
@@ -26,7 +50,7 @@ public class IrisState {
     public static BufferBuilder createUnextendedBufferBuilder(
         ByteBufferBuilder buffer, VertexFormat.Mode mode, VertexFormat format
     ) {
-        if (!RenderState.isIrisPresent()) {
+        if (!hasIrisApi()) {
             return new BufferBuilder(buffer, mode, format);
         }
         return createUnextendedBufferBuilderInternal(buffer, mode, format);
@@ -44,8 +68,22 @@ public class IrisState {
         }
     }
 
+    public static void uploadUnextended(VertexBuffer buffer, MeshData data) {
+        if (!hasIrisApi()) {
+            buffer.upload(data);
+            return;
+        }
+        boolean extended = ImmediateState.renderWithExtendedVertexFormat;
+        ImmediateState.renderWithExtendedVertexFormat = false;
+        try {
+            buffer.upload(data);
+        } finally {
+            ImmediateState.renderWithExtendedVertexFormat = extended;
+        }
+    }
+
     public static void setupUnextendedBufferState(@Nullable VertexFormat previous, VertexFormat current) {
-        if (!RenderState.isIrisPresent()) {
+        if (!hasIrisApi()) {
             setupBufferState(previous, current);
             return;
         }
@@ -64,7 +102,7 @@ public class IrisState {
     }
 
     public static MultiBufferSource getHandBufferSource(MultiBufferSource fallback) {
-        if (!RenderState.isIrisPresent()) return fallback;
+        if (!hasIrisApi()) return fallback;
         try {
             return getHandBufferSourceInternal(fallback);
         } catch (LinkageError ignored) {

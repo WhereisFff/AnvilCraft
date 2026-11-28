@@ -28,6 +28,8 @@ public class ModShaders {
     static ShaderInstance renderTypeLaserShader;
     static ShaderInstance renderTypeColoredOverlayShader;
     @Getter
+    private static ShaderInstance buildingRodGhost;
+    @Getter
     private static ShaderInstance equipmentChargeShader;
     @Getter
     static ShaderInstance ringShader;
@@ -48,6 +50,8 @@ public class ModShaders {
 
     public static void register(RegisterShadersEvent event) {
         try {
+            event.registerShader(new ShaderInstance(event.getResourceProvider(), AnvilCraft.of("building_rod_ghost"),
+                DefaultVertexFormat.BLOCK), shader -> buildingRodGhost = shader);
             event.registerShader(new ShaderInstance(event.getResourceProvider(), AnvilCraft.of("monolith_surface"),
                 DefaultVertexFormat.POSITION), shader -> monolithSurface = shader);
             event.registerShader(new ShaderInstance(event.getResourceProvider(), AnvilCraft.of("equipment_charge"),

@@ -32,6 +32,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.Nullable;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 public class StorageBlockEntity extends BlockEntity {
@@ -45,15 +46,11 @@ public class StorageBlockEntity extends BlockEntity {
     }
 
     public void setId(UUID id) {
-        if (this.id != null) {
+        if (id.equals(this.id)) {
             return;
         }
-        this.id = id;
-        this.invalidateStorageCapabilities();
-        this.invalidateItemPorts(this.id);
+        this.updateStorageId(id);
         this.setChanged();
-        TerminalSourceManager.registerIfApplicable(this);
-        StorageComparatorManager.registerIfApplicable(this);
         if (this.level != null) {
             BlockState state = this.getBlockState();
             this.level.sendBlockUpdated(this.getBlockPos(), state, state, Block.UPDATE_ALL);
@@ -61,11 +58,24 @@ public class StorageBlockEntity extends BlockEntity {
     }
 
     public void clearId() {
-        final UUID previousId = this.id;
-        this.id = null;
-        this.invalidateStorageCapabilities();
-        this.invalidateItemPorts(previousId);
+        this.updateStorageId(null);
         this.setChanged();
+    }
+
+    private void updateStorageId(@Nullable UUID id) {
+        final UUID previousId = this.id;
+        TerminalSourceManager.unregisterIfApplicable(this);
+        StorageComparatorManager.unregisterIfApplicable(this);
+        this.id = id;
+        if (id != null) {
+            TerminalSourceManager.registerIfApplicable(this);
+            StorageComparatorManager.registerIfApplicable(this);
+        }
+        if (!Objects.equals(previousId, id)) {
+            this.invalidateStorageCapabilities();
+            this.invalidateItemPorts(id);
+        }
+        this.invalidateItemPorts(previousId);
     }
 
     public Holder<IStorageType<?>> getStorageTypeHolder() {
@@ -110,22 +120,20 @@ public class StorageBlockEntity extends BlockEntity {
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
-        final UUID previousId = this.id;
-        if (tag.contains("storage_id")) {
-            this.id = tag.getUUID("storage_id");
+        if (tag.hasUUID("storage_id")) {
+            this.updateStorageId(tag.getUUID("storage_id"));
         }
-        TerminalSourceManager.registerIfApplicable(this);
-        if (!java.util.Objects.equals(previousId, this.id)) {
-            this.invalidateStorageCapabilities();
-            this.invalidateItemPorts(this.id);
-        }
-        this.invalidateItemPorts(previousId);
     }
 
     @Override
     public void onLoad() {
         super.onLoad();
+        if (this.id == null && this.level instanceof ServerLevel) {
+            this.setId(UUID.randomUUID());
+            return;
+        }
         this.invalidateStorageCapabilities();
+        TerminalSourceManager.registerIfApplicable(this);
         StorageComparatorManager.registerIfApplicable(this);
         this.invalidateItemPorts(this.id);
     }
@@ -170,7 +178,9 @@ public class StorageBlockEntity extends BlockEntity {
         if (ref == null || !ref.type().is(this.storageType)) {
             return;
         }
-        this.setId(ref.id().orElse(UUID.randomUUID()));
+        if (this.id == null || ref.id().isPresent()) {
+            this.setId(ref.id().orElseGet(UUID::randomUUID));
+        }
     }
 
     @Override

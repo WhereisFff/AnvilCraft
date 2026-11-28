@@ -1,15 +1,11 @@
 package dev.dubhe.anvilcraft.client.building;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.ByteBufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.blaze3d.vertex.VertexBuffer;
 import com.mojang.math.Axis;
-import dev.anvilcraft.lib.v2.cube.client.CubeSelection;
-import dev.anvilcraft.lib.v2.cube.client.OutlineRenderer;
-import dev.anvilcraft.lib.v2.cube.client.SelectionPart;
-import dev.anvilcraft.lib.v2.rendering.projection.ProjectionRenderer;
-import dev.anvilcraft.lib.v2.rendering.projection.ProjectionScene;
 import dev.dubhe.anvilcraft.AnvilCraft;
-import dev.dubhe.anvilcraft.block.multipart.AbstractMultiPartBlock;
 import dev.dubhe.anvilcraft.building.BlueprintBlockConfiguration;
 import dev.dubhe.anvilcraft.building.BlueprintBlockEntities;
 import dev.dubhe.anvilcraft.building.BlueprintMultiblocks;
@@ -18,50 +14,55 @@ import dev.dubhe.anvilcraft.building.BuildingEntityTransform;
 import dev.dubhe.anvilcraft.building.BuildingRodService;
 import dev.dubhe.anvilcraft.building.EntityBuildAdapters;
 import dev.dubhe.anvilcraft.building.StructureSnapshot;
-import dev.dubhe.anvilcraft.client.event.LargeBlockPlacePreviewEventListener;
-import dev.dubhe.anvilcraft.client.selection.ModelBlockSelection;
-import dev.dubhe.anvilcraft.init.item.ModItems;
+import dev.dubhe.anvilcraft.integration.iris.IrisState;
 import dev.dubhe.anvilcraft.item.BuildingRodItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Vec3i;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.level.biome.Biomes;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.ModelEvent;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
+import org.joml.Matrix4f;
+import org.jspecify.annotations.Nullable;
+import org.lwjgl.opengl.GL11;
 
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import javax.annotation.Nullable;
 
 @EventBusSubscriber(modid = AnvilCraft.MOD_ID, value = Dist.CLIENT)
 public final class BuildingRodRenderer {
-    private static final ProjectionRenderer PROJECTION = new ProjectionRenderer();
     @Nullable
     private static StructureSnapshot built;
     private static Rotation rotation = Rotation.NONE;
     private static Mirror mirror = Mirror.NONE;
     private static int layer = -1;
-    private static int meshAlpha = 110;
+    private static final int BLUEPRINT_ALPHA = 110;
+    static final int MATERIAL_ALPHA = 166;
+    static final float MATERIAL_SCALE = 0.64f;
     private static final BuildingRodAnimation ANIMATION = new BuildingRodAnimation();
     private static List<BuildingRodService.Cell> placementCells = List.of();
-    @Nullable
-    private static StructureSnapshot placementSnapshot;
-    private static BlockPos placementAnchor = BlockPos.ZERO;
+    private static @Nullable BoundingBox placementBounds;
+    private static final Map<BlockPos, BoundingBox> PLACEMENT_UNITS = new HashMap<>();
+    private static final List<BlockEntity> BLOCK_ENTITIES = new ArrayList<>();
+    private static final List<Entity> BLUEPRINT_ENTITIES = new ArrayList<>();
+    private static @Nullable BuildingRodGhostFeatures features;
+    private static @Nullable VertexBuffer mesh;
+    private static boolean shaderPack;
+    private static int shaderGeneration;
 
     private BuildingRodRenderer() {
     }
@@ -69,8 +70,21 @@ public final class BuildingRodRenderer {
     public static void clear() {
         BuildingRodRenderer.ANIMATION.clear();
         BuildingRodRenderer.clearMesh();
-        BuildingRodRenderer.placementCells = List.of();
-        BuildingRodRenderer.placementSnapshot = null;
+        if (features != null) {
+            features.close();
+            features = null;
+        }
+    }
+
+    @EventBusSubscriber(modid = AnvilCraft.MOD_ID, value = Dist.CLIENT, bus = EventBusSubscriber.Bus.MOD)
+    static final class Reload {
+        @SubscribeEvent
+        static void reload(ModelEvent.BakingCompleted event) {
+            clear();
+            BuildingRodPlacementAnimation.clear();
+            BuildingRodModelParts.clear();
+            BuildingRodRenderTypes.clearLayers();
+        }
     }
 
     static void turn(int quarterTurns) {
@@ -78,65 +92,219 @@ public final class BuildingRodRenderer {
     }
 
     private static void clearMesh() {
-        BuildingRodRenderer.PROJECTION.close();
         BuildingRodRenderer.built = null;
+        if (mesh != null) {
+            mesh.close();
+            mesh = null;
+        }
+        placementCells = List.of();
+        placementBounds = null;
+        PLACEMENT_UNITS.clear();
+        BLOCK_ENTITIES.clear();
+        BLUEPRINT_ENTITIES.clear();
     }
 
     @SubscribeEvent
     public static void render(RenderLevelStageEvent event) {
-        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS) return;
+        if (IrisState.isRenderingShadows()) {
+            return;
+        }
+        boolean shaders = IrisState.isShaderEnabled();
+        var stage = shaders ? RenderLevelStageEvent.Stage.AFTER_LEVEL : RenderLevelStageEvent.Stage.AFTER_TRANSLUCENT_BLOCKS;
+        if (event.getStage() != stage) {
+            return;
+        }
+        int generation = IrisState.shaderGeneration();
+        if (shaderPack != shaders || shaderGeneration != generation) {
+            clearMesh();
+            shaderPack = shaders;
+            shaderGeneration = generation;
+        }
+        var matrices = RenderSystem.getModelViewStack();
+        matrices.pushMatrix().set(event.getModelViewMatrix());
+        RenderSystem.applyModelViewMatrix();
+        try {
+            renderProjection(event);
+        } finally {
+            matrices.popMatrix();
+            RenderSystem.applyModelViewMatrix();
+        }
+    }
+
+    private static void renderProjection(RenderLevelStageEvent event) {
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null || mc.player == null) return;
+        if (mc.level == null || mc.player == null) {
+            return;
+        }
+        BuildingRodPlacementAnimation.render(mc.level, event);
+        StructureSnapshot snapshot = BuildingRodClient.snapshot;
+        if (snapshot == null) {
+            if (BuildingRodItem.isHeld(mc.player) && BuildingRodItem.isPlacementMaterial(BuildingRodItem.material(mc.player))) {
+                renderMaterial(event, mc.level);
+            }
+            return;
+        }
         Vec3 camera = event.getCamera().getPosition();
-        PoseStack pose = event.getPoseStack();
         var bounds = BuildingRodClient.selectionBounds();
         if (bounds != null) {
             AABB box = AABB.of(bounds).move(-camera.x, -camera.y, -camera.z);
-            boolean valid = BuildingRodClient.snapshot == null ? (long) bounds.getXSpan() * bounds.getYSpan() * bounds.getZSpan()
-                                                                 <= AnvilCraft.CONFIG.equipment.buildingRodMaxBlocks
-                                                               : !BuildingRodClient.blueprintPlacements().isEmpty();
             var buffers = mc.renderBuffers().bufferSource();
-            LevelRenderer.renderLineBox(pose, buffers.getBuffer(RenderType.lines()), box, valid ? 0.2f : 1, valid ? 1 : 0.2f, 0.8f, 1);
+            boolean valid = !BuildingRodClient.blueprintPlacements().isEmpty();
+            LevelRenderer.renderLineBox(event.getPoseStack(), buffers.getBuffer(RenderType.lines()), box,
+                valid ? 0.2f : 1, valid ? 1 : 0.2f, 0.8f, 1);
             buffers.endBatch(RenderType.lines());
         }
-        StructureSnapshot snapshot = BuildingRodClient.snapshot;
-        boolean materialPreview = snapshot == null && BuildingRodItem.isHeld(mc.player);
-        if (!materialPreview && BuildingRodClient.traditional() && !BuildingRodTraditionalControls.isActive()) return;
-        BlueprintPlacement placement = BuildingRodClient.placement;
-        if (materialPreview) {
-            var material = BuildingRodItem.material(mc.player);
-            if (!material.is(ModItems.FILTER) && (!(material.getItem() instanceof BlockItem item)
-                                                  || !LargeBlockPlacePreviewEventListener.isPreviewable(item.getBlock()))) {
-                return;
+        if (BuildingRodClient.traditional() && !BuildingRodTraditionalControls.isActive()
+            || BuildingRodClient.target == null && !BuildingRodClient.locked) {
+            return;
+        }
+        var placement = BuildingRodClient.placement;
+        if (built != snapshot || rotation != placement.rotation() || mirror != placement.mirror()
+            || layer != BuildingRodClient.layer) {
+            build(snapshot, placement);
+        }
+        var copies = BuildingRodClient.blueprintPlacements();
+        for (var copy : copies) {
+            renderCopy(event, snapshot, copy, copies.size() == 1);
+        }
+    }
+
+    private static void renderMaterial(RenderLevelStageEvent event, ClientLevel level) {
+        List<BuildingRodService.Cell> cells = BuildingRodClient.placementPreview();
+        if (placementCells != cells && !placementCells.equals(cells)) {
+            clearMesh();
+            if (!cells.isEmpty()) {
+                buildMaterial(level, cells);
             }
-            List<BuildingRodService.Cell> cells = BuildingRodClient.placementPreview();
-            if (cells.isEmpty() || !AnvilCraft.CLIENT_CONFIG.effects.multiPartPreviewMode.isEnabled()) return;
-            if (AnvilCraft.CLIENT_CONFIG.effects.multiPartPreviewMode.isOutline() && BuildingRodRenderer.renderPlacementOutline(
-                event,
-                cells
-            )) {
-                return;
+            placementCells = cells;
+        }
+        Vec3 camera = event.getCamera().getPosition();
+        BoundingBox bounds = BuildingRodClient.selectionBounds();
+        if (placementBounds != null) {
+            var pose = event.getPoseStack();
+            pose.pushPose();
+            try {
+                pose.translate(placementBounds.minX() - camera.x, placementBounds.minY() - camera.y, placementBounds.minZ() - camera.z);
+                drawGhost(event, MATERIAL_ALPHA);
+            } finally {
+                pose.popPose();
             }
-            BuildingRodRenderer.preparePlacement(cells);
-            snapshot = BuildingRodRenderer.placementSnapshot;
-            placement = new BlueprintPlacement(BuildingRodRenderer.placementAnchor, Rotation.NONE, Mirror.NONE);
+            bounds = bounds == null ? placementBounds : bounds.encapsulate(placementBounds);
         }
-        if (snapshot == null || (BuildingRodClient.target == null && !BuildingRodClient.locked)) return;
-        int alpha = materialPreview ? (int) Math.round(255 * AnvilCraft.CLIENT_CONFIG.effects.multiPartPreviewGhostOpacity) : 110;
-        if (!BuildingRodRenderer.PROJECTION.isValid() || BuildingRodRenderer.built != snapshot
-            || BuildingRodRenderer.rotation != placement.rotation() || BuildingRodRenderer.mirror != placement.mirror()
-            || BuildingRodRenderer.layer != BuildingRodClient.layer || BuildingRodRenderer.meshAlpha != alpha) {
-            BuildingRodRenderer.build(snapshot, placement, alpha);
+        if (bounds != null) {
+            AABB box = AABB.of(bounds).move(-camera.x, -camera.y, -camera.z).inflate(0.002);
+            var buffers = Minecraft.getInstance().renderBuffers().bufferSource();
+            var quads = buffers.getBuffer(RenderType.debugQuads());
+            float green = cells.isEmpty() ? 0.333f : 1;
+            float blue = cells.isEmpty() ? 0.467f : 1;
+            for (Direction face : Direction.values()) {
+                LevelRenderer.renderFace(event.getPoseStack(), quads, face, (float) box.minX, (float) box.minY, (float) box.minZ,
+                    (float) box.maxX, (float) box.maxY, (float) box.maxZ, 1, green, blue, 28f / 255);
+            }
+            buffers.endBatch(RenderType.debugQuads());
+            LevelRenderer.renderLineBox(event.getPoseStack(), buffers.getBuffer(BuildingRodRenderTypes.BOUNDS), box, 1, green, blue, 1);
+            buffers.endBatch(BuildingRodRenderTypes.BOUNDS);
         }
-        List<BlueprintPlacement> copies = materialPreview ? List.of(placement) : BuildingRodClient.blueprintPlacements();
-        for (BlueprintPlacement copy : copies) {
-            BuildingRodRenderer.renderCopy(event, snapshot, copy, materialPreview, !materialPreview && copies.size() == 1);
+    }
+
+    private static void buildMaterial(ClientLevel level, List<BuildingRodService.Cell> cells) {
+        BoundingBox bounds = new BoundingBox(cells.getFirst().pos());
+        Map<BlockPos, BoundingBox> groups = new HashMap<>();
+        var view = new BlueprintRenderView(level, cells.getFirst().pos(), PLACEMENT_UNITS, false);
+        for (var cell : cells) {
+            BlockPos pos = cell.pos();
+            bounds.encapsulate(pos);
+            var core = BlueprintMultiblocks.core(pos, cell.state());
+            var unit = groups.computeIfAbsent(core, ignored -> new BoundingBox(pos));
+            unit.encapsulate(pos);
+            PLACEMENT_UNITS.put(pos, unit);
+            var entity = BlueprintBlockEntities.create(level, pos, cell.state(), cell.config().isEmpty() ? null : cell.config());
+            if (entity != null) {
+                BLOCK_ENTITIES.add(entity);
+            }
+            view.put(pos, cell.state(), entity);
         }
+        placementBounds = bounds;
+        bake(view, MATERIAL_ALPHA);
+    }
+
+    private static void bake(BlueprintRenderView view, int alpha) {
+        var renderer = Minecraft.getInstance().getBlockRenderer();
+        var type = BuildingRodRenderTypes.BLOCK_GHOST;
+        try (var memory = new ByteBufferBuilder(type.bufferSize())) {
+            var buffer = IrisState.createUnextendedBufferBuilder(memory, type.mode(), type.format());
+            var vertices = new PlacementVertices();
+            for (var block : view.blocks()) {
+                BlockPos pos = block.getKey();
+                var unit = PLACEMENT_UNITS.get(pos);
+                Vec3 pivot = unit == null ? Vec3.atLowerCornerOf(pos) : AABB.of(unit).getCenter();
+                vertices.bake(view, renderer, pos, block.getValue(), pivot);
+                var relative = placementBounds == null ? pivot
+                    : pivot.subtract(placementBounds.minX(), placementBounds.minY(), placementBounds.minZ());
+                vertices.draw(buffer, 0, vertices.end(), (float) relative.x, (float) relative.y,
+                    (float) relative.z, unit == null ? 1 : MATERIAL_SCALE, alpha);
+                vertices.clear();
+            }
+            var data = buffer.build();
+            if (data != null) {
+                mesh = new VertexBuffer(VertexBuffer.Usage.STATIC);
+                try {
+                    mesh.bind();
+                    IrisState.uploadUnextended(mesh, data);
+                } finally {
+                    VertexBuffer.unbind();
+                }
+            }
+        }
+    }
+
+    private static void drawGhost(RenderLevelStageEvent event, int alpha) {
+        var pose = event.getPoseStack();
+        if (mesh != null) {
+            var type = BuildingRodRenderTypes.BLOCK_GHOST;
+            type.setupRenderState();
+            try {
+                mesh.bind();
+                var modelView = new Matrix4f(RenderSystem.getModelViewMatrix()).mul(pose.last().pose());
+                mesh.drawWithShader(modelView, event.getProjectionMatrix(), RenderSystem.getShader());
+            } finally {
+                VertexBuffer.unbind();
+                type.clearRenderState();
+            }
+        }
+        if (BLOCK_ENTITIES.isEmpty() && BLUEPRINT_ENTITIES.isEmpty()) {
+            return;
+        }
+        if (features == null) {
+            features = new BuildingRodGhostFeatures();
+        }
+        for (var entity : BLOCK_ENTITIES) {
+            BlockPos pos = entity.getBlockPos();
+            pose.pushPose();
+            try {
+                var unit = PLACEMENT_UNITS.get(pos);
+                if (unit == null || placementBounds == null) {
+                    pose.translate(pos.getX(), pos.getY(), pos.getZ());
+                } else {
+                    Vec3 pivot = AABB.of(unit).getCenter();
+                    pose.translate(pivot.x - placementBounds.minX(), pivot.y - placementBounds.minY(), pivot.z - placementBounds.minZ());
+                    pose.scale(MATERIAL_SCALE, MATERIAL_SCALE, MATERIAL_SCALE);
+                    pose.translate(pos.getX() - pivot.x, pos.getY() - pivot.y, pos.getZ() - pivot.z);
+                }
+                features.renderPreview(entity, pose, alpha);
+            } finally {
+                pose.popPose();
+            }
+        }
+        for (var entity : BLUEPRINT_ENTITIES) {
+            features.renderPreview(entity, pose, alpha);
+        }
+        features.endBatch();
     }
 
     private static void renderCopy(
         RenderLevelStageEvent event, StructureSnapshot snapshot, BlueprintPlacement placement,
-        boolean materialPreview, boolean animate
+        boolean animate
     ) {
         Vec3 camera = event.getCamera().getPosition();
         PoseStack pose = event.getPoseStack();
@@ -165,7 +333,7 @@ public final class BuildingRodRenderer {
         pose.mulPose(Axis.YP.rotationDegrees(-placement.yawDegrees()));
         pose.translate(placement.anchor().getX() - center.x, placement.anchor().getY() - center.y, placement.anchor().getZ() - center.z);
         Minecraft mc = Minecraft.getInstance();
-        if (!materialPreview && BuildingRodClient.traditional()) {
+        if (BuildingRodClient.traditional()) {
             var local = new BlueprintPlacement(BlockPos.ZERO, placement.rotation(), placement.mirror());
             var outlineBuffers = mc.renderBuffers().bufferSource();
             LevelRenderer.renderLineBox(
@@ -179,101 +347,37 @@ public final class BuildingRodRenderer {
             );
             outlineBuffers.endBatch(RenderType.lines());
         }
-        BuildingRodRenderer.PROJECTION.render(pose, event.getProjectionMatrix(), mc.renderBuffers().bufferSource());
-        pose.popPose();
-    }
-
-    private static void preparePlacement(List<BuildingRodService.Cell> cells) {
-        if (BuildingRodRenderer.placementCells.equals(cells)) return;
-        BuildingRodRenderer.placementCells = cells;
-        int minX = cells.stream().mapToInt(cell -> cell.pos().getX()).min().orElse(0);
-        int minY = cells.stream().mapToInt(cell -> cell.pos().getY()).min().orElse(0);
-        int minZ = cells.stream().mapToInt(cell -> cell.pos().getZ()).min().orElse(0);
-        int maxX = cells.stream().mapToInt(cell -> cell.pos().getX()).max().orElse(0);
-        int maxY = cells.stream().mapToInt(cell -> cell.pos().getY()).max().orElse(0);
-        int maxZ = cells.stream().mapToInt(cell -> cell.pos().getZ()).max().orElse(0);
-        BuildingRodRenderer.placementAnchor = new BlockPos(minX, minY, minZ);
-        Map<BlockState, Integer> palette = new LinkedHashMap<>();
-        List<StructureSnapshot.BlockEntry> entries = new ArrayList<>();
-        for (var cell : cells) {
-            int index = palette.computeIfAbsent(cell.state(), state -> palette.size());
-            entries.add(new StructureSnapshot.BlockEntry(
-                cell.pos().subtract(BuildingRodRenderer.placementAnchor),
-                index,
-                cell.config().isEmpty() ? Optional.empty() : Optional.of(cell.config())
-            ));
-        }
-        BuildingRodRenderer.placementSnapshot = new StructureSnapshot(
-            new Vec3i(maxX - minX + 1, maxY - minY + 1, maxZ - minZ + 1),
-            new ArrayList<>(palette.keySet()),
-            entries,
-            List.of()
-        );
-    }
-
-    private static boolean renderPlacementOutline(RenderLevelStageEvent event, List<BuildingRodService.Cell> cells) {
-        Map<BuildingRodService.Cell, List<SelectionPart>> outlines = new LinkedHashMap<>();
-        for (var cell : cells) {
-            if (cell.state().getBlock() instanceof AbstractMultiPartBlock<?> multipart && !multipart.isMainPart(cell.state())) continue;
-            List<SelectionPart> parts = new ArrayList<>(ModelBlockSelection.multipartOutline(cell.state()));
-            if (cell.state().hasBlockEntity()) parts.addAll(ModelBlockSelection.previewBerParts(cell.state(), cell.pos()));
-            // 与普通放置预览一致：没有可用模型描边时回退到虚影，不以包围盒冒充模型。
-            if (parts.isEmpty()) return false;
-            outlines.put(cell, parts);
-        }
-        var buffers = Minecraft.getInstance().renderBuffers().bufferSource();
-        VertexConsumer vertices = buffers.getBuffer(RenderType.lines());
-        Vec3 camera = event.getCamera().getPosition();
-        PoseStack pose = event.getPoseStack();
-        for (var entry : outlines.entrySet()) {
-            BlockPos pos = entry.getKey().pos();
-            pose.pushPose();
-            pose.translate(pos.getX() - camera.x, pos.getY() - camera.y, pos.getZ() - camera.z);
-            for (SelectionPart part : entry.getValue()) {
-                pose.pushPose();
-                part.apply(pose);
-                OutlineRenderer.render(
-                    pose,
-                    vertices,
-                    CubeSelection.outlines().get(part.geometry()),
-                    1,
-                    1,
-                    1,
-                    (float) AnvilCraft.CLIENT_CONFIG.effects.multiPartPreviewOutlineOpacity
-                );
-                pose.popPose();
+        boolean reversed = pose.last().pose().determinant3x3() < 0;
+        int originalFace = reversed ? GL11.glGetInteger(GL11.GL_FRONT_FACE) : GL11.GL_CCW;
+        try {
+            if (reversed) {
+                GL11.glFrontFace(originalFace == GL11.GL_CCW ? GL11.GL_CW : GL11.GL_CCW);
+            }
+            drawGhost(event, BLUEPRINT_ALPHA);
+        } finally {
+            if (reversed) {
+                GL11.glFrontFace(originalFace);
             }
             pose.popPose();
         }
-        buffers.endBatch(RenderType.lines());
-        return true;
     }
 
-    private static void build(StructureSnapshot snapshot, BlueprintPlacement placement, int alpha) {
+    private static void build(StructureSnapshot snapshot, BlueprintPlacement placement) {
         BuildingRodRenderer.clearMesh();
         Minecraft mc = Minecraft.getInstance();
-        if (mc.level == null) return;
-        var plains = mc.level.registryAccess().registryOrThrow(Registries.BIOME).getHolderOrThrow(Biomes.PLAINS).value();
-        ProjectionScene view = new ProjectionScene(
-            mc.level,
-            placement.anchor(),
-            (pos, resolver) -> resolver.getColor(
-                plains,
-                placement.anchor().getX(),
-                placement.anchor().getZ()
-            )
-        );
+        if (mc.level == null) {
+            return;
+        }
+        var view = new BlueprintRenderView(mc.level, placement.anchor(), Map.of(), false);
         BlueprintPlacement local = new BlueprintPlacement(BlockPos.ZERO, placement.rotation(), placement.mirror());
         List<BlueprintMultiblocks.PlacedBlock> blocks;
         try {
             blocks = BlueprintMultiblocks.expand(snapshot, local, BuildingRodClient.layer);
         } catch (IllegalArgumentException exception) {
-            BuildingRodRenderer.PROJECTION.rebuild(view, alpha);
             BuildingRodRenderer.built = snapshot;
             BuildingRodRenderer.rotation = placement.rotation();
             BuildingRodRenderer.mirror = placement.mirror();
             BuildingRodRenderer.layer = BuildingRodClient.layer;
-            BuildingRodRenderer.meshAlpha = alpha;
             return;
         }
         BlockPos sourceOrigin = BlueprintBlockConfiguration.sourceOrigin(snapshot);
@@ -286,17 +390,19 @@ public final class BuildingRodRenderer {
                 return transformed;
             }).orElse(null);
             BlockEntity entity = BlueprintBlockEntities.create(mc.level, pos, state, data);
+            if (entity != null) {
+                BLOCK_ENTITIES.add(entity);
+            }
             view.put(pos, state, entity);
         }
         for (var entry : snapshot.entities()) {
             EntityBuildAdapters.create(BuildingEntityTransform.transform(entry, local), mc.level)
-                .filter(entity -> !EntityBuildAdapters.isTransient(entity)).ifPresent(view::addEntity);
+                .filter(entity -> !EntityBuildAdapters.isTransient(entity)).ifPresent(BLUEPRINT_ENTITIES::add);
         }
-        BuildingRodRenderer.PROJECTION.rebuild(view, alpha);
+        bake(view, BLUEPRINT_ALPHA);
         BuildingRodRenderer.built = snapshot;
         BuildingRodRenderer.rotation = placement.rotation();
         BuildingRodRenderer.mirror = placement.mirror();
         BuildingRodRenderer.layer = BuildingRodClient.layer;
-        BuildingRodRenderer.meshAlpha = alpha;
     }
 }

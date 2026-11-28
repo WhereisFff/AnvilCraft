@@ -1,9 +1,5 @@
 package dev.dubhe.anvilcraft.client.gui.screen;
 
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Axis;
 import dev.anvilcraft.lib.v2.wheel.api.WheelMenuModel;
 import dev.anvilcraft.lib.v2.wheel.api.WheelSelectionEffect;
 import dev.anvilcraft.lib.v2.wheel.client.gui.component.WheelFrostedBackground;
@@ -11,63 +7,45 @@ import dev.anvilcraft.lib.v2.wheel.client.gui.component.WheelWidget;
 import dev.dubhe.anvilcraft.AnvilCraft;
 import dev.dubhe.anvilcraft.api.hammer.IHasHammerEffect;
 import dev.dubhe.anvilcraft.api.input.IMouseHandlerExtension;
-import dev.dubhe.anvilcraft.block.MountedRedstone;
 import dev.dubhe.anvilcraft.block.multipart.FlexibleMultiPartBlock;
 import dev.dubhe.anvilcraft.block.multipart.IMultiPartBlockModelHolder;
 import dev.dubhe.anvilcraft.block.multipart.IMultiPartBlockModelHolder.ModelRenderTarget;
 import dev.dubhe.anvilcraft.client.init.ModRenderTypes;
-import dev.dubhe.anvilcraft.client.support.RenderSupport;
+import dev.dubhe.anvilcraft.client.support.HammerPreviewState;
 import dev.dubhe.anvilcraft.integration.iris.IrisState;
 import dev.dubhe.anvilcraft.network.HammerChangeBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerChangeFlexibleMultiPartBlockPacket;
 import dev.dubhe.anvilcraft.network.HammerUsePacket;
-import dev.dubhe.anvilcraft.util.FullBrightLevelProxy;
 import dev.dubhe.anvilcraft.util.StateUtil;
-import dev.dubhe.anvilcraft.util.VertexConsumerWithPose;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.ItemBlockRenderTypes;
-import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.block.BlockRenderDispatcher;
-import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.RandomSource;
 import net.minecraft.world.InteractionHand;
-import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ButtonBlock;
 import net.minecraft.world.level.block.ComparatorBlock;
 import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.FenceGateBlock;
-import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.TrapDoorBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.Property;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.client.model.data.ModelData;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.joml.Matrix4f;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import javax.annotation.Nullable;
 
 public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     public static final int DELAY = 150;
-    private static final float ZOOM = 13.5f;
-    private static final RandomSource RANDOM = RandomSource.createNewThreadLocalInstance();
 
     private final Minecraft minecraft = Minecraft.getInstance();
     private final float radialMenuScale = (float) AnvilCraft.CLIENT_CONFIG.ui.anvilHammerWheelScale;
@@ -80,7 +58,6 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     private final int pageSize;
     private int pageIndex;
 
-    private final BlockAndTintGetter fullBrightLevel = new FullBrightLevelProxy(this.minecraft.level);
     private BlockState currentBlockState;
     private ModelRenderTarget currentModelTarget;
     private final long displayTime = System.currentTimeMillis();
@@ -88,7 +65,9 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     private boolean closingAnimationStarted;
     private @Nullable WheelWidget wheel;
     private @Nullable WheelFrostedBackground frostedBackground;
-    private boolean shouldRebuildChunk = true;
+    private boolean previewActive;
+    private double heldMouseX = Double.NaN;
+    private double heldMouseY = Double.NaN;
     private boolean validate = true;
     private final InteractionHand hand;
     private final BlockHitResult hitVec;
@@ -103,8 +82,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         this.currentBlockState = initialBlockState;
         this.property = property;
         this.possibleStates = possibleStates;
-        this.pageSize = initialBlockState.getBlock() instanceof MountedRedstone
-            ? BlockStateProperties.HORIZONTAL_FACING.getPossibleValues().size() : possibleStates.size();
+        this.pageSize = StateUtil.hasHammerPages(initialBlockState, property) ? 4 : possibleStates.size();
         this.pageIndex = possibleStates.indexOf(initialBlockState) / this.pageSize;
         this.camera = Minecraft.getInstance().gameRenderer.getMainCamera();
         this.hand = hand;
@@ -118,30 +96,34 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         if (this.frostedBackground != null) this.frostedBackground.close();
         this.frostedBackground = new WheelFrostedBackground();
         this.rebuildPage();
+        var window = this.minecraft.getWindow();
+        this.holdSelection(this.minecraft.mouseHandler.xpos() * window.getGuiScaledWidth() / window.getScreenWidth(),
+            this.minecraft.mouseHandler.ypos() * window.getGuiScaledHeight() / window.getScreenHeight());
     }
 
     private void rebuildPage() {
         int start = this.pageIndex * this.pageSize;
         List<WheelWidget.RawSection> sections = new ArrayList<>();
-        for (BlockState state : this.possibleStates.subList(start, start + this.pageSize)) {
+        var sources = this.initialModelTarget.parts();
+        for (BlockState state : this.possibleStates.subList(start, Math.min(start + this.pageSize, this.possibleStates.size()))) {
             ModelRenderTarget target = this.getModelRenderTarget(state);
-            float scale = state.getBlock() instanceof IMultiPartBlockModelHolder ? 5 : ZOOM;
-            sections.add(new WheelWidget.RawSection(propertyName(state, this.property),
-                (graphics, pose, width, height) -> this.renderRotatedBlock(pose, target, 0, 0, 100, scale * this.radialMenuScale)));
+            var icon = new HammerWheelIcon(Objects.requireNonNull(this.minecraft.level), target, sources);
+            sections.add(new WheelWidget.RawSection(HammerWheelLabel.describe(state, this.property),
+                (graphics, pose, width, height) -> icon.render(pose, this.camera, this.radialMenuScale)));
         }
         this.wheel = new WheelWidget(
             0, 0, this.width, this.height, 55 * this.radialMenuScale, 105 * this.radialMenuScale,
             0, 300, 150, 0x88000000, WheelMenuModel.DEFAULT_SELECTION_EFFECT_COLOR, 5, 0xfdfdfd,
             this.radialMenuScale, sections, (int) (15 * this.radialMenuScale)
         ) {
-            private double lastMouseX = Double.NaN;
-            private double lastMouseY = Double.NaN;
-
             @Override
             public void checkMousePos(double mouseX, double mouseY) {
-                if (mouseX == this.lastMouseX && mouseY == this.lastMouseY) return;
-                this.lastMouseX = mouseX;
-                this.lastMouseY = mouseY;
+                double dx = mouseX - AnvilHammerScreen.this.heldMouseX;
+                double dy = mouseY - AnvilHammerScreen.this.heldMouseY;
+                if (dx * dx + dy * dy <= 4) {
+                    return;
+                }
+                AnvilHammerScreen.this.heldMouseX = Double.NaN;
                 super.checkMousePos(mouseX, mouseY);
             }
         };
@@ -151,13 +133,9 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         this.wheel.setCurrentIndex(this.possibleStates.indexOf(this.currentBlockState) - start);
     }
 
-    private static <T extends Comparable<T>> Component propertyName(BlockState state, Property<T> property) {
-        if (state.getBlock() instanceof MountedRedstone) {
-            return Component.translatable("screen.anvilcraft.button.direction." + state.getValue(MountedRedstone.ATTACHMENT).getName())
-                .append(" / ")
-                .append(Component.translatable("screen.anvilcraft.button.direction." + MountedRedstone.inputDirection(state).getName()));
-        }
-        return Component.literal(property.getName(state.getValue(property)));
+    private void holdSelection(double mouseX, double mouseY) {
+        this.heldMouseX = mouseX;
+        this.heldMouseY = mouseY;
     }
 
     private ModelRenderTarget getModelRenderTarget(BlockState previewState) {
@@ -179,14 +157,23 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        if (this.wheel == null || this.closingAnimationStarted) return true;
-        if (scrollY != 0 && this.possibleStates.size() > this.pageSize) {
-            this.pageIndex = Math.floorMod(this.pageIndex + (scrollY > 0 ? 1 : -1), this.possibleStates.size() / this.pageSize);
+        if (this.wheel == null || this.closingAnimationStarted || scrollY == 0) {
+            return true;
+        }
+        if (this.possibleStates.size() > this.pageSize) {
+            final int slot = Math.max(0, this.wheel.getCurrentSectionIndex());
+            this.heldMouseX = Double.NaN;
+            int pageCount = Math.ceilDiv(this.possibleStates.size(), this.pageSize);
+            this.pageIndex = Math.floorMod(this.pageIndex + (scrollY > 0 ? 1 : -1), pageCount);
             this.rebuildPage();
             this.wheel.checkMousePos(mouseX, mouseY);
+            if (this.wheel.getCurrentSectionIndex() < 0) {
+                this.wheel.setCurrentIndex(Math.min(slot, this.possibleStates.size() - this.pageIndex * this.pageSize - 1));
+            }
         } else {
             this.wheel.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
         }
+        this.holdSelection(mouseX, mouseY);
         this.updateSelection();
         return true;
     }
@@ -196,96 +183,9 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         int index = this.wheel.getCurrentSectionIndex();
         if (index >= 0 && index < this.pageSize) {
             this.setCurrentBlockState(this.possibleStates.get(this.pageIndex * this.pageSize + index));
-        } else if (this.initialBlockState.getBlock() instanceof MountedRedstone) {
+        } else {
             this.setCurrentBlockState(this.initialBlockState);
         }
-    }
-
-    @SuppressWarnings({"SameParameterValue", "deprecation"})
-    private void renderRotatedBlock(
-        PoseStack poseStack,
-        ModelRenderTarget modelTarget,
-        float x,
-        float y,
-        float z,
-        float scale
-    ) {
-        final float partialTick = this.minecraft.getTimer().getGameTimeDeltaPartialTick(true);
-        poseStack.pushPose();
-        poseStack.translate(-7 * this.radialMenuScale, 7 * this.radialMenuScale, 0);
-        poseStack.translate(x, y, z);
-        poseStack.scale(scale, scale, scale);
-        poseStack.mulPose(new Matrix4f().scaling(1, -1, 1));
-        poseStack.translate(0.5f, 0.5f, 0.5f);
-        poseStack.mulPose(Axis.XP.rotationDegrees(this.camera.getEntity().getXRot()));
-        poseStack.mulPose(Axis.YP.rotationDegrees(this.camera.getEntity().getYRot() + 180f));
-        poseStack.translate(-0.5f, -0.5f, -0.5f);
-
-        RenderSystem.setShaderColor(1F, 1F, 1F, 1F);
-
-        BlockPos modelPos = modelTarget.pos();
-        BlockState block = modelTarget.state();
-        final FluidState fluidState = block.getFluidState();
-        MultiBufferSource.BufferSource buffers =
-            Minecraft.getInstance().renderBuffers().bufferSource();
-
-        RenderSystem.setupGui3DDiffuseLighting(RenderSupport.L1, RenderSupport.L2);
-        BlockRenderDispatcher blockRenderDispatcher = Minecraft.getInstance().getBlockRenderer();
-        BakedModel model = blockRenderDispatcher.getBlockModel(block);
-        for (RenderType renderType : model.getRenderTypes(block, RANDOM, ModelData.EMPTY)) {
-            VertexConsumer bufferBuilder = buffers.getBuffer(renderType);
-            blockRenderDispatcher.renderBatched(
-                block,
-                modelPos,
-                this.fullBrightLevel,
-                poseStack,
-                bufferBuilder,
-                true,
-                RANDOM,
-                ModelData.EMPTY,
-                renderType
-            );
-        }
-        buffers.endLastBatch();
-        if (!fluidState.isEmpty()) {
-            if (block.getBlock() instanceof LiquidBlock) {
-                block = block.setValue(LiquidBlock.LEVEL, block.getFluidState().getAmount());
-            }
-            blockRenderDispatcher.renderLiquid(
-                modelPos,
-                this.fullBrightLevel,
-                new VertexConsumerWithPose(
-                    buffers.getBuffer(ItemBlockRenderTypes.getRenderLayer(fluidState)),
-                    poseStack.last(),
-                    BlockPos.ZERO
-                ),
-                block,
-                fluidState
-            );
-            buffers.endLastBatch();
-        }
-        BlockEntity blockEntity = Objects.requireNonNull(this.minecraft.level).getBlockEntity(modelPos);
-        if (blockEntity != null && blockEntity.getBlockState().is(block.getBlock())) {
-            BlockEntityRenderer<BlockEntity> renderer = this.minecraft.getBlockEntityRenderDispatcher().getRenderer(blockEntity);
-            if (renderer != null) {
-                final Level originalLevel = blockEntity.getLevel();
-                final BlockState originalBlockState = blockEntity.getBlockState();
-                blockEntity.setBlockState(block);
-                renderer.render(
-                    blockEntity,
-                    partialTick,
-                    poseStack,
-                    buffers,
-                    LightTexture.FULL_BLOCK,
-                    OverlayTexture.NO_OVERLAY
-                );
-                if (originalLevel != null) {
-                    blockEntity.setLevel(originalLevel);
-                }
-                blockEntity.setBlockState(originalBlockState);
-            }
-        }
-        poseStack.popPose();
     }
 
     @Override
@@ -306,9 +206,10 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     }
 
     private void triggerChunkRebuild() {
-        if (!this.shouldRebuildChunk) return;
-        this.shouldRebuildChunk = false;
-        this.minecraft.levelRenderer.setBlockDirty(this.hiddenBlockPos(), false);
+        if (!this.previewActive && this.minecraft.level != null) {
+            this.previewActive = true;
+            HammerPreviewState.begin(this.minecraft.level, this.targetBlockPos, this.initialModelTarget);
+        }
     }
 
     private boolean isValidState(BlockState selected) {
@@ -326,6 +227,9 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     @Override
     public void removed() {
         if (this.frostedBackground != null) {
+            if (this.wheel != null) {
+                this.wheel.setFrostedBackground(null);
+            }
             this.frostedBackground.close();
             this.frostedBackground = null;
         }
@@ -339,8 +243,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
         }
         if (this.animationStarted) {
             Level level = Objects.requireNonNull(Minecraft.getInstance().level);
-            if (this.initialBlockState.getBlock() instanceof MountedRedstone
-                && (this.wheel == null || this.wheel.getCurrentSectionIndex() < 0)) {
+            if (this.wheel == null || this.wheel.getCurrentSectionIndex() < 0) {
                 super.removed();
                 return;
             }
@@ -350,11 +253,6 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
                 super.removed();
                 return;
             }
-            level.setBlock(
-                this.targetBlockPos, this.currentBlockState,
-                Block.UPDATE_CLIENTS,
-                0
-            );
             if (this.currentBlockState.getBlock() instanceof FlexibleMultiPartBlock<?, ?, ?>) {
                 if (this.currentBlockState.hasProperty(BlockStateProperties.FACING)) {
                     PacketDistributor.sendToServer(new HammerChangeFlexibleMultiPartBlockPacket(
@@ -385,11 +283,9 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
     }
 
     private void restoreHiddenBlock() {
-        this.shouldRebuildChunk = true;
-        BlockPos hiddenPos = this.hiddenBlockPos();
-        Minecraft.getInstance().levelRenderer.setBlockDirty(hiddenPos, false);
-        if (!this.targetBlockPos.equals(hiddenPos)) {
-            Minecraft.getInstance().levelRenderer.setBlockDirty(this.targetBlockPos, false);
+        if (this.previewActive) {
+            this.previewActive = false;
+            HammerPreviewState.end();
         }
     }
 
@@ -423,7 +319,7 @@ public class AnvilHammerScreen extends Screen implements IHasHammerEffect {
 
     @Override
     public boolean shouldSkipRebuildBlock() {
-        return !this.shouldRebuildChunk;
+        return this.previewActive;
     }
 
     private void runLocalDefaultInteraction() {

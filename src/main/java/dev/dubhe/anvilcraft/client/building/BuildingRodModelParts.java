@@ -24,6 +24,10 @@ final class BuildingRodModelParts {
     private final List<BakedQuad> body = new ArrayList<>();
     private final List<BakedQuad> core = new ArrayList<>();
 
+    static void clear() {
+        CACHE.clear();
+    }
+
     private BuildingRodModelParts(BakedModel model) {
         RandomSource random = RandomSource.create(42);
         for (Direction direction : Direction.values()) {

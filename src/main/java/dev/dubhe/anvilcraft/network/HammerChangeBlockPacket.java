@@ -47,6 +47,9 @@ public record HammerChangeBlockPacket(BlockPos pos, BlockState state) implements
         }
         BlockState blockState = level.getBlockState(this.pos);
         BlockState targetState = StateUtil.hammerTarget(blockState, this.state);
+        if (targetState == blockState) {
+            return;
+        }
         boolean stateVerified = StateUtil.verifyPossibleStatesForProperty(blockState, targetState);
         boolean hasHammer = player.getMainHandItem().getItem() instanceof AnvilHammerItem
                             || player.getOffhandItem().getItem() instanceof AnvilHammerItem;
